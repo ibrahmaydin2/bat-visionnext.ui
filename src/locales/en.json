@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "homePage": "Ana Sayfa",
+    "logout": "Oturumu Kapat",
+    "changePassword": "Şifremi Değiştir",
+    "workOrder": "Work Order",
+    "other": "Diğer"
+  },
+  "router": {
+    "WorkOrder": "Work Order",
+    "WorkOrderInsert": "Work Order Oluştur",
+    "WorkOrderShow": "Work Order Görüntüle",
+    "WorkOrderUpdate": "Work Order Düzenle",
+    "WorkOrderGet": "Work Order Görüntüle",
+    "Search": "Arama Sonuçları"
+  },
+  "insert": {
+    "detail": "Detaylar",
+    "sharing": "Paylaşım"
+  },
+  "get": {
+    "detail": "Detaylar",
+    "sharing": "Paylaşım"
+  },
+  "general": {
+    "pleaseWait": "Lütfen Bekleyin"
+  },
+  "index": {
+    "BloodTransfusion": "BloodTransfusion",
+    "Code": "Code",
+    "ContactEmail": "ContactEmail",
+    "ContactGsm": "ContactGsm",
+    "ContactName": "ContactName",
+    "ContactPhone": "ContactPhone",
+    "ContactSurname": "ContactSurname",
+    "CreatedDateTime": "CreatedDateTime",
+    "Description1": "Description1",
+    "ExSibling": "ExSibling",
+    "KitType": "KitType",
+    "Lab": "Lab",
+    "PathogenicVariant": "PathogenicVariant",
+    "PatientBirthDate": "PatientBirthDate",
+    "PatientCity": "PatientCity",
+    "PatientCountry": "PatientCountry",
+    "PatientGender": "PatientGender",
+    "PatientGsm": "PatientGsm",
+    "PatientName": "PatientName",
+    "PatientPhone": "PatientPhone",
+    "PatientSurname": "PatientSurname",
+    "Project": "Project",
+    "ProvisionNumber": "ProvisionNumber",
+    "SampleDate": "SampleDate",
+    "SampleType": "SampleType",
+    "SerialNumber": "SerialNumber",
+    "System": "System",
+    "TransportationAddress": "TransportationAddress",
+    "TransportationDate": "TransportationDate",
+    "TransportationTime": "TransportationTime",
+    "WorkOrderStatus": "WorkOrderStatus",
+    "WorkOrderStatusId": "WorkOrderStatusId",
+    "WorkOrderType": "WorkOrderType"
+  },
+  "auth": {
+    "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",
+    "userCode": "Kullanıcı Kodu",
+    "email": "E-Mail",
+    "password": "Şifre",
+    "login": "OTURUM AÇ",
+    "forgotPassword": "Şifremi Unuttum",
+    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
+  },
+  "list": {
+    "back": "Geri Dön",
+    "allFilters": "Tüm Filtreler",
+    "allRecords": "Tüm Kayıtlar",
+    "search": "Ara",
+    "addBasket": "Sepete Ekle",
+    "selectedRows": "Seçili Sütunlar",
+    "operations": "İşlemler",
+    "trash": "İptal",
+    "create": "Oluştur",
+    "okOrder": "Demo Ver",
+    "okDispatch": "Sevkiyat Emri Ver",
+    "seeBasket": "Sepetim",
+    "show": "Görüntüle",
+    "print": "Yazdır",
+    "edit": "Düzenle",
+    "downloadPdf": "Pdf Aktar",
+    "downloadExcel": "Excel Aktar",
+    "downloadXml": "Xml Aktar"
+  },
+  "dashboard": {
+    "search": "Ara",
+    "create": "Oluştur",
+    "chartTitle": "Test Statülerine Göre Dağılım",
+    "title": "Gen Panelleri & Tek Gen Kitleri"
+  },
+  "sidebar": {
+    "createShortcut": "Kısayol Oluştur",
+    "shortcuts": "Kısayollar",
+    "update": "Güncelle",
+    "savedShortcuts": "Kayıtlı Kısayollar",
+    "otherApps": "Diğer Uygulamalar"
+  }
+}
