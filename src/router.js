@@ -2,7 +2,7 @@
   |||||| DİKKAT ||||||
   Index, Inser, Update, Get ekranları Layout altında "children" elementine tanımlanmalanacaktır.
   -------------------------------------------------------------------------------------------------------------
-  Yeni oluşturulacak ekranlar WorkOrder'dan kopyalanabilir.
+  Yeni oluşturulacak ekranlar Demo'dan kopyalanabilir.
   Yeni oluşturulmuş ekranları dil dosyalarında da tanımlamak gerekmektedir. (locales/tr||en.json)
   Düzeni sağlamak amacıyla "router" dizini kullanılacaktır.
   -------------------------------------------------------------------------------------------------------------
@@ -12,7 +12,7 @@
   Her dizinin Yeni Kayıt linki createLink altında tanımlanmalıdır.
   -------------------------------------------------------------------------------------------------------------
   İçeriği modal içinde gösterilecek olan ekranlar INDEX altına children olarak tanımlanır
-  ve WorkOrder/Show/:url örneğini kullanılır.
+  ve Demo/Show/:url örneğini kullanılır.
   -------------------------------------------------------------------------------------------------------------
   En alt dizinde bulunan "*" "tümü" anlamına gelir ve her zaman en alt satırda olmalıdır.
   Tanımlanmamış tüm ekranlar / hatalı linkler ana sayfaya yönlendirecektir.
@@ -32,18 +32,11 @@ import LayoutUpdate from '@/pages/layout/update'
 
 import SearchIndex from '@/pages/Search/'
 
-import WorkOrderIndex from '@/pages/WorkOrder/' // liste ekranı
-import WorkOrderGet from '@/pages/WorkOrder/get' // fullpage görünümü
-import WorkOrderInsert from '@/pages/WorkOrder/insert' // yeni kayıt
-import WorkOrderUpdate from '@/pages/WorkOrder/update' // güncelleme
-
-// import WorkOrderProvisionIndex from '@/pages/WorkOrderProvision/' // liste ekranı
-// import WorkOrderProvisionShow from '@/pages/WorkOrderProvision/show' // modal view
-// import WorkOrderProvisionGet from '@/pages/WorkOrderProvision/get' // fullpage görünümü
-import WorkOrderProvisionInsert from '@/pages/WorkOrderProvision/insert' // yeni kayıt
-// import WorkOrderProvisionUpdate from '@/pages/WorkOrderProvision/update' // güncelleme
-
-import Report from '@/pages/Report/'
+import DemoIndex from '@/pages/Demo/' // liste ekranı
+import DemoSmart from '@/pages/Demo/smart' // liste ekranı
+import DemoGet from '@/pages/Demo/get' // fullpage görünümü
+import DemoInsert from '@/pages/Demo/insert' // yeni kayıt
+import DemoUpdate from '@/pages/Demo/update' // güncelleme
 
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
@@ -77,24 +70,33 @@ const routes = [
         component: LayoutIndex, // listeleme ekranları
         children: [
           {
-            path: '/WorkOrder/',
-            name: 'WorkOrder',
-            component: WorkOrderIndex,
+            path: '/Demo/',
+            name: 'Demo',
+            component: DemoIndex,
             meta: {
-              title: i18n.t('router.WorkOrder'),
-              createLink: 'WorkOrderInsert'
+              title: i18n.t('router.Demo'),
+              createLink: 'DemoInsert'
             },
             children: [
               {
                 path: 'Show/:url',
-                name: 'WorkOrderShow',
-                component: WorkOrderGet,
+                name: 'DemoShow',
+                component: DemoGet,
                 meta: {
-                  title: i18n.t('router.WorkOrderShow'),
-                  base: 'WorkOrder'
+                  title: i18n.t('router.DemoShow'),
+                  base: 'Demo'
                 }
               }
             ]
+          },
+          {
+            path: '/Demo/smart',
+            name: 'Demo',
+            component: DemoSmart,
+            meta: {
+              title: i18n.t('router.Demo'),
+              createLink: 'DemoInsert'
+            }
           },
           {
             path: '/Search/:q',
@@ -102,7 +104,7 @@ const routes = [
             component: SearchIndex,
             meta: {
               title: i18n.t('router.Search'),
-              createLink: 'WorkOrderInsert'
+              createLink: 'DemoInsert'
             }
           }
         ]
@@ -112,11 +114,11 @@ const routes = [
         component: LayoutGet, // görüntüleme ekranları
         children: [
           {
-            path: '/WorkOrder/:url',
-            name: 'WorkOrderGet',
-            component: WorkOrderGet,
+            path: '/Demo/:url',
+            name: 'DemoGet',
+            component: DemoGet,
             meta: {
-              title: i18n.t('router.WorkOrderGet')
+              title: i18n.t('router.DemoGet')
             }
           }
         ]
@@ -126,11 +128,11 @@ const routes = [
         component: LayoutUpdate, // görüntüleme ekranları
         children: [
           {
-            path: '/WorkOrder/Update/:url',
-            name: 'WorkOrderUpdate',
-            component: WorkOrderUpdate,
+            path: '/Demo/Update/:url',
+            name: 'DemoUpdate',
+            component: DemoUpdate,
             meta: {
-              title: i18n.t('router.WorkOrderUpdate')
+              title: i18n.t('router.DemoUpdate')
             }
           }
         ]
@@ -140,21 +142,12 @@ const routes = [
         component: LayoutInsert, // oluşturma ekranları
         children: [
           {
-            path: '/Insert/WorkOrder/:type',
-            name: 'WorkOrderInsert',
-            component: WorkOrderInsert,
+            path: '/Insert/Demo/:type',
+            name: 'DemoInsert',
+            component: DemoInsert,
             meta: {
-              title: i18n.t('router.WorkOrderInsert'),
-              baseLink: 'WorkOrder'
-            }
-          },
-          {
-            path: '/Insert/WorkOrderProvision/:type',
-            name: 'WorkOrderProvisionInsert',
-            component: WorkOrderProvisionInsert,
-            meta: {
-              title: i18n.t('router.WorkOrderProvisionInsert'),
-              baseLink: 'WorkOrder'
+              title: i18n.t('router.DemoInsert'),
+              baseLink: 'Demo'
             }
           }
         ]
@@ -164,9 +157,9 @@ const routes = [
         component: LayoutGet, // görüntüleme ekranları
         children: [
           {
-            path: '/Report/:type',
-            name: 'Report',
-            component: Report
+            path: '/Demo/:type',
+            name: 'Demo',
+            component: DemoGet
           }
         ]
       }

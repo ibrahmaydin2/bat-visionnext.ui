@@ -1,17 +1,21 @@
 <template>
   <b-container fluid class="asc__auth">
     <b-row>
-      <b-col cols="12" sm="2" md="4" lg="6" xl="9">
+      <b-col cols="12" sm="2" md="4" lg="6" xl="8">
       </b-col>
-      <b-col cols="12" sm="10" md="8" lg="6" xl="3" class="asc__auth-right">
+      <b-col cols="12" sm="10" md="8" lg="6" xl="4" class="asc__auth-right">
+        <b-col cols="12">
+          <figure class="figure">
+            <img :src="logo.login" class="figure-img img-fluid" :alt="title.siteName" />
+          </figure>
+        </b-col>
         <b-row>
-          <b-col cols="12">
-            <figure class="figure">
-              <img :src="logo.login" class="figure-img img-fluid" :alt="title.siteName" />
-            </figure>
-          </b-col>
-          <b-col cols="12" class="asc__auth-form">
-            <router-view/>
+          <b-col cols="9" class="m-auto">
+            <b-row>
+              <b-col cols="12" class="asc__auth-form">
+                <router-view/>
+              </b-col>
+            </b-row>
           </b-col>
           <b-col cols="12" class="asc__auth-idea">
             <figure class="figure">
@@ -66,13 +70,21 @@ export default {
       & a
         width: 100%
         line-height: 40px
+        color: #fe3d3e
+        font-size: 14px
+        text-decoration: underline
+      & input
+        height: 48px
       & legend
-        color: #5f6164
+        color: #7f838a
+        font-weight: bold
+        font-size: 14px
         font-weight: bold
       & button
-        background: linear-gradient(45deg, #e88000, #ffa300)
+        background: linear-gradient(45deg, #fcbb45, #fe3d3e)
         border: none
         color: #fff
+        font-weight: bold
         width: 100%
         line-height: 40px
     .asc__auth-form

@@ -1,6 +1,6 @@
-# Gene2Var Portal
+# BAT UI
 
-> Gene2Info
+> bat
 
 ## Build Setup
 

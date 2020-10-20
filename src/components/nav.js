@@ -73,8 +73,8 @@ export const items = [
 
 export const shortcut = [
   {
-    title: i18n.t('nav.workOrder'),
-    router: 'WorkOrder',
+    title: i18n.t('nav.demo'),
+    router: 'Demo',
     icon: 'fas fa-tags',
     params: {}
   }

@@ -7,19 +7,19 @@
       <b-form-input v-model="user.Password" type="password" :placeholder="$t('auth.password')" @keyup.enter="submitForm" />
     </b-form-group>
     <b-row class="text-center">
-      <b-col cols="12" md="6">
-        <router-link :to="{name: 'ForgotPassword'}">{{$t('auth.forgotPassword')}}</router-link>
-      </b-col>
-      <b-col cols="12" md="6">
+      <b-col cols="12">
         <b-button id="loginButton" @click="submitForm()" type="button">
           <span id="loginLoaderText">{{$t('auth.login')}}</span>
           <b-spinner id="loginLoader" style="display: none; text-align: center" label="Spinning" />
         </b-button>
       </b-col>
+      <b-col cols="12" class="my-3">
+        <router-link :to="{name: 'ForgotPassword'}">{{$t('auth.forgotPassword')}}</router-link>
+      </b-col>
       <b-col cols="12" v-if="loginError" class="my-4">
         <b-alert show variant="danger">{{loginError}}</b-alert>
       </b-col>
-      <b-col cols="12" class="mt-3">
+      <b-col cols="9" class="mt-3 m-auto">
         <p v-html="$t('auth.information')"></p>
       </b-col>
     </b-row>
