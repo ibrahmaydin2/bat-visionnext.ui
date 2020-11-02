@@ -62,6 +62,7 @@ export const store = new Vuex.Store({
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
     tableData: [],
+    tableOperations: [],
     tableRows: [],
     tableActions: [
       { id: 1, text: i18n.t('list.show'), icon: 'user' },
@@ -138,11 +139,26 @@ export const store = new Vuex.Store({
         })
     },
     getTableGetData ({ commit }, query) { // tüm index ekranlarının tablosunu GET metoduyla besleyen fonksiyondur.
-      commit('bigLoaded', false)
-      return axios.get(query.url, query.params)
+      commit('bigLoaded', true)
+      let connection = query.params ? query.url + query.params : query.url
+      return axios.get(connection)
         .then(res => {
           commit('setTableData', res.data)
           commit('bigLoaded', false)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getTableOperations ({ commit }, query) { // tüm index ekranlarının tablosunu GET metoduyla besleyen fonksiyondur.
+      commit('bigLoaded', true)
+      return axios.get(query.url + query.params)
+        .then(res => {
+          commit('setTableOperations', res.data.uiPageModels[0])
+          commit('bigLoaded', false)
+        })
+        .catch(err => {
+          console.log(err)
         })
     },
     createAny ({ commit }, query) {
@@ -323,6 +339,9 @@ export const store = new Vuex.Store({
     },
     setTableData (state, payload) {
       state.tableData = payload
+    },
+    setTableOperations (state, payload) {
+      state.tableOperations = payload
     },
     setTableRows (state, payload) {
       state.tableRows = payload

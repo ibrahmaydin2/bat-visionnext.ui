@@ -14,6 +14,135 @@ export default {
   },
   data () {
     const aafields = [ 'StockDate: string', 'Warehouse: string', 'Item: string', 'UnitSet: string' ]
+    /*
+    const aarows = [
+      {
+        'label': 'Depo Kodu',
+        'dataField': 'WarehouseId',
+        'visible': false
+      },
+      {
+        'label': 'Ürün',
+        'dataField': 'ItemId',
+        'visible': false
+      },
+      {
+        'label': 'Birim Seti',
+        'dataField': 'UnitSetId',
+        'visible': false
+      },
+      {
+        'label': 'Birim',
+        'dataField': 'UnitId',
+        'visible': false
+      },
+      {
+        'label': 'ConvFact1',
+        'dataField': 'ConvFact1',
+        'visible': false
+      },
+      {
+        'label': 'ConvFact2',
+        'dataField': 'ConvFact2',
+        'visible': false
+      },
+      {
+        'label': 'Adet',
+        'dataField': 'Quantity',
+        'visible': false
+      },
+      {
+        'label': 'Durum',
+        'dataField': 'StatusId',
+        'visible': false
+      },
+      {
+        'label': 'RecordId',
+        'dataField': 'RecordId',
+        'visible': false
+      },
+      {
+        'label': 'Kodu',
+        'dataField': 'Code',
+        'visible': false
+      },
+      {
+        'label': 'CompanyId',
+        'dataField': 'CompanyId',
+        'visible': false
+      },
+      {
+        'label': 'BranchId',
+        'dataField': 'BranchId',
+        'visible': false
+      },
+      {
+        'label': 'Açıklama',
+        'dataField': 'Description1',
+        'visible': false
+      },
+      {
+        'label': 'CreatedUser',
+        'dataField': 'CreatedUser',
+        'visible': false
+      },
+      {
+        'label': 'Oluşturma Zamanı',
+        'dataField': 'CreatedDateTime',
+        'visible': false
+      },
+      {
+        'label': 'ModifiedUser',
+        'dataField': 'ModifiedUser',
+        'visible': false
+      },
+      {
+        'label': 'Düzenleme Zamanı',
+        'dataField': 'ModifiedDateTime',
+        'visible': false
+      },
+      {
+        'label': 'Deleted',
+        'dataField': 'Deleted',
+        'visible': false
+      },
+      {
+        'label': 'System',
+        'dataField': 'System',
+        'visible': false
+      },
+      {
+        'label': 'Stok Tarihi',
+        'dataField': 'StockDate',
+        'visible': true
+      },
+      {
+        'label': 'Statü',
+        'dataField': 'Status',
+        'visible': false
+      },
+      {
+        'label': 'Depo',
+        'dataField': 'Warehouse',
+        'visible': true
+      },
+      {
+        'label': 'Ürün',
+        'dataField': 'Item',
+        'visible': true
+      },
+      {
+        'label': 'Birim Seti',
+        'dataField': 'UnitSet',
+        'visible': true
+      },
+      {
+        'label': 'Birim',
+        'dataField': 'Unit',
+        'visible': false
+      }
+    ]
+    */
     const bbrows = [
       {
         'title': 'Stok Tarihi',
@@ -187,7 +316,6 @@ export default {
       this.setSelectedRowKey(e.selectedRowsData[0].EncryptedKey) // tıklanmış satırın EncryptedKey değerini alır.
     },
     optionSelected (e) {
-      console.log(e)
       switch (e.itemData.id) {
         case 1:
           this.$router.push({name: 'WorkOrderShow', params: {url: this.selectedRowKey}})

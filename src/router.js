@@ -30,13 +30,16 @@ import LayoutGet from '@/pages/layout/get'
 import LayoutInsert from '@/pages/layout/insert'
 import LayoutUpdate from '@/pages/layout/update'
 
-import SearchIndex from '@/pages/Search/'
-
 import DemoIndex from '@/pages/Demo/' // liste ekranı
 import DemoSmart from '@/pages/Demo/smart' // liste ekranı
 import DemoGet from '@/pages/Demo/get' // fullpage görünümü
 import DemoInsert from '@/pages/Demo/insert' // yeni kayıt
 import DemoUpdate from '@/pages/Demo/update' // güncelleme
+
+import WarehouseStockHistoryIndex from '@/pages/WarehouseStockHistory/' // liste ekranı
+// import WarehouseStockHistoryGet from '@/pages/WarehouseStockHistory/get' // fullpage görünümü
+// import WarehouseStockHistoryInsert from '@/pages/WarehouseStockHistory/insert' // yeni kayıt
+// import WarehouseStockHistoryUpdate from '@/pages/WarehouseStockHistory/update' // güncelleme
 
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
@@ -90,7 +93,7 @@ const routes = [
             ]
           },
           {
-            path: '/Demo/smart',
+            path: '/Smart/:url',
             name: 'Demo',
             component: DemoSmart,
             meta: {
@@ -98,13 +101,14 @@ const routes = [
               createLink: 'DemoInsert'
             }
           },
+          // yukarısı demo, temizlenecek. aşağısı yeni üretilen ekranlar (index)
           {
-            path: '/Search/:q',
-            name: 'SearchFilter',
-            component: SearchIndex,
+            path: '/WarehouseStockHistory',
+            name: 'WarehouseStockHistory',
+            component: WarehouseStockHistoryIndex,
             meta: {
-              title: i18n.t('router.Search'),
-              createLink: 'DemoInsert'
+              title: i18n.t('router.WarehouseStockHistory'),
+              createLink: 'WarehouseStockHistoryInsert'
             }
           }
         ]
@@ -149,17 +153,6 @@ const routes = [
               title: i18n.t('router.DemoInsert'),
               baseLink: 'Demo'
             }
-          }
-        ]
-      },
-      {
-        path: '/Get',
-        component: LayoutGet, // görüntüleme ekranları
-        children: [
-          {
-            path: '/Demo/:type',
-            name: 'Demo',
-            component: DemoGet
           }
         ]
       }
