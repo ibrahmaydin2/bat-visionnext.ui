@@ -1,22 +1,19 @@
 <template>
   <b-dropdown class="asc__mega-menu-dropdown" :text="$t('nav.other')">
-    <li v-for="(nav, i) in data" :key="i">
-      <span class="d-none"><b>{{nav.title}}</b></span>
-      <ul class="pl-0 ls-none" v-if="nav.navs">
-        <li class="pl-0 ls-none" v-for="(links, i) in nav.navs" :key="i">
-          <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }}">
-            {{ links.title }}
-          </router-link>
-          <ul class="pl-0 ls-none" v-if="links.sub">
-            <li class="pl-0 ls-none" v-for="(subs, x) in links.sub" :key="'sub' + x">
-              <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}">
-                {{ subs.title }}
-              </router-link>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </li>
+    <ul>
+      <li v-for="(links, i) in data" :key="i">
+        <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }}">
+          {{ links.title }}
+        </router-link>
+        <ul v-if="links.sub">
+          <li v-for="(subs, x) in links.sub" :key="'sub' + x" class="asc__item-head-title-li">
+            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}">
+              {{ subs.title }}
+            </router-link>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </b-dropdown>
 </template>
 <script>
@@ -44,27 +41,48 @@ export default {
       background-color: transparent !important
       box-shadow: none !important
       border: none !important
+    .dropdown-menu
+      background: linear-gradient(45deg, #e88000, #ffa300) !important
+      border: none
+      border-radius: 0 0 20px 20px
+      padding: 20px 20px 40px 20px
+      box-shadow: 0 10px 10px #00000060
+      & ul
+        list-style: none
+        padding: 0px
+        width: 100%
+      & li
+        width: 25%
+        display: inline-block
+        list-style: none
+        color: #ffffff
+        & ul
+          & li
+            display: block
+            width: 100%
+        & a
+          color: #ffffff
     .dropdown-menu.show
-      padding: 20px
       display: flex
-      align-items: center
-      justify-content: space-evenly
       transform: unset !important
       position: fixed !important
       width: 90%
-      border-radius: unset
       top:42px !important
       flex-wrap: wrap
       left: 5% !important
     .asc__item-head-title
       display: block
-      padding: 10px 0px 6px 0px
-      font-size: 12px
+      padding: 0px 0px 6px 0px
+      font-size: 16px
       font-weight: bold
       color: #333333
-      border-bottom: solid 1px #d9d9d9
       margin-bottom: 6px
       line-height: normal
+    .asc__item-head-title-li
+      width: 100%
+      line-height: 30px
+      list-style: circle !important
+      margin-left: 20px !important
     .asc__item-title
       color: #6e6e6e
       font-size: 12px

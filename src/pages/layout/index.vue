@@ -229,6 +229,9 @@ export default {
         & i
           padding: 2px
           color: #333
+        & a
+          color: #333
+          display: block
       .active
         background-color: transparent
         & i

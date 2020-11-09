@@ -32,10 +32,8 @@ export default {
     display: none
     color: #ffa300
   .asc__insertPage
+    margin-bottom: 2rem
     & header
-      display: flex
-      align-items: center
-      justify-content: space-between
       padding: .5rem 15px 0 15px
     & section
       padding: .5rem 15px 0 15px
@@ -77,7 +75,6 @@ export default {
         padding: 1rem 15px
         background: #fbfbfb
         min-height: 60vh
-  .asc__insertPage
     .card-body
       padding-top: 0px !important
     .asc__insertPage-h3

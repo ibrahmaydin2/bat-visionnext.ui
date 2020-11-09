@@ -6,7 +6,7 @@
           <b-col cols="12" md="6">
             <Breadcrumb />
           </b-col>
-          <b-col cols="12" md="6">
+          <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
               <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
             </router-link>
@@ -18,14 +18,6 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <!-- <b-col cols="12" md="2">
-            <b-form-group>
-              <b-form-radio-group id="radio-group-2" v-model="form.active" name="radio-sub-component">
-                <b-form-radio value="1">{{$t('insert.active')}}</b-form-radio>
-                <b-form-radio value="0">{{$t('insert.passive')}}</b-form-radio>
-              </b-form-radio-group>
-            </b-form-group>
-          </b-col> -->
            <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.code')"
@@ -54,13 +46,6 @@
               </b-form-checkbox>
             </b-form-group>
           </b-col>
-          <!-- <b-col cols="12" md="2" offset="2">
-            <b-form-group
-              :label="$t('insert.locations')"
-            >
-              <b-button variant="primary" size="sm">{{$t('insert.locations')}}</b-button>
-            </b-form-group>
-          </b-col> -->
         </b-row>
       </section>
     </b-col>
