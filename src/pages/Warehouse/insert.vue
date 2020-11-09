@@ -86,7 +86,7 @@
               <b-form-group
                 :label="$t('insert.Model_WarehouseCapacity')"
               >
-                <b-form-input type="text" v-model="form.Model_WarehouseCapacity"/>
+                <b-form-input type="text" v-model="form.WarehouseCapacity"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
