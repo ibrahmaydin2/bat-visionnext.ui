@@ -6,6 +6,8 @@ import { ToastPlugin } from 'bootstrap-vue'
 import { systemName, ideaName, copyright, verno, apiLink } from '../static/system'
 import router from './router'
 import i18n from './i18n'
+import cities from '../static/cities.json'
+import distiricts from '../static/district.json'
 
 Vue.use(Vuex)
 Vue.use(ToastPlugin)
@@ -68,7 +70,9 @@ export const store = new Vuex.Store({
     breadcrumbList: [],
     modalLoad: false,
     searchRes: [],
-    errorMessage: null
+    errorMessage: null,
+    cities: [],
+    distiricts: []
   },
   actions: {
     // sistem gereksinimleri
@@ -407,6 +411,12 @@ export const store = new Vuex.Store({
     changeLang (state, payload) {
       state.appLang = payload.changedLang
       localStorage.setItem('siteLang', payload.changedLang)
+    },
+    setCities (state,payload) {
+      state.cities = cities
+    },
+    setDistiricts(state, payload) {
+      state.distiricts = distiricts.filter(item => item.plaka == payload)
     }
   }
 })
