@@ -1,6 +1,58 @@
 <template>
   <b-row class="asc__dashboard">
     <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="ColumnChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
+    </b-col>
+    <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="PieChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
+    </b-col>
+    <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="BarChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
+    </b-col>
+    <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="ComboChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
+    </b-col>
+    <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="LineChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
+    </b-col>
+    <b-col cols="12" sm="6" lg="6" xl="6">
+      <b-card title="Dummy">
+        <GChart
+          type="ColumnChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </b-card>
     </b-col>
   </b-row>
 </template>
@@ -14,6 +66,21 @@ export default {
   },
   data () {
     return {
+      chartData: [
+        ['Year', 'Sales', 'Expenses', 'Profit'],
+        ['2017', 1000, 400, 200],
+        ['2018', 1170, 460, 250],
+        ['2019', 660, 1120, 300],
+        ['2020', 1030, 540, 350]
+      ],
+      chartOptions: {
+        colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+        is3D: true,
+        chart: {
+          title: 'Company Performance',
+          subtitle: 'Sales, Expenses, and Profit: 2017-2020'
+        }
+      }
     }
   },
   mounted () {

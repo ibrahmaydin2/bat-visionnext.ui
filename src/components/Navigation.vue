@@ -1,6 +1,21 @@
 <template>
   <div :class="style.navigation">
-    <div class="asc__nav shadow">
+    <div class="asc__nav">
+      <ul v-for="(nav, s) in items" :key="'nav' + s" class="asc__nav-ul-main">
+        <li v-for="(a, i) in nav.navs" :key="'main' + i">
+          {{ a.title }}
+          <ul v-if="a.sub" class="asc__nav-ul-main-sub">
+            <li v-for="(b, x) in a.sub" :key="'sub' + x">
+              <i class="far fa-circle" /> {{ b.title }}
+              <ul v-if="b.sub" class="asc__nav-ul-main-sub-sub">
+                <li v-for="(c, y) in b.sub" :key="'subsub' + y">
+                  {{ c.title }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
       <figure class="asc__system-navLogo">
         <img :src="logo.idea">
       </figure>
@@ -13,9 +28,11 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
+import { items } from './nav.js'
 export default {
   data () {
     return {
+      items: items
     }
   },
   computed: {
@@ -34,20 +51,36 @@ export default {
     position: fixed
     top: 0px
     left: 0vw
-    transform: translateX(0vh)
+    transform: translateY(0vh)
     width: 100vw
     height: 100vh
     padding-top: 45px
     font-size: 12px
     z-index: 991
-    @media (max-width: 767px)
-      width: 100vw
+    background: #fff
+    overflow: auto
     .asc__nav
-      background: #fff
-      width: 300px
+      width: 100%
       height: 100%
       position: absolute
       z-index: 3
+      .asc__nav-ul-main
+        list-style: none
+        padding: 0 50px
+        & li
+          display: block
+          font-weight: bold
+          font-size: 14px
+          border-bottom: 1px #ddd solid
+          &:last-child
+            border-bottom: none
+        .asc__nav-ul-main-sub
+          & li
+            line-height: 40px
+            font-weight: 400
+            & i
+              font-size: 12px
+              color: #ffa300
     .asc__nav-bg
       width: 100%
       height: 100%
@@ -59,7 +92,7 @@ export default {
       left: 0
       z-index: 2
   .asc__navigation-none
-    transform: translateX(-200vh)
+    transform: translateY(-200vh)
     // .asc__nav-bg
     //   opacity: 0
     //   transition: 0.3s

@@ -116,6 +116,22 @@ const routes = [
             meta: {
               title: i18n.t('router.RouteGet')
             }
+          },
+          {
+            path: '/Vehicle/:url',
+            name: 'VehicleGet',
+            component: VehicleGet,
+            meta: {
+              title: i18n.t('router.VehicleGet')
+            }
+          },
+          {
+            path: '/Employee/:url',
+            name: 'EmployeeGet',
+            component: EmployeeGet,
+            meta: {
+              title: i18n.t('router.EmployeeGet')
+            }
           }
         ]
       },
@@ -129,6 +145,22 @@ const routes = [
             component: RouteUpdate,
             meta: {
               title: i18n.t('router.RouteUpdate')
+            }
+          },
+          {
+            path: '/Vehicle/Update/:url',
+            name: 'VehicleUpdate',
+            component: VehicleUpdate,
+            meta: {
+              title: i18n.t('router.VehicleUpdate')
+            }
+          },
+          {
+            path: '/Employee/Update/:url',
+            name: 'EmployeeUpdate',
+            component: EmployeeUpdate,
+            meta: {
+              title: i18n.t('router.EmployeeUpdate')
             }
           }
         ]
@@ -144,6 +176,24 @@ const routes = [
             meta: {
               title: i18n.t('router.RouteInsert'),
               baseLink: 'Route'
+            }
+          },
+          {
+            path: '/Insert/Vehicle',
+            name: 'VehicleInsert',
+            component: VehicleInsert,
+            meta: {
+              title: i18n.t('router.VehicleInsert'),
+              baseLink: 'Vehicle'
+            }
+          },
+          {
+            path: '/Insert/Employee',
+            name: 'EmployeeInsert',
+            component: EmployeeInsert,
+            meta: {
+              title: i18n.t('router.EmployeeInsert'),
+              baseLink: 'Employee'
             }
           }
         ]

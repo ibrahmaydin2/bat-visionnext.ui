@@ -4,21 +4,21 @@ export const items = [
     title: 'HEAD',
     navs: [
       {
-        title: 'Sipariş Yönetimi',
-        router: 'WorkOrder',
+        title: 'Ana Kayıtlar',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       },
       {
         title: 'Ürün Yönetimi',
-        router: 'WorkOrder',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       }
     ]
@@ -27,21 +27,21 @@ export const items = [
     title: 'HEAD',
     navs: [
       {
-        title: 'Sipariş Yönetimi',
-        router: 'WorkOrder',
+        title: 'Ana Kayıtlar',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       },
       {
         title: 'Ürün Yönetimi',
-        router: 'WorkOrder',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       }
     ]
@@ -50,21 +50,21 @@ export const items = [
     title: 'HEAD',
     navs: [
       {
-        title: 'Sipariş Yönetimi',
-        router: 'WorkOrder',
+        title: 'Ana Kayıtlar',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       },
       {
         title: 'Ürün Yönetimi',
-        router: 'WorkOrder',
+        router: 'Route',
         sub: [
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' },
-          { title: 'yeni sipariş', router: 'WorkOrder', link: 'Insert' }
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' },
+          { title: 'yeni sipariş', router: 'Route', link: 'Insert' }
         ]
       }
     ]

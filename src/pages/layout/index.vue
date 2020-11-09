@@ -70,7 +70,7 @@
                     <i class="fas fa-download" />
                   </template>
                   <b-dropdown-header id="dropdown-header-label">
-                    {{$t('list.downloads')}}
+                    {{ $t('list.downloads') }}
                   </b-dropdown-header>
                   <b-dropdown-item
                     v-for="(dwn, i) in tableOperations.Downloads"

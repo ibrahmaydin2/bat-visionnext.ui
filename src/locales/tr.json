@@ -5,7 +5,9 @@
     "changePassword": "Şifremi Değiştir",
     "workOrder": "Work Order",
     "other": "Diğer",
-    "Route": "Rota Kayıtları"
+    "Route": "Rota Kayıtları",
+    "Employee": "Personel Yönetimi",
+    "Vehicle": "Araç Ana Kayıtları"
   },
   "router": {
     "WorkOrder": "Work Order",
@@ -18,7 +20,15 @@
     "Route": "Rota Kayıtları",
     "RouteInsert": "Yeni Rota",
     "RouteUpdate": "Rota Güncelle",
-    "RouteGet": "Rota Görüntüle"
+    "RouteGet": "Rota Görüntüle",
+    "Employee": "Personel Yönetimi",
+    "Vehicle": "Araç Ana Kayıtları",
+    "VehicleGet": "Araç Görüntüle",
+    "EmployeeGet": "Personel Görüntüle",
+    "VehicleUpdate": "Araç Düzenle",
+    "EmployeeUpdate": "Personel Düzenle",
+    "VehicleInsert": "Yeni Araç",
+    "EmployeeInsert": "Yeni Personel"
   },
   "insert": {
     "detail": "Detaylar",
@@ -94,7 +104,8 @@
     "downloadPdf": "Pdf Aktar",
     "downloadExcel": "Excel Aktar",
     "downloadXml": "Xml Aktar",
-    "quick": "Hızlı Bakış"
+    "quick": "Hızlı Bakış",
+    "downloads": "Dışarı Aktar"
   },
   "dashboard": {
     "search": "Ara",

@@ -1,17 +1,20 @@
 <template>
   <div class="asc__header">
     <b-row>
-      <b-col cols="10" md="6">
+      <b-col>
         <!-- <div class="asc__header-otherApps">
           <img id="otherAppsImg" v-b-toggle.sidebar-1 src="../../static/otherApps.svg">
         </div> -->
-        <router-link :to="{name: 'Dashboard'}"><img class="asc__header-logo" :src="logo.header"></router-link>
+        <router-link class="asc__header-logo" :to="{name: 'Dashboard'}"><img :src="logo.header"></router-link>
         <Shortcuts class="d-none d-lg-inline-block" />
+        <b-button class="d-inline-block d-md-none float-right" @click="collapseNav()">
+          <i class="fas fa-bars" />
+        </b-button>
         <!-- <div @click="collapseNav()" :class="style.icon">
           <i class="fas fa-bars"></i>
         </div> -->
       </b-col>
-      <b-col cols="2" md="6" class="asc__header-userBox d-flex align-items-center justify-content-end">
+      <b-col md="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
         <b-dropdown id="asc__header-userBox" variant="white" class="d-none d-md-inline-block">
           <template v-slot:button-content>
             <b>{{loginUser.company}}</b> {{loginUser.name}}
@@ -160,7 +163,9 @@ export default {
     .asc__sidebar-header img:focus
       outline: none !important
     .asc__header-logo
-      height: 35px
+      display: inline-block
+      & img
+        height: 35px
     .asc__header-hamburger
       line-height: 25px
       cursor: pointer

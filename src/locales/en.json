@@ -4,7 +4,10 @@
     "logout": "Oturumu Kapat",
     "changePassword": "Şifremi Değiştir",
     "workOrder": "Work Order",
-    "other": "Diğer"
+    "other": "Diğer",
+    "Route": "Rota Kayıtları",
+    "Employee": "Personel Yönetimi",
+    "Vehicle": "Araç Ana Kayıtları"
   },
   "router": {
     "WorkOrder": "Work Order",
@@ -12,7 +15,20 @@
     "WorkOrderShow": "Work Order Görüntüle",
     "WorkOrderUpdate": "Work Order Düzenle",
     "WorkOrderGet": "Work Order Görüntüle",
-    "Search": "Arama Sonuçları"
+    "Search": "Arama Sonuçları",
+    "Report": "Rapor",
+    "Route": "Rota Kayıtları",
+    "RouteInsert": "Yeni Rota",
+    "RouteUpdate": "Rota Güncelle",
+    "RouteGet": "Rota Görüntüle",
+    "Employee": "Personel Yönetimi",
+    "Vehicle": "Araç Ana Kayıtları",
+    "VehicleGet": "Araç Görüntüle",
+    "EmployeeGet": "Personel Görüntüle",
+    "VehicleUpdate": "Araç Düzenle",
+    "EmployeeUpdate": "Personel Düzenle",
+    "VehicleInsert": "Yeni Araç",
+    "EmployeeInsert": "Yeni Personel"
   },
   "insert": {
     "detail": "Detaylar",
@@ -87,13 +103,18 @@
     "edit": "Düzenle",
     "downloadPdf": "Pdf Aktar",
     "downloadExcel": "Excel Aktar",
-    "downloadXml": "Xml Aktar"
+    "downloadXml": "Xml Aktar",
+    "quick": "Hızlı Bakış",
+    "downloads": "Dışarı Aktar"
   },
   "dashboard": {
     "search": "Ara",
     "create": "Oluştur",
     "chartTitle": "Test Statülerine Göre Dağılım",
-    "title": "Gen Panelleri & Tek Gen Kitleri"
+    "title": "Gen Panelleri & Tek Gen Kitleri",
+    "primaryTestDesc": "Birincil test talebi oluşturmak için elinizde bulunan kan taşıma kiti üzerindeki referans numarasını giriniz.",
+    "secondTestDesc": "İkincil test talebi oluşturmak için hasta adı ve soyadı veya referans numarası giriniz.",
+    "secondTestSelect": "İkincil test talebi oluşturmak istediğiniz hastayı seçiniz."
   },
   "sidebar": {
     "createShortcut": "Kısayol Oluştur",

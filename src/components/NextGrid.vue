@@ -3,7 +3,7 @@
     <b-table-simple hover bordered small responsive sticky-header class="asc__nextgrid-table">
       <b-thead>
         <draggable v-model="head" tag="tr">
-          <b-th width="30">
+          <b-th width="30" class="asc__nextgrid-table-header">
             &nbsp;
           </b-th>
           <b-th v-for="(h, i) in tableRows.filter(item => item.visible === true)" :key="'head' + i" :class="h.align == null ? 'text-left' : 'text-' + h.align" class="asc__nextgrid-table-header">
@@ -28,7 +28,7 @@
                 <i class="fas fa-sort-down" />
               </b-button>
             </div>
-            <b-form-input v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+            <b-form-input class="asc__nextgrid-table-header-search d-none" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
           </b-th>
         </draggable>
       </b-thead>
@@ -72,19 +72,20 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
-    <b-row>
-      <b-col cols="6">
-        <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm" variant="outline-dark">
-          <b-dropdown-item v-for="p in perPageOpt" :key="p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
-        </b-dropdown>
-      </b-col>
-      <b-col cols="6">
-        <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
-      </b-col>
-      <b-col cols="6">
-        aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
-      </b-col>
-    </b-row>
+
+      <b-row class="asc__nextgrid-table-footer">
+        <b-col cols="6">
+          <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
+            <b-dropdown-item v-for="p in perPageOpt" :key="p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
+          </b-dropdown>
+        </b-col>
+        <b-col cols="6">
+          <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
+        </b-col>
+        <!-- <b-col cols="6">
+          aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
+        </b-col> -->
+      </b-row>
   </div>
 </template>
 
@@ -183,10 +184,23 @@ export default {
         this.$router.push({name: this.$route.name, query: {'page': 1, 'where': field, 'sort': sort}})
       }
     },
-    searchOnTable (field, search) {
+    searchOnTable (tableField, search) {
       // bu fonksiyon için servis henüz üretilmedi.
-      this.tablefield = field
+      this.tablefield = tableField
       this.searched = search
+
+      let urlquery = []
+      if (this.$route.query.count) {
+        urlquery.push({count: this.$route.query.count})
+      }
+      if (this.$route.query.page) {
+        urlquery.push({page: this.$route.query.page})
+      }
+      if (this.$route.query.sort) {
+        urlquery.push({sort: this.$route.query.sort})
+      }
+      console.log(urlquery)
+      // this.$router.push({name: this.$route.name, query: urlquery})
     },
     getData (e, p, c, s) {
       this.$store.dispatch('getTableData', {...this.query, url: 'VisionNext' + e + '/api/' + e + '/Search', page: parseInt(p), count: parseInt(c), sort: s})
@@ -236,9 +250,11 @@ export default {
 <style lang="sass">
   .asc__nextgrid
     position: relative
+    height: 85vh
     .asc__nextgrid-table
-      min-height: 72vh
-      max-height: 78vh
+      height: 81vh
+      max-height: inherit
+      margin-bottom: 0px
     .router-link-exact-active
       background: #007bff
       color: #fff
@@ -254,8 +270,9 @@ export default {
         background-color: #fc9e01
         border-color: #f99a03
     .asc__nextgrid-table-header
-      background: #ffffff
-      top: -2px
+      background: #f2f2f2
+      top: -3px !important
+      .asc__nextgrid-table-header-search
       .asc__nextgrid-table-header-title
         display: inline-block
         cursor: move
@@ -264,9 +281,19 @@ export default {
         float: right
         cursor: pointer
         & button
-          color: #ddd
+          color: #8a8a8a
           background: none
           border: none
         .asc__nextgrid-table-header-sort-active
           color: #000
+    .asc__nextgrid-table-footer
+      padding: 10px 0 0 0
+      height: 50px
+      margin: auto
+      width: 100%
+      background: #f2f2f2
+      .dropdown-toggle
+        background: #ffffff
+        color: #000
+        border-color: #dee2e6
 </style>

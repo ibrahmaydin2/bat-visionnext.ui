@@ -112,9 +112,16 @@ export const store = new Vuex.Store({
       commit('setTableData', [])
       commit('bigLoaded', true)
       let dataQuery = {}
+      let search = []
+      if (query.search) {
+        search = query.search
+      }
       if (query.sort) {
+        
         dataQuery = {
-          'AndConditionModel': {},
+          'AndConditionModel': {
+            search
+          },
           'branchId': 1,
           'pagerecordCount': query.count,
           'page': query.page
@@ -200,114 +207,6 @@ export const store = new Vuex.Store({
           document.getElementById('submitLoader').style.display = 'none'
           commit('showAlert', { type: 'danger', msg: err })
         })
-    },
-    updateData ({ commit }, query) {
-      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
-      document.getElementById('submitButton').disabled = true
-      document.getElementById('submitLoaderText').style.display = 'none'
-      document.getElementById('submitLoader').style.display = 'block'
-      return axios.post('APIADRESI/' + query.id, query, authHeader)
-        .then(res => {
-          commit('showAlert', { type: 'success', msg: i18n.t('form.updateok') })
-          router.push({name: query.return})
-          document.getElementById('submitButton').disabled = false
-          document.getElementById('submitLoaderText').style.display = 'block'
-          document.getElementById('submitLoader').style.display = 'none'
-        })
-        .catch(err => {
-          document.getElementById('submitButton').disabled = false
-          document.getElementById('submitLoaderText').style.display = 'block'
-          document.getElementById('submitLoader').style.display = 'none'
-          commit('showAlert', { type: 'danger', msg: err })
-        })
-    },
-    getSearchRes ({ commit }, query) {
-      commit('bigLoaded', true)
-      commit('setSearchRes', [])
-      return axios.post('WorkOrder/WorkOrderOperations.svc/json/Search', query.info)
-        .then(res => {
-          switch (res.status) {
-            case 200:
-              if (res.data.ListModel.TotalRowCount >= 1) {
-                commit('setErrorMessage', null)
-                commit('setSearchRes', res.data.ListModel)
-              } else {
-                commit('setErrorMessage', 'Kayıt bulunamadı. Lütfen yeniden deneyin.')
-              }
-              commit('bigLoaded', false)
-              break
-            case 900:
-              commit('logout')
-              break
-            default:
-              commit('setSearchRes', [])
-              commit('showAlert', { type: 'error', msg: res.data.message })
-            break
-          }
-        })
-        .catch(err => {
-          commit('showAlert', { type: 'danger', msg: err })
-          commit('setSearchRes', [])
-          commit('bigLoaded', false)
-        })
-    },
-    insert ({ commit }, query) {
-      commit('bigLoaded', true)
-      let dataShowEmail = {
-        'Authentication': {
-        'Key': localStorage.getItem('Key'),
-        'LanguageId': localStorage.getItem('LanguageId')
-        },
-        'Model': query.info
-      }
-      
-      return axios.post('WorkOrder/WorkOrderOperations.svc/json/Insert', dataShowEmail)
-        .then(res => {
-          switch (res.status) {
-            case 200:
-              commit('bigLoaded', false)
-            break
-            case 900:
-              commit('logout')
-              break
-            default:
-              commit('showAlert', { type: 'error', msg: res.data.message })
-            break
-          }
-        })
-        .catch(err => {
-          commit('showAlert', { type: 'danger', msg: err })
-          commit('bigLoaded', false)
-        })
-    },
-    update ({ commit }, query) {
-      commit('bigLoaded', true)
-      let dataShowEmail = {
-        'Authentication': {
-        'Key': localStorage.getItem('Key'),
-        'LanguageId': localStorage.getItem('LanguageId')
-        },
-        'Model': query.info
-      }
-
-      return axios.post('WorkOrder/WorkOrderOperations.svc/json/Update', dataShowEmail)
-        .then(res => {
-          switch (res.status) {
-            case 200:
-              commit('bigLoaded', false)
-            break
-            case 900:
-              commit('logout')
-              break
-            default:
-              commit('showAlert', { type: 'error', msg: res.data.message })
-            break
-          }
-        })
-        .catch(err => {
-          commit('showAlert', { type: 'danger', msg: err })
-          commit('bigLoaded', false)
-        })
     }
   },
   mutations: {
@@ -361,7 +260,8 @@ export const store = new Vuex.Store({
       state.tableData = payload
     },
     setTableRows (state, payload) {
-      state.tableRows = payload
+      const trows = payload
+      state.tableRows = trows
     },
     setTableOperations (state, payload) {
       state.tableOperations = payload

@@ -21,6 +21,7 @@ import VueTheMask from 'vue-the-mask'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 
 import draggable from 'vuedraggable'
+import VueGoogleCharts from 'vue-google-charts'
 
 import Carousel from './components/Carousel'
 import Navigation from './components/Navigation'
@@ -42,6 +43,7 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 Vue.use(Autocomplete)
 Vue.use(VueTheMask)
+Vue.use(VueGoogleCharts)
 
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
