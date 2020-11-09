@@ -176,12 +176,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ColorId')">
+              <b-form-group :label="$t('insert.Model_KindId')">
                 <v-select :options="form.ColorId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ColorId')">
+              <b-form-group :label="$t('insert.Model_UnitSetId')">
                 <v-select :options="form.ColorId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -306,7 +306,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemBarcodes')">
+        <b-tab :title="$t('insert.ItemOrderQuotas')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.Model_BeginDate')">

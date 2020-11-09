@@ -125,6 +125,18 @@
               </b-form-group>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group label="Tip">
+                <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group label="Müşteri Bölgesi">
+                <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
         </b-tab>
         <b-tab :title="$t('insert.locations')">
         </b-tab>
