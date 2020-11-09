@@ -39,7 +39,7 @@ export default {
       padding: .5rem 15px 0 15px
     & section
       padding: .5rem 15px 0 15px
-      background: #f2f2f2
+      background: #f5f5f5
     & h3
       display: block
       font-size: 14px

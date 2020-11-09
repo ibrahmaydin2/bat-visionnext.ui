@@ -7,15 +7,15 @@
         </div> -->
         <router-link class="asc__header-logo" :to="{name: 'Dashboard'}"><img :src="logo.header"></router-link>
         <Shortcuts class="d-none d-lg-inline-block" />
-        <b-button class="d-inline-block d-md-none float-right" @click="collapseNav()">
+        <b-button class="d-inline-block d-lg-none float-right" @click="collapseNav()">
           <i class="fas fa-bars" />
         </b-button>
         <!-- <div @click="collapseNav()" :class="style.icon">
           <i class="fas fa-bars"></i>
         </div> -->
       </b-col>
-      <b-col md="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
-        <b-dropdown id="asc__header-userBox" variant="white" class="d-none d-md-inline-block">
+      <b-col lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
+        <b-dropdown id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
             <b>{{loginUser.company}}</b> {{loginUser.name}}
           </template>

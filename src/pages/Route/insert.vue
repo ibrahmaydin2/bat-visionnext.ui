@@ -5,9 +5,9 @@
         <Breadcrumb />
         <div>
           <router-link :to="{name: 'Dashboard' }">
-            <b-button size="sm" variant="outline-danger">Cancel</b-button>
+            <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
           </router-link>
-          <b-button @click="save()" size="sm" variant="success">Save</b-button>
+          <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
         </div>
       </header>
     </b-col>
@@ -137,7 +137,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <b-tab :title="$t('insert.locations')">
         </b-tab>
       </b-tabs>
     </b-col>
