@@ -53,41 +53,41 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.routeGroup')">
                 <v-select :options="form.rotaGroups" @input="selectedRotaGroup" label="title"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.routeClass')">
                 <v-select :options="form.rotaClasses" @input="selectedRotaClass" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicle')">
                 <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.personel')">
                 <v-select :options="form.personels" @input="selectedPersonel" label="title"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.supervisor')">
                 <v-select :options="form.supervisors" @input="selectedSupervisor" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.control')">
                 <v-select :options="form.controls" @input="selectedControl" label="title"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group
                 :label="$t('insert.multiDayRoute')"
               >
@@ -97,7 +97,7 @@
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
-            <b-col cols="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group
                 :label="$t('insert.superRoute')"
               >
@@ -109,17 +109,17 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.city')">
                 <v-select :options="cities" @input="selectedCity" label="il"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.distirict')">
                 <v-select :options="distiricts" @input="selectedDistirict" label="ilce"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
+            <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.town')">
                 <b-form-input type="text" v-model="form.town"/>
               </b-form-group>
