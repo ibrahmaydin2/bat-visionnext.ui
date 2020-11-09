@@ -40,7 +40,15 @@
                 <i class="fas fa-th" />
               </template>
               <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                <i class="far fa-circle" /> {{ opt.Title }}
+                <router-link :to="{name: $route.name + opt.Action, params: {url: r.Code}}">
+                  <i class="far fa-circle" /> {{ opt.Title }}
+                </router-link>
+                <!-- <router-link v-if="opt.Action === 'Update'" :to="{name: $route.name + 'Update', params: {url: r.Code}}">
+                  <i class="far fa-circle" /> {{ opt.Title }}
+                </router-link>
+                <router-link v-else-if="opt.Action === 'Get'" :to="{name: $route.name + 'Get', params: {url: r.Code}}">
+                  <i class="far fa-circle" /> {{ opt.Title }}
+                </router-link> -->
               </b-dropdown-item>
               <!--<b-dropdown-divider />-->
             </b-dropdown>

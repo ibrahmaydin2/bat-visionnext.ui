@@ -7,7 +7,11 @@
     "other": "Diğer",
     "Route": "Rota Kayıtları",
     "Employee": "Personel Yönetimi",
-    "Vehicle": "Araç Ana Kayıtları"
+    "Vehicle": "Araç Ana Kayıtları",
+    "Item": "Ürün Kayıtları",
+    "Branch": "Şube Kayıtları",
+    "Warehouse": "Depo Kayıtları",
+    "Customer": "Müşteri Kayıtları"
   },
   "router": {
     "WorkOrder": "Work Order",
@@ -28,7 +32,23 @@
     "VehicleUpdate": "Araç Düzenle",
     "EmployeeUpdate": "Personel Düzenle",
     "VehicleInsert": "Yeni Araç",
-    "EmployeeInsert": "Yeni Personel"
+    "EmployeeInsert": "Yeni Personel",
+    "Item": "Ürün Kayıtları",
+    "ItemGet": "Ürün Görüntüle",
+    "ItemUpdate": "Ürün Güncelle",
+    "ItemInsert": "Yeni Ürün",
+    "Branch": "Şube Kayıtları",
+    "BranchGet": "Şube Görüntüle",
+    "BranchUpdate": "Şube Güncelle",
+    "BranchInsert": "Yeni Şube",
+    "Warehouse": "Depo Kayıtları",
+    "WarehouseGet": "Depo Görüntüle",
+    "WarehouseUpdate": "Depo Güncelle",
+    "WarehouseInsert": "Yeni Depo",
+    "Customer": "Müşteri Kayıtları",
+    "CustomerGet": "Müşteri Görüntüle",
+    "CustomerUpdate": "Müşteri Güncelle",
+    "CustomerInsert": "Yeni Müşteri"
   },
   "insert": {
     "detail": "Detaylar",

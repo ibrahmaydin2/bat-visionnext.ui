@@ -1,22 +1,29 @@
 <template>
-  <b-overlay :show="bigLoading" rounded="sm">
-    <b-card class="asc__insertPage">
-      <router-view/>
-    </b-card>
-  </b-overlay>
+  <b-container fluid>
+    <Navigation/>
+    <Header/>
+    <b-row>
+      <b-col cols="12">
+        <div :class="style.viewPush">
+          <b-overlay :show="bigLoading" rounded="sm">
+            <b-card class="asc__updatePage" no-body>
+              <router-view/>
+            </b-card>
+          </b-overlay>
+        </div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 <script>
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      // pageTitle: this.$route.meta.title
     }
   },
   computed: {
-    ...mapState(['bigLoading'])
-  },
-  methods: {
+    ...mapState(['style', 'bigLoading'])
   }
 }
 </script>
@@ -24,10 +31,15 @@ export default {
   .asc__general-addingLoader
     display: none
     color: #ffa300
-  .asc__insertPage
+  .asc__updatePage
     & header
-      display: block
-      padding: .5rem 0
+      display: flex
+      align-items: center
+      justify-content: space-between
+      padding: .5rem 15px 0 15px
+    & section
+      padding: .5rem 15px 0 15px
+      background: #f5f5f5
     & h3
       display: block
       font-size: 14px
@@ -48,6 +60,7 @@ export default {
         margin-right: 5px
       & span
         font-weight: bold
+    .asc__updatePage-content-head
     .tabs
       .nav-tabs
         background: #e4e4e4
@@ -64,10 +77,10 @@ export default {
         padding: 1rem 15px
         background: #fbfbfb
         min-height: 60vh
-  .asc__insertPage
+  .asc__updatePage
     .card-body
       padding-top: 0px !important
-    .asc__insertPage-h3
+    .asc__updatePage-h3
       font-size: 14px
       font-weight: 700
       background: #fff
@@ -75,7 +88,7 @@ export default {
       padding: 0px
       line-height: 36px
       border-bottom: 2px #ddd solid
-    .asc__insertPage-top
+    .asc__updatePage-top
       border-bottom: 2px #ddd solid
       margin: 5px 0 10px 0px
       font-size: 12px
@@ -86,12 +99,12 @@ export default {
         margin: 0px
         padding: 0px
         line-height: 36px
-      .asc__insertPage-top-Create
+      .asc__updatePage-top-Create
         font-size: 12px !important
         line-height: 22px !important
         margin-top: 0px !important
 
-    .asc__insertPage-header-Dropdown
+    .asc__updatePage-header-Dropdown
       float: left
       margin: 0 10px 0 0
       & button
@@ -109,7 +122,7 @@ export default {
         color: #333 !important
         font-size: 12px !important
         padding: 5px 10px !important
-    .asc__insertPage-header-Search
+    .asc__updatePage-header-Search
       width: 200px !important
       margin: 0 !important
       float: left !important
@@ -119,7 +132,7 @@ export default {
       & input
         font-size: 12px !important
         padding: 5px 10px !important
-    .asc__insertPage-header-SelectRows
+    .asc__updatePage-header-SelectRows
       width: 140px
       margin: 0 0px 0 0
       float: left
@@ -154,7 +167,7 @@ export default {
           padding: 2px !important
           background: #ffa300 !important
           color: #fff !important
-    .asc__insertPage-header-Download
+    .asc__updatePage-header-Download
       float: left
       margin: 0 0 0 0
       & button
@@ -170,10 +183,10 @@ export default {
         color: #333 !important
         font-size: 12px !important
         padding: 5px 10px !important
-    .asc__insertPage-header
+    .asc__updatePage-header
       background: #FDFDFD !important
       border-color: #EAEAEA !important
-      .asc__insertPage-header-h4
+      .asc__updatePage-header-h4
         font-size: 16px
         font-style: italic
         font-weight: 700
@@ -186,7 +199,7 @@ export default {
       .form-group
         .col-form-label
           line-height: 10px !important
-      .asc__insertPage-header-table
+      .asc__updatePage-header-table
         & tr
           line-height: 18px !important
           border-bottom: 1px #ddd solid !important
@@ -195,11 +208,11 @@ export default {
             border-bottom: none !important
           & td
             padding: 5px 0px !important
-    .asc__insertPage-body
+    .asc__updatePage-body
       background: #FDFDFD !important
       border-color: #EAEAEA !important
-      .asc__insertPage-body-h5
+      .asc__updatePage-body-h5
         font-weight: bold
         font-size: 14px
         font-style: italic
-</style>
+  </style>

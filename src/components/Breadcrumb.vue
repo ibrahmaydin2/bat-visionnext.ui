@@ -9,14 +9,18 @@
     <b-breadcrumb-item :to="{name: baseName}">
       {{ $t('router.'+baseName) }}
     </b-breadcrumb-item>
-    <b-breadcrumb-item active>
+    <b-breadcrumb-item :active="!title">
       {{ $t('router.'+routeName) }}
+    </b-breadcrumb-item>
+    <b-breadcrumb-item v-if="title" active>
+      {{ title }}
     </b-breadcrumb-item>
   </b-breadcrumb>
 </template>
 <script>
 import { mapState } from 'vuex'
 export default {
+  props: ['title'],
   data () {
     return {
       baseName: this.$route.meta.baseLink,

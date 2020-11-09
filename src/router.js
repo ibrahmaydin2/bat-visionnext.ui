@@ -45,6 +45,26 @@ import EmployeeGet from '@/pages/Employee/get' // fullpage görünümü
 import EmployeeInsert from '@/pages/Employee/insert' // yeni kayıt
 import EmployeeUpdate from '@/pages/Employee/update' // güncelleme
 
+import ItemIndex from '@/pages/Item/' // liste ekranı
+import ItemGet from '@/pages/Item/get' // fullpage görünümü
+import ItemInsert from '@/pages/Item/insert' // yeni kayıt
+import ItemUpdate from '@/pages/Item/update' // güncelleme
+
+import BranchIndex from '@/pages/Branch/' // liste ekranı
+import BranchGet from '@/pages/Branch/get' // fullpage görünümü
+import BranchInsert from '@/pages/Branch/insert' // yeni kayıt
+import BranchUpdate from '@/pages/Branch/update' // güncelleme
+
+import WarehouseIndex from '@/pages/Warehouse/' // liste ekranı
+import WarehouseGet from '@/pages/Warehouse/get' // fullpage görünümü
+import WarehouseInsert from '@/pages/Warehouse/insert' // yeni kayıt
+import WarehouseUpdate from '@/pages/Warehouse/update' // güncelleme
+
+import CustomerIndex from '@/pages/Customer/' // liste ekranı
+import CustomerGet from '@/pages/Customer/get' // fullpage görünümü
+import CustomerInsert from '@/pages/Customer/insert' // yeni kayıt
+import CustomerUpdate from '@/pages/Customer/update' // güncelleme
+
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
 import Register from '@/views/Auth/register'
@@ -76,126 +96,52 @@ const routes = [
         redirect: '/Dashboard',
         component: LayoutIndex, // listeleme ekranları
         children: [
-          {
-            path: '/Route',
-            name: 'Route',
-            component: RouteIndex,
-            meta: {
-              title: i18n.t('router.Route'),
-              createLink: 'RouteInsert'
-            }
-          },
-          {
-            path: '/Vehicle',
-            name: 'Vehicle',
-            component: VehicleIndex,
-            meta: {
-              title: i18n.t('router.Vehicle'),
-              createLink: 'VehicleInsert'
-            }
-          },
-          {
-            path: '/Employee',
-            name: 'Employee',
-            component: EmployeeIndex,
-            meta: {
-              title: i18n.t('router.Employee'),
-              createLink: 'EmployeeInsert'
-            }
-          }
+          { path: '/Route', name: 'Route', component: RouteIndex, meta: { title: i18n.t('router.Route'), createLink: 'RouteInsert' } },
+          { path: '/Vehicle', name: 'Vehicle', component: VehicleIndex, meta: { title: i18n.t('router.Vehicle'), createLink: 'VehicleInsert' } },
+          { path: '/Employee', name: 'Employee', component: EmployeeIndex, meta: { title: i18n.t('router.Employee'), createLink: 'EmployeeInsert' } },
+          { path: '/Item', name: 'Item', component: ItemIndex, meta: { title: i18n.t('router.Item'), createLink: 'ItemInsert' } },
+          { path: '/Branch', name: 'Branch', component: BranchIndex, meta: { title: i18n.t('router.Branch'), createLink: 'BranchInsert' } },
+          { path: '/Warehouse', name: 'Warehouse', component: WarehouseIndex, meta: { title: i18n.t('router.Warehouse'), createLink: 'WarehouseInsert' } },
+          { path: '/Customer', name: 'Customer', component: CustomerIndex, meta: { title: i18n.t('router.Customer'), createLink: 'CustomerInsert' } }
         ]
       },
       {
         path: '/Get',
         component: LayoutGet, // görüntüleme ekranları
         children: [
-          {
-            path: '/Route/:url',
-            name: 'RouteGet',
-            component: RouteGet,
-            meta: {
-              title: i18n.t('router.RouteGet')
-            }
-          },
-          {
-            path: '/Vehicle/:url',
-            name: 'VehicleGet',
-            component: VehicleGet,
-            meta: {
-              title: i18n.t('router.VehicleGet')
-            }
-          },
-          {
-            path: '/Employee/:url',
-            name: 'EmployeeGet',
-            component: EmployeeGet,
-            meta: {
-              title: i18n.t('router.EmployeeGet')
-            }
-          }
+          { path: '/Route/:url', name: 'RouteGet', component: RouteGet, meta: { title: i18n.t('router.RouteGet'), baseLink: 'Route' } },
+          { path: '/Vehicle/:url', name: 'VehicleGet', component: VehicleGet, meta: { title: i18n.t('router.VehicleGet'), baseLink: 'Vehicle' } },
+          { path: '/Employee/:url', name: 'EmployeeGet', component: EmployeeGet, meta: { title: i18n.t('router.EmployeeGet'), baseLink: 'Employee' } },
+          { path: '/Item/:url', name: 'ItemGet', component: ItemGet, meta: { title: i18n.t('router.ItemGet'), baseLink: 'Item' } },
+          { path: '/Branch/:url', name: 'BranchGet', component: BranchGet, meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
+          { path: '/Warehouse/:url', name: 'WarehouseGet', component: WarehouseGet, meta: { title: i18n.t('router.WarehouseGet'), baseLink: 'Warehouse' } },
+          { path: '/Customer/:url', name: 'CustomerGet', component: CustomerGet, meta: { title: i18n.t('router.CustomerGet'), baseLink: 'Customer' } }
         ]
       },
       {
         path: '/Update',
         component: LayoutUpdate, // görüntüleme ekranları
         children: [
-          {
-            path: '/Route/Update/:url',
-            name: 'RouteUpdate',
-            component: RouteUpdate,
-            meta: {
-              title: i18n.t('router.RouteUpdate')
-            }
-          },
-          {
-            path: '/Vehicle/Update/:url',
-            name: 'VehicleUpdate',
-            component: VehicleUpdate,
-            meta: {
-              title: i18n.t('router.VehicleUpdate')
-            }
-          },
-          {
-            path: '/Employee/Update/:url',
-            name: 'EmployeeUpdate',
-            component: EmployeeUpdate,
-            meta: {
-              title: i18n.t('router.EmployeeUpdate')
-            }
-          }
+          { path: '/Update/Route/:url', name: 'RouteUpdate', component: RouteUpdate, meta: { title: i18n.t('router.RouteUpdate'), baseLink: 'Route' } },
+          { path: '/Update/Vehicle/:url', name: 'VehicleUpdate', component: VehicleUpdate, meta: { title: i18n.t('router.VehicleUpdate'), baseLink: 'Vehicle' } },
+          { path: '/Update/Employee/:url', name: 'EmployeeUpdate', component: EmployeeUpdate, meta: { title: i18n.t('router.EmployeeUpdate'), baseLink: 'Employee' } },
+          { path: '/Update/Item/:url', name: 'ItemUpdate', component: ItemUpdate, meta: { title: i18n.t('router.ItemUpdate'), baseLink: 'Item' } },
+          { path: '/Update/Branch/:url', name: 'BranchUpdate', component: BranchUpdate, meta: { title: i18n.t('router.BranchUpdate'), baseLink: 'Branch' } },
+          { path: '/Update/Warehouse/:url', name: 'WarehouseUpdate', component: WarehouseUpdate, meta: { title: i18n.t('router.WarehouseUpdate'), baseLink: 'Warehouse' } },
+          { path: '/Update/Customer/:url', name: 'CustomerUpdate', component: CustomerUpdate, meta: { title: i18n.t('router.CustomerUpdate'), baseLink: 'Customer' } }
         ]
       },
       {
         path: '/Insert',
         component: LayoutInsert, // oluşturma ekranları
         children: [
-          {
-            path: '/Insert/Route',
-            name: 'RouteInsert',
-            component: RouteInsert,
-            meta: {
-              title: i18n.t('router.RouteInsert'),
-              baseLink: 'Route'
-            }
-          },
-          {
-            path: '/Insert/Vehicle',
-            name: 'VehicleInsert',
-            component: VehicleInsert,
-            meta: {
-              title: i18n.t('router.VehicleInsert'),
-              baseLink: 'Vehicle'
-            }
-          },
-          {
-            path: '/Insert/Employee',
-            name: 'EmployeeInsert',
-            component: EmployeeInsert,
-            meta: {
-              title: i18n.t('router.EmployeeInsert'),
-              baseLink: 'Employee'
-            }
-          }
+          { path: '/Insert/Route', name: 'RouteInsert', component: RouteInsert, meta: { title: i18n.t('router.RouteInsert'), baseLink: 'Route' } },
+          { path: '/Insert/Vehicle', name: 'VehicleInsert', component: VehicleInsert, meta: { title: i18n.t('router.VehicleInsert'), baseLink: 'Vehicle' } },
+          { path: '/Insert/Employee', name: 'EmployeeInsert', component: EmployeeInsert, meta: { title: i18n.t('router.EmployeeInsert'), baseLink: 'Employee' } },
+          { path: '/Insert/Item', name: 'ItemInsert', component: ItemInsert, meta: { title: i18n.t('router.ItemInsert'), baseLink: 'Item' } },
+          { path: '/Insert/Branch', name: 'BranchInsert', component: BranchInsert, meta: { title: i18n.t('router.BranchInsert'), baseLink: 'Branch' } },
+          { path: '/Insert/Warehouse', name: 'WarehouseInsert', component: WarehouseInsert, meta: { title: i18n.t('router.WarehouseInsert'), baseLink: 'Warehouse' } },
+          { path: '/Insert/Customer', name: 'CustomerInsert', component: CustomerInsert, meta: { title: i18n.t('router.CustomerInsert'), baseLink: 'Customer' } }
         ]
       }
     ]
