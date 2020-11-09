@@ -2,19 +2,23 @@
   <b-row>
     <b-col cols="12">
       <header>
-        <Breadcrumb />
-        <div>
-          <router-link :to="{name: 'Dashboard' }">
-            <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
-          </router-link>
-          <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
-        </div>
+        <b-row>
+          <b-col cols="12" md="6">
+            <Breadcrumb />
+          </b-col>
+          <b-col cols="12" md="6">
+            <router-link :to="{name: 'Dashboard' }">
+              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+            </router-link>
+            <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
+          </b-col>
+        </b-row>
       </header>
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <!-- <b-col cols="2">
+          <!-- <b-col cols="12" md="2">
             <b-form-group>
               <b-form-radio-group id="radio-group-2" v-model="form.active" name="radio-sub-component">
                 <b-form-radio value="1">{{$t('insert.active')}}</b-form-radio>
@@ -22,26 +26,26 @@
               </b-form-radio-group>
             </b-form-group>
           </b-col> -->
-           <b-col cols="2">
+           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.code')"
             >
               <b-form-input type="text" v-model="form.code"/>
             </b-form-group>
           </b-col>
-          <b-col cols="2">
+          <b-col cols="12" md="2">
             <b-form-group :label="$t('insert.rotaType')">
               <v-select :options="form.rotaTypes" @input="selectedRota" label="title"></v-select>
             </b-form-group>
           </b-col>
-          <b-col cols="2">
+          <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.name')"
             >
               <b-form-input type="text" v-model="form.name"/>
             </b-form-group>
           </b-col>
-          <b-col cols="2">
+          <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.state')"
             >
@@ -50,7 +54,7 @@
               </b-form-checkbox>
             </b-form-group>
           </b-col>
-          <!-- <b-col cols="2" offset="2">
+          <!-- <b-col cols="12" md="2" offset="2">
             <b-form-group
               :label="$t('insert.locations')"
             >
