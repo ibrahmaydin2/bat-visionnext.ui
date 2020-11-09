@@ -1,71 +1,66 @@
 <template>
-    <div>
-        <b-sidebar id="sidebar-right" class="asc__sidebar-right" text-variant="light" right backdrop shadow :title="$t('sidebar.shortcuts')" @hidden="hidden">
-          <div class="p-3">
-            <!-- <i class="fa fa-star-half-alt font-weight-bold text-white"></i>
-            <span class="font-weight-bold text-white"> Kısayollar</span>
-            <p class="mt-3 text-white font-weight-bold">Kısayol Oluştur</p> -->
-            <template>
-              <div v-show="!showEdit">
-                <div role="group">
-                  <label class="mb-0 text-white" for="input-live">Description1</label>
-                  <b-form-input
-                    v-model="description1"
-                    trim
-                    class="bg-transparent border-white text-white"
-                  ></b-form-input>
-                </div>
-                <div class="mt-3" role="group">
-                  <label class="mb-0 text-white" for="input-live">LinkUrl</label>
-                  <b-form-input
-                    v-model="linkUrl"
-                    trim
-                    class="bg-transparent border-white text-white"
-                  ></b-form-input>
-                </div>
-                <div class="mt-3 w-100 text-right asc__add-shortcut-btn">
-                  <b-button variant="outline-light" @click="addShortcut()">{{$t('sidebar.createShortcut')}}</b-button>
-                </div>
-              </div>
-              <div v-show="showEdit">
-                <div role="group">
-                  <label class="mb-0 text-white" for="input-live">Description1</label>
-                  <b-form-input
-                    v-model="description1"
-                    trim
-                    class="bg-transparent border-white text-white"
-                  ></b-form-input>
-                </div>
-                <div class="mt-3" role="group">
-                  <label class="mb-0 text-white" for="input-live">LinkUrl</label>
-                  <b-form-input
-                    v-model="linkUrl"
-                    trim
-                    class="bg-transparent border-white text-white"
-                  ></b-form-input>
-                </div>
-                <div class="mt-3 w-100 text-right asc__add-shortcut-btn edit">
-                  <i class="fa fa-trash fa-2x"></i>
-                  <b-button @click="updateShortcut" variant="outline-light">{{$t('sidebar.update')}}</b-button>
-                </div>
-              </div>
-              <p class="mt-3 text-white font-weight-bold">{{$t('sidebar.savedShortcuts')}}</p>
-              <ul class="asc__sidebar-shortcuts">
-                <li v-for="(item,i) in items" :key="'i'+i">
-                  <router-link class="text-white" exact :to="{name: item.router}">
-                    <i :class="item.icon ? item.icon : ''"></i>
-                    {{item.title}}
-                  </router-link>
-                  <i @click="editShortcut(item)" class="fa fa-edit asc__shortcut-edit"></i>
-                </li>
-              </ul>
-            </template>
+  <b-sidebar id="sidebar-right" class="asc__sidebar-right" text-variant="light" right backdrop shadow :title="$t('sidebar.shortcuts')" @hidden="hidden">
+    <div class="p-3">
+      <!-- <i class="fa fa-star-half-alt font-weight-bold text-white"></i>
+      <span class="font-weight-bold text-white"> Kısayollar</span>
+      <p class="mt-3 text-white font-weight-bold">Kısayol Oluştur</p> -->
+      <template>
+        <div v-show="!showEdit">
+          <div role="group">
+            <label class="mb-0 text-white" for="input-live">Description1</label>
+            <b-form-input
+              v-model="description1"
+              trim
+              class="bg-transparent border-white text-white"
+            ></b-form-input>
           </div>
-        </b-sidebar>
-        <b-tooltip target="shortcutsIcon" triggers="hover" placement="left">
-            {{$t('sidebar.shortcuts')}}
-        </b-tooltip>
+          <div class="mt-3" role="group">
+            <label class="mb-0 text-white" for="input-live">LinkUrl</label>
+            <b-form-input
+              v-model="linkUrl"
+              trim
+              class="bg-transparent border-white text-white"
+            ></b-form-input>
+          </div>
+          <div class="mt-3 w-100 text-right asc__add-shortcut-btn">
+            <b-button variant="outline-light" @click="addShortcut()">{{$t('sidebar.createShortcut')}}</b-button>
+          </div>
+        </div>
+        <div v-show="showEdit">
+          <div role="group">
+            <label class="mb-0 text-white" for="input-live">Description1</label>
+            <b-form-input
+              v-model="description1"
+              trim
+              class="bg-transparent border-white text-white"
+            ></b-form-input>
+          </div>
+          <div class="mt-3" role="group">
+            <label class="mb-0 text-white" for="input-live">LinkUrl</label>
+            <b-form-input
+              v-model="linkUrl"
+              trim
+              class="bg-transparent border-white text-white"
+            ></b-form-input>
+          </div>
+          <div class="mt-3 w-100 text-right asc__add-shortcut-btn edit">
+            <i class="fa fa-trash fa-2x"></i>
+            <b-button @click="updateShortcut" variant="outline-light">{{$t('sidebar.update')}}</b-button>
+          </div>
+        </div>
+        <p class="mt-3 text-white font-weight-bold">{{$t('sidebar.savedShortcuts')}}</p>
+        <ul class="asc__sidebar-shortcuts">
+          <li v-for="(item,i) in items" :key="'i'+i">
+            <router-link class="text-white" exact :to="{name: item.router}">
+              <i :class="item.icon ? item.icon : ''"></i>
+              {{item.title}}
+            </router-link>
+            <i @click="editShortcut(item)" class="fa fa-edit asc__shortcut-edit"></i>
+          </li>
+        </ul>
+      </template>
     </div>
+  </b-sidebar>
 </template>
 <script>
 import { shortcut } from './nav.js'

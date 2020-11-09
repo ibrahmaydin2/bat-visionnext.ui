@@ -33,8 +33,13 @@ export default {
     color: #ffa300
   .asc__insertPage
     & header
-      display: block
-      padding: .5rem 15px
+      display: flex
+      align-items: center
+      justify-content: space-between
+      padding: .5rem 15px 0 15px
+    & section
+      padding: .5rem 15px 0 15px
+      background: #f2f2f2
     & h3
       display: block
       font-size: 14px
@@ -55,6 +60,7 @@ export default {
         margin-right: 5px
       & span
         font-weight: bold
+    .asc__insertPage-content-head
     .tabs
       .nav-tabs
         background: #e4e4e4

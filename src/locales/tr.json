@@ -4,7 +4,8 @@
     "logout": "Oturumu Kapat",
     "changePassword": "Şifremi Değiştir",
     "workOrder": "Work Order",
-    "other": "Diğer"
+    "other": "Diğer",
+    "Route": "Rota Kayıtları"
   },
   "router": {
     "WorkOrder": "Work Order",
@@ -13,7 +14,11 @@
     "WorkOrderUpdate": "Work Order Düzenle",
     "WorkOrderGet": "Work Order Görüntüle",
     "Search": "Arama Sonuçları",
-    "Report": "Rapor"
+    "Report": "Rapor",
+    "Route": "Rota Kayıtları",
+    "RouteInsert": "Yeni Rota",
+    "RouteUpdate": "Rota Güncelle",
+    "RouteGet": "Rota Görüntüle"
   },
   "insert": {
     "detail": "Detaylar",

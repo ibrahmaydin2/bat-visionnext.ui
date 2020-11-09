@@ -6,18 +6,27 @@
     <!--<b-breadcrumb-item v-for="(it, i) in breadcrumbList" :key="'brc' + i">
       {{ it.title }}
     </b-breadcrumb-item>-->
-    <b-breadcrumb-item :to="{name: route}">
-      {{ $t('router.'+route) }}
+    <b-breadcrumb-item :to="{name: baseName}">
+      {{ $t('router.'+baseName) }}
     </b-breadcrumb-item>
     <b-breadcrumb-item active>
-      {{ title }}
+      {{ $t('router.'+routeName) }}
     </b-breadcrumb-item>
   </b-breadcrumb>
 </template>
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['title', 'route'],
+  data () {
+    return {
+      baseName: this.$route.meta.baseLink,
+      routeName: this.$route.name
+    }
+  },
+  mounted () {
+    this.baseName = this.$route.meta.baseLink
+    this.routeName = this.$route.name
+  },
   computed: {
     ...mapState(['breadcrumbList'])
   }

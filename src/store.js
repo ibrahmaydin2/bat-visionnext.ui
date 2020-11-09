@@ -61,19 +61,13 @@ export const store = new Vuex.Store({
       { value: 'today', title: 'Bu Günün Kayıtları' },
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
+    nextgrid: false,
     tableData: [],
     tableOperations: [],
     tableRows: [],
-    tableActions: [
-      { id: 1, text: i18n.t('list.show'), icon: 'user' },
-      { id: 2, text: i18n.t('list.edit'), icon: 'edit' },
-      { id: 3, text: i18n.t('list.print'), icon: 'print' }
-    ],
-    // proje gereksinimleri
     breadcrumbList: [],
     modalLoad: false,
     searchRes: [],
-    selectedRowKey: '',
     errorMessage: null
   },
   actions: {
@@ -117,25 +111,46 @@ export const store = new Vuex.Store({
     getTableData ({ commit }, query) { // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
       commit('setTableData', [])
       commit('bigLoaded', true)
-      return axios.post(query.action, query.number)
+      let dataQuery = {}
+      if (query.sort) {
+        dataQuery = {
+          'AndConditionModel': {},
+          'branchId': 1,
+          'pagerecordCount': query.count,
+          'page': query.page
+        }
+      } else {
+        dataQuery = {
+          'AndConditionModel': {},
+          'branchId': 1,
+          'pagerecordCount': query.count,
+          'page': query.page
+        }
+      }
+      commit('showNextgrid', false)
+      return axios.post(query.url, dataQuery)
         .then(res => {
           switch (res.status) {
-            case 201:
-              commit('setTableData', res.data.ticketInfosField)
+            case 200:
+              commit('showNextgrid', true)
               commit('bigLoaded', false)
+              commit('setTableData', res.data.ListModel)
             break
             case 900:
+              commit('bigLoaded', false)
               commit('logout')
               break
             default:
+              commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
             break
           }
         })
         .catch(err => {
-          commit('showAlert', { type: 'danger', msg: err })
-          commit('setTableData', [])
-          commit('bigLoaded', false)
+          console.log(err.message)
+          // commit('showAlert', { type: 'danger', msg: err })
+          // commit('setTableData', [])
+          // commit('bigLoaded', false)
         })
     },
     getTableGetData ({ commit }, query) { // tüm index ekranlarının tablosunu GET metoduyla besleyen fonksiyondur.
@@ -154,19 +169,24 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       return axios.get(query.url + query.params)
         .then(res => {
-          commit('setTableOperations', res.data.uiPageModels[0])
+          if (res.data.IsCompleted === true) {
+            commit('setTableOperations', res.data.UIPageModels[0])
+            commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+          } else {
+            commit('showAlert', { type: 'warning', msg: res.data.Message })
+          }
           commit('bigLoaded', false)
         })
         .catch(err => {
-          console.log(err)
+          commit('showAlert', { type: 'warning', msg: err })
         })
     },
-    createAny ({ commit }, query) {
+    createData ({ commit }, query) {
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
       document.getElementById('submitLoaderText').style.display = 'none'
       document.getElementById('submitLoader').style.display = 'block'
-      return axios.post('anyApi/create', query, authHeader)
+      return axios.post('APIADRESI', query, authHeader)
         .then(res => {
           commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
           router.push({name: query.return})
@@ -181,12 +201,12 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
-    updateAny ({ commit }, query) {
+    updateData ({ commit }, query) {
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
       document.getElementById('submitLoaderText').style.display = 'none'
       document.getElementById('submitLoader').style.display = 'block'
-      return axios.post('anyApi/update/' + query.id, query, authHeader)
+      return axios.post('APIADRESI/' + query.id, query, authHeader)
         .then(res => {
           commit('showAlert', { type: 'success', msg: i18n.t('form.updateok') })
           router.push({name: query.return})
@@ -340,17 +360,14 @@ export const store = new Vuex.Store({
     setTableData (state, payload) {
       state.tableData = payload
     },
-    setTableOperations (state, payload) {
-      state.tableOperations = payload
-    },
     setTableRows (state, payload) {
       state.tableRows = payload
     },
-    setSelectedRowKey (state, payload) {
-      state.selectedRowKey = payload
+    setTableOperations (state, payload) {
+      state.tableOperations = payload
     },
-    indexTableActions (state, payload) {
-      state.tableActions = payload
+    showNextgrid (state, payload) {
+      state.nextgrid = payload
     },
     hideTableRow (state, payload) {
       state.tableRows[payload.row].visible = payload.visible

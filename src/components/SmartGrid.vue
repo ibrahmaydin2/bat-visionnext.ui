@@ -1,12 +1,11 @@
 <template>
   <div class="asc__smart">
-    <smart-grid id="grid"></smart-grid>
+    <smart-grid id="grid" />
     <smart-menu id="menu" mode="dropDown">
       <smart-menu-item data-id="clickedMe" label="<i class='fas fa-bell'></i>click me"></smart-menu-item>
       <smart-menu-item data-id="removedMe" label="<i class='fas fa-trash'></i>Remove Me"></smart-menu-item>
     </smart-menu>
-    <div id="log" class="mt-3"></div>
-
+    <div id="log" class="mt-3" />
     <div class="option">
       <button id="printRestrictBtn">print 0-50</button>
       <button id="printBtn">print all</button>
@@ -24,80 +23,86 @@
 import 'smart-webcomponents/source/styles/smart.default.css'
 import 'smart-webcomponents/source/modules/smart.grid.js'
 import 'smart-webcomponents/source/modules/smart.menu.js'
+import { dm } from './dumy.js'
+import { mapState } from 'vuex'
 export default {
-  props: ['items', 'columns', 'fields'],
-  name: 'app',
-  mounted () {
-    this.grid()
-    const grid = document.getElementById('grid')
-    const log = document.querySelector('#log')
-
-    grid.addEventListener('columnDragStart', function () {})
-    grid.onColumnDragStart = function (event) {
-      log.innerHTML = 'columnDragStart: ' + event.detail.column.label + ', index: ' + event.detail.index + '<br/>'
+  watch: {
+    smartgrid: function (e) {
+      if (e === true) {
+        this.grid(this.tableData.BaseModels, dm.RowColumns, this.tableOperations.RowFields)
+      }
     }
-    grid.onColumnDragging = function () {}
-    grid.onColumnDragEnd = function (event) {
-      log.innerHTML += 'columnDragEnd: ' + event.detail.column.label + ', index: ' + event.detail.index + ', new index: ' + event.detail.newIndex + '<br/>'
-    }
-    grid.onColumnDragCancel = function (event) {
-      log.innerHTML += 'columnDragCancel: ' + event.detail.column.label + '<br/>'
-    }
-
-    grid.addEventListener('rowDragging', function (event) {
-      log.innerHTML += 'columnDragEnd: ' + event.detail.column.label + ', index: ' + event.detail.index + ', new index: ' + event.detail.newIndex + '<br/>'
-    })
-
-    grid.addEventListener('filter', function (event) {
-      const detail = event.detail
-      const columns = detail.columns
-      const data = detail.data
-      console.log(detail, columns, data)
-    })
-    const xlsxBtn = document.querySelector('#xlsxBtn')
-    const pdfBtn = document.querySelector('#pdfBtn')
-    const csvBtn = document.querySelector('#csvBtn')
-    const tsvBtn = document.querySelector('#tsvBtn')
-    const xmlBtn = document.querySelector('#xmlBtn')
-    const htmlBtn = document.querySelector('#htmlBtn')
-    xlsxBtn.addEventListener('click', () => {
-      grid.exportData('xlsx')
-    })
-    pdfBtn.addEventListener('click', () => {
-      grid.exportData('pdf')
-    })
-    csvBtn.addEventListener('click', () => {
-      grid.exportData('csv')
-    })
-    tsvBtn.addEventListener('click', () => {
-      grid.exportData('tsv')
-    })
-    xmlBtn.addEventListener('click', () => {
-      grid.exportData('xml')
-    })
-    htmlBtn.addEventListener('click', () => {
-      grid.exportData('html')
-    })
-
-    const printBtn = document.querySelector('#printBtn')
-    const printRestrictBtn = document.querySelector('#printRestrictBtn')
-    printBtn.addEventListener('click', () => {
-      grid.print()
-    })
-    printRestrictBtn.addEventListener('click', () => {
-      grid.dataExport.viewStart = 25
-      grid.dataExport.viewEnd = 50
-      grid.dataExport.view = true
-      grid.print()
-      grid.dataExport.viewStart = 0
-      grid.dataExport.viewEnd = 50
-    })
+  },
+  computed: {
+    ...mapState(['smartgrid', 'tableData', 'tableOperations'])
   },
   methods: {
-    grid () {
-      const dataitems = this.items
-      const datacolums = this.columns
-      const datafields = this.fields
+    gridActions () {
+      const grid = document.getElementById('grid')
+      const log = document.querySelector('#log')
+
+      grid.addEventListener('columnDragStart', function () {})
+      grid.onColumnDragStart = function (event) {
+        log.innerHTML = 'columnDragStart: ' + event.detail.column.label + ', index: ' + event.detail.index + '<br/>'
+      }
+      grid.onColumnDragging = function () {}
+      grid.onColumnDragEnd = function (event) {
+        log.innerHTML += 'columnDragEnd: ' + event.detail.column.label + ', index: ' + event.detail.index + ', new index: ' + event.detail.newIndex + '<br/>'
+      }
+      grid.onColumnDragCancel = function (event) {
+        log.innerHTML += 'columnDragCancel: ' + event.detail.column.label + '<br/>'
+      }
+
+      grid.addEventListener('rowDragging', function (event) {
+        log.innerHTML += 'columnDragEnd: ' + event.detail.column.label + ', index: ' + event.detail.index + ', new index: ' + event.detail.newIndex + '<br/>'
+      })
+
+      grid.addEventListener('filter', function (event) {
+        const detail = event.detail
+        const columns = detail.columns
+        const data = detail.data
+        console.log(detail, columns, data)
+      })
+      const xlsxBtn = document.querySelector('#xlsxBtn')
+      const pdfBtn = document.querySelector('#pdfBtn')
+      const csvBtn = document.querySelector('#csvBtn')
+      const tsvBtn = document.querySelector('#tsvBtn')
+      const xmlBtn = document.querySelector('#xmlBtn')
+      const htmlBtn = document.querySelector('#htmlBtn')
+      xlsxBtn.addEventListener('click', () => {
+        grid.exportData('xlsx')
+      })
+      pdfBtn.addEventListener('click', () => {
+        grid.exportData('pdf')
+      })
+      csvBtn.addEventListener('click', () => {
+        grid.exportData('csv')
+      })
+      tsvBtn.addEventListener('click', () => {
+        grid.exportData('tsv')
+      })
+      xmlBtn.addEventListener('click', () => {
+        grid.exportData('xml')
+      })
+      htmlBtn.addEventListener('click', () => {
+        grid.exportData('html')
+      })
+
+      const printBtn = document.querySelector('#printBtn')
+      const printRestrictBtn = document.querySelector('#printRestrictBtn')
+      printBtn.addEventListener('click', () => {
+        grid.print()
+      })
+      printRestrictBtn.addEventListener('click', () => {
+        grid.dataExport.viewStart = 25
+        grid.dataExport.viewEnd = 50
+        grid.dataExport.view = true
+        grid.print()
+        grid.dataExport.viewStart = 0
+        grid.dataExport.viewEnd = 50
+      })
+    },
+    grid (d, c, f) {
       window.Smart(
         '#grid', class {
           get properties () {
@@ -208,17 +213,18 @@ export default {
                 }
               },
               */
-              columns: datacolums,
+              columns: c,
               dataSource: new window.Smart.DataAdapter(
                 {
-                  dataSource: dataitems,
-                  dataFields: datafields
+                  dataSource: d,
+                  dataFields: f
                 }
               )
             }
           }
         }
       )
+      this.gridActions()
     }
   }
 }
@@ -233,6 +239,7 @@ export default {
 <style lang="sass">
   .smart-grid
     width: 100%
+    height: 80vh
   .smart-menu
     height: auto !important
 </style>

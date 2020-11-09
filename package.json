@@ -19,8 +19,6 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.18.1",
-    "devextreme": "20.1.7",
-    "devextreme-vue": "20.1.7",
     "hooper": "^0.3.4",
     "jquery": "^3.5.1",
     "jszip": "^3.5.0",
@@ -34,6 +32,7 @@
     "vue-select": "^3.10.8",
     "vue-the-mask": "^0.11.1",
     "vue-toasted": "^1.1.28",
+    "vuedraggable": "^2.24.3",
     "vuejs-datepicker": "^0.9.29",
     "vuelidate": "^0.7.6",
     "vuex": "^3.5.1"

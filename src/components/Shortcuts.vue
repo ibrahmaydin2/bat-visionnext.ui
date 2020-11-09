@@ -8,7 +8,7 @@
         </router-link>
       </li>
     </ul>
-    <!-- <mega-menu :data="items" /> -->
+    <mega-menu :data="items" />
   </div>
 </template>
 <script>

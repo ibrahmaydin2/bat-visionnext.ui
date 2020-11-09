@@ -5,49 +5,81 @@
     <b-row class="mb-3">
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-card class="asc__listPage">
+          <b-card class="asc__listPage shadow">
             <b-row class="asc__listPage-Header">
               <b-col cols="12" sm="12" md="3" class="pl-0">
-                <h3>{{pageTitle}}</h3>
+                <h3>{{tableOperations.Name}}</h3>
               </b-col>
-              <b-col cols="12" sm="6" md="3">
-                <b-input-group class="asc__listPage-Header-Search d-none">
-                  <b-form-input />
-                  <b-input-group-append>
-                    <b-button variant="warning">{{$t('list.search')}}</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-col>
-              <b-col cols="12" sm="6" md="6" class="pr-0">
-                <b-dropdown id="selectedRows" right variant="white" :text="$t('list.selectedRows')" class="asc__listPage-Header-SelectRows float-right">
-                  <b-dropdown-item v-for="(row,i) in tableRows" :key="i" :active="row.visible" @click="hideRow(i, row.visible == true ? false : true)">
-                    <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" />
-                    {{$t('index.'+row.field)}}
+              <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
+                <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
+                  <i class="fas fa-plus-square" /> {{$t('list.create')}}
+                </b-button>
+                <b-dropdown v-else split :split-to="{name: createLink}" variant="success" right size="sm">
+                  <template v-slot:button-content>
+                    <i class="fas fa-plus-square" /> {{$t('list.create')}}
+                  </template>
+                  <b-dropdown-item v-for="(act, i) in tableOperations.Actions" :key="'act' + i">
+                    <i class="fas fa-file-code"></i> {{act.Title}}
                   </b-dropdown-item>
                 </b-dropdown>
-                <b-dropdown variant="white" :text="$t('list.allRecords')" class="asc__listPage-Header-Dropdown float-right">
-                  <b-dropdown-item v-for="(fil,i) in tableFilters" :key="i" @click="showOrders(fil.value)">{{fil.title}}</b-dropdown-item>
+                <b-dropdown
+                  variant="white"
+                  :text="$t('list.allRecords')"
+                  class="asc__listPage-Header-Dropdown"
+                >
+                  <b-dropdown-header id="dropdown-header-label">
+                    {{$t('list.allRecords')}}
+                  </b-dropdown-header>
+                  <b-dropdown-item
+                    v-for="(flt, i) in tableOperations.Filters"
+                    :key="'filter' + i"
+                  >
+                    <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                  </b-dropdown-item>
                   <b-dropdown-divider />
                   <b-dropdown-item>{{$t('list.allFilters')}}</b-dropdown-item>
                 </b-dropdown>
-                <b-dropdown right variant="white" class="asc__listPage-Header-Download float-right d-none">
+                <b-dropdown
+                  right
+                  variant="white"
+                  :text="$t('list.selectedRows')"
+                  class="asc__listPage-Header-SelectRows"
+                >
+                  <b-dropdown-header id="dropdown-header-label">
+                    {{$t('list.selectedRows')}}
+                  </b-dropdown-header>
+                  <b-dropdown-item
+                    v-for="(row,i) in tableRows"
+                    :key="'selectedRow' + i"
+                    :active="row.visible"
+                    @click="hideRow(i, row.visible == true ? false : true)"
+                  >
+                    <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" /> {{ row.label }}
+                  </b-dropdown-item>
+                  <!-- <b-dropdown-item
+                    v-for="(row,i) in tableOperations.RowColumns"
+                    :key="'selectedRow' + i"
+                    :active="row.visible"
+                    @click="hideRow(i, row.visible == true ? false : true)"
+                  >
+                    <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" /> {{ row.label }}
+                  </b-dropdown-item> -->
+                </b-dropdown>
+                <b-dropdown right variant="white" class="asc__listPage-Header-Download">
                   <template v-slot:button-content>
                     <i class="fas fa-download" />
                   </template>
-                  <b-dropdown-item><i class="fas fa-file-pdf"></i> {{$t('list.downloadPdf')}}</b-dropdown-item>
-                  <b-dropdown-item><i class="fas fa-file-excel"></i> {{$t('list.downloadExcel')}}</b-dropdown-item>
-                  <b-dropdown-item><i class="fas fa-file-code"></i> {{$t('list.downloadXml')}}</b-dropdown-item>
-                </b-dropdown>
-
-                <b-dropdown id="dropdown-1" v-if="thisRout == 'SearchFilter'" :text="$t('list.create')" variant="info" size="sm" class="float-right text-white asc__listPage-Header-Create">
-                  <b-dropdown-item v-for="(item, i) in favouriteKitTypes" :key="i" :to="{name: item.ProvisionClass ? 'WorkOrderProvisionInsert' : 'WorkOrderInsert', params: {type: item.EncryptedKey}}">
-                    <i class="fas fa-plus-square"/> {{ item.Code }}
+                  <b-dropdown-header id="dropdown-header-label">
+                    {{$t('list.downloads')}}
+                  </b-dropdown-header>
+                  <b-dropdown-item
+                    v-for="(dwn, i) in tableOperations.Downloads"
+                    :key="'download' + i"
+                    @click="downloadBtn(thisRout,dwn.Action,dwn.Action)"
+                  >
+                    <i class="fas fa-file-pdf" /> {{dwn.Title}}
                   </b-dropdown-item>
                 </b-dropdown>
-
-                <router-link v-else class="btn btn-sm btn-info float-right text-white asc__listPage-Header-Create" :to="{name: createLink}">
-                  <i class="far fa-plus-square" /> {{$t('list.create')}}
-                </router-link>
               </b-col>
             </b-row>
             <b-overlay :show="bigLoading" rounded="sm">
@@ -62,8 +94,6 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import trMessages from 'devextreme/localization/messages/tr.json'
-import { locale, loadMessages } from 'devextreme/localization'
 export default {
   data () {
     return {
@@ -72,17 +102,8 @@ export default {
       createLink: this.$route.meta.createLink
     }
   },
-  created () {
-    loadMessages(trMessages)
-    locale(navigator.language)
-  },
-  mounted () {
-    // if (this.$route.fullPath === '/') {
-    //   this.$router.push({name: 'Dashboard'})
-    // }
-  },
   computed: {
-    ...mapState(['style', 'bigLoading', 'tableRows', 'tableFilters', 'favouriteKitTypes'])
+    ...mapState(['style', 'bigLoading', 'tableRows', 'tableFilters', 'tableOperations'])
   },
   watch: {
     $route (to, from) {
@@ -93,15 +114,43 @@ export default {
   },
   methods: {
     ...mapMutations(['hideTableRow']),
-    showOrders (e) {
-      this.$router.push({name: 'eTicketFilter', params: {day: e}})
-    },
     hideRow (e, v) {
       let hr = {
         row: e,
         visible: v
       }
       this.hideTableRow(hr)
+    },
+    downloadBtn (r, f, e) {
+      let apil = 'OrderLink'
+      let data
+      data = {
+        'infoType': '1',
+        'sapUserCode': '11081',
+        'operationType': e,
+        'visibleColumnList': [
+          'ConfirmationCodeDescription',
+          'SapCustomerCode',
+          'SapOrderNumber',
+          'SasNumber',
+          'OrderLineNumber',
+          'ProductType',
+          'ProductWeight',
+          'ProductWidthFormatted',
+          'ProductLengthFormatted',
+          'PackingTypeName',
+          'OrderQuantity',
+          'ShipmentQuantity',
+          'BalanceShipmentAmount',
+          'StockQuantity',
+          'UnitPrice',
+          'Currency',
+          'OrderAmountFormatted',
+          'DeliveryDate'
+        ],
+        'userPortalId': 'K11081'
+      }
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: apil, list: data, format: f})
     }
   }
 }
@@ -111,19 +160,17 @@ export default {
     .card-body
       padding-top: 0px
     .asc__listPage-Header
-      border-bottom: 2px #ddd solid
-      margin: 5px 0 10px 0px
+      margin: 5px 0
       font-size: 12px
       & h3
-        font-size: 14px
+        font-size: 16px
         font-weight: 700
         background: #fff
         margin: 0px
         padding: 0px
         line-height: 36px
     .asc__listPage-Header-Dropdown
-      float: left
-      margin: 0 10px 0 0
+      margin: 0 0 0
       & button
         font-size: 12px
         padding: 6px 10px
@@ -152,7 +199,6 @@ export default {
     .asc__listPage-Header-SelectRows
       width: 140px
       margin: 0 0px 0 0
-      float: left
       & button
         font-size: 12px
         padding: 6px 10px
@@ -166,40 +212,30 @@ export default {
       & input
         font-size: 12px
         padding: 5px 10px
-      .dropdown-menu
-        box-shadow: 0 0 10px #a2a2a2
-        max-height: 400px
-        overflow-x: hidden
-        overflow-y: auto
-        .dropdown-item
-          width: 200px
-          margin: 0px 10px 0px 10px
-          color: #333 !important
-          border-bottom: 1px #efefef solid
-          font-size: 12px
-          padding: 7px 10px
-          &:hover
-            background-color: #efefef
-          & i
-            padding: 2px
-            color: #333
-        .active
-          background-color: transparent
-          & i
-            padding: 2px
-            background: #ffa300
-            color: #fff
-    .asc__listPage-Header-Create
-      font-size: 12px
-      line-height: 22px
-      margin-top: 0px
-      margin-right: 10px
-      .dropdown-menu
+    .dropdown-menu
+      box-shadow: 0 0 10px #a2a2a2
+      max-height: 400px
+      overflow-x: hidden
+      overflow-y: auto
+      .dropdown-item
+        width: 200px
+        margin: 0px 10px 0px 10px
+        color: #333 !important
+        border-bottom: 1px #efefef solid
         font-size: 12px
-        .dropdown-item
-          padding: 0.25rem 0.50rem
+        padding: 7px 10px
+        &:hover
+          background-color: #efefef
+        & i
+          padding: 2px
+          color: #333
+      .active
+        background-color: transparent
+        & i
+          padding: 2px
+          background: #ffa300
+          color: #fff
     .asc__listPage-Header-Download
-      float: left
       margin: 0 0 0 0
       & button
         font-size: 12px
@@ -213,7 +249,8 @@ export default {
       .dropdown-item
         color: #333 !important
         font-size: 12px
-        padding: 5px 10px
+        padding: 0.25rem 0.50rem
+        // padding: 5px 10px
       .list-group-item
         border: none !important
         padding: 5px 0 !important
@@ -230,50 +267,6 @@ export default {
     padding-top: 0px;
     padding-bottom: 0px;
     font-size: 10px;
-  }
-  .asc__listPage-dataGrid {
-    height: calc(100vh - 160px);
-    transition-timing-function: ease;
-  }
-  .dx-widget {
-    font-size: 11px !important
-  }
-  .dx-datagrid .dx-row > td {
-    padding: 2px 4px !important;
-    vertical-align: middle !important;
-  }
-  .dx-dropdownbutton-action.dx-button .dx-button-content {
-    padding: 2px !important
-  }
-  .dx-button-content .dx-icon-spindown {
-    display: none !important
-  }
-  .dx-button-mode-outlined {
-    border: none !important
-  }
-  .dx-filter-menu.dx-menu .dx-menu-item .dx-menu-item-content {
-    padding: 0px 0px 0px 0px !important
-  }
-  .dx-datagrid-headers .dx-texteditor-input,
-  .dx-datagrid-rowsview .dx-texteditor-input {
-    padding: 0px !important;
-    min-height: 28px !important;
-  }
-  .dx-datagrid-filter-row .dx-editor-cell
-  .dx-editor-with-menu .dx-placeholder:before,
-  .dx-datagrid-filter-row .dx-editor-cell
-  .dx-editor-with-menu .dx-texteditor-input {
-    padding-left: 16px !important;
-  }
-  .dx-dropdownbutton-popup-wrapper.dx-popup-wrapper .dx-overlay-content {
-    width: 200px !important;
-  }
-  .dx-datagrid-headers {
-    font-weight: bold !important;
-    color: #000000 !important;
-  }
-  .dx-datagrid-nowrap, .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
-    white-space: pre-wrap !important;
   }
 </style>
 <style lang="sass">

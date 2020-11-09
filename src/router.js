@@ -2,7 +2,7 @@
   |||||| DİKKAT ||||||
   Index, Inser, Update, Get ekranları Layout altında "children" elementine tanımlanmalanacaktır.
   -------------------------------------------------------------------------------------------------------------
-  Yeni oluşturulacak ekranlar Demo'dan kopyalanabilir.
+  Yeni oluşturulacak ekranlar Route'dan kopyalanabilir.
   Yeni oluşturulmuş ekranları dil dosyalarında da tanımlamak gerekmektedir. (locales/tr||en.json)
   Düzeni sağlamak amacıyla "router" dizini kullanılacaktır.
   -------------------------------------------------------------------------------------------------------------
@@ -12,7 +12,7 @@
   Her dizinin Yeni Kayıt linki createLink altında tanımlanmalıdır.
   -------------------------------------------------------------------------------------------------------------
   İçeriği modal içinde gösterilecek olan ekranlar INDEX altına children olarak tanımlanır
-  ve Demo/Show/:url örneğini kullanılır.
+  ve Route/Show/:url örneğini kullanılır.
   -------------------------------------------------------------------------------------------------------------
   En alt dizinde bulunan "*" "tümü" anlamına gelir ve her zaman en alt satırda olmalıdır.
   Tanımlanmamış tüm ekranlar / hatalı linkler ana sayfaya yönlendirecektir.
@@ -30,16 +30,20 @@ import LayoutGet from '@/pages/layout/get'
 import LayoutInsert from '@/pages/layout/insert'
 import LayoutUpdate from '@/pages/layout/update'
 
-import DemoIndex from '@/pages/Demo/' // liste ekranı
-import DemoSmart from '@/pages/Demo/smart' // liste ekranı
-import DemoGet from '@/pages/Demo/get' // fullpage görünümü
-import DemoInsert from '@/pages/Demo/insert' // yeni kayıt
-import DemoUpdate from '@/pages/Demo/update' // güncelleme
+import RouteIndex from '@/pages/Route/' // liste ekranı
+import RouteGet from '@/pages/Route/get' // fullpage görünümü
+import RouteInsert from '@/pages/Route/insert' // yeni kayıt
+import RouteUpdate from '@/pages/Route/update' // güncelleme
 
-import WarehouseStockHistoryIndex from '@/pages/WarehouseStockHistory/' // liste ekranı
-// import WarehouseStockHistoryGet from '@/pages/WarehouseStockHistory/get' // fullpage görünümü
-// import WarehouseStockHistoryInsert from '@/pages/WarehouseStockHistory/insert' // yeni kayıt
-// import WarehouseStockHistoryUpdate from '@/pages/WarehouseStockHistory/update' // güncelleme
+import VehicleIndex from '@/pages/Vehicle/' // liste ekranı
+import VehicleGet from '@/pages/Vehicle/get' // fullpage görünümü
+import VehicleInsert from '@/pages/Vehicle/insert' // yeni kayıt
+import VehicleUpdate from '@/pages/Vehicle/update' // güncelleme
+
+import EmployeeIndex from '@/pages/Employee/' // liste ekranı
+import EmployeeGet from '@/pages/Employee/get' // fullpage görünümü
+import EmployeeInsert from '@/pages/Employee/insert' // yeni kayıt
+import EmployeeUpdate from '@/pages/Employee/update' // güncelleme
 
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
@@ -73,42 +77,30 @@ const routes = [
         component: LayoutIndex, // listeleme ekranları
         children: [
           {
-            path: '/Demo/',
-            name: 'Demo',
-            component: DemoIndex,
+            path: '/Route',
+            name: 'Route',
+            component: RouteIndex,
             meta: {
-              title: i18n.t('router.Demo'),
-              createLink: 'DemoInsert'
-            },
-            children: [
-              {
-                path: 'Show/:url',
-                name: 'DemoShow',
-                component: DemoGet,
-                meta: {
-                  title: i18n.t('router.DemoShow'),
-                  base: 'Demo'
-                }
-              }
-            ]
-          },
-          {
-            path: '/Smart/:url',
-            name: 'Demo',
-            component: DemoSmart,
-            meta: {
-              title: i18n.t('router.Demo'),
-              createLink: 'DemoInsert'
+              title: i18n.t('router.Route'),
+              createLink: 'RouteInsert'
             }
           },
-          // yukarısı demo, temizlenecek. aşağısı yeni üretilen ekranlar (index)
           {
-            path: '/WarehouseStockHistory',
-            name: 'WarehouseStockHistory',
-            component: WarehouseStockHistoryIndex,
+            path: '/Vehicle',
+            name: 'Vehicle',
+            component: VehicleIndex,
             meta: {
-              title: i18n.t('router.WarehouseStockHistory'),
-              createLink: 'WarehouseStockHistoryInsert'
+              title: i18n.t('router.Vehicle'),
+              createLink: 'VehicleInsert'
+            }
+          },
+          {
+            path: '/Employee',
+            name: 'Employee',
+            component: EmployeeIndex,
+            meta: {
+              title: i18n.t('router.Employee'),
+              createLink: 'EmployeeInsert'
             }
           }
         ]
@@ -118,11 +110,11 @@ const routes = [
         component: LayoutGet, // görüntüleme ekranları
         children: [
           {
-            path: '/Demo/:url',
-            name: 'DemoGet',
-            component: DemoGet,
+            path: '/Route/:url',
+            name: 'RouteGet',
+            component: RouteGet,
             meta: {
-              title: i18n.t('router.DemoGet')
+              title: i18n.t('router.RouteGet')
             }
           }
         ]
@@ -132,11 +124,11 @@ const routes = [
         component: LayoutUpdate, // görüntüleme ekranları
         children: [
           {
-            path: '/Demo/Update/:url',
-            name: 'DemoUpdate',
-            component: DemoUpdate,
+            path: '/Route/Update/:url',
+            name: 'RouteUpdate',
+            component: RouteUpdate,
             meta: {
-              title: i18n.t('router.DemoUpdate')
+              title: i18n.t('router.RouteUpdate')
             }
           }
         ]
@@ -146,12 +138,12 @@ const routes = [
         component: LayoutInsert, // oluşturma ekranları
         children: [
           {
-            path: '/Insert/Demo/:type',
-            name: 'DemoInsert',
-            component: DemoInsert,
+            path: '/Insert/Route',
+            name: 'RouteInsert',
+            component: RouteInsert,
             meta: {
-              title: i18n.t('router.DemoInsert'),
-              baseLink: 'Demo'
+              title: i18n.t('router.RouteInsert'),
+              baseLink: 'Route'
             }
           }
         ]

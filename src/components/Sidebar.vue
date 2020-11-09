@@ -1,23 +1,18 @@
 <template>
-    <div>
-        <b-sidebar id="sidebar-1" text-variant="light" backdrop shadow :title="$t('sidebar.otherApps')">
-            <div class="asc__sidebar-header p-4">
-              <!-- <img v-b-toggle.sidebar-1 class="mr-4" src="../../static/otherApps2.svg">
-              <span> Diğer Uygulamalar </span> -->
-            </div>
-            <div class="px-3 py-2 asc__sidebar-body text-center">
-              <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
-              <b-img src="https://picsum.photos/500/500/?image=51" fluid thumbnail></b-img>
-              <b-img src="https://picsum.photos/500/500/?image=52" fluid thumbnail></b-img>
-              <b-img src="https://picsum.photos/500/500/?image=55" fluid thumbnail></b-img>
-              <b-img src="https://picsum.photos/500/500/?image=50" fluid thumbnail></b-img>
-              <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img>
-            </div>
-        </b-sidebar>
-        <b-tooltip target="otherAppsImg" triggers="hover" placement="right">
-            {{$t('sidebar.otherApps')}}
-        </b-tooltip>
+  <b-sidebar id="sidebar-1" text-variant="light" backdrop shadow :title="$t('sidebar.otherApps')">
+    <div class="asc__sidebar-header p-4">
+      <!-- <img v-b-toggle.sidebar-1 class="mr-4" src="../../static/otherApps2.svg">
+      <span> Diğer Uygulamalar </span> -->
     </div>
+    <div class="px-3 py-2 asc__sidebar-body text-center">
+      <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
+      <b-img src="https://picsum.photos/500/500/?image=51" fluid thumbnail></b-img>
+      <b-img src="https://picsum.photos/500/500/?image=52" fluid thumbnail></b-img>
+      <b-img src="https://picsum.photos/500/500/?image=55" fluid thumbnail></b-img>
+      <b-img src="https://picsum.photos/500/500/?image=50" fluid thumbnail></b-img>
+      <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img>
+    </div>
+  </b-sidebar>
 </template>
 <script>
 export default {
