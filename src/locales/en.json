@@ -32,7 +32,15 @@
   },
   "insert": {
     "detail": "Detaylar",
-    "sharing": "Paylaşım"
+    "sharing": "Paylaşım",
+    "active": "Aktif",
+    "passive": "Pasif",
+    "code": "Kodu*",
+    "state": "Durum*",
+    "rotaType": "Rota Tipi*",
+    "chooseRotaType": "Rota Tipi Seçiniz",
+    "name": "Adı*",
+    "locations": "Lokasyonlar"
   },
   "get": {
     "detail": "Detaylar",
