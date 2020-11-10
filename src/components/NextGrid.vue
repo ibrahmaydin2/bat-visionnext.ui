@@ -61,20 +61,23 @@
             <span v-if="h.columnType === 'LabelValue'" class="d-block w-100">
               {{ labelFormat(r[h.dataField]) }}
             </span>
-            <span v-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
+            <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="r[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
-            <span v-if="h.columnType === 'Date'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Date'" class="d-block w-100">
               {{ dateFormat(r[h.dataField]) }}
             </span>
-            <span v-if="h.columnType === 'DateTime'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100">
               {{ dateTimeformat(r[h.dataField]) }}
             </span>
-            <span v-if="h.columnType === 'String'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'String'" class="d-block w-100">
               {{ r[h.dataField] }}
             </span>
-            <span v-if="h.columnType === 'Id'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Id'" class="d-block w-100">
               <i>{{ r[h.dataField] }}</i>
+            </span>
+            <span v-else class="d-block w-100">
+              {{ r[h.dataField] }}
             </span>
           </b-td>
         </b-tr>

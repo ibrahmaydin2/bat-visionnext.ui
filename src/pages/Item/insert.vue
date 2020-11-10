@@ -34,7 +34,7 @@
             <b-form-group
               :label="$t('insert.Model_CardTypeId')"
             >
-              <v-select :options="form.CardTypeId" @input="selectedRota" label="title"></v-select>
+              <v-select :options="form.CardTypeId" @input="selectedVehicle" label="title"></v-select>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
@@ -497,34 +497,8 @@ export default {
       }
       this.$store.dispatch('createData', {...this.query, info: createData})
     },
-    selectedRota (e) {
-      this.rotaType = e.title
-    },
-    selectedRotaGroup (e) {
-      this.rotaGroup = e.title
-    },
-    selectedRotaClass (e) {
-      this.rotaGroup = e.title
-    },
     selectedVehicle (e) {
       this.vehicle = e.title
-    },
-    selectedSupervisor (e) {
-      this.supervisor = e.title
-    },
-    selectedPersonel (e) {
-      this.personel = e.title
-    },
-    selectedControl (e) {
-      this.control = e.title
-    },
-    selectedCity (e) {
-      this.city = e.title
-      this.$store.commit('setDistiricts', e.plaka)
-    },
-    selectedDistirict (e) {
-      console.log(e)
-      this.distirict = e.id
     }
   }
 }
