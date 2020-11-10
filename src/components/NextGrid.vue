@@ -288,9 +288,12 @@ export default {
         display: inline-block
         cursor: move
       .asc__nextgrid-table-header-sort
-        display: inline-block
-        float: right
+        display: block
         cursor: pointer
+        position: absolute
+        top: 5px
+        right: 5px
+        z-index: 2
         & button
           color: #8a8a8a
           background: none
