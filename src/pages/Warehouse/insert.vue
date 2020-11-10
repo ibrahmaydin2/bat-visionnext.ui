@@ -18,21 +18,21 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="4" lg="4">
+          <b-col cols="12" md="3" lg="2">
             <b-form-group
               :label="$t('insert.Model_Code')"
             >
               <b-form-input type="text" v-model="form.Code"/>
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="4" lg="4">
+          <b-col cols="12" md="3" lg="2">
             <b-form-group
               :label="$t('insert.Model_Description1')"
             >
               <b-form-input type="text" v-model="form.Description1"/>
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="4" lg="4">
+          <b-col cols="12" md="3" lg="2">
             <b-form-group
               :label="$t('insert.Model_StatusId')"
             >
