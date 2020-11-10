@@ -20,19 +20,19 @@
         <b-row>
            <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.Model_Code')"
+              :label="$t('insert.item.Model_Code')"
             >
               <b-form-input type="text" v-model="form.Code" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.Model_Description1')">
+            <b-form-group :label="$t('insert.item.Model_Description1')">
               <b-form-input type="text" v-model="form.Description1" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.Model_CardTypeId')"
+              :label="$t('insert.item.Model_CardTypeId')"
             >
               <v-select :options="form.CardTypeId" @input="selectedVehicle" label="title"></v-select>
             </b-form-group>
@@ -54,17 +54,17 @@
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ShortDescription')">
+              <b-form-group :label="$t('insert.item.Model_ShortDescription')">
                 <b-form-input type="text" v-model="form.ShortDescription" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ExportDescription1')">
+              <b-form-group :label="$t('insert.item.Model_ExportDescription1')">
                 <b-form-input type="text" v-model="form.ExportDescription1" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ProducerCodeId')">
+              <b-form-group :label="$t('insert.item.Model_ProducerCodeId')">
                 <v-select :options="form.ProducerCodeId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -76,24 +76,24 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_GroupId')">
+              <b-form-group :label="$t('insert.item.Model_GroupId')">
                 <v-select :options="form.GroupId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ShelfLife')">
+              <b-form-group :label="$t('insert.item.Model_ShelfLife')">
                 <b-form-input type="text" v-model="form.ShelfLife" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_TimeFrameId')">
+              <b-form-group :label="$t('insert.item.Model_TimeFrameId')">
                 <v-select :options="form.TimeFrameId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_IsBarterAllowed')">
+              <b-form-group :label="$t('insert.item.Model_IsBarterAllowed')">
                 <b-form-radio-group v-model="form.IsBarterAllowed">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -101,31 +101,31 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_CategoryId')">
+              <b-form-group :label="$t('insert.item.Model_CategoryId')">
                 <v-select :options="form.CategoryId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_SortOrder')">
+              <b-form-group :label="$t('insert.item.Model_SortOrder')">
                 <b-form-input type="text" v-model="form.SortOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ClassId')">
+              <b-form-group :label="$t('insert.item.Model_ClassId')">
                 <v-select :options="form.ClassId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_ColorId')">
+              <b-form-group :label="$t('insert.item.Model_ColorId')">
                 <v-select :options="form.ColorId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_IsOrderAllowed')">
+              <b-form-group :label="$t('insert.item.Model_IsOrderAllowed')">
                 <b-form-radio-group v-model="form.IsOrderAllowed">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -133,7 +133,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_IsSaleAllowed')">
+              <b-form-group :label="$t('insert.item.Model_IsSaleAllowed')">
                 <b-form-radio-group v-model="form.IsSaleAllowed">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -141,7 +141,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_UseSalesAnalysis')">
+              <b-form-group :label="$t('insert.item.Model_UseSalesAnalysis')">
                 <b-form-radio-group v-model="form.UseSalesAnalysis">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -151,7 +151,7 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_IsSpGiftItem')">
+              <b-form-group :label="$t('insert.item.Model_IsSpGiftItem')">
                 <b-form-radio-group v-model="form.IsSpGiftItem">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -159,7 +159,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_IsPhysicalBom')">
+              <b-form-group :label="$t('insert.item.Model_IsPhysicalBom')">
                 <b-form-radio-group v-model="form.IsPhysicalBom">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
@@ -176,92 +176,92 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_KindId')">
+              <b-form-group :label="$t('insert.item.Model_KindId')">
                 <v-select :options="form.ColorId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_UnitSetId')">
+              <b-form-group :label="$t('insert.item.Model_UnitSetId')">
                 <v-select :options="form.ColorId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_FinanceCode')">
+              <b-form-group :label="$t('insert.item.Model_FinanceCode')">
                 <b-form-input type="text" v-model="form.FinanceCode" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_DiscountGroup1Id')">
+              <b-form-group :label="$t('insert.item.Model_DiscountGroup1Id')">
                 <v-select :options="form.DiscountGroup1Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_RecurrenceTypeId')">
+              <b-form-group :label="$t('insert.item.Model_RecurrenceTypeId')">
                 <v-select :options="form.RecurrenceTypeId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_MaxDiscountRate')">
+              <b-form-group :label="$t('insert.item.Model_MaxDiscountRate')">
                 <b-form-input type="text" v-model="form.MaxDiscountRate" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category1Id')">
+              <b-form-group :label="$t('insert.item.Model_Category1Id')">
                 <v-select :options="form.Category1Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category2Id')">
+              <b-form-group :label="$t('insert.item.Model_Category2Id')">
                 <v-select :options="form.Category2Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category3Id')">
+              <b-form-group :label="$t('insert.item.Model_Category3Id')">
                 <v-select :options="form.Category3Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category4Id')">
+              <b-form-group :label="$t('insert.item.Model_Category4Id')">
                 <v-select :options="form.Category4Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category5Id')">
+              <b-form-group :label="$t('insert.item.Model_Category5Id')">
                 <v-select :options="form.Category5Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category6Id')">
+              <b-form-group :label="$t('insert.item.Model_Category6Id')">
                 <v-select :options="form.Category6Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category7Id')">
+              <b-form-group :label="$t('insert.item.Model_Category7Id')">
                 <v-select :options="form.Category7Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category8Id')">
+              <b-form-group :label="$t('insert.item.Model_Category8Id')">
                 <v-select :options="form.Category8Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category9Id')">
+              <b-form-group :label="$t('insert.item.Model_Category9Id')">
                 <v-select :options="form.Category9Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Category10Id')">
+              <b-form-group :label="$t('insert.item.Model_Category10Id')">
                 <v-select :options="form.Category10Id" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -270,17 +270,17 @@
         <b-tab :title="$t('insert.ItemCustomers')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_CustomerId')">
+              <b-form-group :label="$t('insert.item.Model_CustomerId')">
                 <b-form-input type="text" v-model="form.CustomerId" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_CustomerId')">
+              <b-form-group :label="$t('insert.item.Model_CustomerId')">
                 <b-form-input type="text" v-model="form.CustomerId" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_CustomerItemDescription')">
+              <b-form-group :label="$t('insert.item.Model_CustomerItemDescription')">
                 <b-form-input type="text" v-model="form.CustomerItemDescription" />
               </b-form-group>
             </b-col>
@@ -292,12 +292,12 @@
         <b-tab :title="$t('insert.ItemBarcodes')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_UnitSetId')">
+              <b-form-group :label="$t('insert.item.Model_UnitSetId')">
                 <v-select :options="form.UnitSetId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_Barcode')">
+              <b-form-group :label="$t('insert.item.Model_Barcode')">
                 <b-form-input type="text" v-model="form.Barcode" />
               </b-form-group>
             </b-col>
@@ -309,37 +309,37 @@
         <b-tab :title="$t('insert.ItemOrderQuotas')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_BeginDate')">
+              <b-form-group :label="$t('insert.item.Model_BeginDate')">
                 <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.BeginDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_EndDate')">
+              <b-form-group :label="$t('insert.item.Model_EndDate')">
                 <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.EndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_QuotaQuantity')">
+              <b-form-group :label="$t('insert.item.Model_QuotaQuantity')">
                 <b-form-input type="text" v-model="form.QuotaQuantity" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_QuotaUnitId')">
+              <b-form-group :label="$t('insert.item.Model_QuotaUnitId')">
                 <v-select :options="form.QuotaUnitId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_QuotaBranchId')">
+              <b-form-group :label="$t('insert.item.Model_QuotaBranchId')">
                 <v-select :options="form.QuotaBranchId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_QuotaRegionId')">
+              <b-form-group :label="$t('insert.item.Model_QuotaRegionId')">
                 <v-select :options="form.QuotaRegionId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_StatusId')">
+              <b-form-group :label="$t('insert.item.Model_StatusId')">
                 <v-select :options="form.StatusId" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -351,7 +351,7 @@
         <b-tab :title="$t('insert.ItemAttachments')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_File')">
+              <b-form-group :label="$t('insert.item.Model_File')">
                 <b-form-file v-model="form.file" accept="image/jpeg, image/png, image/gif" />
               </b-form-group>
             </b-col>
