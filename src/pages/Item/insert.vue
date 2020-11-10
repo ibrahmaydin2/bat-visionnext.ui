@@ -51,7 +51,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" active>
+        <b-tab :title="$t('insert.item.detail')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_ShortDescription')">
@@ -71,7 +71,7 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.ItemInsertModel')">
+              <b-form-group :label="$t('insert.item.ItemInsertModel')">
                 <v-select :options="form.ItemInsertModel" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -168,10 +168,10 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemFinancialInfo')">
+        <b-tab :title="$t('insert.item.ItemFinancialInfo')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.ItemInsertModel')">
+              <b-form-group :label="$t('insert.item.ItemInsertModel')">
                 <b-form-input type="text" v-model="form.ItemInsertModel" />
               </b-form-group>
             </b-col>
@@ -267,7 +267,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemCustomers')">
+        <b-tab :title="$t('insert.item.ItemCustomers')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_CustomerId')">
@@ -289,7 +289,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemBarcodes')">
+        <b-tab :title="$t('insert.item.ItemBarcodes')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_UnitSetId')">
@@ -306,7 +306,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemOrderQuotas')">
+        <b-tab :title="$t('insert.item.ItemOrderQuotas')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_BeginDate')">
@@ -348,7 +348,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.ItemAttachments')">
+        <b-tab :title="$t('insert.item.ItemAttachments')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_File')">

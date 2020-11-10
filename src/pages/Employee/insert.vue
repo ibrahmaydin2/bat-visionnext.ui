@@ -39,7 +39,7 @@
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.state')"
+              :label="$t('insert.employee.state')"
             >
               <b-form-checkbox v-model="form.state" name="check-button" switch>
                 {{(form.checked) ? $t('insert.active'): $t('insert.passive')}}
@@ -51,7 +51,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.Employee')" active>
+        <b-tab :title="$t('insert.employee.Employee')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_ERPCustomerCode')">
@@ -99,7 +99,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.EmployeeCustomer')">
+        <b-tab :title="$t('insert.employee.EmployeeCustomer')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_CreateCustomer')">
@@ -199,7 +199,7 @@
           </b-row>
 
         </b-tab>
-        <b-tab :title="$t('insert.EmployeeContact')">
+        <b-tab :title="$t('insert.employee.EmployeeContact')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_GsmNumber')">
@@ -230,7 +230,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.EmployeeDevices')">
+        <b-tab :title="$t('insert.employee.EmployeeDevices')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_SerialNumber')">
@@ -252,7 +252,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.EmployeeBanks')">
+        <b-tab :title="$t('insert.employee.EmployeeBanks')">
           <b-row>
             <b-col cols="12" md="6" lg="4">
               <b-form-group :label="$t('insert.employee.Model_BankBranchId')">

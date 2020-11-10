@@ -20,14 +20,14 @@
         <b-row>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.Model_Code')"
+              label="Sistem Kodu"
             >
               <b-form-input type="text" v-model="form.Code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.Model_Description1')"
+              label="Adı"
             >
               <b-form-input type="text" v-model="form.Description1"/>
             </b-form-group>

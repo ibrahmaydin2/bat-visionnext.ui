@@ -20,24 +20,24 @@
         <b-row>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.Model_Code')"
+              :label="$t('insert.warehouse.Model_Code')"
             >
               <b-form-input type="text" v-model="form.Code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.Model_Description1')"
+              :label="$t('insert.warehouse.Model_Description1')"
             >
               <b-form-input type="text" v-model="form.Description1"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.Model_StatusId')"
+              :label="$t('insert.warehouse.Model_StatusId')"
             >
               <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.checked) ? $t('insert.vehicles.active'): $t('insert.vehicles.passive')}}
+                {{(form.checked) ? $t('insert.yes'): $t('insert.no')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -49,22 +49,22 @@
         <b-tab title="Depo Ana Kayıtları" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_WarehouseTypeId')">
+              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <!-- <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.Model_IsVehicle')"
+                :label="$t('insert.warehouse.Model_IsVehicle')"
               >
               <b-form-radio-group v-model="form.IsVehicle">
-                  <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
+                  <b-form-radio value="1">{{$t('insert.warehouse.vehicles.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.warehouse.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col> -->
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.Model_VehicleId')">
+              <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -72,11 +72,11 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.Model_IsCenterWarehouse')"
+                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
               >
               <b-form-radio-group v-model="form.IsVehicle">
-                  <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
@@ -84,21 +84,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.Model_WarehouseCapacity')"
+                :label="$t('insert.warehouse.Model_WarehouseCapacity')"
               >
                 <b-form-input type="text" v-model="form.WarehouseCapacity"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.Model_LicenseNumber')"
+                :label="$t('insert.warehouse.Model_LicenseNumber')"
               >
                 <b-form-input type="text" v-model="form.Model_LicenseNumber"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.Model_FinanceCode')"
+                :label="$t('insert.warehouse.Model_FinanceCode')"
               >
                 <b-form-input type="text" v-model="form.Model_FinanceCode"/>
               </b-form-group>
@@ -171,7 +171,7 @@ export default {
     },
     selectedDriver (e) {
       this.form.driver = e.title
-    },
+    }
   }
 }
 </script>

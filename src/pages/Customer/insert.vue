@@ -46,7 +46,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.Customer')" active>
+        <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row>
             <b-col cols="12" md="6" lg="4">
               <b-form-group :label="$t('insert.customer.Model_CommercialTitle')">
@@ -150,7 +150,7 @@
           </b-row>
         </b-tab>
 
-        <b-tab :title="$t('insert.CustomerLocations')">
+        <b-tab :title="$t('insert.customer.CustomerLocations')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Code')">
@@ -275,7 +275,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerClass')">
+        <b-tab :title="$t('insert.customer.CustomerClass')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Category1Id')">
@@ -416,7 +416,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerFinancialInfo')">
+        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
@@ -498,7 +498,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerCreditHistories')">
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
@@ -554,7 +554,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerPaymentTypes')">
+        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
           <b-row>
             <b-col cols="12">
               <b-row>
@@ -605,7 +605,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerItemDiscountCrts')">
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountPercent1')">

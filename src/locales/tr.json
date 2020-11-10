@@ -51,6 +51,8 @@
     "CustomerInsert": "Yeni Müşteri"
   },
   "insert": {
+    "yes": "Evet",
+    "no": "Hayır",
     "detail": "Detaylar",
     "sharing": "Paylaşım",
     "active": "Aktif",
@@ -155,6 +157,7 @@
       "Model_Prefix": "Prefix"
     },
     "customer": {
+      "Model_StatusReasonId": "Durum Sebebi",
       "Model_CommercialTitle": "Ticari Ünvan",
       "Model_Description1": "Tabela Adı",
       "Model_TaxCustomerTypeId": "Müşteri Vergi Tipi",
@@ -171,6 +174,7 @@
       "Model_PriceListCategoryId": "Müşteri Fiyat Listesi",
       "Model_SalesPriceChangeRate": "Fiyat Değişiklik Oranı",
       "Model_DeliveryDayParam": "Teslim Gün Sayısı",
+      "Model_TextField6": "Ambar Bilgisi",
       "Customer": "Genel Bilgiler",
       "CustomerLocations": "Müşteri Lokasyonları",
       "CustomerClass": "Genel Sınıflandırma Bilgileri",
@@ -259,8 +263,8 @@
       "DiscountPercent1" : "Ürün İndirimi 1*"
 
     },
-    "item": {
-      "Model_Code": "Sistem Kodu*",
+    "warehouse": {
+      "Model_Code": "Sistem Kodu",
       "Model_Description1": "Adı*",
       "Model_StatusId": "Durum*",
       "Model_WarehouseTypeId": "Depo Tipi",
@@ -268,6 +272,13 @@
       "Model_IsCenterWarehouse": "Varsayılan Depo mu?",
       "Model_WarehouseCapacity": "Depo Kapasitesi (m2)",
       "Model_LicenseNumber": "Lisans Numarası",
+      "Model_FinanceCode": "Finans Kodu"
+    },
+    "item": {
+      "Detail": "Detaylar",
+      "Model_Code": "Sistem Kodu*",
+      "Model_Description1": "Adı*",
+      "Model_StatusId": "Durum*",
       "Model_FinanceCode": "Finans Kodu",
       "Model_CardTypeId": "Kart Tipi",
       "Model_ShortDescription": "Ürün Kısa Adı",
