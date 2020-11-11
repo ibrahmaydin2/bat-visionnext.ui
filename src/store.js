@@ -64,6 +64,7 @@ export const store = new Vuex.Store({
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
     nextgrid: false,
+    rowData: [],
     tableData: [],
     tableOperations: [],
     tableRows: [],
@@ -112,40 +113,94 @@ export const store = new Vuex.Store({
           commit('bigLoaded', false)
         })
     },
-    getTableData ({ commit }, query) { // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
+    // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
+    // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
+    getTableOperations ({ commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setTableOperations', res.data.UIPageModels[0])
+            commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+
+            // başarılı -> tabloyu doldur.
+            this.dispatch('getTableData', {
+              ...this.query,
+              api: query.api,
+              page: query.page,
+              count: query.count,
+              sort: query.sort,
+              searchField: query.where,
+              searchText: query.search
+            })
+          } else {
+            commit('showAlert', { type: 'warning', msg: res.data.Message })
+          }
+          commit('bigLoaded', false)
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'warning', msg: err })
+        })
+    },
+    // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
+    getTableData ({ commit }, query) {
       commit('setTableData', [])
       commit('bigLoaded', true)
       let dataQuery = {}
-      let search = []
-      if (query.search) {
-        search = query.search
-      }
-      if (query.sort) {
-        
+      if (query.searchField) {
+        let AndConditionModel = {}
+        AndConditionModel[query.searchField] = query.searchText
         dataQuery = {
-          'AndConditionModel': {
-            search
-          },
+          AndConditionModel,
           'branchId': 1,
           'pagerecordCount': query.count,
           'page': query.page
         }
       } else {
         dataQuery = {
-          'AndConditionModel': {},
+          'AndConditionModel': {
+            // 'Description1': 'ST03 ROTA'
+          },
           'branchId': 1,
           'pagerecordCount': query.count,
           'page': query.page
         }
       }
+
       commit('showNextgrid', false)
-      return axios.post(query.url, dataQuery)
+
+      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('showNextgrid', true)
+            commit('bigLoaded', false)
+            commit('setTableData', res.data.ListModel)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    // tüm GET ekranlarının genel datasını POST metodudyla besleyen fonksiyondur.
+    getData ({ commit }, query) {
+      commit('setTableData', [])
+      commit('bigLoaded', true)
+      let dataQuery = {}
+      dataQuery = {
+        "BranchId" : 1,
+        "CompanyId" : 1,
+        "EncryptedKey" : query.record
+      }
+      commit('showNextgrid', false)
+      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Get', dataQuery)
         .then(res => {
           switch (res.status) {
             case 200:
-              commit('showNextgrid', true)
               commit('bigLoaded', false)
-              commit('setTableData', res.data.ListModel)
+              commit('setRowData', res.data.Model)
             break
             case 900:
               commit('bigLoaded', false)
@@ -162,34 +217,6 @@ export const store = new Vuex.Store({
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
           // commit('bigLoaded', false)
-        })
-    },
-    getTableGetData ({ commit }, query) { // tüm index ekranlarının tablosunu GET metoduyla besleyen fonksiyondur.
-      commit('bigLoaded', true)
-      let connection = query.params ? query.url + query.params : query.url
-      return axios.get(connection)
-        .then(res => {
-          commit('setTableData', res.data)
-          commit('bigLoaded', false)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    getTableOperations ({ commit }, query) { // tüm index ekranlarının tablosunu GET metoduyla besleyen fonksiyondur.
-      commit('bigLoaded', true)
-      return axios.get(query.url + query.params)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setTableOperations', res.data.UIPageModels[0])
-            commit('setTableRows', res.data.UIPageModels[0].RowColumns)
-          } else {
-            commit('showAlert', { type: 'warning', msg: res.data.Message })
-          }
-          commit('bigLoaded', false)
-        })
-        .catch(err => {
-          commit('showAlert', { type: 'warning', msg: err })
         })
     },
     createData ({ commit }, query) {
@@ -259,6 +286,9 @@ export const store = new Vuex.Store({
     },
     bigLoaded (state, payload) {
       state.bigLoading = payload
+    },
+    setRowData (state, payload) {
+      state.rowData = payload
     },
     setTableData (state, payload) {
       state.tableData = payload

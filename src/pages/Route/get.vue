@@ -16,6 +16,9 @@
       <b-tabs>
         <b-tab :title="$t('get.detail')" active>
           <b-row>
+            <b-col>
+              {{rowData}}
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -35,14 +38,14 @@ export default {
     this.$store.commit('bigLoaded', false)
   },
   computed: {
-    ...mapState(['data', 'style'])
+    ...mapState(['rowData', 'style'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      // this.$store.dispatch('getData', {...this.query})
+      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
     }
   }
 }

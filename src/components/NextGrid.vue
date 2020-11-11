@@ -28,7 +28,7 @@
                 <i class="fas fa-sort-down" />
               </b-button>
             </div>
-            <b-form-input class="asc__nextgrid-table-header-search d-none" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+            <b-form-input class="asc__nextgrid-table-header-search" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
           </b-th>
         </draggable>
       </b-thead>
@@ -40,7 +40,7 @@
                 <i class="fas fa-th" />
               </template>
               <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                <router-link :to="{name: $route.name + opt.Action, params: {url: r.Code}}">
+                <router-link :to="{name: $route.name + opt.Action, params: {url: r.EncryptedKey}}">
                   <i class="far fa-circle" /> {{ opt.Title }}
                 </router-link>
                 <!-- <router-link v-if="opt.Action === 'Update'" :to="{name: $route.name + 'Update', params: {url: r.Code}}">
@@ -84,19 +84,19 @@
       </b-tbody>
     </b-table-simple>
 
-      <b-row class="asc__nextgrid-table-footer">
-        <b-col cols="6">
-          <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
-            <b-dropdown-item v-for="p in perPageOpt" :key="p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
-          </b-dropdown>
-        </b-col>
-        <b-col cols="6">
-          <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
-        </b-col>
-        <!-- <b-col cols="6">
-          aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
-        </b-col> -->
-      </b-row>
+    <b-row class="asc__nextgrid-table-footer">
+      <b-col cols="6">
+        <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
+          <b-dropdown-item v-for="p in perPageOpt" :key="p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
+        </b-dropdown>
+      </b-col>
+      <b-col cols="6">
+        <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
+      </b-col>
+      <!-- <b-col cols="6">
+        aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
+      </b-col> -->
+    </b-row>
   </div>
 </template>
 
@@ -189,6 +189,11 @@ export default {
     sortable (field, sort) {
       this.sort = sort
       this.whereSort = field
+
+      // OrderByColumns = {
+      //   Column: field,
+      //   OrderByType: sort // 'Ascending'
+      // }
       if (this.$route.query.count) {
         this.$router.push({name: this.$route.name, query: {'page': 1, 'count': this.$route.query.count, 'where': field, 'sort': sort}})
       } else {
@@ -196,26 +201,27 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
-      // bu fonksiyon için servis henüz üretilmedi.
       this.tablefield = tableField
       this.searched = search
-
-      let urlquery = []
-      if (this.$route.query.count) {
-        urlquery.push({count: this.$route.query.count})
-      }
-      if (this.$route.query.page) {
-        urlquery.push({page: this.$route.query.page})
-      }
-      if (this.$route.query.sort) {
-        urlquery.push({sort: this.$route.query.sort})
-      }
-      console.log(urlquery)
-      // this.$router.push({name: this.$route.name, query: urlquery})
+      this.$router.push({name: this.$route.name, query: {page: 1, search: search, where: tableField}})
     },
     getData (e, p, c, s) {
-      this.$store.dispatch('getTableData', {...this.query, url: 'VisionNext' + e + '/api/' + e + '/Search', page: parseInt(p), count: parseInt(c), sort: s})
-      this.$store.dispatch('getTableOperations', {...this.query, url: 'VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields', params: '?name=' + e})
+      /*
+        DİKKAT
+        1. versiyonda iki fonksiyon birlikte çalışıyordu ancak bu problemlere sebep oluyordu.
+        bu versiyonda önce tableOperations çağırılıyor ve sonrasında tableData çalıştırılıyor.
+        getTableData fonksiyonu devredışı.
+      */
+      // this.$store.dispatch('getTableData', {...this.query, url: 'VisionNext' + e + '/api/' + e + '/Search', page: parseInt(p), count: parseInt(c), sort: s})
+      this.$store.dispatch('getTableOperations', {
+        ...this.query,
+        api: e,
+        page: parseInt(p),
+        count: parseInt(c),
+        sort: s,
+        where: this.$route.query.where,
+        search: this.$route.query.search
+      })
     }
   },
   watch: {
@@ -223,12 +229,12 @@ export default {
       // sayfa değişikliklerini yakalamak ve içeriği güncellemek için bu bölüm şarttır.
       let sortOpt = {}
       if (to.query.count) {
-        this.perPage = to.query.count
+        this.perPage = parseInt(to.query.count)
       } else {
         this.perPage = 20
       }
       if (to.query.page) {
-        this.currentPage = to.query.page
+        this.currentPage = parseInt(to.query.page)
       } else {
         this.currentPage = 1
       }
