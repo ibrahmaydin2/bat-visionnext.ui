@@ -36,6 +36,11 @@ export default {
       min-height: 90vh
       .asc__showPage-times
         display: none
+      section
+        i
+          color: #f78b4e !important
+        span
+          margin-right: 5px
     & header
       display: block
       border-bottom: 2px #f6f6f6 solid
@@ -71,8 +76,13 @@ export default {
       & span
         display: block
         font-weight: bold
+        & i
+          color: #f78b4e !important
+
       & p
         font-style: normal
+        padding-bottom: 5px
+        border-bottom: 1px solid #e2dfdf
     .tabs
       .nav-tabs
         background: #e4e4e4
