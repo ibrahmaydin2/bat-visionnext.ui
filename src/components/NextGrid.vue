@@ -29,35 +29,50 @@
             <div class="asc__nextgrid-table-header-filter">
               <v-select
                 v-if="h.columnType === 'LabelValue'"
+                v-once
                 @input="filterAutocomplete"
                 label="title"
-                v-once
                 disabled
               />
 
               <v-select
                 v-if="h.columnType === 'Boolean'"
-                :options="searchBoolean"
-                @input="filterBoolean(h.dataField)"
                 v-once
                 v-model="searchText"
+                :options="searchBoolean"
+                @input="filterBoolean(h.dataField)"
                 label="title"
               />
 
               <b-form-datepicker
                 v-if="h.columnType === 'Date'"
-                v-model="searchText"
                 v-once
+                v-model="searchText"
+                placeholder=""
                 @click="searchOnTable(h.dataField, searchText)"
               />
 
               <b-form-datepicker
                 v-if="h.columnType === 'DateTime'"
-                v-model="searchText" v-once @click="searchOnTable(h.dataField, searchText)" />
+                v-once
+                v-model="searchText"
+                placeholder=""
+                @click="searchOnTable(h.dataField, searchText)"
+              />
 
-              <b-form-input v-if="h.columnType === 'String'" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+              <b-form-input
+                v-if="h.columnType === 'String'"
+                v-once
+                v-model="searchText"
+                @keydown.enter="searchOnTable(h.dataField, searchText)"
+              />
 
-              <b-form-input v-if="h.columnType === 'Id'" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+              <b-form-input
+                v-if="h.columnType === 'Id'"
+                v-once
+                v-model="searchText"
+                @keydown.enter="searchOnTable(h.dataField, searchText)"
+              />
             </div>
           </b-th>
         </draggable>
@@ -189,9 +204,11 @@ export default {
     },
     dateTimeformat (e) {
       let calendar, date
-      calendar = e.split('T')
-      date = calendar[0].split('-')
-      return date[2] + '-' + date[1] + '-' + date[0] + ' ' + calendar[1]
+      if (e != null) {
+        calendar = e.split('T')
+        date = calendar[0].split('-')
+        return date[2] + '-' + date[1] + '-' + date[0] + ' ' + calendar[1]
+      }
     },
     dateFormat (e) {
       return e
@@ -255,6 +272,7 @@ export default {
       this.tablefield = tableField
       this.searched = search
       this.$router.push({name: this.$route.name, query: {page: 1, search: search, where: tableField}})
+      this.searchText = null
     },
     getData (e, p, c, s) {
       /*

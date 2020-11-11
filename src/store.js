@@ -175,6 +175,7 @@ export const store = new Vuex.Store({
       dataQuery = {
         AndConditionModel,
         'branchId': 1,
+        'companyId': 1,
         'pagerecordCount': query.count,
         'page': query.page,
         OrderByColumns

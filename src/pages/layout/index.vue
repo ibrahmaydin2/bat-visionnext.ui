@@ -56,14 +56,6 @@
                   >
                     <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" /> {{ row.label }}
                   </b-dropdown-item>
-                  <!-- <b-dropdown-item
-                    v-for="(row,i) in tableOperations.RowColumns"
-                    :key="'selectedRow' + i"
-                    :active="row.visible"
-                    @click="hideRow(i, row.visible == true ? false : true)"
-                  >
-                    <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" /> {{ row.label }}
-                  </b-dropdown-item> -->
                 </b-dropdown>
                 <b-dropdown right variant="white" class="asc__listPage-Header-Download">
                   <template v-slot:button-content>
