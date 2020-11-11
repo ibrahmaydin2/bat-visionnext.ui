@@ -8,20 +8,40 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="'data.Code'" />
-            <!-- <span><i class="fas fa-code" />  <b>Reference:</b> {{data.SerialNumber}}</span> -->
             <div class="clearfix"></div>
           </header>
         </b-col>
       </b-row>
-      <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
-          <b-row>
-            <b-col>
-              {{rowData}}
-            </b-col>
-          </b-row>
-        </b-tab>
-      </b-tabs>
+      <b-row>
+        <b-col cols="12">
+          <section>
+            <span><i class="fas fa-code" />  <b>Reference:</b> {{rowData.EncryptedKey}}</span>
+          </section>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card class="m-3 asc__showPage-card">
+            <h6>Detail</h6>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+            <span><i class="far fa-circle" /> RepresentativeId</span>
+            <p>{{rowData.RepresentativeId}}</p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="8">
+          <b-card class="m-3 asc__showPage-card">
+            <b-table :items="rowData" :fields="fields">
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
@@ -31,6 +51,7 @@ export default {
   props: ['dataKey'],
   data () {
     return {
+      fields: ['RepresentativeId', 'EncryptedKey', 'CreatedDateTime']
     }
   },
   mounted () {

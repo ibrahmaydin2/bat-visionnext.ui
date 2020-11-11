@@ -32,20 +32,14 @@ export default {
   .asc__getPage
     min-height: 90vh
     .asc__showPage
-      position: relative
-      top: inherit
-      left: inherit
-      width: inherit
-      height: inherit
-      z-index: inherit
-      padding: inherit
-      background: inherit
+      background: #f2f2f2
+      min-height: 90vh
       .asc__showPage-times
         display: none
     & header
       display: block
       border-bottom: 2px #f6f6f6 solid
-      padding: 10px 15px
+      padding: 10px 15px 0 15px !important
       background: #fff
       & h3
         display: inline-block
@@ -65,6 +59,20 @@ export default {
           margin-right: 5px
         & span
           font-weight: bold
+    & section
+      background: #ffffff
+      padding: 10px 15px
+    .asc__showPage-card
+      border: none
+      & h6
+        font-weight: bold
+        border-bottom: 1px #ddd solid
+        margin-bottom: 1rem
+      & span
+        display: block
+        font-weight: bold
+      & p
+        font-style: normal
     .tabs
       .nav-tabs
         background: #e4e4e4

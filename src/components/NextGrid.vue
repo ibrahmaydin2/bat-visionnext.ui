@@ -6,7 +6,15 @@
           <b-th width="30" class="asc__nextgrid-table-header">
             &nbsp;
           </b-th>
-          <b-th v-for="(h, i) in tableRows.filter(item => item.visible === true)" :key="'head' + i" :class="h.align == null ? 'text-left' : 'text-' + h.align" class="asc__nextgrid-table-header">
+          <b-th
+            v-for="(h, i) in tableRows.filter(item => item.visible === true)"
+            :key="'head' + i"
+            :class="
+              h.align == null ?
+              'asc__nextgrid-table-header asc__nextgrid-table-header-' + h.columnType + ' text-left'
+              :
+              'asc__nextgrid-table-header asc__nextgrid-table-header-' + h.columnType + ' text-' + h.align"
+          >
             <span class="asc__nextgrid-table-header-title">{{h.label}}</span>
             <div class="asc__nextgrid-table-header-sort">
               <b-button
@@ -18,7 +26,39 @@
                 <i :class="sort === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
               </b-button>
             </div>
-            <b-form-input class="asc__nextgrid-table-header-search" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+            <div class="asc__nextgrid-table-header-filter">
+              <v-select
+                v-if="h.columnType === 'LabelValue'"
+                @input="filterAutocomplete"
+                label="title"
+                v-once
+                disabled
+              />
+
+              <v-select
+                v-if="h.columnType === 'Boolean'"
+                :options="searchBoolean"
+                @input="filterBoolean(h.dataField)"
+                v-once
+                v-model="searchText"
+                label="title"
+              />
+
+              <b-form-datepicker
+                v-if="h.columnType === 'Date'"
+                v-model="searchText"
+                v-once
+                @click="searchOnTable(h.dataField, searchText)"
+              />
+
+              <b-form-datepicker
+                v-if="h.columnType === 'DateTime'"
+                v-model="searchText" v-once @click="searchOnTable(h.dataField, searchText)" />
+
+              <b-form-input v-if="h.columnType === 'String'" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+
+              <b-form-input v-if="h.columnType === 'Id'" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
+            </div>
           </b-th>
         </draggable>
       </b-thead>
@@ -106,7 +146,11 @@ export default {
       tablefield: null,
       searched: null,
       sort: 'ASC',
-      whereSort: null
+      sortField: null,
+      searchBoolean: [
+        { value: 1, title: 'Aktif' },
+        { value: 0, title: 'Pasif' }
+      ]
     }
   },
   mounted () {
@@ -126,9 +170,9 @@ export default {
     // ön tanımlı olarak sıralama gönderilmez. eğer varsa query alınacak.
     if (this.$route.query.sort) {
       this.sort = this.$route.query.sort
-      this.whereSort = this.$route.query.where
+      this.sortField = this.$route.query.field
       sortOpt = {
-        table: this.whereSort,
+        table: this.sortField,
         sort: this.sort
       }
     } else {
@@ -140,6 +184,9 @@ export default {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid'])
   },
   methods: {
+    filterAutocomplete (e) {
+      console.log(e)
+    },
     dateTimeformat (e) {
       let calendar, date
       calendar = e.split('T')
@@ -157,40 +204,52 @@ export default {
       }
     },
     linkGen (pageNum) {
-      console.log(pageNum)
-      console.log(this.$route.query)
-      // sayfadaki kayıt sayısı veya sıralama belirtilmişse o kadar datayı çağırır. belirtilmemişse default değer gelir.
-      // if ((this.$route.query.count) && (this.$route.query.sort)) {
-      //   return `?page=${pageNum}&count=${this.$route.query.count}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
-      // } else if ((this.$route.query.count) && (!this.$route.query.sort)) {
-      //   return `?page=${pageNum}&count=${this.$route.query.count}`
-      // } else if ((!this.$route.query.count) && (this.$route.query.sort)) {
-      //   return `?page=${pageNum}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
-      // } else {
-      //   return `?page=${pageNum}`
-      // }
+      let paginationQ = ''
+      const rt = this.$route.query
+      if (rt.search) {
+        paginationQ += `&search=${rt.search}&where=${rt.where}`
+      }
+      if (rt.sort) {
+        paginationQ += `&field=${rt.field}&sort=${rt.sort}`
+      }
+      if (rt.count) {
+        paginationQ += `&count=${rt.count}`
+      }
+      return `?page=${pageNum}${paginationQ}`
     },
     setPerPage (p) {
       this.perPage = p
       if (this.$route.query.sort) {
-        this.$router.push({name: this.$route.name, query: {'page': 1, 'count': p, 'where': this.$route.query.where, 'sort': this.$route.query.sort}})
+        this.$router.push({name: this.$route.name, query: {'page': 1, 'count': p, 'field': this.$route.query.field, 'sort': this.$route.query.sort}})
       } else {
         this.$router.push({name: this.$route.name, query: {'page': 1, 'count': p}})
       }
     },
     sortable (field, sort) {
       this.sort = sort
-      this.whereSort = field
-
-      // OrderByColumns = {
-      //   Column: field,
-      //   OrderByType: sort // 'Ascending'
-      // }
-      if (this.$route.query.count) {
-        this.$router.push({name: this.$route.name, query: {'page': 1, 'count': this.$route.query.count, 'where': field, 'sort': sort}})
-      } else {
-        this.$router.push({name: this.$route.name, query: {'page': 1, 'where': field, 'sort': sort}})
+      this.sortField = field
+      const rt = this.$route.query
+      let routeQ = {}
+      routeQ['page'] = 1
+      if (rt.search) {
+        routeQ['search'] = rt.search
+        routeQ['where'] = rt.where
       }
+      if (rt.count) {
+        routeQ['count'] = rt.count
+      }
+      routeQ['field'] = this.sortField
+      routeQ['sort'] = this.sort
+      this.$router.push({name: this.$route.name, query: routeQ})
+
+      // if (this.$route.query.count) {
+      //   this.$router.push({name: this.$route.name, query: {'page': 1, 'count': this.$route.query.count, 'field': field, 'sort': sort}})
+      // } else {
+      //   this.$router.push({name: this.$route.name, query: {'page': 1, 'field': field, 'sort': sort}})
+      // }
+    },
+    filterBoolean (e) {
+      this.searchOnTable(e, this.searchText.value)
     },
     searchOnTable (tableField, search) {
       this.tablefield = tableField
@@ -232,9 +291,9 @@ export default {
       }
       if (to.query.sort) {
         this.sort = to.query.sort
-        this.whereSort = to.query.where
+        this.sortField = to.query.field
         sortOpt = {
-          table: this.whereSort,
+          table: this.sortField,
           sort: this.sort
         }
       } else {
@@ -278,10 +337,21 @@ export default {
       .router-link-exact-active
         background-color: #fc9e01
         border-color: #f99a03
+    .asc__nextgrid-table-header-LabelValue
+      min-width: 100px
+    .asc__nextgrid-table-header-Boolean
+      width: 120px
+    .asc__nextgrid-table-header-Date
+      min-width: 100px
+    .asc__nextgrid-table-header-DateTime
+      min-width: 100px
+    .asc__nextgrid-table-header-String
+      min-width: 100px
+    .asc__nextgrid-table-header-Id
+      width: 120px
     .asc__nextgrid-table-header
       background: #f2f2f2
       top: -3px !important
-      .asc__nextgrid-table-header-search
       .asc__nextgrid-table-header-title
         display: inline-block
         cursor: move
@@ -298,6 +368,8 @@ export default {
           border: none
         .asc__nextgrid-table-header-sort-active
           color: #000
+      .asc__nextgrid-table-header-filter
+        position: relative
     .asc__nextgrid-table-footer
       padding: 10px 0 0 0
       height: 50px

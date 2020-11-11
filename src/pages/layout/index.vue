@@ -272,6 +272,7 @@ export default {
     font-size: 10px;
   }
 </style>
+<!--
 <style lang="sass">
   .asc__showPage
     position: fixed
@@ -302,7 +303,8 @@ export default {
         top: 45px
         right: 3px
     .asc__showPage-container
-      background: #fff
+      background: #f2f2f2
+      min-height: 90vh
       @media (max-width: 767px)
         height: 80vh
         overflow: auto
@@ -395,3 +397,4 @@ export default {
         letter-spacing: -0.7px
         font-weight: bold
 </style>
+-->
