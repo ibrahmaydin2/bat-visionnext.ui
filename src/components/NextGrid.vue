@@ -49,7 +49,7 @@
                 v-once
                 v-model="searchText"
                 placeholder=""
-                @click="searchOnTable(h.dataField, searchText)"
+                @input="filterDate(h.dataField, searchText)"
               />
 
               <b-form-datepicker
@@ -57,7 +57,7 @@
                 v-once
                 v-model="searchText"
                 placeholder=""
-                @click="searchOnTable(h.dataField, searchText)"
+                @input="filterDate(h.dataField, searchText)"
               />
 
               <b-form-input
@@ -267,6 +267,9 @@ export default {
     },
     filterBoolean (e) {
       this.searchOnTable(e, this.searchText.value)
+    },
+    filterDate (e, date) {
+      this.searchOnTable(e, date)
     },
     searchOnTable (tableField, search) {
       this.tablefield = tableField

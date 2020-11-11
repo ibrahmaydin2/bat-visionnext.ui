@@ -153,7 +153,7 @@ export default {
             id: 3,
             title: 'Örnek 3'
           }
-        ],
+        ]
       }
     }
   },
