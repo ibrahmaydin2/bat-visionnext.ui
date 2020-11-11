@@ -145,30 +145,40 @@ export const store = new Vuex.Store({
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
     getTableData ({ commit }, query) {
       commit('setTableData', [])
+      commit('showNextgrid', false)
       commit('bigLoaded', true)
       let dataQuery = {}
-      if (query.searchField) {
-        let AndConditionModel = {}
-        AndConditionModel[query.searchField] = query.searchText
-        dataQuery = {
-          AndConditionModel,
-          'branchId': 1,
-          'pagerecordCount': query.count,
-          'page': query.page
-        }
+      let OrderByColumns = []
+      let AndConditionModel = {}
+
+      if (query.sort) {
+        // sıralama özelliği şuan tek sütunda geçerli.
+        // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
+        OrderByColumns = [
+          {
+            Column: query.sort.table,
+            OrderByType: query.sort.sort === 'ASC' ? 'Ascending' : 'Descending'
+          }
+        ]
       } else {
-        dataQuery = {
-          'AndConditionModel': {
-            // 'Description1': 'ST03 ROTA'
-          },
-          'branchId': 1,
-          'pagerecordCount': query.count,
-          'page': query.page
-        }
+        OrderByColumns = []
       }
 
-      commit('showNextgrid', false)
+      if (query.searchField) {
+        // search özelliği şuan tek sütunda geçerli.
+        // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
+        AndConditionModel[query.searchField] = query.searchText
+      } else {
+        AndConditionModel = {}
+      }
 
+      dataQuery = {
+        AndConditionModel,
+        'branchId': 1,
+        'pagerecordCount': query.count,
+        'page': query.page,
+        OrderByColumns
+      }
       return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery)
         .then(res => {
           if (res.data.IsCompleted === true) {

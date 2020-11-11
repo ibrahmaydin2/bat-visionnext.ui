@@ -10,22 +10,12 @@
             <span class="asc__nextgrid-table-header-title">{{h.label}}</span>
             <div class="asc__nextgrid-table-header-sort">
               <b-button
-                v-if="sort != 'DESC'"
-                @click="sortable(h.dataField, 'DESC')"
+                @click="sortable(h.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
                 size="sm"
                 variant="light"
                 class="py-0"
               >
-                <i class="fas fa-sort-up" />
-              </b-button>
-              <b-button
-                v-if="sort != 'ASC'"
-                @click="sortable(h.dataField, 'ASC')"
-                size="sm"
-                variant="light"
-                class="py-0"
-              >
-                <i class="fas fa-sort-down" />
+                <i :class="sort === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
               </b-button>
             </div>
             <b-form-input class="asc__nextgrid-table-header-search" v-model="searchText" v-once @keydown.enter="searchOnTable(h.dataField, searchText)" />
@@ -129,7 +119,7 @@ export default {
     }
     // ön tanımlı olarak 1. sayfa gelir. eğer farklı bir sayfa istenmişse onu belirtir.
     if (this.$route.query.page) {
-      this.currentPage = this.$route.query.page
+      this.currentPage = parseInt(this.$route.query.page)
     } else {
       this.currentPage = 1
     }
@@ -167,16 +157,18 @@ export default {
       }
     },
     linkGen (pageNum) {
+      console.log(pageNum)
+      console.log(this.$route.query)
       // sayfadaki kayıt sayısı veya sıralama belirtilmişse o kadar datayı çağırır. belirtilmemişse default değer gelir.
-      if ((this.$route.query.count) && (this.$route.query.sort)) {
-        return `?page=${pageNum}&count=${this.$route.query.count}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
-      } else if ((this.$route.query.count) && (!this.$route.query.sort)) {
-        return `?page=${pageNum}&count=${this.$route.query.count}`
-      } else if ((!this.$route.query.count) && (this.$route.query.sort)) {
-        return `?page=${pageNum}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
-      } else {
-        return `?page=${pageNum}`
-      }
+      // if ((this.$route.query.count) && (this.$route.query.sort)) {
+      //   return `?page=${pageNum}&count=${this.$route.query.count}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
+      // } else if ((this.$route.query.count) && (!this.$route.query.sort)) {
+      //   return `?page=${pageNum}&count=${this.$route.query.count}`
+      // } else if ((!this.$route.query.count) && (this.$route.query.sort)) {
+      //   return `?page=${pageNum}&where=${this.$route.query.where}&sort=${this.$route.query.sort}`
+      // } else {
+      //   return `?page=${pageNum}`
+      // }
     },
     setPerPage (p) {
       this.perPage = p
