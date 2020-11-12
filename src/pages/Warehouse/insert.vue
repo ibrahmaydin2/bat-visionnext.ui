@@ -122,6 +122,29 @@
           </b-row>
         </b-tab>
         <b-tab title="Tedarikçi">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.warehouse.Model_SupplierBranchId')">
+                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.warehouse.Model_PurchaseWarehouseId')">
+                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.warehouse.Model_ReturnWarehouseId')">
+                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+
         </b-tab>
       </b-tabs>
     </b-col>

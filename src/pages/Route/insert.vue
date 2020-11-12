@@ -139,6 +139,68 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.locations')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.route.CustomerId')">
+                <b-form-input type="text" v-model="form.CustomerId" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.route.LocationId')">
+                <b-form-input type="text" v-model="form.LocationId" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day1VisitOrder')">
+                <b-form-input type="text" v-model="form.Day1VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day2VisitOrder')">
+                <b-form-input type="text" v-model="form.Day2VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day3VisitOrder')">
+                <b-form-input type="text" v-model="form.Day3VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day4VisitOrder')">
+                <b-form-input type="text" v-model="form.Day4VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day5VisitOrder')">
+                <b-form-input type="text" v-model="form.Day5VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day6VisitOrder')">
+                <b-form-input type="text" v-model="form.Day6VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="1">
+              <b-form-group :label="$t('insert.route.Day7VisitOrder')">
+                <b-form-input type="text" v-model="form.Day7VisitOrder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.route.Day1FreStartDate')">
+                <b-form-input type="text" v-model="form.Day1FreStartDate" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.route.Day1Frequency')">
+                <b-form-input type="text" v-model="form.Day1Frequency" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>

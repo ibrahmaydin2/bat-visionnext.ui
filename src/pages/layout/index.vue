@@ -24,7 +24,7 @@
                 </b-dropdown>
                 <b-dropdown
                   variant="white"
-                  :text="$t('list.allRecords')"
+                  :text="$t('list.allFilters')"
                   class="asc__listPage-Header-Dropdown"
                 >
                   <b-dropdown-header id="dropdown-header-label">

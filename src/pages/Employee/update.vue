@@ -248,7 +248,9 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-button variant="success">Ekle</b-button>
+              <b-form-group>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+              </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
@@ -260,7 +262,9 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-button variant="success">Ekle</b-button>
+              <b-form-group>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+              </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
@@ -272,7 +276,9 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-button variant="success">Ekle</b-button>
+              <b-form-group>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+              </b-form-group>
             </b-col>
           </b-row>
         </b-tab>

@@ -15,7 +15,7 @@
         </div> -->
       </b-col>
       <b-col lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
-        <b-dropdown id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
+        <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
             <b>{{loginUser.company}}</b> {{loginUser.name}}
           </template>

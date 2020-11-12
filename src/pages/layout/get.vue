@@ -81,8 +81,9 @@ export default {
 
       & p
         font-style: normal
-        padding-bottom: 5px
+        padding-bottom: 10px
         border-bottom: 1px solid #e2dfdf
+        margin-left: 15px
     .tabs
       .nav-tabs
         background: #e4e4e4

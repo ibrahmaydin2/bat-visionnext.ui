@@ -58,7 +58,18 @@
       "title": "Detaylar",
       "type": "Tip",
       "customerArea": "Müşteri Bölgesi",
-      "reference": "Referans"
+      "reference": "Referans",
+      "CustomerId": "Müşteri Kodu",
+      "LocationId": "Lokasyon Kodu",
+      "Day1VisitOrder": "Pazartesi",
+      "Day2VisitOrder": "Salı",
+      "Day3VisitOrder": "Çarşamba",
+      "Day4VisitOrder": "Perşembe",
+      "Day5VisitOrder": "Cuma",
+      "Day6VisitOrder": "Cumartesi",
+      "Day7VisitOrder": "Pazar",
+      "Day1FreStartDate": "Rota Başlangıcı",
+      "Day1Frequency": "Yıllık Uğrama Frekansı"
     },
     "yes": "Evet",
     "no": "Hayır",
@@ -281,7 +292,10 @@
       "Model_IsCenterWarehouse": "Varsayılan Depo mu?",
       "Model_WarehouseCapacity": "Depo Kapasitesi (m2)",
       "Model_LicenseNumber": "Lisans Numarası",
-      "Model_FinanceCode": "Finans Kodu"
+      "Model_FinanceCode": "Finans Kodu",
+      "Model_SupplierBranchId": "Şube",
+      "Model_PurchaseWarehouseId": "Satın Alma Deposu",
+      "Model_ReturnWarehouseId": "İade Deposu"
     },
     "item": {
       "Detail": "Detaylar",

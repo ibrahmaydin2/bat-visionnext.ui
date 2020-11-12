@@ -56,13 +56,10 @@
           <b-card class="m-3 asc__showPage-card">
             <b-table :items="tempItems" :fields="fields">
               <template #cell(customer)="data">
-                {{data.value}}
-                <br>
-                <br>
-                {{data.item.code}}
+                <kbd>{{data.item.code}}</kbd> {{data.value}}
               </template>
               <template #cell(visit)="data">
-                <i class="fa fa-check text-success"></i>
+                <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
               </template>
             </b-table>
           </b-card>
@@ -82,28 +79,31 @@ export default {
         {
           key: 'customer',
           label: 'Müşteri',
+          sortable: true
         },
         {
           key: 'location',
           label: 'Lokasyon',
+          sortable: true
         },
         {
           key: 'visit',
           label: 'Ziyaret Başlama Kontrolü Yapılmayacak',
+          sortable: true
         }
       ],
       tempItems: [
         { customer: 'CIHAN BUFE- ALI ATAN', location: 'CIHAN BUFE- ALI ATAN', visit: 1, code: '312' },
-        { customer: 'UGUR BUFE', location: 'UGUR BUFE', visit: 1 , code: '260'},
+        { customer: 'UGUR BUFE', location: 'UGUR BUFE', visit: 1, code: '260' },
         { customer: 'ENGIN MARKET-ENGIN SIT', location: 'ENGIN MARKET-ENGIN SIT', visit: 0, code: '312' },
         { customer: 'MOKKI', location: 'MOKKI', visit: 0 },
-        { customer: 'CAN BÜFE SERKAN ÇALIŞKAN', location: 'CAN BÜFE SERKAN ÇALIŞKAN', visit: 0 , code: '312'},
-        { customer: 'YAVUZ BÜFE', location: 'YAVUZ BÜFE', visit: 0 , code: '312'},
-        { customer: 'MASLAK ARENA', location: 'MASLAK ARENA', visit: 1 , code: '312'},
-        { customer: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', location: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', visit: 1 , code: '312'},
+        { customer: 'CAN BÜFE SERKAN ÇALIŞKAN', location: 'CAN BÜFE SERKAN ÇALIŞKAN', visit: 0, code: '312' },
+        { customer: 'YAVUZ BÜFE', location: 'YAVUZ BÜFE', visit: 0, code: '312' },
+        { customer: 'MASLAK ARENA', location: 'MASLAK ARENA', visit: 1, code: '312' },
+        { customer: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', location: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', visit: 1, code: '312' },
         { customer: 'TEKEL 61-İDRİS BAŞALI', location: 'TEKEL 61-İDRİS BAŞALI', visit: 1, code: '312' },
-        { customer: 'ARZU GIDA-AHMET AKSU', location: 'ARZU GIDA-AHMET AKSU', visit: 1 , code: '312'},
-        { customer: 'BARBADOS TÜTÜN', location: 'BARBADOS TÜTÜN', visit: 1 , code: '312'},
+        { customer: 'ARZU GIDA-AHMET AKSU', location: 'ARZU GIDA-AHMET AKSU', visit: 1, code: '312' },
+        { customer: 'BARBADOS TÜTÜN', location: 'BARBADOS TÜTÜN', visit: 1, code: '312' }
       ]
     }
   },
