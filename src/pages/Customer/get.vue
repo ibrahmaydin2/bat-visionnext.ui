@@ -15,10 +15,9 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.route.reference')}}:</b> {{rowData.EncryptedKey}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.route.StatusReason')}}:</b> {{rowData.StatusReasonId.Label}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_StatusReasonId')}}:</b> {{rowData.StatusReasonId.Label}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.customer.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
@@ -28,22 +27,22 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CommercialTitle')}}</span><p>{{rowData.CommercialTitle}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Description1')}}</span><p>{{rowData.Description1}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TaxOffice')}}</span><p>{{rowData.TaxOffice}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TaxNumber')}}</span><p>{{rowData.TaxNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.IsDutyFree')}}</span><p>{{rowData.IsDutyFree}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.UseEInvoice')}}</span><p>{{rowData.UseEInvoice}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.IsTaxExemption')}}</span><p>{{rowData.IsTaxExemption}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CardTypeId')}}</span><p>{{rowData.CardTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TypeId')}}</span><p>{{rowData.TypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.SalesTypeId')}}</span><p>{{rowData.SalesTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.SalesDocumentTypeId')}}</span><p>{{rowData.SalesDocumentTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.PriceListCategoryId')}}</span><p>{{rowData.PriceListCategoryId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.SalesPriceChangeRate')}}</span><p>{{rowData.SalesPriceChangeRate}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DeliveryDayParam')}}</span><p>{{rowData.DeliveryDayParam}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CommercialTitle')}}</span><p>{{rowData.CommercialTitle}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Description1')}}</span><p>{{rowData.Description1}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxOffice')}}</span><p>{{rowData.TaxOffice}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxNumber')}}</span><p>{{rowData.TaxNumber}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDutyFree')}}</span><p>{{rowData.IsDutyFree}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_UseEInvoice')}}</span><p>{{rowData.UseEInvoice}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span><p>{{rowData.IsTaxExemption}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CardTypeId')}}</span><p>{{rowData.CardTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.TypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesTypeId')}}</span><p>{{rowData.SalesTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesDocumentTypeId')}}</span><p>{{rowData.SalesDocumentTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PriceListCategoryId')}}</span><p>{{rowData.PriceListCategoryId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesPriceChangeRate')}}</span><p>{{rowData.SalesPriceChangeRate}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DeliveryDayParam')}}</span><p>{{rowData.DeliveryDayParam}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">
@@ -66,31 +65,31 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Category1Id')}}</span><p>{{rowData.Category1Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Category3Id')}}</span><p>{{rowData.Category3Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Category2Id')}}</span><p>{{rowData.Category2Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.GroupId')}}</span><p>{{rowData.GroupId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup1Id')}}</span><p>{{rowData.DiscountGroup1Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup3Id')}}</span><p>{{rowData.DiscountGroup3Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup5Id')}}</span><p>{{rowData.DiscountGroup5Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup6Id')}}</span><p>{{rowData.DiscountGroup6Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup7Id')}}</span><p>{{rowData.DiscountGroup7Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup8Id')}}</span><p>{{rowData.DiscountGroup8Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.SalesMethodId')}}</span><p>{{rowData.SalesMethodId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TradeFocusId')}}</span><p>{{rowData.TradeFocusId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DiscountGroup4Id')}}</span><p>{{rowData.DiscountGroup4Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.OwnerTypeId')}}</span><p>{{rowData.OwnerTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.ClassId')}}</span><p>{{rowData.ClassId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.ClassProposalId')}}</span><p>{{rowData.ClassProposalId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.ClassProposalReasonId')}}</span><p>{{rowData.ClassProposalReasonId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.KindId')}}</span><p>{{rowData.KindId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.GeographicEnvironmentId')}}</span><p>{{rowData.GeographicEnvironmentId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Field1')}}</span><p>{{rowData.Field1}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Field2')}}</span><p>{{rowData.Field2}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Field3')}}</span><p>{{rowData.Field3}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Field4')}}</span><p>{{rowData.Field4}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Field5')}}</span><p>{{rowData.Field5}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.TextField6')}}</span><p>{{rowData.TextField6}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category1Id')}}</span><p>{{rowData.Category1Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category3Id')}}</span><p>{{rowData.Category3Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category2Id')}}</span><p>{{rowData.Category2Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_GroupId')}}</span><p>{{rowData.GroupId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup1Id')}}</span><p>{{rowData.DiscountGroup1Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup3Id')}}</span><p>{{rowData.DiscountGroup3Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup5Id')}}</span><p>{{rowData.DiscountGroup5Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup6Id')}}</span><p>{{rowData.DiscountGroup6Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup7Id')}}</span><p>{{rowData.DiscountGroup7Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup8Id')}}</span><p>{{rowData.DiscountGroup8Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesMethodId')}}</span><p>{{rowData.SalesMethodId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TradeFocusId')}}</span><p>{{rowData.TradeFocusId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup4Id')}}</span><p>{{rowData.DiscountGroup4Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_OwnerTypeId')}}</span><p>{{rowData.OwnerTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassId')}}</span><p>{{rowData.ClassId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassProposalId')}}</span><p>{{rowData.ClassProposalId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassProposalReasonId')}}</span><p>{{rowData.ClassProposalReasonId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_KindId')}}</span><p>{{rowData.KindId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_GeographicEnvironmentId')}}</span><p>{{rowData.GeographicEnvironmentId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field1')}}</span><p>{{rowData.Field1}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field2')}}</span><p>{{rowData.Field2}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field3')}}</span><p>{{rowData.Field3}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field4')}}</span><p>{{rowData.Field4}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field5')}}</span><p>{{rowData.Field5}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TextField6')}}</span><p>{{rowData.TextField6}}</p>
               </b-card>
             </b-col>
           </b-row>
@@ -100,18 +99,18 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CreditLimit')}}</span><p>{{rowData.CreditLimit}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.RiskLimit')}}</span><p>{{rowData.RiskLimit}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.IsDefaultLocation')}}</span><p>{{rowData.IsDefaultLocation}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CurrentCredit')}}</span><p>{{rowData.CurrentCredit}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CurrentRisk')}}</span><p>{{rowData.CurrentRisk}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.IsAutoBlockingOff')}}</span><p>{{rowData.IsAutoBlockingOff}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.IsBlocked')}}</span><p>{{rowData.IsBlocked}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.BlockReasonId')}}</span><p>{{rowData.BlockReasonId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.ManualInvoiceClosure')}}</span><p>{{rowData.ManualInvoiceClosure}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.InvoiceCombineRuleId')}}</span><p>{{rowData.InvoiceCombineRuleId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.FinanceCode')}}</span><p>{{rowData.FinanceCode}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.CustomerRegion5Id')}}</span><p>{{rowData.CustomerRegion5Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CreditLimit')}}</span><p>{{rowData.CreditLimit}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_RiskLimit')}}</span><p>{{rowData.RiskLimit}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDefaultLocation')}}</span><p>{{rowData.IsDefaultLocation}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentCredit')}}</span><p>{{rowData.CurrentCredit}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentRisk')}}</span><p>{{rowData.CurrentRisk}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsAutoBlockingOff')}}</span><p>{{rowData.IsAutoBlockingOff}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsBlocked')}}</span><p>{{rowData.IsBlocked}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BlockReasonId')}}</span><p>{{rowData.BlockReasonId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ManualInvoiceClosure')}}</span><p>{{rowData.ManualInvoiceClosure}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_InvoiceCombineRuleId')}}</span><p>{{rowData.InvoiceCombineRuleId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_FinanceCode')}}</span><p>{{rowData.FinanceCode}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerRegion5Id')}}</span><p>{{rowData.CustomerRegion5Id}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">
@@ -134,14 +133,14 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.DefaultPaymentTypeId')}}</span><p>{{rowData.DefaultPaymentTypeId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.BankPaymentSystemId')}}</span><p>{{rowData.BankPaymentSystemId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.PaymentPeriod')}}</span><p>{{rowData.PaymentPeriod}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DefaultPaymentTypeId')}}</span><p>{{rowData.DefaultPaymentTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BankPaymentSystemId')}}</span><p>{{rowData.BankPaymentSystemId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PaymentPeriod')}}</span><p>{{rowData.PaymentPeriod}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.PaymentTypeId')}}</h6>
+                <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
                 <b-table responsive :items="paymentTypeItems" :fields="paymentTypeFields">
                   <template #cell(customer)="data">
                     <kbd>{{data.item.code}}</kbd> {{data.value}}
@@ -154,7 +153,7 @@
             </b-col>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.FixedTermId')}}</h6>
+                <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
                 <b-table responsive :items="fixedTermItems" :fields="fixedTermFields">
                   <template #cell(customer)="data">
                     <kbd>{{data.item.code}}</kbd> {{data.value}}
@@ -171,7 +170,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.FixedTermId')}}</h6>
+                <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
                 <b-table responsive :items="discountItems" :fields="discountFields">
                   <template #cell(customer)="data">
                     <kbd>{{data.item.code}}</kbd> {{data.value}}

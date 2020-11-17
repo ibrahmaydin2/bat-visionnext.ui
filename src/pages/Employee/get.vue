@@ -15,109 +15,123 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <!-- <span><i class="fas fa-code" />  <b>{{$t('insert.route.reference')}}:</b> {{rowData.EncryptedKey}}</span> 
-            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
-            <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span> -->
+            <span><i class="fas fa-code" />  <b>{{$t('insert.employee.Model_Code')}}:</b></span> 
+            <span><i class="fas fa-check" />  <b>{{$t('insert.employee.Model_Name')}}:</b></span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.employee.Model_Surname')}}:</b></span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.employee.state')}}:</b></span>
           </section>
         </b-col>
-        <b-col cols="12" md="4">
-          <b-card class="m-3 asc__showPage-card">
-            <h6>{{$t('insert.employee.Employee')}}</h6>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPCustomerCode')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPSupplierCode')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_IsRepresentative')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_SAPSrCode')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Team')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.active')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.passive')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Description')}}</span>
-            <p></p>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="4">
-          <b-card class="m-3 asc__showPage-card">
-            <h6>{{$t('insert.employee.EmployeeCustomer')}}</h6>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CreateCustomer')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_taxNumber')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_FinanceCode1')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_PriceListCategoryId')}}</span>
-            <p></p>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="4">
-          <b-card class="m-3 asc__showPage-card">
-            <h6>{{$t('insert.employee.Model_Personal')}}</h6>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BirthDate')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EducationId')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Identificationnumber')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BloodType')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_JeansSize')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ShirtSize')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Shoesize')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CoatSize')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_TShirtSize')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ClothTrousersSize')}}</span>
-            <p></p>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="4">
-          <b-card class="m-3 asc__showPage-card">
-            <h6>{{$t('insert.employee.EmployeeContact')}}</h6>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_GsmNumber')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone1')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone2')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Email')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Fax')}}</span>
-            <p></p>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="6">
-          <b-card class="m-3 asc__showPage-card">
-            <b-table responsive :items="[]" :fields="fields1">
-            </b-table>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="6">
-          <b-card class="m-3 asc__showPage-card">
-            <b-table responsive :items="[]" :fields="fields2">
-            </b-table>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="6">
-          <b-card class="m-3 asc__showPage-card">
-            <b-table responsive :items="[]" :fields="fields3">
-            </b-table>
-          </b-card>
-        </b-col>
       </b-row>
+      <b-tabs>
+        <b-tab :title="$t('get.detail')" active>
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.employee.Employee')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPCustomerCode')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPSupplierCode')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_IsRepresentative')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_SAPSrCode')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Team')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.active')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.passive')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Description')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_GsmNumber')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone1')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone2')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Email')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Fax')}}</span>
+                <p></p>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.employee.Model_Personal')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BirthDate')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EducationId')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Identificationnumber')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BloodType')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_JeansSize')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ShirtSize')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Shoesize')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CoatSize')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_TShirtSize')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ClothTrousersSize')}}</span>
+                <p></p>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.employee.EmployeeCustomer')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CreateCustomer')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_taxNumber')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_FinanceCode1')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_PriceListCategoryId')}}</span>
+                <p></p>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.employee.EmployeeDevices')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="[]" :fields="fields1">
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.employee.EmployeeBanks')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="[]" :fields="fields2">
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.employee.EmployeePrefix')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="[]" :fields="fields3">
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+
+      </b-tabs>
     </div>
   </div>
   <!-- "EmployeeDevices": "Uygun Cihazlar",

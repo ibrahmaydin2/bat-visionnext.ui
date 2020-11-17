@@ -69,7 +69,9 @@
       "Day6VisitOrder": "Cumartesi",
       "Day7VisitOrder": "Pazar",
       "Day1FreStartDate": "Rota Başlangıcı",
-      "Day1Frequency": "Yıllık Uğrama Frekansı"
+      "Day1Frequency": "Yıllık Uğrama Frekansı",
+      "routeDetail": "Rota Detayı",
+      "locations": "Lokasyonlar"
     },
     "yes": "Evet",
     "no": "Hayır",
@@ -282,8 +284,9 @@
       "EndDate" : "Bitiş Tarih",
       "ColumnName" : "Alan Açıklaması",
       "ColumnValue" : "Değer",
-      "DiscountPercent1" : "Ürün İndirimi 1"
-
+      "DiscountPercent1" : "Ürün İndirimi 1",
+      "code": "Sistem Kodu",
+      "status": "Durum"
     },
     "warehouse": {
       "Model_Code": "Sistem Kodu",
@@ -297,7 +300,21 @@
       "Model_FinanceCode": "Finans Kodu",
       "Model_SupplierBranchId": "Şube",
       "Model_PurchaseWarehouseId": "Satın Alma Deposu",
-      "Model_ReturnWarehouseId": "İade Deposu"
+      "Model_ReturnWarehouseId": "İade Deposu",
+      "Warehouse": "Depo Ana Kayıtları",
+      "WarehouseSuppliers": "Tedarikçi",
+      "SupplierBranchId": "Şube",
+      "PurchaseWarehouseId": "Satın Alma Deposu",
+      "ReturnWarehouseId": "İade Deposu",
+      "title": "Depo Ana Kayıtları",
+      "VehicleId": "Araç",
+      "IsCenterWarehouse": "Varsayılan Depo",
+      "WarehouseCapacity": "Depo Kapasitesi (m2)",
+      "LicenseNumber": "Lisans Numarası",
+      "FinanceCode": "Finans Kodu",
+      "locations": "Hizmet Alınan Depolar",
+      "status": "Durum",
+      "code": "Sistem Kodu"
     },
     "item": {
       "Detail": "Detaylar",
@@ -355,7 +372,16 @@
       "no": "Hayır",
       "ItemInsertModel": "Sistem Kodu",
       "ItemOrderQuotas": "Sipariş Kotası",
-      "Model_KindId": "Çeşit"
+      "Model_KindId": "Çeşit",
+      "product": "Ürün",
+      "CustomerItemCode": "Ürün Kodu",
+      "customerUnitDefinition": "Birim Tanımları",
+      "deposit": "Depozito",
+      "quantity": "Adet",
+      "unit": "Birim",
+      "ItemBoms": "Ürün Gruplama",
+      "LineNumber": "Sıra Numarası",
+      "bomItem": "Bileşen Ürün"
     },
     "branch": {
       "Code": "Sistem Kodu",
@@ -438,7 +464,19 @@
       "Plate" : "Ada/Pafta",
       "PlateNumber" : "Araç Plakası",
       "PaymentType": "Ödeme Tipi",
-      "add": "Ekle"
+      "add": "Ekle",
+      "CustomFixedTerms": "FixedTerms",
+      "CustomerItemDiscountCrts": "Ürün İndirimleri",
+      "EInvoiceSeqs": "E-Fatura Sırası",
+      "Prefix": "Önek",
+      "TerminalOrPcId": "Ortam",
+      "EInvoiceTypeId": "VisionPlus EFU Servisleri",
+      "TransactionDayId": "İşlem Günü",
+      "StartDate":"Başlangıç Tarihi",
+      "EndDate" : "Bitiş Tarih",
+      "ColumnName" : "Alan Açıklaması",
+      "ColumnValue" : "Değer",
+      "chooseDate": "Tarih Seçiniz"
     }
   },
   "get": {
