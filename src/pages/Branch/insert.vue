@@ -744,7 +744,7 @@ export default {
     },
     selectedDriver (e) {
       this.form.driver = e.title
-    },
+    }
   }
 }
 </script>
