@@ -21,50 +21,57 @@
             <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span>
           </section>
         </b-col>
-        <b-col cols="12" md="4">
-          <b-card class="m-3 asc__showPage-card">
-            <h6>{{$t('insert.route.title')}}</h6>
-            <span><i class="far fa-circle" /> {{$t('insert.routeGroup')}}</span>
-            <p>{{(rowData.routeGroup) ? rowData.routeGroup.Label : ''}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.routeClass')}}</span>
-            <p>{{(rowData.RouteClass) ? rowData.RouteClass.Label : ''}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.vehicle')}}</span>
-            <p>{{(rowData.Vehicle) ? rowData.Vehicle.Label : ''}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.personel')}}</span>
-            <p>{{(rowData.Representative) ? rowData.Representative.Label : ''}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.supervisor')}}</span>
-            <p>{{(rowData.Supervisor) ? rowData.Supervisor.Label : ''}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.control')}}</span>
-            <p>{{(rowData.VisitStartControl) ? rowData.VisitStartControl.Label : ''}}</p>
-            <!-- <span><i class="far fa-circle" /> {{$t('insert.city')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.distirict')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.town')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
-            <p></p>
-            <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
-            <p></p> -->
-            <span><i class="far fa-circle" /> {{$t('insert.multiDayRoute')}}</span>
-            <p>{{(rowData.IsMultidayRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
-            <span><i class="far fa-circle" /> {{$t('insert.superRoute')}}</span>
-            <p>{{(rowData.IsSuperRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
-          </b-card>
-        </b-col>
-        <b-col cols="12" md="8">
-          <b-card class="m-3 asc__showPage-card">
-            <b-table :items="tempItems" :fields="fields">
-              <template #cell(customer)="data">
-                <kbd>{{data.item.code}}</kbd> {{data.value}}
-              </template>
-              <template #cell(visit)="data">
-                <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
-              </template>
-            </b-table>
-          </b-card>
-        </b-col>
       </b-row>
+      <b-tabs>
+        <b-tab :title="$t('insert.route.title')" active>
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.route.title')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.routeGroup')}}</span>
+                <p>{{(rowData.routeGroup) ? rowData.routeGroup.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.routeClass')}}</span>
+                <p>{{(rowData.RouteClass) ? rowData.RouteClass.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicle')}}</span>
+                <p>{{(rowData.Vehicle) ? rowData.Vehicle.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.personel')}}</span>
+                <p>{{(rowData.Representative) ? rowData.Representative.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.supervisor')}}</span>
+                <p>{{(rowData.Supervisor) ? rowData.Supervisor.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.control')}}</span>
+                <p>{{(rowData.VisitStartControl) ? rowData.VisitStartControl.Label : ''}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.city')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.distirict')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.town')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
+                <p></p> -->
+                <span><i class="far fa-circle" /> {{$t('insert.multiDayRoute')}}</span>
+                <p>{{(rowData.IsMultidayRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.superRoute')}}</span>
+                <p>{{(rowData.IsSuperRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="8">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.route.locations')}}</h6>
+                <b-table :items="tempItems" :fields="fields">
+                  <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template>
+                  <template #cell(visit)="data">
+                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+      </b-tabs>
     </div>
   </div>
 </template>

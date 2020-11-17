@@ -101,7 +101,7 @@ export const store = new Vuex.Store({
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
             commit('bigLoaded', false)
-  
+
           }
         })
         .catch(err => {
@@ -232,21 +232,16 @@ export const store = new Vuex.Store({
     },
     createData ({ commit }, query) {
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      console.log(query)
       document.getElementById('submitButton').disabled = true
-      document.getElementById('submitLoaderText').style.display = 'none'
-      document.getElementById('submitLoader').style.display = 'block'
-      return axios.post('APIADRESI', query, authHeader)
+      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Insert', query.form, authHeader)
         .then(res => {
           commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
           router.push({name: query.return})
           document.getElementById('submitButton').disabled = false
-          document.getElementById('submitLoaderText').style.display = 'block'
-          document.getElementById('submitLoader').style.display = 'none'
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
-          document.getElementById('submitLoaderText').style.display = 'block'
-          document.getElementById('submitLoader').style.display = 'none'
           commit('showAlert', { type: 'danger', msg: err })
         })
     }

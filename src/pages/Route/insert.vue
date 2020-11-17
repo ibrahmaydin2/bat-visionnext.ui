@@ -10,7 +10,7 @@
             <router-link :to="{name: 'Dashboard' }">
               <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
             </router-link>
-            <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
+            <b-button @click="save()" id="submitButton" size="sm" variant="success">Kaydet</b-button>
           </b-col>
         </b-row>
       </header>
@@ -212,6 +212,73 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      insert: {
+        RepresentativeId: 1004418.0,
+        VehicleId: 1004423.0,
+        TerminalId: null,
+        RouteTypeId: 1.0,
+        RouteGroupId: null,
+        RouteClassId: null,
+        IsMultidayRoute: 0,
+        StatusId: 1.0,
+        IsSuperRoute: 0,
+        ManagerId: null,
+        MarketingRegion5Id: null,
+        MarketingRegion4Id: null,
+        MarketingRegion3Id: null,
+        MarketingRegion2Id: null,
+        MarketingRegion1Id: null,
+        VisitStartControlId: 669.0,
+        SupervisorId: null,
+        Representative: {
+          Code: '000000001',
+          UpperValue: null,
+          Label: 'Recep TOPUZ',
+          Value: '1004418',
+          DecimalValue: 1004418.0,
+          OtherProperties: null
+        },
+        MarketingRegion1: null,
+        MarketingRegion2: null,
+        MarketingRegion3: null,
+        MarketingRegion4: null,
+        MarketingRegion5: null,
+        RouteGroup: null,
+        RouteClass: null,
+        Vehicle: {
+          Code: '000000001',
+          UpperValue: null,
+          Label: '34 EP 9978',
+          Value: '1004423',
+          DecimalValue: 1004423.0,
+          OtherProperties: null
+        },
+        RouteType: null,
+        RouteDetails: null,
+        CompanyId: 2.0,
+        BranchId: 1003017.0,
+        CreatedUser: 1004415.0,
+        CreatedDateTime: '2011-07-27T18:37:04',
+        ModifiedUser: 1293221.0,
+        ModifiedDateTime: '2013-11-11T13:26:49',
+        Deleted: 0,
+        System: 0,
+        Status: null,
+        VisitStartControl: {
+          Code: null,
+          UpperValue: null,
+          Label: 'Manuel',
+          Value: '669',
+          DecimalValue: 669.0,
+          OtherProperties: null
+        },
+        Supervisor: null,
+        EncryptedKey: 'XMk1zya1lmo=',
+        RecordId: 1004828.0,
+        Code: '000000001',
+        Description1: 'ST01 ROTA',
+        RecordState: null
+      },
       form: {
         active: null,
         checked: null,
@@ -335,9 +402,7 @@ export default {
   },
   methods: {
     save () {
-      let createData = {
-      }
-      this.$store.dispatch('createData', {...this.query, info: createData})
+      this.$store.dispatch('createData', {...this.query, form: this.insert, api: this.$route.meta.baseLink})
     },
     selectedRota (e) {
       this.rotaType = e.title

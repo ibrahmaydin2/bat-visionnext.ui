@@ -20,21 +20,21 @@
         <b-row>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.branch.Model_Code')"
+              :label="$t('insert.branch.Code')"
             >
               <b-form-input type="text" v-model="form.Code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.branch.Model_Description1')"
+              :label="$t('insert.branch.Description1')"
             >
               <b-form-input type="text" v-model="form.Description1"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.branch.Model_DistributionTypeId')"
+              :label="$t('insert.branch.DistributionTypeId')"
             >
               <b-form-input type="text" v-model="form.branchType"/>
             </b-form-group>
@@ -48,18 +48,18 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_BranchCommercialTitle')"
+                :label="$t('insert.branch.BranchCommercialTitle')"
               >
                 <b-form-input type="text" v-model="form.Unvan"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_TaxCustomerTypeId')">
+              <b-form-group :label="$t('insert.branch.TaxCustomerTypeId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_UpperBranchId')">
+              <b-form-group :label="$t('insert.branch.UpperBranchId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -67,7 +67,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsDutyFree')"
+                :label="$t('insert.branch.IsDutyFree')"
               >
               <b-form-radio-group v-model="form.IsVehicle">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -77,14 +77,14 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_TaxOffice')"
+                :label="$t('insert.branch.TaxOffice')"
               >
                 <b-form-input type="text" v-model="form.Vergi"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_TaxNumber')"
+                :label="$t('insert.branch.TaxNumber')"
               >
                 <b-form-input type="text" v-model="form.vergiNo"/>
               </b-form-group>
@@ -92,32 +92,32 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_BranchRegionId')">
+              <b-form-group :label="$t('insert.branch.BranchRegionId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_LicenseNumber')"
+                :label="$t('insert.branch.LicenseNumber')"
               >
                 <b-form-input type="text" v-model="form.vergiNo"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_SalesDocumentTypeId')">
+              <b-form-group :label="$t('insert.branch.SalesDocumentTypeId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_InvoiceCombineRuleId')">
+              <b-form-group :label="$t('insert.branch.InvoiceCombineRuleId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsOrderChangeUnitary')"
+                :label="$t('insert.branch.IsOrderChangeUnitary')"
               >
               <b-form-radio-group v-model="form.isSales">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -127,7 +127,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsWarehouseSale')"
+                :label="$t('insert.branch.IsWarehouseSale')"
               >
               <b-form-radio-group v-model="form.isWarehouse">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -139,21 +139,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_WebUrl')"
+                :label="$t('insert.branch.WebUrl')"
               >
                 <b-form-input type="text" v-model="form.adress"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_TradeLicenseNumber')"
+                :label="$t('insert.branch.TradeLicenseNumber')"
               >
                 <b-form-input type="text" v-model="form.sicilNo"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_UseEInvoice')"
+                :label="$t('insert.branch.UseEInvoice')"
               >
               <b-form-radio-group v-model="form.isEfatura">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -164,18 +164,18 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_UseEArchive')">
+              <b-form-group :label="$t('insert.branch.UseEArchive')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_UseEWaybill')">
+              <b-form-group :label="$t('insert.branch.UseEWaybill')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_StatusId')"
+                :label="$t('insert.branch.StatusId')"
               >
               <b-form-radio-group v-model="form.isStatus">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -187,7 +187,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_CustomerPrefixCode')"
+                :label="$t('insert.branch.CustomerPrefixCode')"
               >
                 <b-form-input type="text" v-model="form.OnCode"/>
               </b-form-group>
@@ -197,17 +197,17 @@
         <b-tab :title="$t('insert.branch.BranchDetails')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_DiscountGroup10Id')">
+              <b-form-group :label="$t('insert.branch.DiscountGroup10Id')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_DiscountGroup2Id')">
+              <b-form-group :label="$t('insert.branch.DiscountGroup2Id')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_DiscountGroup9Id')">
+              <b-form-group :label="$t('insert.branch.DiscountGroup9Id')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -215,7 +215,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Genexp1')"
+                :label="$t('insert.branch.Genexp1')"
               >
                 <b-form-input type="text" v-model="form.Note"/>
               </b-form-group>
@@ -226,21 +226,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Code_Location')"
+                :label="$t('insert.branch.Code_Location')"
               >
                 <b-form-input type="text" v-model="form.locationCode"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Description1_Location')"
+                :label="$t('insert.branch.Description1_Location')"
               >
                 <b-form-input type="text" v-model="form.locationName"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_AddressDetail')"
+                :label="$t('insert.branch.AddressDetail')"
               >
                 <b-form-input type="text" v-model="form.add"/>
               </b-form-group>
@@ -248,23 +248,23 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_CityId')">
+              <b-form-group :label="$t('insert.branch.CityId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_DistrictId')">
+              <b-form-group :label="$t('insert.branch.DistrictId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_ParishId')">
+              <b-form-group :label="$t('insert.branch.ParishId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_StreetDescription')"
+                :label="$t('insert.branch.StreetDescription')"
               >
                 <b-form-input type="text" v-model="form.sokak"/>
               </b-form-group>
@@ -273,28 +273,28 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_GsmNumber')"
+                :label="$t('insert.branch.GsmNumber')"
               >
                 <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel1"/>
               </b-form-group>
             </b-col>
              <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_PhoneNumber1')"
+                :label="$t('insert.branch.PhoneNumber1')"
               >
                 <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel2"/>
               </b-form-group>
             </b-col>
              <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_PhoneNumber2')"
+                :label="$t('insert.branch.PhoneNumber2')"
               >
                 <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel3"/>
               </b-form-group>
             </b-col>
              <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_FaxNumber')"
+                :label="$t('insert.branch.FaxNumber')"
               >
                 <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.faks"/>
               </b-form-group>
@@ -303,7 +303,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsInvoiceAddress')"
+                :label="$t('insert.branch.IsInvoiceAddress')"
               >
               <b-form-radio-group v-model="form.isFaturaAddress">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -313,7 +313,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsDeliveryAddress')"
+                :label="$t('insert.branch.IsDeliveryAddress')"
               >
               <b-form-radio-group v-model="form.isTeslimat">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -323,7 +323,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_IsDefaultLocation')"
+                :label="$t('insert.branch.IsDefaultLocation')"
               >
               <b-form-radio-group v-model="form.default">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -335,7 +335,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Genexp1')"
+                :label="$t('insert.branch.Genexp1')"
               >
                 <b-form-input type="text" v-model="form.note1"/>
               </b-form-group>
@@ -352,18 +352,18 @@
         <b-tab :title="$t('insert.branch.BranchFinancialInfo')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_DefaultPaymentTypeId')">
+              <b-form-group :label="$t('insert.branch.DefaultPaymentTypeId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_PriceListCategoryId')">
+              <b-form-group :label="$t('insert.branch.PriceListCategoryId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_MaxBonusRate')"
+                :label="$t('insert.branch.MaxBonusRate')"
               >
                 <b-form-input type="text" v-model="form.prim"/>
               </b-form-group>
@@ -372,19 +372,19 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_SalesPriceChangeRate')"
+                :label="$t('insert.branch.SalesPriceChangeRate')"
               >
                 <b-form-input type="text" v-model="form.change"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_PaymentPeriod')">
+              <b-form-group :label="$t('insert.branch.PaymentPeriod')">
                 <v-select disabled :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_FinanceCode')"
+                :label="$t('insert.branch.FinanceCode')"
               >
                 <b-form-input type="text" v-model="form.note2"/>
               </b-form-group>
@@ -393,21 +393,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_CreditLimit')"
+                :label="$t('insert.branch.CreditLimit')"
               >
                 <b-form-input disabled type="text" v-model="form.limit"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_RiskLimit')"
+                :label="$t('insert.branch.RiskLimit')"
               >
                 <b-form-input disabled type="text" v-model="form.limit2"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_AllowOverLimit')"
+                :label="$t('insert.branch.AllowOverLimit')"
               >
               <b-form-radio-group v-model="form.isRisk">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -419,21 +419,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_DeliveryDayParam')"
+                :label="$t('insert.branch.DeliveryDayParam')"
               >
                 <b-form-input type="text" v-model="form.note3"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_DiscountPercent1')"
+                :label="$t('insert.branch.DiscountPercent1')"
               >
                 <b-form-input type="text" v-model="form.note4"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_DiscountPercent2')"
+                :label="$t('insert.branch.DiscountPercent2')"
               >
                 <b-form-input type="text" v-model="form.note5"/>
               </b-form-group>
@@ -442,7 +442,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_ManualInvoiceClosure')"
+                :label="$t('insert.branch.ManualInvoiceClosure')"
               >
                 <b-form-input type="text" v-model="form.note3"/>
               </b-form-group>
@@ -452,56 +452,56 @@
         <b-tab :title="$t('insert.branch.BranchCreditHistories')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_CreditDescriptionId')">
+              <b-form-group :label="$t('insert.branch.CreditDescriptionId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_CreditAmount')"
+                :label="$t('insert.branch.CreditAmount')"
               >
                 <b-form-input type="text" v-model="form.tutar"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_CurrencyId')">
+              <b-form-group :label="$t('insert.branch.CurrencyId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_BankId')">
+              <b-form-group :label="$t('insert.branch.BankId')">
                 <v-select disabled :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_CreditStartDate')">
-                <b-form-datepicker id="contract-datepicker1" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date1" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.CreditStartDate')">
+                <b-form-datepicker id="contract-datepicker1" :placeholder="$t('insert.branch.chooseDate')" v-model="form.date1" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_CreditEndDate')">
-                <b-form-datepicker id="contract-datepicker2" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date2" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.CreditEndDate')">
+                <b-form-datepicker id="contract-datepicker2" :placeholder="$t('insert.branch.chooseDate')" v-model="form.date2" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_CreditLimit')"
+                :label="$t('insert.branch.CreditLimit')"
               >
                 <b-form-input type="text" v-model="form.limit3"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_RiskLimit')"
+                :label="$t('insert.branch.RiskLimit')"
               >
                 <b-form-input type="text" v-model="form.limit4"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_AllowOverLimit')"
+                :label="$t('insert.branch.AllowOverLimit')"
               >
               <b-form-radio-group v-model="form.isRisk2">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
@@ -513,21 +513,21 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Bail')"
+                :label="$t('insert.branch.Bail')"
               >
                 <b-form-input type="text" disabled v-model="form.kefil"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Debtor')"
+                :label="$t('insert.branch.Debtor')"
               >
                 <b-form-input type="text" disabled v-model="form.borc"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_TextNo')"
+                :label="$t('insert.branch.TextNo')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak"/>
               </b-form-group>
@@ -535,27 +535,27 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_TextDate')">
-                <b-form-datepicker disabled id="contract-datepicker3" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date4" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.TextDate')">
+                <b-form-datepicker disabled id="contract-datepicker3" :placeholder="$t('insert.branch.chooseDate')" v-model="form.date4" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_LandOffice')"
+                :label="$t('insert.branch.LandOffice')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak1"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_TraficRegistry')"
+                :label="$t('insert.branch.TraficRegistry')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak2"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_NotaryNo')"
+                :label="$t('insert.branch.NotaryNo')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak3"/>
               </b-form-group>
@@ -563,27 +563,27 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_NotaryDate')">
-                <b-form-datepicker disabled id="contract-datepicker4" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.NotaryDate')">
+                <b-form-datepicker disabled id="contract-datepicker4" :placeholder="$t('insert.branch.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_MortgageValue')"
+                :label="$t('insert.branch.MortgageValue')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak4"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_Plate')"
+                :label="$t('insert.branch.Plate')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak5"/>
               </b-form-group>
             </b-col>
              <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.branch.Model_PlateNumber')"
+                :label="$t('insert.branch.PlateNumber')"
               >
                 <b-form-input type="text" disabled v-model="form.evrak6"/>
               </b-form-group>
@@ -595,10 +595,10 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.Model_PaymentType')">
+        <b-tab :title="$t('insert.branch.PaymentType')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.branch.Model_PaymentType')">
+              <b-form-group :label="$t('insert.branch.PaymentType')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -609,10 +609,10 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab title="Ödeme Vadeleri">
+        <b-tab :title="$t('insert.branch.CustomFixedTerms')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Satın Alma Ödeme Vadesi">
+              <b-form-group :label="$t('insert.branch.FixedTermId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
@@ -623,41 +623,37 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab title="Ürün İndirimleri">
+        <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Başlangıç Tarihi">
-                <b-form-datepicker id="contract-datepicker5" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.StartDate')">
+                <b-form-datepicker id="contract-datepicker5" :placeholder="$t('insert.branch.StartDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Bitiş Tarihi">
-                <b-form-datepicker id="contract-datepicker6" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.branch.EndDate')">
+                <b-form-datepicker id="contract-datepicker6" :placeholder="$t('insert.branch.EndDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Alan Açıklaması">
+              <b-form-group :label="$t('insert.branch.ColumnName')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Değer">
+              <b-form-group :label="$t('insert.branch.ColumnValue')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ürün İndirimi 1*"
-              >
+              <b-form-group :label="$t('insert.branch.DiscountPercent1')">
                 <b-form-input type="text" v-model="form.discount1"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ürün İndirimi 2*"
-              >
+              <b-form-group :label="$t('insert.branch.DiscountPercent2')">
                 <b-form-input type="text" v-model="form.discount2"/>
               </b-form-group>
             </b-col>
@@ -668,32 +664,30 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab title="EFU Kodları">
+        <b-tab :title="$t('insert.branch.EInvoiceSeqs')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ön Birim Kod*"
-              >
+              <b-form-group :label="$t('insert.branch.Prefix')">
                 <b-form-input type="text" v-model="form.unit1"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Terminal mi PC mi?">
+              <b-form-group :label="$t('insert.branch.TerminalOrPcId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="VisionPlus EFU Servisleri*">
+              <b-form-group :label="$t('insert.branch.EInvoiceTypeId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="İşlem Günü">
+              <b-form-group :label="$t('insert.branch.TransactionDayId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Durum">
+              <b-form-group :label="$t('insert.branch.StatusId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>

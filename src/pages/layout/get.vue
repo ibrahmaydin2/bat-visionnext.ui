@@ -30,10 +30,9 @@ export default {
 </script>
 <style lang="sass">
   .asc__getPage
-    min-height: 90vh
+    margin-bottom: 5vh
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important
     .asc__showPage
-      background: #f2f2f2
-      min-height: 90vh
       .asc__showPage-times
         display: none
       section
@@ -86,20 +85,19 @@ export default {
         margin-left: 15px
     .tabs
       .nav-tabs
-        background: #e4e4e4
         padding: 0px 15px
-        border-bottom: 3px solid #f6f6f6
         .nav-item
+          margin-bottom: -2px
           .active
-            border-radius: 0px !important
+            background: #f2f2f2
+            border: none !important
             font-weight: bold
             font-size: 14px
           .nav-link
             color: #000
       .tab-pane
-        padding: 1rem 15px
-        background: #fbfbfb
-        min-height: 60vh
+        background: #f2f2f2
+        min-height: 75vh
     .asc__getPage-detailPart
       position: relative
       border: 2px #eaeaea solid
