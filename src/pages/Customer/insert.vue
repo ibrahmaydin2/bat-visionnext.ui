@@ -19,23 +19,17 @@
       <section>
         <b-row>
            <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.customer.Model_Code')"
-            >
+            <b-form-group :label="$t('insert.customer.Model_Code')">
               <b-form-input type="text" v-model="form.Code" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.customer.Model_StatusReasonId')"
-            >
+            <b-form-group :label="$t('insert.customer.Model_StatusReasonId')">
               <v-select :options="form.Model_StatusReasonId" @input="selectedVehicle" label="title"></v-select>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.state')"
-            >
+            <b-form-group :label="$t('insert.state')">
               <b-form-checkbox v-model="form.state" name="check-button" switch>
                 {{(form.checked) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>

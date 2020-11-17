@@ -46,7 +46,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab title="Depo Ana Kayıtları" active>
+        <b-tab :title="$t('insert.warehouse.Warehouse')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
@@ -104,37 +104,21 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="ERP Kodu"
-              >
-                <b-form-input type="text" v-model="form.erpCode"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Açıklama"
-              >
-                <b-form-input type="text" v-model="form.desc"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
         </b-tab>
-        <b-tab title="Tedarikçi">
+        <b-tab :title="$t('insert.warehouse.WarehouseSuppliers')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_SupplierBranchId')">
+              <b-form-group :label="$t('insert.warehouse.SupplierBranchId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_PurchaseWarehouseId')">
+              <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_ReturnWarehouseId')">
+              <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
                 <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
               </b-form-group>
             </b-col>

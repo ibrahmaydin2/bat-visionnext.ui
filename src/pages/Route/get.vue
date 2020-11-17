@@ -59,7 +59,7 @@
             <b-col cols="12" md="8">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.locations')}}</h6>
-                <b-table :items="tempItems" :fields="fields">
+                <b-table responsive :items="tempItems" :fields="fields">
                   <template #cell(customer)="data">
                     <kbd>{{data.item.code}}</kbd> {{data.value}}
                   </template>

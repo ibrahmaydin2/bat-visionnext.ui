@@ -135,8 +135,8 @@ export const store = new Vuex.Store({
             })
           } else {
             commit('showAlert', { type: 'warning', msg: res.data.Message })
+            commit('bigLoaded', false)
           }
-          commit('bigLoaded', false)
         })
         .catch(err => {
           commit('showAlert', { type: 'warning', msg: err })

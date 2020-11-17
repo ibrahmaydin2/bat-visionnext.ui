@@ -101,19 +101,19 @@
         </b-col>
         <b-col cols="12" md="6">
           <b-card class="m-3 asc__showPage-card">
-            <b-table :items="[]" :fields="fields1">
+            <b-table responsive :items="[]" :fields="fields1">
             </b-table>
           </b-card>
         </b-col>
         <b-col cols="12" md="6">
           <b-card class="m-3 asc__showPage-card">
-            <b-table :items="[]" :fields="fields2">
+            <b-table responsive :items="[]" :fields="fields2">
             </b-table>
           </b-card>
         </b-col>
         <b-col cols="12" md="6">
           <b-card class="m-3 asc__showPage-card">
-            <b-table :items="[]" :fields="fields3">
+            <b-table responsive :items="[]" :fields="fields3">
             </b-table>
           </b-card>
         </b-col>
