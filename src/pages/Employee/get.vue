@@ -7,74 +7,124 @@
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb :title="workOrder.Code" :route="'WorkOrder'" />
-            <span><i class="fas fa-code" />  <b>Reference:</b> {{workOrder.SerialNumber}}</span>
-            <span><i class="fas fa-calendar" />  <b>Date:</b> {{workOrder.SampleDate}}</span>
-            <span><i class="fas fa-user" />  <b>Patient:</b> {{workOrder.PatientName + ' ' + workOrder.PatientSurname}}</span>
+            <Breadcrumb title="rowData.Description1" />
             <div class="clearfix"></div>
           </header>
         </b-col>
       </b-row>
-      <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
-          <b-row>
-            <b-col cols="12" md="6" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Analysis Request Info </h3>
-                <ul>
-                  <li><i class="fas fa-user" />PatientName<span>{{workOrder.PatientName + ' ' + workOrder.PatientSurname}}</span></li>
-                  <li><i class="far fa-circle" />Patient ID Number <span>{{workOrder.ContactId}}</span></li>
-                  <li><i class="far fa-circle" />PatientBirthDate<span>{{workOrder.PatientBirthDate}}</span></li>
-                  <li><i class="far fa-circle" />Patient Phone <span>{{workOrder.PatientPhone}}</span></li>
-                  <li><i class="far fa-circle" />PatientGsm<span>{{workOrder.PatientGsm}}</span></li>
-                  <li><i class="far fa-circle" />Contact Name <span>{{workOrder.ContactName + ' ' + workOrder.ContactSurname}}</span></li>
-                  <li><i class="far fa-circle" />Contact Phone <span>{{workOrder.ContactPhone}}</span></li>
-                  <li><i class="far fa-circle" />Contact Hospital <span>{{workOrder.ContactOrganization}}</span></li>
-                  <li><i class="far fa-circle" />Contact Department <span>{{workOrder.ContactDepartment}}</span></li>
-                  <li><i class="far fa-circle" />Contact Email <span>{{workOrder.ContactEmail}}</span></li>
-                  <li><i class="far fa-circle" />Sample Status <span>{{workOrder.WorkOrderStatus.Label}}</span></li>
-                  <li><i class="far fa-circle" />Kit <span>{{workOrder.KitType.Label}}</span></li>
-                  <li><i class="far fa-circle" />Sample Type <span>{{workOrder.SampleType.Label}}</span></li>
-                  <li><i class="far fa-circle" />Patient Gender <span>{{workOrder.PatientGender.Label}}</span></li>
-                  <li><i class="far fa-circle" />PatientCountry <span>{{workOrder.PatientCountry.Label + ' / ' + workOrder.PatientCity.Label}}</span></li>
-                  <li><i class="far fa-circle" />PatientCountry <span>{{workOrder.PatientCountry.Label + ' / ' + workOrder.PatientCity.Label}}</span></li>
-                  <li><i class="far fa-circle" />Code <span>{{workOrder.Code}}</span></li>
-                  <li><i class="far fa-circle" />Reference Number <span>{{workOrder.SerialNumber}}</span></li>
-                </ul>
-              </div>
-            </b-col>
-            <b-col cols="12" md="12" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Sharing</h3>
-                <ul>
-                  <li v-for="(shr, i) in workOrder.WorkOrderReceivers" :key="i">
-                    {{ shr.Contact.Email }}
-                  </li>
-                </ul>
-              </div>
-            </b-col>
-            <b-col cols="12" md="6" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Family Information</h3>
-                <ul>
-                  <li>Parental Consanguinity<span>{{workOrder.ParentConsanMarriage === 1 ? 'evet' : 'hayır' }}</span></li>
-                  <li>Disease in Family History <span>{{workOrder.HasRelativesDisease === 1 ? 'evet' : 'hayır'}}</span></li>
-                </ul>
-              </div>
-              <div class="asc__getPage-detailPart">
-                <h3>Symptoms</h3>
-                <ul>
-                  <li v-for="(syms, i) in workOrder.WorkOrderSymptoms" :key="i">
-                    {{ syms.Symptom.Label }}
-                  </li>
-                </ul>
-              </div>
-            </b-col>
-          </b-row>
-        </b-tab>
-      </b-tabs>
+      <b-row>
+        <b-col cols="12">
+          <section>
+            <!-- <span><i class="fas fa-code" />  <b>{{$t('insert.route.reference')}}:</b> {{rowData.EncryptedKey}}</span> 
+            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span> -->
+          </section>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card class="m-3 asc__showPage-card">
+            <h6>{{$t('insert.employee.Employee')}}</h6>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPCustomerCode')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPSupplierCode')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_IsRepresentative')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_SAPSrCode')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Team')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.active')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.passive')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Description')}}</span>
+            <p></p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card class="m-3 asc__showPage-card">
+            <h6>{{$t('insert.employee.EmployeeCustomer')}}</h6>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CreateCustomer')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_taxNumber')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_FinanceCode1')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_PriceListCategoryId')}}</span>
+            <p></p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card class="m-3 asc__showPage-card">
+            <h6>{{$t('insert.employee.Model_Personal')}}</h6>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BirthDate')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EducationId')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Identificationnumber')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BloodType')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_JeansSize')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ShirtSize')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Shoesize')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CoatSize')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_TShirtSize')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ClothTrousersSize')}}</span>
+            <p></p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="4">
+          <b-card class="m-3 asc__showPage-card">
+            <h6>{{$t('insert.employee.EmployeeContact')}}</h6>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_GsmNumber')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone1')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone2')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Email')}}</span>
+            <p></p>
+            <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Fax')}}</span>
+            <p></p>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="6">
+          <b-card class="m-3 asc__showPage-card">
+            <b-table :items="[]" :fields="fields1">
+            </b-table>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="6">
+          <b-card class="m-3 asc__showPage-card">
+            <b-table :items="[]" :fields="fields2">
+            </b-table>
+          </b-card>
+        </b-col>
+        <b-col cols="12" md="6">
+          <b-card class="m-3 asc__showPage-card">
+            <b-table :items="[]" :fields="fields3">
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
     </div>
   </div>
+  <!-- "EmployeeDevices": "Uygun Cihazlar",
+      "EmployeeBanks": "Banka",
+      "Model_BankBranchId": "Banka Şube Adı",
+      "EmployeePrefix": "Prefix",
+      "Model_Prefix": "Prefix" -->
 </template>
 <script>
 import { mapState } from 'vuex'
@@ -82,37 +132,63 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      showLoader: false,
-      encryptedKey: this.$route.params.url
+      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
+      fields1: [
+        {
+          key: 'serialNo',
+          label: this.$t('insert.employee.Model_SerialNumber'),
+          sortable: true
+        },
+        {
+          key: 'model',
+          label: this.$t('insert.employee.Model_DeviceModelId'),
+          sortable: true
+        },
+        {
+          key: 'area',
+          label: this.$t('insert.employee.Model_DeviceUseAraeId'),
+          sortable: true
+        },
+      ],
+      fields2: [
+        {
+          key: 'code',
+          label: this.$t('insert.employee.code'),
+          sortable: true
+        },
+        {
+          key: 'branchName',
+          label: this.$t('insert.employee.Model_BankBranchId'),
+          sortable: true
+        }
+      ],
+      fields3: [
+        {
+          key: 'prefixCode',
+          label: this.$t('insert.employee.code'),
+          sortable: true
+        },
+        {
+          key: 'prefix',
+          label: this.$t('insert.employee.Model_Prefix'),
+          sortable: true
+        }
+      ]
     }
   },
   mounted () {
     this.getData()
+    this.$store.commit('bigLoaded', false)
   },
   computed: {
-    ...mapState(['workOrder', 'style'])
+    ...mapState(['rowData', 'style'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      let workorderKey = {
-        'Authentication': {
-          'Key': localStorage.getItem('Key'),
-          'LanguageId': localStorage.getItem('LanguageId')
-        },
-        'EncryptedKey': this.encryptedKey
-      }
-      this.$store.dispatch('getWorkOrder', {...this.query, info: workorderKey})
-    },
-    dateFormat (e) {
-      if (e) {
-        const splDate = e.split('T')
-        const newDate = splDate[0].split('-')
-        const newTime = splDate[1].split(':')
-        return newDate[2] + '-' + newDate[1] + '-' + newDate[0] + ' / ' + newTime[0] + ':' + newTime[1]
-      }
+      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
     }
   }
 }

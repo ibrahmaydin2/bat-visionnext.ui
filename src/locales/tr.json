@@ -125,7 +125,8 @@
       "vehicleCategory1": "Araç Kategori 1",
       "vehicleCategory2": "Araç Kategori 2",
       "vehicleCategory3": "Araç Kategori 3",
-      "chooseDate": "Tarih Seçiniz"
+      "chooseDate": "Tarih Seçiniz",
+      "general": "Genel"
     },
     "employee": {
       "Model_Code": "Sistem Kodu",
@@ -167,14 +168,15 @@
       "Model_Telephone2": "Telefon (2)",
       "Model_Email": "E-Mail",
       "Model_Fax": "Faks",
+      "code": "Kodu",
       "EmployeeDevices": "Uygun Cihazlar",
       "Model_SerialNumber": "Seri Numarası",
       "Model_DeviceModelId": "Model",
       "Model_DeviceUseAraeId": "Cihaz Kullanım Alanı",
       "EmployeeBanks": "Banka",
       "Model_BankBranchId": "Banka Şube Adı",
-      "EmployeePrefix": "Prefix",
-      "Model_Prefix": "Prefix"
+      "EmployeePrefix": "Önek",
+      "Model_Prefix": "Önek"
     },
     "customer": {
       "Model_StatusReasonId": "Durum Sebebi",
