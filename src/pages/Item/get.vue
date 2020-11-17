@@ -7,68 +7,142 @@
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb :title="workOrder.Code" :route="'WorkOrder'" />
-            <span><i class="fas fa-code" />  <b>Reference:</b> {{workOrder.SerialNumber}}</span>
-            <span><i class="fas fa-calendar" />  <b>Date:</b> {{workOrder.SampleDate}}</span>
-            <span><i class="fas fa-user" />  <b>Patient:</b> {{workOrder.PatientName + ' ' + workOrder.PatientSurname}}</span>
+            <Breadcrumb title="Title" />
             <div class="clearfix"></div>
           </header>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col cols="12">
+          <section>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.item.Model_Code')}}:</b></span> 
+            <span><i class="fas fa-check" />  <b>{{$t('insert.item.Model_Description1')}}:</b></span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.item.Model_CardTypeId')}}:</b></span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.item.Model_StatusId')}}:</b></span>
+          </section>
+        </b-col>
+      </b-row>
       <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
+        <b-tab :title="$t('insert.item.Detail')" active>
           <b-row>
-            <b-col cols="12" md="6" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Analysis Request Info </h3>
-                <ul>
-                  <li><i class="fas fa-user" />PatientName<span>{{workOrder.PatientName + ' ' + workOrder.PatientSurname}}</span></li>
-                  <li><i class="far fa-circle" />Patient ID Number <span>{{workOrder.ContactId}}</span></li>
-                  <li><i class="far fa-circle" />PatientBirthDate<span>{{workOrder.PatientBirthDate}}</span></li>
-                  <li><i class="far fa-circle" />Patient Phone <span>{{workOrder.PatientPhone}}</span></li>
-                  <li><i class="far fa-circle" />PatientGsm<span>{{workOrder.PatientGsm}}</span></li>
-                  <li><i class="far fa-circle" />Contact Name <span>{{workOrder.ContactName + ' ' + workOrder.ContactSurname}}</span></li>
-                  <li><i class="far fa-circle" />Contact Phone <span>{{workOrder.ContactPhone}}</span></li>
-                  <li><i class="far fa-circle" />Contact Hospital <span>{{workOrder.ContactOrganization}}</span></li>
-                  <li><i class="far fa-circle" />Contact Department <span>{{workOrder.ContactDepartment}}</span></li>
-                  <li><i class="far fa-circle" />Contact Email <span>{{workOrder.ContactEmail}}</span></li>
-                  <li><i class="far fa-circle" />Sample Status <span>{{workOrder.WorkOrderStatus.Label}}</span></li>
-                  <li><i class="far fa-circle" />Kit <span>{{workOrder.KitType.Label}}</span></li>
-                  <li><i class="far fa-circle" />Sample Type <span>{{workOrder.SampleType.Label}}</span></li>
-                  <li><i class="far fa-circle" />Patient Gender <span>{{workOrder.PatientGender.Label}}</span></li>
-                  <li><i class="far fa-circle" />PatientCountry <span>{{workOrder.PatientCountry.Label + ' / ' + workOrder.PatientCity.Label}}</span></li>
-                  <li><i class="far fa-circle" />PatientCountry <span>{{workOrder.PatientCountry.Label + ' / ' + workOrder.PatientCity.Label}}</span></li>
-                  <li><i class="far fa-circle" />Code <span>{{workOrder.Code}}</span></li>
-                  <li><i class="far fa-circle" />Reference Number <span>{{workOrder.SerialNumber}}</span></li>
-                </ul>
-              </div>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.item.product')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ShortDescription')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ExportDescription1')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ProducerCodeId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_TypeId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_GroupId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Code')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ShelfLife')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_TimeFrameId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsBarterAllowed')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_CategoryId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_SortOrder')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ClassId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_ColorId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsOrderAllowed')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsSaleAllowed')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_UseSalesAnalysis')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsSpGiftItem')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsPhysicalBom')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p> 
+              </b-card>
             </b-col>
-            <b-col cols="12" md="12" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Sharing</h3>
-                <ul>
-                  <li v-for="(shr, i) in workOrder.WorkOrderReceivers" :key="i">
-                    {{ shr.Contact.Email }}
-                  </li>
-                </ul>
-              </div>
+            <b-col cols="12" md="8">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.item.ItemFinancialInfo')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_FinanceCode')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_UnitSetId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_DiscountGroup1Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_RecurrenceTypeId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_KindId')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_MaxDiscountRate')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category1Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category2Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category3Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category4Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category5Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category6Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category7Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category8Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category9Id')}}</span><p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category10Id')}}</span><p></p>
+                
+              </b-card>
             </b-col>
-            <b-col cols="12" md="6" lg="4" xl="4">
-              <div class="asc__getPage-detailPart">
-                <h3>Family Information</h3>
-                <ul>
-                  <li>Parental Consanguinity<span>{{workOrder.ParentConsanMarriage === 1 ? 'evet' : 'hayır' }}</span></li>
-                  <li>Disease in Family History <span>{{workOrder.HasRelativesDisease === 1 ? 'evet' : 'hayır'}}</span></li>
-                </ul>
-              </div>
-              <div class="asc__getPage-detailPart">
-                <h3>Symptoms</h3>
-                <ul>
-                  <li v-for="(syms, i) in workOrder.WorkOrderSymptoms" :key="i">
-                    {{ syms.Symptom.Label }}
-                  </li>
-                </ul>
-              </div>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemCustomers')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="customerItems" :fields="customerFields">
+                  <!-- <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template> -->
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemBarcodes')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="barcodeItems" :fields="barcodeFields">
+                  <!-- <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template> -->
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemOrderQuotas')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="orderItems" :fields="orderFields">
+                  <!-- <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template> -->
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemAttachments')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.item.ItemAttachments')}}</h6>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.deposit')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="depositsItems" :fields="depositsFields">
+                  <!-- <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template> -->
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemBoms')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="productGroupItems" :fields="productGroupFields">
+                  <!-- <template #cell(customer)="data">
+                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                  </template> -->
+                </b-table>
+              </b-card>
             </b-col>
           </b-row>
         </b-tab>
@@ -82,37 +156,151 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      showLoader: false,
-      encryptedKey: this.$route.params.url
+      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
+      customerFields: [
+        {
+          key: 'customer',
+          label: this.$t('insert.item.Model_CustomerId') ,
+          sortable: true
+        },
+        {
+          key: 'code',
+          label: this.$t('insert.item.CustomerItemCode') ,
+          sortable: true
+        },
+        {
+          key: 'description',
+          label: this.$t('insert.item.Model_CustomerItemDescription') ,
+          sortable: true
+        }
+      ],
+      barcodeFields: [
+        {
+          key: 'barcode',
+          label: this.$t('insert.item.Model_Barcode') ,
+          sortable: true
+        },
+        {
+          key: 'defination',
+          label: this.$t('insert.item.customerUnitDefinition') ,
+          sortable: true
+        }
+      ],
+      orderFields: [
+        {
+          key: 'quotaQuantity',
+          label: this.$t('insert.item.Model_QuotaQuantity') ,
+          sortable: true
+        },
+        {
+          key: 'quotaRegion',
+          label: this.$t('insert.item.Model_QuotaRegionId') ,
+          sortable: true
+        },
+        {
+          key: 'quotaDate',
+          label: this.$t('insert.item.Model_BeginDate') ,
+          sortable: true
+        }
+      ],
+      depositsFields: [
+        {
+          key: 'deposit',
+          label: this.$t('insert.item.deposit') ,
+          sortable: true
+        },
+        {
+          key: 'quantity',
+          label: this.$t('insert.item.quantity') ,
+          sortable: true
+        },
+        {
+          key: 'unit',
+          label: this.$t('insert.item.unit') ,
+          sortable: true
+        }
+      ],
+       productGroupFields: [
+        {
+          key: 'lineNumber',
+          label: this.$t('insert.item.LineNumber') ,
+          sortable: true
+        },
+        {
+          key: 'bomItem',
+          label: this.$t('insert.item.bomItem') ,
+          sortable: true
+        },
+        {
+          key: 'quantity',
+          label: this.$t('insert.item.quantity') ,
+          sortable: true
+        }
+      ],
+      customerItems: [
+        { customer: 'CIHAN BUFE- ALI ATAN', description: 'CIHAN BUFE- ALI ATAN', visit: 1, code: '312' },
+        { customer: 'UGUR BUFE', description: 'UGUR BUFE', visit: 1, code: '260' },
+        { customer: 'ENGIN MARKET-ENGIN SIT', description: 'ENGIN MARKET-ENGIN SIT', visit: 0, code: '312' },
+        { customer: 'MOKKI', description: 'MOKKI', visit: 0 },
+        { customer: 'CAN BÜFE SERKAN ÇALIŞKAN', description: 'CAN BÜFE SERKAN ÇALIŞKAN', visit: 0, code: '312' },
+        { customer: 'YAVUZ BÜFE', description: 'YAVUZ BÜFE', visit: 0, code: '312' },
+        { customer: 'MASLAK ARENA', description: 'MASLAK ARENA', visit: 1, code: '312' },
+        { customer: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', description: 'CUMHURİYET BÜFE-MUSTAFA BOZOK', visit: 1, code: '312' },
+        { customer: 'TEKEL 61-İDRİS BAŞALI', description: 'TEKEL 61-İDRİS BAŞALI', visit: 1, code: '312' },
+        { customer: 'ARZU GIDA-AHMET AKSU', description: 'ARZU GIDA-AHMET AKSU', visit: 1, code: '312' },
+        { customer: 'BARBADOS TÜTÜN', description: 'BARBADOS TÜTÜN', visit: 1, code: '312' }
+      ],
+      barcodeItems: [
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''},
+        {barcode: '', defination: ''}
+      ],
+      orderItems: [
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''},
+        {quotaQuantity: '', quotaRegion: '', quotaDate: ''}
+      ],
+      depositsItems: [
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''},
+        {deposit: '', quantity: '', unit: ''}
+      ],
+      productGroupItems: [
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''},
+        {lineNumber: '', bomItem: '', quantity: ''}
+      ]
     }
   },
   mounted () {
     this.getData()
+    this.$store.commit('bigLoaded', false)
   },
   computed: {
-    ...mapState(['workOrder', 'style'])
+    ...mapState(['rowData', 'style'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      let workorderKey = {
-        'Authentication': {
-          'Key': localStorage.getItem('Key'),
-          'LanguageId': localStorage.getItem('LanguageId')
-        },
-        'EncryptedKey': this.encryptedKey
-      }
-      this.$store.dispatch('getWorkOrder', {...this.query, info: workorderKey})
-    },
-    dateFormat (e) {
-      if (e) {
-        const splDate = e.split('T')
-        const newDate = splDate[0].split('-')
-        const newTime = splDate[1].split(':')
-        return newDate[2] + '-' + newDate[1] + '-' + newDate[0] + ' / ' + newTime[0] + ':' + newTime[1]
-      }
+      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
     }
   }
 }

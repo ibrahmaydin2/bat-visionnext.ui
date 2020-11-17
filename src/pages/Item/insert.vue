@@ -51,7 +51,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.item.detail')" active>
+        <b-tab :title="$t('insert.item.Detail')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.item.Model_ShortDescription')">
@@ -275,8 +275,8 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.item.Model_CustomerId')">
-                <b-form-input type="text" v-model="form.CustomerId" />
+              <b-form-group :label="$t('insert.item.CustomerItemCode')">
+                <b-form-input type="text" v-model="form.CustomerItemCode" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">

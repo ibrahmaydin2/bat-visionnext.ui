@@ -22,65 +22,63 @@
             <span><i class="far fa-circle" />  <b>{{$t('insert.vehicles.state')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
-        <b-col cols="12">
-          <b-tabs>
-            <b-tab :title="$t('get.detail')" active>
-              <b-row>
-                <b-col cols="12" md="4">
-                  <b-card class="m-3 asc__showPage-card">
-                    <h6>{{$t('insert.vehicles.general')}}</h6>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.trademark')}}</span>
-                    <p>{{rowData.Brand}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.model')}}</span>
-                    <p>{{(rowData.Model) ? rowData.Model.Label : ''}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.year')}}</span>
-                    <p>{{rowData.ModelYear}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.isRouteVehicle')}}</span>
-                    <p><i :class="rowData.IsRouteVehicle === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleType')}}</span>
-                    <p>{{(rowData.VehicleType) ? rowData.VehicleType.Label : ''}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
-                    <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
-                    <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                  </b-card>
-                </b-col>
-                <b-col cols="12" md="4">
-                  <b-card class="m-3 asc__showPage-card">
-                    <h6>{{$t('insert.vehicles.additionalInfo')}}</h6>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleKind')}}</span>
-                    <p>{{(rowData.VehicleGroup) ? rowData.VehicleGroup.Label : ''}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.colorCode')}}</span>
-                    <p>{{(rowData.Color) ? rowData.Color.Label : ''}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.sideAwningType')}}</span>
-                    <p></p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.backrest')}}</span>
-                    <p></p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.truckLogo')}}</span>
-                    <p></p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeCapacity')}}</span>
-                    <p>{{rowData.VolumeCp}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeUnit')}}</span>
-                    <p>{{(rowData.VolumeCpUnit) ? rowData.VolumeCpUnit.Label : ''}}</p> 
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightCapacity')}}</span>
-                    <p>{{rowData.WeightCp}}</p>
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightUnit')}}</span>
-                    <p>{{(rowData.WeightCpUnit) ? rowData.WeightCpUnit.Label : ''}}</p> 
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.contractEndDate')}}</span>
-                    <p>{{rowData.ContractEndDate}}</p> 
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory1')}}</span>
-                    <p>{{(rowData.Category1) ? rowData.Category1.Label : ''}}</p> 
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory2')}}</span>
-                    <p>{{(rowData.Category2) ? rowData.Category2.Label : ''}}</p> 
-                    <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory3')}}</span>
-                    <p>{{(rowData.Category3) ? rowData.Category3.Label : ''}}</p> 
-                  </b-card>
-                </b-col>
-              </b-row>
-            </b-tab>
-          </b-tabs>
-        </b-col>
       </b-row>
+      <b-tabs>
+        <b-tab :title="$t('get.detail')" active>
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.vehicles.general')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.trademark')}}</span>
+                <p>{{rowData.Brand}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.model')}}</span>
+                <p>{{(rowData.Model) ? rowData.Model.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.year')}}</span>
+                <p>{{rowData.ModelYear}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.isRouteVehicle')}}</span>
+                <p><i :class="rowData.IsRouteVehicle === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleType')}}</span>
+                <p>{{(rowData.VehicleType) ? rowData.VehicleType.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
+                <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
+                <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.vehicles.additionalInfo')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleKind')}}</span>
+                <p>{{(rowData.VehicleGroup) ? rowData.VehicleGroup.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.colorCode')}}</span>
+                <p>{{(rowData.Color) ? rowData.Color.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.sideAwningType')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.backrest')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.truckLogo')}}</span>
+                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeCapacity')}}</span>
+                <p>{{rowData.VolumeCp}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeUnit')}}</span>
+                <p>{{(rowData.VolumeCpUnit) ? rowData.VolumeCpUnit.Label : ''}}</p> 
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightCapacity')}}</span>
+                <p>{{rowData.WeightCp}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightUnit')}}</span>
+                <p>{{(rowData.WeightCpUnit) ? rowData.WeightCpUnit.Label : ''}}</p> 
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.contractEndDate')}}</span>
+                <p>{{rowData.ContractEndDate}}</p> 
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory1')}}</span>
+                <p>{{(rowData.Category1) ? rowData.Category1.Label : ''}}</p> 
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory2')}}</span>
+                <p>{{(rowData.Category2) ? rowData.Category2.Label : ''}}</p> 
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory3')}}</span>
+                <p>{{(rowData.Category3) ? rowData.Category3.Label : ''}}</p> 
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+      </b-tabs>
     </div>
   </div>
 </template>
