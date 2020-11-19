@@ -17,7 +17,7 @@
           <section>
             <span><i class="fas fa-code" /> <b>{{$t('insert.branch.BranchCommercialTitle')}}:</b> {{rowData.BranchCommercialTitle}}</span>
             <span><i class="fas fa-code" /> <b>{{$t('insert.branch.CustomerPrefixCode')}}: </b> {{rowData.CustomerPrefixCode}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label: ''}}</span>
           </section>
         </b-col>
       </b-row>
@@ -169,6 +169,115 @@
               </b-card>
             </b-col>
           </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.other')">
+           <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.route.other')}}</h6>
+                <span><i class="far fa-circle" /> BankPaymentSystemId </span>
+                <p>{{ rowData.BankPaymentSystemId }}</p>
+                <span><i class="far fa-circle" /> BlockReason </span>
+                <p>{{ rowData.BlockReason.Label }}</p>
+                <span><i class="far fa-circle" /> BlockReasonDescription </span>
+                <p>{{ rowData.BlockReasonDescription }}</p>
+                <span><i class="far fa-circle" /> BlockReasonId </span>
+                <p>{{ rowData.BlockReasonId }}</p>
+                <span><i class="far fa-circle" /> BranchCommercialTitle </span>
+                <p>{{ rowData.BranchCommercialTitle }}</p>
+                <span><i class="far fa-circle" /> BranchCreditHistories </span>
+                <p>{{ rowData.BranchCreditHistories }}</p>
+                <span><i class="far fa-circle" /> BranchId </span>
+                <p>{{ rowData.BranchId }}</p>
+                <span><i class="far fa-circle" /> BranchLocations </span>
+                <p>{{ rowData.BranchLocations.Label }}</p>
+                <span><i class="far fa-circle" /> BranchPaymentTypes </span>
+                <p>{{ rowData.BranchPaymentTypes.Label }}</p>
+                <span><i class="far fa-circle" /> BranchRegion </span>
+                <p>{{ rowData.BranchRegion }}</p>
+                <span><i class="far fa-circle" /> CashSafeCode </span>
+                <p>{{ rowData.CashSafeCode }}</p>
+                <span><i class="far fa-circle" /> Code </span>
+                <p>{{ rowData.Code }}</p>
+                <span><i class="far fa-circle" /> CompanyId </span>
+                <p>{{ rowData.CompanyId }}</p>
+                <span><i class="far fa-circle" /> CreatedDateTime </span>
+                <p>{{ rowData.CreatedDateTime }}</p>
+                <span><i class="far fa-circle" /> CreatedUser </span>
+                <p>{{ rowData.CreatedUser }}</p>
+                <span><i class="far fa-circle" /> CreditCardSafeCode </span>
+                <p>{{ rowData.CreditCardSafeCode }}</p>
+                <span><i class="far fa-circle" /> CurrentCredit </span>
+                <p>{{ rowData.CurrentCredit }}</p>
+                <span><i class="far fa-circle" /> CurrentRisk </span>
+                <p>{{ rowData.CurrentRisk }}</p>
+                <span><i class="far fa-circle" /> CustomFixedTerms </span>
+                <p>{{ rowData.CustomFixedTerms }}</p>
+                <span><i class="far fa-circle" /> CustomerId </span>
+                <p>{{ rowData.CustomerId }}</p>
+                <span><i class="far fa-circle" /> CustomerItemDiscountCrts </span>
+                <p>{{ rowData.CustomerItemDiscountCrts }}</p>
+                <span><i class="far fa-circle" /> DefaultLocation </span>
+                <p>{{ rowData.DefaultLocation.Label }}</p>
+                <span><i class="far fa-circle" /> DefaultLocationId </span>
+                <p>{{ rowData.DefaultLocationId }}</p>
+                <span><i class="far fa-circle" /> DefaultPaymentType </span>
+                <p>{{ rowData.DefaultPaymentType.Label }}</p>
+                <span><i class="far fa-circle" /> Deleted </span>
+                <p>{{ rowData.Deleted }}</p>
+                <span><i class="far fa-circle" /> DistributionType </span>
+                <p>{{ rowData.DistributionType.Label }}</p>
+                <span><i class="far fa-circle" /> DistributionTypeId </span>
+                <p>{{ rowData.DistributionTypeId }}</p>
+                <span><i class="far fa-circle" /> EDocumentUseType </span>
+                <p>{{ rowData.EDocumentUseType.Label }}</p>
+                <span><i class="far fa-circle" /> EInvoiceNumberPrefix </span>
+                <p>{{ rowData.EInvoiceNumberPrefix }}</p>
+                <span><i class="far fa-circle" /> EInvoiceSeqs </span>
+                <p>{{ rowData.EInvoiceSeqs }}</p>
+                <span><i class="far fa-circle" /> EInvoiceTaxExReason </span>
+                <p>{{ rowData.EInvoiceTaxExReason }}</p>
+                <span><i class="far fa-circle" /> EncryptedKey </span>
+                <p>{{ rowData.EncryptedKey }}</p>
+                <span><i class="far fa-circle" /> HqId </span>
+                <p>{{ rowData.HqId }}</p>
+                <span><i class="far fa-circle" /> InvoiceCombineRule </span>
+                <p>{{ rowData.InvoiceCombineRule }}</p>
+                <span><i class="far fa-circle" /> IsBlocked </span>
+                <p>{{ rowData.IsBlocked }}</p>
+                <span><i class="far fa-circle" /> IsDirectDebit </span>
+                <p>{{ rowData.IsDirectDebit }}</p>
+                <span><i class="far fa-circle" /> ModifiedDateTime </span>
+                <p>{{ rowData.ModifiedDateTime }}</p>
+                <span><i class="far fa-circle" /> ModifiedUser </span>
+                <p>{{ rowData.ModifiedUser }}</p>
+                <span><i class="far fa-circle" /> PaymentPeriodClass </span>
+                <p>{{ rowData.PaymentPeriodClass }}</p>
+                <span><i class="far fa-circle" /> PriceListCategory </span>
+                <p>{{ rowData.PriceListCategory }}</p>
+                <span><i class="far fa-circle" /> RecordId </span>
+                <p>{{ rowData.RecordId }}</p>
+                <span><i class="far fa-circle" /> RecordState </span>
+                <p>{{ rowData.RecordState }}</p>
+                <span><i class="far fa-circle" /> RecordStatus </span>
+                <p>{{ rowData.RecordStatus }}</p>
+                <span><i class="far fa-circle" /> RiskLimit </span>
+                <p>{{ rowData.RiskLimit }}</p>
+                <span><i class="far fa-circle" /> SSType </span>
+                <p>{{ rowData.SSType }}</p>
+                <span><i class="far fa-circle" /> SSTypeId </span>
+                <p>{{ rowData.SSTypeId }}</p>
+                <span><i class="far fa-circle" /> SalesDocumentType </span>
+                <p>{{ rowData.SalesDocumentType }}</p>
+                <span><i class="far fa-circle" /> System </span>
+                <p>{{ rowData.System }}</p>
+                <span><i class="far fa-circle" /> UpperBranch </span>
+                <p>{{ rowData.UpperBranch }}</p>
+                <span><i class="far fa-circle" /> UseEWaybillUseType </span>
+                <p>{{ rowData.UseEWaybillUseType }}</p>
+              </b-card>
+            </b-col>
+           </b-row>
         </b-tab>
       </b-tabs>
     </div>

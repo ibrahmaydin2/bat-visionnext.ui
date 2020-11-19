@@ -20,29 +20,29 @@
         <b-row>
            <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.code')"
+              :label="$t('insert.route.code')"
             >
               <b-form-input type="text" v-model="form.code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.rotaType')">
+            <b-form-group :label="$t('insert.route.rotaType')">
               <v-select :options="form.rotaTypes" @input="selectedRota" label="title"></v-select>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.name')"
+              :label="$t('insert.route.name')"
             >
               <b-form-input type="text" v-model="form.name"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.state')"
+              :label="$t('insert.route.state')"
             >
               <b-form-checkbox v-model="form.checked" name="check-button" switch>
-                {{(form.checked) ? $t('insert.active'): $t('insert.passive')}}
+                {{(form.checked) ? $t('insert.route.active'): $t('insert.route.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -51,94 +51,94 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" active>
+        <b-tab :title="$t('insert.route.detail')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.routeGroup')">
+              <b-form-group :label="$t('insert.route.routeGroup')">
                 <v-select :options="form.rotaGroups" @input="selectedRotaGroup" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.routeClass')">
+              <b-form-group :label="$t('insert.route.routeClass')">
                 <v-select :options="form.rotaClasses" @input="selectedRotaClass" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.vehicle')">
+              <b-form-group :label="$t('insert.route.vehicle')">
                 <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.personel')">
+              <b-form-group :label="$t('insert.route.personel')">
                 <v-select :options="form.personels" @input="selectedPersonel" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.supervisor')">
+              <b-form-group :label="$t('insert.route.supervisor')">
                 <v-select :options="form.supervisors" @input="selectedSupervisor" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.control')">
+              <b-form-group :label="$t('insert.route.control')">
                 <v-select :options="form.controls" @input="selectedControl" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.multiDayRoute')"
+                :label="$t('insert.route.multiDayRoute')"
               >
                 <b-form-radio-group id="radio-group-multi-day" v-model="form.multiDayRoute">
-                  <b-form-radio value="1">{{$t('insert.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.passive')}}</b-form-radio>
+                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group
-                :label="$t('insert.superRoute')"
+                :label="$t('insert.route.superRoute')"
               >
                 <b-form-radio-group id="radio-group-super-route" v-model="form.superRoute">
-                  <b-form-radio value="1">{{$t('insert.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.passive')}}</b-form-radio>
+                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.city')">
+              <b-form-group :label="$t('insert.route.city')">
                 <v-select :options="cities" @input="selectedCity" label="il"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.distirict')">
+              <b-form-group :label="$t('insert.route.distirict')">
                 <v-select :options="distiricts" @input="selectedDistirict" label="ilce"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.town')">
+              <b-form-group :label="$t('insert.route.town')">
                 <b-form-input type="text" v-model="form.town"/>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Tip">
+              <b-form-group :label="$t('insert.route.type')">
                 <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Müşteri Bölgesi">
+              <b-form-group :label="$t('insert.route.customerArea')">
                 <v-select :options="form.vehicles" @input="selectedVehicle" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.locations')">
+        <b-tab :title="$t('insert.route.locations')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.CustomerId')">
@@ -197,7 +197,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group>
-                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
