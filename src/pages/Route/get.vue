@@ -16,7 +16,7 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.route.reference')}}:</b> {{rowData.EncryptedKey}}</span> 
-            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.route.active'): $t('insert.route.passive')}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span>
           </section>
@@ -28,32 +28,32 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.routeGroup')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.routeGroup')}}</span>
                 <p>{{(rowData.routeGroup) ? rowData.routeGroup.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.routeClass')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.routeClass')}}</span>
                 <p>{{(rowData.RouteClass) ? rowData.RouteClass.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.vehicle')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.vehicle')}}</span>
                 <p>{{(rowData.Vehicle) ? rowData.Vehicle.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.personel')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.personel')}}</span>
                 <p>{{(rowData.Representative) ? rowData.Representative.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.supervisor')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.supervisor')}}</span>
                 <p>{{(rowData.Supervisor) ? rowData.Supervisor.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.control')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.control')}}</span>
                 <p>{{(rowData.VisitStartControl) ? rowData.VisitStartControl.Label : ''}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.city')}}</span>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.city')}}</span>
                 <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.distirict')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.distirict')}}</span>
                 <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.town')}}</span>
+                <span><i class="far fa-circle" /> {{$t('insert.route.town')}}</span>
                 <p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
                 <p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
                 <p></p> -->
-                <span><i class="far fa-circle" /> {{$t('insert.multiDayRoute')}}</span>
-                <p>{{(rowData.IsMultidayRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.superRoute')}}</span>
-                <p>{{(rowData.IsSuperRoute) ? $t('insert.yes') : $t('insert.no')}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.route.multiDayRoute')}}</span>
+                <p>{{(rowData.IsMultidayRoute) ? $t('insert.route.yes') : $t('insert.route.no')}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.route.superRoute')}}</span>
+                <p>{{(rowData.IsSuperRoute) ? $t('insert.route.yes') : $t('insert.route.no')}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">
@@ -70,6 +70,67 @@
               </b-card>
             </b-col>
           </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.other')">
+           <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.route.other')}}</h6>
+                <span><i class="far fa-circle" /> MarketingRegion1 </span>
+                <p>{{(rowData.MarketingRegion1) ? rowData.MarketingRegion1.Label : ''}}</p>
+                <span><i class="far fa-circle" /> MarketingRegion2 </span>
+                <p>{{(rowData.MarketingRegion2) ? rowData.MarketingRegion2.Label : ''}}</p>
+                <span><i class="far fa-circle" /> MarketingRegion3 </span>
+                <p>{{(rowData.MarketingRegion3) ? rowData.MarketingRegion3.Label : ''}}</p>
+                <span><i class="far fa-circle" /> MarketingRegion4 </span>
+                <p>{{(rowData.MarketingRegion4) ? rowData.MarketingRegion4.Label : ''}}</p>
+                <span><i class="far fa-circle" /> MarketingRegion5 </span>
+                <p>{{(rowData.MarketingRegion5) ? rowData.MarketingRegion5.Label : ''}}</p>
+                <span><i class="far fa-circle" /> BranchId </span>
+                <p>{{rowData.BranchId}}</p>
+                <span><i class="far fa-circle" /> CompanyId </span>
+                <p>{{rowData.CompanyId}}</p>
+                <span><i class="far fa-circle" /> CreatedDateTime </span>
+                <p>{{rowData.CreatedDateTime}}</p>
+                <span><i class="far fa-circle" /> CreatedUser </span>
+                <p>{{rowData.CreatedUser}}</p>
+                <span><i class="far fa-circle" /> Deleted </span>
+                <p>{{rowData.Deleted}}</p>
+                <span><i class="far fa-circle" /> ManagerId </span>
+                <p>{{rowData.ManagerId}}</p>
+                <span><i class="far fa-circle" /> ModifiedDateTime </span>
+                <p>{{rowData.ModifiedDateTime}}</p>
+                <span><i class="far fa-circle" /> ModifiedUser </span>
+                <p>{{rowData.ModifiedUser}}</p>
+                <span><i class="far fa-circle" /> RecordId </span>
+                <p>{{rowData.RecordId}}</p>
+                <span><i class="far fa-circle" /> RecordState </span>
+                <p>{{rowData.RecordState}}</p>
+                <span><i class="far fa-circle" /> RepresentativeId </span>
+                <p>{{rowData.RepresentativeId}}</p>
+                <span><i class="far fa-circle" /> RouteClassId </span>
+                <p>{{rowData.RouteClassId}}</p>
+                <span><i class="far fa-circle" /> RouteDetails </span>
+                <p>{{rowData.RouteDetails}}</p>
+                <span><i class="far fa-circle" /> RouteGroupId </span>
+                <p>{{rowData.RouteGroupId}}</p>
+                <span><i class="far fa-circle" /> RouteTypeId </span>
+                <p>{{rowData.RouteTypeId}}</p>
+                <span><i class="far fa-circle" /> Status </span>
+                <p>{{rowData.Status}}</p>
+                <span><i class="far fa-circle" /> SupervisorId </span>
+                <p>{{rowData.SupervisorId}}</p>
+                <span><i class="far fa-circle" /> System </span>
+                <p>{{rowData.System}}</p>
+                <span><i class="far fa-circle" /> TerminalId </span>
+                <p>{{rowData.TerminalId}}</p>
+                <span><i class="far fa-circle" /> VehicleId </span>
+                <p>{{rowData.VehicleId}}</p>
+                <span><i class="far fa-circle" /> VisitStartControlId </span>
+                <p>{{rowData.VisitStartControlId}}</p>
+              </b-card>
+            </b-col>
+           </b-row>
         </b-tab>
       </b-tabs>
     </div>

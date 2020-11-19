@@ -15,7 +15,7 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active'): $t('insert.passive')}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
           </section>
         </b-col>
@@ -48,6 +48,58 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.other')">
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.route.other')}}</h6>
+                <span><i class="far fa-circle" /> BranchId </span>
+                <p>{{ rowData.BranchId }}</p>
+                <span><i class="far fa-circle" /> CompanyId </span>
+                <p>{{ rowData.CompanyId }}</p>
+                <span><i class="far fa-circle" /> CreatedDateTime </span>
+                <p>{{ rowData.CreatedDateTime }}</p>
+                <span><i class="far fa-circle" /> CreatedUser </span>
+                <p>{{ rowData.CreatedUser }}</p>
+                <span><i class="far fa-circle" /> CustomerId </span>
+                <p>{{ rowData.CustomerId }}</p>
+                <span><i class="far fa-circle" /> EncryptedKey </span>
+                <p>{{ rowData.EncryptedKey }}</p>
+                <span><i class="far fa-circle" /> IsCustomerWarehouse </span>
+                <p>{{ rowData.IsCustomerWarehouse }}</p>
+                <span><i class="far fa-circle" /> IsVehicle </span>
+                <p>{{ rowData.IsVehicle }}</p>
+                <span><i class="far fa-circle" /> LocationId </span>
+                <p>{{ rowData.LocationId }}</p>
+                <span><i class="far fa-circle" /> ModifiedDateTime </span>
+                <p>{{ rowData.ModifiedDateTime }}</p>
+                <span><i class="far fa-circle" /> ModifiedUser </span>
+                <p>{{ rowData.ModifiedUser }}</p>
+                <span><i class="far fa-circle" /> RecordId </span>
+                <p>{{ rowData.RecordId }}</p>
+                <span><i class="far fa-circle" /> RecordState </span>
+                <p>{{ rowData.RecordState }}</p>
+                <span><i class="far fa-circle" /> RecordStatus </span>
+                <p>{{ rowData.RecordStatus }}</p>
+                <span><i class="far fa-circle" /> StatusId </span>
+                <p>{{ rowData.StatusId }}</p>
+                <span><i class="far fa-circle" /> System </span>
+                <p>{{ rowData.System }}</p>
+                <span><i class="far fa-circle" /> Vehicle </span>
+                <p>{{ rowData.Vehicle }}</p>
+                <span><i class="far fa-circle" /> WarehouseStocks </span>
+                <p>{{ rowData.WarehouseStocks }}</p>
+                <span><i class="far fa-circle" /> WarehouseSuppliers </span>
+                <p>{{ rowData.WarehouseSuppliers }}</p>
+                <span><i class="far fa-circle" /> WarehouseType </span>
+                <p>{{ rowData.WarehouseType }}</p>
+                <span><i class="far fa-circle" /> WarehouseTypeId </span>
+                <p>{{ rowData.WarehouseTypeId }}</p>
+                
+              </b-card>
+            </b-col>
+           </b-row>
+         </b-tab>
       </b-tabs>
     </div>
   </div>
