@@ -191,6 +191,9 @@ export default {
         }
       },
       detailListData: [],
+      detailListBranch: '',
+      detailListPurchaseWarehouseId: '',
+      detailListReturnWarehouseId: '',
       WarehouseSuppliers: {
         selectedBranch: '',
         selectedPurchaseWarehouseId: '',
@@ -246,19 +249,22 @@ export default {
     },
     selectedBranch (e) {
       this.WarehouseSuppliers.selectedBranch = e.RecordId
+      this.detailListBranch = e.BranchCommercialTitle
       this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
     },
     selectedPurchaseWarehouseId (e) {
       this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
+      this.detailListPurchaseWarehouseId = e.Description1
     },
     selectedReturnWarehouseId (e) {
       this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
+      this.detailListReturnWarehouseId = e.Description1
     },
     addDetailList () {
       let a = {
-        selectedBranch: this.WarehouseSuppliers.selectedBranch,
-        selectedPurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
+        selectedBranch: this.detailListBranch,
+        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
+        selectedReturnWarehouseId: this.detailListReturnWarehouseId
       }
       let b = {
         StatusId: null,
@@ -275,6 +281,9 @@ export default {
         ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
       }
       this.detailListData.push(a)
+      this.detailListBranch = null
+      this.detailListPurchaseWarehouseId = null
+      this.detailListReturnWarehouseId = null
       this.form.Model.WarehouseSuppliers.push(b)
     },
     selectedWarehouseType (e) {
