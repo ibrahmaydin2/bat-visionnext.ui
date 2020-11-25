@@ -291,6 +291,33 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
+    updateData ({ commit }, query) {
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Update', query.formdata)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
+            router.push({name: query.return})
+            document.getElementById('submitButton').disabled = false
+          } else {
+            let errs = res.data.Validations.Errors
+            for (let i = 0; i < errs.length; i++) {
+              let errmsg = errs[i].States
+              for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                
+              }
+              
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: err })
+        })
+    },
     // LOOKUP servisleri
     lookupWareouseType ({ state, commit }, query) {
       let dataQuery = {
