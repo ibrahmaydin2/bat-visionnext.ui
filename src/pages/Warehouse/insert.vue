@@ -161,6 +161,7 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    {{form}}
   </b-row>
 </template>
 <script>
@@ -238,6 +239,7 @@ export default {
       if (e === 0) {
         this.showCustomer = false
       } else {
+        this.form.Model.IsCenterWarehouse = e
         this.showCustomer = true
       }
     },
@@ -301,9 +303,11 @@ export default {
       // merkez depo mu ?
       if (e.DecimalValue === 76506191) {
         this.form.Model.IsCustomerWarehouse = 1
+        this.form.Model.IsCenterWarehouse = 1
         this.showCustomer = true
       } else {
         this.form.Model.IsCustomerWarehouse = 0
+        this.form.Model.IsCenterWarehouse = 0
         this.showCustomer = false
       }
     },

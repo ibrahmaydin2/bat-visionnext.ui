@@ -178,7 +178,7 @@
                 <span><i class="far fa-circle" /> BankPaymentSystemId </span>
                 <p>{{ rowData.BankPaymentSystemId }}</p>
                 <span><i class="far fa-circle" /> BlockReason </span>
-                <p>{{ rowData.BlockReason.Label }}</p>
+                <p>{{ rowData.BlockReason ? rowData.BlockReason.Label : '' }}</p>
                 <span><i class="far fa-circle" /> BlockReasonDescription </span>
                 <p>{{ rowData.BlockReasonDescription }}</p>
                 <span><i class="far fa-circle" /> BlockReasonId </span>
@@ -190,9 +190,9 @@
                 <span><i class="far fa-circle" /> BranchId </span>
                 <p>{{ rowData.BranchId }}</p>
                 <span><i class="far fa-circle" /> BranchLocations </span>
-                <p>{{ rowData.BranchLocations.Label }}</p>
+                <p>{{ rowData.BranchLocations ? rowData.BranchLocations.Label : '' }}</p>
                 <span><i class="far fa-circle" /> BranchPaymentTypes </span>
-                <p>{{ rowData.BranchPaymentTypes.Label }}</p>
+                <p>{{ rowData.BranchPaymentTypes ? rowData.BranchPaymentTypes.Label : '' }}</p>
                 <span><i class="far fa-circle" /> BranchRegion </span>
                 <p>{{ rowData.BranchRegion }}</p>
                 <span><i class="far fa-circle" /> CashSafeCode </span>
@@ -218,19 +218,19 @@
                 <span><i class="far fa-circle" /> CustomerItemDiscountCrts </span>
                 <p>{{ rowData.CustomerItemDiscountCrts }}</p>
                 <span><i class="far fa-circle" /> DefaultLocation </span>
-                <p>{{ rowData.DefaultLocation.Label }}</p>
+                <p>{{ rowData.DefaultLocation ? rowData.DefaultLocation.Label : '' }}</p>
                 <span><i class="far fa-circle" /> DefaultLocationId </span>
                 <p>{{ rowData.DefaultLocationId }}</p>
                 <span><i class="far fa-circle" /> DefaultPaymentType </span>
-                <p>{{ rowData.DefaultPaymentType.Label }}</p>
+                <p>{{ rowData.DefaultPaymentType ? rowData.DefaultPaymentType.Label : '' }}</p>
                 <span><i class="far fa-circle" /> Deleted </span>
                 <p>{{ rowData.Deleted }}</p>
                 <span><i class="far fa-circle" /> DistributionType </span>
-                <p>{{ rowData.DistributionType.Label }}</p>
+                <p>{{ rowData.DistributionType ? rowData.DistributionType.Label : '' }}</p>
                 <span><i class="far fa-circle" /> DistributionTypeId </span>
                 <p>{{ rowData.DistributionTypeId }}</p>
                 <span><i class="far fa-circle" /> EDocumentUseType </span>
-                <p>{{ rowData.EDocumentUseType.Label }}</p>
+                <p>{{ rowData.EDocumentUseType ? rowData.EDocumentUseType.Label : '' }}</p>
                 <span><i class="far fa-circle" /> EInvoiceNumberPrefix </span>
                 <p>{{ rowData.EInvoiceNumberPrefix }}</p>
                 <span><i class="far fa-circle" /> EInvoiceSeqs </span>
@@ -416,7 +416,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBranch/api/Branch', record: this.$route.params.url})
     }
   }
 }

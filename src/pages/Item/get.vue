@@ -160,41 +160,41 @@ export default {
       customerFields: [
         {
           key: 'customer',
-          label: this.$t('insert.item.Model_CustomerId') ,
+          label: this.$t('insert.item.Model_CustomerId'),
           sortable: true
         },
         {
           key: 'code',
-          label: this.$t('insert.item.CustomerItemCode') ,
+          label: this.$t('insert.item.CustomerItemCode'),
           sortable: true
         },
         {
           key: 'description',
-          label: this.$t('insert.item.Model_CustomerItemDescription') ,
+          label: this.$t('insert.item.Model_CustomerItemDescription'),
           sortable: true
         }
       ],
       barcodeFields: [
         {
           key: 'barcode',
-          label: this.$t('insert.item.Model_Barcode') ,
+          label: this.$t('insert.item.Model_Barcode'),
           sortable: true
         },
         {
           key: 'defination',
-          label: this.$t('insert.item.customerUnitDefinition') ,
+          label: this.$t('insert.item.customerUnitDefinition'),
           sortable: true
         }
       ],
       orderFields: [
         {
           key: 'quotaQuantity',
-          label: this.$t('insert.item.Model_QuotaQuantity') ,
+          label: this.$t('insert.item.Model_QuotaQuantity'),
           sortable: true
         },
         {
           key: 'quotaRegion',
-          label: this.$t('insert.item.Model_QuotaRegionId') ,
+          label: this.$t('insert.item.Model_QuotaRegionId'),
           sortable: true
         },
         {
@@ -220,7 +220,7 @@ export default {
           sortable: true
         }
       ],
-       productGroupFields: [
+      productGroupFields: [
         {
           key: 'lineNumber',
           label: this.$t('insert.item.LineNumber') ,
@@ -300,7 +300,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextItem/api/Item', record: this.$route.params.url})
     }
   }
 }

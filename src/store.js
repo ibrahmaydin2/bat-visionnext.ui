@@ -267,7 +267,7 @@ export const store = new Vuex.Store({
     createData ({ commit }, query) {
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Insert', query.formdata)
+      return axios.post(query.api + '/Insert', query.formdata)
         .then(res => {
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {

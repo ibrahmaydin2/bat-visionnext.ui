@@ -162,7 +162,7 @@ export default {
           key: 'area',
           label: this.$t('insert.employee.Model_DeviceUseAraeId'),
           sortable: true
-        },
+        }
       ],
       fields2: [
         {
@@ -202,7 +202,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextEmployee/api/Employee', record: this.$route.params.url})
     }
   }
 }

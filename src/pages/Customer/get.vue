@@ -232,7 +232,7 @@
                 <span><i class="far fa-circle" /> Contracted </span>
                 <p>{{ rowData.Contracted }}</p>
                 <span><i class="far fa-circle" /> Contractedo </span>
-                <p>{{ rowData.Contractedo.Label }}</p>
+                <p>{{ rowData.Contractedo ? rowData.Contractedo.Label : '' }}</p>
                 <span><i class="far fa-circle" /> CreatedDateTime </span>
                 <p>{{ rowData.CreatedDateTime }}</p>
                 <span><i class="far fa-circle" /> CreatedUser </span>
@@ -550,7 +550,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
     }
   }
 }
