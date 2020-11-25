@@ -116,7 +116,7 @@ export default {
         {key: 'PurchaseWarehouseId', label: 'PurchaseWarehouseId', sortable: true},
         {key: 'ReturnWarehouseId', label: 'ReturnWarehouseId', sortable: true}
       ],
-      tempItems: [ 
+      tempItems: [
         {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
         {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
         {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},

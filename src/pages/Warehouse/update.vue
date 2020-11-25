@@ -194,6 +194,9 @@ export default {
         }
       },
       detailListData: [],
+      detailListBranch: '',
+      detailListPurchaseWarehouseId: '',
+      detailListReturnWarehouseId: '',
       WarehouseSuppliers: {
         selectedBranch: '',
         selectedPurchaseWarehouseId: '',
@@ -209,23 +212,27 @@ export default {
   },
   watch: {
     rowData: function (e) {
-      // this.form.Model.WarehouseType = e.WarehouseType.Label
       this.selectedWarehouseType(e.WarehouseType)
       if (e.WarehouseTypeId === 76506193) {
         this.form.Model.Vehicle = e.Vehicle.Label
         this.form.Model.VehicleId = e.VehicleId
       }
-      
-      //if'e koyulacak
-      this.form.Model.Customer = e.Customer.Label
-      this.form.Model.CustomerId = e.CustomerId
+      // if'e koyulacak
+      if (e.Customer) {
+        this.form.Model.Customer = e.Customer.Label
+        this.form.Model.CustomerId = e.CustomerId
+      }
 
       this.form.Model.Code = e.Code
       this.form.Model.Description1 = e.Description1
       this.form.Model.WarehouseCapacity = e.WarehouseCapacity
       this.form.Model.LicenseNumber = e.LicenseNumber
       this.form.Model.FinanceCode = e.FinanceCode
-      this.dataStatus = (e.StatusId === 1) ? true : false
+      if (e.StatusId === 1) {
+        this.dataStatus = true
+      } else {
+        this.dataStatus = true
+      }
     },
     dataStatus: function (e) {
       if (e === true) {
@@ -242,12 +249,12 @@ export default {
   },
   methods: {
     getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: this.$route.meta.baseLink, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
     },
     save () {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
-      this.$store.dispatch('updateData', {...this.query, api: this.$route.meta.baseLink, formdata: this.form, return: this.$route.meta.baseLink})
+      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
       if (e === 0) {
@@ -264,19 +271,22 @@ export default {
     },
     selectedBranch (e) {
       this.WarehouseSuppliers.selectedBranch = e.RecordId
+      this.detailListBranch = e.BranchCommercialTitle
       this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
     },
     selectedPurchaseWarehouseId (e) {
       this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
+      this.detailListPurchaseWarehouseId = e.Description1
     },
     selectedReturnWarehouseId (e) {
       this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
+      this.detailListReturnWarehouseId = e.Description1
     },
     addDetailList () {
       let a = {
-        selectedBranch: this.WarehouseSuppliers.selectedBranch,
-        selectedPurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
+        selectedBranch: this.detailListBranch,
+        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
+        selectedReturnWarehouseId: this.detailListReturnWarehouseId
       }
       let b = {
         StatusId: null,
@@ -293,6 +303,9 @@ export default {
         ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
       }
       this.detailListData.push(a)
+      this.detailListBranch = null
+      this.detailListPurchaseWarehouseId = null
+      this.detailListReturnWarehouseId = null
       this.form.Model.WarehouseSuppliers.push(b)
     },
     selectedWarehouseType (e) {

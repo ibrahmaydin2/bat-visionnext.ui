@@ -229,7 +229,7 @@ export default {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
 
-      this.$store.dispatch('createData', {...this.query, api: this.$route.meta.baseLink, formdata: this.form, return: this.$route.meta.baseLink})
+      this.$store.dispatch('createData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
       if (e === 0) {

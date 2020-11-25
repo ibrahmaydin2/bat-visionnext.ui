@@ -226,7 +226,7 @@ export const store = new Vuex.Store({
         'RecordId' : query.record
       }
       commit('showNextgrid', false)
-      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Get', dataQuery)
+      return axios.post(query.api + '/Get', dataQuery)
         .then(res => {
           switch (res.status) {
             case 200:
@@ -269,53 +269,48 @@ export const store = new Vuex.Store({
       document.getElementById('submitButton').disabled = true
       return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Insert', query.formdata)
         .then(res => {
+          document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
             router.push({name: query.return})
-            document.getElementById('submitButton').disabled = false
           } else {
             let errs = res.data.Validations.Errors
             for (let i = 0; i < errs.length; i++) {
               let errmsg = errs[i].States
               for (let x = 0; x < errmsg.length; x++) {
-                  commit('showAlert', { type: 'validation', msg: errmsg })
-                
+                commit('showAlert', { type: 'validation', msg: errmsg })
               }
-              
             }
           }
         })
         .catch(err => {
           console.log(err)
           document.getElementById('submitButton').disabled = false
-          commit('showAlert', { type: 'danger', msg: err })
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
     updateData ({ commit }, query) {
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Update', query.formdata)
+      return axios.post(query.api + '/Update', query.formdata)
         .then(res => {
+          document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
             router.push({name: query.return})
-            document.getElementById('submitButton').disabled = false
           } else {
             let errs = res.data.Validations.Errors
             for (let i = 0; i < errs.length; i++) {
               let errmsg = errs[i].States
               for (let x = 0; x < errmsg.length; x++) {
-                  commit('showAlert', { type: 'validation', msg: errmsg })
-                
+                commit('showAlert', { type: 'validation', msg: errmsg })
               }
-              
             }
           }
         })
         .catch(err => {
-          console.log(err)
           document.getElementById('submitButton').disabled = false
-          commit('showAlert', { type: 'danger', msg: err })
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
     // LOOKUP servisleri
