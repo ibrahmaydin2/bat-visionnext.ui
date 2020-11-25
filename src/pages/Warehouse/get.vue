@@ -3,7 +3,7 @@
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
-    <div class="asc__showPage-container">
+    <div v-if="rowData" class="asc__showPage-container">
       <b-row>
         <b-col cols="12">
           <header>

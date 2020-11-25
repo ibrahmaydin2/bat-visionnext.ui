@@ -11,6 +11,13 @@
                 <h3>{{tableOperations.Name}}</h3>
               </b-col>
               <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
+                <b-button v-if="filterbtn" variant="info" size="sm" @click="clearFilters">
+                  <i class="fas fa-search-minus" /> {{$t('list.clear')}}
+                </b-button>
+                <!-- oluşturulan filtreyi kaydetme sistemi çalıştırıldığında bu fonksiyon aktifleşecek.
+                <b-button v-if="filterbtn" variant="success" size="sm" @click="saveFilter">
+                  <i class="fas fa-save" /> {{$t('list.saveFilter')}}
+                </b-button> -->
                 <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
                   <i class="fas fa-plus-square" /> {{$t('list.create')}}
                 </b-button>
@@ -48,14 +55,22 @@
                   <b-dropdown-header id="dropdown-header-label">
                     {{$t('list.selectedRows')}}
                   </b-dropdown-header>
-                  <b-dropdown-item
-                    v-for="(row,i) in tableRows"
-                    :key="'selectedRow' + i"
-                    :active="row.visible"
-                    @click="hideRow(i, row.visible == true ? false : true)"
-                  >
-                    <i :class="row.visible == true ? 'far fa-check-square' : 'far fa-square'" /> {{ row.label }}
-                  </b-dropdown-item>
+                  <div class="asc__listPage-Header-SelectRows-overlay">
+                    <b-form-checkbox
+                      v-for="(row,i) in tableRows"
+                      :name="row.dataField"
+                      :key="'selectedRow' + i"
+                      v-model="row.visible"
+                      variant="danger"
+                      switch>
+                        {{ row.label }}
+                    </b-form-checkbox>
+                  </div>
+                  <div class="asc__listPage-Header-SelectRows-footer">
+                    <b-button size="sm" variant="success" @click="submitRows(tableRows)" class="w-100 text-center">
+                      <i class="fas fa-table" /> {{$t('index.saveRows')}}
+                    </b-button>
+                  </div>
                 </b-dropdown>
                 <b-dropdown right variant="white" class="asc__listPage-Header-Download">
                   <template v-slot:button-content>
@@ -91,27 +106,58 @@ export default {
     return {
       thisRout: this.$route.name,
       pageTitle: this.$route.meta.title,
-      createLink: this.$route.meta.createLink
+      createLink: this.$route.meta.createLink,
+      filterbtn: false
     }
   },
   computed: {
     ...mapState(['style', 'bigLoading', 'tableRows', 'tableFilters', 'tableOperations'])
+  },
+  mounted () {
+    this.objlen(this.$route.query)
   },
   watch: {
     $route (to, from) {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
+      this.objlen(to.query)
     }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
-    hideRow (e, v) {
-      let hr = {
-        row: e,
-        visible: v
+    objlen (e) {
+      var count = 0
+      var i
+      for (i in e) {
+        if (e.hasOwnProperty(i)) {
+          count++
+        }
       }
-      this.hideTableRow(hr)
+      if (count >= 1) {
+        this.filterbtn = true
+      } else {
+        this.filterbtn = false
+      }
+      console.log(count)
+    },
+    clearFilters () {
+      this.$router.push({name: this.$route.name})
+    },
+    submitRows (t) {
+      let tbl = t.filter(t => t.visible === true)
+      let el = ''
+      for (let i = 0; i < tbl.length; i++) {
+        if (el === '') {
+          el += tbl[i].dataField
+        } else {
+          el += ',' + tbl[i].dataField
+        }
+      }
+      console.log(el)
+    },
+    hideRow (t) {
+      // this.hideTableRow(hr)
     },
     downloadBtn (r, f, e) {
       let apil = 'OrderLink'
@@ -191,6 +237,17 @@ export default {
     .asc__listPage-Header-SelectRows
       width: 140px
       margin: 0 0px 0 0
+      .asc__listPage-Header-SelectRows-overlay
+        height: 300px
+        overflow: auto
+        padding: 0 15px
+        margin-bottom: 10px
+      .asc__listPage-Header-SelectRows-footer
+        padding: 0 15px
+      .dropdown-menu
+        width: 230px
+      .custom-control
+        font-size: 12px
       & button
         font-size: 12px
         padding: 6px 10px

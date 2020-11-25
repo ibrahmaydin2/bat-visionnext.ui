@@ -75,6 +75,7 @@
     },
     "yes": "Evet",
     "no": "Hayır",
+    "min3": "3 karakter girin",
     "detail": "Detaylar",
     "sharing": "Paylaşım",
     "active": "Aktif",
@@ -301,6 +302,7 @@
       "Model_SupplierBranchId": "Şube",
       "Model_PurchaseWarehouseId": "Satın Alma Deposu",
       "Model_ReturnWarehouseId": "İade Deposu",
+      "Model_Customer": "Müşteri",
       "Warehouse": "Depo Ana Kayıtları",
       "WarehouseSuppliers": "Tedarikçi",
       "SupplierBranchId": "Şube",
@@ -519,7 +521,8 @@
     "TransportationTime": "TransportationTime",
     "WorkOrderStatus": "WorkOrderStatus",
     "WorkOrderStatusId": "WorkOrderStatusId",
-    "WorkOrderType": "WorkOrderType"
+    "WorkOrderType": "WorkOrderType",
+    "saveRows": "Düzenlemeyi Onayla"
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",
@@ -546,6 +549,8 @@
     "show": "Görüntüle",
     "print": "Yazdır",
     "edit": "Düzenle",
+    "clear": "Filtreleri Temizle",
+    "saveFilter": "Filtreyi Kaydet",
     "downloadPdf": "Pdf Aktar",
     "downloadExcel": "Excel Aktar",
     "downloadXml": "Xml Aktar",

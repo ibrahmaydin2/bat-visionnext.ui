@@ -1,5 +1,5 @@
 <template>
-  <Nextgrid />
+  <Nextgrid apiurl="VisionNextRoute/api/Route/Search" />
 </template>
 <script>
 import Nextgrid from '../../components/NextGrid'

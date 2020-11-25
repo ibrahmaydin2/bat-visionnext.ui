@@ -32,10 +32,8 @@ export default {
     display: none
     color: #ffa300
   .asc__updatePage
+    margin-bottom: 2rem
     & header
-      display: flex
-      align-items: center
-      justify-content: space-between
       padding: .5rem 15px 0 15px
     & section
       padding: .5rem 15px 0 15px

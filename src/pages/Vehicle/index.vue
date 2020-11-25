@@ -1,5 +1,5 @@
 <template>
-  <Nextgrid />
+  <Nextgrid apiurl="VisionNextVehicle/api/Vehicle/Search" />
 </template>
 <script>
 import Nextgrid from '../../components/NextGrid'

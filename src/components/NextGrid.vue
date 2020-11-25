@@ -30,10 +30,12 @@
               <v-select
                 v-if="h.columnType === 'LabelValue'"
                 v-once
-                @input="filterAutocomplete"
                 label="title"
+                @open="onOpen(h.dataField, items)"
+                @click="filterAutocomplete(items)"
                 disabled
-              />
+              >
+              </v-select>
 
               <v-select
                 v-if="h.columnType === 'Boolean'"
@@ -85,7 +87,7 @@
                 <i class="fas fa-th" />
               </template>
               <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                <router-link :to="{name: $route.name + opt.Action, params: {url: r.EncryptedKey}}">
+                <router-link :to="{name: $route.name + opt.Action, params: {url: r.RecordId}}">
                   <i class="far fa-circle" /> {{ opt.Title }}
                 </router-link>
               </b-dropdown-item>
@@ -137,10 +139,10 @@
     </b-row>
   </div>
 </template>
-
 <script>
 import { mapState } from 'vuex'
 export default {
+  props: ['apiurl'],
   data () {
     return {
       head: null,
@@ -192,9 +194,6 @@ export default {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid'])
   },
   methods: {
-    filterAutocomplete (e) {
-      console.log(e)
-    },
     dateTimeformat (e) {
       let calendar, date
       if (e != null) {
@@ -280,6 +279,7 @@ export default {
       // this.$store.dispatch('getTableData', {...this.query, url: 'VisionNext' + e + '/api/' + e + '/Search', page: parseInt(p), count: parseInt(c), sort: s})
       this.$store.dispatch('getTableOperations', {
         ...this.query,
+        apiUrl: this.apiurl,
         api: e,
         page: parseInt(p),
         count: parseInt(c),

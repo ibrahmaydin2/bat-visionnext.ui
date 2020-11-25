@@ -19,6 +19,7 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import VueTheMask from 'vue-the-mask'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
+import '@trevoreyre/autocomplete-vue/dist/style.css'
 
 import draggable from 'vuedraggable'
 import VueGoogleCharts from 'vue-google-charts'
@@ -44,7 +45,6 @@ Vue.use(Vuelidate)
 Vue.use(Autocomplete)
 Vue.use(VueTheMask)
 Vue.use(VueGoogleCharts)
-
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
 Vue.component('Carousel', Carousel)

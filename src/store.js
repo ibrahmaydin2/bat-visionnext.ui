@@ -20,6 +20,11 @@ let authHeader = {
   }
 }
 
+let authCompanyAndBranch = {
+  'CompanyId' : 1,
+  'BranchId' : 1,
+}
+
 export const store = new Vuex.Store({
   state: {
     // sistem gereksinimleri
@@ -63,9 +68,13 @@ export const store = new Vuex.Store({
       { value: 'today', title: 'Bu Günün Kayıtları' },
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
+    BranchId: 1,
+    CompanyId: 1,
     nextgrid: false,
+    createCode: null,
     rowData: [],
     tableData: [],
+    autocompleteData: [],
     tableOperations: [],
     tableRows: [],
     breadcrumbList: [],
@@ -73,7 +82,12 @@ export const store = new Vuex.Store({
     searchRes: [],
     errorMessage: null,
     cities: [],
-    distiricts: []
+    distiricts: [],
+    lookupWarehouse_type: [],
+    vehicleList: [],
+    branchList: [],
+    warehouseList: [],
+    customerList: []
   },
   actions: {
     // sistem gereksinimleri
@@ -121,11 +135,16 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setTableOperations', res.data.UIPageModels[0])
-            commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+            if (res.data.UIPageModels[0].SelectedColumns.length === 0) {
+              commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+            } else {
+              commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
+            }
 
             // başarılı -> tabloyu doldur.
             this.dispatch('getTableData', {
               ...this.query,
+              apiUrl: query.apiUrl,
               api: query.api,
               page: query.page,
               count: query.count,
@@ -143,7 +162,7 @@ export const store = new Vuex.Store({
         })
     },
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
-    getTableData ({ commit }, query) {
+    getTableData ({ state, commit }, query) {
       commit('setTableData', [])
       commit('showNextgrid', false)
       commit('bigLoaded', true)
@@ -174,13 +193,14 @@ export const store = new Vuex.Store({
 
       dataQuery = {
         AndConditionModel,
-        'branchId': 1,
-        'companyId': 1,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
         'pagerecordCount': query.count,
         'page': query.page,
         OrderByColumns
       }
-      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery)
+      // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
+      return axios.post(query.apiUrl, dataQuery)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('showNextgrid', true)
@@ -196,14 +216,14 @@ export const store = new Vuex.Store({
         })
     },
     // tüm GET ekranlarının genel datasını POST metodudyla besleyen fonksiyondur.
-    getData ({ commit }, query) {
+    getData ({ state, commit }, query) {
       commit('setTableData', [])
       commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
-        "BranchId" : 1,
-        "CompanyId" : 1,
-        "EncryptedKey" : query.record
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
+        'RecordId' : query.record
       }
       commit('showNextgrid', false)
       return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Get', dataQuery)
@@ -230,21 +250,160 @@ export const store = new Vuex.Store({
           // commit('bigLoaded', false)
         })
     },
-    createData ({ commit }, query) {
-      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
-      console.log(query)
-      document.getElementById('submitButton').disabled = true
-      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Insert', query.form, authHeader)
+    getCreateCode ({ commit }, query) {
+      return axios.post(query.apiUrl, authCompanyAndBranch)
         .then(res => {
-          commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
-          router.push({name: query.return})
-          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('setGetCreateCode', res.data.Model.Code)
+          } else {
+          }
         })
         .catch(err => {
+          console.log(err)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
-    }
+    },
+    createData ({ commit }, query) {
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Insert', query.formdata)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
+            router.push({name: query.return})
+            document.getElementById('submitButton').disabled = false
+          } else {
+            let errs = res.data.Validations.Errors
+            for (let i = 0; i < errs.length; i++) {
+              let errmsg = errs[i].States
+              for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                
+              }
+              
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: err })
+        })
+    },
+    // LOOKUP servisleri
+    lookupWareouseType ({ state, commit }, query) {
+      let dataQuery = {
+        authCompanyAndBranch,
+        'LookupTableCode' : 'WAREHOUSE_TYPE'
+      }
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            state.lookupWarehouse_type = res.data.Values
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    // autocomplete datalar & listeler
+    acVehicle ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setVehicleList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    acCustomer ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextCustomer/api/Customer/Search', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    acBranch ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextBranch/api/Branch/Search', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setBranchList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    acWarehouse ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      AndConditionModel['isVehicle'] = 0
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setWarehouseList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
   },
   mutations: {
     showAlert (state, payload) {
@@ -254,6 +413,13 @@ export const store = new Vuex.Store({
             title: JSON.stringify(payload.msg),
             variant: 'danger',
             noCloseButton: false
+          })
+          break
+        case 'validation':
+          this._vm.$bvToast.toast(payload.msg, {
+            variant: 'danger',
+            noCloseButton: true,
+            toaster: 'b-toaster-bottom-right'
           })
           break
         case 'warning':
@@ -299,9 +465,27 @@ export const store = new Vuex.Store({
     setTableData (state, payload) {
       state.tableData = payload
     },
+    setVehicleList (state, payload) {
+      state.vehicleList = payload
+    },
+    setCustomerList (state, payload) {
+      state.customerList = payload
+    },
+    setBranchList (state, payload) {
+      state.branchList = payload
+    },
+    setWarehouseList (state, payload) {
+      state.warehouseList = payload
+    },
     setTableRows (state, payload) {
       const trows = payload
       state.tableRows = trows
+    },
+    setLookup (state, payload) {
+      state.lookup = payload
+    },
+    setGetCreateCode (state, payload) {
+      state.createCode = payload
     },
     setTableOperations (state, payload) {
       state.tableOperations = payload
