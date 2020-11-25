@@ -60,7 +60,7 @@
             </b-col>
             <b-col v-if="showVehicle" cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select v-model="form.Model.Vehicle" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -72,7 +72,7 @@
             </b-col>
             <b-col v-if="showCustomer" cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
+                <v-select v-model="form.Model.Customer" label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -89,8 +89,8 @@
                 :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
               >
               <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
+                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
@@ -188,7 +188,9 @@ export default {
           IsCenterWarehouse: null,
           Code: null,
           Description1: null,
-          CustomerId: null
+          CustomerId: null,
+          Vehicle: null,
+          Customer: null
         }
       },
       detailListData: [],
@@ -207,8 +209,23 @@ export default {
   },
   watch: {
     rowData: function (e) {
-      console.log(e)
-      this.form.Model.WarehouseType = e.WarehouseType.Label
+      // this.form.Model.WarehouseType = e.WarehouseType.Label
+      this.selectedWarehouseType(e.WarehouseType)
+      if (e.WarehouseTypeId === 76506193) {
+        this.form.Model.Vehicle = e.Vehicle.Label
+        this.form.Model.VehicleId = e.VehicleId
+      }
+      
+      //if'e koyulacak
+      this.form.Model.Customer = e.Customer.Label
+      this.form.Model.CustomerId = e.CustomerId
+
+      this.form.Model.Code = e.Code
+      this.form.Model.Description1 = e.Description1
+      this.form.Model.WarehouseCapacity = e.WarehouseCapacity
+      this.form.Model.LicenseNumber = e.LicenseNumber
+      this.form.Model.FinanceCode = e.FinanceCode
+      this.dataStatus = (e.StatusId === 1) ? true : false
     },
     dataStatus: function (e) {
       if (e === true) {
@@ -230,8 +247,7 @@ export default {
     save () {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
-
-      this.$store.dispatch('createData', {...this.query, api: this.$route.meta.baseLink, formdata: this.form})
+      this.$store.dispatch('updateData', {...this.query, api: this.$route.meta.baseLink, formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
       if (e === 0) {

@@ -59,6 +59,7 @@
     "passive": "Pasif",
     "yes": "Evet",
     "no": "Hayır",
+    "min3": "3 karakter girin",
     "route": {
       "status": "Durum",
       "routeCode": "Rota Kodu",
@@ -104,14 +105,6 @@
       "distirict": "İlçe",
       "town": "Mahalle"
     },
-<<<<<<< HEAD
-    "yes": "Evet",
-    "no": "Hayır",
-    "min3": "3 karakter girin",
-    "detail": "Detaylar",
-    "sharing": "Paylaşım",
-    "active": "Aktif",
-    "passive": "Pasif",
     "code": "Kodu",
     "state": "Durum",
     "rotaType": "Rota Tipi",
@@ -129,8 +122,6 @@
     "city": "Şehir",
     "distirict": "İlçe",
     "town": "Mahalle",
-=======
->>>>>>> 701e2ea8f5fa2f5ce445def68a3c20c5b60602c5
     "vehicles": {
       "code": "Sistem Kodu",
       "driver": "Sürücü",
@@ -163,7 +154,11 @@
       "vehicleCategory2": "Araç Kategori 2",
       "vehicleCategory3": "Araç Kategori 3",
       "chooseDate": "Tarih Seçiniz",
-      "general": "Genel"
+      "general": "Genel",
+      "status": "Durum",
+      "distirict":"İlçe",
+      "city":"Şehir",
+      "Model_PhoneNumber2": "Telefon (2)"
     },
     "employee": {
       "Model_Code": "Sistem Kodu",
@@ -614,5 +609,9 @@
   "header": {
     "save": "Kaydet",
     "cancel": "Vazgeç"
+  },
+  "form": {
+    "createOk": "Başarılı",
+    "pleaseWait":"Lütfen Bekleyin"
   }
 }
