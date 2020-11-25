@@ -51,6 +51,14 @@
     "CustomerInsert": "Yeni Müşteri"
   },
   "insert": {
+    "add": "Ekle",
+    "other": "Diğer",
+    "detail": "Detaylar",
+    "sharing": "Paylaşım",
+    "active": "Aktif",
+    "passive": "Pasif",
+    "yes": "Evet",
+    "no": "Hayır",
     "route": {
       "status": "Durum",
       "routeCode": "Rota Kodu",
@@ -71,8 +79,32 @@
       "Day1FreStartDate": "Rota Başlangıcı",
       "Day1Frequency": "Yıllık Uğrama Frekansı",
       "routeDetail": "Rota Detayı",
-      "locations": "Lokasyonlar"
+      "locations": "Lokasyonlar",
+      "other": "Diğer",
+      "yes": "Evet",
+      "no": "Hayır",
+      "detail": "Detaylar",
+      "sharing": "Paylaşım",
+      "active": "Aktif",
+      "passive": "Pasif",
+      "code": "Kodu",
+      "state": "Durum",
+      "rotaType": "Rota Tipi",
+      "chooseRotaType": "Rota Tipi Seçiniz",
+      "name": "Adı",
+      "routeGroup": "Rota Grubu",
+      "routeClass": "Rota Sınıfı",
+      "vehicle": "Araç",
+      "personel": "Saha Personeli",
+      "supervisor": "Satış Şefi",
+      "multiDayRoute": "Çoklu Gün Rotası Mı?",
+      "superRoute": "Super Rota Mı?",
+      "control": "Ziyaret Başlama Kontrolü",
+      "city": "Şehir",
+      "distirict": "İlçe",
+      "town": "Mahalle"
     },
+<<<<<<< HEAD
     "yes": "Evet",
     "no": "Hayır",
     "min3": "3 karakter girin",
@@ -97,6 +129,8 @@
     "city": "Şehir",
     "distirict": "İlçe",
     "town": "Mahalle",
+=======
+>>>>>>> 701e2ea8f5fa2f5ce445def68a3c20c5b60602c5
     "vehicles": {
       "code": "Sistem Kodu",
       "driver": "Sürücü",
@@ -287,7 +321,11 @@
       "ColumnValue" : "Değer",
       "DiscountPercent1" : "Ürün İndirimi 1",
       "code": "Sistem Kodu",
-      "status": "Durum"
+      "status": "Durum",
+      "distirict":"İlçe",
+      "city":"Şehir",
+      "Model_PhoneNumber2": "Telefon (2)",
+      "chooseDate": "Tarih Seçiniz"
     },
     "warehouse": {
       "Model_Code": "Sistem Kodu",

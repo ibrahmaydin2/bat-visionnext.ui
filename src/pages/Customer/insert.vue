@@ -164,12 +164,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.city')">
+              <b-form-group :label="$t('insert.customer.city')">
                 <v-select :options="cities" @input="selectedCity" label="il"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.distirict')">
+              <b-form-group :label="$t('insert.customer.distirict')">
                 <v-select :options="distiricts" @input="selectedDistirict" label="ilce"></v-select>
               </b-form-group>
             </b-col>

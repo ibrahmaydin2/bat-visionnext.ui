@@ -41,8 +41,8 @@
                 <p>{{(rowData.VehicleType) ? rowData.VehicleType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
                 <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                <span><i class="far fa-circle" /> {{$t('insert.vehicles.isStore')}}</span>
-                <p><i :class="rowData.UseAsWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+                <span><i class="far fa-circle" /> {{$t('insert.vehicles.isAsset')}}</span>
+                <p><i :class="rowData.isAsset === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
               </b-card>
             </b-col>
             <b-col cols="12" md="4">
@@ -77,6 +77,96 @@
               </b-card>
             </b-col>
           </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.other')">
+           <b-row>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <span><i class="far fa-circle" />AlternativeVehicle</span>
+                <p>{{(rowData.AlternativeVehicle) ? rowData.AlternativeVehicle.Label : ''}}</p>
+                <span><i class="far fa-circle" />AxleQuantity</span>
+                <p>{{rowData.AxleQuantity}}</p>
+                <span><i class="far fa-circle" />AxleWeight</span>
+                <p>{{rowData.AxleWeight}}</p>
+                <span><i class="far fa-circle" />BranchId</span>
+                <p>{{rowData.BranchId}}</p>
+                <span><i class="far fa-circle" />Category4</span>
+                <p>{{(rowData.Category4) ? rowData.Category4.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category5</span>
+                <p>{{(rowData.Category5) ? rowData.Category5.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category6</span>
+                <p>{{(rowData.Category6) ? rowData.Category6.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category7</span>
+                <p>{{(rowData.Category7) ? rowData.Category7.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category8</span>
+                <p>{{(rowData.Category8) ? rowData.Category8.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category9</span>
+                <p>{{(rowData.Category9) ? rowData.Category9.Label : ''}}</p>
+                <span><i class="far fa-circle" />Category10</span>
+                <p>{{(rowData.Category10) ? rowData.Category10.Label : ''}}</p>
+                <span><i class="far fa-circle" />ColorId</span>
+                <p>{{rowData.ColorId}}</p>
+                <span><i class="far fa-circle" />CompanyId</span>
+                <p>{{rowData.CompanyId}}</p>
+                <span><i class="far fa-circle" />CreatedDateTime</span>
+                <p>{{rowData.CreatedDateTime}}</p>
+                <span><i class="far fa-circle" />DefaultDriverEmployeeId</span>
+                <p>{{rowData.DefaultDriverEmployeeId}}</p>
+                <span><i class="far fa-circle" />Deleted</span>
+                <p>{{rowData.Deleted}}</p>
+                <span><i class="far fa-circle" />EngineeNo1</span>
+                <p>{{rowData.EngineeNo1}}</p>
+                <span><i class="far fa-circle" />EngineeNo2</span>
+                <p>{{rowData.EngineeNo2}}</p>
+                <span><i class="far fa-circle" />EngineeSize</span>
+                <p>{{rowData.EngineeSize}}</p>
+                <span><i class="far fa-circle" />Hp</span>
+                <p>{{rowData.Hp}}</p>
+                <span><i class="far fa-circle" />IsBranchLocation</span>
+                <p>{{rowData.IsBranchLocation}}</p>
+                <span><i class="far fa-circle" />LengthCp</span>
+                <p>{{rowData.LengthCp}}</p>
+                <span><i class="far fa-circle" />LengthCpUnitId</span>
+                <p>{{rowData.LengthCpUnitId}}</p>
+                <span><i class="far fa-circle" />ModifiedDateTime</span>
+                <p>{{rowData.ModifiedDateTime}}</p>
+                <span><i class="far fa-circle" />ModifiedUser</span>
+                <p>{{rowData.ModifiedUser}}</p>
+                <span><i class="far fa-circle" />OrderCapacity</span>
+                <p>{{rowData.OrderCapacity}}</p>
+                <span><i class="far fa-circle" />RecordId</span>
+                <p>{{rowData.RecordId}}</p>
+                <span><i class="far fa-circle" />RecordState</span>
+                <p>{{rowData.RecordState}}</p>
+                <span><i class="far fa-circle" />SeatQuantity</span>
+                <p>{{rowData.SeatQuantity}}</p>
+                <span><i class="far fa-circle" />ServiceAddressDetail</span>
+                <p>{{rowData.ServiceAddressDetail}}</p>
+                <span><i class="far fa-circle" />ServiceAddressId</span>
+                <p>{{rowData.ServiceAddressId}}</p>
+                <span><i class="far fa-circle" />ServiceContact</span>
+                <p>{{rowData.ServiceContact}}</p>
+                <span><i class="far fa-circle" />ServiceEmail</span>
+                <p>{{rowData.ServiceEmail}}</p>
+                <span><i class="far fa-circle" />ServiceFax</span>
+                <p>{{rowData.ServiceFax}}</p>
+                <span><i class="far fa-circle" />ServiceTelephone1</span>
+                <p>{{rowData.ServiceTelephone1}}</p>
+                <span><i class="far fa-circle" />ServiceTelephone2</span>
+                <p>{{rowData.ServiceTelephone2}}</p>
+                <span><i class="far fa-circle" />System</span>
+                <p>{{rowData.System}}</p>
+                <span><i class="far fa-circle" />TireQuantity</span>
+                <p>{{rowData.TireQuantity}}</p>
+                <span><i class="far fa-circle" />TireSize</span>
+                <p>{{rowData.TireSize}}</p>
+                <span><i class="far fa-circle" />UsageType</span>
+                <p>{{rowData.UsageType}}</p>
+                <span><i class="far fa-circle" />UsageTypeId</span>
+                <p>{{rowData.UsageTypeId}}</p>
+              </b-card>
+            </b-col>
+           </b-row>
         </b-tab>
       </b-tabs>
     </div>
