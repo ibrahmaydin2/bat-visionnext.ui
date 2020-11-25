@@ -26,8 +26,14 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.VehicleId}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p>{{rowData.IsCenterWarehouse}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
+                <div v-if="rowData.WarehouseTypeId === 76506193">
+                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
+                </div>
+                <div v-if="rowData.WarehouseTypeId === 76506191">
+                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
+                </div>
+                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
                 <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
@@ -81,21 +87,12 @@
                 <p>{{ rowData.RecordState }}</p>
                 <span><i class="far fa-circle" /> RecordStatus </span>
                 <p>{{ rowData.RecordStatus }}</p>
-                <span><i class="far fa-circle" /> StatusId </span>
-                <p>{{ rowData.StatusId }}</p>
                 <span><i class="far fa-circle" /> System </span>
                 <p>{{ rowData.System }}</p>
-                <span><i class="far fa-circle" /> Vehicle </span>
-                <p>{{ rowData.Vehicle }}</p>
                 <span><i class="far fa-circle" /> WarehouseStocks </span>
                 <p>{{ rowData.WarehouseStocks }}</p>
                 <span><i class="far fa-circle" /> WarehouseSuppliers </span>
                 <p>{{ rowData.WarehouseSuppliers }}</p>
-                <span><i class="far fa-circle" /> WarehouseType </span>
-                <p>{{ rowData.WarehouseType }}</p>
-                <span><i class="far fa-circle" /> WarehouseTypeId </span>
-                <p>{{ rowData.WarehouseTypeId }}</p>
-                
               </b-card>
             </b-col>
            </b-row>
@@ -112,9 +109,9 @@ export default {
     return {
       // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
       fields: [
-        {key: 'SupplierBranchId', label: 'SupplierBranchId', sortable: true},
-        {key: 'PurchaseWarehouseId', label: 'PurchaseWarehouseId', sortable: true},
-        {key: 'ReturnWarehouseId', label: 'ReturnWarehouseId', sortable: true}
+        {key: 'SupplierBranchId', label: 'Şube', sortable: true},
+        {key: 'PurchaseWarehouseId', label: 'Satın Alma Deposu', sortable: true},
+        {key: 'ReturnWarehouseId', label: 'İade Deposu', sortable: true}
       ],
       tempItems: [
         {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},

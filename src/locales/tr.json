@@ -349,7 +349,8 @@
       "FinanceCode": "Finans Kodu",
       "locations": "Hizmet Alınan Depolar",
       "status": "Durum",
-      "code": "Sistem Kodu"
+      "code": "Sistem Kodu",
+      "Customer": "Müşteri"
     },
     "item": {
       "Detail": "Detaylar",
