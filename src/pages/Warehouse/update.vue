@@ -60,7 +60,7 @@
             </b-col>
             <b-col v-if="showVehicle" cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="form.Model.Vehicle" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select v-model="VehicleName" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -193,6 +193,7 @@ export default {
           Customer: null
         }
       },
+      VehicleName: '',
       detailListData: [],
       detailListBranch: '',
       detailListPurchaseWarehouseId: '',
@@ -214,7 +215,8 @@ export default {
     rowData: function (e) {
       this.selectedWarehouseType(e.WarehouseType)
       if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.Vehicle.Label
+        this.form.Model.Vehicle = e.RecordId
+        this.VehicleName = e.Vehicle.Label
         this.form.Model.VehicleId = e.VehicleId
       }
       // if'e koyulacak
