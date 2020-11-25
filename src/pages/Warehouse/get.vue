@@ -42,19 +42,22 @@
             <b-col cols="12" md="8">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.warehouse.locations')}}</h6>
-                <b-table responsive :items="tempItems" :fields="fields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                <b-table responsive :items="rowData.WarehouseSuppliers" :fields="fields">
+                  <template #cell(SupplierBranchId)="data">
+                    {{data.item.SupplierBranch.Label}}
                   </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  <template #cell(PurchaseWarehouseId)="data">
+                    {{data.item.PurchaseWarehouse.Label}}
+                  </template>
+                  <template #cell(ReturnWarehouseId)="data">
+                    {{data.item.ReturnWarehouse.Label}}
                   </template>
                 </b-table>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <b-tab v-if="false" :title="$t('insert.other')">
           <b-row>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
