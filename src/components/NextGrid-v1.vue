@@ -2,21 +2,23 @@
   <div class="asc__nextgrid">
     <b-table-simple hover bordered small responsive sticky-header class="asc__nextgrid-table">
       <b-thead>
-        <draggable tag="tr" :list="head">
+        <draggable v-model="head" tag="tr">
+          <b-th width="30" class="asc__nextgrid-table-header">
+            &nbsp;
+          </b-th>
           <b-th
-            v-for="header in head"
-            :key="header.dataField"
-            :style="header.width ? 'width:' + header.width : ''"
+            v-for="(h, i) in tableRows.filter(item => item.visible === true)"
+            :key="'head' + i"
             :class="
-              header.align == null ?
-              'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-left'
+              h.align == null ?
+              'asc__nextgrid-table-header asc__nextgrid-table-header-' + h.columnType + ' text-left'
               :
-              'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
+              'asc__nextgrid-table-header asc__nextgrid-table-header-' + h.columnType + ' text-' + h.align"
           >
-            <span class="asc__nextgrid-table-header-title">{{header.label}}</span>
-            <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
+            <span class="asc__nextgrid-table-header-title">{{h.label}}</span>
+            <div class="asc__nextgrid-table-header-sort">
               <b-button
-                @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
+                @click="sortable(h.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
                 size="sm"
                 variant="light"
                 class="py-0"
@@ -26,124 +28,106 @@
             </div>
             <div class="asc__nextgrid-table-header-filter">
               <v-select
-                v-if="header.columnType === 'LabelValue'"
+                v-if="h.columnType === 'LabelValue'"
                 v-once
                 label="title"
-                @open="onOpen(header.dataField, items)"
+                @open="onOpen(h.dataField, items)"
                 @click="filterAutocomplete(items)"
                 disabled
               >
               </v-select>
 
-              <!--<v-select
-                v-if="header.columnType === 'LabelValue'"
-                v-once
-                disabled
-                v-model="VehicleName"
-                label="VehiclePlateNumber"
-                :filterable="false"
-                :options="vehicleList"
-                @search="onVehicleSearch"
-                @input="selectedVehicle"
-              >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.VehiclePlateNumber }}
-                </template>
-              </v-select>-->
-
               <v-select
-                v-if="header.columnType === 'Boolean'"
+                v-if="h.columnType === 'Boolean'"
                 v-once
                 v-model="searchText"
                 :options="searchBoolean"
-                @input="filterBoolean(header.dataField)"
+                @input="filterBoolean(h.dataField)"
                 label="title"
               />
 
               <b-form-datepicker
-                v-if="header.columnType === 'Date'"
+                v-if="h.columnType === 'Date'"
                 v-once
                 v-model="searchText"
                 placeholder=""
-                @input="filterDate(header.dataField, searchText)"
+                @input="filterDate(h.dataField, searchText)"
               />
 
               <b-form-datepicker
-                v-if="header.columnType === 'DateTime'"
+                v-if="h.columnType === 'DateTime'"
                 v-once
                 v-model="searchText"
                 placeholder=""
-                @input="filterDate(header.dataField, searchText)"
+                @input="filterDate(h.dataField, searchText)"
               />
 
               <b-form-input
-                v-if="header.columnType === 'String'"
+                v-if="h.columnType === 'String'"
                 v-once
                 v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                @keydown.enter="searchOnTable(h.dataField, searchText)"
               />
 
               <b-form-input
-                v-if="header.columnType === 'Id'"
+                v-if="h.columnType === 'Id'"
                 v-once
                 v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                @keydown.enter="searchOnTable(h.dataField, searchText)"
               />
             </div>
           </b-th>
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="item in items" :key="'item' + item.Code">
-          <b-td v-for="h in head" :key="h.dataField">
+        <b-tr v-for="(r, x) in items" :key="'r' + x">
+          <b-td>
+            <b-dropdown size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
+              <template #button-content>
+                <i class="fas fa-th" />
+              </template>
+              <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
+                <router-link :to="{name: $route.name + opt.Action, params: {url: r.RecordId}}">
+                  <i class="far fa-circle" /> {{ opt.Title }}
+                </router-link>
+              </b-dropdown-item>
+            </b-dropdown>
+          </b-td>
+          <b-td v-for="(h, y) in tableRows.filter(item => item.visible === true)" :key="'row' + y" :class="h.align == null ? 'text-left' : 'text-' + h.align">
             <!-- eğer value gönderirlerse bu fonksiyonu çalıştırıcaz.
             <template v-if="h.value">
-              {{ item[h.dataField][h.value] }}
+              {{ r[h.dataField][h.value] }}
             </template>-->
-            <span v-if="h.columnType === 'operations'" class="d-block w-100">
-              <b-dropdown size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
-                <template #button-content>
-                  <i class="fas fa-th" />
-                </template>
-                <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                  <router-link :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </router-link>
-                </b-dropdown-item>
-              </b-dropdown>
-            </span>
             <span v-if="h.columnType === 'LabelValue'" class="d-block w-100">
-              {{ labelFormat(item[h.dataField]) }}
+              {{ labelFormat(r[h.dataField]) }}
             </span>
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
-              <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
+              <i :class="r[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
             <span v-else-if="h.columnType === 'Date'" class="d-block w-100">
-              {{ dateFormat(item[h.dataField]) }}
+              {{ dateFormat(r[h.dataField]) }}
             </span>
             <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100">
-              {{ dateTimeformat(item[h.dataField]) }}
+              {{ dateTimeformat(r[h.dataField]) }}
             </span>
             <span v-else-if="h.columnType === 'String'" class="d-block w-100">
-              {{ item[h.dataField] }}
+              {{ r[h.dataField] }}
             </span>
             <span v-else-if="h.columnType === 'Id'" class="d-block w-100">
-              <i>{{ item[h.dataField] }}</i>
+              <i>{{ r[h.dataField] }}</i>
             </span>
             <span v-else class="d-block w-100">
-              {{ item[h.dataField] }}
+              {{ r[h.dataField] }}
             </span>
           </b-td>
         </b-tr>
       </b-tbody>
     </b-table-simple>
+
     <b-row class="asc__nextgrid-table-footer">
       <b-col cols="6">
         <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
-          <b-dropdown-item v-for="p in perPageOpt" :key="'perpage' + p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
+          <b-dropdown-item v-for="p in perPageOpt" :key="p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
         </b-dropdown>
       </b-col>
       <b-col cols="6">
@@ -161,7 +145,7 @@ export default {
   props: ['apiurl'],
   data () {
     return {
-      head: [],
+      head: null,
       items: null,
       totalRowCount: null,
       totalPageCount: null,
@@ -286,14 +270,6 @@ export default {
       this.$router.push({name: this.$route.name, query: {page: 1, search: search, where: tableField}})
       this.searchText = null
     },
-    // onVehicleSearch (search, loading) {
-    //   if (search.length >= 3) {
-    //     this.searchVehicle(loading, search, this)
-    //   }
-    // },
-    // searchVehicle (loading, search, vm) {
-    //   this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    // },
     getData (e, p, c, s) {
       /*
         DİKKAT
@@ -341,13 +317,13 @@ export default {
       this.getData(to.name, this.currentPage, this.perPage, sortOpt)
     },
     tableRows: function (e) {
-      this.head = []
-      const visibleRows = e.filter(item => item.visible === true)
-      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      this.head.push(opt)
-      for (let t = 0; t < visibleRows.length; t++) {
-        this.head.push(visibleRows[t])
+      let trows = e.filter(item => item.visible === true)
+      let trowsl = trows.length
+      let headRows = []
+      for (let t = 0; t < trowsl; t++) {
+        headRows.push(trows[t]['dataField'])
       }
+      this.head = headRows
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.

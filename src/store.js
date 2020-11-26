@@ -77,6 +77,7 @@ export const store = new Vuex.Store({
     autocompleteData: [],
     tableOperations: [],
     tableRows: [],
+    tableRowsAll: [],
     breadcrumbList: [],
     modalLoad: false,
     searchRes: [],
@@ -500,8 +501,10 @@ export const store = new Vuex.Store({
       state.warehouseList = payload
     },
     setTableRows (state, payload) {
-      const trows = payload
-      state.tableRows = trows
+      state.tableRows = []
+      state.tableRowsAll = []
+      state.tableRows = payload
+      state.tableRowsAll = payload
     },
     setLookup (state, payload) {
       state.lookup = payload

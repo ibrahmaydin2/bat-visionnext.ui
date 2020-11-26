@@ -20,6 +20,7 @@ import 'vue-select/dist/vue-select.css'
 import VueTheMask from 'vue-the-mask'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
+import Sortable from 'vue-sortable'
 
 import draggable from 'vuedraggable'
 import VueGoogleCharts from 'vue-google-charts'
@@ -33,6 +34,7 @@ import Header from './components/Header'
 import ProgressTimeline from './components/ProgressTimeline'
 import Breadcrumb from './components/Breadcrumb'
 
+Vue.use(Sortable)
 Vue.use(BabelPolyFill)
 Vue.use(VueRouter)
 Vue.use(Vuex)

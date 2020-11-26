@@ -57,17 +57,18 @@
                   </b-dropdown-header>
                   <div class="asc__listPage-Header-SelectRows-overlay">
                     <b-form-checkbox
-                      v-for="(row,i) in tableRows"
+                      v-for="(row,i) in tableRowsAll"
                       :name="row.dataField"
                       :key="'selectedRow' + i"
                       v-model="row.visible"
                       variant="danger"
+                      @input="changeRows"
                       switch>
                         {{ row.label }}
                     </b-form-checkbox>
                   </div>
                   <div class="asc__listPage-Header-SelectRows-footer">
-                    <b-button size="sm" variant="success" @click="submitRows(tableRows)" class="w-100 text-center">
+                    <b-button size="sm" variant="success" @click="submitRows" class="w-100 text-center">
                       <i class="fas fa-table" /> {{$t('index.saveRows')}}
                     </b-button>
                   </div>
@@ -111,7 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['style', 'bigLoading', 'tableRows', 'tableFilters', 'tableOperations'])
+    ...mapState(['style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations'])
   },
   mounted () {
     this.objlen(this.$route.query)
@@ -139,13 +140,15 @@ export default {
       } else {
         this.filterbtn = false
       }
-      console.log(count)
     },
     clearFilters () {
       this.$router.push({name: this.$route.name})
     },
-    submitRows (t) {
-      let tbl = t.filter(t => t.visible === true)
+    changeRows () {
+      this.$store.commit('setTableRows', this.tableRowsAll)
+    },
+    submitRows () {
+      let tbl = this.tableRowsAll.filter(t => t.visible === true)
       let el = ''
       for (let i = 0; i < tbl.length; i++) {
         if (el === '') {
