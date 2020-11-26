@@ -264,6 +264,7 @@ export default {
       this.searchOnTable(e, date)
     },
     searchOnTable (tableField, search) {
+      console.log(tableField, search)
       this.tablefield = tableField
       this.searched = search
       this.$router.push({name: this.$route.name, query: {page: 1, search: search, where: tableField}})

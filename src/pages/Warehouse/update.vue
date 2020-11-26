@@ -159,6 +159,7 @@
               </b-tr>
             </b-tbody>
           </b-table-simple>
+          {{detailListData}}
         </b-tab>
       </b-tabs>
     </b-col>
@@ -166,7 +167,6 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-
 export default {
   data () {
     return {
@@ -213,6 +213,16 @@ export default {
   },
   watch: {
     rowData: function (e) {
+      console.log(e.WarehouseSuppliers)
+      // this.form.Model.WarehouseSuppliers = e.WarehouseSuppliers
+
+      // this.detailListBranch = e.BranchCommercialTitle
+      // this.detailListPurchaseWarehouseId = e.Description1
+      // this.detailListReturnWarehouseId = e.Description1
+      // this.WarehouseSuppliers.selectedBranch = e.RecordId
+      // this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
+      // this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
+
       this.selectedWarehouseType(e.WarehouseType)
       if (e.WarehouseTypeId === 76506193) {
         this.form.Model.Vehicle = e.RecordId
