@@ -190,7 +190,8 @@ export default {
           Description1: null,
           CustomerId: null,
           Vehicle: null,
-          Customer: null
+          Customer: null,
+          RecordId: null
         }
       },
       VehicleName: '',
@@ -213,15 +214,28 @@ export default {
   },
   watch: {
     rowData: function (e) {
-      console.log(e.WarehouseSuppliers)
-      // this.form.Model.WarehouseSuppliers = e.WarehouseSuppliers
+      e.WarehouseSuppliers.map(item => {
+        this.form.Model.WarehouseSuppliers.push({
+          StatusId: item.StatusId,
+          SupplierBranchId: item.SupplierBranchId,
+          SupplierCustomerId: item.SupplierCustomerId,
+          CompanyId: item.CompanyId,
+          BranchId: item.BranchId,
+          CreatedUser: item.CreatedUser,
+          ModifiedUser: item.ModifiedUser,
+          ModifiedDateTime: item.ModifiedDateTime,
+          Deleted: item.Deleted,
+          System: item.System,
+          PurchaseWarehouseId: item.PurchaseWarehouseId,
+          ReturnWarehouseId: item.ReturnWarehouseId,
+        })
 
-      // this.detailListBranch = e.BranchCommercialTitle
-      // this.detailListPurchaseWarehouseId = e.Description1
-      // this.detailListReturnWarehouseId = e.Description1
-      // this.WarehouseSuppliers.selectedBranch = e.RecordId
-      // this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
-      // this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
+        this.detailListData.push({
+          selectedBranch: item.SupplierBranch.Label,
+          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
+          selectedReturnWarehouseId: item.ReturnWarehouse.Label
+        })
+      })
 
       this.selectedWarehouseType(e.WarehouseType)
       if (e.WarehouseTypeId === 76506193) {
@@ -236,6 +250,7 @@ export default {
       }
 
       this.form.Model.Code = e.Code
+      this.form.Model.RecordId = e.RecordId
       this.form.Model.Description1 = e.Description1
       this.form.Model.WarehouseCapacity = e.WarehouseCapacity
       this.form.Model.LicenseNumber = e.LicenseNumber
@@ -266,6 +281,7 @@ export default {
     save () {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
+      this.form.Model.WarehouseType = null
       this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
@@ -322,7 +338,7 @@ export default {
     },
     selectedWarehouseType (e) {
       this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e.Label
+      this.form.Model.WarehouseType = e
       // araç mı ?
       if (e.DecimalValue === 76506193) {
         this.showVehicle = true
