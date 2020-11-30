@@ -14,9 +14,10 @@ Vue.use(ToastPlugin)
 Vue.use(Vuex)
 export default axios
 axios.defaults.baseURL = apiLink
+let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
-    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+    'key': localStorage.getItem('Key')
   }
 }
 
@@ -54,8 +55,8 @@ export const store = new Vuex.Store({
     loginError: '',
     loginUser: {
       signed: localStorage.getItem('signed'),
-      name: localStorage.getItem('user_info') ? JSON.parse(localStorage.getItem('user_info')).UserName : 'TEST KULLANICI',
-      company: localStorage.getItem('user_info') ? JSON.parse(localStorage.getItem('user_info')).CompanyName : 'TEST FİRMA MERKEZ ŞUBE'
+      name: user ? user.Name + ' ' + user.Surname : null,
+      company: user? user.AuthorizedBranches[0].Desciption : null
     },
     notify: [
       {
@@ -72,6 +73,8 @@ export const store = new Vuex.Store({
     CompanyId: 1,
     nextgrid: false,
     createCode: null,
+    navigation: [],
+    shortcuts: [],
     rowData: [],
     tableData: [],
     autocompleteData: [],
@@ -109,31 +112,41 @@ export const store = new Vuex.Store({
           document.getElementById('loginLoaderText').style.display = 'block'
           document.getElementById('loginLoader').style.display = 'none'
           if (res.data.IsCompleted === true) {
-            console.log('1')
             commit('login', res.data)
           } else {
-            console.log('2')
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
             commit('bigLoaded', false)
-
+          }
+        })
+        // .catch(err => {
+        //   document.getElementById('loginButton').disabled = false
+        //   document.getElementById('loginLoaderText').style.display = 'block'
+        //   document.getElementById('loginLoader').style.display = 'none'
+        //   commit('showAlert', { type: 'error', msg: err })
+        //   commit('setTableData', [])
+        //   commit('bigLoaded', false)
+        // })
+    },
+    navigation ({ commit }, authData) {
+      commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
+      return axios.post('VisionNextUIOperations/api/UiMenu/SearchByApplicationHash', authCompanyAndBranch, authHeader)
+        .then(res => {
+          console.log(res)
+          if (res.data.IsCompleted === true) {
+            commit('setNavigation', {navigation: res.data.navigation, shortcut: res.data.shortcut})
+          } else {
           }
         })
         .catch(err => {
-          console.log('3')
-          document.getElementById('loginButton').disabled = false
-          document.getElementById('loginLoaderText').style.display = 'block'
-          document.getElementById('loginLoader').style.display = 'none'
-          commit('showAlert', { type: 'error', msg: err })
-          commit('setTableData', [])
-          commit('bigLoaded', false)
+          console.log(err)
         })
     },
     // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ commit }, query) {
       commit('bigLoaded', true)
-      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api)
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setTableOperations', res.data.UIPageModels[0])
@@ -161,6 +174,7 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('showAlert', { type: 'warning', msg: err })
+          router.push({name: 'Dashboard'})
         })
     },
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
@@ -202,7 +216,7 @@ export const store = new Vuex.Store({
         OrderByColumns
       }
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
-      return axios.post(query.apiUrl, dataQuery)
+      return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('showNextgrid', true)
@@ -500,6 +514,10 @@ export const store = new Vuex.Store({
     bigLoaded (state, payload) {
       state.bigLoading = payload
     },
+    setNavigation (state, payload) {
+      state.navigation = payload.navigation
+      state.shortcuts = payload.shortcut
+    },
     setRowData (state, payload) {
       state.rowData = payload
     },
@@ -555,13 +573,21 @@ export const store = new Vuex.Store({
       state.modalLoad = payload
     },
     login (state, payload) {  
-      const user = JSON.parse(localStorage.getItem('UserModel'))
       localStorage.setItem('UserModel', JSON.stringify(payload.UserModel))
+      user = JSON.parse(localStorage.getItem('UserModel'))
       localStorage.setItem('Key', user.Key)
       localStorage.setItem('LanguageId', user.DefaultLanguageId || 1)
       state.loginUser.name = user.Name + ' ' + user.Surname,
-      state.loginUser.company = user.AuthorizedBranches[0].Description
-      authHeader = {}
+      state.loginUser.company = user.AuthorizedBranches[0].Desciption
+      authHeader = {
+        headers: {
+          'key': localStorage.getItem('Key')
+        }
+      }
+      authCompanyAndBranch = {
+        'CompanyId' : 1,
+        'BranchId' : 1,
+      }
       router.push({name: 'Dashboard'})
     },
     logout () {
