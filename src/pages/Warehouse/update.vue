@@ -191,7 +191,8 @@ export default {
           CustomerId: null,
           Vehicle: null,
           Customer: null,
-          RecordId: null
+          RecordId: null,
+          Deleted: 0
         }
       },
       VehicleName: '',
