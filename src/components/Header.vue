@@ -2,9 +2,9 @@
   <div class="asc__header">
     <b-row>
       <b-col>
-        <!-- <div class="asc__header-otherApps">
+        <div class="asc__header-otherApps">
           <img id="otherAppsImg" v-b-toggle.sidebar-1 src="../../static/otherApps.svg">
-        </div> -->
+        </div>
         <router-link class="asc__header-logo" :to="{name: 'Dashboard'}"><img :src="logo.header"></router-link>
         <Shortcuts class="d-none d-lg-inline-block" />
         <b-button class="d-inline-block d-lg-none float-right" @click="collapseNav()">
@@ -17,7 +17,15 @@
       <b-col lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
-            <b>{{loginUser.company}}</b> {{loginUser.name}}
+            <b>{{loginUser.company}}</b>
+          </template>
+          <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
+          
+          </b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
+          <template v-slot:button-content>
+            <b>{{loginUser.name}}</b>
           </template>
           <b-dropdown-item><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
@@ -67,6 +75,7 @@ export default {
   },
   data () {
     return {
+      UserBranches: [],
       headerLinks: [],
       windowWidth: 0,
       windowHeight: 0,
@@ -80,6 +89,7 @@ export default {
     selectedLang === 'tr' ? this.setLang('tr', 'English') : this.setLang('en', 'Türkçe')
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
+    this.UserBranches = localStorage.getItem('UserBranches')
   },
   destroyed () {
     window.removeEventListener('resize', this.handleResize)

@@ -1,4 +1,4 @@
-const holy = true
+const holy = false
 
 export default (to, from, next) => {
   if (holy) {

@@ -32,9 +32,10 @@ export default {
   data () {
     return {
       user: {
+        SessionId: '',
         UserName: '',
         Password: '',
-        InstanceHash: '914c5000-092f-4cef-aa39-2c2d9a3826a9'
+        InstanceHash: ''
       }
     }
   },

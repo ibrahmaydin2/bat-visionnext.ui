@@ -98,21 +98,21 @@ export const store = new Vuex.Store({
       document.getElementById('loginLoaderText').style.display = 'none'
       document.getElementById('loginLoader').style.display = 'block'
       commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
-      return axios.post('Authentication/AuthenticationOperations.svc/json/Login', {
+      return axios.post('VisionNextAuthentication/api/Authentication/Login', {
+        SessionId: authData.SessionId,
         UserName: authData.UserName,
         Password: authData.Password,
         InstanceHash: authData.InstanceHash
       })
         .then(res => {
+          document.getElementById('loginButton').disabled = false
+          document.getElementById('loginLoaderText').style.display = 'block'
+          document.getElementById('loginLoader').style.display = 'none'
           if (res.data.IsCompleted === true) {
-            document.getElementById('loginButton').disabled = false
-            document.getElementById('loginLoaderText').style.display = 'block'
-            document.getElementById('loginLoader').style.display = 'none'
+            console.log('1')
             commit('login', res.data)
           } else {
-            document.getElementById('loginButton').disabled = false
-            document.getElementById('loginLoaderText').style.display = 'block'
-            document.getElementById('loginLoader').style.display = 'none'
+            console.log('2')
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
             commit('bigLoaded', false)
@@ -120,6 +120,7 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
+          console.log('3')
           document.getElementById('loginButton').disabled = false
           document.getElementById('loginLoaderText').style.display = 'block'
           document.getElementById('loginLoader').style.display = 'none'
@@ -333,6 +334,23 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    lookupEmployeeType ({ state, commit }, query) {
+      let dataQuery = {
+        authCompanyAndBranch,
+        'LookupTableCode' : 'EMPLOYEE_TYPE'
+      }
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     // autocomplete datalar & listeler
     acVehicle ({ state, commit }, query) {
       let AndConditionModel = {}
@@ -536,12 +554,13 @@ export const store = new Vuex.Store({
       store.commit('bigLoaded', payload)
       state.modalLoad = payload
     },
-    login (state, payload) {
+    login (state, payload) {  
+      const user = JSON.parse(localStorage.getItem('UserModel'))
       localStorage.setItem('UserModel', JSON.stringify(payload.UserModel))
-      localStorage.setItem('Key', JSON.parse(localStorage.getItem('UserModel')).Key)
-      localStorage.setItem('LanguageId', JSON.parse(localStorage.getItem('UserModel')).DefaultLanguageId || 1)
-      state.loginUser.name = JSON.parse(localStorage.getItem('UserModel')).Name + ' ' + JSON.parse(localStorage.getItem('UserModel')).Surname,
-      state.loginUser.company = null
+      localStorage.setItem('Key', user.Key)
+      localStorage.setItem('LanguageId', user.DefaultLanguageId || 1)
+      state.loginUser.name = user.Name + ' ' + user.Surname,
+      state.loginUser.company = user.AuthorizedBranches[0].Description
       authHeader = {}
       router.push({name: 'Dashboard'})
     },

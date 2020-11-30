@@ -5,18 +5,22 @@
       <span> Diğer Uygulamalar </span> -->
     </div>
     <div class="px-3 py-2 asc__sidebar-body text-center">
-      <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
-      <b-img src="https://picsum.photos/500/500/?image=51" fluid thumbnail></b-img>
-      <b-img src="https://picsum.photos/500/500/?image=52" fluid thumbnail></b-img>
-      <b-img src="https://picsum.photos/500/500/?image=55" fluid thumbnail></b-img>
-      <b-img src="https://picsum.photos/500/500/?image=50" fluid thumbnail></b-img>
-      <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img>
+      {{otherApps}}
+      <!-- <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img> -->
     </div>
   </b-sidebar>
 </template>
 <script>
 export default {
-  name: 'Sidebar'
+  name: 'Sidebar',
+  data () {
+    return {
+      otherApps: []
+    }
+  },
+  mounted () {
+    this.otherApps = localStorage.getItem('UserInstances')
+  }
 }
 </script>
 <style lang="sass">
