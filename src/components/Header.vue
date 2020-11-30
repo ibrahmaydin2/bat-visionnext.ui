@@ -17,15 +17,18 @@
       <b-col lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
-            <b>{{loginUser.company}}</b>
+            <i class="fas fa-network-wired" /> {{loginUser.company}}
           </template>
+          <b-dropdown-header id="dropdown-header-label">
+            {{$t('general.branches')}}
+          </b-dropdown-header>
           <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
-          
+            {{branch.Desciption}}
           </b-dropdown-item>
         </b-dropdown>
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
-            <b>{{loginUser.name}}</b>
+            <i class="far fa-user" /> {{loginUser.name}}
           </template>
           <b-dropdown-item><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
@@ -89,7 +92,7 @@ export default {
     selectedLang === 'tr' ? this.setLang('tr', 'English') : this.setLang('en', 'Türkçe')
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
-    this.UserBranches = localStorage.getItem('UserBranches')
+    this.UserBranches = JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches
   },
   destroyed () {
     window.removeEventListener('resize', this.handleResize)

@@ -5,7 +5,9 @@
       <span> Diğer Uygulamalar </span> -->
     </div>
     <div class="px-3 py-2 asc__sidebar-body text-center">
-      {{otherApps}}
+      <b-card v-for="(app,i) in otherApps" :key="'otherapp' + i" class="mb-3">
+        {{app.Name}}
+      </b-card>
       <!-- <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img> -->
     </div>
   </b-sidebar>
@@ -19,7 +21,7 @@ export default {
     }
   },
   mounted () {
-    this.otherApps = localStorage.getItem('UserInstances')
+    this.otherApps = JSON.parse(localStorage.getItem('UserModel')).AuthorizedInstances
   }
 }
 </script>
@@ -42,4 +44,7 @@ export default {
       max-height: 200px
       margin-bottom: 10px
       width: 100% !important
+    .card-body
+      color: #333
+      font-weight: bold
 </style>

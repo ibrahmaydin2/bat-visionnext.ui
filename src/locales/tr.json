@@ -520,7 +520,8 @@
     "sharing": "Paylaşım"
   },
   "general": {
-    "pleaseWait": "Lütfen Bekleyin"
+    "pleaseWait": "Lütfen Bekleyin",
+    "branches": "Şubeler"
   },
   "index": {
     "BloodTransfusion": "BloodTransfusion",

@@ -1,7 +1,7 @@
-const holy = false
+const authcontrol = false
 
 export default (to, from, next) => {
-  if (holy) {
+  if (authcontrol) {
     next()
   } else if (localStorage.getItem('Key') != null && localStorage.getItem('Key').length > 0) {
     next()

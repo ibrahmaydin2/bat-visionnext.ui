@@ -14,6 +14,7 @@
 <script>
 import { items, shortcut } from './nav.js'
 import MegaMenu from './MegaMenu'
+import { mapState } from 'vuex'
 export default {
   components: {
     MegaMenu
@@ -22,6 +23,17 @@ export default {
     return {
       shortcut: shortcut,
       items: items
+    }
+  },
+  mounted () {
+    this.getNav()
+  },
+  computed: {
+    ...mapState(['navigation'])
+  },
+  methods: {
+    getNav () {
+      this.$store.dispatch('navigation')
     }
   }
 }
