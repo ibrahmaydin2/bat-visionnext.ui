@@ -333,6 +333,23 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    lookupEmployeeType ({ state, commit }, query) {
+      let dataQuery = {
+        authCompanyAndBranch,
+        'LookupTableCode' : 'EMPLOYEE_TYPE'
+      }
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     // autocomplete datalar & listeler
     acVehicle ({ state, commit }, query) {
       let AndConditionModel = {}

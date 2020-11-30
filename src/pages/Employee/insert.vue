@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
-            <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
+            <b-button @click="save()" size="sm" variant="success">{{$t('header.save')}}</b-button>
           </b-col>
         </b-row>
       </header>
@@ -22,27 +22,27 @@
             <b-form-group
               :label="$t('insert.employee.Model_Code')"
             >
-              <b-form-input type="text" v-model="form.Code" />
+              <b-form-input type="text" v-model="form.model.code" readonly />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group :label="$t('insert.employee.Model_Name')">
-              <b-form-input type="text" v-model="form.Model_Name" />
+              <b-form-input type="text" v-model="form.model.name" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.Model_Surname')"
             >
-              <v-select :options="form.Model_Surname" @input="selectedRota" label="title"></v-select>
+              <b-form-input type="text" v-model="form.model.surname" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.state')"
             >
-              <b-form-checkbox v-model="form.state" name="check-button" switch>
-                {{(form.checked) ? $t('insert.active'): $t('insert.passive')}}
+              <b-form-checkbox v-model="form.model.statusId" name="check-button" switch>
+                {{(form.model.statusId) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -65,7 +65,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_IsRepresentative')">
-                <b-form-radio-group v-model="form.Model_IsRepresentative">
+                <b-form-radio-group v-model="form.model.isRepresentative">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -85,8 +85,8 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Team')">
-                <b-form-checkbox v-model="form.Model_Team" name="check-button" switch>
-                  {{(form.checked) ? $t('insert.active'): $t('insert.passive')}}
+                <b-form-checkbox v-model="form.model.isTeam" name="check-button" switch>
+                  {{(form.model.isTeam) ? $t('insert.active'): $t('insert.passive')}}
                 </b-form-checkbox>
               </b-form-group>
             </b-col>
@@ -94,7 +94,7 @@
           <b-row>
             <b-col cols="12" md="6" lg="4">
               <b-form-group :label="$t('insert.employee.Model_Description')">
-                <b-form-textarea v-model="form.Model_Description" rows="3" max-rows="6" />
+                <b-form-textarea v-model="form.model.description1" rows="3" max-rows="6" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -103,7 +103,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_CreateCustomer')">
-                <b-form-radio-group v-model="form.Model_CreateCustomer">
+                <b-form-radio-group v-model="form.model.createCustomer">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -132,7 +132,14 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_BirthDate')">
-                <b-form-datepicker :placeholder="$t('insert.employee.Model_BirthDate')" v-model="form.Model_BirthDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker 
+                  :placeholder="$t('insert.employee.Model_BirthDate')" 
+                  v-model="form.model.birthDate" 
+                  locale="tr"
+                  class="mb-2"
+                  :value-as-date="true"
+                >
+                </b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -203,29 +210,29 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_GsmNumber')">
-                <b-form-input type="text" v-model="form.Model_GsmNumber" />
+                <b-form-input type="text" v-model="form.model.gsmNumber" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Telephone1')">
-                <b-form-input type="text" v-model="form.Model_Telephone1" />
+                <b-form-input type="text" v-model="form.model.telephone1" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Telephone2')">
-                <b-form-input type="text" v-model="form.Model_Telephone2" />
+                <b-form-input type="text" v-model="form.model.telephone2" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Email')">
-                <b-form-input type="text" v-model="form.Model_Email" />
+                <b-form-input type="text" v-model="form.model.email" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Fax')">
-                <b-form-input type="text" v-model="form.Model_Fax" />
+                <b-form-input type="text" v-model="form.model.faxNumber" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -293,6 +300,160 @@ export default {
   data () {
     return {
       form: {
+        companyId: 0,
+        branchId: 0,
+        model: {
+          encryptedKey: '',
+          recordId: 0,
+          code: '',
+          description1: '',
+          recordState: 1,
+          employmentStartDate: '',
+          employmentEndDate: '',
+          registerNo: '',
+          name: '',
+          surname: '',
+          typeId: 0,
+          groupId: 0,
+          statusId: 0,
+          category1Id: 0,
+          category2Id: 0,
+          category3Id: 0,
+          category4Id: 0,
+          category5Id: 0,
+          category6Id: 0,
+          category7Id: 0,
+          category8Id: 0,
+          category9Id: 0,
+          category10Id: 0,
+          seniority: '',
+          professionId: 0,
+          insuranceStartDate: '',
+          insuranceNumber: '',
+          insuranceRegCityId: 0,
+          insurancePayCityId: 0,
+          departmentId: 0,
+          managerId: 0,
+          telephone1: '',
+          telephone2: '',
+          gsmNumber: '',
+          faxNumber: '',
+          email: '',
+          other1: '',
+          other2: '',
+          homeaddressId: 0,
+          homeaddressDetail: '',
+          birthDate: '',
+          tShirtSize: '',
+          jacketSize: '',
+          montSize: '',
+          overcoatSize: '',
+          shoeSize: '',
+          hatSize: '',
+          height: 0,
+          weight: 0,
+          driverLicenceType: '',
+          driverLicenceNumber: '',
+          genexp1: '',
+          genexp2: '',
+          isRepresentative: null,
+          assistantId: 0,
+          jobaddressId: 0,
+          jobaddressDetail: '',
+          spouseName: '',
+          kidName1: '',
+          kidName2: '',
+          kidName3: '',
+          anniversary: '',
+          fathersName: '',
+          mothersName: '',
+          placeOfBirth: '',
+          religion: '',
+          regCity: '',
+          regCounty: '',
+          regDistrict: '',
+          regSerialNumber: '',
+          primarySchool: '',
+          psStartDate: '',
+          psEndDate: '',
+          secondarySchool: '',
+          ssStartDate: '',
+          ssEndDate: '',
+          highSchool: '',
+          hsStartDate: '',
+          hsEndDate: '',
+          collage: '',
+          clStartDate: '',
+          clEndDate: '',
+          master: '',
+          msStartDate: '',
+          msEndDate: '',
+          phd: '',
+          phdStartDate: '',
+          phdEndDate: '',
+          bankDef: '',
+          bankAccount: '',
+          bonusTypeId: 0,
+          isTeam: 0,
+          customerId: 0,
+          priceListCategoryId: 0,
+          createCustomerRecord: 0,
+          financeCode1: '',
+          financeCode2: '',
+          userGroupId: 0,
+          educationId: 0,
+          denimSize: '',
+          corduroySize: '',
+          scoreCardClassId: 0,
+          createCustomer: 0,
+          employeeBanks: [
+            {
+              "encryptedKey": "",
+              "recordId": 0,
+              "code": "''",
+              "description1": "",
+              "recordState": 1,
+              "statusId": 0,
+              "employeeId": 0,
+              "bankBranchId": 0
+            }
+          ],
+          eInvoiceSeqs: [
+            {
+              "encryptedKey": "",
+              "recordId": 0,
+              "code": "",
+              "description1": "",
+              "recordState": 1,
+              "statusId": 0,
+              "year": 0,
+              "prefix": "",
+              "lastSequence": 0,
+              "eInvoiceBranchId": 0,
+              "terminalOrPcId": 0,
+              "employeeId": 0,
+              "transactionDayId": 0,
+              "eInvoiceTypeId": 0
+            }
+          ],
+          employeeDevices: [
+            {
+              "encryptedKey": "",
+              "recordId": 0,
+              "code": "",
+              "description1": "",
+              "recordState": 1,
+              "statusId": 0,
+              "employeeId": 0,
+              "serialNumber": "",
+              "deviceModelId": 0,
+              "deviceUseAraeId": 0
+            }
+          ],
+          nameSurname: '',
+          taxOffice: '',
+          taxNumber: ''
+        },
         active: null,
         checked: null,
         code: '',
@@ -407,17 +568,26 @@ export default {
     }
   },
   computed: {
-    ...mapState(['cities', 'distiricts'])
+    ...mapState(['cities', 'distiricts', 'createCode'])
   },
   mounted () {
     this.$store.commit('setCities', false)
     this.$store.commit('bigLoaded', false)
+    this.getLookup()
+    this.getCode()
   },
   methods: {
+    getCode () {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextEmployee/api/Employee/GetCode'})
+    },
+    getLookup () {
+      this.$store.dispatch('lookupEmployeeType')
+    },
     save () {
-      let createData = {
-      }
-      this.$store.dispatch('createData', {...this.query, info: createData})
+
+      this.form.model.birthDate = new Date(this.form.model.birthDate).toISOString()
+      console.log(this.form.model)
+      // this.$store.dispatch('createData', {...this.query, info: createData})
     },
     selectedRota (e) {
       this.rotaType = e.title
@@ -447,6 +617,13 @@ export default {
     selectedDistirict (e) {
       console.log(e)
       this.distirict = e.id
+    }
+  },
+  watch: {
+    createCode (e) {
+      if (e) {
+        this.form.model.code = e
+      }
     }
   }
 }
