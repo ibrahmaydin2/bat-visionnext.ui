@@ -25,6 +25,7 @@ import Sortable from 'vue-sortable'
 import draggable from 'vuedraggable'
 import VueGoogleCharts from 'vue-google-charts'
 
+import Nextgrid from './components/NextGrid'
 import Carousel from './components/Carousel'
 import Navigation from './components/Navigation'
 import DispatchModal from './components/DispatchModal'
@@ -58,6 +59,7 @@ Vue.component('ProgressTimeline', ProgressTimeline)
 Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('DispatchModal', DispatchModal)
 Vue.component('b-form-datepicker', BFormDatepicker)
+Vue.component('Nextgrid', Nextgrid)
 
 Vue.config.productionTip = false
 global.jQuery = jQuery

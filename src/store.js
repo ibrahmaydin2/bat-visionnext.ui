@@ -146,7 +146,7 @@ export const store = new Vuex.Store({
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ commit }, query) {
       commit('bigLoaded', true)
-      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setTableOperations', res.data.UIPageModels[0])
@@ -199,9 +199,9 @@ export const store = new Vuex.Store({
         OrderByColumns = []
       }
 
+      // search özelliği şuan tek sütunda geçerli.
+      // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
       if (query.searchField) {
-        // search özelliği şuan tek sütunda geçerli.
-        // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
         AndConditionModel[query.searchField] = query.searchText
       } else {
         AndConditionModel = {}
@@ -216,7 +216,7 @@ export const store = new Vuex.Store({
         OrderByColumns
       }
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
-      return axios.post(query.apiUrl, dataQuery, authHeader)
+      return axios.post(query.apiUrl, dataQuery)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('showNextgrid', true)
