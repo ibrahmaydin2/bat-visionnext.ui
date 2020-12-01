@@ -1,14 +1,14 @@
 <template>
   <div>
     <ul class="asc__header-shortcuts">
-      <li v-for="(item,i) in shortcut" :key="'i'+i">
+      <li v-for="(item,i) in shortcuts" :key="'i'+i">
         <router-link active-class="asc__navigation-shortcuts-active" exact :to="{name: item.router}">
           <i :class="item.icon ? item.icon : ''"></i>
           {{item.title}}
         </router-link>
       </li>
     </ul>
-    <mega-menu :data="items" />
+    <mega-menu :data="navigation" />
   </div>
 </template>
 <script>
@@ -29,7 +29,7 @@ export default {
     this.getNav()
   },
   computed: {
-    ...mapState(['navigation'])
+    ...mapState(['navigation', 'shortcuts'])
   },
   methods: {
     getNav () {

@@ -132,10 +132,8 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UiMenu/SearchByApplicationHash', authCompanyAndBranch, authHeader)
         .then(res => {
-          console.log(res)
           if (res.data.IsCompleted === true) {
-            commit('setNavigation', {navigation: res.data.navigation, shortcut: res.data.shortcut})
-          } else {
+            commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
           }
         })
         .catch(err => {
@@ -146,7 +144,7 @@ export const store = new Vuex.Store({
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ commit }, query) {
       commit('bigLoaded', true)
-      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api)
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setTableOperations', res.data.UIPageModels[0])
@@ -216,7 +214,7 @@ export const store = new Vuex.Store({
         OrderByColumns
       }
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
-      return axios.post(query.apiUrl, dataQuery)
+      return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('showNextgrid', true)

@@ -1,19 +1,17 @@
 <template>
   <b-dropdown class="asc__mega-menu-dropdown" :text="$t('nav.other')">
-    <ul>
-      <li v-for="(links, i) in data" :key="i">
-        <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }}">
-          {{ links.title }}
-        </router-link>
-        <ul v-if="links.sub">
-          <li v-for="(subs, x) in links.sub" :key="'sub' + x" class="asc__item-head-title-li">
-            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}">
-              {{ subs.title }}
-            </router-link>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <li v-for="(links, i) in data" :key="i">
+      <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }}">
+        {{ links.title }}
+      </router-link>
+      <ul v-if="links.sub">
+        <li v-for="(subs, x) in links.sub" :key="'sub' + x" class="asc__item-head-title-li">
+          <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}">
+            {{ subs.title }}
+          </router-link>
+        </li>
+      </ul>
+    </li>
   </b-dropdown>
 </template>
 <script>
@@ -42,7 +40,7 @@ export default {
       box-shadow: none !important
       border: none !important
     .dropdown-menu
-      background: linear-gradient(45deg, #e88000, #ffa300) !important
+      background: linear-gradient(-195deg, #333, dimgray) !important
       border: none
       border-radius: 0 0 20px 20px
       padding: 20px 20px 40px 20px
@@ -53,20 +51,28 @@ export default {
         width: 100%
       & li
         width: 25%
-        display: inline-block
+        padding: 2rem .5rem 1rem .5rem
         list-style: none
         color: #ffffff
         & ul
           & li
+            padding: 0px
             display: block
             width: 100%
+            margin: 0px
         & a
           color: #ffffff
+        @media (max-width: 1024px)
+          width: 25%
+        @media (max-width: 768px)
+          width: 50%
     .dropdown-menu.show
       display: flex
       transform: unset !important
       position: fixed !important
       width: 90%
+      max-height: calc(90vh - 42px)
+      overflow-x: auto
       top:42px !important
       flex-wrap: wrap
       left: 5% !important
@@ -82,7 +88,7 @@ export default {
       width: 100%
       line-height: 30px
       list-style: circle !important
-      margin-left: 20px !important
+      margin-left: 0px !important
     .asc__item-title
       color: #6e6e6e
       font-size: 12px
