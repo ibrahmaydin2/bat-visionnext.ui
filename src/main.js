@@ -34,6 +34,7 @@ import Shortcuts from './components/Shortcuts'
 import Header from './components/Header'
 import ProgressTimeline from './components/ProgressTimeline'
 import Breadcrumb from './components/Breadcrumb'
+import ErrorPage from './components/Error'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -60,6 +61,7 @@ Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('DispatchModal', DispatchModal)
 Vue.component('b-form-datepicker', BFormDatepicker)
 Vue.component('Nextgrid', Nextgrid)
+Vue.component('ErrorPage', ErrorPage)
 
 Vue.config.productionTip = false
 global.jQuery = jQuery

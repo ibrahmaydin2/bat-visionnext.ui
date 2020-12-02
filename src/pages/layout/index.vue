@@ -1,103 +1,106 @@
 <template>
   <b-container fluid>
-    <Navigation/>
-    <Header/>
-    <b-row class="mb-3">
-      <b-col cols="12">
-        <div :class="style.viewPush">
-          <b-card class="asc__listPage shadow">
-            <b-row class="asc__listPage-Header">
-              <b-col cols="12" sm="12" md="3" class="pl-0">
-                <h3>{{tableOperations.Name}}</h3>
-              </b-col>
-              <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
-                <b-button v-if="filterbtn" variant="info" size="sm" @click="clearFilters">
-                  <i class="fas fa-search-minus" /> {{$t('list.clear')}}
-                </b-button>
-                <!-- oluşturulan filtreyi kaydetme sistemi çalıştırıldığında bu fonksiyon aktifleşecek.
-                <b-button v-if="filterbtn" variant="success" size="sm" @click="saveFilter">
-                  <i class="fas fa-save" /> {{$t('list.saveFilter')}}
-                </b-button> -->
-                <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
-                  <i class="fas fa-plus-square" /> {{$t('list.create')}}
-                </b-button>
-                <b-dropdown v-else split :split-to="{name: createLink}" variant="success" right size="sm">
-                  <template v-slot:button-content>
+    <ErrorPage v-if="errorView" :data="errorData" />
+    <template v-else>
+      <Navigation/>
+      <Header/>
+      <b-row class="mb-3">
+        <b-col cols="12">
+          <div :class="style.viewPush">
+            <b-card class="asc__listPage shadow">
+              <b-row class="asc__listPage-Header">
+                <b-col cols="12" sm="12" md="3" class="pl-0">
+                  <h3>{{tableOperations.Name}}</h3>
+                </b-col>
+                <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
+                  <b-button v-if="filterbtn" variant="info" size="sm" @click="clearFilters">
+                    <i class="fas fa-search-minus" /> {{$t('list.clear')}}
+                  </b-button>
+                  <!-- oluşturulan filtreyi kaydetme sistemi çalıştırıldığında bu fonksiyon aktifleşecek.
+                  <b-button v-if="filterbtn" variant="success" size="sm" @click="saveFilter">
+                    <i class="fas fa-save" /> {{$t('list.saveFilter')}}
+                  </b-button> -->
+                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
-                  </template>
-                  <b-dropdown-item v-for="(act, i) in tableOperations.Actions" :key="'act' + i">
-                    <i class="fas fa-file-code"></i> {{act.Title}}
-                  </b-dropdown-item>
-                </b-dropdown>
-                <b-dropdown
-                  variant="white"
-                  :text="$t('list.allFilters')"
-                  class="asc__listPage-Header-Dropdown"
-                >
-                  <b-dropdown-header id="dropdown-header-label">
-                    {{$t('list.allRecords')}}
-                  </b-dropdown-header>
-                  <b-dropdown-item
-                    v-for="(flt, i) in tableOperations.Filters"
-                    :key="'filter' + i"
+                  </b-button>
+                  <b-dropdown v-else split :split-to="{name: createLink}" variant="success" right size="sm">
+                    <template v-slot:button-content>
+                      <i class="fas fa-plus-square" /> {{$t('list.create')}}
+                    </template>
+                    <b-dropdown-item v-for="(act, i) in tableOperations.Actions" :key="'act' + i">
+                      <i class="fas fa-file-code"></i> {{act.Title}}
+                    </b-dropdown-item>
+                  </b-dropdown>
+                  <b-dropdown
+                    variant="white"
+                    :text="$t('list.allFilters')"
+                    class="asc__listPage-Header-Dropdown"
                   >
-                    <i class="fas fa-file-pdf" /> {{dwn.Title}}
-                  </b-dropdown-item>
-                  <b-dropdown-divider />
-                  <b-dropdown-item>{{$t('list.allFilters')}}</b-dropdown-item>
-                </b-dropdown>
-                <b-dropdown
-                  right
-                  variant="white"
-                  :text="$t('list.selectedRows')"
-                  class="asc__listPage-Header-SelectRows"
-                >
-                  <b-dropdown-header id="dropdown-header-label">
-                    {{$t('list.selectedRows')}}
-                  </b-dropdown-header>
-                  <div class="asc__listPage-Header-SelectRows-overlay">
-                    <b-form-checkbox
-                      v-for="(row,i) in tableRowsAll"
-                      :name="row.dataField"
-                      :key="'selectedRow' + i"
-                      v-model="row.visible"
-                      variant="danger"
-                      @input="changeRows"
-                      switch>
-                        {{ row.label }}
-                    </b-form-checkbox>
-                  </div>
-                  <div class="asc__listPage-Header-SelectRows-footer">
-                    <b-button size="sm" variant="success" @click="submitRows" class="w-100 text-center">
-                      <i class="fas fa-table" /> {{$t('index.saveRows')}}
-                    </b-button>
-                  </div>
-                </b-dropdown>
-                <b-dropdown right variant="white" class="asc__listPage-Header-Download">
-                  <template v-slot:button-content>
-                    <i class="fas fa-download" />
-                  </template>
-                  <b-dropdown-header id="dropdown-header-label">
-                    {{ $t('list.downloads') }}
-                  </b-dropdown-header>
-                  <b-dropdown-item
-                    v-for="(dwn, i) in tableOperations.Downloads"
-                    :key="'download' + i"
-                    @click="downloadBtn(thisRout,dwn.Action,dwn.Action)"
+                    <b-dropdown-header id="dropdown-header-label">
+                      {{$t('list.allRecords')}}
+                    </b-dropdown-header>
+                    <b-dropdown-item
+                      v-for="(flt, i) in tableOperations.Filters"
+                      :key="'filter' + i"
+                    >
+                      <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                    </b-dropdown-item>
+                    <b-dropdown-divider />
+                    <b-dropdown-item>{{$t('list.allFilters')}}</b-dropdown-item>
+                  </b-dropdown>
+                  <b-dropdown
+                    right
+                    variant="white"
+                    :text="$t('list.selectedRows')"
+                    class="asc__listPage-Header-SelectRows"
                   >
-                    <i class="fas fa-file-pdf" /> {{dwn.Title}}
-                  </b-dropdown-item>
-                </b-dropdown>
-              </b-col>
-            </b-row>
-            <b-overlay :show="bigLoading" rounded="sm">
-              <router-view />
-              <div class="clearfix" />
-            </b-overlay>
-          </b-card>
-        </div>
-      </b-col>
-    </b-row>
+                    <b-dropdown-header id="dropdown-header-label">
+                      {{$t('list.selectedRows')}}
+                    </b-dropdown-header>
+                    <div class="asc__listPage-Header-SelectRows-overlay">
+                      <b-form-checkbox
+                        v-for="(row,i) in tableRowsAll"
+                        :name="row.dataField"
+                        :key="'selectedRow' + i"
+                        v-model="row.visible"
+                        variant="danger"
+                        @input="changeRows"
+                        switch>
+                          {{ row.label }}
+                      </b-form-checkbox>
+                    </div>
+                    <div class="asc__listPage-Header-SelectRows-footer">
+                      <b-button size="sm" variant="success" @click="submitRows" class="w-100 text-center">
+                        <i class="fas fa-table" /> {{$t('index.saveRows')}}
+                      </b-button>
+                    </div>
+                  </b-dropdown>
+                  <b-dropdown right variant="white" class="asc__listPage-Header-Download">
+                    <template v-slot:button-content>
+                      <i class="fas fa-download" />
+                    </template>
+                    <b-dropdown-header id="dropdown-header-label">
+                      {{ $t('list.downloads') }}
+                    </b-dropdown-header>
+                    <b-dropdown-item
+                      v-for="(dwn, i) in tableOperations.Downloads"
+                      :key="'download' + i"
+                      @click="downloadBtn(thisRout,dwn.Action,dwn.Action)"
+                    >
+                      <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                    </b-dropdown-item>
+                  </b-dropdown>
+                </b-col>
+              </b-row>
+              <b-overlay :show="bigLoading" rounded="sm">
+                <router-view />
+                <div class="clearfix" />
+              </b-overlay>
+            </b-card>
+          </div>
+        </b-col>
+      </b-row>
+    </template>
   </b-container>
 </template>
 <script>
@@ -112,7 +115,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations'])
   },
   mounted () {
     this.objlen(this.$route.query)

@@ -69,6 +69,8 @@ export const store = new Vuex.Store({
       { value: 'today', title: 'Bu Günün Kayıtları' },
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
+    errorView: false,
+    errorData: [],
     BranchId: 1,
     CompanyId: 1,
     nextgrid: false,
@@ -134,10 +136,12 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
+          } else {
+            console.log(res)
           }
         })
         .catch(err => {
-          console.log(err)
+          commit('showAlert', { type: 'catch', msg: err.response })
         })
     },
     // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
@@ -171,8 +175,7 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          commit('showAlert', { type: 'warning', msg: err })
-          router.push({name: 'Dashboard'})
+          commit('showAlert', { type: 'network', msg: err.response })
         })
     },
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
@@ -461,6 +464,24 @@ export const store = new Vuex.Store({
   mutations: {
     showAlert (state, payload) {
       switch (payload.type) {
+        case 'catch':
+          if (payload.msg.status === 401) {
+            router.push({name: 'Login'})
+          }
+          this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
+            title: 'Server Error',
+            variant: 'danger',
+            noCloseButton: false
+          })
+          break
+        case 'network':
+          const err = payload.msg
+          this._vm.$bvToast.toast(JSON.stringify(err.data.Message), {
+            title: 'Server Error',
+            variant: 'danger',
+            noCloseButton: false
+          })
+          break
         case 'danger':
           this._vm.$bvToast.toast(payload.msg, {
             title: JSON.stringify(payload.msg),
