@@ -492,6 +492,7 @@ export const store = new Vuex.Store({
           this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
             title: 'Server Error',
             variant: 'danger',
+            toaster: 'b-toaster-bottom-right',
             noCloseButton: false
           })
           break
@@ -500,6 +501,7 @@ export const store = new Vuex.Store({
           this._vm.$bvToast.toast(JSON.stringify(err.data.Message), {
             title: 'Server Error',
             variant: 'danger',
+            toaster: 'b-toaster-bottom-right',
             noCloseButton: false
           })
           break
@@ -514,21 +516,24 @@ export const store = new Vuex.Store({
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'danger',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-bottom-right',
+            noCloseButton: false
           })
           break
         case 'warning':
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'danger',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-bottom-right',
+            noCloseButton: false
           })
           break
         case 'error':
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'info',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-bottom-right',
+            noCloseButton: false
           })
           state.loginError = payload.msg
           break
@@ -536,14 +541,16 @@ export const store = new Vuex.Store({
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'info',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-bottom-right',
+            noCloseButton: false
           })
           break
         case 'success':
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'success',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-bottom-right',
+            noCloseButton: false
           })
           break
       }
