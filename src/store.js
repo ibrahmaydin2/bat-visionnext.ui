@@ -158,7 +158,7 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
-          if (res.data.IsCompleted === true) {
+          if ((res.data.IsCompleted === true) || (res.data.UIPageModels.length >= 1)) {
             commit('setTableOperations', res.data.UIPageModels[0])
             if (res.data.UIPageModels[0].SelectedColumns.length === 0) {
               commit('setTableRows', res.data.UIPageModels[0].RowColumns)
@@ -177,13 +177,19 @@ export const store = new Vuex.Store({
               searchField: query.where,
               searchText: query.search
             })
+            console.log(res.data)
+            commit('setError', {view: false, info: null})
           } else {
-            commit('showAlert', { type: 'warning', msg: res.data.Message })
+            console.log(res)
+            commit('setError', {view: true, info: 'b'})
+            // commit('showAlert', { type: 'warning', msg: res.data.Message })
             commit('bigLoaded', false)
           }
         })
         .catch(err => {
-          commit('showAlert', { type: 'network', msg: err.response })
+          console.log(err)
+          commit('setError', {view: true, info: 'Server Error'})
+          // commit('showAlert', { type: 'network', msg: err.response })
         })
     },
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
@@ -483,6 +489,10 @@ export const store = new Vuex.Store({
     },
   },
   mutations: {
+    setError (state, payload) {
+      state.errorView = payload.view
+      state.errorData = payload.info
+    },
     showAlert (state, payload) {
       switch (payload.type) {
         case 'catch':

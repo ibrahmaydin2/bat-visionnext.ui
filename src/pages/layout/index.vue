@@ -1,10 +1,9 @@
 <template>
   <b-container fluid>
-    <ErrorPage v-if="errorView" :data="errorData" />
-    <template v-else>
       <Navigation/>
       <Header/>
-      <b-row class="mb-3">
+      <ErrorPage v-if="errorView" :info="errorData" />
+      <b-row v-else class="mb-3">
         <b-col cols="12">
           <div :class="style.viewPush">
             <b-card class="asc__listPage shadow">
@@ -100,7 +99,6 @@
           </div>
         </b-col>
       </b-row>
-    </template>
   </b-container>
 </template>
 <script>
