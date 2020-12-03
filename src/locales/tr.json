@@ -208,7 +208,12 @@
       "EmployeeBanks": "Banka",
       "Model_BankBranchId": "Banka Şube Adı",
       "EmployeePrefix": "Önek",
-      "Model_Prefix": "Önek"
+      "Model_Prefix": "Önek",
+      "Model_UserGroupId": "Personel Grubu",
+      "category1": "Personel Kategorisi 1",
+      "scoreCardClasses": "Score Card Sınıfı",
+      "group": "Grup",
+      "personalType": "Personel Tipi"
     },
     "customer": {
       "Model_StatusReasonId": "Durum Sebebi",
