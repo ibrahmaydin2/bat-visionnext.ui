@@ -93,7 +93,15 @@ export const store = new Vuex.Store({
     vehicleList: [],
     branchList: [],
     warehouseList: [],
-    customerList: []
+    customerList: [],
+    //Employee Lookups Values//
+    employeeTypes: [],
+    priceList: [],
+    educationStatus: [],
+    bloodTypes: [],
+    employeeGroups: [],
+    category1: [],
+    scoreCards: []
   },
   actions: {
     // sistem gereksinimleri
@@ -243,7 +251,7 @@ export const store = new Vuex.Store({
         'RecordId' : query.record
       }
       commit('showNextgrid', false)
-      return axios.post(query.api + '/Get', dataQuery)
+      return axios.post(query.api + '/Get', dataQuery, authHeader)
         .then(res => {
           switch (res.status) {
             case 200:
@@ -268,7 +276,7 @@ export const store = new Vuex.Store({
         })
     },
     getCreateCode ({ commit }, query) {
-      return axios.post(query.apiUrl, authCompanyAndBranch)
+      return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setGetCreateCode', res.data.Model.Code)
@@ -282,9 +290,14 @@ export const store = new Vuex.Store({
         })
     },
     createData ({ commit }, query) {
+      let dataQuery = {
+        'branchId': 1,
+        'companyId': 1,
+        ...query.formdata
+      }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post(query.api + '/Insert', query.formdata)
+      return axios.post(query.api + '/Insert', dataQuery, authHeader)
         .then(res => {
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
@@ -307,9 +320,14 @@ export const store = new Vuex.Store({
         })
     },
     updateData ({ commit }, query) {
+      let dataQuery = {
+        'branchId': 1,
+        'companyId': 1,
+        ...query.formdata
+      }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post(query.api + '/Update', query.formdata)
+      return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
@@ -333,7 +351,8 @@ export const store = new Vuex.Store({
     // LOOKUP servisleri
     lookupWareouseType ({ state, commit }, query) {
       let dataQuery = {
-        authCompanyAndBranch,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
         'LookupTableCode' : 'WAREHOUSE_TYPE'
       }
       return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
@@ -351,12 +370,14 @@ export const store = new Vuex.Store({
     },
     lookupEmployeeType ({ state, commit }, query) {
       let dataQuery = {
-        authCompanyAndBranch,
-        'LookupTableCode' : 'EMPLOYEE_TYPE'
+        'LookupTableCode' : query.type,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId
       }
-      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
+            commit('setEmployeeValues', {data: res.data, name: query.name})
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -626,6 +647,9 @@ export const store = new Vuex.Store({
     },
     setDistiricts(state, payload) {
       state.distiricts = distiricts.filter(item => item.plaka == payload)
+    },
+    setEmployeeValues(state, payload) {
+      state[payload.name] = payload.data.Values
     }
   }
 })
