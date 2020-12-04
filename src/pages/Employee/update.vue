@@ -258,6 +258,28 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.employee.EmployeePrefix')">
+          <b-table-simple bordered small>
+            <b-thead>
+              <b-th width="30%">
+                <b-form-group :label="$t('insert.employee.EmployeePrefix')">
+                  <v-select v-model="selectedEInvoice" :options="eInvoiceSeqsList" @input="selectedEInvoiceSeq" label="Label"></v-select>
+                </b-form-group>
+              </b-th>
+              <b-th width="10%">
+                <b-form-group>
+                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+                </b-form-group>
+              </b-th>
+            </b-thead>
+            <b-tbody>
+              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
+                <b-td>{{r.Label}} {{r.RecordId}}</b-td>
+                <b-td><i @click="deleteEInvoiceSeq(r)" class="far fa-trash-alt text-danger"></i></b-td>
+              </b-tr>
+            </b-tbody>
+          </b-table-simple>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -321,20 +343,27 @@ export default {
       category: '',
       education: '',
       bloodType: '',
-      price: ''
+      price: '',
+      eInvoiceSeqsList: [],
+      detailListData: [],
+      selectedEInvoice: []
     }
   },
   computed: {
-    ...mapState(['rowData', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards'])
+    ...mapState(['rowData', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'branch'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
     this.getData()
     this.getLookup()
+    this.getBranchData()
   },
   methods: {
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextEmployee/api/Employee', record: this.$route.params.url})
+    },
+    getBranchData () {
+      this.$store.dispatch('getBranchData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
     },
     getLookup () {
       //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
@@ -380,6 +409,28 @@ export default {
       } else {
         this.disabledCustomer = true
       }
+    },
+    selectedEInvoiceSeq (e) {
+      this.selectedEInvoice = e
+    },
+    addDetailList () {
+      if (this.selectedEInvoice.length < 1) {
+        return
+      }
+      this.detailListData.push(this.selectedEInvoice)
+      this.form.model.eInvoiceSeqs.push({
+        recordId: this.selectedEInvoice.RecordId,
+        recordState: 2
+      })
+      this.selectedEInvoice = null
+    },
+    deleteEInvoiceSeq (item) {      
+      // Model içerisindeki eInvoiceSeqs dizisinden elemanın çıkarılması
+      let filteredArr = this.form.model.eInvoiceSeqs.filter(i => i.recordId === item.RecordId)
+      this.form.model.eInvoiceSeqs.splice(this.form.model.eInvoiceSeqs.indexOf(filteredArr[0]), 1)
+
+      // Tabloda listenen eInvoiceSeqs dizisinden elemanın çıkarılması
+      this.detailListData.splice(this.detailListData.indexOf(item), 1)
     }
   },
   watch: {
@@ -423,12 +474,20 @@ export default {
           description1: e.Description1,
           deleted: e.Deleted,
           recordId: e.RecordId,
-          eInvoiceSeqs: [
-            {
-                "recordId": 82457596
-            }
-          ]
+          eInvoiceSeqs: []
         }
+
+        e.EInvoiceSeqs.map(i => {
+          this.detailListData.push({
+            Label: i.Prefix + ' ' + i.Year + ' ' + i.EInvoiceType.Label,
+            RecordId: i.RecordId
+          })
+          this.form.model.eInvoiceSeqs.push({
+            recordId: i.RecordId,
+            recordState: 2,
+            employeeId: i.EmployeeId
+          })
+        })
 
         if (e.Group) {
           this.group = e.Group.Label
@@ -448,6 +507,14 @@ export default {
         if (e.PriceListCategory && e.CreateCustomerRecord) {
           this.price = e.PriceListCategory.Label
         }
+      }
+    },
+    branch (e) {
+      if (e) {
+        this.eInvoiceSeqsList = e.EInvoiceSeqs
+        this.eInvoiceSeqsList.map(item => {
+          item.Label = item.Prefix + ' ' + item.Year + ' ' + item.EInvoiceType.Label
+        })
       }
     }
   }

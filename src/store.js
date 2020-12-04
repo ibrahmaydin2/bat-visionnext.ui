@@ -101,7 +101,20 @@ export const store = new Vuex.Store({
     bloodTypes: [],
     employeeGroups: [],
     category1: [],
-    scoreCards: []
+    scoreCards: [],
+    employees: [],
+    //Vehicle Lookups Values//
+    vehicleTypes: [],
+    vehicleBrands: [],
+    vehicleModels: [],
+    vehicleUsageTypes: [],
+    vehicleCategory1: [],
+    vehicleCategory2: [],
+    vehicleCategory3: [],
+    vehicleColors: [],
+    vehicleUnits: [],
+    branch: []
+
   },
   actions: {
     // sistem gereksinimleri
@@ -275,6 +288,39 @@ export const store = new Vuex.Store({
           // commit('bigLoaded', false)
         })
     },
+    getBranchData ({ state, commit }, query) {
+      commit('setTableData', [])
+      commit('bigLoaded', true)
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
+        'RecordId' : query.record
+      }
+      return axios.post(query.api + '/Get', dataQuery, authHeader)
+        .then(res => {
+          switch (res.status) {
+            case 200:
+              commit('bigLoaded', false)
+              commit('setBranch', res.data.Model)
+            break
+            case 900:
+              commit('bigLoaded', false)
+              commit('logout')
+              break
+            default:
+              commit('bigLoaded', false)
+              commit('showAlert', { type: 'error', msg: res.data.message })
+            break
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          // commit('showAlert', { type: 'danger', msg: err })
+          // commit('setTableData', [])
+          // commit('bigLoaded', false)
+        })
+    },
     getCreateCode ({ commit }, query) {
       return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
@@ -301,7 +347,7 @@ export const store = new Vuex.Store({
         .then(res => {
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
-            commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
             router.push({name: query.return})
           } else {
             let errs = res.data.Validations.Errors
@@ -331,7 +377,7 @@ export const store = new Vuex.Store({
         .then(res => {
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
-            commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
             router.push({name: query.return})
           } else {
             let errs = res.data.Validations.Errors
@@ -355,7 +401,7 @@ export const store = new Vuex.Store({
         'CompanyId' : state.CompanyId,
         'LookupTableCode' : 'WAREHOUSE_TYPE'
       }
-      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery)
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             state.lookupWarehouse_type = res.data.Values
@@ -377,7 +423,26 @@ export const store = new Vuex.Store({
       return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('setEmployeeValues', {data: res.data, name: query.name})
+            commit('setValues', {data: res.data, name: query.name})
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getLookups ({ state, commit }, query) {
+      let dataQuery = {
+        'LookupTableCode' : query.type,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId
+      }
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setValues', {data: res.data, name: query.name})
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -468,7 +533,7 @@ export const store = new Vuex.Store({
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery)
+      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setWarehouseList', res.data.ListModel.BaseModels)
@@ -481,6 +546,28 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getEmployeesByBranchId({state, commit}) {
+      let dataQuery = {
+        'AndConditionModel': {},
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post('VisionNextEmployee/api/Employee/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setEmployees', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    }
   },
   mutations: {
     showAlert (state, payload) {
@@ -652,11 +739,17 @@ export const store = new Vuex.Store({
     setCities (state,payload) {
       state.cities = cities
     },
-    setDistiricts(state, payload) {
+    setDistiricts (state, payload) {
       state.distiricts = distiricts.filter(item => item.plaka == payload)
     },
-    setEmployeeValues(state, payload) {
+    setValues (state, payload) {
       state[payload.name] = payload.data.Values
+    },
+    setEmployees (state, payload) {
+      state.employees = payload
+    },
+    setBranch(state, payload) {
+      state.branch = payload
     }
   }
 })
