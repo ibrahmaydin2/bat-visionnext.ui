@@ -60,9 +60,25 @@ export const store = new Vuex.Store({
     },
     notify: [
       {
-        title: '',
-        content: ''
-      }
+        title: 'notify 1',
+        content: 'notify 1'
+      },
+      {
+        title: 'notify 2',
+        content: 'notify 2'
+      },
+      {
+        title: 'notify 3',
+        content: 'notify 3'
+      },
+      {
+        title: 'notify 4',
+        content: 'notify 4'
+      },
+      {
+        title: 'notify 5',
+        content: 'notify 5'
+      },
     ],
     tableFilters: [
       { value: 'all', title: 'Tüm Kayıtlar' },
@@ -110,7 +126,7 @@ export const store = new Vuex.Store({
       document.getElementById('loginButton').disabled = true
       document.getElementById('loginLoaderText').style.display = 'none'
       document.getElementById('loginLoader').style.display = 'block'
-      commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
+      commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
       return axios.post('VisionNextAuthentication/api/Authentication/Login', {
         SessionId: authData.SessionId,
         UserName: authData.UserName,
@@ -118,6 +134,7 @@ export const store = new Vuex.Store({
         InstanceHash: authData.InstanceHash
       })
         .then(res => {
+          commit('hideAlert')
           document.getElementById('loginButton').disabled = false
           document.getElementById('loginLoaderText').style.display = 'block'
           document.getElementById('loginLoader').style.display = 'none'
@@ -129,19 +146,20 @@ export const store = new Vuex.Store({
             commit('bigLoaded', false)
           }
         })
-        // .catch(err => {
-        //   document.getElementById('loginButton').disabled = false
-        //   document.getElementById('loginLoaderText').style.display = 'block'
-        //   document.getElementById('loginLoader').style.display = 'none'
-        //   commit('showAlert', { type: 'error', msg: err })
-        //   commit('setTableData', [])
-        //   commit('bigLoaded', false)
-        // })
+        .catch(err => {
+          document.getElementById('loginButton').disabled = false
+          document.getElementById('loginLoaderText').style.display = 'block'
+          document.getElementById('loginLoader').style.display = 'none'
+          commit('showAlert', { type: 'network', msg: err })
+          commit('setTableData', [])
+          commit('bigLoaded', false)
+        })
     },
     navigation ({ commit }, authData) {
       commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UiMenu/SearchByApplicationHash', authCompanyAndBranch, authHeader)
         .then(res => {
+          commit('hideAlert')
           if (res.data.IsCompleted === true) {
             commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
           } else {
@@ -156,9 +174,10 @@ export const store = new Vuex.Store({
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ commit }, query) {
       commit('bigLoaded', true)
+      commit('setError', {view: false, info: null})
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
-          if ((res.data.IsCompleted === true) || (res.data.UIPageModels.length >= 1)) {
+          if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
             commit('setTableOperations', res.data.UIPageModels[0])
             if (res.data.UIPageModels[0].SelectedColumns.length === 0) {
               commit('setTableRows', res.data.UIPageModels[0].RowColumns)
@@ -177,19 +196,16 @@ export const store = new Vuex.Store({
               searchField: query.where,
               searchText: query.search
             })
-            console.log(res.data)
+            commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {
-            console.log(res)
-            commit('setError', {view: true, info: 'b'})
-            // commit('showAlert', { type: 'warning', msg: res.data.Message })
+            commit('setError', {view: true, info: res.data.Message})
             commit('bigLoaded', false)
           }
         })
         .catch(err => {
           console.log(err)
           commit('setError', {view: true, info: 'Server Error'})
-          // commit('showAlert', { type: 'network', msg: err.response })
         })
     },
     // tüm index ekranlarının tablosunu POST metodudyla besleyen fonksiyondur.
@@ -231,18 +247,22 @@ export const store = new Vuex.Store({
         OrderByColumns
       }
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
+          commit('hideAlert')
           if (res.data.IsCompleted === true) {
+            commit('setError', {view: false, info: null})
             commit('showNextgrid', true)
             commit('bigLoaded', false)
             commit('setTableData', res.data.ListModel)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
+            commit('setError', {view: true, info: res})
           }
         })
         .catch(err => {
-          console.log(err.message)
+          commit('setError', {view: true, info: 'Server Error'})
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -305,6 +325,7 @@ export const store = new Vuex.Store({
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
         .then(res => {
+          commit('hideAlert')
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
@@ -335,6 +356,7 @@ export const store = new Vuex.Store({
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
+          commit('hideAlert')
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createok') })
@@ -493,6 +515,9 @@ export const store = new Vuex.Store({
       state.errorView = payload.view
       state.errorData = payload.info
     },
+    hideAlert () {
+      this._vm.$bvToast.hide()
+    },
     showAlert (state, payload) {
       switch (payload.type) {
         case 'catch':
@@ -500,16 +525,16 @@ export const store = new Vuex.Store({
             router.push({name: 'Login'})
           }
           this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
-            title: 'Server Error',
+            title: i18n.t('general.serverError'),
             variant: 'danger',
             toaster: 'b-toaster-bottom-right',
             noCloseButton: false
           })
           break
         case 'network':
-          const err = payload.msg
-          this._vm.$bvToast.toast(JSON.stringify(err.data.Message), {
-            title: 'Server Error',
+          const err = payload.msg.message
+          this._vm.$bvToast.toast(JSON.stringify(err), {
+            title: i18n.t('general.serverError'),
             variant: 'danger',
             toaster: 'b-toaster-bottom-right',
             noCloseButton: false
@@ -540,7 +565,8 @@ export const store = new Vuex.Store({
           break
         case 'error':
           this._vm.$bvToast.toast(payload.msg, {
-            variant: 'info',
+            title: i18n.t('general.errorTitle'),
+            variant: 'warning',
             noCloseButton: true,
             toaster: 'b-toaster-bottom-right',
             noCloseButton: false
@@ -549,6 +575,7 @@ export const store = new Vuex.Store({
           break
         case 'info':
           this._vm.$bvToast.toast(payload.msg, {
+            title: i18n.t('general.pleaseWait'),
             variant: 'info',
             noCloseButton: true,
             toaster: 'b-toaster-bottom-right',

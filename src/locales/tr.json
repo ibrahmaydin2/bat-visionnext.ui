@@ -525,8 +525,15 @@
     "sharing": "Paylaşım"
   },
   "general": {
-    "pleaseWait": "Lütfen Bekleyin",
-    "branches": "Şubeler"
+    "pleaseWait": "Lütfen Bekleyin...",
+    "loggined": "Oturum Açılıyor",
+    "errorTitle": "Hata!",
+    "serverError": "Sunucu Hatası!",
+    "branches": "Şubeler",
+    "supportMail": "Hata Bildir",
+    "homepage": "Ana Sayfa",
+    "notifications": "Bildirimler",
+    "notifyItems": "{x} Bildirim"
   },
   "index": {
     "BloodTransfusion": "BloodTransfusion",

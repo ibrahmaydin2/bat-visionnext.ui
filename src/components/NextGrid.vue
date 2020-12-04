@@ -316,6 +316,7 @@ export default {
   },
   watch: {
     $route (to, from) {
+      console.log('nextgrid')
       // sayfa değişikliklerini yakalamak ve içeriği güncellemek için bu bölüm şarttır.
       let sortOpt = {}
       if (to.query.count) {

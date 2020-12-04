@@ -7,14 +7,8 @@
         </div>
         <router-link class="asc__header-logo" :to="{name: 'Dashboard'}"><img :src="logo.header"></router-link>
         <Shortcuts class="d-none d-lg-inline-block" />
-        <b-button class="d-inline-block d-lg-none float-right" @click="collapseNav()">
-          <i class="fas fa-bars" />
-        </b-button>
-        <!-- <div @click="collapseNav()" :class="style.icon">
-          <i class="fas fa-bars"></i>
-        </div> -->
       </b-col>
-      <b-col lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
+      <b-col cols="2" md="4" lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
             <i class="fas fa-network-wired" /> {{loginUser.company}}
@@ -26,7 +20,7 @@
             {{branch.Desciption}}
           </b-dropdown-item>
         </b-dropdown>
-        <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
+        <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-md-inline-block">
           <template v-slot:button-content>
             <i class="far fa-user" /> {{loginUser.name}}
           </template>
@@ -35,27 +29,33 @@
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
         </b-dropdown>
-        <!-- <div class="position-relative">
-          <span class="asc__count">13</span> -->
-          <!-- <b-dropdown class="asc__notification" size="lg" no-caret > -->
-            <!-- <template v-slot:button-content>
+
+        <div class="position-relative">
+          <span class="asc__count">{{notify.length}}</span>
+          <b-dropdown class="asc__notification" size="lg" no-caret >
+            <template v-slot:button-content>
               <i class="fa fa-bell"></i>
-            </template> -->
-            <!-- <b-dropdown-header id="dropdown-header-label">
+            </template>
+            <b-dropdown-header id="dropdown-header-label">
               <div class="d-flex justify-content-between">
-                <span><b>Notifications</b></span>
-                <span><b>135 Items</b></span>
+                <span><b>{{$t('general.notifications')}}</b></span>
+                <span><b>{{$t('general.notifyItems', {x: notify.length}) }}</b></span>
               </div>
-            </b-dropdown-header> -->
-            <!-- <b-dropdown-item
+            </b-dropdown-header>
+            <b-dropdown-item
               v-for="(row,i) in notify"
               :key="i"
               class="asc__dropdown-item">
                 <b-button v-b-modal.notificationModal @click="openModal(row.title, row.content)">{{row.title}}</b-button>
-            </b-dropdown-item> -->
-          <!-- </b-dropdown>
-        </div> -->
-        <!-- <i id="shortcutsIcon" class="fa fa-star" v-b-toggle.sidebar-right></i> -->
+            </b-dropdown-item>
+          </b-dropdown>
+        </div>
+        <i id="shortcutsIcon" class="fa fa-star" v-b-toggle.sidebar-right></i>
+
+        <b-button class="d-inline-block d-lg-none float-right text-light" variant="default" @click="collapseNav()">
+          <i :class="hamburgerIcon" />
+        </b-button>
+
       </b-col>
       <b-modal id="notificationModal" :title="modalHeader">
         <p class="my-4">{{modalContent}}</p>
@@ -78,6 +78,7 @@ export default {
   },
   data () {
     return {
+      hamburgerIcon: 'fas fa-bars',
       UserBranches: [],
       headerLinks: [],
       windowWidth: 0,
@@ -106,6 +107,11 @@ export default {
       this.logout()
     },
     collapseNav () {
+      if (this.hamburgerIcon === 'fas fa-bars') {
+        this.hamburgerIcon = 'fas fa-times'
+      } else {
+        this.hamburgerIcon = 'fas fa-bars'
+      }
       this.hamburger(this.style.icon === 'asc__header-hamburger d-inline-block' ? 'open' : 'close')
     },
     handleResize () {

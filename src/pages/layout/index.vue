@@ -120,6 +120,7 @@ export default {
   },
   watch: {
     $route (to, from) {
+      this.$store.commit('setError', {view: false, info: null})
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink

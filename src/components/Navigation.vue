@@ -1,42 +1,46 @@
 <template>
   <div :class="style.navigation">
     <div class="asc__nav">
-      <ul v-for="(nav, s) in items" :key="'nav' + s" class="asc__nav-ul-main">
-        <li v-for="(a, i) in nav.navs" :key="'main' + i">
-          {{ a.title }}
-          <ul v-if="a.sub" class="asc__nav-ul-main-sub">
-            <li v-for="(b, x) in a.sub" :key="'sub' + x">
-              <i class="far fa-circle" /> {{ b.title }}
-              <ul v-if="b.sub" class="asc__nav-ul-main-sub-sub">
-                <li v-for="(c, y) in b.sub" :key="'subsub' + y">
-                  {{ c.title }}
-                </li>
-              </ul>
+      <div class="asc__nav-list" v-for="(links, i) in navigation" :key="i">
+        <b-button
+          v-b-toggle="'mobileNavLink' + i"
+          variant="default"
+          class="asc__nav-list-btn"
+        >
+          {{ links.title }}
+          <!-- <router-link class="asc__nav-title" :to="{name: links.router, params: { url: links.link }}">
+            {{ links.title }}
+          </router-link> -->
+        </b-button>
+        <b-collapse v-if="links.sub" :id="'mobileNavLink' + i">
+          <ul>
+            <li v-for="(subs, x) in links.sub" :key="'sub' + x" class="asc__nav-title-li" @click="collapseNav()">
+              <router-link class="asc__nav-title" :to="{name: subs.router, params: { url: subs.link }}">
+                {{ subs.title }}
+              </router-link>
             </li>
           </ul>
-        </li>
-      </ul>
-      <figure class="asc__system-navLogo">
-        <img :src="logo.idea">
-      </figure>
-      <div class="asc__system-verno">
-        <span>V</span> {{system.version}}
+        </b-collapse>
       </div>
     </div>
-    <div class="asc__nav-bg" @click="collapseNav()" />
+    <figure class="asc__system-navLogo">
+      <img :src="logo.idea">
+    </figure>
+    <div class="asc__system-verno">
+      <span>V</span> {{system.version}}
+    </div>
+    <!-- <div class="asc__nav-bg" @click="collapseNav()" /> -->
   </div>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { items } from './nav.js'
 export default {
   data () {
     return {
-      items: items
     }
   },
   computed: {
-    ...mapState(['system', 'style', 'logo'])
+    ...mapState(['system', 'style', 'logo', 'navigation'])
   },
   methods: {
     ...mapMutations(['hamburger', 'logout']),
@@ -60,27 +64,26 @@ export default {
     background: #fff
     overflow: auto
     .asc__nav
-      width: 100%
-      height: 100%
-      position: absolute
-      z-index: 3
-      .asc__nav-ul-main
-        list-style: none
-        padding: 0 50px
-        & li
-          display: block
-          font-weight: bold
+      height: 80vh
+      margin-bottom: 5vh
+      padding: 1.5rem
+      overflow-x: auto
+      .asc__nav-list
+        position: relative;
+        .asc__nav-title-li
+          list-style: none
+          line-height: 60px
           font-size: 14px
-          border-bottom: 1px #ddd solid
-          &:last-child
-            border-bottom: none
-        .asc__nav-ul-main-sub
-          & li
-            line-height: 40px
-            font-weight: 400
-            & i
-              font-size: 12px
-              color: #ffa300
+          font-weight: bold
+          & a
+            color: #000
+        .asc__nav-list-btn
+          background: linear-gradient(45deg, #e88000, #ffa300) !important
+          color: #fff
+          font-size: 16px
+          font-weight: bold
+          width: 100%
+          margin-bottom: .5rem
     .asc__nav-bg
       width: 100%
       height: 100%
