@@ -159,7 +159,6 @@
               </b-tr>
             </b-tbody>
           </b-table-simple>
-          {{detailListData}}
         </b-tab>
       </b-tabs>
     </b-col>

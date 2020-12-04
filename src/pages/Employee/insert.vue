@@ -41,8 +41,8 @@
             <b-form-group
               :label="$t('insert.employee.state')"
             >
-              <b-form-checkbox v-model="form.model.statusId" name="check-button" switch>
-                {{(form.model.statusId) ? $t('insert.active'): $t('insert.passive')}}
+              <b-form-checkbox v-model="statusId" name="check-button" switch>
+                {{(statusId) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -295,21 +295,30 @@
               </b-form-group>
             </b-col>
           </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.employee.EmployeePrefix')">
-          <b-row>
-            <b-col cols="12" md="6" lg="4">
-              <b-form-group :label="$t('insert.employee.Model_Prefix')">
-                <b-form-input type="text" v-model="form.Model_Prefix" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
         </b-tab> -->
+        <b-tab :title="$t('insert.employee.EmployeePrefix')">
+          <b-table-simple bordered small>
+            <b-thead>
+              <b-th width="30%">
+                <b-form-group :label="$t('insert.employee.EmployeePrefix')">
+                  <v-select v-model="selectedEInvoice" :options="eInvoiceSeqsList" @input="selectedEInvoiceSeq" label="Label"></v-select>
+                </b-form-group>
+              </b-th>
+              <b-th width="10%">
+                <b-form-group>
+                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
+                </b-form-group>
+              </b-th>
+            </b-thead>
+            <b-tbody>
+              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
+                <b-td>{{r.Label}}</b-td>
+                <b-td><i @click="deleteEInvoiceSeq(r)" class="far fa-trash-alt text-danger"></i></b-td>
+              </b-tr>
+            </b-tbody>
+          </b-table-simple>
+          
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -358,25 +367,29 @@ export default {
           isRepresentative: null,
           description1: null,
           deleted: 0,
-          eInvoiceSeqs: [
-            {
-                "recordId": 82457596
-            }
-          ]
+          eInvoiceSeqs: []
         },
       },
-      disabledCustomer: true
+      disabledCustomer: true,
+      eInvoiceSeqsList: [],
+      detailListData: [],
+      selectedEInvoice: [],
+      statusId: true
     }
   },
   computed: {
-    ...mapState(['createCode', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards'])
+    ...mapState(['createCode', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'rowData'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
     this.getLookup()
     this.getCode()
+    this.getBranch()
   },
   methods: {
+    getBranch () {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
+    },
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextEmployee/api/Employee/GetCode'})
     },
@@ -393,7 +406,7 @@ export default {
       this.form.model.birthDate = this.form.model.birthDate ? new Date(this.form.model.birthDate).toISOString() : ''
       this.form.model.employmentStartDate = this.form.model.employmentStartDate ? new Date(this.form.model.employmentStartDate).toISOString() : ''
       this.form.model.employmentEndDate = this.form.model.employmentEndDate ? new Date(this.form.model.employmentEndDate).toISOString() : ''
-      this.form.model.statusId = this.form.model.statusId ? 1 : 0
+      this.form.model.statusId = this.statusId ? 1 : 0
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextEmployee/api/Employee', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedType (e) {
@@ -427,12 +440,44 @@ export default {
       } else {
         this.disabledCustomer = true
       }
+    },
+    selectedEInvoiceSeq (e) {
+      this.selectedEInvoice = e
+    },
+    addDetailList () {
+      if (!this.selectedEInvoice) {
+        return
+      }
+      this.detailListData.push(this.selectedEInvoice)
+      this.form.model.eInvoiceSeqs.push({
+        recordId: this.selectedEInvoice.RecordId,
+        recordState: 2
+      })
+      this.selectedEInvoice = null
+    },
+    deleteEInvoiceSeq (item) {      
+      // Model içerisindeki eInvoiceSeqs dizisinden elemanın çıkarılması
+      let filteredArr = this.form.model.eInvoiceSeqs.filter(i => i.recordId === item.RecordId)
+      this.form.model.eInvoiceSeqs.splice(this.form.model.eInvoiceSeqs.indexOf(filteredArr[0]), 1)
+
+      // Tabloda listenen eInvoiceSeqs dizisinden elemanın çıkarılması
+      this.detailListData.splice(this.detailListData.indexOf(item), 1)
+
     }
+
   },
   watch: {
     createCode (e) {
       if (e) {
         this.form.model.code = e
+      }
+    },
+    rowData (e) {
+      if (e) {
+        this.eInvoiceSeqsList = e.EInvoiceSeqs
+        this.eInvoiceSeqsList.map(item => {
+          item.Label = item.Prefix + ' ' + item.Year + ' ' + item.EInvoiceType.Label
+        })
       }
     }
   }

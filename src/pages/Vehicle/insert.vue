@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
-            <b-button @click="save()" size="sm" variant="success">Kaydet</b-button>
+            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
           </b-col>
         </b-row>
       </header>
@@ -22,32 +22,32 @@
             <b-form-group
               :label="$t('insert.vehicles.code')"
             >
-              <b-form-input type="text" v-model="form.code"/>
+              <b-form-input type="text" v-model="form.model.code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group :label="$t('insert.vehicles.driver')">
-              <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
+              <v-select :options="employees" @input="selectedDriver" label="nameSurname"></v-select>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
               :label="$t('insert.vehicles.plaque')"
             >
-              <b-form-input type="text" v-model="form.plaque"/>
+              <b-form-input type="text" v-model="form.model.vehiclePlateNumber"/>
             </b-form-group>
           </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.assetNo')">
-                <b-form-input type="text" v-model="form.assetNo"/>
+                <b-form-input type="text" v-model="form.model.assetNumber"/>
               </b-form-group>
             </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
               :label="$t('insert.vehicles.state')"
             >
-              <b-form-checkbox v-model="form.checked" name="check-button" switch>
-                {{(form.checked) ? $t('insert.vehicles.active'): $t('insert.vehicles.passive')}}
+              <b-form-checkbox v-model="statusId" name="check-button" switch>
+                {{(statusId) ? $t('insert.vehicles.active'): $t('insert.vehicles.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -60,17 +60,17 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.trademark')">
-                <v-select :options="form.trademarks" @input="selectedTrademark" label="title"></v-select>
+                <v-select :options="vehicleBrands" @input="selectedVehicleBrand" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.model')">
-                <v-select :options="form.models" @input="selectedModel" label="title"></v-select>
+                <v-select :options="vehicleModels" @input="selectedVehicleModel" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.year')">
-                <b-form-input type="text" v-model="form.year"/>
+                <b-form-input type="text" v-model="form.model.modelYear"/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -79,7 +79,7 @@
               <b-form-group
                 :label="$t('insert.vehicles.isRouteVehicle')"
               >
-                <b-form-radio-group id="radio-group-route-vehicle" v-model="form.isRouteVehicle">
+                <b-form-radio-group id="radio-group-route-vehicle" v-model="form.model.isRouteVehicle">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -87,7 +87,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.vehicleType')">
-                <v-select :options="form.vehicleTypes" @input="selectedVehicleType" label="title"></v-select>
+                <v-select :options="vehicleTypes" @input="selectedVehicleType" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -96,7 +96,7 @@
               <b-form-group
                 :label="$t('insert.vehicles.isStore')"
               >
-                <b-form-radio-group id="radio-group-is-store" v-model="form.isStore">
+                <b-form-radio-group id="radio-group-is-store" v-model="form.model.useAsWarehouse">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -106,7 +106,7 @@
               <b-form-group
                 :label="$t('insert.vehicles.isAsset')"
               >
-                <b-form-radio-group id="radio-group-is-asset" v-model="form.isAsset">
+                <b-form-radio-group id="radio-group-is-asset" v-model="form.model.isBranchLocation">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -118,77 +118,106 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.vehicleKind')">
-                <v-select :options="form.vehicleKinds" @input="selectedVehicleKind" label="title"></v-select>
+                <v-select :options="vehicleUsageTypes" @input="selectedVehicleUsageType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.colorCode')">
-                <v-select :options="form.colorCodes" @input="selectedColorCode" label="title"></v-select>
+                <v-select :options="vehicleColors" @input="selectedVehicleColor" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row>
+          <!-- <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.sideAwningType')">
-                <v-select :options="form.sideAwningTypes" @input="selectedSideAwningType" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.backrest')">
-                <v-select :options="form.backrests" @input="selectedBackrest" label="title"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.truckLogo')">
-                <v-select :options="form.truckLogos" @input="selectedTruckLogo" label="title"></v-select>
               </b-form-group>
             </b-col>
-          </b-row>
+          </b-row> -->
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.volumeCapacity')">
-                <b-form-input type="text" v-model="form.volumeCapacity"/>
+                <b-form-input type="number" v-model="form.model.volumeCp"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.volumeUnit')">
-                <v-select :options="form.volumeUnits" @input="selectedVolumeUnit" label="title"></v-select>
+                <v-select :options="vehicleUnits" @input="selectedVolumeUnit" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.weightCapacity')">
-                <b-form-input type="text" v-model="form.weightCapacity"/>
+                <b-form-input type="number" v-model="form.model.weightCp"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.weightUnit')">
-                <v-select :options="form.weightUnits" @input="selectedWeightUnit" label="title"></v-select>
+                <v-select :options="vehicleUnits" @input="selectedWeightUnit" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.contractEndDate')">
-                <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.contractEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.model.ContractEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.vehicleCategory1')">
-                <v-select :options="form.vehicleCategories" @input="selectedVehicleCategory1" label="title"></v-select>
+                <v-select :options="vehicleCategory1" @input="selectedCategory1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.vehicleCategory2')">
-                <v-select :options="form.vehicleCategories" @input="selectedVehicleCategory2" label="title"></v-select>
+                <v-select :options="vehicleCategory2" @input="selectedCategory2" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.vehicleCategory3')">
-                <v-select :options="form.vehicleCategories" @input="selectedVehicleCategory3" label="title"></v-select>
+                <v-select :options="vehicleCategory3" @input="selectedCategory3" label="Label"></v-select>
               </b-form-group>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.vehicles.replacementDrivers')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <v-select v-model="selectedEmployee" :options="employees" @input="selectedReplacementDriver" label="nameSurname"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button @click="addReplacementDriver()" size="sm" variant="success">{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="12" lg="12">
+              <b-table-simple>
+                <b-thead>
+                  <tr>
+                    <th>İsim</th>
+                    <th>Kod</th>
+                  </tr>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(r, i) in replacmentDrivers" :key="'dl' + i">
+                    <b-td>{{r.nameSurname}}</b-td>
+                    <b-td>{{r.code}}</b-td>
+                    <b-td><i @click="deleteReplacementDriver(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+            
           </b-row>
         </b-tab>
       </b-tabs>
@@ -202,257 +231,144 @@ export default {
   data () {
     return {
       form: {
-        active: null,
-        checked: null,
-        code: '',
-        name: '',
-        driver: null,
-        plaque: null,
-        assetNo: null,
-        trademark: null,
-        model: null,
-        year: null,
-        isRouteVehicle: null,
-        vehicleType: null,
-        isStore: null,
-        isAsset: null,
-        vehicleKind: null,
-        colorCode: null,
-        sideAwningType: null,
-        backrest: null,
-        truckLogo: null,
-        volumeCapacity: null,
-        weightCapacity: null,
-        volumeUnit: null,
-        weightUnit: null,
-        vehicleCategory1: null,
-        vehicleCategory2: null,
-        vehicleCategory3: null,
-        contractEndDate: null,
-        drivers: [
-          {
-            id: 1,
-            title: 'Sürücü 1'
-          },
-          {
-            id: 2,
-            title: 'Sürücü 2'
-          },
-          {
-            id: 3,
-            title: 'Sürücü 3'
-          }
-        ],
-        trademarks: [
-          {
-            id: 1,
-            title: 'Marka 1'
-          },
-          {
-            id: 2,
-            title: 'Marka 2'
-          },
-          {
-            id: 3,
-            title: 'Marka 3'
-          }
-        ],
-        models: [
-          {
-            id: 1,
-            title: 'Model 1'
-          },
-          {
-            id: 2,
-            title: 'Model 2'
-          },
-          {
-            id: 3,
-            title: 'Model 3'
-          }
-        ],
-        vehicleTypes: [
-          {
-            id: 1,
-            title: 'Araç 1'
-          },
-          {
-            id: 2,
-            title: 'Araç 2'
-          },
-          {
-            id: 3,
-            title: 'Araç 3'
-          }
-        ],
-        vehicleKinds: [
-          {
-            id: 1,
-            title: 'Araç 1'
-          },
-          {
-            id: 2,
-            title: 'Araç 2'
-          },
-          {
-            id: 3,
-            title: 'Araç 3'
-          }
-        ],
-        colorCodes: [
-          {
-            id: 1,
-            title: 'Renk 1'
-          },
-          {
-            id: 2,
-            title: 'Renk 2'
-          },
-          {
-            id: 3,
-            title: 'Renk 3'
-          }
-        ],
-        sideAwningTypes: [
-          {
-            id: 1,
-            title: 'Tente 1'
-          },
-          {
-            id: 2,
-            title: 'Tente 2'
-          },
-          {
-            id: 3,
-            title: 'Tente 3'
-          }
-        ],
-        backrests: [
-          {
-            id: 1,
-            title: 'Arkalık 1'
-          },
-          {
-            id: 2,
-            title: 'Arkalık 2'
-          },
-          {
-            id: 3,
-            title: 'Arkalık 3'
-          }
-        ],
-        truckLogos: [
-          {
-            id: 1,
-            title: 'Logo 1'
-          },
-          {
-            id: 2,
-            title: 'Logo 2'
-          },
-          {
-            id: 3,
-            title: 'Logo 3'
-          }
-        ],
-        weightUnits: [
-          {
-            id: 1,
-            title: 'Birim 1'
-          },
-          {
-            id: 2,
-            title: 'Birim 2'
-          },
-          {
-            id: 3,
-            title: 'Birim 3'
-          }
-        ],
-        volumeUnits: [
-          {
-            id: 1,
-            title: 'Birim 1'
-          },
-          {
-            id: 2,
-            title: 'Birim 2'
-          },
-          {
-            id: 3,
-            title: 'Birim 3'
-          }
-        ],
-        vehicleCategories: [
-          {
-            id: 1,
-            title: 'Araç 1'
-          },
-          {
-            id: 2,
-            title: 'Araç 2'
-          },
-          {
-            id: 3,
-            title: 'Araç 3'
-          }
-        ],
-      }
+        model: {
+          code: null,
+          assetNumber: null,
+          vehiclePlateNumber: null,
+          defaultDriverEmployeeId: null,
+          vehicleTypeId: null,
+          statusId: 1,
+          modelYear: null,
+          brandId: null,
+          modelId: null,
+          useAsWarehouse: 0,
+          isRouteVehicle: 0,
+          isBranchLocation: 0,
+          usageTypeId: null,
+          category1Id: null,
+          category2Id: null,
+          category3Id: null,
+          volumeCpUnitId: null,
+          volumeCp: null,
+          weightCpUnitId: null,
+          weightCp: null,
+          colorId: null,
+          contractEndDate: null,
+          vehicleReplacementDrivers: []
+        }
+      },
+      selectedEmployee: null,
+      replacmentDrivers: [],
+      statusId: true
     }
   },
   computed: {
-    ...mapState([])
+    ...mapState(['createCode', 'employees', 'vehicleTypes', 'vehicleBrands', 'vehicleModels', 'vehicleUsageTypes', 'vehicleCategory1', 'vehicleCategory2', 'vehicleCategory3', 'vehicleColors', 'vehicleUnits'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
+    this.$store.dispatch('getEmployeesByBranchId')
+    this.getLookups()
+    this.getCode()
   },
   methods: {
-    save () {
-      let createData = {
-      }
-      this.$store.dispatch('createData', {...this.query, info: createData})
+    getCode () {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextVehicle/api/Vehicle/GetCode'})
+    },
+    getLookups() {
+      //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_TYPE', name: 'vehicleTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_BRAND', name: 'vehicleBrands'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_MODEL', name: 'vehicleModels'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'USAGE_TYPE', name: 'vehicleUsageTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_1', name: 'vehicleCategory1'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_2', name: 'vehicleCategory2'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_3', name: 'vehicleCategory3'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'COLOR', name: 'vehicleColors'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'UNIT', name: 'vehicleUnits'})
     },
     selectedDriver (e) {
-      this.form.driver = e.title
-    },
-    selectedTrademark (e) {
-      this.form.trademark = e.title
-    },
-    selectedModel (e) {
-      this.form.model = e.title
+      this.form.model.defaultDriverEmployeeId = e.RecordId
     },
     selectedVehicleType (e) {
-      this.form.vehicleType = e.title
+      this.form.model.vehicleTypeId = e.DecimalValue
     },
-    selectedVehicleKind (e) {
-      this.form.vehicleKind = e.title
+    selectedVehicleBrand (e) {
+      this.form.model.brandId = e.DecimalValue
     },
-    selectedColorCode (e) {
-      this.form.colorCode = e.title
+    selectedVehicleModel (e) {
+      this.form.model.modelId = e.DecimalValue
     },
-    selectedSideAwningType (e) {
-      this.form.sideAwningType = e.title
+    selectedVehicleUsageType (e) {
+      this.form.model.usageTypeId = e.DecimalValue
     },
-    selectedBackrest (e) {
-      this.form.backrest = e.title
+    selectedVehicleColor (e) {
+      this.form.model.colorId = e.DecimalValue
     },
-    selectedTruckLogo (e) {
-      this.form.truckLogo = e.title
+    selectedCategory1 (e) {
+      this.form.model.category1Id = e.DecimalValue
     },
-    selectedWeightUnit (e) {
-      this.form.weightUnit = e.title
+    selectedCategory2 (e) {
+      this.form.model.category2Id = e.DecimalValue
+    },
+    selectedCategory3 (e) {
+      this.form.model.category3Id = e.DecimalValue
     },
     selectedVolumeUnit (e) {
-      this.form.volumeUnit = e.title
+      this.form.model.volumeCpUnitId = e.DecimalValue
     },
-    selectedVehicleCategory1 (e) {
-      this.form.vehicleCategory1 = e.title
+    selectedWeightUnit (e) {
+      this.form.model.weightCpUnitId = e.DecimalValue
     },
-    selectedVehicleCategory2 (e) {
-      this.form.vehicleCategory2 = e.title
+    selectedReplacementDriver (e) {
+      this.selectedEmployee = e
     },
-    selectedVehicleCategory3 (e) {
-      this.form.vehicleCategory3 = e.title
+    addReplacementDriver () {
+      if (!this.selectedEmployee) {
+        console.log("Sürücü Seçin")
+        return
+      }
+      this.form.model.vehicleReplacementDrivers.push({
+        code: '',
+        description1: this.selectedEmployee.Name + ' ' + this.selectedEmployee.Surname,
+        driverId: this.selectedEmployee.RecordId,
+        recordState: 2
+      })
+      this.replacmentDrivers.push({
+        nameSurname: this.selectedEmployee.Name + ' ' + this.selectedEmployee.Surname,
+        code: this.selectedEmployee.Code,
+        id: this.selectedEmployee.RecordId
+      })
+      this.selectedEmployee = null
+
+    },
+    deleteReplacementDriver (item) {
+      console.log(item)
+      // Model içerisindeki eInvoiceSeqs dizisinden elemanın çıkarılması
+      let filteredArr = this.form.model.vehicleReplacementDrivers.filter(i => i.driverId === item.id)
+      this.form.model.vehicleReplacementDrivers.splice(this.form.model.vehicleReplacementDrivers.indexOf(filteredArr[0]), 1)
+
+      this.replacmentDrivers.splice(this.replacmentDrivers.indexOf(item), 1)
+    },
+    save () {
+      console.log(this.form.model)
+      this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
+      this.form.model.statusId = this.statusId ? 1 : 0
+      this.$store.dispatch('createData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
+    }
+  },
+  watch: {
+    createCode (e) {
+      if (e) {
+        this.form.model.code = e
+      }
+    },
+    employees (e) {
+      if (e) {
+        e.map(item => {
+          item.nameSurname = `${item.Name} ${item.Surname}`
+        })
+      }
     }
   }
 }
