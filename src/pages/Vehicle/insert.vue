@@ -275,8 +275,8 @@ export default {
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextVehicle/api/Vehicle/GetCode'})
     },
-    getLookups() {
-      //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+    getLookups () {
+      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_TYPE', name: 'vehicleTypes'})
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_BRAND', name: 'vehicleBrands'})
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_MODEL', name: 'vehicleModels'})
