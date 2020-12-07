@@ -7,7 +7,7 @@
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb title="rowData.Description1" />
+            <Breadcrumb :title="rowData.Description1" />
             <div class="clearfix"></div>
           </header>
         </b-col>
@@ -15,10 +15,10 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.employee.Model_Code')}}:</b></span> 
-            <span><i class="fas fa-check" />  <b>{{$t('insert.employee.Model_Name')}}:</b></span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.employee.Model_Surname')}}:</b></span>
-            <span><i class="far fa-circle" />  <b>{{$t('insert.employee.state')}}:</b></span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.employee.Model_Code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.employee.Model_Name')}}:</b> {{rowData.Name}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.employee.Model_Surname')}}:</b> {{rowData.Surname}}</span>
+            <span><i class="far fa-circle" /><b> {{$t('insert.employee.state')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
       </b-row>
@@ -28,31 +28,36 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.employee.Employee')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_UserGroupId')}}</span>
+                <p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.category1')}}</span>
+                <p>{{rowData.Category1 ? rowData.Category1.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.personalType')}}</span>
+                <p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPCustomerCode')}}</span>
-                <p></p>
+                <p>{{rowData.FinanceCode1}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPSupplierCode')}}</span>
-                <p></p>
+                <p>{{rowData.FinanceCode2}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_IsRepresentative')}}</span>
-                <p></p>
+                <p><i :class="rowData.IsRepresentative === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_SAPSrCode')}}</span>
                 <p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Team')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.active')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.passive')}}</span>
-                <p></p>
+                <p><i :class="rowData.IsTeam === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Description')}}</span>
-                <p></p>
+                <p>{{rowData.other1}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.scoreCardClasses')}}</span>
+                <p>{{rowData.ScoreCardClass ? rowData.ScoreCardClass.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_GsmNumber')}}</span>
-                <p></p>
+                <p>{{rowData.GsmNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone1')}}</span>
-                <p></p>
+                <p>{{rowData.Telephone1}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone2')}}</span>
-                <p></p>
+                <p>{{rowData.Telephone2}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Email')}}</span>
-                <p></p>
+                <p>{{rowData.Email}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Fax')}}</span>
+                <p>{{rowData.FaxNumber}}</p>
                 <p></p>
               </b-card>
             </b-col>
@@ -60,62 +65,36 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.employee.Model_Personal')}}</h6>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BirthDate')}}</span>
-                <p></p>
+                <p>{{dateConvertFromTimezone(rowData.BirthDate)}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentStartDate')}}</span>
+                <p>{{dateConvertFromTimezone(rowData.EmploymentStartDate)}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span>
-                <p></p>
+                <p>{{dateConvertFromTimezone(rowData.EmploymentEndDate)}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EducationId')}}</span>
-                <p></p>
+                <p>{{rowData.Education ? rowData.Education.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Identificationnumber')}}</span>
-                <p></p>
+                <p>{{rowData.taxNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BloodType')}}</span>
-                <p></p>
+                <p>{{rowData.BloodType ? rowData.BloodType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_JeansSize')}}</span>
-                <p></p>
+                <p>{{rowData.DenimSize}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ShirtSize')}}</span>
-                <p></p>
+                <p>{{rowData.MontSize}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Shoesize')}}</span>
-                <p></p>
+                <p>{{rowData.ShoeSize}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CoatSize')}}</span>
-                <p></p>
+                <p>{{rowData.OvercoatSize}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_TShirtSize')}}</span>
-                <p></p>
+                <p>{{rowData.TShirtSize}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ClothTrousersSize')}}</span>
-                <p></p>
+                <p>{{rowData.CorduroySize}}</p>
               </b-card>
             </b-col>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="4" v-if="rowData.CreateCustomerRecord">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.employee.EmployeeCustomer')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CreateCustomer')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_taxNumber')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.employee.Model_FinanceCode1')}}</span>
-                <p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.employee.Model_PriceListCategoryId')}}</span>
-                <p></p>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.employee.EmployeeDevices')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <b-table responsive :items="[]" :fields="fields1">
-                </b-table>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.employee.EmployeeBanks')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <b-table responsive :items="[]" :fields="fields2">
-                </b-table>
+                <p>{{rowData.PriceListCategory ? rowData.PriceListCategory.Label : ''}}</p>
               </b-card>
             </b-col>
           </b-row>
@@ -124,7 +103,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <b-table responsive :items="[]" :fields="fields3">
+                <b-table responsive :items="rowData.EInvoiceSeqs" :fields="fields3">
                 </b-table>
               </b-card>
             </b-col>
@@ -134,19 +113,16 @@
       </b-tabs>
     </div>
   </div>
-  <!-- "EmployeeDevices": "Uygun Cihazlar",
-      "EmployeeBanks": "Banka",
-      "Model_BankBranchId": "Banka Şube Adı",
-      "EmployeePrefix": "Prefix",
-      "Model_Prefix": "Prefix" -->
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
+
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
       fields1: [
         {
           key: 'serialNo',
