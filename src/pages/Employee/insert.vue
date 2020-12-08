@@ -97,8 +97,8 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_Team')">
-                <b-form-checkbox v-model="form.model.isTeam" name="check-button" switch>
-                  {{(form.model.isTeam) ? $t('insert.active'): $t('insert.passive')}}
+                <b-form-checkbox v-model="isTeam" name="check-button" switch>
+                  {{(isTeam) ? $t('insert.active'): $t('insert.passive')}}
                 </b-form-checkbox>
               </b-form-group>
             </b-col>
@@ -187,7 +187,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_BloodType')">
-                <v-select :options="bloodTypes" @input="selectedBloodType" label="title"></v-select>
+                <v-select :options="bloodTypes" @input="selectedBloodType" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -374,7 +374,8 @@ export default {
       eInvoiceSeqsList: [],
       detailListData: [],
       selectedEInvoice: [],
-      statusId: true
+      statusId: true,
+      isTeam: false,
     }
   },
   computed: {
@@ -407,6 +408,7 @@ export default {
       this.form.model.employmentStartDate = this.form.model.employmentStartDate ? new Date(this.form.model.employmentStartDate).toISOString() : ''
       this.form.model.employmentEndDate = this.form.model.employmentEndDate ? new Date(this.form.model.employmentEndDate).toISOString() : ''
       this.form.model.statusId = this.statusId ? 1 : 0
+      this.form.model.isTeam = this.isTeam ? 1 : 0
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextEmployee/api/Employee', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedType (e) {

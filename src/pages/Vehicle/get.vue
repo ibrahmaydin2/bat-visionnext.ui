@@ -49,7 +49,7 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.vehicles.additionalInfo')}}</h6>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleKind')}}</span>
-                <p>{{(rowData.VehicleGroup) ? rowData.VehicleGroup.Label : ''}}</p>
+                <p>{{(rowData.UsageType) ? rowData.UsageType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.colorCode')}}</span>
                 <p>{{(rowData.Color) ? rowData.Color.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.sideAwningType')}}</span>
@@ -67,7 +67,7 @@
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightUnit')}}</span>
                 <p>{{(rowData.WeightCpUnit) ? rowData.WeightCpUnit.Label : ''}}</p> 
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.contractEndDate')}}</span>
-                <p>{{rowData.ContractEndDate}}</p> 
+                <p>{{dateConvertFromTimezone(rowData.ContractEndDate)}}</p> 
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory1')}}</span>
                 <p>{{(rowData.Category1) ? rowData.Category1.Label : ''}}</p> 
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory2')}}</span>
@@ -78,7 +78,27 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <b-tab :title="$t('insert.vehicles.replacementDrivers')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <b-table-simple responsive hover small>
+                  <b-thead head-variant="light">
+                    <b-tr>
+                      <b-th>{{$t('insert.vehicles.driver')}}</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <tr v-for="(driver, i) in rowData.VehicleReplacementDrivers" :key="i">
+                      <b-td>{{driver.DriverEmployee.Label}}</b-td>
+                    </tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <!-- <b-tab :title="$t('insert.other')">
            <b-row>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
@@ -104,6 +124,8 @@
                 <p>{{(rowData.Category9) ? rowData.Category9.Label : ''}}</p>
                 <span><i class="far fa-circle" />Category10</span>
                 <p>{{(rowData.Category10) ? rowData.Category10.Label : ''}}</p>
+                <span><i class="far fa-circle" />VehicleGroup</span>
+                <p>{{(rowData.VehicleGroup) ? rowData.VehicleGroup.Label : ''}}</p>
                 <span><i class="far fa-circle" />ColorId</span>
                 <p>{{rowData.ColorId}}</p>
                 <span><i class="far fa-circle" />CompanyId</span>
@@ -160,21 +182,19 @@
                 <p>{{rowData.TireQuantity}}</p>
                 <span><i class="far fa-circle" />TireSize</span>
                 <p>{{rowData.TireSize}}</p>
-                <span><i class="far fa-circle" />UsageType</span>
-                <p>{{rowData.UsageType}}</p>
-                <span><i class="far fa-circle" />UsageTypeId</span>
-                <p>{{rowData.UsageTypeId}}</p>
               </b-card>
             </b-col>
            </b-row>
-        </b-tab>
+        </b-tab> -->
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
