@@ -15,10 +15,9 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.route.reference')}}:</b> {{rowData.EncryptedKey}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.route.active'): $t('insert.route.passive')}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.route.active'): $t('insert.route.passive')}}</span>
           </section>
         </b-col>
       </b-row>
@@ -51,9 +50,9 @@
                 <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
                 <p></p> -->
                 <span><i class="far fa-circle" /> {{$t('insert.route.multiDayRoute')}}</span>
-                <p>{{(rowData.IsMultidayRoute) ? $t('insert.route.yes') : $t('insert.route.no')}}</p>
+                <p><i :class="rowData.IsMultidayRoute === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.superRoute')}}</span>
-                <p>{{(rowData.IsSuperRoute) ? $t('insert.route.yes') : $t('insert.route.no')}}</p>
+                <p><i :class="rowData.IsSuperRoute === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">
@@ -71,7 +70,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <!-- <b-tab :title="$t('insert.other')">
            <b-row>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
@@ -131,7 +130,7 @@
               </b-card>
             </b-col>
            </b-row>
-        </b-tab>
+        </b-tab> -->
       </b-tabs>
     </div>
   </div>

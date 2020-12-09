@@ -22,7 +22,7 @@
             <b-form-group
               :label="$t('insert.vehicles.code')"
             >
-              <b-form-input type="text" v-model="form.model.code"/>
+              <b-form-input type="text" v-model="form.model.code" readonly/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
@@ -288,7 +288,11 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'UNIT', name: 'vehicleUnits'})
     },
     selectedDriver (e) {
-      this.form.model.defaultDriverEmployeeId = e.RecordId
+      if(e) {
+        this.form.model.defaultDriverEmployeeId = e.RecordId
+      } else {
+        this.form.model.defaultDriverEmployeeId = null
+      }
     },
     selectedVehicleType (e) {
       this.form.model.vehicleTypeId = e.DecimalValue
@@ -351,7 +355,6 @@ export default {
       this.replacmentDrivers.splice(this.replacmentDrivers.indexOf(item), 1)
     },
     save () {
-      console.log(this.form.model)
       this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
       this.form.model.statusId = this.statusId ? 1 : 0
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
