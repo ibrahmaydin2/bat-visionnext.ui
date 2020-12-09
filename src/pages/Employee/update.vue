@@ -367,12 +367,12 @@ export default {
     },
     getLookup () {
       //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'EMPLOYEE_TYPE', name: 'employeeTypes'})
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'EDUCATION', name: 'educationStatus'})
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'EMPLOYEE_GROUP', name: 'employeeGroups'})
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'BLOOD_TYPE', name: 'bloodTypes'})
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'EMPLOYEE_CATEGORY_1', name: 'category1'})
-      this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'SCORE_CARD_CLASS', name: 'scoreCards'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_TYPE', name: 'employeeTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'EDUCATION', name: 'educationStatus'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_GROUP', name: 'employeeGroups'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'BLOOD_TYPE', name: 'bloodTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_CATEGORY_1', name: 'category1'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'SCORE_CARD_CLASS', name: 'scoreCards'})
     },
     save () {
       this.form.model.birthDate = this.form.model.birthDate ? new Date(this.form.model.birthDate).toISOString() : ''
@@ -405,7 +405,7 @@ export default {
     changeCustomer (e) {
       if (e === "1") {
         this.disabledCustomer = false
-        this.$store.dispatch('lookupEmployeeType', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
+        this.$store.dispatch('getLookups', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
       } else {
         this.disabledCustomer = true
       }

@@ -110,7 +110,7 @@ export const store = new Vuex.Store({
     branchList: [],
     warehouseList: [],
     customerList: [],
-    //Employee Lookups Values//
+    //Employee Lookups Values
     employeeTypes: [],
     priceList: [],
     educationStatus: [],
@@ -119,7 +119,7 @@ export const store = new Vuex.Store({
     category1: [],
     scoreCards: [],
     employees: [],
-    //Vehicle Lookups Values//
+    //Vehicle Lookups Values
     vehicleTypes: [],
     vehicleBrands: [],
     vehicleModels: [],
@@ -129,7 +129,14 @@ export const store = new Vuex.Store({
     vehicleCategory3: [],
     vehicleColors: [],
     vehicleUnits: [],
-    branch: []
+    branch: [],
+    vehicles: [],
+    routeTypes: [],
+    //Route Lookups Values
+    routeClasses: [],
+    routeGroups: [],
+    visitStartControls: [],
+    routeTypeOptions: []
 
   },
   actions: {
@@ -442,7 +449,26 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    lookupEmployeeType ({ state, commit }, query) {
+    // lookupEmployeeType ({ state, commit }, query) {
+    //   let dataQuery = {
+    //     'LookupTableCode' : query.type,
+    //     'BranchId' : state.BranchId,
+    //     'CompanyId' : state.CompanyId
+    //   }
+    //   return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
+    //     .then(res => {
+    //       if (res.data.IsCompleted === true) {
+    //         commit('setValues', {data: res.data, name: query.name})
+    //       } else {
+    //         commit('showAlert', { type: 'danger', msg: res.data.Message })
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err.message)
+    //       commit('showAlert', { type: 'danger', msg: err.message })
+    //     })
+    // },
+    getLookups ({ state, commit }, query) {
       let dataQuery = {
         'LookupTableCode' : query.type,
         'BranchId' : state.BranchId,
@@ -461,13 +487,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getLookups ({ state, commit }, query) {
+    getLookupsWithUpperValue ({ state, commit }, query) {
       let dataQuery = {
         'LookupTableCode' : query.type,
         'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId
+        'CompanyId' : state.CompanyId,
+        'UpperValue': query.upperValue
       }
-      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setValues', {data: res.data, name: query.name})
@@ -587,6 +614,50 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setEmployees', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getVehiclesByBranchId({state, commit}) {
+      let dataQuery = {
+        'AndConditionModel': {},
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setVehicles', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getRouteTypesByBranchId({state, commit}) {
+      let dataQuery = {
+        'AndConditionModel': {},
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post('VisionNextRoute/api/RouteType/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setRouteTypes', res.data.ListModel.BaseModels)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -787,6 +858,12 @@ export const store = new Vuex.Store({
     },
     setBranch(state, payload) {
       state.branch = payload
+    },
+    setVehicles(state, payload) {
+      state.vehicles = payload
+    },
+    setRouteTypes(state, payload) {
+      state.routeTypes = payload
     }
   }
 })
