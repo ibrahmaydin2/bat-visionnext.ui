@@ -11,13 +11,15 @@
       <b-col cols="2" md="4" lg="2" class="asc__header-userBox d-flex align-items-center justify-content-end">
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-lg-inline-block">
           <template v-slot:button-content>
-            <i class="fas fa-network-wired" /> {{loginUser.company}}
+            <i class="fas fa-network-wired" /> {{loginUser.branch}}
           </template>
           <b-dropdown-header id="dropdown-header-label">
             <i class="fas fa-network-wired" /> {{$t('general.branches')}}
           </b-dropdown-header>
           <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
-            {{branch.Desciption}}
+            <span @click="changeBranch(branch)">
+              {{branch.Desciption}}
+            </span>
           </b-dropdown-item>
         </b-dropdown>
         <b-dropdown right id="asc__header-userBox" variant="white" class="d-none d-md-inline-block">
@@ -30,7 +32,7 @@
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
         </b-dropdown>
 
-        <div class="position-relative">
+        <div class="position-relative d-none">
           <span class="asc__count">{{notify.length}}</span>
           <b-dropdown class="asc__notification" size="lg" no-caret >
             <template v-slot:button-content>
@@ -50,7 +52,7 @@
             </b-dropdown-item>
           </b-dropdown>
         </div>
-        <i id="shortcutsIcon" class="fa fa-star" v-b-toggle.sidebar-right></i>
+        <i id="shortcutsIcon" class="fa fa-star d-none" v-b-toggle.sidebar-right></i>
 
         <b-button class="d-inline-block d-lg-none float-right text-light" variant="default" @click="collapseNav()">
           <i :class="hamburgerIcon" />
@@ -99,7 +101,7 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   computed: {
-    ...mapState(['logo', 'loginUser', 'style', 'notify'])
+    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId'])
   },
   methods: {
     ...mapMutations(['hamburger', 'logout']),
@@ -117,6 +119,14 @@ export default {
     handleResize () {
       this.windowWidth = window.innerWidth
       this.windowHeight = window.innerHeight
+    },
+    changeBranch (e) {
+      this.$store.commit('userIDs', {
+        company: localStorage.getItem('CompanyId'),
+        companyName: e.CommercialTitle,
+        branch: e.Id,
+        branchName: e.Desciption
+      })
     },
     changeLang () {
       switch (this.$i18n.locale) {

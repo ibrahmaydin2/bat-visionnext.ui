@@ -1,29 +1,29 @@
 <template>
+  <div class="asc__dashboard">
     <draggable
       :list="chartList"
       tag="div"
       :group="{ name: 'row' }"
-      class="asc__dashboard"
+      class="row"
       handle=".handle"
     >
-      <masonry class="row">
-        <b-col cols="12" class="mb-4" v-for="(chart, i) in chartList" :key="'chart' + i">
-          <b-card class="asc__dashboard-card">
-            <i class="fas fa-arrows-alt handle asc__dashboard-move-icon" />
-            <h5 class="asc__dashboard-title">{{chart.title}}</h5>
-            <!-- <i :class="collapseIcon === true ? 'far fa-caret-square-up' : 'far fa-caret-square-down'" class="asc__dashboard-collapse" v-b-toggle="'dashboardCard-' + i" /> -->
-            <div class="clearfix" />
-            <!-- <b-collapse :id="'dashboardCard-' + i" v-model="collapseIcon" v-once> -->
-              <GChart
-                type="ColumnChart"
-                :data="chartData"
-                :options="chartOptions"
-              />
-            <!-- </b-collapse> -->
-          </b-card>
-        </b-col>
-      </masonry>
+      <b-col cols="12" md="6" class="mb-4" v-for="(chart, i) in chartList" :key="'chart' + i">
+        <b-card class="asc__dashboard-card">
+          <i class="fas fa-arrows-alt handle asc__dashboard-move-icon" />
+          <h5 class="asc__dashboard-title">{{chart.title}}</h5>
+          <!-- <i :class="collapseIcon === true ? 'far fa-caret-square-up' : 'far fa-caret-square-down'" class="asc__dashboard-collapse" v-b-toggle="'dashboardCard-' + i" /> -->
+          <div class="clearfix" />
+          <!-- <b-collapse :id="'dashboardCard-' + i" v-model="collapseIcon" v-once> -->
+            <GChart
+              type="ColumnChart"
+              :data="chartData"
+              :options="chartOptions"
+            />
+          <!-- </b-collapse> -->
+        </b-card>
+      </b-col>
     </draggable>
+  </div>
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
@@ -85,6 +85,7 @@ export default {
     height: calc(100vh - 55px)
     margin-top: -5px
     padding: 15px 0
+    margin-bottom: 2rem
     .asc__create-req-btn
       color: #f08c00 !important
       border-color: #f08c0 !important

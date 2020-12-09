@@ -12,7 +12,6 @@
   </div>
 </template>
 <script>
-import { items, shortcut } from './nav.js'
 import MegaMenu from './MegaMenu'
 import { mapState } from 'vuex'
 export default {
@@ -21,8 +20,6 @@ export default {
   },
   data () {
     return {
-      shortcut: shortcut,
-      items: items
     }
   },
   mounted () {

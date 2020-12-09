@@ -24,7 +24,8 @@ import Sortable from 'vue-sortable'
 
 import draggable from 'vuedraggable'
 import VueGoogleCharts from 'vue-google-charts'
-import VueMasonry from 'vue-masonry-css'
+
+import {VueMasonryPlugin} from 'vue-masonry'
 
 import Nextgrid from './components/NextGrid'
 import Carousel from './components/Carousel'
@@ -50,7 +51,8 @@ Vue.use(Vuelidate)
 Vue.use(Autocomplete)
 Vue.use(VueTheMask)
 Vue.use(VueGoogleCharts)
-Vue.use(VueMasonry)
+Vue.use(VueMasonryPlugin)
+
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
 Vue.component('Carousel', Carousel)

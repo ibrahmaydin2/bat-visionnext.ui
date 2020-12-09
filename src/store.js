@@ -21,11 +21,18 @@ let authHeader = {
   }
 }
 
-let authCompanyAndBranch = {
-  'CompanyId' : 1,
-  'BranchId' : 1,
+let authCompanyAndBranch = {}
+if (localStorage.getItem('BranchId')) {
+  authCompanyAndBranch = {
+    'CompanyId' : localStorage.getItem('CompanyId'),
+    'BranchId' : localStorage.getItem('BranchId')
+  }
+} else {
+  authCompanyAndBranch = {
+    'CompanyId' : 1,
+    'BranchId' : 1
+  }
 }
-
 export const store = new Vuex.Store({
   state: {
     // sistem gereksinimleri
@@ -56,7 +63,8 @@ export const store = new Vuex.Store({
     loginUser: {
       signed: localStorage.getItem('signed'),
       name: user ? user.Name + ' ' + user.Surname : null,
-      company: user? user.AuthorizedBranches[0].Desciption : null
+      company: localStorage.getItem('companyName') ? localStorage.getItem('companyName') : null,
+      branch: localStorage.getItem('branchName') ? localStorage.getItem('branchName') : null
     },
     notify: [
       {
@@ -87,8 +95,8 @@ export const store = new Vuex.Store({
     ],
     errorView: false,
     errorData: [],
-    BranchId: 1,
-    CompanyId: 1,
+    CompanyId: localStorage.getItem('CompanyId') ? localStorage.getItem('CompanyId') : 1,
+    BranchId: localStorage.getItem('BranchId') ? localStorage.getItem('BranchId') : 1,
     nextgrid: false,
     createCode: null,
     navigation: [],
@@ -370,8 +378,8 @@ export const store = new Vuex.Store({
     },
     createData ({ commit }, query) {
       let dataQuery = {
-        'branchId': 1,
-        'companyId': 1,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -401,8 +409,8 @@ export const store = new Vuex.Store({
     },
     updateData ({ commit }, query) {
       let dataQuery = {
-        'branchId': 1,
-        'companyId': 1,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -827,9 +835,23 @@ export const store = new Vuex.Store({
         }
       }
       authCompanyAndBranch = {
-        'CompanyId' : 1,
-        'BranchId' : 1,
+        'CompanyId' : localStorage.getItem('CompanyId'),
+        'BranchId' : localStorage.getItem('BranchId')
       }
+      store.commit('userIDs', {company: user.AuthorizedCompanies[0].Id, branch: user.AuthorizedBranches[0].Id, branchName: user.AuthorizedBranches[0].Desciption})
+      // router.push({name: 'Dashboard'})
+    },
+    userIDs (state, payload) {
+      localStorage.setItem('CompanyId', payload.company)
+      localStorage.setItem('BranchId', payload.branch)
+      state.CompanyId = localStorage.getItem('CompanyId')
+      state.BranchId = localStorage.getItem('BranchId')
+      
+      localStorage.setItem('companyName', payload.companyName)
+      localStorage.setItem('branchName', payload.branchName)
+
+      state.loginUser.company = localStorage.getItem('companyName')
+      state.loginUser.branch = localStorage.getItem('branchName')
       router.push({name: 'Dashboard'})
     },
     logout () {

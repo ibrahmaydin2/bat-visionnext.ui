@@ -331,10 +331,10 @@ export default {
           deleted: 0,
           eInvoiceSeqs: [
             {
-                "recordId": 82457596
+              'recordId': 82457596
             }
           ]
-        },
+        }
       },
       disabledCustomer: true,
       type: '',
@@ -366,7 +366,7 @@ export default {
       this.$store.dispatch('getBranchData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
     },
     getLookup () {
-      //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
       this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_TYPE', name: 'employeeTypes'})
       this.$store.dispatch('getLookups', {...this.query, type: 'EDUCATION', name: 'educationStatus'})
       this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_GROUP', name: 'employeeGroups'})

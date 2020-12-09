@@ -6,10 +6,17 @@
           <i :class="links.icon ? 'fas ' + links.icon : 'far fa-circle'" />{{ links.title }}
         </span>
         <ul>
-          <li v-for="(subs, x) in links.sub" :key="'sub' + x" class="asc__item-head-title-li">
+          <li v-for="(subs, x) in links.sub" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
             <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
+            <ul v-if="subs.sub">
+              <li v-for="(three, y) in subs.sub" :key="'three' + y">
+                <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }}" @click.native="closeHeader()">
+                  <i :class="three.icon ? 'fas ' + three.icon : 'far fa-circle'" />{{ three.title }}
+                </router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </template>
@@ -63,11 +70,15 @@ export default {
         width: 100%
       & li
         width: 100%
+        position: relative
         display: block
         list-style: none
         color: #ffffff
+        line-height: 30px
+        margin: 0px
         & ul
           position: fixed
+          z-index: 3
           visibility: hidden
           left: 230px
           width: calc( 100% - 230px )
@@ -78,32 +89,58 @@ export default {
           overflow-x: auto
           border-radius: 0 0 20px 0
           & li
-            padding: 0px
-            display: block
-            width: 100%
-            margin: 0px
-            font-weight: bold
+            width: 300px
             border-bottom: 1px #ddd solid
-            width: calc( 100% / 3 )
             & i
               width: 30px
               color: #e88000
             &:last-child
               border-bottom: none
+            & ul
+              position: fixed
+              border-top: 1px #e88000 solid
+              visibility: hidden
+              left: calc(230px + 308px)
+              width: 300px
+              height: 310px
+              top: 8px
+              background: #f2f2f2
+              padding: .5rem 1rem 2rem .5rem
+              overflow-x: auto
+              border-radius: 0 20px 20px 0
+              & li
+                padding: 0px
+                display: block
+                width: 300px
+                margin: 0px
+                border-bottom: 1px #ddd solid
+                & i
+                  width: 30px
+                  color: #e88000 !important
+                &:last-child
+                  border-bottom: none
+                & a
+                  color: #000 !important
         & a
-          color: #ffffff
+          color: #6e6e6e
+          font-size: 12px
           display: block
         &:hover
           background: #fff
           border-radius: 3px 0 0 3px
           color: #000
-          & a
-            color: #000000
-            text-decoration: none
-            &:hover
-              color: #e88000
           & ul
             visibility: visible
+            & li
+              transition: .3s
+              &:hover
+                border-bottom: 1px #e88000 solid
+                transition: .3s
+              & ul
+                visibility: hidden
+              &:hover
+                & ul
+                  visibility: visible
     .dropdown-menu.show
       display: flex
       transform: unset !important
@@ -123,14 +160,20 @@ export default {
       font-size: 12px
       & i
         width: 30px
-    .asc__item-head-title-li
-      width: 100%
-      line-height: 30px
-      list-style: circle !important
-      margin-left: 0px !important
-    .asc__item-title
-      color: #6e6e6e
-      font-size: 12px
-  .ls-none
-    list-style: none !important
+  .asc__item-head-li
+    & a
+      text-decoration: none
+      padding-left: 10px
+      color: #e88000
+  .asc__item-head-li-sub
+    &:hover
+      background: #e88000 !important
+      color: #fff !important
+      & a
+        color: #fff !important
+        & i
+          color: #fff !important
+      & li
+        & a
+          color: #000
 </style>
