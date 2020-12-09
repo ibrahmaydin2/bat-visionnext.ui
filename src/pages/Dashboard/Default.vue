@@ -1,60 +1,29 @@
 <template>
-  <b-row class="asc__dashboard">
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="ColumnChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="PieChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="BarChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="ComboChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="LineChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-    <b-col cols="12" sm="6" lg="6" xl="6">
-      <b-card title="Dummy">
-        <GChart
-          type="ColumnChart"
-          :data="chartData"
-          :options="chartOptions"
-        />
-      </b-card>
-    </b-col>
-  </b-row>
+    <draggable
+      :list="chartList"
+      tag="div"
+      :group="{ name: 'row' }"
+      class="asc__dashboard"
+      handle=".handle"
+    >
+      <masonry class="row">
+        <b-col cols="12" class="mb-4" v-for="(chart, i) in chartList" :key="'chart' + i">
+          <b-card class="asc__dashboard-card">
+            <i class="fas fa-arrows-alt handle asc__dashboard-move-icon" />
+            <h5 class="asc__dashboard-title">{{chart.title}}</h5>
+            <!-- <i :class="collapseIcon === true ? 'far fa-caret-square-up' : 'far fa-caret-square-down'" class="asc__dashboard-collapse" v-b-toggle="'dashboardCard-' + i" /> -->
+            <div class="clearfix" />
+            <!-- <b-collapse :id="'dashboardCard-' + i" v-model="collapseIcon" v-once> -->
+              <GChart
+                type="ColumnChart"
+                :data="chartData"
+                :options="chartOptions"
+              />
+            <!-- </b-collapse> -->
+          </b-card>
+        </b-col>
+      </masonry>
+    </draggable>
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
@@ -66,6 +35,16 @@ export default {
   },
   data () {
     return {
+      collapseIcon: true,
+      chartList: [
+        {title: 'dummy 1'},
+        {title: 'dummy 2'},
+        {title: 'dummy 3'},
+        {title: 'dummy 4'},
+        {title: 'dummy 5'},
+        {title: 'dummy 6'},
+        {title: 'dummy 7'}
+      ],
       chartData: [
         ['Year', 'Sales', 'Expenses', 'Profit'],
         ['2017', 1000, 400, 200],
@@ -113,6 +92,22 @@ export default {
         color: white !important
         background-color: #f08c00 !important
         border-color: #f08c00 !important
+    .asc__dashboard-card
+      .asc__dashboard-title
+        float: left
+      .asc__dashboard-collapse
+        float: right
+      .asc__dashboard-move-icon
+        float: left
+        cursor: move
+        color: #fff
+        transition: .3s
+        line-height: 26px
+        width: 20px
+      &:hover
+        .asc__dashboard-move-icon
+          color: #333
+          transition: .3s
   .asc__card-mainTitle
     font-weight: bold
     font-style: italic

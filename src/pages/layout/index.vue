@@ -9,7 +9,7 @@
             <b-card class="asc__listPage shadow">
               <b-row class="asc__listPage-Header">
                 <b-col cols="12" sm="12" md="3" class="pl-0">
-                  <h3>{{tableOperations.Name}}</h3>
+                  <h3>{{tableOperations.Title}}</h3>
                 </b-col>
                 <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
                   <b-button v-if="filterbtn" variant="info" size="sm" @click="clearFilters">

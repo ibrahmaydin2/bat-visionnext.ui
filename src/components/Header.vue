@@ -14,7 +14,7 @@
             <i class="fas fa-network-wired" /> {{loginUser.company}}
           </template>
           <b-dropdown-header id="dropdown-header-label">
-            {{$t('general.branches')}}
+            <i class="fas fa-network-wired" /> {{$t('general.branches')}}
           </b-dropdown-header>
           <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
             {{branch.Desciption}}
@@ -207,8 +207,12 @@ export default {
         color: #fff
       .dropdown-menu
         width: 200px
+        max-height: 50vh
+        overflow-x: auto
+        padding-bottom: 15px
         .dropdown-item
           font-size: 12px
+          white-space: normal
   .dropdown.asc__notification
     button
       border: none
