@@ -735,7 +735,8 @@ export const store = new Vuex.Store({
       switch (payload.type) {
         case 'catch':
           if (payload.msg.status === 401) {
-            router.push({name: 'Login'})
+            console.log(payload.msg)
+            // router.push({name: 'Login'})
           }
           this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
             title: i18n.t('general.serverError'),
@@ -881,10 +882,6 @@ export const store = new Vuex.Store({
           'key': localStorage.getItem('Key')
         }
       }
-      authCompanyAndBranch = {
-        'CompanyId' : localStorage.getItem('CompanyId'),
-        'BranchId' : localStorage.getItem('BranchId')
-      }
       store.commit('userIDs', {company: user.AuthorizedCompanies[0].Id, branch: user.AuthorizedBranches[0].Id, branchName: user.AuthorizedBranches[0].Desciption})
       // router.push({name: 'Dashboard'})
     },
@@ -899,6 +896,18 @@ export const store = new Vuex.Store({
 
       state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.branch = localStorage.getItem('branchName')
+      authCompanyAndBranch = {
+        'CompanyId' : localStorage.getItem('CompanyId'),
+        'BranchId' : localStorage.getItem('BranchId')
+      }
+      console.log(payload)
+      console.log(state.CompanyId)
+      console.log(state.BranchId)
+      console.log(state.company)
+      console.log(state.branch)
+      console.log(localStorage.getItem('companyName'))
+      console.log(localStorage.getItem('branchName'))
+      
       router.push({name: 'Dashboard'})
     },
     logout () {
