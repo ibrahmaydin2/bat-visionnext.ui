@@ -140,12 +140,12 @@ export const store = new Vuex.Store({
     branch: [],
     vehicles: [],
     routeTypes: [],
+    customerLocationsList: [],
     //Route Lookups Values
     routeClasses: [],
     routeGroups: [],
     visitStartControls: [],
-    routeTypeOptions: []
-
+    routeTypeOptions: [],
   },
   actions: {
     // sistem gereksinimleri
@@ -549,7 +549,7 @@ export const store = new Vuex.Store({
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextCustomer/api/Customer/Search', dataQuery)
+      return axios.post('VisionNextCustomer/api/Customer/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setCustomerList', res.data.ListModel.BaseModels)
@@ -572,7 +572,7 @@ export const store = new Vuex.Store({
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextBranch/api/Branch/Search', dataQuery)
+      return axios.post('VisionNextBranch/api/Branch/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setBranchList', res.data.ListModel.BaseModels)
@@ -609,6 +609,29 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    // acCustomerLocation ({ state, commit }, query) {
+    //   let AndConditionModel = {}
+    //   AndConditionModel[query.searchField] = query.searchText
+    //   let dataQuery = {
+    //     AndConditionModel,
+    //     'branchId': state.BranchId,
+    //     'companyId': state.CompanyId,
+    //     'pagerecordCount': 50,
+    //     'page': 1
+    //   }
+    //   return axios.post('VisionNextCustomer/api/CustomerLocation/Search', dataQuery, authHeader)
+    //     .then(res => {
+    //       if (res.data.IsCompleted === true) {
+    //         commit('setCustomerLocationsList', res.data.ListModel.BaseModels)
+    //       } else {
+    //         commit('showAlert', { type: 'danger', msg: res.data.Message })
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err.message)
+    //       commit('showAlert', { type: 'danger', msg: err.message })
+    //     })
+    // },
     getEmployeesByBranchId({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
@@ -674,7 +697,31 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-    }
+    },
+    getCustomerLocationByCustomerIds({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+          'customerIds': query.customerIds,
+          // 'isRouteNode': 1
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCustomer/api/CustomerLocation/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerLocationsList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
   },
   mutations: {
     setError (state, payload) {
@@ -886,6 +933,9 @@ export const store = new Vuex.Store({
     },
     setRouteTypes(state, payload) {
       state.routeTypes = payload
+    },
+    setCustomerLocationsList(state, payload) {
+      state.customerLocationsList = payload
     }
   }
 })

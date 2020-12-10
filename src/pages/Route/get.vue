@@ -58,14 +58,42 @@
             <b-col cols="12" md="8">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.locations')}}</h6>
-                <b-table responsive :items="tempItems" :fields="fields">
+                <!-- <b-table responsive :items="rowData.routeDetails" :fields="fields">
                   <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                    {{data}}
                   </template>
                   <template #cell(visit)="data">
                     <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
                   </template>
-                </b-table>
+                </b-table> -->
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day4VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('list.operations')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.RouteDetails" :key="i">
+                      <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
+                      <b-td>{{r.Location ? r.Location.Label : ''}}</b-td>
+                      <b-td>{{r.Day1VisitOrder}}</b-td>
+                      <b-td>{{r.Day2VisitOrder}}</b-td>
+                      <b-td>{{r.Day3VisitOrder}}</b-td>
+                      <b-td>{{r.Day4VisitOrder}}</b-td>
+                      <b-td>{{r.Day5VisitOrder}}</b-td>
+                      <b-td>{{r.Day6VisitOrder}}</b-td>
+                      <b-td>{{r.Day7VisitOrder}}</b-td>
+                      <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
