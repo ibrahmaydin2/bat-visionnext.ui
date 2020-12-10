@@ -132,64 +132,108 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.CustomerId')">
-                <b-form-input type="text" v-model="form.CustomerId" />
+                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.CommercialTitle }}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.LocationId')">
-                <b-form-input type="text" v-model="form.LocationId" />
+                <v-select label="Description1" :options="customerLocationsList" @input="selectedCustomerLocation">
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day1VisitOrder')">
-                <b-form-input type="text" v-model="form.Day1VisitOrder" />
+                <b-form-input type="number" v-model="Day1VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day2VisitOrder')">
-                <b-form-input type="text" v-model="form.Day2VisitOrder" />
+                <b-form-input type="number" v-model="Day2VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day3VisitOrder')">
-                <b-form-input type="text" v-model="form.Day3VisitOrder" />
+                <b-form-input type="number" v-model="Day3VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day4VisitOrder')">
-                <b-form-input type="text" v-model="form.Day4VisitOrder" />
+                <b-form-input type="number" v-model="Day4VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day5VisitOrder')">
-                <b-form-input type="text" v-model="form.Day5VisitOrder" />
+                <b-form-input type="number" v-model="Day5VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day6VisitOrder')">
-                <b-form-input type="text" v-model="form.Day6VisitOrder" />
+                <b-form-input type="number" v-model="Day6VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="1">
               <b-form-group :label="$t('insert.route.Day7VisitOrder')">
-                <b-form-input type="text" v-model="form.Day7VisitOrder" />
+                <b-form-input type="number" v-model="Day7VisitOrder" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.Day1FreStartDate')">
-                <b-form-input type="text" v-model="form.Day1FreStartDate" />
+                <b-form-datepicker 
+                  v-model="DaysFreStartDate" 
+                  locale="tr"
+                  class="mb-2"
+                  :value-as-date="true"
+                >
+                </b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.Day1Frequency')">
-                <b-form-input type="text" v-model="form.Day1Frequency" />
+                <b-form-input type="number" v-model="DaysFrequency" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group>
-                <b-button class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addCustomerLocation" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
+          </b-row>
+          <b-row v-if="form.model.routeDetails.length > 0">
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day4VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.routeDetails" :key="'dl' + i">
+                  <b-td>{{r.CustomerId}}</b-td>
+                  <b-td>{{r.LocationId}}</b-td>
+                  <b-td>{{r.Day1VisitOrder}}</b-td>
+                  <b-td>{{r.Day2VisitOrder}}</b-td>
+                  <b-td>{{r.Day3VisitOrder}}</b-td>
+                  <b-td>{{r.Day4VisitOrder}}</b-td>
+                  <b-td>{{r.Day5VisitOrder}}</b-td>
+                  <b-td>{{r.Day6VisitOrder}}</b-td>
+                  <b-td>{{r.Day7VisitOrder}}</b-td>
+                  <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -198,8 +242,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {
@@ -218,8 +264,8 @@ export default {
           visitStartControlId: null,
           cityId: null,
           districtId: null,
-          parishId: null,
-          routeDetails: null,
+          parishIds: [],
+          routeDetails: [],
           deleted: null,
           recordId: null
         }
@@ -236,11 +282,24 @@ export default {
       city: null,
       district: null,
       parish: null,
-      visitStartControl: null
+      visitStartControl: null,
+      selectedParishes: [],
+      Day1VisitOrder: null,
+      Day2VisitOrder: null,
+      Day3VisitOrder: null,
+      Day4VisitOrder: null,
+      Day5VisitOrder: null,
+      Day6VisitOrder: null,
+      Day7VisitOrder: null,
+      DaysFreStartDate: null,
+      DaysFrequency: null,
+      selectedCustomerArr: [],
+      selectedLocationArr: [],
+      customerLocationTable: []
     }
   },
   computed: {
-    ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions'])
+    ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList'])
   },
   mounted () {
     // this.$store.commit('setCities', false)
@@ -345,6 +404,72 @@ export default {
       } else {
         this.form.model.customerRegion5Id = null
       }
+    },
+    onCustomerSearch (search) {
+      if (search.length >= 3) {
+        this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
+      }
+    },
+    selectedCustomer (e) {
+      if (e) {
+        this.selectedCustomerArr = e
+        this.$store.dispatch('getCustomerLocationByCustomerIds', {...this.query, customerIds: [e.RecordId]})
+      } else {
+        this.selectedCustomerArr = []
+        this.selectedLocationArr = []
+      }
+    },
+    selectedCustomerLocation (e) {
+        if (e) {
+          this.selectedLocationArr = e
+        } else {
+          this.selectedLocationArr = []
+        }
+    },
+    addCustomerLocation() {
+      if (this.selectedCustomerArr.length < 1 || this.selectedLocationArr < 1) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      let date = this.dateConvertToISo(this.DaysFreStartDate)
+      this.form.model.routeDetails.push({
+        CustomerId: this.selectedCustomerArr.RecordId,
+        LocationId: this.selectedLocationArr.RecordId,
+        Day1Frequency: this.DaysFrequency,
+        Day1FreStartDate: date,
+        Day1VisitOrder: this.Day1VisitOrder,
+        Day2Frequency: this.DaysFrequency,
+        Day2FreStartDate: date,
+        Day2VisitOrder: this.Day2VisitOrder,
+        Day3Frequency: this.DaysFrequency,
+        Day3FreStartDate: date,
+        Day3VisitOrder: this.Day3VisitOrder,
+        Day4Frequency: this.DaysFrequency,
+        Day4FreStartDate: date,
+        Day4VisitOrder: this.Day4VisitOrder,
+        Day5Frequency: this.DaysFrequency,
+        Day5FreStartDate: date,
+        Day5VisitOrder: this.Day5VisitOrder,
+        Day6Frequency: this.DaysFrequency,
+        Day6FreStartDate: date,
+        Day6VisitOrder: this.Day6VisitOrder,
+        Day7Frequency: this.DaysFrequency,
+        Day7FreStartDate: date,
+        Day7VisitOrder: this.Day7VisitOrder,
+        StatusId: 1,
+        RecordState: 2,
+        AnnualVisitCount: null, // Hesaplaması var öğrenilecek
+      })
+
+      this.selectedCustomerArr = []
+      this.selectedLocationArr = []
+    },
+    removeRouteDetails (item) {
+      this.form.model.routeDetails.splice(this.form.model.routeDetails.indexOf(item), 1)
     }
   },
   watch: {
