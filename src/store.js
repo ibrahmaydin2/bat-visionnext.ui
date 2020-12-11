@@ -376,7 +376,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
-    createData ({ commit }, query) {
+    createData ({ state, commit }, query) {
       let dataQuery = {
         'BranchId' : state.BranchId,
         'CompanyId' : state.CompanyId,
@@ -407,7 +407,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
-    updateData ({ commit }, query) {
+    updateData ({ state, commit }, query) {
       let dataQuery = {
         'BranchId' : state.BranchId,
         'CompanyId' : state.CompanyId,
