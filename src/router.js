@@ -375,6 +375,11 @@ import WarehouseStockGet from '@/pages/WarehouseStock/get'
 import WarehouseStockInsert from '@/pages/WarehouseStock/insert'
 import WarehouseStockUpdate from '@/pages/WarehouseStock/update'
 
+import FixedTermIndex from '@/pages/FixedTerm/'
+import FixedTermGet from '@/pages/FixedTerm/get'
+import FixedTermInsert from '@/pages/FixedTerm/insert'
+import FixedTermUpdate from '@/pages/FixedTerm/update'
+
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
 import Register from '@/views/Auth/register'
@@ -475,7 +480,8 @@ const routes = [
           {path: '/FieldAnalysisResult', name: 'FieldAnalysisResult', component: FieldAnalysisResultIndex, meta: { title: i18n.t('router.FieldAnalysisResult'), createLink: 'FieldAnalysisResultInsert' }},
           {path: '/ItemAnalysisResult', name: 'ItemAnalysisResult', component: ItemAnalysisResultIndex, meta: { title: i18n.t('router.ItemAnalysisResult'), createLink: 'ItemAnalysisResultInsert' }},
           {path: '/FieldSurveyResult', name: 'FieldSurveyResult', component: FieldSurveyResultIndex, meta: { title: i18n.t('router.FieldSurveyResult'), createLink: 'FieldSurveyResultInsert' }},
-          {path: '/FieldSurvey', name: 'FieldSurvey', component: FieldSurveyIndex, meta: { title: i18n.t('router.FieldSurvey'), createLink: 'FieldSurveyInsert' }}
+          {path: '/FieldSurvey', name: 'FieldSurvey', component: FieldSurveyIndex, meta: { title: i18n.t('router.FieldSurvey'), createLink: 'FieldSurveyInsert' }},
+          {path: '/FixedTerm', name: 'FixedTerm', component: FixedTermIndex, meta: { title: i18n.t('router.FixedTerm'), createLink: 'FixedTermInsert' }},
         ]
       },
       {
@@ -552,7 +558,8 @@ const routes = [
           { path: '/FieldAnalysisResult/:url', name: 'FieldAnalysisResultGet', component: FieldAnalysisResultGet, meta: { title: i18n.t('router.FieldAnalysisResultGet'), baseLink: 'FieldAnalysisResult' } },
           { path: '/ItemAnalysisResult/:url', name: 'ItemAnalysisResultGet', component: ItemAnalysisResultGet, meta: { title: i18n.t('router.ItemAnalysisResultGet'), baseLink: 'ItemAnalysisResult' } },
           { path: '/FieldSurveyResult/:url', name: 'FieldSurveyResultGet', component: FieldSurveyResultGet, meta: { title: i18n.t('router.FieldSurveyResultGet'), baseLink: 'FieldSurveyResult' } },
-          { path: '/FieldSurvey/:url', name: 'FieldSurveyGet', component: FieldSurveyGet, meta: { title: i18n.t('router.FieldSurveyGet'), baseLink: 'FieldSurvey' } }
+          { path: '/FieldSurvey/:url', name: 'FieldSurveyGet', component: FieldSurveyGet, meta: { title: i18n.t('router.FieldSurveyGet'), baseLink: 'FieldSurvey' } },
+          { path: '/FixedTerm/:url', name: 'FixedTermGet', component: FixedTermGet, meta: { title: i18n.t('router.FixedTermGet'), baseLink: 'FixedTerm' } },
         ]
       },
       {
@@ -630,7 +637,8 @@ const routes = [
           { path: '/Update/FieldAnalysisResultUpdate/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResultUpdate' } },
           { path: '/Update/ItemAnalysisResultUpdate/:url', name: 'ItemAnalysisResultUpdate', component: ItemAnalysisResultUpdate, meta: { title: i18n.t('router.ItemAnalysisResultUpdate'), baseLink: 'ItemAnalysisResultUpdate' } },
           { path: '/Update/FieldSurveyResultUpdate/:url', name: 'FieldSurveyResultUpdate', component: FieldSurveyResultUpdate, meta: { title: i18n.t('router.FieldSurveyResultUpdate'), baseLink: 'FieldSurveyResultUpdate' } },
-          { path: '/Update/FieldSurveyUpdate/:url', name: 'FieldSurveyUpdate', component: FieldSurveyUpdate, meta: { title: i18n.t('router.FieldSurveyUpdate'), baseLink: 'FieldSurveyUpdate' } }
+          { path: '/Update/FieldSurveyUpdate/:url', name: 'FieldSurveyUpdate', component: FieldSurveyUpdate, meta: { title: i18n.t('router.FieldSurveyUpdate'), baseLink: 'FieldSurveyUpdate' } },
+          { path: '/Update/FixedTerm/:url', name: 'FixedTermUpdate', component: FixedTermUpdate, meta: { title: i18n.t('router.FixedTermUpdate'), baseLink: 'FixedTerm' } }
         ]
       },
       {
@@ -707,7 +715,9 @@ const routes = [
           { path: '/Insert/FieldAnalysisResultInsert', name: 'FieldAnalysisResultInsert', component: FieldAnalysisResultInsert, meta: { title: i18n.t('router.FieldAnalysisResultInsert'), baseLink: 'FieldAnalysisResult' } },
           { path: '/Insert/ItemAnalysisResultInsert', name: 'ItemAnalysisResultInsert', component: ItemAnalysisResultInsert, meta: { title: i18n.t('router.ItemAnalysisResultInsert'), baseLink: 'ItemAnalysisResult' } },
           { path: '/Insert/FieldSurveyResultInsert', name: 'FieldSurveyResultInsert', component: FieldSurveyResultInsert, meta: { title: i18n.t('router.FieldSurveyResultInsert'), baseLink: 'FieldSurveyResult' } },
-          { path: '/Insert/FieldSurveyInsert', name: 'FieldSurveyInsert', component: FieldSurveyInsert, meta: { title: i18n.t('router.FieldSurveyInsert'), baseLink: 'FieldSurvey' } }
+          { path: '/Insert/FieldSurveyInsert', name: 'FieldSurveyInsert', component: FieldSurveyInsert, meta: { title: i18n.t('router.FieldSurveyInsert'), baseLink: 'FieldSurvey' } },
+          { path: '/Insert/FixedTerm', name: 'FixedTermInsert', component: FixedTermInsert, meta: { title: i18n.t('router.FixedTermInsert'), baseLink: 'FixedTerm' } }
+
         ]
       }
     ]
