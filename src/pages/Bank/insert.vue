@@ -22,7 +22,7 @@
             <b-form-group
               :label="$t('insert.bank.code')"
             >
-              <b-form-input type="text" v-model="form.model.code" readonly />
+              <b-form-input type="text" v-model="form.model.code"  />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
@@ -58,7 +58,7 @@
             <b-thead>
               <b-th width="20%">
                 <b-form-group :label="$t('insert.bank.branchCode')">
-                  <b-form-input type="text" v-model="branchCode" readonly />
+                  <b-form-input type="text" v-model="branchCode"  />
                 </b-form-group>
               </b-th>
               <b-th width="30%">
@@ -82,6 +82,7 @@
                   </b-form-checkbox>
                 </b-form-group>
               </b-th>
+
               <b-th width="10%">
                 <b-form-group>
                   <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
@@ -90,6 +91,7 @@
             </b-thead>
             <b-tbody>
               <b-tr v-for="(r, i) in form.model.bankBranches" :key="i">
+                <b-td></b-td>
                 <b-td>{{r.description1}}</b-td>
                 <b-td>{{r.financeCode}}</b-td>
                 <b-td>{{r.defaultAccountNumber}}</b-td>
@@ -124,8 +126,7 @@ export default {
       branchCode: null,
       branchDescription1: null,
       branchFinansCode: null,
-      defaultAccountNumber: null,
-      isDefaultBranch: null
+      defaultAccountNumber: null
     }
   },
   computed: {
@@ -148,14 +149,14 @@ export default {
         description1: this.branchDescription1,
         financeCode: this.branchFinansCode,
         defaultAccountNumber: this.defaultAccountNumber,
-        isDefaultBranch: this.isDefaultBranch,
+        isDefaultBranch: this.isDefaultBranch ? 1 : 0,
         recordState: 2,
         statusId: 1
       })
       this.branchDescription1 = null
       this.branchFinansCode = null
       this.defaultAccountNumber = null
-      this.isDefaultBranch = null
+      this.isDefaultBranch = 0
       this.branchCode++
     },
     removeBankBranch (item) {
