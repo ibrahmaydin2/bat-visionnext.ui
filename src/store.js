@@ -154,6 +154,43 @@ export const store = new Vuex.Store({
     routeGroups: [],
     visitStartControls: [],
     routeTypeOptions: [],
+    //Customer
+    customerCardTypes: [],
+    cancelReasons: [],
+    customerTypes: [],
+    blockReasons: [],
+    customerTaxTypes: [],
+    customerInvoiceTypes: [],
+    customerCategory1: [],
+    customerCategory2: [],
+    customerCategory3: [],
+    customerGroups: [],
+    customerClass: [],
+    salesDocumentTypes: [],
+    ownerTypes: [],
+    classProposals: [],
+    classProposalReasons: [],
+    customerSalesMethods: [],
+    geographicEnvironments: [],
+    customerTradeFocus: [],
+    invoiceCombineRules: [],
+    backMarginGroups: [],
+    discountGroups1: [],
+    discountGroups3: [],
+    discountGroups4: [],
+    discountGroups5: [],
+    discountGroups6: [],
+    discountGroups7: [],
+    discountGroups8: [],
+    customerKinds: [],
+    creditDescriptions: [],
+    holdAssets: [],
+    contracteds: [],
+    discountGroups10: [],
+    discountGroups2: [],
+    discountGroups9: [],
+    signNameIds: [],
+
   },
   actions: {
     // sistem gereksinimleri
@@ -761,6 +798,50 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getCustomerCardType({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCustomer/api/CustomerCardType/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerCardTypes', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getCustomerCancelReasons({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCommonApi/api/CancelReason/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCancelReasons', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
   },
   mutations: {
     setError (state, payload) {
@@ -995,6 +1076,12 @@ export const store = new Vuex.Store({
     },
     setCustomerLocationsList(state, payload) {
       state.customerLocationsList = payload
+    },
+    setCustomerCardTypes(state, payload) {
+      state.customerCardTypes = payload
+    },
+    setCancelReasons(state, payload) {
+      state.cancelReasons = payload
     }
   }
 })
