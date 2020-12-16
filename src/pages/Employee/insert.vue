@@ -21,18 +21,20 @@
            <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.Model_Code')"
+              :class="{ 'form-group--error': $v.form.model.code.$error }"
             >
               <b-form-input type="text" v-model="form.model.code" readonly />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.employee.Model_Name')">
+            <b-form-group :label="$t('insert.employee.Model_Name')" :class="{ 'form-group--error': $v.form.model.name.$error }">
               <b-form-input type="text" v-model="form.model.name" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.Model_Surname')"
+              :class="{ 'form-group--error': $v.form.model.surname.$error }"
             >
               <b-form-input type="text" v-model="form.model.surname" />
             </b-form-group>
@@ -40,6 +42,7 @@
           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.state')"
+              :class="{ 'form-group--error': $v.form.model.statusId.$error }"
             >
               <b-form-checkbox v-model="statusId" name="check-button" switch>
                 {{(statusId) ? $t('insert.active'): $t('insert.passive')}}
@@ -114,7 +117,7 @@
         <b-tab :title="$t('insert.employee.group')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.personalType')">
+              <b-form-group :label="$t('insert.employee.personalType')" :class="{ 'form-group--error': $v.form.model.typeId.$error }">
                 <v-select :options="employeeTypes" @input="selectedType" label="Label"></v-select>
               </b-form-group>
             </b-col>
@@ -181,7 +184,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_Identificationnumber')">
+              <b-form-group :label="$t('insert.employee.Model_Identificationnumber')" :class="{ 'form-group--error': $v.form.model.taxNumber.$error }">
                 <b-form-input type="text" v-model="form.model.taxNumber" />
               </b-form-group>
             </b-col>
@@ -230,7 +233,7 @@
         <b-tab :title="$t('insert.employee.EmployeeContact')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_GsmNumber')">
+              <b-form-group :label="$t('insert.employee.Model_GsmNumber')" :class="{ 'form-group--error': $v.form.model.gsmNumber.$error }">
                 <b-form-input type="text" v-model="form.model.gsmNumber" />
               </b-form-group>
             </b-col>
@@ -247,7 +250,7 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_Email')">
+              <b-form-group :label="$t('insert.employee.Model_Email')" :class="{ 'form-group--error': $v.form.model.email.$error }">
                 <b-form-input type="text" v-model="form.model.email" />
               </b-form-group>
             </b-col>
@@ -325,6 +328,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   data () {
@@ -354,7 +358,7 @@ export default {
           name: null,
           surname: null,
           groupId: null,
-          statusId: null,
+          statusId: 1,
           category1Id: null,
           other1: null,
           isTeam: null,
@@ -376,6 +380,36 @@ export default {
       selectedEInvoice: [],
       statusId: true,
       isTeam: false,
+    }
+  },
+  validations: {
+    form: {
+      model: {
+        code: {
+          required
+        },
+        typeId: {
+          required
+        },
+        name: {
+          required
+        },
+        surname: {
+          required
+        },
+        statusId: {
+          required
+        },
+        taxNumber: {
+          required
+        },
+        gsmNumber: {
+          required
+        },
+        email: {
+          required
+        }
+      }
     }
   },
   computed: {
@@ -404,6 +438,12 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'SCORE_CARD_CLASS', name: 'scoreCards'})
     },
     save () {
+
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$toasted.show(this.$t('insert.fillRequired'), {type: 'error', keepOnHover: true, duration: '3000'})
+        return
+      }
       this.form.model.birthDate = this.form.model.birthDate ? new Date(this.form.model.birthDate).toISOString() : ''
       this.form.model.employmentStartDate = this.form.model.employmentStartDate ? new Date(this.form.model.employmentStartDate).toISOString() : ''
       this.form.model.employmentEndDate = this.form.model.employmentEndDate ? new Date(this.form.model.employmentEndDate).toISOString() : ''
