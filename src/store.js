@@ -22,6 +22,13 @@ let authHeader = {
 }
 
 let authCompanyAndBranch = {}
+let UserId = ''
+
+if (localStorage.getItem('UserId')) {
+  UserId = localStorage.getItem('UserId')
+} else {
+  UserId = 1
+}
 if (localStorage.getItem('BranchId')) {
   authCompanyAndBranch = {
     'CompanyId' : localStorage.getItem('CompanyId'),
@@ -66,6 +73,9 @@ export const store = new Vuex.Store({
       company: localStorage.getItem('companyName') ? localStorage.getItem('companyName') : null,
       branch: localStorage.getItem('branchName') ? localStorage.getItem('branchName') : null
     },
+    UserId: localStorage.getItem('UserId') ? localStorage.getItem('UserId') : 1,
+    CompanyId: localStorage.getItem('CompanyId') ? localStorage.getItem('CompanyId') : 1,
+    BranchId: localStorage.getItem('BranchId') ? localStorage.getItem('BranchId') : 1,
     notify: [
       {
         title: 'notify 1',
@@ -95,8 +105,6 @@ export const store = new Vuex.Store({
     ],
     errorView: false,
     errorData: [],
-    CompanyId: localStorage.getItem('CompanyId') ? localStorage.getItem('CompanyId') : 1,
-    BranchId: localStorage.getItem('BranchId') ? localStorage.getItem('BranchId') : 1,
     nextgrid: false,
     createCode: null,
     navigation: [],
@@ -212,6 +220,7 @@ export const store = new Vuex.Store({
             } else {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
             }
+            commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
 
             // başarılı -> tabloyu doldur.
             this.dispatch('getTableData', {
@@ -434,6 +443,36 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
+    setSelectedRows ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
+        'UserId' : state.UserId,
+        'FormId' : query.FormId,
+        'Columns': query.Columns
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
+        .then(res => {
+          console.log(res)
+          commit('hideAlert')
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+          } else {
+            let errs = res.data.Validations.Errors
+            for (let i = 0; i < errs.length; i++) {
+              let errmsg = errs[i].States
+              for (let x = 0; x < errmsg.length; x++) {
+                commit('showAlert', { type: 'validation', msg: errmsg })
+              }
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
@@ -836,8 +875,10 @@ export const store = new Vuex.Store({
     },
     setTableRows (state, payload) {
       state.tableRows = []
-      state.tableRowsAll = []
       state.tableRows = payload
+    },
+    setTableRowsAll (state, payload) {
+      state.tableRowsAll = []
       state.tableRowsAll = payload
     },
     setLookup (state, payload) {
@@ -882,18 +923,26 @@ export const store = new Vuex.Store({
           'key': localStorage.getItem('Key')
         }
       }
-      store.commit('userIDs', {company: user.AuthorizedCompanies[0].Id, branch: user.AuthorizedBranches[0].Id, branchName: user.AuthorizedBranches[0].Desciption})
+      store.commit('userIDs', {
+        userId: user.UserId,
+        company: user.AuthorizedCompanies[0].Id,
+        branch: user.AuthorizedBranches[0].Id,
+        branchName: user.AuthorizedBranches[0].Desciption})
       // router.push({name: 'Dashboard'})
     },
     userIDs (state, payload) {
+      localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+
+      state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
       state.BranchId = localStorage.getItem('BranchId')
       
       localStorage.setItem('companyName', payload.companyName)
       localStorage.setItem('branchName', payload.branchName)
-
+      
+      state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.branch = localStorage.getItem('branchName')
       authCompanyAndBranch = {
@@ -901,6 +950,7 @@ export const store = new Vuex.Store({
         'BranchId' : localStorage.getItem('BranchId')
       }
       console.log(payload)
+      console.log(state.UserId)
       console.log(state.CompanyId)
       console.log(state.BranchId)
       console.log(state.company)

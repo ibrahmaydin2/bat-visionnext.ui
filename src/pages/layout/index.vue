@@ -159,7 +159,7 @@ export default {
           el += ',' + tbl[i].dataField
         }
       }
-      console.log(el)
+      this.$store.dispatch('setSelectedRows', {...this.query, FormId: this.tableOperations.Id, Columns: el})
     },
     hideRow (t) {
       // this.hideTableRow(hr)

@@ -1,3 +1,4 @@
+export const shortcut = []
 export const items = [
   {
     'title': 'Finans',
