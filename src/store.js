@@ -121,6 +121,7 @@ export const store = new Vuex.Store({
     errorMessage: null,
     cities: [],
     distiricts: [],
+    lookUp: [],
     lookupWarehouse_type: [],
     vehicleList: [],
     branchList: [],
@@ -558,10 +559,11 @@ export const store = new Vuex.Store({
         'BranchId' : state.BranchId,
         'CompanyId' : state.CompanyId
       }
-      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
+      return axios.post(`VisionNextCommonApi/api/LookupValue/GetValues`, dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setValues', {data: res.data, name: query.name})
+            // commit('setLookUp', res.data.Values)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -962,7 +964,7 @@ export const store = new Vuex.Store({
       state.tableRowsAll = []
       state.tableRowsAll = payload
     },
-    setLookup (state, payload) {
+    setLookUp (state, payload) {
       state.lookup = payload
     },
     setGetCreateCode (state, payload) {
@@ -1061,6 +1063,9 @@ export const store = new Vuex.Store({
     },
     setValues (state, payload) {
       state[payload.name] = payload.data.Values
+    },
+    setLookup (state, payload) {
+      state.lookUp = payload
     },
     setEmployees (state, payload) {
       state.employees = payload
