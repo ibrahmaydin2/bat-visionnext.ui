@@ -48,7 +48,11 @@
     "Customer": "Müşteri Kayıtları",
     "CustomerGet": "Müşteri Görüntüle",
     "CustomerUpdate": "Müşteri Güncelle",
-    "CustomerInsert": "Yeni Müşteri"
+    "CustomerInsert": "Yeni Müşteri",
+    "Bank": "Banka",
+    "BankInsert": "Yeni Banka",
+    "BankUpdate": "Banka Güncelle",
+    "BankGet": "Banka Görüntüle"
   },
   "insert": {
     "add": "Ekle",
@@ -61,6 +65,24 @@
     "no": "Hayır",
     "min3": "3 karakter girin",
     "requiredFields": "Lüften Zorunlu Alanları Doldurun",
+    "status": "Durum",
+    "code": "Kodu",
+    "state": "Durum",
+    "rotaType": "Rota Tipi",
+    "chooseRotaType": "Rota Tipi Seçiniz",
+    "name": "Adı",
+    "locations": "Lokasyonlar",
+    "routeGroup": "Rota Grubu",
+    "routeClass": "Rota Sınıfı",
+    "vehicle": "Araç",
+    "personel": "Saha Personeli",
+    "supervisor": "Satış Şefi",
+    "multiDayRoute": "Çoklu Gün Rotası Mı?",
+    "superRoute": "Super Rota Mı?",
+    "control": "Ziyaret Başlama Kontrolü",
+    "city": "Şehir",
+    "distirict": "İlçe",
+    "town": "Mahalle",
     "route": {
       "status": "Durum",
       "routeCode": "Rota Kodu",
@@ -107,23 +129,6 @@
       "distirict": "İlçe",
       "town": "Mahalle"
     },
-    "code": "Kodu",
-    "state": "Durum",
-    "rotaType": "Rota Tipi",
-    "chooseRotaType": "Rota Tipi Seçiniz",
-    "name": "Adı",
-    "locations": "Lokasyonlar",
-    "routeGroup": "Rota Grubu",
-    "routeClass": "Rota Sınıfı",
-    "vehicle": "Araç",
-    "personel": "Saha Personeli",
-    "supervisor": "Satış Şefi",
-    "multiDayRoute": "Çoklu Gün Rotası Mı?",
-    "superRoute": "Super Rota Mı?",
-    "control": "Ziyaret Başlama Kontrolü",
-    "city": "Şehir",
-    "distirict": "İlçe",
-    "town": "Mahalle",
     "vehicles": {
       "code": "Araç Kodu",
       "driver": "Sürücü",
@@ -521,6 +526,15 @@
       "ColumnName" : "Alan Açıklaması",
       "ColumnValue" : "Değer",
       "chooseDate": "Tarih Seçiniz"
+    },
+    "bank": {
+      "code":"Banka Kodu",
+      "financeCode":"ERP Kodu",
+      "description1":"Açıklama",
+      "branchCode": "Şube Kodu",
+      "defaultAccountNumber": "Varsayılan Hesap No",
+      "isDefaultBranch": "Varsayılan Şube",
+      "title": "Banka"
     }
   },
   "get": {
