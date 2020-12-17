@@ -45,6 +45,7 @@
           <b-col cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.state')"
+              :class="{ 'form-group--error': $v.form.model.statusId.$error }"
             >
               <b-form-checkbox v-model="statusId" name="check-button" switch>
                 {{(statusId) ? $t('insert.active'): $t('insert.passive')}}
@@ -119,7 +120,7 @@
         <b-tab :title="$t('insert.employee.group')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.personalType')">
+              <b-form-group :label="$t('insert.employee.personalType')" :class="{ 'form-group--error': $v.form.model.typeId.$error }">
                 <v-select :options="employeeTypes" @input="selectedType" label="Label"></v-select>
               </b-form-group>
             </b-col>
@@ -332,8 +333,48 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      form: {},
       requireds: {},
+      form: {
+        model: {
+          typeId: null,
+          userGroupId: 1,
+          telephone1: null,
+          telephone2: null,
+          gsmNumber: null,
+          faxNumber: null,
+          email: null,
+          employmentStartDate: null,
+          employmentEndDate: null,
+          taxNumber: null,
+          birthDate: null,
+          tShirtSize: null,
+          montSize: null,
+          overcoatSize: null,
+          shoeSize: null,
+          educationId: null,
+          denimSize: null,
+          corduroySize: null,
+          bloodTypeId: null,
+          code: null,
+          name: null,
+          surname: null,
+          groupId: null,
+          statusId: 1,
+          category1Id: null,
+          other1: null,
+          isTeam: null,
+          priceListCategoryId: null,
+          createCustomerRecord: 0,
+          financeCode1: null,
+          financeCode2: null,
+          scoreCardClassId: null,
+          sapHrCode: null,
+          isRepresentative: null,
+          description1: null,
+          deleted: 0,
+          eInvoiceSeqs: []
+        }
+      },
       disabledCustomer: true,
       eInvoiceSeqsList: [],
       detailListData: [],
