@@ -28,6 +28,7 @@ import VueGoogleCharts from 'vue-google-charts'
 import {VueMasonryPlugin} from 'vue-masonry'
 
 import Nextgrid from './components/NextGrid'
+import Nextform from './components/NextForm'
 import Carousel from './components/Carousel'
 import Navigation from './components/Navigation'
 import DispatchModal from './components/DispatchModal'
@@ -65,6 +66,7 @@ Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('DispatchModal', DispatchModal)
 Vue.component('b-form-datepicker', BFormDatepicker)
 Vue.component('Nextgrid', Nextgrid)
+Vue.component('Nextform', Nextform)
 Vue.component('ErrorPage', ErrorPage)
 
 Vue.config.productionTip = false

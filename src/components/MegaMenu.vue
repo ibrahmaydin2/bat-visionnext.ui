@@ -10,7 +10,7 @@
             <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
-            <ul v-if="subs.sub">
+            <ul v-if="subs.sub.length >= 1">
               <li v-for="(three, y) in subs.sub" :key="'three' + y">
                 <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }}" @click.native="closeHeader()">
                   <i :class="three.icon ? 'fas ' + three.icon : 'far fa-circle'" />{{ three.title }}

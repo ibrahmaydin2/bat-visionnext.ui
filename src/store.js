@@ -6,6 +6,8 @@ import { ToastPlugin } from 'bootstrap-vue'
 import { systemName, ideaName, copyright, verno, apiLink } from '../static/system'
 import router from './router'
 import i18n from './i18n'
+import { required, not } from 'vuelidate/lib/validators'
+
 import cities from '../static/cities.json'
 import distiricts from '../static/district.json'
 
@@ -127,6 +129,7 @@ export const store = new Vuex.Store({
     branchList: [],
     warehouseList: [],
     customerList: [],
+    insertRules: [],
     //Employee Lookups Values
     employeeTypes: [],
     priceList: [],
@@ -253,10 +256,10 @@ export const store = new Vuex.Store({
         .then(res => {
           if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
             commit('setTableOperations', res.data.UIPageModels[0])
-            if (res.data.UIPageModels[0].SelectedColumns.length === 0) {
-              commit('setTableRows', res.data.UIPageModels[0].RowColumns)
-            } else {
+            if ((res.data.UIPageModels[0].SelectedColumns) && (res.data.UIPageModels[0].SelectedColumns.length >= 1)) {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
+            } else {
+              commit('setTableRows', res.data.UIPageModels[0].RowColumns)
             }
             commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
 
@@ -407,6 +410,20 @@ export const store = new Vuex.Store({
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
           // commit('bigLoaded', false)
+        })
+    },
+    getInsertRules ({ commit }, query) {
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits${query.api}`, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setInsertRules', res.data.RowColumns)
+          } else {
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: err })
         })
     },
     getCreateCode ({ commit }, query) {
@@ -966,6 +983,15 @@ export const store = new Vuex.Store({
     },
     setLookUp (state, payload) {
       state.lookup = payload
+    },
+    setInsertRules (state, payload) {
+      let rull = {}
+      const apiRules = payload
+      for (let i = 0; i < apiRules.length; i++) {
+        let fieldName = apiRules[i].EntityProperty
+        rull[fieldName] = apiRules[i].Required === true ? { required } : { not }
+      }
+      state.insertRules = rull
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload
