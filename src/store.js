@@ -105,6 +105,7 @@ export const store = new Vuex.Store({
       { value: 'today', title: 'Bu Günün Kayıtları' },
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
+    debugVisible: true,
     errorView: false,
     errorData: [],
     nextgrid: false,
@@ -986,12 +987,22 @@ export const store = new Vuex.Store({
     },
     setInsertRules (state, payload) {
       let rull = {}
+      let visibleList = {}
       const apiRules = payload
       for (let i = 0; i < apiRules.length; i++) {
         let fieldName = apiRules[i].EntityProperty
         rull[fieldName] = apiRules[i].Required === true ? { required } : { not }
       }
+      for (let i = 0; i < apiRules.length; i++) {
+        let vfieldName = apiRules[i].EntityProperty
+        visibleList[vfieldName] = apiRules[i].Visible
+      }
+      for (let i = 0; i < apiRules.length; i++) {
+        let vfieldName = apiRules[i].EntityProperty
+        visibleList[vfieldName] = apiRules[i].Visible
+      }
       state.insertRules = rull
+      state.insertVisible = visibleList
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload

@@ -18,12 +18,12 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <b-col cols="12" md="2">
+           <b-col v-if="insertVisible.Code != null ? insertVisible.Code : debugVisible" cols="12" md="2">
             <b-form-group
               :label="$t('insert.employee.Model_Code')"
               :class="{ 'form-group--error': $v.form.Code.$error }"
             >
-              <b-form-input type="text" v-model="form.Code" readonly />
+              <b-form-input type="text" v-model="form.Code = insertDefault.Code" :readonly="insertReadonly.Code" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
@@ -385,7 +385,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['createCode', 'employeeTypes', 'insertRules', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'rowData'])
+    ...mapState(['createCode', 'employeeTypes', 'debugVisible', 'insertRules', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'rowData'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
