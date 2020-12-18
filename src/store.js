@@ -124,7 +124,7 @@ export const store = new Vuex.Store({
     errorMessage: null,
     cities: [],
     distiricts: [],
-    lookUp: [],
+    lookup: [],
     lookupWarehouse_type: [],
     vehicleList: [],
     branchList: [],
@@ -591,6 +591,26 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getAllLookups ({ state, commit }, query) {
+      let dataQuery = {
+        'LookupTableCode' : query.type,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId
+      }
+      return axios.post(`VisionNextCommonApi/api/LookupValue/GetValuesMultiple`, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setLookUp', res.data.Values)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+
     getLookupsWithUpperValue ({ state, commit }, query) {
       let dataQuery = {
         'LookupTableCode' : query.type,
@@ -1101,9 +1121,9 @@ export const store = new Vuex.Store({
     setValues (state, payload) {
       state[payload.name] = payload.data.Values
     },
-    setLookup (state, payload) {
-      state.lookUp = payload
-    },
+    // setLookup (state, payload) {
+    //   state.lookUp = payload
+    // },
     setEmployees (state, payload) {
       state.employees = payload
     },

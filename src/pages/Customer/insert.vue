@@ -1109,6 +1109,7 @@ export default {
       'discountGroups2',
       'discountGroups9',
       'signNameIds',
+      'lookup'
     ])
   },
   mounted () {
@@ -1126,41 +1127,44 @@ export default {
       // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
       // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY,CUSTOMER_CATEGORY_1,CUSTOMER_CATEGORY_2,CUSTOMER_CATEGORY_3,CUSTOMER_GROUP,CUSTOMER_CLASS,SALES_DOCUMENT_TYPE,OWNER_TYPE,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_SALES_METHOD,CUSTOMER_GEOGRAPHIC_ENVIRONMENT,CUSTOMER_TRADE_FOCUS,INVOICE_COMBINE_RULE,BACK_MARGIN_GROUP,CUSTOMER_DISCOUNT_GROUP_1,CUSTOMER_DISCOUNT_GROUP_3,CUSTOMER_DISCOUNT_GROUP_4,CUSTOMER_DISCOUNT_GROUP_5,CUSTOMER_DISCOUNT_GROUP_6,CUSTOMER_DISCOUNT_GROUP_7,CUSTOMER_DISCOUNT_GROUP_8,CUSTOMER_KIND,PRICE_LIST_CATEGORY_TYPE,CREDIT_DESCRIPTION,CUSTOMER_HOLD_ASSET,CUSTOMER_CONTRACTED,CUSTOMER_DISCOUNT_GROUP_10,CUSTOMER_DISCOUNT_GROUP_2,CUSTOMER_DISCOUNT_GROUP_9,SIGN_NAME'})
 
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TYPE', name: 'customerTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_BLOCK_REASON', name: 'blockReasons'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'TAX_CUSTOMER_TYPE', name: 'customerTaxTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_INVOICE_TYPE', name: 'customerInvoiceTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_1', name: 'customerCategory1'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_2', name: 'customerCategory2'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_3', name: 'customerCategory3'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GROUP', name: 'customerGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS', name: 'customerClass'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'SALES_DOCUMENT_TYPE', name: 'salesDocumentTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'OWNER_TYPE', name: 'ownerTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposals'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposalReasons'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_SALES_METHOD', name: 'customerSalesMethods'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GEOGRAPHIC_ENVIRONMENT', name: 'geographicEnvironments'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TRADE_FOCUS', name: 'customerTradeFocus'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'INVOICE_COMBINE_RULE', name: 'invoiceCombineRules'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'BACK_MARGIN_GROUP', name: 'backMarginGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_1', name: 'discountGroups1'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_3', name: 'discountGroups3'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_4', name: 'discountGroups4'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_5', name: 'discountGroups5'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_6', name: 'discountGroups6'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_7', name: 'discountGroups7'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_8', name: 'discountGroups8'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_KIND', name: 'customerKinds'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'creditDescriptions'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_HOLD_ASSET', name: 'holdAssets'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CONTRACTED', name: 'contracteds'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_10', name: 'discountGroups10'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_2', name: 'discountGroups2'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_9', name: 'discountGroups9'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'SIGN_NAME', name: 'signNameIds'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TYPE', name: 'customerTypes'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_BLOCK_REASON', name: 'blockReasons'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'TAX_CUSTOMER_TYPE', name: 'customerTaxTypes'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_INVOICE_TYPE', name: 'customerInvoiceTypes'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_1', name: 'customerCategory1'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_2', name: 'customerCategory2'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_3', name: 'customerCategory3'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GROUP', name: 'customerGroups'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS', name: 'customerClass'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'SALES_DOCUMENT_TYPE', name: 'salesDocumentTypes'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'OWNER_TYPE', name: 'ownerTypes'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposals'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposalReasons'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_SALES_METHOD', name: 'customerSalesMethods'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GEOGRAPHIC_ENVIRONMENT', name: 'geographicEnvironments'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TRADE_FOCUS', name: 'customerTradeFocus'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'INVOICE_COMBINE_RULE', name: 'invoiceCombineRules'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'BACK_MARGIN_GROUP', name: 'backMarginGroups'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_1', name: 'discountGroups1'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_3', name: 'discountGroups3'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_4', name: 'discountGroups4'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_5', name: 'discountGroups5'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_6', name: 'discountGroups6'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_7', name: 'discountGroups7'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_8', name: 'discountGroups8'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_KIND', name: 'customerKinds'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'creditDescriptions'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_HOLD_ASSET', name: 'holdAssets'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CONTRACTED', name: 'contracteds'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_10', name: 'discountGroups10'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_2', name: 'discountGroups2'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_9', name: 'discountGroups9'})
+      // this.$store.dispatch('getLookups', {...this.query, type: 'SIGN_NAME', name: 'signNameIds'})
+      let allLookups = 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY'
+      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+
     },
     getDatas() {
       this.$store.dispatch('getCustomerCardType')
@@ -1484,6 +1488,9 @@ export default {
       } else {
         this.form.model.statusId = 0
       }
+    },
+    lookup(e) {
+      console.log(e)
     }
   }
 }
