@@ -28,6 +28,13 @@ export default {
 }
 </script>
 <style lang="sass">
+  .asc__codeHTML
+    background: #333
+    color: green
+    font-size: 10px
+    height: 300px
+    overflow: auto
+    margin: 1rem 0
   .asc__general-addingLoader
     display: none
     color: #ffa300

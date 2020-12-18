@@ -10,6 +10,7 @@ import { required, not } from 'vuelidate/lib/validators'
 
 import cities from '../static/cities.json'
 import distiricts from '../static/district.json'
+import { trim } from 'jquery'
 
 Vue.use(Vuex)
 Vue.use(ToastPlugin)
@@ -105,7 +106,12 @@ export const store = new Vuex.Store({
       { value: 'today', title: 'Bu Günün Kayıtları' },
       { value: 'month', title: 'Bu Ayın Kayıtları' }
     ],
-    debugVisible: true,
+    insertHTML: null,
+    insertRules: [],
+    insertVisible: [],
+    insertTitle: [],
+    insertReadonly: [],
+    developmentMode: true,
     errorView: false,
     errorData: [],
     nextgrid: false,
@@ -130,7 +136,6 @@ export const store = new Vuex.Store({
     branchList: [],
     warehouseList: [],
     customerList: [],
-    insertRules: [],
     //Employee Lookups Values
     employeeTypes: [],
     priceList: [],
@@ -194,8 +199,7 @@ export const store = new Vuex.Store({
     discountGroups10: [],
     discountGroups2: [],
     discountGroups9: [],
-    signNameIds: [],
-
+    signNameIds: []
   },
   actions: {
     // sistem gereksinimleri
@@ -414,11 +418,10 @@ export const store = new Vuex.Store({
         })
     },
     getInsertRules ({ commit }, query) {
-      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits${query.api}`, authHeader)
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('setInsertRules', res.data.RowColumns)
-          } else {
+            commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
           }
         })
         .catch(err => {
@@ -896,7 +899,7 @@ export const store = new Vuex.Store({
         case 'catch':
           if (payload.msg.status === 401) {
             console.log(payload.msg)
-            // router.push({name: 'Login'})
+            store.commit('logout')
           }
           this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
             title: i18n.t('general.serverError'),
@@ -1005,24 +1008,124 @@ export const store = new Vuex.Store({
     setLookUp (state, payload) {
       state.lookup = payload
     },
+    setLookUpAuto (state, payload) {
+      state.autoLookup[payload.name] = payload.data.Values
+      console.log(state.autoLookup)
+    },
     setInsertRules (state, payload) {
+      /*
+        Servisten gelen Kural Setini derler ve HTML kodu üretecek şekilde çıktısını verir.
+        Gelen HTML kodu manuel olarak INSERT ekranına yerleştirilecektir.
+      */
+      const apiRules = payload.rows
+      const view = payload.route
+      let insertPageHTML = {}
       let rull = {}
-      let visibleList = {}
-      const apiRules = payload
-      for (let i = 0; i < apiRules.length; i++) {
-        let fieldName = apiRules[i].EntityProperty
-        rull[fieldName] = apiRules[i].Required === true ? { required } : { not }
-      }
-      for (let i = 0; i < apiRules.length; i++) {
-        let vfieldName = apiRules[i].EntityProperty
-        visibleList[vfieldName] = apiRules[i].Visible
-      }
-      for (let i = 0; i < apiRules.length; i++) {
-        let vfieldName = apiRules[i].EntityProperty
-        visibleList[vfieldName] = apiRules[i].Visible
-      }
+      let visbl = {}
+      let title = {}
+      let enbld = {}
+      let valueForAutoLookup = ''
+      apiRules.forEach(rule => {
+        let inputCode
+        let fieldName = rule.EntityProperty
+        let fieldEnabled = rule.Enabled
+        let fieldLabel = rule.Label
+        let fieldRequired = rule.Required
+        let fieldDefaultValue = rule.DefaultValue
+        let fieldVisible = rule.Visible
+        let fieldUnique = rule.Unique // ne işe yarıyor ?
+
+        rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
+        visbl[fieldName] = fieldVisible // görüntüleme durumu.
+        title[fieldName] = fieldLabel // input ismi.
+        enbld[fieldName] = fieldEnabled === true ? false : true // input ismi.
+        if (state.developmentMode) {
+          switch (rule.ColumnType) {
+            case 'Id':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+                </b-form-group>
+              </b-col>`
+            break;
+            
+            case 'String':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+                </b-form-group>
+              </b-col>`
+            break;
+
+            case 'LabelValue':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+                </b-form-group>
+              </b-col>`
+            break;
+            
+            case 'Select':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <v-select
+                    v-model="form.${fieldName}"
+                    :options="lookup.${fieldDefaultValue}"
+                    @input="selectedType('${fieldName}', form.${fieldName})"
+                    label="Label"
+                  />
+                </b-form-group>
+              </b-col>`
+              valueForAutoLookup += fieldDefaultValue
+            break;
+
+            case 'Radio':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-checkbox v-model="form.${fieldName}" name="check-button" switch>
+                    {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
+                  </b-form-checkbox>
+                </b-form-group>
+              </b-col>`
+            break;
+
+            case 'Check':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-checkbox v-model="form.${fieldName}" name="check-button">
+                    {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
+                  </b-form-checkbox>
+                </b-form-group>
+              </b-col>`
+            break;
+
+            case 'DateTime':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-datepicker v-model="form.${fieldName}" />
+                </b-form-group>
+              </b-col>`
+            break;
+
+            case 'Text':
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <b-form-textarea v-model="form.${fieldName}" placeholder="" />
+                </b-form-group>
+              </b-col>`
+            break;
+          }
+
+          insertPageHTML[fieldName] = inputCode.trim()
+        }
+      });
+      this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
+      state.insertHTML = insertPageHTML
       state.insertRules = rull
-      state.insertVisible = visibleList
+      state.insertVisible = visbl
+      state.insertTitle = title
+      state.insertReadonly = enbld
+
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload
@@ -1051,7 +1154,7 @@ export const store = new Vuex.Store({
       store.commit('bigLoaded', payload)
       state.modalLoad = payload
     },
-    login (state, payload) {  
+    login (state, payload) {
       localStorage.setItem('UserModel', JSON.stringify(payload.UserModel))
       user = JSON.parse(localStorage.getItem('UserModel'))
       localStorage.setItem('Key', user.Key)
@@ -1078,10 +1181,10 @@ export const store = new Vuex.Store({
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
       state.BranchId = localStorage.getItem('BranchId')
-      
+
       localStorage.setItem('companyName', payload.companyName)
       localStorage.setItem('branchName', payload.branchName)
-      
+
       state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.branch = localStorage.getItem('branchName')
@@ -1089,15 +1192,6 @@ export const store = new Vuex.Store({
         'CompanyId' : localStorage.getItem('CompanyId'),
         'BranchId' : localStorage.getItem('BranchId')
       }
-      console.log(payload)
-      console.log(state.UserId)
-      console.log(state.CompanyId)
-      console.log(state.BranchId)
-      console.log(state.company)
-      console.log(state.branch)
-      console.log(localStorage.getItem('companyName'))
-      console.log(localStorage.getItem('branchName'))
-      
       router.push({name: 'Dashboard'})
     },
     logout () {
