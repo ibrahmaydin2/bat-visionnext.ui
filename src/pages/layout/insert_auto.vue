@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -18,6 +18,7 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
+        header
         </b-row>
       </section>
     </b-col>

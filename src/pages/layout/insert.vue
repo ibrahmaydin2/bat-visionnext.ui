@@ -39,6 +39,7 @@ export default {
     display: none
     color: #ffa300
   .asc__insertPage
+    min-height: 60vh
     margin-bottom: 2rem
     & header
       padding: .5rem 15px 0 15px

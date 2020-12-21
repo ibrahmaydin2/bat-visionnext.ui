@@ -435,28 +435,32 @@ export const store = new Vuex.Store({
         })
     },
     getInsertRules ({ commit }, query) {
+      commit('bigLoaded', true)
       return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
         .then(res => {
+          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
           }
         })
         .catch(err => {
-          console.log(err)
+          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
     getCreateCode ({ commit }, query) {
+      commit('bigLoaded', true)
       return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
+          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setGetCreateCode', res.data.Model.Code)
           } else {
           }
         })
         .catch(err => {
-          console.log(err)
+          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
