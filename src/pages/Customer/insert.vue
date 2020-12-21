@@ -100,7 +100,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_TypeId')">
-                <v-select :options="customerTypes" @input="selectedCustomerType" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_TYPE" @input="selectedCustomerType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -110,7 +110,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CustomerInvoiceTypeId')">
-                <v-select :options="customerInvoiceTypes" @input="selectedInvoiceType" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_INVOICE_TYPE" @input="selectedInvoiceType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <!-- <b-col cols="12" md="3" lg="2">
@@ -206,7 +206,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.city')">
-                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
+                <v-select :options="lookup.CITY" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -341,78 +341,78 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Category1Id')">
-                <v-select :options="customerCategory1" @input="selectedCustomerCategory1" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CATEGORY_1" @input="selectedCustomerCategory1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Category2Id')">
-                <v-select :options="customerCategory2" @input="selectedCustomerCategory2" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CATEGORY_2" @input="selectedCustomerCategory2" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Category3Id')">
-                <v-select :options="customerCategory3" @input="selectedCustomerCategory3" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CATEGORY_3" @input="selectedCustomerCategory3" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_GroupId')">
-                <v-select :options="customerGroups" @input="selectedCustomerGroup" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_GROUP" @input="selectedCustomerGroup" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_ClassId')">
-                <v-select :options="customerClass" @input="selectedCustomerClass" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CLASS" @input="selectedCustomerClass" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_SalesDocumentTypeId')">
-                <v-select :options="salesDocumentTypes" @input="selectedSalesDocumentType" label="Label"></v-select>
+                <v-select :options="lookup.SALES_DOCUMENT_TYPE" @input="selectedSalesDocumentType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_OwnerTypeId')">
-                <v-select :options="ownerTypes" @input="selectedOwnerType" label="Label"></v-select>
+                <v-select :options="lookup.OWNER_TYPE" @input="selectedOwnerType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_ClassProposalId')">
-                <v-select :options="classProposals" @input="selectedClassProposal" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CLASS_PROPOSAL" @input="selectedClassProposal" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_SalesMethodId')">
-                <v-select :options="customerSalesMethods" @input="selectedCustomerSalesMethod" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_SALES_METHOD" @input="selectedCustomerSalesMethod" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_GeographicEnvironmentId')">
-                <v-select :options="geographicEnvironments" @input="selectedGeographicEnvironments" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_GEOGRAPHIC_ENVIRONMENT" @input="selectedGeographicEnvironments" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_TradeFocusId')">
-                <v-select :options="customerTradeFocus" @input="selectedCustomerTradeFocus" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_TRADE_FOCUS" @input="selectedCustomerTradeFocus" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_InvoiceCombineRuleId')">
-                <v-select :options="invoiceCombineRules" @input="selectedInvoiceCombineRule" label="Label"></v-select>
+                <v-select :options="lookup.INVOICE_COMBINE_RULE" @input="selectedInvoiceCombineRule" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_ClassProposalReasonId')">
-                <v-select :options="classProposalReasons" @input="selectedClassProposalReason" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CLASS_PROPOSAL_REASON" @input="selectedClassProposalReason" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_BackMarginGroupId')">
-                <v-select :options="backMarginGroups" @input="selectedBackMarginGroup" label="Label"></v-select>
+                <v-select :options="lookup.BACK_MARGIN_GROUP" @input="selectedBackMarginGroup" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -457,44 +457,49 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup1Id')">
-                <v-select :options="discountGroups1" @input="selectedDiscountGroups1" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_1" @input="selectedDiscountGroups1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup3Id')">
-                <v-select :options="discountGroups3" @input="selectedDiscountGroups3" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_3" @input="selectedDiscountGroups3" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup4Id')">
-                <v-select :options="discountGroups4" @input="selectedDiscountGroups4" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_4" @input="selectedDiscountGroups4" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup5Id')">
-                <v-select :options="discountGroups5" @input="selectedDiscountGroups5" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_5" @input="selectedDiscountGroups5" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup6Id')">
-                <v-select :options="discountGroups6" @input="selectedDiscountGroups6" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_6" @input="selectedDiscountGroups6" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup7Id')">
-                <v-select :options="discountGroups7" @input="selectedDiscountGroups7" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_7" @input="selectedDiscountGroups7" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_DiscountGroup8Id')">
-                <v-select :options="discountGroups8" @input="selectedDiscountGroups8" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_8" @input="selectedDiscountGroups8" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_KindId')">
-                <v-select :options="customerKinds" @input="selectedKind" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_KIND" @input="selectedKind" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_KindId')">
+                <v-select :options="lookup.CUSTOMER_ACTIVITY_1" @input="selectedActivity1" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -503,7 +508,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_PriceListCategoryId')">
-                <v-select :options="priceList" @input="selectedPriceList" label="Label"></v-select>
+                <v-select :options="lookup.PRICE_LIST_CATEGORY_TYPE" @input="selectedPriceList" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -643,7 +648,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
-                <v-select :options="creditDescriptions" @input="selectedCreditDescription" label="Label"></v-select>
+                <v-select :options="lookup.CREDIT_DESCRIPTION" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -831,34 +836,34 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.holdAsset')">
-                <v-select :options="holdAssets" @input="selectedHoldAsset" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_HOLD_ASSET" @input="selectedHoldAsset" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.contracted')">
-                <v-select :options="contracteds" @input="selectedContracteds" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_CONTRACTED" @input="selectedContracteds" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountGroup10')">
-                <v-select :options="discountGroups10" @input="selectedDiscountGroups10" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_10" @input="selectedDiscountGroups10" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountGroup2')">
-                <v-select :options="discountGroups2" @input="selectedDiscountGroups2" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_2" @input="selectedDiscountGroups2" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountGroup9')">
-                <v-select :options="discountGroups9" @input="selectedDiscountGroups9" label="Label"></v-select>
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_9" @input="selectedDiscountGroups9" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.signNameId')">
-                <v-select :options="signNameIds" @input="selectedSignNameIds" label="Label"></v-select>
+                <v-select :options="lookup.SIGN_NAME" @input="selectedSignNameIds" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -1014,7 +1019,9 @@ export default {
           discountGroup2: null,
           discountGroup9: null,
           signNameId: null,
-          isOpportunitySpot: null
+          isOpportunitySpot: null,
+          activity1: null,
+          activity2: null
         }
       },
       customerLocations: {
@@ -1071,44 +1078,7 @@ export default {
   computed: {
     ...mapState([
       'createCode',
-      'cities',
       'distiricts',
-      'customerCardTypes',
-      'cancelReasons',
-      'customerTypes',
-      'blockReasons',
-      'customerTaxTypes',
-      'customerInvoiceTypes',
-      'customerCategory1',
-      'customerCategory2',
-      'customerCategory3',
-      'customerGroups',
-      'customerClass',
-      'salesDocumentTypes',
-      'ownerTypes',
-      'classProposals',
-      'classProposalReasons',
-      'customerSalesMethods',
-      'geographicEnvironments',
-      'customerTradeFocus',
-      'invoiceCombineRules',
-      'backMarginGroups',
-      'discountGroups1',
-      'discountGroups3',
-      'discountGroups4',
-      'discountGroups5',
-      'discountGroups6',
-      'discountGroups7',
-      'discountGroups8',
-      'customerKinds',
-      'priceList',
-      'creditDescriptions',
-      'holdAssets',
-      'contracteds',
-      'discountGroups10',
-      'discountGroups2',
-      'discountGroups9',
-      'signNameIds',
       'lookup'
     ])
   },
@@ -1125,46 +1095,8 @@ export default {
     },
     getLookup () {
       // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY,CUSTOMER_CATEGORY_1,CUSTOMER_CATEGORY_2,CUSTOMER_CATEGORY_3,CUSTOMER_GROUP,CUSTOMER_CLASS,SALES_DOCUMENT_TYPE,OWNER_TYPE,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_SALES_METHOD,CUSTOMER_GEOGRAPHIC_ENVIRONMENT,CUSTOMER_TRADE_FOCUS,INVOICE_COMBINE_RULE,BACK_MARGIN_GROUP,CUSTOMER_DISCOUNT_GROUP_1,CUSTOMER_DISCOUNT_GROUP_3,CUSTOMER_DISCOUNT_GROUP_4,CUSTOMER_DISCOUNT_GROUP_5,CUSTOMER_DISCOUNT_GROUP_6,CUSTOMER_DISCOUNT_GROUP_7,CUSTOMER_DISCOUNT_GROUP_8,CUSTOMER_KIND,PRICE_LIST_CATEGORY_TYPE,CREDIT_DESCRIPTION,CUSTOMER_HOLD_ASSET,CUSTOMER_CONTRACTED,CUSTOMER_DISCOUNT_GROUP_10,CUSTOMER_DISCOUNT_GROUP_2,CUSTOMER_DISCOUNT_GROUP_9,SIGN_NAME'})
-
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TYPE', name: 'customerTypes'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_BLOCK_REASON', name: 'blockReasons'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'TAX_CUSTOMER_TYPE', name: 'customerTaxTypes'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_INVOICE_TYPE', name: 'customerInvoiceTypes'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_1', name: 'customerCategory1'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_2', name: 'customerCategory2'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CATEGORY_3', name: 'customerCategory3'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GROUP', name: 'customerGroups'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS', name: 'customerClass'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'SALES_DOCUMENT_TYPE', name: 'salesDocumentTypes'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'OWNER_TYPE', name: 'ownerTypes'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposals'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CLASS_PROPOSAL', name: 'classProposalReasons'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_SALES_METHOD', name: 'customerSalesMethods'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_GEOGRAPHIC_ENVIRONMENT', name: 'geographicEnvironments'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TRADE_FOCUS', name: 'customerTradeFocus'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'INVOICE_COMBINE_RULE', name: 'invoiceCombineRules'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'BACK_MARGIN_GROUP', name: 'backMarginGroups'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_1', name: 'discountGroups1'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_3', name: 'discountGroups3'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_4', name: 'discountGroups4'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_5', name: 'discountGroups5'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_6', name: 'discountGroups6'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_7', name: 'discountGroups7'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_8', name: 'discountGroups8'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_KIND', name: 'customerKinds'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'creditDescriptions'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_HOLD_ASSET', name: 'holdAssets'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_CONTRACTED', name: 'contracteds'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_10', name: 'discountGroups10'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_2', name: 'discountGroups2'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_DISCOUNT_GROUP_9', name: 'discountGroups9'})
-      // this.$store.dispatch('getLookups', {...this.query, type: 'SIGN_NAME', name: 'signNameIds'})
-      let allLookups = 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY'
+      let allLookups = 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY,CUSTOMER_CATEGORY_1,CUSTOMER_CATEGORY_2,CUSTOMER_CATEGORY_3,CUSTOMER_GROUP,CUSTOMER_CLASS,SALES_DOCUMENT_TYPE,OWNER_TYPE,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_SALES_METHOD,CUSTOMER_GEOGRAPHIC_ENVIRONMENT,CUSTOMER_TRADE_FOCUS,INVOICE_COMBINE_RULE,BACK_MARGIN_GROUP,CUSTOMER_DISCOUNT_GROUP_1,CUSTOMER_DISCOUNT_GROUP_3,CUSTOMER_DISCOUNT_GROUP_4,CUSTOMER_DISCOUNT_GROUP_5,CUSTOMER_DISCOUNT_GROUP_6,CUSTOMER_DISCOUNT_GROUP_7,CUSTOMER_DISCOUNT_GROUP_8,CUSTOMER_KIND,PRICE_LIST_CATEGORY_TYPE,CREDIT_DESCRIPTION,CUSTOMER_HOLD_ASSET,CUSTOMER_CONTRACTED,CUSTOMER_DISCOUNT_GROUP_10,CUSTOMER_DISCOUNT_GROUP_2,CUSTOMER_DISCOUNT_GROUP_9,SIGN_NAME,CUSTOMER_CLASS_PROPOSAL_REASON,CUSTOMER_ACTIVITY_1,CUSTOMER_ACTIVITY_2'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
-
     },
     getDatas() {
       this.$store.dispatch('getCustomerCardType')
@@ -1384,6 +1316,20 @@ export default {
         this.form.model.kindId = e.DecimalValue
       } else {
         this.form.model.kindId = null
+      }
+    },
+    selectedActivity1 (e) {
+      if (e) {
+        this.form.model.activity1 = e.DecimalValue
+      } else {
+        this.form.model.activity1 = null
+      }
+    },
+    selectedActivity2 (e) {
+      if (e) {
+        this.form.model.activity2 = e.DecimalValue
+      } else {
+        this.form.model.activity2 = null
       }
     },
     selectedHoldAsset (e) {
