@@ -34,6 +34,55 @@
                 disabled
               >
               </v-select>
+              <v-select
+                v-if="header.columnType === 'CodeValue'"
+                v-once
+                label="title"
+                @open="onOpen(header.dataField, items)"
+                @click="filterAutocomplete(items)"
+                disabled
+              >
+              </v-select>
+
+              <v-select
+                v-if="header.columnType === 'UpperValueValue'"
+                v-once
+                label="title"
+                @open="onOpen(header.dataField, items)"
+                @click="filterAutocomplete(items)"
+                disabled
+              >
+              </v-select>
+
+              <v-select
+                v-if="header.columnType === 'ValueValue'"
+                v-once
+                label="title"
+                @open="onOpen(header.dataField, items)"
+                @click="filterAutocomplete(items)"
+                disabled
+              >
+              </v-select>
+
+              <v-select
+                v-if="header.columnType === 'DecimalValueValue'"
+                v-once
+                label="title"
+                @open="onOpen(header.dataField, items)"
+                @click="filterAutocomplete(items)"
+                disabled
+              >
+              </v-select>
+
+              <v-select
+                v-if="header.columnType === 'OtherPropertiesValue'"
+                v-once
+                label="title"
+                @open="onOpen(header.dataField, items)"
+                @click="filterAutocomplete(items)"
+                disabled
+              >
+              </v-select>
 
               <!--<v-select
                 v-if="header.columnType === 'LabelValue'"
@@ -115,9 +164,25 @@
                 </b-dropdown-item>
               </b-dropdown>
             </span>
-            <span v-if="h.columnType === 'LabelValue'" class="d-block w-100">
-              {{ labelFormat(item[h.dataField]) }}
+            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'Label') }}
             </span>
+            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'Code') }}
+            </span>
+            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'UpperValue')}}
+            </span>
+            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'Value')}}
+            </span>
+            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'DecimalValue')}}
+            </span>
+            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100">
+              {{ labelFormat(item[h.dataField], 'OtherProperties')}}
+            </span>
+
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
@@ -221,11 +286,11 @@ export default {
     dateFormat (e) {
       return e
     },
-    labelFormat (e) {
+    labelFormat (e, type) {
       if (e == null) {
         return ''
       } else {
-        return e.Label
+        return e[type]
       }
     },
     linkGen (pageNum) {
