@@ -786,8 +786,12 @@ export default {
   mounted () {
     this.$store.commit('setCities', false)
     this.$store.commit('bigLoaded', false)
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
+    },
     save () {
       let createData = {
       }
