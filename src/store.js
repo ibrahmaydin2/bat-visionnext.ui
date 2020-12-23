@@ -130,9 +130,11 @@ export const store = new Vuex.Store({
     cities: [],
     distiricts: [],
     lookup: [],
+    detailLookup: [],
     lookupWarehouse_type: [],
     vehicleList: [],
     branchList: [],
+    analysisQuestions: [],
     warehouseList: [],
     customerList: [],
     //Employee Lookups Values
@@ -434,6 +436,25 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getDetailPanelLookups ({ state, commit }, query) {
+      let dataQuery = {
+        'LookupTableCode' : query.type,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId
+      }
+      return axios.post(`VisionNextCommonApi/api/LookupValue/GetValuesMultiple`, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setDetailPanelLookups', res.data.Values)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     getInsertRules ({ commit }, query) {
       commit('bigLoaded', true)
       return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
@@ -482,12 +503,16 @@ export const store = new Vuex.Store({
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
             router.push({name: query.return})
           } else {
-            let errs = res.data.Validations.Errors
-            for (let i = 0; i < errs.length; i++) {
-              let errmsg = errs[i].States
-              for (let x = 0; x < errmsg.length; x++) {
-                commit('showAlert', { type: 'validation', msg: errmsg })
+            if (res.data.Validations) {
+              let errs = res.data.Validations.Errors
+              for (let i = 0; i < errs.length; i++) {
+                let errmsg = errs[i].States
+                for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                }
               }
+            } else {
+              commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
         })
@@ -525,6 +550,29 @@ export const store = new Vuex.Store({
         .catch(err => {
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
+    getAutocomplete ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextBranch/api/Branch/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setBranchList', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     // aşağıdaki fonksiyonlar temizlenmeli. birbirini taklit eden fonksiyonlar birleştirilmeli.
@@ -572,26 +620,6 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             state.lookupWarehouse_type = res.data.Values
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getLookups ({ state, commit }, query) {
-      let dataQuery = {
-        'LookupTableCode' : query.type,
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId
-      }
-      return axios.post(`VisionNextCommonApi/api/LookupValue/GetValues`, dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setValues', {data: res.data, name: query.name})
-            // commit('setLookUp', res.data.Values)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -668,6 +696,29 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    acAnalysisQuestions ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextFieldAnalysis/api/AnalysisQuestions/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setAnalysisQuestions', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     acBranch ({ state, commit }, query) {
       let AndConditionModel = {}
       AndConditionModel[query.searchField] = query.searchText
@@ -715,29 +766,6 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    // acCustomerLocation ({ state, commit }, query) {
-    //   let AndConditionModel = {}
-    //   AndConditionModel[query.searchField] = query.searchText
-    //   let dataQuery = {
-    //     AndConditionModel,
-    //     'branchId': state.BranchId,
-    //     'companyId': state.CompanyId,
-    //     'pagerecordCount': 50,
-    //     'page': 1
-    //   }
-    //   return axios.post('VisionNextCustomer/api/CustomerLocation/Search', dataQuery, authHeader)
-    //     .then(res => {
-    //       if (res.data.IsCompleted === true) {
-    //         commit('setCustomerLocationsList', res.data.ListModel.BaseModels)
-    //       } else {
-    //         commit('showAlert', { type: 'danger', msg: res.data.Message })
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err.message)
-    //       commit('showAlert', { type: 'danger', msg: err.message })
-    //     })
-    // },
     getEmployeesByBranchId({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
@@ -871,7 +899,7 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-    },
+    }
   },
   mutations: {
     setDev (state, payload) {
@@ -986,8 +1014,12 @@ export const store = new Vuex.Store({
     setLookUp (state, payload) {
       state.lookup = payload
     },
-    setLookUpAuto (state, payload) {
-      state.autoLookup[payload.name] = payload.data.Values
+    setDetailPanelLookups (state, payload) {
+      state.detailLookup = payload
+    },
+    setAutocomplete (state, payload) {
+      console.log(payload)
+      state[payload.name] = payload.data.Values
     },
     setInsertRules (state, payload) {
       /*
@@ -1047,14 +1079,13 @@ export const store = new Vuex.Store({
               inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
                 <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                   <v-select
-                    v-model="form.${fieldName}"
                     :options="lookup.${fieldDefaultValue}"
-                    @input="selectedType('${fieldName}', form.${fieldName})"
+                    @input="selectedType('${fieldName}', $event)"
                     label="Label"
                   />
                 </b-form-group>
               </b-col>`
-              valueForAutoLookup += fieldDefaultValue
+              valueForAutoLookup += fieldDefaultValue + ','
             break;
 
             case 'Radio':
@@ -1194,6 +1225,9 @@ export const store = new Vuex.Store({
     },
     setEmployees (state, payload) {
       state.employees = payload
+    },
+    setAnalysisQuestions(state, payload) {
+      state.analysisQuestions = payload
     },
     setBranch(state, payload) {
       state.branch = payload
