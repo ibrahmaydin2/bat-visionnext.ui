@@ -145,7 +145,7 @@ export default {
     save () {
       this.$store.dispatch('updateData', {...this.query, api: 'VisionNextBank/api/Bank', formdata: this.form, return: this.$route.meta.baseLink})
     },
-    addDetailList() {
+    addDetailList () {
       this.form.model.bankBranches.push({
         Code: this.branchCode,
         Description1: this.branchDescription1,
@@ -178,8 +178,8 @@ export default {
           bankBranches: e.BankBranches,
           recordId: e.RecordId,
           deleted: e.Deleted
-        },
-        this.dataStatus = e.StatusId ? true : false
+        }
+        this.dataStatus = !!e.StatusId
       }
     },
     dataStatus: function (e) {
@@ -201,7 +201,6 @@ export default {
 </script>
 <style lang="sass" scope>
   table
-    i 
+    i
       cursor: pointer
 </style>
-

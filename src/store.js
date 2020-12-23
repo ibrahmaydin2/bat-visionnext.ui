@@ -200,7 +200,15 @@ export const store = new Vuex.Store({
     discountGroups10: [],
     discountGroups2: [],
     discountGroups9: [],
-    signNameIds: []
+    signNameIds: [],
+    banks: [],
+    currency: [],
+    items: [],
+    paymentPeriods: [],
+    statementDays: [],
+    paymentTypes: [],
+    customerLabels: [],
+    customerLabelValues: []
   },
   actions: {
     // sistem gereksinimleri
@@ -899,8 +907,186 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-    }
-  },
+      },
+    // aşağıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
+    getBanks({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextBank/api/Bank/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setBanks', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getCurrency({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextSystem/api/SysCurrency/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCurrency', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getItems({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setItems', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getPaymentPeriods({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCommonApi/api/FixedTerm/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setPaymentPeriods', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getStatementDays({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextSystem/api/SysDay/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setStatementDays', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getPaymentTypes({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCommonApi/api/PaymentType/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setPaymentTypes', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getCustomerLabels({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCommonApi/api/Label/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerLabels', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getCustomerLabelValues({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+      }
+      return axios.post('VisionNextCommonApi/api/LabelDetail/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerLabelValues', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+      }
+      // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
+    },
   mutations: {
     setDev (state, payload) {
       state.developmentMode = payload
@@ -1258,6 +1444,33 @@ export const store = new Vuex.Store({
     },
     setWarehouseList (state, payload) {
       state.warehouseList = payload
-    }
+    },
+    setBanks (state, payload) {
+      state.banks = payload
+    },
+    setCurrency (state, payload) {
+      state.currency = payload
+    },
+    setItems (state, payload) {
+      state.items = payload
+    },
+    setPaymentPeriods (state, payload) {
+      state.paymentPeriods = payload
+    },
+    setStatementDays (state, payload) {
+      payload.map(item => {
+        item.Label = item.DayNumber + " " + item.Description1
+      })
+      state.statementDays = payload
+    },
+    setPaymentTypes (state, payload) {
+      state.paymentTypes = payload
+    },
+    setCustomerLabels (state, payload) {
+      state.customerLabels = payload
+    },
+    setCustomerLabelValues (state, payload) {
+      state.customerLabelValues = payload
+    },
   }
 })

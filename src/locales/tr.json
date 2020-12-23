@@ -627,7 +627,22 @@
       "discountGroup2": "Filtre Alanı 1",
       "discountGroup9": "Filtre Alanı 2",
       "signNameId": "Aidiyet",
-      "isOpportunitySpot": "Fırsat Noktası"
+      "isOpportunitySpot": "Fırsat Noktası",
+      "licenseValidDate": "Lisans Geçerlilik Tarihi",
+      "outSourceOrderId" : "Dış Kaynak Sipariş",
+      "bank": "Banka",
+      "discountCode": "Ürün Kodu",
+      "discountDescription": "Ürün Adı",
+      "discountTci1": "TCI 1",
+      "discountTci2": "TCI 2",
+      "customerRegion5": "Müşteri Bölgesi 5",
+      "marketingRegion5": "Pazarlama Bölgesi 5",
+      "tag": "Etiket",
+      "labelId": "Etiket Tanımı",
+      "labelValueId": "Etiket Değeri",
+      "customerTouchpoints": "Tüketici İletişim Fırsatları",
+      "touchpointPriority": "İletişim Fırsatı Seviyesi",
+      "touchpointTypeId": "İletişim Fırsatı Tipi"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
