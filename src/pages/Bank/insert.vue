@@ -143,7 +143,7 @@ export default {
     save () {
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextBank/api/Bank', formdata: this.form, return: this.$route.meta.baseLink})
     },
-    addDetailList() {
+    addDetailList () {
       this.form.model.bankBranches.push({
         code: this.branchCode,
         description1: this.branchDescription1,
