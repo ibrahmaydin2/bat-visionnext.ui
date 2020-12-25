@@ -65,6 +65,11 @@ import CustomerGet from '@/pages/Customer/get' // fullpage görünümü
 import CustomerInsert from '@/pages/Customer/insert' // yeni kayıt
 import CustomerUpdate from '@/pages/Customer/update' // güncelleme
 
+import KeyAccountIndex from '@/pages/KeyAccount/' // liste ekranı
+import KeyAccountGet from '@/pages/KeyAccount/get' // fullpage görünümü
+import KeyAccountInsert from '@/pages/KeyAccount/insert' // yeni kayıt
+import KeyAccountUpdate from '@/pages/KeyAccount/update' // güncelleme
+
 import BranchStockTransferIndex from '@/pages/BranchStockTransfer/'
 import BranchStockTransferGet from '@/pages/BranchStockTransfer/get'
 import BranchStockTransferInsert from '@/pages/BranchStockTransfer/insert'
@@ -424,6 +429,7 @@ const routes = [
           {path: '/Branch', name: 'Branch', component: BranchIndex, meta: { title: i18n.t('router.Branch'), createLink: 'BranchInsert' }},
           {path: '/Warehouse', name: 'Warehouse', component: WarehouseIndex, meta: { title: i18n.t('router.Warehouse'), createLink: 'WarehouseInsert' }},
           {path: '/Customer', name: 'Customer', component: CustomerIndex, meta: { title: i18n.t('router.Customer'), createLink: 'CustomerInsert' }},
+          {path: '/KeyAccount', name: 'KeyAccount', component: KeyAccountIndex, meta: { title: i18n.t('router.KeyAccount'), createLink: 'KeyAccountInsert' }},
           {path: '/Service', name: 'Service', component: ServiceIndex, meta: { title: i18n.t('router.Service'), createLink: 'ServiceInsert' }},
           {path: '/EDocumentErrorManagement', name: 'EDocumentErrorManagement', component: EDocumentErrorManagementIndex, meta: { title: i18n.t('router.EDocumentErrorManagement'), createLink: 'EDocumentErrorManagementInsert' }},
           {path: '/ServiceRecords', name: 'ServiceRecords', component: ServiceRecordsIndex, meta: { title: i18n.t('router.ServiceRecords'), createLink: 'ServiceRecordsInsert' }},
@@ -495,6 +501,7 @@ const routes = [
           { path: '/Branch/:url', name: 'BranchGet', component: BranchGet, meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
           { path: '/Warehouse/:url', name: 'WarehouseGet', component: WarehouseGet, meta: { title: i18n.t('router.WarehouseGet'), baseLink: 'Warehouse' } },
           { path: '/Customer/:url', name: 'CustomerGet', component: CustomerGet, meta: { title: i18n.t('router.CustomerGet'), baseLink: 'Customer' } },
+          { path: '/KeyAccount/:url', name: 'KeyAccountGet', component: KeyAccountGet, meta: { title: i18n.t('router.KeyAccountGet'), baseLink: 'KeyAccount' } },
 
           { path: '/Service/:url', name: 'ServiceGet', component: ServiceGet, meta: { title: i18n.t('router.ServiceGet'), baseLink: 'Service' } },
           { path: '/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementGet', component: EDocumentErrorManagementGet, meta: { title: i18n.t('router.EDocumentErrorManagementGet'), baseLink: 'EDocumentErrorManagement' } },
@@ -573,6 +580,7 @@ const routes = [
           { path: '/Update/Branch/:url', name: 'BranchUpdate', component: BranchUpdate, meta: { title: i18n.t('router.BranchUpdate'), baseLink: 'Branch' } },
           { path: '/Update/Warehouse/:url', name: 'WarehouseUpdate', component: WarehouseUpdate, meta: { title: i18n.t('router.WarehouseUpdate'), baseLink: 'Warehouse' } },
           { path: '/Update/Customer/:url', name: 'CustomerUpdate', component: CustomerUpdate, meta: { title: i18n.t('router.CustomerUpdate'), baseLink: 'Customer' } },
+          { path: '/Update/KeyAccount/:url', name: 'KeyAccountUpdate', component: KeyAccountUpdate, meta: { title: i18n.t('router.KeyAccountUpdate'), baseLink: 'KeyAccount' } },
 
           { path: '/Update/Service/:url', name: 'ServiceUpdate', component: ServiceUpdate, meta: { title: i18n.t('router.ServiceUpdate'), baseLink: 'Service' } },
           { path: '/Update/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementUpdate', component: EDocumentErrorManagementUpdate, meta: { title: i18n.t('router.EDocumentErrorManagementUpdate'), baseLink: 'EDocumentErrorManagement' } },
@@ -652,6 +660,7 @@ const routes = [
           { path: '/Insert/Branch', name: 'BranchInsert', component: BranchInsert, meta: { title: i18n.t('router.BranchInsert'), baseLink: 'Branch' } },
           { path: '/Insert/Warehouse', name: 'WarehouseInsert', component: WarehouseInsert, meta: { title: i18n.t('router.WarehouseInsert'), baseLink: 'Warehouse' } },
           { path: '/Insert/Customer', name: 'CustomerInsert', component: CustomerInsert, meta: { title: i18n.t('router.CustomerInsert'), baseLink: 'Customer' } },
+          { path: '/Insert/KeyAccount', name: 'KeyAccountInsert', component: KeyAccountInsert, meta: { title: i18n.t('router.KeyAccountInsert'), baseLink: 'KeyAccount' } },
 
           { path: '/Insert/Service', name: 'ServiceInsert', component: ServiceInsert, meta: { title: i18n.t('router.ServiceInsert'), baseLink: 'Service' } },
           { path: '/Insert/EDocumentErrorManagement', name: 'EDocumentErrorManagementInsert', component: EDocumentErrorManagementInsert, meta: { title: i18n.t('router.EDocumentErrorManagementInsert'), baseLink: 'EDocumentErrorManagement' } },

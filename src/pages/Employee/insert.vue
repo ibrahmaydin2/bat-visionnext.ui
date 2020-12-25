@@ -15,6 +15,40 @@
         </b-row>
       </header>
     </b-col>
+    <b-col cols="12" class="asc__insertPage-content-head">
+      <section>
+        <b-row>
+           <b-col cols="12" md="2">
+            <b-form-group
+              :label="$t('insert.employee.Model_Code')"
+            >
+              <b-form-input type="text" v-model="form.model.code" readonly />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group :label="$t('insert.employee.Model_Name')">
+              <b-form-input type="text" v-model="form.model.name" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group
+              :label="$t('insert.employee.Model_Surname')"
+            >
+              <b-form-input type="text" v-model="form.model.surname" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group
+              :label="$t('insert.employee.state')"
+            >
+              <b-form-checkbox v-model="statusId" name="check-button" switch>
+                {{(statusId) ? $t('insert.active'): $t('insert.passive')}}
+              </b-form-checkbox>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </section>
+    </b-col>
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.employee.Employee')" active>

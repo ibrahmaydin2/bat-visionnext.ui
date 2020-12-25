@@ -153,7 +153,7 @@
               {{ item[h.dataField][h.value] }}
             </template>-->
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
-              <b-dropdown size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
+              <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>

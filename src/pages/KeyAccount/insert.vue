@@ -1,0 +1,1817 @@
+<template>
+  <b-row>
+    <b-col cols="12">
+      <header>
+        <b-row>
+          <b-col cols="12" md="6">
+            <Breadcrumb />
+          </b-col>
+          <b-col cols="12" md="6" class="text-right">
+            <router-link :to="{name: 'Dashboard' }">
+              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+            </router-link>
+            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+          </b-col>
+        </b-row>
+      </header>
+    </b-col>
+    <b-col cols="12" class="asc__insertPage-content-head">
+      <section>
+        <b-row>
+          <b-col cols="12" md="2">
+            <b-form-group :label="$t('insert.customer.code')" :class="{ 'form-group--error': $v.form.model.code.$error }">
+              <b-form-input type="text" v-model="form.model.code" readonly />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group :label="$t('insert.customer.Model_CardTypeId')" :class="{ 'form-group--error': $v.form.model.cardTypeId.$error }">
+              <v-select :options="customerCardTypes" @input="selectedCartType" label="Description1"></v-select>
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group :label="$t('insert.customer.Model_StatusReasonId')">
+              <v-select :options="cancelReasons" @input="selectedCancelReason" label="Description1"></v-select>
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-form-group :label="$t('insert.state')" :class="{ 'form-group--error': $v.form.model.statusId.$error }">
+              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
+                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
+              </b-form-checkbox>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </section>
+    </b-col>
+    <b-col cols="12">
+      <b-tabs>
+        <b-tab :title="$t('insert.customer.Customer')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CommercialTitle')" :class="{ 'form-group--error': $v.form.model.commercialTitle.$error }">
+                <b-form-input type="text" v-model="form.model.commercialTitle" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Description1')" :class="{ 'form-group--error': $v.form.model.description1.$error }">
+                <b-form-input type="text" v-model="form.model.description1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_LicenseNumber')">
+                <b-form-input type="text" v-model="form.model.licenseNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_TaxCustomerTypeId')" :class="{ 'form-group--error': $v.form.model.taxCustomerTypeId.$error }">
+                <v-select :options="lookup.TAX_CUSTOMER_TYPE" @input="selectedCustomerTaxType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_TaxOffice')" :class="{ 'form-group--error': $v.form.model.taxOffice.$error }">
+                <b-form-input type="text" v-model="form.model.taxOffice" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <div class="error" v-if="!$v.form.model.taxNumber.minLength"> En az {{$v.form.model.taxNumber.$params.minLength.min}} karakter olmalıdır.</div>
+              <b-form-group :label="$t('insert.customer.Model_TaxNumber')" :class="{ 'form-group--error': $v.form.model.taxCustomerTypeId.$error }">
+                <b-form-input type="text" v-model="form.model.taxNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.customerEmail')">
+                <b-form-input type="text" v-model="form.model.customerEmail" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_salesVisitFrequency')">
+                <b-form-input type="text" v-model="form.model.salesVisitFrequency" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_BlockReasonId')" :class="{ 'form-group--error': $v.form.model.blockReasonId.$error }">
+                <v-select :options="lookup.CUSTOMER_BLOCK_REASON" @input="selectedBlockReason" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_TypeId')" :class="{ 'form-group--error': $v.form.model.typeId.$error }">
+                <v-select :options="lookup.CUSTOMER_TYPE" @input="selectedCustomerType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.serviceVisitFrequency')">
+                <b-form-input type="text" v-model="form.model.serviceVisitFrequency" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CustomerInvoiceTypeId')">
+                <v-select :options="lookup.CUSTOMER_INVOICE_TYPE" @input="selectedInvoiceType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.customerRegion5')">
+                <v-select :options="lookup.CUSTOMER_REGION_5" @input="selectedCustomerRegion5" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.marketingRegion5')">
+                <v-select :options="lookup.MARKETING_REGION_5" @input="selectedMarketingRegion5" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.routeCode')">
+                <b-form-input type="text" v-model="form.model.routeCode" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.licenseValidDate')" :class="{ 'form-group--error': $v.form.model.licenseValidDate.$error }">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="form.model.licenseValidDate" locale="tr" class="mb-2"></b-form-datepicker>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_IsBlocked')">
+                <b-form-radio-group v-model="form.model.isBlocked">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.manualSItem')">
+                <b-form-radio-group v-model="form.model.manualSItem">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isRouteRegion')">
+                <b-form-radio-group v-model="form.model.isRouteRegion">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isOrderChangeUnitary')">
+                <b-form-radio-group v-model="form.model.isOrderChangeUnitary">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_UseEInvoice')">
+                <b-form-radio-group v-model="form.model.useEInvoice">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_isWarehouseSale')">
+                <b-form-radio-group v-model="form.model.isWarehouseSale">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-tab>
+
+        <b-tab :title="$t('insert.customer.CustomerLocations')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Code')">
+                <b-form-input type="text" v-model="customerLocations.code" readonly/>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Location_Description1')">
+                <b-form-input type="text" v-model="customerLocations.description1" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="6" lg="4">
+              <b-form-group :label="$t('insert.customer.Model_AddressDetail')">
+                <b-form-input type="text" v-model="customerLocations.addressDetail" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.city')">
+                <v-select :options="lookup.CITY" @input="selectedCity" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.distirict')">
+                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_PostCode')">
+                <b-form-input type="text" v-model="customerLocations.postCode" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_XPosition')">
+                <b-form-input type="text" v-model="customerLocations.xPosition" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_YPosition')">
+                <b-form-input type="text" v-model="customerLocations.yPosition" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="6" lg="6">
+              <b-form-group :label="$t('insert.customer.Model_AddressDescription')">
+                <b-form-input type="text" v-model="customerLocations.addressDescription" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_ContactName')">
+                <b-form-input type="text" v-model="customerLocations.contactName" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1')">
+                <b-form-input type="text" v-model="customerLocations.phoneNumber1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_FaxNumber')">
+                <b-form-input type="text" v-model="customerLocations.faxNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Alias')">
+                <b-form-input type="text" v-model="customerLocations.alias" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_IsDefaultLocation')">
+                <b-form-radio-group v-model="customerLocations.isDefaultLocation">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_IsInvoiceAddress')">
+                <b-form-radio-group v-model="customerLocations.isInvoiceAddress">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_IsDeliveryAddress')">
+                <b-form-radio-group v-model="customerLocations.isDeliveryAddress">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isRouteNode')">
+                <b-form-radio-group v-model="customerLocations.isRouteNode">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="9" lg="6">
+              <b-form-group :label="$t('insert.customer.Model_Genexp1')">
+                <b-form-input type="text" v-model="customerLocations.genexp1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="9" lg="6">
+              <b-form-group :label="$t('insert.customer.Model_Genexp2')">
+                <b-form-input type="text" v-model="customerLocations.genexp2" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="12" lg="12" class="text-right">
+              <b-form-group>
+                <b-button @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row v-if="form.model.customerLocations.length > 0">
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.customerLocations" :key="i">
+                  <b-td>{{r.code}}</b-td>
+                  <b-td>{{r.description1}}</b-td>
+                  <b-td class="text-center"><i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerClass')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Category1Id')" :class="{ 'form-group--error': $v.form.model.category1Id.$error }">
+                <v-select :options="lookup.CUSTOMER_CATEGORY_1" @input="selectedCustomerCategory1" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Category2Id')" :class="{ 'form-group--error': $v.form.model.category2Id.$error }">
+                <v-select :options="lookup.CUSTOMER_CATEGORY_2" @input="selectedCustomerCategory2" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_Category3Id')" :class="{ 'form-group--error': $v.form.model.category3Id.$error }">
+                <v-select :options="lookup.CUSTOMER_CATEGORY_3" @input="selectedCustomerCategory3" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_GroupId')">
+                <v-select :options="lookup.CUSTOMER_GROUP" @input="selectedCustomerGroup" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_ClassId')">
+                <v-select :options="lookup.CUSTOMER_CLASS" @input="selectedCustomerClass" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_SalesDocumentTypeId')" :class="{ 'form-group--error': $v.form.model.salesDocumentTypeId.$error }">
+                <v-select :options="lookup.SALES_DOCUMENT_TYPE" @input="selectedSalesDocumentType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_OwnerTypeId')">
+                <v-select :options="lookup.OWNER_TYPE" @input="selectedOwnerType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_ClassProposalId')">
+                <v-select :options="lookup.CUSTOMER_CLASS_PROPOSAL" @input="selectedClassProposal" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_SalesMethodId')">
+                <v-select :options="lookup.CUSTOMER_SALES_METHOD" @input="selectedCustomerSalesMethod" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_GeographicEnvironmentId')">
+                <v-select :options="lookup.CUSTOMER_GEOGRAPHIC_ENVIRONMENT" @input="selectedGeographicEnvironments" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_TradeFocusId')">
+                <v-select :options="lookup.CUSTOMER_TRADE_FOCUS" @input="selectedCustomerTradeFocus" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_InvoiceCombineRuleId')" :class="{ 'form-group--error': $v.form.model.invoiceCombineRuleId.$error }">
+                <v-select :options="lookup.INVOICE_COMBINE_RULE" @input="selectedInvoiceCombineRule" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_ClassProposalReasonId')">
+                <v-select :options="lookup.CUSTOMER_CLASS_PROPOSAL_REASON" @input="selectedClassProposalReason" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_BackMarginGroupId')">
+                <v-select :options="lookup.BACK_MARGIN_GROUP" @input="selectedBackMarginGroup" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.AdditionalClassInformation')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup1Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_1" @input="selectedDiscountGroups1" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup3Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_3" @input="selectedDiscountGroups3" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup4Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_4" @input="selectedDiscountGroups4" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup5Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_5" @input="selectedDiscountGroups5" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup6Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_6" @input="selectedDiscountGroups6" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup7Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_7" @input="selectedDiscountGroups7" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountGroup8Id')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_8" @input="selectedDiscountGroups8" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_KindId')">
+                <v-select :options="lookup.CUSTOMER_KIND" @input="selectedKind" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_KindId')">
+                <v-select :options="lookup.CUSTOMER_ACTIVITY_1" @input="selectedActivity1" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_KindId')">
+                <v-select :options="lookup.OUT_SOURCE_ORDER" @input="selectedOutSourceOrder" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_PriceListCategoryId')" :class="{ 'form-group--error': $v.form.model.priceListCategoryId.$error }">
+                <v-select :options="lookup.PRICE_LIST_CATEGORY_TYPE" @input="selectedPriceList" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
+                <b-form-input type="text" v-model="form.model.creditLimit" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit')">
+                <b-form-input type="text" v-model="form.model.riskLimit" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CurrentCredit')">
+                <b-form-input type="text" v-model="form.model.currentCredit" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CurrentRisk')">
+                <b-form-input type="text" v-model="form.model.currentRisk" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.reservedLimit')">
+                <b-form-input type="text" v-model="form.model.reservedLimit" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_FinanceCode')">
+                <b-form-input type="text" v-model="form.model.financeCode" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.debitAccountRemainder')">
+                <b-form-input type="text" v-model="form.model.debitAccountRemainder" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.creditAccountRemainder')">
+                <b-form-input type="text" v-model="form.model.creditAccountRemainder" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountPercent1')">
+                <b-form-input type="text" v-model="form.model.discountPercent1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountPercent2')">
+                <b-form-input type="text" v-model="form.model.discountPercent2" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.sapCustomerId')">
+                <b-form-input type="text" v-model="form.model.sapCustomerId" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DeliveryDayParam')">
+                <b-form-input type="text" v-model="form.model.deliveryDayParam" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_PaymentPeriod')">
+                <v-select :options="paymentPeriods" @input="selectedPaymentPeriod" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountTci1')">
+                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCiBreak1" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountTci2')">
+                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCiBreak2" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.statementDay')">
+                <v-select :options="statementDays" @input="selectedStatementDay" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DefaultPaymentTypeId')" :class="{ 'form-group--error': $v.form.model.defaultPaymentTypeId.$error }">
+                <v-select :options="paymentTypes" @input="selectedPaymentType" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_AllowOverLimit')">
+                <b-form-radio-group v-model="form.model.allowOverLimit">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isDirectDebit')">
+                <b-form-radio-group v-model="form.model.isDirectDebit">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_ManualInvoiceClosure')">
+                <b-form-radio-group v-model="form.model.manualInvoiceClosure">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.statement')">
+                <b-form-radio-group v-model="form.model.statement">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isBlackListed')">
+                <b-form-radio-group v-model="form.model.isBlackListed">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.bank')">
+                <v-select :options="banks" @input="selectedBank" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId')">
+                <v-select :options="currency" @input="selectedCurrency" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
+                <v-select :options="lookup.CREDIT_DESCRIPTION" @input="selectedCreditDescription" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditAmount')">
+                <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.debtor')">
+                <b-form-input type="text" v-model="customerCreditHistories.debtor" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.bail')">
+                <b-form-input type="text" v-model="customerCreditHistories.bail" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
+                <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit')">
+                <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.landOffice')">
+                <b-form-input type="text" v-model="customerCreditHistories.landOffice" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.plate')">
+                <b-form-input type="text" v-model="customerCreditHistories.plate" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.textDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.textDate" locale="tr" class="mb-2"></b-form-datepicker>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.notaryDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.notaryDate" locale="tr" class="mb-2"></b-form-datepicker>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.traficRegistry')">
+                <b-form-input type="text" v-model="customerCreditHistories.traficRegistry" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.textNo')">
+                <b-form-input type="text" v-model="customerCreditHistories.textNo" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.notaryNo')">
+                <b-form-input type="text" v-model="customerCreditHistories.notaryNo" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.plateNumber')">
+                <b-form-input type="text" v-model="customerCreditHistories.plateNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.mortgageValue')">
+                <b-form-input type="text" v-model="customerCreditHistories.mortgageValue" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.dbsPriority')">
+                <b-form-input type="text" v-model="customerCreditHistories.dbsPriority" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.allowOverLimit')">
+                <b-form-radio-group v-model="form.model.allowOverLimit">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2" class="ml-auto">
+              <b-form-group>
+                <b-button @click="addCreditHistories" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.debtor')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.bail')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.customerCreditHistories" :key="i">
+                  <b-td>{{r.creditAmount}}</b-td>
+                  <b-td>{{r.debtor}}</b-td>
+                  <b-td>{{r.bail}}</b-td>
+                  <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
+          <b-row>
+            <b-col>
+              <b-row>
+                <b-col cols="12" md="6" lg="4">
+                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId')">
+                    <v-select :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="12" md="3" lg="2">
+                  <b-form-group>
+                    <b-button @click="addCustomerPaymentType" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.Model_PaymentTypeId')}}</span></b-th>
+                    <b-th><span>{{$t('list.operations')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in form.model.customerPaymentTypes" :key="i">
+                      <b-td>{{r.paymentTypeId}}</b-td>
+                      <b-td class="text-center"><i @click="removeCustomerPaymentType(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-row>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.detail')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.textField1')">
+                <b-form-input type="text" v-model="form.model.textField1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.textField2')">
+                <b-form-input type="text" v-model="form.model.textField2" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.barcode')">
+                <b-form-input type="text" v-model="form.model.barcode" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.holdAsset')">
+                <v-select :options="lookup.CUSTOMER_HOLD_ASSET" @input="selectedHoldAsset" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.contracted')">
+                <v-select :options="lookup.CUSTOMER_CONTRACTED" @input="selectedContracteds" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountGroup10')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_10" @input="selectedDiscountGroups10" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountGroup2')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_2" @input="selectedDiscountGroups2" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountGroup9')">
+                <v-select :options="lookup.CUSTOMER_DISCOUNT_GROUP_9" @input="selectedDiscountGroups9" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.signNameId')">
+                <v-select :options="lookup.SIGN_NAME" @input="selectedSignNameIds" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.isOpportunitySpot')">
+                <b-form-radio-group v-model="form.model.isOpportunitySpot">
+                  <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountCode')">
+                <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountDescription')">
+                <b-form-input type="text" v-model="customerItemDiscounts.description1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountPercent1')">
+                <b-form-input type="text" v-model="customerItemDiscounts.discountPercent1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.Model_DiscountPercent2')">
+                <b-form-input type="text" v-model="customerItemDiscounts.discountPercent2" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountTci1')">
+                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.discountTci2')">
+                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button @click="addItemDiscount" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.discountDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_DiscountPercent1')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_DiscountPercent2')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.customerItemDiscounts" :key="i">
+                  <b-td>{{r.description1}}</b-td>
+                  <b-td>{{r.discountPercent1}}</b-td>
+                  <b-td>{{r.discountPercent2}}</b-td>
+                  <b-td class="text-center"><i @click="removeItemDiscount(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.tag')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.labelId')">
+                <v-select :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.labelValueId')">
+                <v-select :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button @click="addCustomerLabel" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.labelId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.labelValueId')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.customerLabels" :key="i">
+                  <b-td>{{r.labelId}}</b-td>
+                  <b-td>{{r.labelValueId}}</b-td>
+                  <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerTouchpoints')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.touchpointPriority')">
+                <v-select :options="lookup.CUSTOMER_TOUCHPOINT_PRIORITY" @input="selectedTouchpointPriority" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.touchpointTypeId')">
+                <v-select :options="lookup.CUSTOMER_TOUCHPOINT_TYPE" @input="selectedTouchpointType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <b-button @click="addCustomerTouchpoint" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.labelId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.labelValueId')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.model.customerTouchpoints" :key="i">
+                  <b-td>{{r.touchpointPriority}}</b-td>
+                  <b-td>{{r.touchpointTypeId}}</b-td>
+                  <b-td class="text-center"><i @click="removeCustomerTouchpoint(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+      </b-tabs>
+    </b-col>
+  </b-row>
+</template>
+<script>
+import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
+import { required, minLength } from 'vuelidate/lib/validators'
+
+export default {
+  mixins: [mixin],
+  data () {
+    return {
+      form: {
+        model: {
+          code: null,
+          cardTypeId: null,
+          commercialTitle: null,
+          licenseNumber: null,
+          statusId: 1,
+          description1: null,
+          licenseValidDate: null,
+          statusReasonId: null,
+          typeId: null,
+          salesVisitFrequency: null,
+          blockReasonId: null,
+          taxCustomerTypeId: null,
+          serviceVisitFrequency: null,
+          isBlocked: null,
+          taxOffice: null,
+          routeCode: null,
+          isWarehouseSale: null,
+          taxNumber: null,
+          useEInvoice: null,
+          customerInvoiceTypeId: null,
+          manualSItem: null,
+          isRouteRegion: null,
+          isOrderChangeUnitary: null,
+          customerEmail: null,
+          customerLocations: [],
+          groupId: null,
+          classId: null,
+          salesDocumentTypeId: null,
+          category1Id: null,
+          category2Id: null,
+          category3Id: null,
+          ownerTypeId: null,
+          classProposalId: null,
+          classProposalReasonId: null,
+          salesMethodId: null,
+          geographicEnvironmentId: null,
+          tradeFocusId: null,
+          invoiceCombineRuleId: null,
+          backMarginGroupId: null,
+          discountGroup1Id: null,
+          discountGroup3Id: null,
+          discountGroup4Id: null,
+          discountGroup5Id: null,
+          discountGroup6Id: null,
+          discountGroup7Id: null,
+          discountGroup8Id: null,
+          kindId: null,
+          defaultPaymentTypeId: null,
+          paymentPeriod: null,
+          priceListCategoryId: null,
+          creditLimit: null,
+          riskLimit: null,
+          reservedLimit: null,
+          currentCredit: null,
+          currentRisk: null,
+          debitAccountRemainder: null,
+          creditAccountRemainder: null,
+          financeCode: null,
+          discountPercent1: null,
+          discountPercent2: null,
+          tciBreak1Id: null,
+          tciBreak2Id: null,
+          manualInvoiceClosure: null,
+          isBlackListed: null,
+          statement: null,
+          statementDay: null,
+          sapCustomerId: null,
+          allowOverLimit: null,
+          deliveryDayParam: null,
+          isDirectDebit: null,
+          customerCreditHistories: [],
+          customerPaymentTypes: [],
+          customerItemDiscounts: [],
+          textField1: null,
+          textField2: null,
+          barcode: null,
+          contracted: null,
+          holdsAsset: null,
+          discountGroup10: null,
+          discountGroup2: null,
+          discountGroup9: null,
+          signNameId: null,
+          isOpportunitySpot: null,
+          activity1: null,
+          activity2: null,
+          outSourceOrderId: null,
+          customerRegion5Id: null,
+          marketingRegion5Id: null,
+          customerLabels: [],
+          customerTouchpoints: [],
+          salesTypeId: 0
+        }
+      },
+      customerLocations: {
+        code: null,
+        description1: null,
+        addressDetail: null,
+        phoneNumber1: null,
+        faxNumber: null,
+        addressDescription: null,
+        genexp1: null,
+        contactName: null,
+        cityId: null,
+        xPosition: null,
+        yPosition: null,
+        districtId: null,
+        genexp2: null,
+        postCode: null,
+        alias: null,
+        isDefaultLocation: null,
+        isInvoiceAddress: null,
+        isDeliveryAddress: null,
+        isRouteNode: null
+      },
+      customerCreditHistories: {
+        creditAmount: null,
+        creditDescriptionId: null,
+        creditStartDate: null,
+        bankId: null,
+        currencyId: null,
+        creditEndDate: null,
+        debtor: null,
+        bail: null,
+        textDate: null,
+        landOffice: null,
+        notaryDate: null,
+        traficRegistry: null,
+        textNo: null,
+        creditLimit: null,
+        notaryNo: null,
+        plateNumber: null,
+        riskLimit: null,
+        mortgageValue: null,
+        dbsPriority: null,
+        allowOverLimit: null,
+        plate: null
+      },
+      customerPaymentTypes: {
+        paymentTypeId: null
+      },
+      customerItemDiscounts: {
+        code: null,
+        description1: null,
+        discountPercent1: null,
+        discountPercent2: null,
+        tciBreak1Id: null,
+        tciBreak2Id: null
+      },
+      customerTouchpoints: {
+        touchpointPriority: null,
+        touchpointTypeId: null
+      },
+      dataStatus: true,
+      locationCodeCount: 1,
+      customerLabelId: null,
+      customerLabelValue: null
+    }
+  },
+  validations: {
+    form: {
+      model: {
+        licenseValidDate: {
+          required
+        },
+        cardTypeId: {
+          required
+        },
+        statusId: {
+          required
+        },
+        typeId: {
+          required
+        },
+        blockReasonId: {
+          required
+        },
+        taxCustomerTypeId: {
+          required
+        },
+        category3Id: {
+          required
+        },
+        category2Id: {
+          required
+        },
+        category1Id: {
+          required
+        },
+        salesDocumentTypeId: {
+          required
+        },
+        invoiceCombineRuleId: {
+          required
+        },
+        defaultPaymentTypeId: {
+          required
+        },
+        priceListCategoryId: {
+          required
+        },
+        code: {
+          required
+        },
+        commercialTitle: {
+          required
+        },
+        description1: {
+          required
+        },
+        taxNumber: {
+          required,
+          minLength: minLength(11)
+        },
+        taxOffice: {
+          required
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState([
+      'createCode',
+      'distiricts',
+      'lookup',
+      'customerCardTypes',
+      'cancelReasons',
+      'banks',
+      'currency',
+      'items',
+      'paymentPeriods',
+      'statementDays',
+      'paymentTypes',
+      'customerLabels',
+      'customerLabelValues'
+    ])
+  },
+  mounted () {
+    // this.$store.commit('setCities', false)
+    this.$store.commit('bigLoaded', false)
+    this.getCode()
+    this.getLookup()
+    this.getDatas()
+  },
+  methods: {
+    getCode () {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextCustomer/api/Customer/GetCode'})
+    },
+    getLookup () {
+      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+      let allLookups = 'CUSTOMER_TYPE,CUSTOMER_BLOCK_REASON,TAX_CUSTOMER_TYPE,CUSTOMER_INVOICE_TYPE,CITY,CUSTOMER_CATEGORY_1,CUSTOMER_CATEGORY_2,CUSTOMER_CATEGORY_3,CUSTOMER_GROUP,CUSTOMER_CLASS,SALES_DOCUMENT_TYPE,OWNER_TYPE,CUSTOMER_CLASS_PROPOSAL,CUSTOMER_SALES_METHOD,CUSTOMER_GEOGRAPHIC_ENVIRONMENT,CUSTOMER_TRADE_FOCUS,INVOICE_COMBINE_RULE,BACK_MARGIN_GROUP,CUSTOMER_DISCOUNT_GROUP_1,CUSTOMER_DISCOUNT_GROUP_3,CUSTOMER_DISCOUNT_GROUP_4,CUSTOMER_DISCOUNT_GROUP_5,CUSTOMER_DISCOUNT_GROUP_6,CUSTOMER_DISCOUNT_GROUP_7,CUSTOMER_DISCOUNT_GROUP_8,CUSTOMER_KIND,PRICE_LIST_CATEGORY_TYPE,CREDIT_DESCRIPTION,CUSTOMER_HOLD_ASSET,CUSTOMER_CONTRACTED,CUSTOMER_DISCOUNT_GROUP_10,CUSTOMER_DISCOUNT_GROUP_2,CUSTOMER_DISCOUNT_GROUP_9,SIGN_NAME,CUSTOMER_CLASS_PROPOSAL_REASON,CUSTOMER_ACTIVITY_1,CUSTOMER_ACTIVITY_2,OUT_SOURCE_ORDER,TCI_BREAKDOWN,MARKETING_REGION_5,CUSTOMER_REGION_5,CUSTOMER_TOUCHPOINT_TYPE,CUSTOMER_TOUCHPOINT_PRIORITY'
+      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+    },
+    getDatas () {
+      this.$store.dispatch('getCustomerCardType')
+      this.$store.dispatch('getCustomerCancelReasons')
+      this.$store.dispatch('getBanks')
+      this.$store.dispatch('getCurrency')
+      this.$store.dispatch('getItems')
+      this.$store.dispatch('getPaymentPeriods')
+      this.$store.dispatch('getStatementDays')
+      this.$store.dispatch('getPaymentTypes')
+      this.$store.dispatch('getCustomerLabels')
+      this.$store.dispatch('getCustomerLabelValues')
+    },
+    save () {
+      console.log(this.$v)
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$toasted.show(this.$t('insert.fillRequireds'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      } else {
+        this.form.model.licenseValidDate = this.dateConvertToISo(this.form.model.licenseValidDate)
+        this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: this.form, return: this.$route.meta.baseLink})
+      }
+    },
+    selectedCartType (e) {
+      if (e) {
+        this.form.model.cardTypeId = e.RecordId
+      } else {
+        this.form.model.cardTypeId = null
+      }
+    },
+    selectedCancelReason (e) {
+      if (e) {
+        this.form.model.statusReasonId = e.RecordId
+      } else {
+        this.form.model.statusReasonId = null
+      }
+    },
+    selectedBank (e) {
+      if (e) {
+        this.customerCreditHistories.bankId = e.RecordId
+      } else {
+        this.customerCreditHistories.bankId = null
+      }
+    },
+    selectedCurrency (e) {
+      if (e) {
+        this.customerCreditHistories.currencyId = e.RecordId
+      } else {
+        this.customerCreditHistories.currencyId = null
+      }
+    },
+    selectedCustomerType (e) {
+      if (e) {
+        this.form.model.typeId = e.DecimalValue
+      } else {
+        this.form.model.typeId = null
+      }
+    },
+    selectedCustomerTaxType (e) {
+      if (e) {
+        this.form.model.taxCustomerTypeId = e.DecimalValue
+      } else {
+        this.form.model.taxCustomerTypeId = null
+      }
+    },
+    selectedBlockReason (e) {
+      if (e) {
+        this.form.model.blockReasonId = e.DecimalValue
+      } else {
+        this.form.model.blockReasonId = null
+      }
+    },
+    selectedInvoiceType (e) {
+      if (e) {
+        this.form.model.customerInvoiceTypeId = e.DecimalValue
+      } else {
+        this.form.model.customerInvoiceTypeId = null
+      }
+    },
+    selectedCustomerCategory1 (e) {
+      if (e) {
+        this.form.model.category1Id = e.DecimalValue
+      } else {
+        this.form.model.category1Id = null
+      }
+    },
+    selectedCustomerCategory2 (e) {
+      if (e) {
+        this.form.model.category2Id = e.DecimalValue
+      } else {
+        this.form.model.category2Id = null
+      }
+    },
+    selectedCustomerCategory3 (e) {
+      if (e) {
+        this.form.model.category3Id = e.DecimalValue
+      } else {
+        this.form.model.category3Id = null
+      }
+    },
+    selectedCustomerGroup (e) {
+      if (e) {
+        this.form.model.groupId = e.DecimalValue
+      } else {
+        this.form.model.groupId = null
+      }
+    },
+    selectedCustomerClass (e) {
+      if (e) {
+        this.form.model.classId = e.DecimalValue
+      } else {
+        this.form.model.classId = null
+      }
+    },
+    selectedSalesDocumentType (e) {
+      if (e) {
+        this.form.model.salesDocumentTypeId = e.DecimalValue
+      } else {
+        this.form.model.salesDocumentTypeId = null
+      }
+    },
+    selectedOwnerType (e) {
+      if (e) {
+        this.form.model.ownerTypeId = e.DecimalValue
+      } else {
+        this.form.model.ownerTypeId = null
+      }
+    },
+    selectedClassProposal (e) {
+      if (e) {
+        this.form.model.classProposalId = e.DecimalValue
+      } else {
+        this.form.model.classProposalId = null
+      }
+    },
+    selectedClassProposalReason (e) {
+      if (e) {
+        this.form.model.classProposalReasonId = e.DecimalValue
+      } else {
+        this.form.model.classProposalReasonId = null
+      }
+    },
+    selectedCustomerSalesMethod (e) {
+      if (e) {
+        this.form.model.salesMethodId = e.DecimalValue
+      } else {
+        this.form.model.salesMethodId = null
+      }
+    },
+    selectedGeographicEnvironments (e) {
+      if (e) {
+        this.form.model.geographicEnvironmentId = e.DecimalValue
+      } else {
+        this.form.model.geographicEnvironmentId = null
+      }
+    },
+    selectedCustomerTradeFocus (e) {
+      if (e) {
+        this.form.model.tradeFocusId = e.DecimalValue
+      } else {
+        this.form.model.tradeFocusId = null
+      }
+    },
+    selectedInvoiceCombineRule (e) {
+      if (e) {
+        this.form.model.invoiceCombineRuleId = e.DecimalValue
+      } else {
+        this.form.model.invoiceCombineRuleId = null
+      }
+    },
+    selectedBackMarginGroup (e) {
+      if (e) {
+        this.form.model.backMarginGroupId = e.DecimalValue
+      } else {
+        this.form.model.backMarginGroupId = null
+      }
+    },
+    selectedDiscountGroups1 (e) {
+      if (e) {
+        this.form.model.discountGroup1Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup1Id = null
+      }
+    },
+    selectedDiscountGroups3 (e) {
+      if (e) {
+        this.form.model.discountGroup3Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup3Id = null
+      }
+    },
+    selectedDiscountGroups4 (e) {
+      if (e) {
+        this.form.model.discountGroup4Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup4Id = null
+      }
+    },
+    selectedDiscountGroups5 (e) {
+      if (e) {
+        this.form.model.discountGroup5Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup5Id = null
+      }
+    },
+    selectedDiscountGroups6 (e) {
+      if (e) {
+        this.form.model.discountGroup6Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup6Id = null
+      }
+    },
+    selectedDiscountGroups7 (e) {
+      if (e) {
+        this.form.model.discountGroup7Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup7Id = null
+      }
+    },
+    selectedDiscountGroups8 (e) {
+      if (e) {
+        this.form.model.discountGroup8Id = e.DecimalValue
+      } else {
+        this.form.model.discountGroup8Id = null
+      }
+    },
+    selectedPriceList (e) {
+      if (e) {
+        this.form.model.priceListCategoryId = e.DecimalValue
+      } else {
+        this.form.model.priceListCategoryId = null
+      }
+    },
+    selectedCreditDescription (e) {
+      if (e) {
+        this.customerCreditHistories.creditDescriptionId = e.DecimalValue
+      } else {
+        this.customerCreditHistories.creditDescriptionId = null
+      }
+    },
+    selectedKind (e) {
+      if (e) {
+        this.form.model.kindId = e.DecimalValue
+      } else {
+        this.form.model.kindId = null
+      }
+    },
+    selectedActivity1 (e) {
+      if (e) {
+        this.form.model.activity1 = e.DecimalValue
+      } else {
+        this.form.model.activity1 = null
+      }
+    },
+    selectedActivity2 (e) {
+      if (e) {
+        this.form.model.activity2 = e.DecimalValue
+      } else {
+        this.form.model.activity2 = null
+      }
+    },
+    selectedHoldAsset (e) {
+      if (e) {
+        this.form.model.holdsAsset = e.DecimalValue
+      } else {
+        this.form.model.holdsAsset = null
+      }
+    },
+    selectedContracteds (e) {
+      if (e) {
+        this.form.model.contracted = e.DecimalValue
+      } else {
+        this.form.model.contracted = null
+      }
+    },
+    selectedDiscountGroups10 (e) {
+      if (e) {
+        this.form.model.discountGroup10 = e.DecimalValue
+      } else {
+        this.form.model.discountGroup10 = null
+      }
+    },
+    selectedDiscountGroups2 (e) {
+      if (e) {
+        this.form.model.discountGroup2 = e.DecimalValue
+      } else {
+        this.form.model.discountGroup2 = null
+      }
+    },
+    selectedDiscountGroups9 (e) {
+      if (e) {
+        this.form.model.discountGroup9 = e.DecimalValue
+      } else {
+        this.form.model.discountGroup9 = null
+      }
+    },
+    selectedSignNameIds (e) {
+      if (e) {
+        this.form.model.signNameId = e.DecimalValue
+      } else {
+        this.form.model.signNameId = null
+      }
+    },
+    selectedOutSourceOrder (e) {
+      if (e) {
+        this.form.model.outSourceOrderId = e.DecimalValue
+      } else {
+        this.form.model.outSourceOrderId = null
+      }
+    },
+    selectedTCi1 (e) {
+      if (e) {
+        this.customerItemDiscounts.tciBreak1Id = e.DecimalValue
+      } else {
+        this.customerItemDiscounts.tciBreak1Id = null
+      }
+    },
+    selectedTCi2 (e) {
+      if (e) {
+        this.customerItemDiscounts.tciBreak2Id = e.DecimalValue
+      } else {
+        this.customerItemDiscounts.tciBreak2Id = null
+      }
+    },
+    selectedItem (e) {
+      if (e) {
+        this.customerItemDiscounts.code = e.RecordId
+      } else {
+        this.customerItemDiscounts.code = null
+      }
+    },
+    selectedCustomerRegion5 (e) {
+      if (e) {
+        this.form.model.customerRegion5Id = e.DecimalValue
+      } else {
+        this.form.model.customerRegion5Id = null
+      }
+    },
+    selectedMarketingRegion5 (e) {
+      if (e) {
+        this.form.model.marketingRegion5Id = e.DecimalValue
+      } else {
+        this.form.model.marketingRegion5Id = null
+      }
+    },
+    selectedPaymentPeriod (e) {
+      if (e) {
+        this.form.model.paymentPeriod = e.RecordId
+      } else {
+        this.form.model.paymentPeriod = null
+      }
+    },
+    selectedTCiBreak1 (e) {
+      if (e) {
+        this.form.model.tciBreak1Id = e.DecimalValue
+      } else {
+        this.form.model.tciBreak1Id = null
+      }
+    },
+    selectedTCiBreak2 (e) {
+      if (e) {
+        this.form.model.tciBreak2Id = e.DecimalValue
+      } else {
+        this.form.model.tciBreak2Id = null
+      }
+    },
+    selectedStatementDay (e) {
+      if (e) {
+        this.form.model.statementDay = e.RecordId
+      } else {
+        this.form.model.statementDay = null
+      }
+    },
+    selectedPaymentType (e) {
+      if (e) {
+        this.form.model.defaultPaymentTypeId = e.RecordId
+      } else {
+        this.form.model.defaultPaymentTypeId = null
+      }
+    },
+    selectedLabelId (e) {
+      if (e) {
+        this.customerLabelId = e.RecordId
+      } else {
+        this.customerLabelId = null
+      }
+    },
+    selectedLabelValueId (e) {
+      if (e) {
+        this.customerLabelValue = e.RecordId
+      } else {
+        this.customerLabelValue = null
+      }
+    },
+    selectedPaymentTypeArr (e) {
+      if (e) {
+        this.customerPaymentTypes.paymentTypeId = e.RecordId
+      } else {
+        this.customerPaymentTypes.paymentTypeId = null
+      }
+    },
+    selectedTouchpointPriority (e) {
+      if (e) {
+        this.customerTouchpoints.touchpointPriority = e.DecimalValue
+      } else {
+        this.customerTouchpoints.touchpointPriority = null
+      }
+    },
+    selectedTouchpointType (e) {
+      if (e) {
+        this.customerTouchpoints.touchpointTypeId = e.DecimalValue
+      } else {
+        this.customerTouchpoints.touchpointTypeId = null
+      }
+    },
+    addCustomerLocations () {
+      this.form.model.customerLocations.push({
+        code: this.customerLocations.code,
+        description1: this.customerLocations.description1,
+        addressDetail: this.customerLocations.addressDetail,
+        phoneNumber1: this.customerLocations.phoneNumber1,
+        faxNumber: this.customerLocations.faxNumber,
+        addressDescription: this.customerLocations.addressDescription,
+        genexp1: this.customerLocations.genexp1,
+        contactName: this.customerLocations.contactName,
+        cityId: this.customerLocations.cityId,
+        xPosition: this.customerLocations.xPosition,
+        yPosition: this.customerLocations.yPosition,
+        districtId: this.customerLocations.districtId,
+        genexp2: this.customerLocations.genexp2,
+        postCode: this.customerLocations.postCode,
+        alias: this.customerLocations.alias,
+        isDefaultLocation: this.customerLocations.isDefaultLocation,
+        isInvoiceAddress: this.customerLocations.isInvoiceAddress,
+        isDeliveryAddress: this.customerLocations.isDeliveryAddress,
+        isRouteNode: this.customerLocations.isRouteNode
+      })
+    },
+    removeCustomerLocation (item) {
+      this.form.model.customerLocations.splice(this.form.model.customerLocations.indexOf(item), 1)
+    },
+    addCreditHistories () {
+      if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
+        this.$toasted.show(this.$t('insert.fillRequireds'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+
+      this.form.model.customerCreditHistories.push({
+        creditAmount: this.customerCreditHistories.creditAmount,
+        creditDescriptionId: this.customerCreditHistories.creditDescriptionId,
+        creditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
+        bankId: this.customerCreditHistories.bankId,
+        currencyId: this.customerCreditHistories.currencyId,
+        creditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
+        debtor: this.customerCreditHistories.debtor,
+        bail: this.customerCreditHistories.bail,
+        textDate: this.dateConvertToISo(this.customerCreditHistories.textDate),
+        landOffice: this.customerCreditHistories.landOffice,
+        notaryDate: this.dateConvertToISo(this.customerCreditHistories.notaryDate),
+        traficRegistry: this.customerCreditHistories.traficRegistry,
+        textNo: this.customerCreditHistories.textNo,
+        creditLimit: this.customerCreditHistories.creditLimit,
+        notaryNo: this.customerCreditHistories.notaryNo,
+        plateNumber: this.customerCreditHistories.plateNumber,
+        riskLimit: this.customerCreditHistories.riskLimit,
+        mortgageValue: this.customerCreditHistories.mortgageValue,
+        dbsPriority: this.customerCreditHistories.dbsPriority,
+        allowOverLimit: this.customerCreditHistories.allowOverLimit,
+        plate: this.customerCreditHistoriesplate
+      })
+    },
+    removeCustomerCreditHistory (item) {
+      this.form.model.customerCreditHistories.splice(this.form.model.customerCreditHistories.indexOf(item), 1)
+    },
+    addItemDiscount () {
+      if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
+        this.$toasted.show(this.$t('insert.fillRequireds'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.form.model.customerItemDiscounts.push({
+        code: this.customerItemDiscounts.code,
+        description1: this.customerItemDiscounts.description1,
+        discountPercent1: this.customerItemDiscounts.discountPercent1,
+        discountPercent2: this.customerItemDiscounts.discountPercent2,
+        tciBreak1Id: this.customerItemDiscounts.tciBreak1Id,
+        tciBreak2Id: this.customerItemDiscounts.tciBreak2Id
+      })
+    },
+    removeItemDiscount (item) {
+      this.form.model.customerItemDiscounts.splice(this.form.model.customerItemDiscounts.indexOf(item), 1)
+    },
+    addCustomerLabel () {
+      this.form.model.customerLabels.push({
+        labelId: this.customerLabelId,
+        labelValueId: this.customerLabelValue
+      })
+    },
+    removeCustomerLabel (item) {
+      this.form.model.customerLabels.splice(this.form.model.customerLabels.indexOf(item), 1)
+    },
+    addCustomerPaymentType (item) {
+      this.form.model.customerPaymentTypes.push({
+        paymentTypeId: this.customerPaymentTypes.paymentTypeId
+      })
+    },
+    removeCustomerPaymentType (item) {
+      this.form.model.customerPaymentTypes.splice(this.form.model.customerPaymentTypes.indexOf(item), 1)
+    },
+    addCustomerTouchpoint (item) {
+      this.form.model.customerTouchpoints.push({
+        touchpointPriority: this.customerTouchpoints.touchpointPriority,
+        touchpointTypeId: this.customerTouchpoints.touchpointTypeId
+      })
+    },
+    removeCustomerTouchpoint (item) {
+      this.form.model.customerTouchpoints.splice(this.form.model.customerTouchpoints.indexOf(item), 1)
+    },
+    selectedVehicle (e) {
+      this.vehicle = e.title
+    },
+    selectedCity (e) {
+      if (e) {
+        this.customerLocations.cityId = e.DecimalValue
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
+      } else {
+        this.customerLocations.cityId = null
+      }
+    },
+    selectedDistirict (e) {
+      if (e) {
+        this.customerLocations.districtId = e.DecimalValue
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
+      } else {
+        this.customerLocations.districtId = null
+      }
+    }
+  },
+  watch: {
+    createCode (e) {
+      if (e) {
+        this.form.model.code = e
+        this.customerLocations.code = `${this.form.model.code} - ${this.locationCodeCount}`
+      }
+    },
+    dataStatus: function (e) {
+      if (e) {
+        this.form.model.statusId = 1
+      } else {
+        this.form.model.statusId = 0
+      }
+    },
+    lookup (e) {
+      console.log(e)
+    }
+  }
+}
+</script>
+<style lang="sass">
+</style>

@@ -22,7 +22,7 @@
                   <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
                   </b-button>
-                  <b-dropdown v-else split :split-to="{name: createLink}" variant="success" right size="sm">
+                  <b-dropdown v-else-if="tableOperations.Actions && tableOperations.Actions.length > 1" split :split-to="{name: createLink}" variant="success" right size="sm">
                     <template v-slot:button-content>
                       <i class="fas fa-plus-square" /> {{$t('list.create')}}
                     </template>

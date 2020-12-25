@@ -45,7 +45,7 @@ if (localStorage.getItem('BranchId')) {
 export const store = new Vuex.Store({
   state: {
     // sistem gereksinimleri
-    developmentMode: true,
+    developmentMode: false,
     bigLoading: true,
     style: {
       icon: 'asc__header-hamburger asc__header-hamburger-active d-inline-block',
@@ -426,8 +426,12 @@ export const store = new Vuex.Store({
     },
     // tüm INSERT ekranlarının kontrolleri sağlanır.
     getAllLookups ({ state, commit }, query) {
+      const queryType = query.type.split(',').filter(function(item,i,allItems){
+        return i==allItems.indexOf(item)
+      }).join(',')
+    
       let dataQuery = {
-        'LookupTableCode' : query.type,
+        'LookupTableCode' : queryType,
         'BranchId' : state.BranchId,
         'CompanyId' : state.CompanyId
       }
@@ -436,13 +440,13 @@ export const store = new Vuex.Store({
           if (res.data.IsCompleted === true) {
             commit('setLookUp', res.data.Values)
           } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
+            // commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
+        // .catch(err => {
+        //   console.log(err.message)
+        //   commit('showAlert', { type: 'danger', msg: err.message })
+        // })
     },
     getDetailPanelLookups ({ state, commit }, query) {
       let dataQuery = {
@@ -474,7 +478,6 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('bigLoaded', false)
-          document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
@@ -1219,6 +1222,7 @@ export const store = new Vuex.Store({
       let title = {}
       let enbld = {}
       let valueForAutoLookup = ''
+
       apiRules.forEach(rule => {
         let inputCode
         let fieldName = rule.EntityProperty
@@ -1233,37 +1237,36 @@ export const store = new Vuex.Store({
         visbl[fieldName] = fieldVisible // görüntüleme durumu.
         title[fieldName] = fieldLabel // input ismi.
         enbld[fieldName] = fieldEnabled === true ? false : true // input ismi.
-        
         // HTML üretimi sadece development modu aktifken çalışacak.
-        if (state.developmentMode) {
-          switch (rule.ColumnType) {
-            case 'Id':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-                </b-form-group>
-              </b-col>`
-            break;
-            
-            case 'String':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-                </b-form-group>
-              </b-col>`
-            break;
+        switch (rule.ColumnType) {
+          case 'Id':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              </b-form-group>
+            </b-col>`
+          break;
+          
+          case 'String':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              </b-form-group>
+            </b-col>`
+          break;
 
-            case 'LabelValue':
+          case 'LabelValue':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              </b-form-group>
+            </b-col>`
+          break;
+          
+          case 'Select':
+            if (fieldDefaultValue != null) {
               inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-                </b-form-group>
-              </b-col>`
-            break;
-            
-            case 'Select':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                   <v-select
                     :options="lookup.${fieldDefaultValue}"
                     @input="selectedType('${fieldName}', $event)"
@@ -1271,50 +1274,61 @@ export const store = new Vuex.Store({
                   />
                 </b-form-group>
               </b-col>`
+              
               valueForAutoLookup += fieldDefaultValue + ','
-            break;
-
-            case 'Radio':
+            } else {
               inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-checkbox v-model="form.${fieldName}" name="check-button" switch>
-                    {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                  </b-form-checkbox>
+                <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                  <v-select />
                 </b-form-group>
               </b-col>`
-            break;
+            }
+          break;
 
-            case 'Check':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-checkbox v-model="form.${fieldName}" name="check-button">
-                    {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                  </b-form-checkbox>
-                </b-form-group>
-              </b-col>`
-            break;
+          case 'Radio':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-checkbox v-model="form.${fieldName}" name="check-button" switch>
+                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-col>`
+          break;
 
-            case 'DateTime':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} :start-weekday="1" != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-datepicker v-model="form.${fieldName}" />
-                </b-form-group>
-              </b-col>`
-            break;
+          case 'Check':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-checkbox v-model="form.${fieldName}" name="check-button">
+                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-col>`
+          break;
 
-            case 'Text':
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldLabel}" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <b-form-textarea v-model="form.${fieldName}" placeholder="" />
-                </b-form-group>
-              </b-col>`
-            break;
-          }
+          case 'DateTime':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-datepicker v-model="form.${fieldName}" />
+              </b-form-group>
+            </b-col>`
+          break;
+
+          case 'Text':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldLabel} + ($v.form.${fieldLabel}.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <b-form-textarea v-model="form.${fieldName}" placeholder="" />
+              </b-form-group>
+            </b-col>`
+          break;
+        }
+        if (state.developmentMode === true) {
           insertPageHTML[fieldName] = inputCode.trim()
         }
       })
       this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
-      state.insertHTML = insertPageHTML
+      if (state.developmentMode === true) {
+        state.insertHTML = insertPageHTML
+      }
       state.insertRules = rull
       state.insertVisible = visbl
       state.insertTitle = title

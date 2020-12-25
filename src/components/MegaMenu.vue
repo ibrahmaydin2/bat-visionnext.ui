@@ -10,6 +10,7 @@
             <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
+            <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
             <ul v-if="subs.sub.length >= 1">
               <li v-for="(three, y) in subs.sub" :key="'three' + y">
                 <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }}" @click.native="closeHeader()">
@@ -98,18 +99,18 @@ export default {
               border-bottom: none
             & ul
               position: fixed
-              border-top: 1px #e88000 solid
               visibility: hidden
               left: calc(230px + 308px)
               width: 300px
               height: 310px
               top: 8px
-              background: #f2f2f2
+              background: #ffffff
               padding: .5rem 1rem 2rem .5rem
               overflow-x: auto
               border-radius: 0 20px 20px 0
               & li
                 padding: 0px
+                background: #ffffff
                 display: block
                 width: 300px
                 margin: 0px
@@ -124,7 +125,14 @@ export default {
         & a
           color: #6e6e6e
           font-size: 12px
-          display: block
+          display: inline-block
+        .isub
+          display: inline-block
+          float: right
+          color: #ddd
+          line-height: 33px
+          transform: translateX(-10px)
+          transition: .3s
         &:hover
           background: #fff
           border-radius: 3px 0 0 3px
@@ -132,10 +140,11 @@ export default {
           & ul
             visibility: visible
             & li
-              transition: .3s
               &:hover
                 border-bottom: 1px #e88000 solid
-                transition: .3s
+                .isub
+                  transform: translateX(10px)
+                  transition: .3s
               & ul
                 visibility: hidden
               &:hover
