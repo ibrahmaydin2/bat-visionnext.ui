@@ -111,6 +111,7 @@ export const store = new Vuex.Store({
     insertVisible: [],
     insertTitle: [],
     insertReadonly: [],
+    insertColumnType: [],
     errorView: false,
     errorData: [],
     nextgrid: false,
@@ -208,7 +209,11 @@ export const store = new Vuex.Store({
     statementDays: [],
     paymentTypes: [],
     customerLabels: [],
-    customerLabelValues: []
+    customerLabelValues: [],
+    cities: [],
+    credits: [],
+    touchpoints: [],
+    touchpoint_types: []
   },
   actions: {
     // sistem gereksinimleri
@@ -653,6 +658,26 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             state.lookupWarehouse_type = res.data.Values
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getLookups ({ state, commit }, query) {
+      let dataQuery = {
+        'LookupTableCode' : query.type,
+        'BranchId' : state.BranchId,
+        'CompanyId' : state.CompanyId,
+        'UpperValue': query.upperValue
+      }
+      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setValues', {data: res.data, name: query.name})
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -1243,6 +1268,7 @@ export const store = new Vuex.Store({
       let visbl = {}
       let title = {}
       let enbld = {}
+      let cType = {}
       let valueForAutoLookup = ''
 
       apiRules.forEach(rule => {
@@ -1259,6 +1285,7 @@ export const store = new Vuex.Store({
         visbl[fieldName] = fieldVisible // görüntüleme durumu.
         title[fieldName] = fieldLabel // input ismi.
         enbld[fieldName] = fieldEnabled === true ? false : true // input ismi.
+        cType[fieldName] = rule.ColumnType
         // HTML üretimi sadece development modu aktifken çalışacak.
         switch (rule.ColumnType) {
           case 'Id':
@@ -1355,6 +1382,7 @@ export const store = new Vuex.Store({
       state.insertVisible = visbl
       state.insertTitle = title
       state.insertReadonly = enbld
+      state.insertColumnType = cType
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload
