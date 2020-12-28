@@ -118,7 +118,7 @@ export default {
           recordState: 2,
           statusId: null,
           financeCode: null,
-          bankBranches: [],
+          bankBranches: []
         }
       },
       dataStatus: null,

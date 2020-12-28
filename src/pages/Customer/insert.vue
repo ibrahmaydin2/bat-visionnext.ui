@@ -25,12 +25,17 @@
           </b-col>
           <b-col v-if="insertVisible.CardTypeId != null ? insertVisible.CardTypeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.CardTypeId + ($v.form.CardTypeId.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.CardTypeId.$error }">
-              <v-select />
+              <v-select :options="customerCardTypes" @input="selectedSearchType('CardTypeId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusReasonId + ($v.form.StatusReasonId.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
-              <v-select />
+              <v-select :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
+            </b-form-group>
+          </b-col>
+          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.SalesTypeId + ($v.form.SalesTypeId.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesTypeId.$error }">
+              <b-form-input type="text" v-model="form.SalesTypeId" :readonly="insertReadonly.SalesTypeId" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
@@ -227,7 +232,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.city')">
-                <v-select :options="lookup.CITY" @input="selectedCity" label="Label"></v-select>
+                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -659,7 +664,7 @@
             </b-col>
             <b-col v-if="insertVisible.PaymentPeriod != null ? insertVisible.PaymentPeriod : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.PaymentPeriod + ($v.form.PaymentPeriod.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.PaymentPeriod.$error }">
-                <v-select />
+                <v-select :options="paymentPeriods" @input="selectedSearchType('PaymentPeriod', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TciBreak1Id != null ? insertVisible.TciBreak1Id : developmentMode" cols="12" md="2">
@@ -685,12 +690,12 @@
           <b-row>
             <b-col v-if="insertVisible.StatementDay != null ? insertVisible.StatementDay : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.StatementDay + ($v.form.StatementDay.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDay.$error }">
-                <v-select />
+                <v-select :options="statementDays" @input="selectedSearchType('StatementDay', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.DefaultPaymentTypeId != null ? insertVisible.DefaultPaymentTypeId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DefaultPaymentTypeId + ($v.form.DefaultPaymentTypeId.required === false ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultPaymentTypeId.$error }">
-                <v-select />
+                <v-select :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.AllowOverLimit != null ? insertVisible.AllowOverLimit : developmentMode" cols="12" md="2">
@@ -744,7 +749,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
-                <v-select :options="lookup.CREDIT_DESCRIPTION" @input="selectedCreditDescription" label="Label"></v-select>
+                <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1089,12 +1094,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.touchpointPriority')">
-                <v-select :options="lookup.CUSTOMER_TOUCHPOINT_PRIORITY" @input="selectedTouchpointPriority" label="Label"></v-select>
+                <v-select :options="touchpoints" @input="selectedTouchpointPriority" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.touchpointTypeId')">
-                <v-select :options="lookup.CUSTOMER_TOUCHPOINT_TYPE" @input="selectedTouchpointType" label="Label"></v-select>
+                <v-select :options="touchpoint_types" @input="selectedTouchpointType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1127,7 +1132,9 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {
@@ -1136,7 +1143,9 @@ export default {
         customerPaymentTypes: [],
         customerItemDiscounts: [],
         customerLabels: [],
-        customerTouchpoints: []
+        customerTouchpoints: [],
+        SalesTypeId: 0,
+        RecordTypeId: 1
       },
       customerLocations: {
         code: null,
@@ -1203,7 +1212,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'statementDays', 'cities', 'credits', 'touchpoints', 'touchpoint_types'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -1214,8 +1223,10 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-      let allLookups = 'CREDIT_DESCRIPTION,CUSTOMER_TOUCHPOINT_PRIORITY,CUSTOMER_TOUCHPOINT_TYPE'
-      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'credits'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_PRIORITY', name: 'touchpoints'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_TYPE', name: 'touchpoint_types'})
 
       this.$store.dispatch('getCustomerCardType')
       this.$store.dispatch('getCustomerCancelReasons')
@@ -1244,7 +1255,11 @@ export default {
         }
       }
     },
+    selectedSearchType (label, model) {
+      this.form[label] = model.RecordId
+    },
     save () {
+      console.log(this.form)
       this.$v.$touch()
       if (this.$v.$error) {
         this.$toasted.show(this.$t('insert.fillRequireds'), {
@@ -1253,11 +1268,28 @@ export default {
           duration: '3000'
         })
       } else {
-        this.form.licenseValidDate = this.dateConvertToISo(this.form.licenseValidDate)
-        this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: this.form, return: this.$route.meta.baseLink})
+        this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
+        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
+        this.form.IsDirectDebit = this.checkConvertToNumber(this.form.IsDirectDebit)
+        this.form.IsBlocked = this.checkConvertToNumber(this.form.IsBlocked)
+        this.form.IsWarehouseSale = this.checkConvertToNumber(this.form.IsWarehouseSale)
+        this.form.UseEInvoice = this.checkConvertToNumber(this.form.UseEInvoice)
+        this.form.ManualSItem = this.checkConvertToNumber(this.form.ManualSItem)
+        this.form.IsRouteRegion = this.checkConvertToNumber(this.form.IsRouteRegion)
+        this.form.IsOrderChangeUnitary = this.checkConvertToNumber(this.form.IsOrderChangeUnitary)
+        this.form.ManualInvoiceClosure = this.checkConvertToNumber(this.form.ManualInvoiceClosure)
+        this.form.AllowOverLimit = this.checkConvertToNumber(this.form.AllowOverLimit)
+        this.form.IsBlackListed = this.checkConvertToNumber(this.form.IsBlackListed)
+        this.form.Statement = this.checkConvertToNumber(this.form.Statement)
+        this.form.IsOpportunitySpot = this.checkConvertToNumber(this.form.IsOpportunitySpot)
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
       }
     },
     selectedCity (e) {
+      console.log(e)
       if (e) {
         this.customerLocations.cityId = e.DecimalValue
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
