@@ -80,7 +80,7 @@
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.TaxOffice != null ? insertVisible.TaxOffice : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.TaxOffice + (insertRequired.TaxOffice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxOffice.$error }">
+              <b-form-group :label="insertTitle.TaxOffice + (insertRequired .TaxOffice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxOffice.$error }">
                 <b-form-input type="text" v-model="form.TaxOffice" :readonly="insertReadonly.TaxOffice" />
               </b-form-group>
             </b-col>
@@ -1526,6 +1526,7 @@ export default {
   validations () {
     // bu fonksiyonda güncelleme yapılmayacak!
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    // insertRequireds
     return {
       form: this.insertRules
     }
