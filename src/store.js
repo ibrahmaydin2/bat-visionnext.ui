@@ -246,6 +246,28 @@ export const store = new Vuex.Store({
           commit('bigLoaded', false)
         })
     },
+    changePassword ({ commit }, authData) {
+      return axios.post('VisionNextAuthentication/api/Authentication/ChangePassword', {
+        Email: authData.Email,
+        OldPassword: authData.OldPassword,
+        NewPassword: authData.NewPassword,
+        CuaAuthKey: user.CuaKey
+      })
+        .then(res => {
+          console.log(res.data)
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: 'Şifreniz Değiştirildi.' })
+            setTimeout(() => {
+              router.push({name: 'Dashboard'})
+            }, 1000)
+          } else {
+            commit('showAlert', { type: 'error', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'network', msg: err })
+        })
+    },
     navigation ({ commit }, authData) {
       commit('showAlert', { type: 'info', msg: i18n.t('general.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UiMenu/SearchByApplicationHash', authCompanyAndBranch, authHeader)

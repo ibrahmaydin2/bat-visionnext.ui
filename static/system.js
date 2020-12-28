@@ -3,8 +3,8 @@ export const ideaName = 'İdea Teknoloji Çözümleri'
 export const copyright = '© 2020 İdea Teknoloji Çözümler Bilgisayar San. ve Tic. A.Ş.'
 export const verno = '1.0.1.3'
 // export const apiLink = 'https://batqa.visionplus.com.tr/'
-// export const apiLink = 'https://batdev.visionplus.com.tr/'
-export const apiLink = 'https://battestvnapi.visionplus.com.tr'
+export const apiLink = 'https://batdev.visionplus.com.tr/'
+// export const apiLink = 'https://battestvnapi.visionplus.com.tr'
 
 export const now = new Date()
 export const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())

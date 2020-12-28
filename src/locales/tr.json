@@ -299,7 +299,8 @@
     "ItemAnalysisResultInsert": "ItemAnalysisResultInsert",
     "FieldSurveyResultInsert": "FieldSurveyResultInsert",
     "FieldSurveyInsert": "FieldSurveyInsert",
-    "FixedTermInsert": "FixedTermInsert"
+    "FixedTermInsert": "FixedTermInsert",
+    "Settings": "Sistem Ayarları"
   },
   "insert": {
     "add": "Ekle",

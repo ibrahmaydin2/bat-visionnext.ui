@@ -23,6 +23,7 @@ import Pages from '@/pages'
 import AuthRequired from '@/AuthRequired'
 import Dashboard from '@/pages/Dashboard'
 import DashboardIndex from '@/pages/Dashboard/Default'
+import Settings from '@/pages/Dashboard/Settings'
 import i18n from './i18n'
 
 import LayoutIndex from '@/pages/layout/'
@@ -401,15 +402,22 @@ const routes = [
     beforeEnter: AuthRequired,
     children: [
       {
-        path: '/Dashboard',
+        path: '/',
         name: 'Dashboard',
         component: Dashboard,
         redirect: '/Dashboard',
-        children: [{
-          path: '/',
-          name: '',
-          component: DashboardIndex
-        }]
+        children: [
+          {
+            path: '/Dashboard',
+            name: '',
+            component: DashboardIndex
+          },
+          {
+            path: '/Settings/:url',
+            name: 'Settings',
+            component: Settings
+          }
+        ]
       },
       {
         path: '/',

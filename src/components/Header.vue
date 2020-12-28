@@ -26,7 +26,7 @@
           <template v-slot:button-content>
             <i class="far fa-user" /> {{loginUser.name}}
           </template>
-          <b-dropdown-item><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
+          <b-dropdown-item :to="{name: 'Settings', params: {url: 'change-password'}}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
