@@ -1486,7 +1486,7 @@ export default {
           CustomerItemDiscounts: e.CustomerItemDiscounts,
           CustomerLabels: e.CustomerLabels,
           RecordId: e.RecordId,
-          SalesTypeId: e.SalesTypeId,
+          SalesTypeId: 0,
           RecordTypeId: e.RecordTypeId,
           TradeLicenseNumber: e.TradeLicenseNumber,
           Alias: e.Alias,

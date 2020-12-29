@@ -911,10 +911,10 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.customerCreditHistories" :key="i">
-                  <b-td>{{r.creditAmount}}</b-td>
-                  <b-td>{{r.debtor}}</b-td>
-                  <b-td>{{r.bail}}</b-td>
+                <b-tr v-for="(r, i) in form.CustomerCreditHistories" :key="i">
+                  <b-td>{{r.CreditAmount}}</b-td>
+                  <b-td>{{r.Debtor}}</b-td>
+                  <b-td>{{r.Bail}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -943,8 +943,8 @@
                     <b-th><span>{{$t('list.operations')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(r, i) in form.customerPaymentTypes" :key="i">
-                      <b-td>{{r.paymentType}}</b-td>
+                    <b-tr v-for="(r, i) in filteredCustomerPaymentType" :key="i">
+                      <b-td>{{r.PaymentType.Label ? r.PaymentType.Label : r.PaymentType}}</b-td>
                       <b-td class="text-center"><i @click="removeCustomerPaymentType(r)" class="far fa-trash-alt text-danger"></i></b-td>
                     </b-tr>
                   </b-tbody>
@@ -1092,7 +1092,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.customerItemDiscounts" :key="i">
+                <b-tr v-for="(r, i) in form.CustomerItemDiscounts" :key="i">
                   <b-td>{{r.Description1}}</b-td>
                   <b-td>{{r.DiscountPercent1}}</b-td>
                   <b-td>{{r.DiscountPercent2}}</b-td>
@@ -1128,7 +1128,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.customerLabels" :key="i">
+                <b-tr v-for="(r, i) in form.CustomerLabels" :key="i">
                   <b-td>{{r.Label}}</b-td>
                   <b-td>{{r.LabelValue}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -1163,7 +1163,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.customerTouchpoints" :key="i">
+                <b-tr v-for="(r, i) in form.CustomerTouchpoints" :key="i">
                   <b-td>{{r.TouchpointPriority}}</b-td>
                   <b-td>{{r.TouchpointTypeId}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerTouchpoint(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -1228,6 +1228,7 @@ export default {
       OutSourceOrder: null,
       TCIBreak1: null,
       TCIBreak2: null,
+      CustomerPaymentTypesArr: [],
       form: {
         CustomerLocations: [],
         CustomerCreditHistories: [],
@@ -1301,7 +1302,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'statementDays', 'cities', 'credits', 'touchpoints', 'touchpoint_types'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'statementDays', 'cities', 'credits', 'touchpoints', 'touchpoint_types']),
+    filteredCustomerPaymentType () {
+      return this.CustomerPaymentTypesArr.filter(item => {
+        return item.RecordState !== 4
+      })
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -1454,10 +1460,11 @@ export default {
     },
     selectedLabelValueId (e) {
       if (e) {
-        this.customerLabel = e.Description1
-        this.customerLabelValue = e.RecordId
+        this.customerLabelValue = e.Description1
+        this.customerLabelValueId = e.RecordId
       } else {
         this.customerLabelValue = null
+        this.customerLabelValueId = null
       }
     },
     selectedTouchpointPriority (e) {
@@ -1490,6 +1497,13 @@ export default {
         LabelValue: this.customerLabel,
         LabelValueId: this.customerLabelValue
       })
+
+      // this.CustomerLabelsArr.push({
+      //   Label: this.customerLabel,
+      //   LabelId: this.customerLabelId,
+      //   LabelValue: this.customerLabel,
+      //   LabelValueId: this.customerLabelValue
+      // })
     },
     removeCustomerLabel (item) {
       this.form.CustomerLabels.splice(this.form.CustomerLabels.indexOf(item), 1)
@@ -1517,13 +1531,19 @@ export default {
     },
     addCustomerPaymentType () {
       this.form.CustomerPaymentTypes.push({
-        paymentType: this.customerPaymentTypes.paymentType,
-        paymentTypeId: this.customerPaymentTypes.paymentTypeId
+        PaymentTypeId: this.customerPaymentTypes.paymentTypeId,
+        RecordState: 2
       })
-      console.log(this.form.CustomerPaymentTypes)
+      this.CustomerPaymentTypesArr.push({
+        PaymentType: this.customerPaymentTypes.paymentType,
+        PaymentTypeId: this.customerPaymentTypes.paymentTypeId,
+        RecordState: 2
+      })
     },
     removeCustomerPaymentType (item) {
-      this.form.CustomerPaymentTypes.splice(this.form.CustomerPaymentTypes.indexOf(item), 1)
+      this.CustomerPaymentTypesArr[this.CustomerPaymentTypesArr.indexOf(item)].RecordState = 4
+      let filteredArr = this.form.CustomerPaymentTypes.filter(i => i.PaymentTypeId === item.PaymentTypeId)
+      this.form.CustomerPaymentTypes[this.form.CustomerPaymentTypes.indexOf(filteredArr[0])].RecordState = 4
     },
 
     addCustomerLocations () {
@@ -1588,14 +1608,14 @@ export default {
         return
       }
       this.form.CustomerCreditHistories.push({
-        creditAmount: this.customerCreditHistories.creditAmount,
+        CreditAmount: this.customerCreditHistories.creditAmount,
         creditDescriptionId: this.customerCreditHistories.creditDescriptionId,
         creditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
         bankId: this.customerCreditHistories.bankId,
         currencyId: this.customerCreditHistories.currencyId,
         creditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
-        debtor: this.customerCreditHistories.debtor,
-        bail: this.customerCreditHistories.bail,
+        Debtor: this.customerCreditHistories.debtor,
+        Bail: this.customerCreditHistories.bail,
         textDate: this.dateConvertToISo(this.customerCreditHistories.textDate),
         landOffice: this.customerCreditHistories.landOffice,
         notaryDate: this.dateConvertToISo(this.customerCreditHistories.notaryDate),
@@ -1714,10 +1734,15 @@ export default {
           CustomerLabels: e.CustomerLabels,
           CustomerTouchpoints: e.CustomerTouchpoints,
           RecordId: e.RecordId,
-          SalesTypeId: e.SalesTypeId,
-          RecordTypeId: e.RecordTypeId
+          SalesTypeId: 0,
+          RecordTypeId: e.RecordTypeId,
+          Deleted: 0
         }
         this.customerLocations.code = `${this.form.Code} - ${this.form.CustomerLocations.length ? this.form.CustomerLocations.length + 1 : 1}`
+
+        // Detay panellerin doldurulması
+        this.CustomerPaymentTypesArr.push(...e.CustomerPaymentTypes)
+
         if (e.CardType) {
           this.CardType = e.CardType.Label
           // this.selectedOptions('CardType', e.CardType.Label)
