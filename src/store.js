@@ -73,6 +73,7 @@ export const store = new Vuex.Store({
     loginUser: {
       signed: localStorage.getItem('signed'),
       name: user ? user.Name + ' ' + user.Surname : null,
+      email: user ? user.UserName : null,
       company: localStorage.getItem('companyName') ? localStorage.getItem('companyName') : null,
       branch: localStorage.getItem('branchName') ? localStorage.getItem('branchName') : null
     },

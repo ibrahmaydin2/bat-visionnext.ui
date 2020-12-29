@@ -206,7 +206,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.FieldSurvey.validDates')">
+        <b-tab :title="$t('insert.FieldSurvey.validDates')" v-if="validDatesReq">
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.fieldSurveyValidDates.description1')" :class="detailPanelError">
@@ -268,6 +268,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      validDatesReq: false,
       form: {
         fieldSurveyBranchs: [],
         fieldSurveyEmployeeTypes: [],
@@ -329,6 +330,11 @@ export default {
       // bu fonksiyonda güncelleme yapılmayacak!
       // standart dropdownların select işleminde alacağı değeri belirler.
       this.form[label] = model.DecimalValue
+      if ((label === 'ValidityTypeId') && (parseInt(model.DecimalValue) === 463633)) {
+        this.validDatesReq = true
+      } else {
+        this.validDatesReq = false
+      }
     },
     save () {
       this.$v.$touch()

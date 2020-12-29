@@ -10,7 +10,7 @@
         </b-col>
         <b-col class="text-left" cols="6">
           <b-form-group>
-            <b-form-input v-model="Email" type="email" placeholder="Aktif E-Posta Adresiniz" />
+            <b-form-input v-model="Email" readonly type="email" placeholder="Aktif E-Posta Adresiniz" />
           </b-form-group>
         </b-col>
       </b-row>
@@ -59,15 +59,22 @@
   </b-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { required, sameAs, minLength } from 'vuelidate/lib/validators'
 export default {
   data () {
     return {
-      Email: '',
       OldPassword: '',
       NewPassword: '',
       NewPasswordRe: ''
     }
+  },
+  computed: {
+    ...mapState(['loginUser']),
+    Email () {
+      return this.loginUser.email
+    }
+
   },
   methods: {
     changeIt () {
