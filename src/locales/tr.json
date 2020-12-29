@@ -335,6 +335,27 @@
     "city": "Şehir",
     "distirict": "İlçe",
     "town": "Mahalle",
+    "FieldSurvey": {
+      "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
+      "Branches": "Şubeler",
+      "surveyBranchId": "Şube Kodu",
+      "employeeType": "Personel Tipi",
+      "surveyBranch": "Şube Kodu",
+      "questions": "Soru",
+      "questionId": "Soru",
+      "questionLineId": "Sıra Numarası",
+      "questionIsNecessary": "Zorunlu",
+      "question": "Soru",
+      "questionLine": "Sıra Numarası",
+      "validDates": "Geçerlilik Tarihi",
+      "statusId": "Durum"
+    },
+    "fieldSurveyValidDates": {
+      "description1": "Soru",
+      "startDate": "Geçerlilik Başlangıç",
+      "endDate": "Geçerlilik Bitiş",
+      "statusId": "Durum"
+    },
     "route": {
       "status": "Durum",
       "routeCode": "Rota Kodu",

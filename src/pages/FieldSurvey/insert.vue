@@ -215,12 +215,12 @@
             </b-col>
             <b-col cols="12" md="2">
               <b-form-group :label="$t('insert.fieldSurveyValidDates.startDate')" :class="detailPanelError">
-                <b-form-datepicker placeholder="fieldSurveyValidDates.startDate" size="sm" v-once v-model="fieldSurveyValidDates.startDate" />
+                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.startDate')" size="sm" v-once v-model="fieldSurveyValidDates.startDate" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2">
               <b-form-group :label="$t('insert.fieldSurveyValidDates.endDate')" :class="detailPanelError">
-                <b-form-datepicker placeholder="fieldSurveyValidDates.endDate" size="sm" v-once v-model="fieldSurveyValidDates.endDate" />
+                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.endDate')" size="sm" v-once v-model="fieldSurveyValidDates.endDate" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2">
