@@ -264,9 +264,9 @@ export default {
     },
     dataStatus: function (e) {
       if (e === true) {
-        this.form.Model.StatusId = 1
+        this.form.StatusId = 1
       } else {
-        this.form.Model.StatusId = 0
+        this.form.StatusId = 0
       }
     }
   },
