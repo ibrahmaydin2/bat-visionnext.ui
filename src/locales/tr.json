@@ -114,9 +114,9 @@
     "WarehouseStock": "WarehouseStock",
     "BranchStockTransfer": "BranchStockTransfer",
     "Order": "Order",
-    "FieldAnalysisResult": "FieldAnalysisResult",
+    "FieldAnalysisResult": "Aktivite Noktası Analiz Sonuçları",
     "ItemAnalysisResult": "Ürün Analizleri Sonuçları",
-    "FieldSurveyResult": "Saha Araştırması Sonucu",
+    "FieldSurveyResult": "Saha Araştırması Sonuçları",
     "FieldSurvey": "Saha Araştırması",
     "FixedTerm": "Vade Tanımı",
     "ServiceGet": "ServiceGet",
@@ -176,7 +176,7 @@
     "WarehouseStockGet": "WarehouseStockGet",
     "BranchStockTransferGet": "BranchStockTransferGet",
     "OrderGet": "OrderGet",
-    "FieldAnalysisResultGet": "FieldAnalysisResultGet",
+    "FieldAnalysisResultGet": "Aktivite Noktası Analiz Sonuçları Görüntüle",
     "ItemAnalysisResultGet": "Ürün Analizleri Sonuçları Görüntüle",
     "FieldSurveyResultGet": "Saha Araştırması Sonucu Görüntüle",
     "FieldSurveyGet": "Saha Araştırması Görüntüle",
@@ -900,6 +900,33 @@
       "Details": {
         "itemCode": "Ürün Kodu",
         "itemLabel": "Ürün",
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    },
+    "FieldAnalysisResult": {
+      "title": "Aktivite Noktası Analiz Sonuçları",
+      "Code": "Aktivite Analiz Kodu",
+      "Label": "Analiz Tanımı",
+      "Canceled": "İptal",
+      "CancelReason": "İptal Nedeni",
+      "detailsTitle": "Aktivite Noktası Analiz Sonuçları Detayları",
+      "Details": {
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    },
+    "FieldSurveyResult": {
+      "title": "Saha Araştırması Sonuçları",
+      "Code": "Saha Arastirmasi Kodu",
+      "Label": "Analiz Tanımı",
+      "Representative": "Personel",
+      "SurveyStartDate": "Ziyaret Başlangıç Tarihi",
+      "SurveyEndDate": "Ziyaret Bitiş Tarihi",
+      "detailsTitle": "Saha Araştırması Sonuçları Detayları",
+      "Details": {
         "questionCode": "Soru Kodu",
         "questionLabel": "Soru",
         "answer": "Cevap"

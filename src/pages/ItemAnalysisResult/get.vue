@@ -47,7 +47,7 @@
                     <tr v-for="(result, i) in rowData.ItemAnalysisResultDetails" :key="i">
                       <b-td>{{result.Item ? result.Item.Label : ''}}</b-td>
                       <b-td>{{result.Question ? result.Question.Label : ''}}</b-td>
-                      <b-td><i :class="rowData.Answer === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></b-td>
+                      <b-td>{{result.Answer}}</b-td>
                     </tr>
                   </b-tbody>
                 </b-table-simple>
