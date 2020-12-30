@@ -158,9 +158,15 @@
                   <i class="fas fa-th" />
                 </template>
                 <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                  <router-link :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
+                  <router-link v-if="opt.View === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </router-link>
+                  <b-button v-if="opt.View === 'Modal'" v-b-modal="opt.ActionUrl">
+                    <i class="far fa-circle" /> {{ opt.Title }}
+                  </b-button>
+                  <a v-else :href="opt.Action" target="_blank">
+                    <i class="far fa-circle" /> {{ opt.Title }}
+                  </a>
                 </b-dropdown-item>
               </b-dropdown>
             </span>
@@ -218,12 +224,16 @@
         aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
       </b-col> -->
     </b-row>
+    <b-modal id="my-modal">
+      PotentialCustomerApprove
+      PotentialCustomerReject
+    </b-modal>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['apiurl'],
+  props: ['apiurl', 'apiparams'],
   data () {
     return {
       head: [],
@@ -370,6 +380,7 @@ export default {
       this.$store.dispatch('getTableOperations', {
         ...this.query,
         apiUrl: this.apiurl,
+        def: this.apiparams,
         api: e,
         page: parseInt(p),
         count: parseInt(c),
