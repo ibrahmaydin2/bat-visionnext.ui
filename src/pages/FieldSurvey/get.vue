@@ -15,44 +15,73 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{rowData.Code}}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Model_WarehouseTypeId')" active>
+        <b-tab :title="$t('insert.FieldSurvey.FieldSurveyDefinitions')" active>
           <b-row>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
-                <div v-if="rowData.WarehouseTypeId === 76506193">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
-                </div>
-                <div v-if="rowData.WarehouseTypeId === 76506191">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
-                </div>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
+                <h6>{{$t('insert.detail')}}</h6>
+                <span><i class="far fa-circle" /> {{$t('insert.FieldSurvey.analysisTypeId')}}</span> <p>{{rowData.AnalysisType ? rowData.AnalysisType.Label : ''}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.FieldSurvey.validityTypeId')}}</span> <p>{{rowData.validityTypeId}}</p> -->
+                <span><i class="far fa-circle" /> {{$t('insert.FieldSurvey.description1')}}</span> <p>{{rowData.Description1}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.FieldSurvey.sortOrder')}}</span> <p>{{rowData.sortOrder}}</p> -->
+                <span><i class="far fa-circle" /> {{$t('insert.FieldSurvey.approveStateId')}}</span> <p><i :class="rowData.ApproveStateId === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
               </b-card>
             </b-col>
-            <b-col cols="12" md="8">
+            <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.locations')}}</h6>
-                <b-table responsive :items="rowData.WarehouseSuppliers" :fields="fields">
-                  <template #cell(SupplierBranchId)="data">
-                    {{data.item.SupplierBranch.Label}}
-                  </template>
-                  <template #cell(PurchaseWarehouseId)="data">
-                    {{data.item.PurchaseWarehouse.Label}}
-                  </template>
-                  <template #cell(ReturnWarehouseId)="data">
-                    {{data.item.ReturnWarehouse.Label}}
-                  </template>
-                </b-table>
+                <h6>{{$t('insert.FieldSurvey.Branches')}}</h6>
+                <b-table-simple responsive hover small>
+                  <b-thead head-variant="light">
+                    <b-tr>
+                      <b-th>{{$t('insert.FieldSurvey.surveyBranchId')}}</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <tr v-for="(branch, i) in rowData.FieldSurveyBranchs" :key="i">
+                      <b-td>{{branch.SurveyBranch ? branch.SurveyBranch.Label : ''}}</b-td>
+                    </tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.FieldSurvey.employeeType')}}</h6>
+                <b-table-simple responsive hover small>
+                  <b-thead head-variant="light">
+                    <b-tr>
+                      <b-th>{{$t('insert.FieldSurvey.employeeType')}}</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <tr v-for="(employee, i) in rowData.FieldSurveyEmployeeTypes" :key="i">
+                      <b-td>{{employee.EmployeeType ? employee.EmployeeType.Label : ''}}</b-td>
+                    </tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.FieldSurvey.questions')}}</h6>
+                <b-table-simple responsive hover small>
+                  <b-thead head-variant="light">
+                    <b-tr>
+                      <b-th>{{$t('insert.FieldSurvey.questions')}}</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <tr v-for="(question, i) in rowData.FieldSurveyQuestions" :key="i">
+                      <b-td>{{question.Question ? question.Question.Label : ''}}</b-td>
+                    </tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
@@ -136,7 +165,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/FieldSurvey', record: this.$route.params.url})
     }
   }
 }

@@ -227,7 +227,7 @@ export default {
           Deleted: item.Deleted,
           System: item.System,
           PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId,
+          ReturnWarehouseId: item.ReturnWarehouseId
         })
 
         this.detailListData.push({
@@ -237,11 +237,13 @@ export default {
         })
       })
 
-      this.selectedWarehouseType(e.WarehouseType)
-      if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.RecordId
-        this.VehicleName = e.Vehicle.Label
-        this.form.Model.VehicleId = e.VehicleId
+      if (e.WarehouseType) {
+        this.selectedWarehouseType(e.WarehouseType)
+        if (e.WarehouseTypeId === 76506193) {
+          this.form.Model.Vehicle = e.RecordId
+          this.VehicleName = e.Vehicle.Label
+          this.form.Model.VehicleId = e.VehicleId
+        }
       }
       // if'e koyulacak
       if (e.Customer) {

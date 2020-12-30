@@ -65,13 +65,15 @@ export default {
           description1: '',
           period: null,
           statusId: null,
+          RecordId: null,
+          Deleted: 0
         }
       },
-      dataStatus: null,
+      dataStatus: null
     }
   },
   computed: {
-    ...mapState(['createCode'])
+    ...mapState(['rowData'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
@@ -88,13 +90,16 @@ export default {
   watch: {
     rowData: function (e) {
       if (e) {
+        console.log(e)
         this.form.model = {
           code: e.Code,
           description1: e.Description1,
           period: e.Period,
           statusId: e.StatusId,
-        },
-        this.dataStatus = e.StatusId ? true : false
+          RecordId: e.RecordId,
+          Deleted: e.Deleted
+        }
+        this.dataStatus = !!e.StatusId
       }
     },
     dataStatus: function (e) {

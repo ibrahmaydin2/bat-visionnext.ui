@@ -115,9 +115,9 @@
     "Order": "Order",
     "FieldAnalysisResult": "FieldAnalysisResult",
     "ItemAnalysisResult": "ItemAnalysisResult",
-    "FieldSurveyResult": "FieldSurveyResult",
-    "FieldSurvey": "FieldSurvey",
-    "FixedTerm": "FixedTerm",
+    "FieldSurveyResult": "Saha Araştırması Sonucu",
+    "FieldSurvey": "Saha Araştırması",
+    "FixedTerm": "Vade Tanımı",
     "ServiceGet": "ServiceGet",
     "EDocumentErrorManagementGet": "EDocumentErrorManagementGet",
     "ServiceRecordsGet": "ServiceRecordsGet",
@@ -177,9 +177,9 @@
     "OrderGet": "OrderGet",
     "FieldAnalysisResultGet": "FieldAnalysisResultGet",
     "ItemAnalysisResultGet": "ItemAnalysisResultGet",
-    "FieldSurveyResultGet": "FieldSurveyResultGet",
-    "FieldSurveyGet": "FieldSurveyGet",
-    "FixedTermGet": "FixedTermGet",
+    "FieldSurveyResultGet": "Saha Araştırması Sonucu Görüntüle",
+    "FieldSurveyGet": "Saha Araştırması Görüntüle",
+    "FixedTermGet": "Vade Tanımı Görüntüle",
     "ServiceUpdate": "ServiceUpdate",
     "EDocumentErrorManagementUpdate": "EDocumentErrorManagementUpdate",
     "ServiceRecordsUpdate": "ServiceRecordsUpdate",
@@ -239,9 +239,9 @@
     "OrderUpdate": "OrderUpdate",
     "FieldAnalysisResultUpdate": "FieldAnalysisResultUpdate",
     "ItemAnalysisResultUpdate": "ItemAnalysisResultUpdate",
-    "FieldSurveyResultUpdate": "FieldSurveyResultUpdate",
-    "FieldSurveyUpdate": "FieldSurveyUpdate",
-    "FixedTermUpdate": "FixedTermUpdate",
+    "FieldSurveyResultUpdate": "Saha Araştırması Sonucu Güncelle",
+    "FieldSurveyUpdate": "Saha Araştırması Güncelle",
+    "FixedTermUpdate": "Vade Tanımı Güncelle",
     "ServiceInsert": "ServiceInsert",
     "EDocumentErrorManagementInsert": "EDocumentErrorManagementInsert",
     "ServiceRecordsInsert": "ServiceRecordsInsert",
@@ -301,9 +301,9 @@
     "OrderInsert": "OrderInsert",
     "FieldAnalysisResultInsert": "FieldAnalysisResultInsert",
     "ItemAnalysisResultInsert": "ItemAnalysisResultInsert",
-    "FieldSurveyResultInsert": "FieldSurveyResultInsert",
-    "FieldSurveyInsert": "FieldSurveyInsert",
-    "FixedTermInsert": "FixedTermInsert",
+    "FieldSurveyResultInsert": "Saha Araştırması Sonucu Oluştur",
+    "FieldSurveyInsert": "Saha Araştırması Oluştur",
+    "FixedTermInsert": "Vade Tanımı Oluştur",
     "Settings": "Sistem Ayarları"
   },
   "insert": {
@@ -348,7 +348,13 @@
       "question": "Soru",
       "questionLine": "Sıra Numarası",
       "validDates": "Geçerlilik Tarihi",
-      "statusId": "Durum"
+      "statusId": "Durum",
+      "analysisTypeId": "Analiz Tipi",
+      "validityTypeId": "Geçerlilik Tipi",
+      "description1": "Açiklama",
+      "sortOrder": "Görünüm Sirasi",
+      "approveStateId": "Onay Durumu",
+      "isNecessary": "Zorunlu"
     },
     "fieldSurveyValidDates": {
       "description1": "Soru",
@@ -879,7 +885,9 @@
   },
   "get": {
     "detail": "Detaylar",
-    "sharing": "Paylaşım"
+    "sharing": "Paylaşım",
+    "code": "Kod",
+    "status": "Durum"
   },
   "general": {
     "pleaseWait": "Lütfen Bekleyin...",
