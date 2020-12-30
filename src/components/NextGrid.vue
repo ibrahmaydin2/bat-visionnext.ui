@@ -225,8 +225,8 @@
       </b-col> -->
     </b-row>
     <b-modal id="my-modal">
-      PotentialCustomerApprove
-      PotentialCustomerReject
+      <PotentialCustomerApproveModal />
+      <PotentialCustomerRejectModal />
     </b-modal>
   </div>
 </template>

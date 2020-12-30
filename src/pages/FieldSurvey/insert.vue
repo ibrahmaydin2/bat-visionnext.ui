@@ -313,7 +313,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'createCode', 'branchList', 'analysisQuestions'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'createCode', 'branchList', 'analysisQuestions'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -487,6 +487,13 @@ export default {
       if (e) {
         this.form.Code = e
       }
+    },
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        this.form[el] = value[el]
+      })
     }
   }
 }

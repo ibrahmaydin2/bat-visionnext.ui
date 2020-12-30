@@ -31,7 +31,9 @@ import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'
 import Carousel from './components/Carousel'
 import Navigation from './components/Navigation'
-import DispatchModal from './components/DispatchModal'
+import ApproveModal from './components/ApproveModal'
+import PotentialCustomerApproveModal from './components/PotentialCustomerApproveModal'
+import PotentialCustomerRejectModal from './components/PotentialCustomerRejectModal'
 import NavigationList from './components/NavigationList'
 import Shortcuts from './components/Shortcuts'
 import Header from './components/Header'
@@ -63,7 +65,9 @@ Vue.component('Shortcuts', Shortcuts)
 Vue.component('Header', Header)
 Vue.component('ProgressTimeline', ProgressTimeline)
 Vue.component('Breadcrumb', Breadcrumb)
-Vue.component('DispatchModal', DispatchModal)
+Vue.component('ApproveModal', ApproveModal)
+Vue.component('PotentialCustomerApproveModal', PotentialCustomerApproveModal)
+Vue.component('PotentialCustomerRejectModal', PotentialCustomerRejectModal)
 Vue.component('b-form-datepicker', BFormDatepicker)
 Vue.component('Nextgrid', Nextgrid)
 Vue.component('Nextform', Nextform)

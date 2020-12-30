@@ -1538,10 +1538,12 @@ export default {
         this.customerLocations.code = `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length : 1}`
       }
     },
-    insertDefaultValue (e) {
-      console.log(e)
-      console.log(this.insertRules)
-      console.log(this.form)
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        this.form[el] = value[el]
+      })
     }
   }
 }

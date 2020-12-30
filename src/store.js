@@ -1260,7 +1260,7 @@ export const store = new Vuex.Store({
       let enbld = {}
       let cType = {}
       let valueForAutoLookup = ''
-      let dflvl = {}
+      let dflvl = []
       apiRules.forEach(rule => {
         let inputCode
         let fieldName = rule.EntityProperty
@@ -1276,8 +1276,7 @@ export const store = new Vuex.Store({
         title[fieldName] = fieldLabel // input ismi.
         enbld[fieldName] = fieldEnabled !== true // input ismi.
         cType[fieldName] = rule.ColumnType
-        dflvl[fieldName] = fieldDefaultValue
-        // HTML üretimi sadece development modu aktifken çalışacak.
+
         switch (rule.ColumnType) {
           case 'Id':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1285,6 +1284,7 @@ export const store = new Vuex.Store({
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'String':
@@ -1293,6 +1293,7 @@ export const store = new Vuex.Store({
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'LabelValue':
@@ -1333,6 +1334,7 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Check':
@@ -1343,6 +1345,7 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'DateTime':
@@ -1351,6 +1354,7 @@ export const store = new Vuex.Store({
                 <b-form-datepicker v-model="form.${fieldName}" />
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Text':
@@ -1359,9 +1363,10 @@ export const store = new Vuex.Store({
                 <b-form-textarea v-model="form.${fieldName}" placeholder="" />
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
         }
-        if (state.developmentMode === true) {
+        if (state.developmentMode === true) { // HTML üretimi sadece development modu aktifken çalışacak.
           insertPageHTML[fieldName] = inputCode.trim()
         }
       })
