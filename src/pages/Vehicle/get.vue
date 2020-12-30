@@ -16,9 +16,9 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.vehicles.code')}}:</b> {{rowData.Code}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.vehicles.driver')}}:</b> {{(rowData.DefaultDriverEmployee) ? rowData.DefaultDriverEmployee.Label : ''}}</span> 
+            <span><i class="fas fa-code" />  <b>{{$t('insert.vehicles.driver')}}:</b> {{(rowData.DefaultDriverEmployee) ? rowData.DefaultDriverEmployee.Label : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.vehicles.plaque')}}:</b> {{rowData.VehiclePlateNumber}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.vehicles.assetNo')}}:</b> {{rowData.AssetNumber}}</span> 
+            <span><i class="fas fa-code" />  <b>{{$t('insert.vehicles.assetNo')}}:</b> {{rowData.AssetNumber}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.vehicles.state')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
@@ -61,19 +61,19 @@
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeCapacity')}}</span>
                 <p>{{rowData.VolumeCp}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.volumeUnit')}}</span>
-                <p>{{(rowData.VolumeCpUnit) ? rowData.VolumeCpUnit.Label : ''}}</p> 
+                <p>{{(rowData.VolumeCpUnit) ? rowData.VolumeCpUnit.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightCapacity')}}</span>
                 <p>{{rowData.WeightCp}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.weightUnit')}}</span>
-                <p>{{(rowData.WeightCpUnit) ? rowData.WeightCpUnit.Label : ''}}</p> 
+                <p>{{(rowData.WeightCpUnit) ? rowData.WeightCpUnit.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.contractEndDate')}}</span>
-                <p>{{dateConvertFromTimezone(rowData.ContractEndDate)}}</p> 
+                <p>{{dateConvertFromTimezone(rowData.ContractEndDate)}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory1')}}</span>
-                <p>{{(rowData.Category1) ? rowData.Category1.Label : ''}}</p> 
+                <p>{{(rowData.Category1) ? rowData.Category1.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory2')}}</span>
-                <p>{{(rowData.Category2) ? rowData.Category2.Label : ''}}</p> 
+                <p>{{(rowData.Category2) ? rowData.Category2.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.vehicles.vehicleCategory3')}}</span>
-                <p>{{(rowData.Category3) ? rowData.Category3.Label : ''}}</p> 
+                <p>{{(rowData.Category3) ? rowData.Category3.Label : ''}}</p>
               </b-card>
             </b-col>
           </b-row>

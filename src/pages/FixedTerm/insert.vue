@@ -64,10 +64,10 @@ export default {
           code: '',
           description1: '',
           period: null,
-          statusId: null,
+          statusId: null
         }
       },
-      dataStatus: null,
+      dataStatus: null
     }
   },
   computed: {
@@ -104,6 +104,6 @@ export default {
 </script>
 <style lang="sass" scope>
   table
-    i 
+    & i
       cursor: pointer
 </style>

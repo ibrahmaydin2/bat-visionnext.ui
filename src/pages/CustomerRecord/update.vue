@@ -228,7 +228,7 @@ export default {
           Deleted: item.Deleted,
           System: item.System,
           PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId,
+          ReturnWarehouseId: item.ReturnWarehouseId
         })
 
         this.detailListData.push({

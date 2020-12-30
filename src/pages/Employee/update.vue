@@ -153,9 +153,9 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_BirthDate')">
-                <b-form-datepicker 
-                  :placeholder="$t('insert.employee.Model_BirthDate')" 
-                  v-model="form.model.birthDate" 
+                <b-form-datepicker
+                  :placeholder="$t('insert.employee.Model_BirthDate')"
+                  v-model="form.model.birthDate"
                   locale="tr"
                   class="mb-2"
                   :value-as-date="true"
@@ -403,7 +403,7 @@ export default {
       this.form.model.scoreCardClassId = e.DecimalValue
     },
     changeCustomer (e) {
-      if (e === "1") {
+      if (parseInt(e) === 1) {
         this.disabledCustomer = false
         this.$store.dispatch('getLookups', {...this.query, type: 'PRICE_LIST_CATEGORY_TYPE', name: 'priceList'})
       } else {
@@ -424,7 +424,7 @@ export default {
       })
       this.selectedEInvoice = null
     },
-    deleteEInvoiceSeq (item) {      
+    deleteEInvoiceSeq (item) {
       // Model içerisindeki eInvoiceSeqs dizisinden elemanın çıkarılması
       let filteredArr = this.form.model.eInvoiceSeqs.filter(i => i.recordId === item.RecordId)
       this.form.model.eInvoiceSeqs.splice(this.form.model.eInvoiceSeqs.indexOf(filteredArr[0]), 1)
@@ -460,7 +460,7 @@ export default {
           name: e.Name,
           surname: e.Surname,
           groupId: e.GroupId,
-          statusId: e.StatusId ? true : false,
+          statusId: !!e.StatusId,
           category1Id: e.Category1Id,
           other1: e.Other1,
           isTeam: e.IsTeam,

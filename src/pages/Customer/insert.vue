@@ -45,7 +45,6 @@
               </b-form-checkbox>
             </b-form-group>
           </b-col>
-
         </b-row>
       </section>
     </b-col>
@@ -676,7 +675,6 @@
                 />
               </b-form-group>
             </b-col>
-          
             <b-col v-if="insertVisible.TciBreak2Id != null ? insertVisible.TciBreak2Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TciBreak2Id + (insertRequired.TciBreak2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TciBreak2Id.$error }">
                 <v-select
@@ -1212,7 +1210,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'statementDays', 'cities', 'credits', 'touchpoints', 'touchpoint_types'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'statementDays', 'cities', 'credits', 'touchpoints', 'touchpoint_types'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -1539,6 +1537,11 @@ export default {
         this.form.Code = e
         this.customerLocations.code = `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length : 1}`
       }
+    },
+    insertDefaultValue (e) {
+      console.log(e)
+      console.log(this.insertRules)
+      console.log(this.form)
     }
   }
 }

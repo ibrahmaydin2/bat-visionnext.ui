@@ -189,6 +189,6 @@ export default {
 </script>
 <style lang="sass" scope>
   table
-    i 
+    & i
       cursor: pointer
 </style>

@@ -1568,7 +1568,7 @@ export default {
           this.DiscountGroup10 = tmpArr[0].Label
         }
 
-        // buna bakılacak 
+        // buna bakılacak
         if (e.PaymentPeriod) {
           this.PaymentPeriod = e.PaymentPeriod.Label
         }

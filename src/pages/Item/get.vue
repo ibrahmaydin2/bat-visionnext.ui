@@ -15,7 +15,7 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.item.Model_Code')}}:</b></span> 
+            <span><i class="fas fa-code" />  <b>{{$t('insert.item.Model_Code')}}:</b></span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.item.Model_Description1')}}:</b></span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.item.Model_CardTypeId')}}:</b></span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.item.Model_StatusId')}}:</b></span>
@@ -45,7 +45,7 @@
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsSaleAllowed')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_UseSalesAnalysis')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsSpGiftItem')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsPhysicalBom')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p> 
+                <span><i class="far fa-circle" /> {{$t('insert.item.Model_IsPhysicalBom')}}</span><p><i :class="true ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">
@@ -67,7 +67,7 @@
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category8Id')}}</span><p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category9Id')}}</span><p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.item.Model_Category10Id')}}</span><p></p>
-                
+
               </b-card>
             </b-col>
           </b-row>
@@ -199,41 +199,41 @@ export default {
         },
         {
           key: 'quotaDate',
-          label: this.$t('insert.item.Model_BeginDate') ,
+          label: this.$t('insert.item.Model_BeginDate'),
           sortable: true
         }
       ],
       depositsFields: [
         {
           key: 'deposit',
-          label: this.$t('insert.item.deposit') ,
+          label: this.$t('insert.item.deposit'),
           sortable: true
         },
         {
           key: 'quantity',
-          label: this.$t('insert.item.quantity') ,
+          label: this.$t('insert.item.quantity'),
           sortable: true
         },
         {
           key: 'unit',
-          label: this.$t('insert.item.unit') ,
+          label: this.$t('insert.item.unit'),
           sortable: true
         }
       ],
       productGroupFields: [
         {
           key: 'lineNumber',
-          label: this.$t('insert.item.LineNumber') ,
+          label: this.$t('insert.item.LineNumber'),
           sortable: true
         },
         {
           key: 'bomItem',
-          label: this.$t('insert.item.bomItem') ,
+          label: this.$t('insert.item.bomItem'),
           sortable: true
         },
         {
           key: 'quantity',
-          label: this.$t('insert.item.quantity') ,
+          label: this.$t('insert.item.quantity'),
           sortable: true
         }
       ],

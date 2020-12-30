@@ -203,7 +203,6 @@
                 </b-tbody>
               </b-table-simple>
             </b-col>
-            
           </b-row>
         </b-tab>
       </b-tabs>
@@ -274,8 +273,8 @@ export default {
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', record: this.$route.params.url})
     },
-    getLookups() {
-      //Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+    getLookups () {
+      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_TYPE', name: 'vehicleTypes'})
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_BRAND', name: 'vehicleBrands'})
       this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_MODEL', name: 'vehicleModels'})
@@ -338,7 +337,6 @@ export default {
         id: this.selectedEmployee.RecordId
       })
       this.selectedEmployee = null
-
     },
     deleteReplacementDriver (item) {
       console.log(this.form.model.vehicleReplacementDrivers)
@@ -363,7 +361,6 @@ export default {
       this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
       this.form.model.statusId = this.statusId ? 1 : 0
       this.$store.dispatch('updateData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
-
     }
   },
   watch: {
@@ -404,10 +401,10 @@ export default {
           deleted: e.Deleted
         }
 
-        this.statusId = e.StatusId ? true : false
-      // selectedEmployee: null,
-      // replacmentDrivers: [],
-      // statusId: true
+        this.statusId = !!e.StatusId
+        // selectedEmployee: null,
+        // replacmentDrivers: [],
+        // statusId: true
         if (e.DefaultDriverEmployee) {
           this.defaultDriverEmployee = e.DefaultDriverEmployee.Label
         }
@@ -458,7 +455,7 @@ export default {
           })
         })
       }
-    },
+    }
   }
 }
 </script>

@@ -185,8 +185,8 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.Day1FreStartDate')">
-                <b-form-datepicker 
-                  v-model="DaysFreStartDate" 
+                <b-form-datepicker
+                  v-model="DaysFreStartDate"
                   locale="tr"
                   class="mb-2"
                   :value-as-date="true"
@@ -312,7 +312,7 @@ export default {
     getRowData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
     },
-    getDatas() {
+    getDatas () {
       this.$store.dispatch('getEmployeesByBranchId')
       this.$store.dispatch('getVehiclesByBranchId')
       this.$store.dispatch('getRouteTypesByBranchId')
@@ -339,7 +339,7 @@ export default {
           this.showCustomerRegion = true
           this.customerRegionLabel = this.$t('insert.route.customerArea')
           this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_REGION_5', name: payload.name})
-        } else if(e.RecordId === 5) {
+        } else if (e.RecordId === 5) {
           this.customerRegionLabel = this.$t('insert.route.marketingArea')
           this.showCustomerRegion = true
           this.$store.dispatch('getLookups', {...this.query, type: 'MARKETING_REGION_5', name: payload.name})
@@ -420,13 +420,13 @@ export default {
       }
     },
     selectedCustomerLocation (e) {
-        if (e) {
-          this.selectedLocationArr = e
-        } else {
-          this.selectedLocationArr = []
-        }
+      if (e) {
+        this.selectedLocationArr = e
+      } else {
+        this.selectedLocationArr = []
+      }
     },
-    addCustomerLocation() {
+    addCustomerLocation () {
       if (this.selectedCustomerArr.length < 1 || this.selectedLocationArr < 1) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -462,7 +462,7 @@ export default {
         Day7VisitOrder: this.Day7VisitOrder,
         StatusId: 1,
         RecordState: 2,
-        AnnualVisitCount: null, // Hesaplaması var öğrenilecek
+        AnnualVisitCount: null // Hesaplaması var öğrenilecek
       })
 
       this.selectedCustomerArr = []
@@ -495,27 +495,27 @@ export default {
           deleted: e.Deleted,
           recordId: e.RecordId
         }
-        this.statusId = e.StatusId ? true : false
+        this.statusId = !!e.StatusId
 
-        if(e.Representative) {
+        if (e.Representative) {
           this.representative = e.Representative.Label
         }
-        if(e.Vehicle) {
+        if (e.Vehicle) {
           this.vehicle = e.Vehicle.Label
         }
-        if(e.RouteClass) {
+        if (e.RouteClass) {
           this.routeClass = e.RouteClass.Label
         }
-        if(e.RouteGroup) {
+        if (e.RouteGroup) {
           this.routeGroup = e.RouteGroup.Label
         }
-        if(e.VisitStartControl) {
+        if (e.VisitStartControl) {
           this.visitStartControl = e.VisitStartControl.Label
         }
-        if(e.RouteType) {
+        if (e.RouteType) {
           let payload = {
-              name: 'routeTypeOptions',
-              data: []
+            name: 'routeTypeOptions',
+            data: []
           }
           this.form.model.routeTypeId = e.RouteType.DecimalValue
           this.routeType = e.RouteType.Label
@@ -523,7 +523,7 @@ export default {
             this.showCustomerRegion = true
             this.customerRegionLabel = this.$t('insert.route.customerArea')
             this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_REGION_5', name: payload.name})
-          } else if(e.RouteType.DecimalValue === 5) {
+          } else if (e.RouteType.DecimalValue === 5) {
             this.customerRegionLabel = this.$t('insert.route.marketingArea')
             this.showCustomerRegion = true
             this.$store.dispatch('getLookups', {...this.query, type: 'MARKETING_REGION_5', name: payload.name})
@@ -539,7 +539,6 @@ export default {
         // city
         // district
         // parish
-
       }
     },
     employees (e) {

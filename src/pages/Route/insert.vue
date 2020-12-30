@@ -185,8 +185,8 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.Day1FreStartDate')">
-                <b-form-datepicker 
-                  v-model="DaysFreStartDate" 
+                <b-form-datepicker
+                  v-model="DaysFreStartDate"
                   locale="tr"
                   class="mb-2"
                   :value-as-date="true"
@@ -264,7 +264,7 @@ export default {
           cityId: null,
           districtId: null,
           parishIds: [],
-          routeDetails: [],
+          routeDetails: []
         }
       },
       statusId: null,
@@ -296,7 +296,7 @@ export default {
     this.getDatas()
   },
   methods: {
-    getDatas() {
+    getDatas () {
       this.$store.dispatch('getEmployeesByBranchId')
       this.$store.dispatch('getVehiclesByBranchId')
       this.$store.dispatch('getRouteTypesByBranchId')
@@ -313,7 +313,7 @@ export default {
     },
     save () {
       this.form.model.statusId = this.statusId ? 1 : 0
-      if(this.selectedParishes.length > 0) {
+      if (this.selectedParishes.length > 0) {
         this.selectedParishes.map(item => {
           this.form.model.parishIds.push(item.DecimalValue)
         })
@@ -333,7 +333,7 @@ export default {
           this.showCustomerRegion = true
           this.customerRegionLabel = this.$t('insert.route.customerArea')
           this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_REGION_5', name: payload.name})
-        } else if(e.RecordId === 5) {
+        } else if (e.RecordId === 5) {
           this.customerRegionLabel = this.$t('insert.route.marketingArea')
           this.showCustomerRegion = true
           this.$store.dispatch('getLookups', {...this.query, type: 'MARKETING_REGION_5', name: payload.name})
@@ -426,17 +426,16 @@ export default {
       } else {
         this.selectedCustomerArr = []
         this.selectedLocationArr = []
-
       }
     },
     selectedCustomerLocation (e) {
-        if (e) {
-          this.selectedLocationArr = e
-        } else {
-          this.selectedLocationArr = []
-        }
+      if (e) {
+        this.selectedLocationArr = e
+      } else {
+        this.selectedLocationArr = []
+      }
     },
-    addCustomerLocation() {
+    addCustomerLocation () {
       if (this.selectedCustomerArr.length < 1 || this.selectedLocationArr < 1) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -470,7 +469,7 @@ export default {
         Day7FreStartDate: this.dateConvertToISo(this.DaysFreStartDate),
         Day7VisitOrder: this.Day7VisitOrder,
         StatusId: 1,
-        AnnualVisitCount: null, // Hesaplaması var öğrenilecek
+        AnnualVisitCount: null // Hesaplaması var öğrenilecek
       })
       this.selectedCustomerArr = []
       this.selectedLocationArr = []
@@ -497,6 +496,6 @@ export default {
 </script>
 <style lang="sass" scope>
   table
-    i 
+    & i
       cursor: pointer
 </style>

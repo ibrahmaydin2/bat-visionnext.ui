@@ -525,7 +525,6 @@ const routes = [
           { path: '/BranchMasterRecord/:url', name: 'BranchMasterRecordGet', component: BranchMasterRecordGet, meta: { title: i18n.t('router.BranchMasterRecordGet'), baseLink: 'BranchMasterRecord' } },
           { path: '/UnitSet/:url', name: 'UnitSetGet', component: UnitSetGet, meta: { title: i18n.t('router.UnitSetGet'), baseLink: 'UnitSet' } },
           { path: '/Bank/:url', name: 'BankGet', component: BankGet, meta: { title: i18n.t('router.BankGet'), baseLink: 'Bank' } },
-          { path: '/Employee/:url', name: 'EmployeeGet', component: EmployeeGet, meta: { title: i18n.t('router.EmployeeGet'), baseLink: 'Employee' } },
           { path: '/Return/:url', name: 'ReturnGet', component: ReturnGet, meta: { title: i18n.t('router.ReturnGet'), baseLink: 'Return' } },
           { path: '/PurchaseReturnOrder/:url', name: 'PurchaseReturnOrderGet', component: PurchaseReturnOrderGet, meta: { title: i18n.t('router.PurchaseReturnOrderGet'), baseLink: 'PurchaseReturnOrder' } },
           { path: '/WeighingInformation/:url', name: 'WeighingInformationGet', component: WeighingInformationGet, meta: { title: i18n.t('router.WeighingInformationGet'), baseLink: 'WeighingInformation' } },
@@ -574,7 +573,7 @@ const routes = [
           { path: '/ItemAnalysisResult/:url', name: 'ItemAnalysisResultGet', component: ItemAnalysisResultGet, meta: { title: i18n.t('router.ItemAnalysisResultGet'), baseLink: 'ItemAnalysisResult' } },
           { path: '/FieldSurveyResult/:url', name: 'FieldSurveyResultGet', component: FieldSurveyResultGet, meta: { title: i18n.t('router.FieldSurveyResultGet'), baseLink: 'FieldSurveyResult' } },
           { path: '/FieldSurvey/:url', name: 'FieldSurveyGet', component: FieldSurveyGet, meta: { title: i18n.t('router.FieldSurveyGet'), baseLink: 'FieldSurvey' } },
-          { path: '/FixedTerm/:url', name: 'FixedTermGet', component: FixedTermGet, meta: { title: i18n.t('router.FixedTermGet'), baseLink: 'FixedTerm' } },
+          { path: '/FixedTerm/:url', name: 'FixedTermGet', component: FixedTermGet, meta: { title: i18n.t('router.FixedTermGet'), baseLink: 'FixedTerm' } }
         ]
       },
       {
@@ -604,7 +603,6 @@ const routes = [
           { path: '/Update/BranchMasterRecord/:url', name: 'BranchMasterRecordUpdate', component: BranchMasterRecordUpdate, meta: { title: i18n.t('router.BranchMasterRecordUpdate'), baseLink: 'BranchMasterRecord' } },
           { path: '/Update/UnitSet/:url', name: 'UnitSetUpdate', component: UnitSetUpdate, meta: { title: i18n.t('router.UnitSetUpdate'), baseLink: 'UnitSet' } },
           { path: '/Update/Bank/:url', name: 'BankUpdate', component: BankUpdate, meta: { title: i18n.t('router.BankUpdate'), baseLink: 'Bank' } },
-          { path: '/Update/Employee/:url', name: 'EmployeeUpdate', component: EmployeeUpdate, meta: { title: i18n.t('router.EmployeeUpdate'), baseLink: 'Employee' } },
           { path: '/Update/Return/:url', name: 'ReturnUpdate', component: ReturnUpdate, meta: { title: i18n.t('router.ReturnUpdate'), baseLink: 'Return' } },
           { path: '/Update/PurchaseReturnOrder/:url', name: 'PurchaseReturnOrderUpdate', component: PurchaseReturnOrderUpdate, meta: { title: i18n.t('router.PurchaseReturnOrderUpdate'), baseLink: 'PurchaseReturnOrder' } },
           { path: '/Update/WeighingInformation/:url', name: 'WeighingInformationUpdate', component: WeighingInformationUpdate, meta: { title: i18n.t('router.WeighingInformationUpdate'), baseLink: 'WeighingInformation' } },
@@ -684,7 +682,6 @@ const routes = [
           { path: '/Insert/BranchMasterRecord', name: 'BranchMasterRecordInsert', component: BranchMasterRecordInsert, meta: { title: i18n.t('router.BranchMasterRecordInsert'), baseLink: 'BranchMasterRecord' } },
           { path: '/Insert/UnitSet', name: 'UnitSetInsert', component: UnitSetInsert, meta: { title: i18n.t('router.UnitSetInsert'), baseLink: 'UnitSet' } },
           { path: '/Insert/Bank', name: 'BankInsert', component: BankInsert, meta: { title: i18n.t('router.BankInsert'), baseLink: 'Bank' } },
-          { path: '/Insert/Employee', name: 'EmployeeInsert', component: EmployeeInsert, meta: { title: i18n.t('router.EmployeeInsert'), baseLink: 'Employee' } },
           { path: '/Insert/Return', name: 'ReturnInsert', component: ReturnInsert, meta: { title: i18n.t('router.ReturnInsert'), baseLink: 'Return' } },
           { path: '/Insert/PurchaseReturnOrder', name: 'PurchaseReturnOrderInsert', component: PurchaseReturnOrderInsert, meta: { title: i18n.t('router.PurchaseReturnOrderInsert'), baseLink: 'PurchaseReturnOrder' } },
           { path: '/Insert/WeighingInformation', name: 'WeighingInformationInsert', component: WeighingInformationInsert, meta: { title: i18n.t('router.WeighingInformationInsert'), baseLink: 'WeighingInformation' } },
@@ -728,7 +725,7 @@ const routes = [
           { path: '/Insert/WarehouseStockHistory', name: 'WarehouseStockHistoryInsert', component: WarehouseStockHistoryInsert, meta: { title: i18n.t('router.WarehouseStockHistoryInsert'), baseLink: 'WarehouseStockHistory' } },
           { path: '/Insert/WarehouseStock', name: 'WarehouseStockInsert', component: WarehouseStockInsert, meta: { title: i18n.t('router.WarehouseStockInsert'), baseLink: 'WarehouseStock' } },
           { path: '/Insert/BranchStockTransfer', name: 'BranchStockTransferInsert', component: BranchStockTransferInsert, meta: { title: i18n.t('router.BranchStockTransferInsert'), baseLink: 'BranchStockTransfer' } },
-          { path: '/Insert/OrderInsert', name: 'Order', component: OrderInsert, meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
+          { path: '/Insert/OrderInsert', name: 'OrderInsert', component: OrderInsert, meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
           { path: '/Insert/FieldAnalysisResult', name: 'FieldAnalysisResultInsert', component: FieldAnalysisResultInsert, meta: { title: i18n.t('router.FieldAnalysisResultInsert'), baseLink: 'FieldAnalysisResult' } },
           { path: '/Insert/ItemAnalysisResult', name: 'ItemAnalysisResultInsert', component: ItemAnalysisResultInsert, meta: { title: i18n.t('router.ItemAnalysisResultInsert'), baseLink: 'ItemAnalysisResult' } },
           { path: '/Insert/FieldSurveyResult', name: 'FieldSurveyResultInsert', component: FieldSurveyResultInsert, meta: { title: i18n.t('router.FieldSurveyResultInsert'), baseLink: 'FieldSurveyResult' } },

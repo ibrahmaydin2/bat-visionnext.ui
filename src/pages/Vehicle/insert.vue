@@ -217,7 +217,6 @@
                 </b-tbody>
               </b-table-simple>
             </b-col>
-            
           </b-row>
         </b-tab>
       </b-tabs>
@@ -288,7 +287,7 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'UNIT', name: 'vehicleUnits'})
     },
     selectedDriver (e) {
-      if(e) {
+      if (e) {
         this.form.model.defaultDriverEmployeeId = e.RecordId
       } else {
         this.form.model.defaultDriverEmployeeId = null
@@ -329,7 +328,7 @@ export default {
     },
     addReplacementDriver () {
       if (!this.selectedEmployee) {
-        console.log("Sürücü Seçin")
+        console.log('Sürücü Seçin')
         return
       }
       this.form.model.vehicleReplacementDrivers.push({
@@ -344,7 +343,6 @@ export default {
         id: this.selectedEmployee.RecordId
       })
       this.selectedEmployee = null
-
     },
     deleteReplacementDriver (item) {
       console.log(item)

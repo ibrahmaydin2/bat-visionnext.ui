@@ -14,6 +14,7 @@
     "Customer": "Müşteri Kayıtları"
   },
   "router": {
+    "Service": "Servis",
     "WorkOrder": "Work Order",
     "WorkOrderInsert": "Work Order Oluştur",
     "WorkOrderShow": "Work Order Görüntüle",

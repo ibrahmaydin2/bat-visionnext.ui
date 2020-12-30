@@ -1315,7 +1315,6 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'credits'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_PRIORITY', name: 'touchpoints'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_TYPE', name: 'touchpoint_types'})
-      
       this.$store.dispatch('getCustomerCardType')
       this.$store.dispatch('getCustomerCancelReasons')
       this.$store.dispatch('getBanks')
@@ -1793,7 +1792,7 @@ export default {
           this.DiscountGroup10 = tmpArr[0].Label
         }
 
-        // buna bakılacak 
+        // buna bakılacak
         if (e.PaymentPeriod) {
           this.PaymentPeriod = e.PaymentPeriod.Label
         }

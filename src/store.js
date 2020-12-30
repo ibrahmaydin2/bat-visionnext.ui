@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
@@ -24,22 +23,15 @@ let authHeader = {
 }
 
 let authCompanyAndBranch = {}
-let UserId = ''
-
-if (localStorage.getItem('UserId')) {
-  UserId = localStorage.getItem('UserId')
-} else {
-  UserId = 1
-}
 if (localStorage.getItem('BranchId')) {
   authCompanyAndBranch = {
-    'CompanyId' : localStorage.getItem('CompanyId'),
-    'BranchId' : localStorage.getItem('BranchId')
+    'CompanyId': localStorage.getItem('CompanyId'),
+    'BranchId': localStorage.getItem('BranchId')
   }
 } else {
   authCompanyAndBranch = {
-    'CompanyId' : 1,
-    'BranchId' : 1
+    'CompanyId': 1,
+    'BranchId': 1
   }
 }
 export const store = new Vuex.Store({
@@ -100,7 +92,7 @@ export const store = new Vuex.Store({
       {
         title: 'notify 5',
         content: 'notify 5'
-      },
+      }
     ],
     tableFilters: [
       { value: 'all', title: 'Tüm Kayıtlar' },
@@ -114,6 +106,7 @@ export const store = new Vuex.Store({
     insertTitle: [],
     insertReadonly: [],
     insertColumnType: [],
+    insertDefaultValue: [],
     errorView: false,
     errorData: [],
     nextgrid: false,
@@ -131,16 +124,16 @@ export const store = new Vuex.Store({
     searchRes: [],
     errorMessage: null,
     cities: [],
-    distiricts: [],
+    distiricts: [],
     lookup: [],
     detailLookup: [],
     lookupWarehouse_type: [],
     vehicleList: [],
     branchList: [],
-    analysisQuestions: [],
+    analysisQuestions: [],
     warehouseList: [],
     customerList: [],
-    //Employee Lookups Values
+    // Employee Lookups Values
     employeeTypes: [],
     priceList: [],
     educationStatus: [],
@@ -149,7 +142,7 @@ export const store = new Vuex.Store({
     category1: [],
     scoreCards: [],
     employees: [],
-    //Vehicle Lookups Values
+    // Vehicle Lookups Values
     vehicleTypes: [],
     vehicleBrands: [],
     vehicleModels: [],
@@ -163,12 +156,12 @@ export const store = new Vuex.Store({
     vehicles: [],
     routeTypes: [],
     customerLocationsList: [],
-    //Route Lookups Values
+    // Route Lookups Values
     routeClasses: [],
     routeGroups: [],
     visitStartControls: [],
     routeTypeOptions: [],
-    //Customer
+    // Customer
     customerCardTypes: [],
     cancelReasons: [],
     customerTypes: [],
@@ -204,15 +197,14 @@ export const store = new Vuex.Store({
     discountGroups2: [],
     discountGroups9: [],
     signNameIds: [],
-    banks: [],
-    currency: [],
-    items: [],
+    banks: [],
+    currency: [],
+    items: [],
     paymentPeriods: [],
     statementDays: [],
     paymentTypes: [],
     customerLabels: [],
     customerLabelValues: [],
-    cities: [],
     credits: [],
     touchpoints: [],
     touchpoint_types: []
@@ -319,7 +311,7 @@ export const store = new Vuex.Store({
             })
             commit('hideAlert')
             commit('setError', {view: false, info: null})
-          } else {
+          } else {
             commit('setError', {view: true, info: res.data.Message})
             commit('bigLoaded', false)
           }
@@ -390,10 +382,10 @@ export const store = new Vuex.Store({
     // index ekranlarının seçili sütunlarını kullaıcı özelinde günceller.
     setSelectedRows ({ state, commit }, query) {
       let dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
-        'UserId' : state.UserId,
-        'FormId' : query.FormId,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'UserId': state.UserId,
+        'FormId': query.FormId,
         'Columns': query.Columns
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -424,9 +416,9 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
-        'RecordId' : query.record
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'RecordId': query.record
       }
       commit('showNextgrid', false)
       return axios.post(query.api + '/Get', dataQuery, authHeader)
@@ -435,7 +427,7 @@ export const store = new Vuex.Store({
             case 200:
               commit('bigLoaded', false)
               commit('setRowData', res.data.Model)
-            break
+              break
             case 900:
               commit('bigLoaded', false)
               commit('logout')
@@ -443,7 +435,7 @@ export const store = new Vuex.Store({
             default:
               commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
-            break
+              break
           }
         })
         .catch(err => {
@@ -455,14 +447,14 @@ export const store = new Vuex.Store({
     },
     // tüm INSERT ekranlarının kontrolleri sağlanır.
     getAllLookups ({ state, commit }, query) {
-      const queryType = query.type.split(',').filter(function(item,i,allItems){
-        return i==allItems.indexOf(item)
+      const queryType = query.type.split(',').filter(function (item, i, allItems) {
+        return i === allItems.indexOf(item)
       }).join(',')
-    
+
       let dataQuery = {
-        'LookupTableCode' : queryType,
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId
+        'LookupTableCode': queryType,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
       }
       return axios.post(`VisionNextCommonApi/api/LookupValue/GetValuesMultiple`, dataQuery, authHeader)
         .then(res => {
@@ -479,9 +471,9 @@ export const store = new Vuex.Store({
     },
     getDetailPanelLookups ({ state, commit }, query) {
       let dataQuery = {
-        'LookupTableCode' : query.type,
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId
+        'LookupTableCode': query.type,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
       }
       return axios.post(`VisionNextCommonApi/api/LookupValue/GetValuesMultiple`, dataQuery, authHeader)
         .then(res => {
@@ -529,8 +521,8 @@ export const store = new Vuex.Store({
     // tüm create ve update işlemlerinin ortak fonksiyonu.
     createData ({ state, commit }, query) {
       let dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -564,8 +556,8 @@ export const store = new Vuex.Store({
     },
     updateData ({ state, commit }, query) {
       let dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -621,9 +613,9 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
-        'RecordId' : query.record
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'RecordId': query.record
       }
       return axios.post(query.api + '/Get', dataQuery, authHeader)
         .then(res => {
@@ -631,7 +623,7 @@ export const store = new Vuex.Store({
             case 200:
               commit('bigLoaded', false)
               commit('setBranch', res.data.Model)
-            break
+              break
             case 900:
               commit('bigLoaded', false)
               commit('logout')
@@ -639,7 +631,7 @@ export const store = new Vuex.Store({
             default:
               commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
-            break
+              break
           }
         })
         .catch(err => {
@@ -652,9 +644,9 @@ export const store = new Vuex.Store({
     // LOOKUP servisleri
     lookupWareouseType ({ state, commit }, query) {
       let dataQuery = {
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
-        'LookupTableCode' : 'WAREHOUSE_TYPE'
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'LookupTableCode': 'WAREHOUSE_TYPE'
       }
       return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
         .then(res => {
@@ -671,9 +663,9 @@ export const store = new Vuex.Store({
     },
     getLookups ({ state, commit }, query) {
       let dataQuery = {
-        'LookupTableCode' : query.type,
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
+        'LookupTableCode': query.type,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
         'UpperValue': query.upperValue
       }
       return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
@@ -691,9 +683,9 @@ export const store = new Vuex.Store({
     },
     getLookupsWithUpperValue ({ state, commit }, query) {
       let dataQuery = {
-        'LookupTableCode' : query.type,
-        'BranchId' : state.BranchId,
-        'CompanyId' : state.CompanyId,
+        'LookupTableCode': query.type,
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
         'UpperValue': query.upperValue
       }
       return axios.post('VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue', dataQuery, authHeader)
@@ -826,7 +818,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getEmployeesByBranchId({state, commit}) {
+    getEmployeesByBranchId ({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
         'branchId': state.BranchId,
@@ -848,7 +840,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getVehiclesByBranchId({state, commit}) {
+    getVehiclesByBranchId ({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
         'branchId': state.BranchId,
@@ -870,7 +862,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getRouteTypesByBranchId({state, commit}) {
+    getRouteTypesByBranchId ({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
         'branchId': state.BranchId,
@@ -892,16 +884,16 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCustomerLocationByCustomerIds({state, commit}, query) {
+    getCustomerLocationByCustomerIds ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
-          'customerIds': query.customerIds,
+          'customerIds': query.customerIds
           // 'isRouteNode': 1
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCustomer/api/CustomerLocation/Search', dataQuery, authHeader)
         .then(res => {
@@ -916,14 +908,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCustomerCardType({state, commit}, query) {
+    getCustomerCardType ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCustomer/api/CustomerCardType/Search', dataQuery, authHeader)
         .then(res => {
@@ -938,14 +930,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCustomerCancelReasons({state, commit}, query) {
+    getCustomerCancelReasons ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCommonApi/api/CancelReason/Search', dataQuery, authHeader)
         .then(res => {
@@ -959,16 +951,16 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-      },
+    },
     // aşağıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
-    getBanks({state, commit}, query) {
+    getBanks ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextBank/api/Bank/Search', dataQuery, authHeader)
         .then(res => {
@@ -983,14 +975,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCurrency({state, commit}, query) {
+    getCurrency ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextSystem/api/SysCurrency/Search', dataQuery, authHeader)
         .then(res => {
@@ -1005,14 +997,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getItems({state, commit}, query) {
+    getItems ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
         .then(res => {
@@ -1027,14 +1019,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getPaymentPeriods({state, commit}, query) {
+    getPaymentPeriods ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCommonApi/api/FixedTerm/Search', dataQuery, authHeader)
         .then(res => {
@@ -1049,14 +1041,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getStatementDays({state, commit}, query) {
+    getStatementDays ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextSystem/api/SysDay/Search', dataQuery, authHeader)
         .then(res => {
@@ -1071,14 +1063,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getPaymentTypes({state, commit}, query) {
+    getPaymentTypes ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCommonApi/api/PaymentType/Search', dataQuery, authHeader)
         .then(res => {
@@ -1093,14 +1085,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCustomerLabels({state, commit}, query) {
+    getCustomerLabels ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCommonApi/api/Label/Search', dataQuery, authHeader)
         .then(res => {
@@ -1115,14 +1107,14 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getCustomerLabelValues({state, commit}, query) {
+    getCustomerLabelValues ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
-        'page': 1,
+        'page': 1
       }
       return axios.post('VisionNextCommonApi/api/LabelDetail/Search', dataQuery, authHeader)
         .then(res => {
@@ -1136,9 +1128,9 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-      }
-      // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
-    },
+    }
+    // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
+  },
   mutations: {
     setDev (state, payload) {
       state.developmentMode = payload
@@ -1184,16 +1176,14 @@ export const store = new Vuex.Store({
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'danger',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
+            toaster: 'b-toaster-bottom-right'
           })
           break
         case 'warning':
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'danger',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
+            toaster: 'b-toaster-bottom-right'
           })
           break
         case 'error':
@@ -1201,8 +1191,7 @@ export const store = new Vuex.Store({
             title: i18n.t('general.errorTitle'),
             variant: 'warning',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
+            toaster: 'b-toaster-bottom-right'
           })
           state.loginError = payload.msg
           break
@@ -1211,16 +1200,14 @@ export const store = new Vuex.Store({
             title: i18n.t('general.pleaseWait'),
             variant: 'info',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
+            toaster: 'b-toaster-bottom-right'
           })
           break
         case 'success':
           this._vm.$bvToast.toast(payload.msg, {
             variant: 'success',
             noCloseButton: true,
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
+            toaster: 'b-toaster-bottom-right'
           })
           break
       }
@@ -1273,7 +1260,7 @@ export const store = new Vuex.Store({
       let enbld = {}
       let cType = {}
       let valueForAutoLookup = ''
-
+      let dflvl = {}
       apiRules.forEach(rule => {
         let inputCode
         let fieldName = rule.EntityProperty
@@ -1282,14 +1269,14 @@ export const store = new Vuex.Store({
         let fieldRequired = rule.Required
         let fieldDefaultValue = rule.DefaultValue
         let fieldVisible = rule.Visible
-        let fieldUnique = rule.Unique // ne işe yarıyor ?
 
         rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
         star[fieldName] = fieldRequired // validasyon yıldızını göster.
         visbl[fieldName] = fieldVisible // görüntüleme durumu.
         title[fieldName] = fieldLabel // input ismi.
-        enbld[fieldName] = fieldEnabled === true ? false : true // input ismi.
+        enbld[fieldName] = fieldEnabled !== true // input ismi.
         cType[fieldName] = rule.ColumnType
+        dflvl[fieldName] = fieldDefaultValue
         // HTML üretimi sadece development modu aktifken çalışacak.
         switch (rule.ColumnType) {
           case 'Id':
@@ -1298,15 +1285,15 @@ export const store = new Vuex.Store({
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
-          break;
-          
+            break
+
           case 'String':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.${fieldLabel} + (insertRequired.${fieldLabel} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
-          break;
+            break
 
           case 'LabelValue':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1314,8 +1301,8 @@ export const store = new Vuex.Store({
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
-          break;
-          
+            break
+
           case 'Select':
             if (fieldDefaultValue != null) {
               inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1327,7 +1314,7 @@ export const store = new Vuex.Store({
                   />
                 </b-form-group>
               </b-col>`
-              
+
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
               inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1336,7 +1323,7 @@ export const store = new Vuex.Store({
                 </b-form-group>
               </b-col>`
             }
-          break;
+            break
 
           case 'Radio':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1346,7 +1333,7 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
-          break;
+            break
 
           case 'Check':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1356,7 +1343,7 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
-          break;
+            break
 
           case 'DateTime':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -1364,7 +1351,7 @@ export const store = new Vuex.Store({
                 <b-form-datepicker v-model="form.${fieldName}" />
               </b-form-group>
             </b-col>`
-          break;
+            break
 
           case 'Text':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1372,7 +1359,7 @@ export const store = new Vuex.Store({
                 <b-form-textarea v-model="form.${fieldName}" placeholder="" />
               </b-form-group>
             </b-col>`
-          break;
+            break
         }
         if (state.developmentMode === true) {
           insertPageHTML[fieldName] = inputCode.trim()
@@ -1388,6 +1375,7 @@ export const store = new Vuex.Store({
       state.insertTitle = title
       state.insertReadonly = enbld
       state.insertColumnType = cType
+      state.insertDefaultValue = dflvl
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload
@@ -1421,7 +1409,7 @@ export const store = new Vuex.Store({
       user = JSON.parse(localStorage.getItem('UserModel'))
       localStorage.setItem('Key', user.Key)
       localStorage.setItem('LanguageId', user.DefaultLanguageId || 1)
-      state.loginUser.name = user.Name + ' ' + user.Surname,
+      state.loginUser.name = user.Name + ' ' + user.Surname
       state.loginUser.company = user.AuthorizedBranches[0].Desciption
       authHeader = {
         headers: {
@@ -1451,8 +1439,8 @@ export const store = new Vuex.Store({
       state.loginUser.company = localStorage.getItem('companyName')
       state.loginUser.branch = localStorage.getItem('branchName')
       authCompanyAndBranch = {
-        'CompanyId' : localStorage.getItem('CompanyId'),
-        'BranchId' : localStorage.getItem('BranchId')
+        'CompanyId': localStorage.getItem('CompanyId'),
+        'BranchId': localStorage.getItem('BranchId')
       }
       router.push({name: 'Dashboard'})
     },
@@ -1469,11 +1457,11 @@ export const store = new Vuex.Store({
       localStorage.setItem('siteLang', payload.changedLang)
     },
     // aşağıdaki fonksiyonlar temizlenmeli. birbirini taklit eden fonksiyonlar birleştirilmeli.
-    setCities (state,payload) {
+    setCities (state, payload) {
       state.cities = cities
     },
     setDistiricts (state, payload) {
-      state.distiricts = distiricts.filter(item => item.plaka == payload)
+      state.distiricts = distiricts.filter(item => item.plaka === payload)
     },
     setValues (state, payload) {
       state[payload.name] = payload.data.Values
@@ -1481,25 +1469,25 @@ export const store = new Vuex.Store({
     setEmployees (state, payload) {
       state.employees = payload
     },
-    setAnalysisQuestions(state, payload) {
+    setAnalysisQuestions (state, payload) {
       state.analysisQuestions = payload
     },
-    setBranch(state, payload) {
+    setBranch (state, payload) {
       state.branch = payload
     },
-    setVehicles(state, payload) {
+    setVehicles (state, payload) {
       state.vehicles = payload
     },
-    setRouteTypes(state, payload) {
+    setRouteTypes (state, payload) {
       state.routeTypes = payload
     },
-    setCustomerLocationsList(state, payload) {
+    setCustomerLocationsList (state, payload) {
       state.customerLocationsList = payload
     },
-    setCustomerCardTypes(state, payload) {
+    setCustomerCardTypes (state, payload) {
       state.customerCardTypes = payload
     },
-    setCancelReasons(state, payload) {
+    setCancelReasons (state, payload) {
       state.cancelReasons = payload
     },
     setVehicleList (state, payload) {
@@ -1528,7 +1516,7 @@ export const store = new Vuex.Store({
     },
     setStatementDays (state, payload) {
       payload.map(item => {
-        item.Label = item.DayNumber + " " + item.Description1
+        item.Label = item.DayNumber + ' ' + item.Description1
       })
       state.statementDays = payload
     },
@@ -1540,6 +1528,6 @@ export const store = new Vuex.Store({
     },
     setCustomerLabelValues (state, payload) {
       state.customerLabelValues = payload
-    },
+    }
   }
 })

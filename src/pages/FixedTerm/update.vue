@@ -64,10 +64,10 @@ export default {
           code: '',
           description1: '',
           period: null,
-          statusId: null,
+          statusId: null
         }
       },
-      dataStatus: null,
+      dataStatus: null
     }
   },
   computed: {
@@ -83,7 +83,7 @@ export default {
     },
     save () {
       this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm', formdata: this.form, return: this.$route.meta.baseLink})
-    },
+    }
   },
   watch: {
     rowData: function (e) {
@@ -92,9 +92,9 @@ export default {
           code: e.Code,
           description1: e.Description1,
           period: e.Period,
-          statusId: e.StatusId,
-        },
-        this.dataStatus = e.StatusId ? true : false
+          statusId: e.StatusId
+        }
+        this.dataStatus = !!e.StatusId
       }
     },
     dataStatus: function (e) {
@@ -103,12 +103,12 @@ export default {
       } else {
         this.form.model.statusId = 0
       }
-    },
+    }
   }
 }
 </script>
 <style lang="sass" scope>
   table
-    i 
+    & i
       cursor: pointer
 </style>
