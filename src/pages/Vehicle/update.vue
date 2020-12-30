@@ -339,12 +339,10 @@ export default {
       this.selectedEmployee = null
     },
     deleteReplacementDriver (item) {
-      console.log(this.form.model.vehicleReplacementDrivers)
       // Model içerisindeki vehicleReplacementDrivers dizisinden elemanın çıkarılması
       let filteredArr = this.form.model.vehicleReplacementDrivers.filter(i => i.driverId === item.id)
       this.form.model.vehicleReplacementDrivers.splice(this.form.model.vehicleReplacementDrivers.indexOf(filteredArr[0]), 1)
       if (filteredArr[0].recordState === 3) {
-        console.log(filteredArr[0])
         this.form.model.vehicleReplacementDrivers.push({
           code: filteredArr[0].code,
           description1: filteredArr[0].description1,
