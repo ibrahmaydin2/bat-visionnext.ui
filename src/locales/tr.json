@@ -115,7 +115,7 @@
     "BranchStockTransfer": "BranchStockTransfer",
     "Order": "Order",
     "FieldAnalysisResult": "FieldAnalysisResult",
-    "ItemAnalysisResult": "ItemAnalysisResult",
+    "ItemAnalysisResult": "Ürün Analizleri Sonuçları",
     "FieldSurveyResult": "Saha Araştırması Sonucu",
     "FieldSurvey": "Saha Araştırması",
     "FixedTerm": "Vade Tanımı",
@@ -177,7 +177,7 @@
     "BranchStockTransferGet": "BranchStockTransferGet",
     "OrderGet": "OrderGet",
     "FieldAnalysisResultGet": "FieldAnalysisResultGet",
-    "ItemAnalysisResultGet": "ItemAnalysisResultGet",
+    "ItemAnalysisResultGet": "Ürün Analizleri Sonuçları Görüntüle",
     "FieldSurveyResultGet": "Saha Araştırması Sonucu Görüntüle",
     "FieldSurveyGet": "Saha Araştırması Görüntüle",
     "FixedTermGet": "Vade Tanımı Görüntüle",
@@ -888,7 +888,23 @@
     "detail": "Detaylar",
     "sharing": "Paylaşım",
     "code": "Kod",
-    "status": "Durum"
+    "status": "Durum",
+    "description1": "Açiklama",
+    "ItemAnalysisResult": {
+      "title": "Ürün Analizleri Sonuçları",
+      "Code": "Ürün Analiz Kodu",
+      "Label": "Analiz Tanımı",
+      "Canceled": "İptal",
+      "CancelReason": "İptal Nedeni",
+      "detailsTitle": "Ürün Analizleri Sonuçları Detayları",
+      "Details": {
+        "itemCode": "Ürün Kodu",
+        "itemLabel": "Ürün",
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    }
   },
   "general": {
     "pleaseWait": "Lütfen Bekleyin...",
