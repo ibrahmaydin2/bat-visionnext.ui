@@ -161,12 +161,15 @@
                   <router-link v-if="opt.View === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </router-link>
-                  <b-button v-if="opt.View === 'Modal'" v-b-modal="opt.ActionUrl">
+                  <b-button v-else-if="opt.View === 'Modal'" v-b-modal="opt.ActionUrl">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </b-button>
-                  <a v-else :href="opt.Action" target="_blank">
+                  <a v-else-if="opt.Action === 'Link'" :href="opt.Action" target="_blank">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </a>
+                  <router-link v-else :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
+                    <i class="far fa-circle" /> {{ opt.Title }}
+                  </router-link>
                 </b-dropdown-item>
               </b-dropdown>
             </span>

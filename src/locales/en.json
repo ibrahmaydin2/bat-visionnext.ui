@@ -14,6 +14,11 @@
     "Customer": "Müşteri Kayıtları"
   },
   "router": {
+    "Service": "Servis",
+    "Contracts": "Kontrat Yönetimi",
+    "ContractsGet": "Kontrat Yönetimi",
+    "ContractsInsert": "Yeni Kontrat Yönetimi",
+    "ContractsUpdate": "Kontrat Güncelle",
     "WorkOrder": "Work Order",
     "WorkOrderInsert": "Work Order Oluştur",
     "WorkOrderShow": "Work Order Görüntüle",
@@ -113,11 +118,11 @@
     "WarehouseStock": "WarehouseStock",
     "BranchStockTransfer": "BranchStockTransfer",
     "Order": "Order",
-    "FieldAnalysisResult": "FieldAnalysisResult",
-    "ItemAnalysisResult": "ItemAnalysisResult",
-    "FieldSurveyResult": "FieldSurveyResult",
-    "FieldSurvey": "FieldSurvey",
-    "FixedTerm": "FixedTerm",
+    "FieldAnalysisResult": "Aktivite Noktası Analiz Sonuçları",
+    "ItemAnalysisResult": "Ürün Analizleri Sonuçları",
+    "FieldSurveyResult": "Saha Araştırması Sonuçları",
+    "FieldSurvey": "Saha Araştırması",
+    "FixedTerm": "Vade Tanımı",
     "ServiceGet": "ServiceGet",
     "EDocumentErrorManagementGet": "EDocumentErrorManagementGet",
     "ServiceRecordsGet": "ServiceRecordsGet",
@@ -175,11 +180,11 @@
     "WarehouseStockGet": "WarehouseStockGet",
     "BranchStockTransferGet": "BranchStockTransferGet",
     "OrderGet": "OrderGet",
-    "FieldAnalysisResultGet": "FieldAnalysisResultGet",
-    "ItemAnalysisResultGet": "ItemAnalysisResultGet",
-    "FieldSurveyResultGet": "FieldSurveyResultGet",
-    "FieldSurveyGet": "FieldSurveyGet",
-    "FixedTermGet": "FixedTermGet",
+    "FieldAnalysisResultGet": "Aktivite Noktası Analiz Sonuçları Görüntüle",
+    "ItemAnalysisResultGet": "Ürün Analizleri Sonuçları Görüntüle",
+    "FieldSurveyResultGet": "Saha Araştırması Sonucu Görüntüle",
+    "FieldSurveyGet": "Saha Araştırması Görüntüle",
+    "FixedTermGet": "Vade Tanımı Görüntüle",
     "ServiceUpdate": "ServiceUpdate",
     "EDocumentErrorManagementUpdate": "EDocumentErrorManagementUpdate",
     "ServiceRecordsUpdate": "ServiceRecordsUpdate",
@@ -239,9 +244,9 @@
     "OrderUpdate": "OrderUpdate",
     "FieldAnalysisResultUpdate": "FieldAnalysisResultUpdate",
     "ItemAnalysisResultUpdate": "ItemAnalysisResultUpdate",
-    "FieldSurveyResultUpdate": "FieldSurveyResultUpdate",
-    "FieldSurveyUpdate": "FieldSurveyUpdate",
-    "FixedTermUpdate": "FixedTermUpdate",
+    "FieldSurveyResultUpdate": "Saha Araştırması Sonucu Güncelle",
+    "FieldSurveyUpdate": "Saha Araştırması Güncelle",
+    "FixedTermUpdate": "Vade Tanımı Güncelle",
     "ServiceInsert": "ServiceInsert",
     "EDocumentErrorManagementInsert": "EDocumentErrorManagementInsert",
     "ServiceRecordsInsert": "ServiceRecordsInsert",
@@ -301,9 +306,9 @@
     "OrderInsert": "OrderInsert",
     "FieldAnalysisResultInsert": "FieldAnalysisResultInsert",
     "ItemAnalysisResultInsert": "ItemAnalysisResultInsert",
-    "FieldSurveyResultInsert": "FieldSurveyResultInsert",
-    "FieldSurveyInsert": "FieldSurveyInsert",
-    "FixedTermInsert": "FixedTermInsert",
+    "FieldSurveyResultInsert": "Saha Araştırması Sonucu Oluştur",
+    "FieldSurveyInsert": "Saha Araştırması Oluştur",
+    "FixedTermInsert": "Vade Tanımı Oluştur",
     "Settings": "Sistem Ayarları"
   },
   "insert": {
@@ -348,7 +353,13 @@
       "question": "Soru",
       "questionLine": "Sıra Numarası",
       "validDates": "Geçerlilik Tarihi",
-      "statusId": "Durum"
+      "statusId": "Durum",
+      "analysisTypeId": "Analiz Tipi",
+      "validityTypeId": "Geçerlilik Tipi",
+      "description1": "Açiklama",
+      "sortOrder": "Görünüm Sirasi",
+      "approveStateId": "Onay Durumu",
+      "isNecessary": "Zorunlu"
     },
     "fieldSurveyValidDates": {
       "description1": "Soru",
@@ -879,7 +890,52 @@
   },
   "get": {
     "detail": "Detaylar",
-    "sharing": "Paylaşım"
+    "sharing": "Paylaşım",
+    "code": "Kod",
+    "status": "Durum",
+    "description1": "Açiklama",
+    "ItemAnalysisResult": {
+      "title": "Ürün Analizleri Sonuçları",
+      "Code": "Ürün Analiz Kodu",
+      "Label": "Analiz Tanımı",
+      "Canceled": "İptal",
+      "CancelReason": "İptal Nedeni",
+      "detailsTitle": "Ürün Analizleri Sonuçları Detayları",
+      "Details": {
+        "itemCode": "Ürün Kodu",
+        "itemLabel": "Ürün",
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    },
+    "FieldAnalysisResult": {
+      "title": "Aktivite Noktası Analiz Sonuçları",
+      "Code": "Aktivite Analiz Kodu",
+      "Label": "Analiz Tanımı",
+      "Canceled": "İptal",
+      "CancelReason": "İptal Nedeni",
+      "detailsTitle": "Aktivite Noktası Analiz Sonuçları Detayları",
+      "Details": {
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    },
+    "FieldSurveyResult": {
+      "title": "Saha Araştırması Sonuçları",
+      "Code": "Saha Arastirmasi Kodu",
+      "Label": "Analiz Tanımı",
+      "Representative": "Personel",
+      "SurveyStartDate": "Ziyaret Başlangıç Tarihi",
+      "SurveyEndDate": "Ziyaret Bitiş Tarihi",
+      "detailsTitle": "Saha Araştırması Sonuçları Detayları",
+      "Details": {
+        "questionCode": "Soru Kodu",
+        "questionLabel": "Soru",
+        "answer": "Cevap"
+      }
+    }
   },
   "general": {
     "pleaseWait": "Lütfen Bekleyin...",

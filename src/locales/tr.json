@@ -15,6 +15,10 @@
   },
   "router": {
     "Service": "Servis",
+    "Contracts": "Kontrat Yönetimi",
+    "ContractsGet": "Kontrat Yönetimi",
+    "ContractsInsert": "Yeni Kontrat Yönetimi",
+    "ContractsUpdate": "Kontrat Güncelle",
     "WorkOrder": "Work Order",
     "WorkOrderInsert": "Work Order Oluştur",
     "WorkOrderShow": "Work Order Görüntüle",

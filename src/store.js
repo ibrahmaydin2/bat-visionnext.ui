@@ -253,7 +253,6 @@ export const store = new Vuex.Store({
         CuaAuthKey: user.CuaKey
       })
         .then(res => {
-          console.log(res.data)
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: 'Şifreniz Değiştirildi.' })
             setTimeout(() => {
@@ -275,6 +274,7 @@ export const store = new Vuex.Store({
           if (res.data.IsCompleted === true) {
             commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
           } else {
+            commit('showAlert', { type: 'catch', msg: res.data })
             console.log(res)
           }
         })
@@ -391,7 +391,6 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
         .then(res => {
-          console.log(res)
           commit('hideAlert')
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
@@ -1243,7 +1242,6 @@ export const store = new Vuex.Store({
       state.detailLookup = payload
     },
     setAutocomplete (state, payload) {
-      console.log(payload)
       state[payload.name] = payload.data.Values
     },
     setInsertRules (state, payload) {
@@ -1302,6 +1300,7 @@ export const store = new Vuex.Store({
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
             </b-col>`
+            dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Select':
@@ -1334,7 +1333,11 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
-            dflvl[fieldName] = fieldDefaultValue
+            if (parseInt(fieldDefaultValue) === 1) {
+              dflvl[fieldName] = true
+            } else {
+              dflvl[fieldName] = false
+            }
             break
 
           case 'Check':
@@ -1345,7 +1348,7 @@ export const store = new Vuex.Store({
                 </b-form-checkbox>
               </b-form-group>
             </b-col>`
-            dflvl[fieldName] = fieldDefaultValue
+            dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
 
           case 'DateTime':
