@@ -1,26 +1,103 @@
 <template>
-  <b-row class="asc__modal-approveModal-add">
-    <b-col cols="12">
-      <b-form-group>
-        <b-button variant="warning">
-          <i class="fas fa-truck" />
+  <b-overlay :show="status" rounded="sm">
+    <b-row class="asc__modal-approveModal">
+      <b-col cols="12">
+        <h5>{{$t('insert.rejectModal')}}</h5>
+      </b-col>
+      <b-col v-if="((data.ApproveStateId === null) || (data.ApproveStateId === ''))" cols="12" class="asc__modal-approveModal-body">
+        <p>{{$t('insert.approveStateError')}}</p>
+      </b-col>
+      <b-col v-else cols="12" class="asc__modal-approveModal-body">
+        <p style="font-weight: bold">{{title}}</p>
+        <p>{{message}}</p>
+      </b-col>
+      <b-col v-if="((data.ApproveStateId != null) || (data.ApproveStateId != ''))" cols="12" class="asc__modal-approveModal-footer">
+        <!-- <b-button type="button" @click="closeModal" variant="danger" size="sm" class="float-left">
+          <i class="fas fa-times" /> {{$t('insert.cancel')}}
+        </b-button> -->
+        <b-button type="button" @click="submit()" variant="warning" class="float-right">
+          <i class="fas fa-check" /> {{$t('insert.submit')}}
         </b-button>
-      </b-form-group>
-    </b-col>
-  </b-row>
+      </b-col>
+    </b-row>
+  </b-overlay>
 </template>
 <script>
 import { mapState } from 'vuex'
+import axios from 'axios'
 export default {
   data () {
     return {
+      status: false,
+      title: ''
     }
   },
-  props: ['data', 'close'],
+  props: ['action', 'recordId', 'data', 'query', 'message'],
   computed: {
-    ...mapState([])
+    ...mapState(['BranchId', 'CompanyId'])
   },
   methods: {
+    closeModal () {
+      this.$root.$emit('bv::hide::modal', 'RejectModal', '#btnShow')
+    },
+    submit () {
+      if ((this.data.ApproveStateId === null) || (this.data.ApproveStateId === '')) {
+        this.$toasted.show(this.$t('insert.approveStateError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      } else {
+        this.status = true
+        let update = {
+          'BranchId': this.BranchId,
+          'CompanyId': this.CompanyId,
+          'model': {
+            'updatedProperties': [
+              'ApproveStateId'
+            ],
+            'recordId': this.recordId,
+            'approveStateId': this.data.ApproveStateId,
+            'companyId': this.data.CompanyId,
+            'branchId': this.data.BranchId,
+            'deleted': 0,
+            'system': 0
+          }
+        }
+        return axios.post(this.action, update, {
+          headers: {
+            'key': localStorage.getItem('Key')
+          }
+        })
+          .then(res => {
+            this.status = false
+            this.$toasted.show(this.$t('insert.approveRejectSuccess'), {
+              type: 'success',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            this.closeModal()
+          })
+          .catch(err => {
+            this.status = false
+            this.$toasted.show(this.$t('insert.approveRejectError'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            console.log(err)
+          })
+      }
+    }
+  },
+  mounted () {
+    let q = this.query
+    let val = q.split(',')
+    let msg = ''
+    val.forEach(el => {
+      msg += `${this.data[el.trim()]} `
+    })
+    this.title = msg
   },
   watch: {
   }

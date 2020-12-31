@@ -318,6 +318,17 @@ export default {
         font-size: 1rem
         letter-spacing: -0.7px
         font-weight: bold
+  .asc__modal-approveModal
+    & h5
+      border-bottom: 1px #ddd solid
+      margin-bottom: 10px
+    .asc__modal-approveModal-body
+      padding: 30px 0
+      & p
+        text-align: center
+        font-size: 16px
+        padding: 0
+        margin: 0
 </style>
 <style scope>
   .asc__general-btn-inTable {

@@ -158,13 +158,13 @@
                   <i class="fas fa-th" />
                 </template>
                 <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                  <router-link v-if="opt.View === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
+                  <router-link v-if="opt.ViewType === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </router-link>
-                  <b-button v-else-if="opt.View === 'Modal'" v-b-modal="opt.ActionUrl">
+                  <span v-else-if="opt.ViewType === 'Modal'" @click="showModal(opt.Action, opt.ActionUrl, item.RecordId, item, opt.Query, opt.QueryMessage)">
                     <i class="far fa-circle" /> {{ opt.Title }}
-                  </b-button>
-                  <a v-else-if="opt.Action === 'Link'" :href="opt.Action" target="_blank">
+                  </span>
+                  <a v-else-if="opt.ViewType === 'Link'" :href="opt.Action" target="_blank">
                     <i class="far fa-circle" /> {{ opt.Title }}
                   </a>
                   <router-link v-else :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
@@ -227,9 +227,11 @@
         aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
       </b-col> -->
     </b-row>
-    <b-modal id="my-modal">
-      <PotentialCustomerApproveModal />
-      <PotentialCustomerRejectModal />
+    <b-modal ref="RejectModal" hide-footer hide-header>
+      <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+    </b-modal>
+    <b-modal ref="ApproveModal" hide-footer hide-header>
+      <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
     </b-modal>
   </div>
 </template>
@@ -239,6 +241,11 @@ export default {
   props: ['apiurl', 'apiparams'],
   data () {
     return {
+      modalActionUrl: '',
+      modalRecordId: '',
+      modalRecord: '',
+      modalQuery: '',
+      modalQueryMessage: '',
       head: [],
       items: null,
       totalRowCount: null,
@@ -288,6 +295,14 @@ export default {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid'])
   },
   methods: {
+    showModal (action, url, id, data, query, message) {
+      this.modalRecordId = id
+      this.modalRecord = data
+      this.modalQuery = query
+      this.modalQueryMessage = message
+      this.$refs[`${action}Modal`].show()
+      this.modalActionUrl = url
+    },
     dateTimeformat (e) {
       let calendar, date
       if (e != null) {

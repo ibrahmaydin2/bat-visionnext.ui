@@ -312,6 +312,13 @@
     "Settings": "Sistem Ayarları"
   },
   "insert": {
+    "rejectModal": "Reddet",
+    "approveModal": "Kabul Et",
+    "submit": "Onayla",
+    "cancel": "Vazgeç",
+    "approveRejectSuccess": "İşlem Başarılı",
+    "approveRejectError": "İşlem Hatası",
+    "approveStateError": " error.",
     "add": "Ekle",
     "other": "Diğer",
     "detail": "Detaylar",
