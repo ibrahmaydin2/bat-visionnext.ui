@@ -104,9 +104,9 @@ export default {
     ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId'])
   },
   methods: {
-    ...mapMutations(['hamburger', 'logout']),
+    ...mapMutations(['hamburger']),
     logoutHeader () {
-      this.logout()
+      this.$store.dispatch('logout')
     },
     collapseNav () {
       if (this.hamburgerIcon === 'fas fa-bars') {

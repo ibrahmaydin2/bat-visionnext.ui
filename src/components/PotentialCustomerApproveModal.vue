@@ -45,6 +45,8 @@ export default {
         'companyId': this.data.CompanyId,
         'branchId': this.data.BranchId,
         'model': {
+          'recordId': this.recordId,
+          'code': this.data.Code,
           'updatedProperties': [
             'Description1',
             'TaxOffice',
