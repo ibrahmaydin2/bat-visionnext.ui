@@ -1370,7 +1370,9 @@ export const store = new Vuex.Store({
             break
         }
         if (state.developmentMode === true) { // HTML üretimi sadece development modu aktifken çalışacak.
-          insertPageHTML[fieldName] = inputCode.trim()
+          if (inputCode) {
+            insertPageHTML[fieldName] = inputCode.trim()
+          }
         }
       })
       this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})

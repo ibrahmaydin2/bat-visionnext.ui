@@ -60,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -100,6 +100,13 @@ export default {
       if (e) {
         this.form.Code = e
       }
+    },
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        this.form[el] = value[el]
+      })
     }
   }
 }
