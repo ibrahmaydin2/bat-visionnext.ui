@@ -107,6 +107,7 @@ export const store = new Vuex.Store({
     insertReadonly: [],
     insertColumnType: [],
     insertDefaultValue: [],
+    insertFormdata: [],
     errorView: false,
     errorData: [],
     nextgrid: false,
@@ -1272,6 +1273,7 @@ export const store = new Vuex.Store({
       let cType = {}
       let valueForAutoLookup = ''
       let dflvl = []
+      let formData = ''
       apiRules.forEach(rule => {
         let inputCode = ''
         let fieldName = rule.EntityProperty
@@ -1280,14 +1282,14 @@ export const store = new Vuex.Store({
         let fieldRequired = rule.Required
         let fieldDefaultValue = rule.DefaultValue
         let fieldVisible = rule.Visible
-
         rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
         star[fieldName] = fieldRequired // validasyon yıldızını göster.
         visbl[fieldName] = fieldVisible // görüntüleme durumu.
         title[fieldName] = fieldLabel // input ismi.
         enbld[fieldName] = fieldEnabled !== true // input ismi.
         cType[fieldName] = rule.ColumnType
-
+        
+        formData += fieldName + ': null,'
         switch (rule.ColumnType) {
           case 'Id':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1388,6 +1390,7 @@ export const store = new Vuex.Store({
           }
         }
       })
+
       this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
       if (state.developmentMode === true) {
         state.insertHTML = insertPageHTML
@@ -1399,6 +1402,8 @@ export const store = new Vuex.Store({
       state.insertReadonly = enbld
       state.insertColumnType = cType
       state.insertDefaultValue = dflvl
+      state.insertAllElements = dflvl
+      state.insertFormdata = formData
     },
     setGetCreateCode (state, payload) {
       state.createCode = payload

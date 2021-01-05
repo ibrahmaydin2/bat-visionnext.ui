@@ -45,6 +45,14 @@
               <code>{{form}}</code>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="12">
+              <h3>Form Elements</h3>
+              <p>
+                {{insertFormdata}}
+              </p>
+            </b-col>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -60,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
