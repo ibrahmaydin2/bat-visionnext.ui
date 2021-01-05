@@ -121,7 +121,7 @@ export default {
       this.windowHeight = window.innerHeight
     },
     changeBranch (e) {
-      this.$store.commit('userIDs', {
+      this.$store.commit('changeUserIDs', {
         company: localStorage.getItem('CompanyId'),
         companyName: e.CommercialTitle,
         branch: e.Id,

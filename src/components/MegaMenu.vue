@@ -7,13 +7,13 @@
         </span>
         <ul>
           <li v-for="(subs, x) in links.sub" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
-            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }}" @click.native="closeHeader()">
+            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
             <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
             <ul v-if="subs.sub.length >= 1">
               <li v-for="(three, y) in subs.sub" :key="'three' + y">
-                <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }}" @click.native="closeHeader()">
+                <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }, query: {page: 1}}" @click.native="closeHeader()">
                   <i :class="three.icon ? 'fas ' + three.icon : 'far fa-circle'" />{{ three.title }}
                 </router-link>
               </li>
@@ -22,7 +22,7 @@
         </ul>
       </template>
       <template v-else>
-        <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }}" @click.native="closeHeader()">
+        <router-link class="asc__item-head-title" :to="{name: links.router, params: { url: links.link }, query: {page: 1}}" @click.native="closeHeader()">
           <i :class="links.icon ? 'fas ' + links.icon : 'far fa-circle'" />{{ links.title }}
         </router-link>
       </template>

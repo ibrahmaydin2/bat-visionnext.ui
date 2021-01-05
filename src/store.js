@@ -1447,9 +1447,9 @@ export const store = new Vuex.Store({
       store.commit('userIDs', {
         userId: user.UserId,
         company: user.AuthorizedCompanies[0].Id,
-        branch: user.AuthorizedBranches[0].Id,
-        branchName: user.AuthorizedBranches[0].Desciption})
-      // router.push({name: 'Dashboard'})
+        branch: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Id,
+        branchName: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Desciption
+      })
     },
     userIDs (state, payload) {
       localStorage.setItem('UserId', payload.userId)
@@ -1471,6 +1471,27 @@ export const store = new Vuex.Store({
         'BranchId': localStorage.getItem('BranchId')
       }
       router.push({name: 'Dashboard'})
+    },
+    changeUserIDs (state, payload) {
+      localStorage.setItem('UserId', payload.userId)
+      localStorage.setItem('CompanyId', payload.company)
+      localStorage.setItem('BranchId', payload.branch)
+
+      state.UserId = localStorage.getItem('UserId')
+      state.CompanyId = localStorage.getItem('CompanyId')
+      state.BranchId = localStorage.getItem('BranchId')
+
+      localStorage.setItem('companyName', payload.companyName)
+      localStorage.setItem('branchName', payload.branchName)
+
+      state.loginUser.company = localStorage.getItem('companyName')
+      state.loginUser.company = localStorage.getItem('companyName')
+      state.loginUser.branch = localStorage.getItem('branchName')
+      authCompanyAndBranch = {
+        'CompanyId': localStorage.getItem('CompanyId'),
+        'BranchId': localStorage.getItem('BranchId')
+      }
+      location.reload()
     },
     logout () {
       store.commit('clearToken')
