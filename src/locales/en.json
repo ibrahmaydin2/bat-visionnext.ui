@@ -318,7 +318,7 @@
     "cancel": "Vazgeç",
     "approveRejectSuccess": "İşlem Başarılı",
     "approveRejectError": "İşlem Hatası",
-    "approveStateError": " error.",
+    "approveStateError": " hatası.",
     "add": "Ekle",
     "other": "Diğer",
     "detail": "Detaylar",
@@ -893,6 +893,22 @@
       "defaultAccountNumber": "Varsayılan Hesap No",
       "isDefaultBranch": "Varsayılan Şube",
       "title": "Banka"
+    },
+    "contract": {
+      "management": "Kontrat Yönetimi",
+      "otherContract": "Müşterinin Diğer Kontratları",
+      "additionalCustomer": "Ek Müşteriler",
+      "validDates": "Geçerlilik Tarihleri",
+      "contractBenefits": "Kontrat Kazanımları",
+      "assets": "Varlıklar",
+      "Code": "Kontrat Kodu",
+      "ContractNumber": "Sözleşme Numarası",
+      "Description1": "Açıklama",
+      "ApproveState": "Onay Durumu",
+      "StatusReason": "Statü",
+      "customer": "Müşteri",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi"
     }
   },
   "get": {

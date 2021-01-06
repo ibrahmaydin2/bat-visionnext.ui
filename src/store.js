@@ -208,7 +208,13 @@ export const store = new Vuex.Store({
     customerLabelValues: [],
     credits: [],
     touchpoints: [],
-    touchpoint_types: []
+    touchpoint_types: [],
+    contractTypes: [],
+    customerContracts: [],
+    benefitTypes: [],
+    budgets: [],
+    tciBreak1: [],
+    assets: []
   },
   actions: {
     // sistem gereksinimleri
@@ -1141,6 +1147,126 @@ export const store = new Vuex.Store({
           console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
+    },
+    getContractTypes ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextContractManagement/api/ContractType/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setContractTypes', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getCustomerContracts ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+          'customerIds': query.ids
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 1000,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post('VisionNextContractManagement/api/Contract/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCustomerContracts', res.data.ListModel.BaseModels)
+          } else {
+            commit('setCustomerContracts', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('setCustomerContracts', [])
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getBenefitTypes ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextContractManagement/api/ContractBenefitType/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setBenefitTypes', res.data.ListModel.BaseModels)
+          } else {
+            commit('setBenefitTypes', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setBenefitTypes', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getBudgets ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextBudget/api/BudgetMaster/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setBudgets', res.data.ListModel.BaseModels)
+          } else {
+            commit('setBudgets', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setBudgets', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getAssets ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextAsset/api/Asset/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setAssets', res.data.ListModel.BaseModels)
+          } else {
+            commit('setAssets', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setAssets', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
     }
     // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
   },
@@ -1288,8 +1414,8 @@ export const store = new Vuex.Store({
         title[fieldName] = fieldLabel // input ismi.
         enbld[fieldName] = fieldEnabled !== true // input ismi.
         cType[fieldName] = rule.ColumnType
-        
-        formData += fieldName + ': null,'
+
+        formData += fieldName + ': null,' + '\n'
         switch (rule.ColumnType) {
           case 'Id':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
@@ -1339,7 +1465,13 @@ export const store = new Vuex.Store({
               </b-col>`
             }
             break
-
+          case 'SelectSearch':
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
+                <v-select />
+              </b-form-group>
+            </b-col>`
+            break
           case 'Radio':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
@@ -1556,6 +1688,22 @@ export const store = new Vuex.Store({
     },
     setCustomerLabelValues (state, payload) {
       state.customerLabelValues = payload
+    },
+    setContractTypes (state, payload) {
+      state.contractTypes = payload
+    },
+    setCustomerContracts (state, payload) {
+      state.customerContracts = payload
+    },
+    setBenefitTypes (state, payload) {
+      state.benefitTypes = payload
+    },
+    setBudgets (state, payload) {
+      state.budgets = payload
+    },
+    setAssets (state, payload) {
+      state.assets = payload
     }
+
   }
 })

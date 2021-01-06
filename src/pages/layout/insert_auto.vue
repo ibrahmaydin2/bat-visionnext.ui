@@ -83,14 +83,21 @@ export default {
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // standart dropdownların select işleminde alacağı değeri belirler.
-      this.form[label] = model.DecimalValue
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
     },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
       } else {
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: this.form, return: this.routeName})
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
       }
     }
   },
@@ -113,7 +120,9 @@ export default {
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
     insertDefaultValue (value) {
       Object.keys(value).forEach(el => {
-        this.form[el] = value[el]
+        if (el !== 'Code') {
+          this.form[el] = value[el]
+        }
       })
     }
   }
