@@ -1257,7 +1257,6 @@ export default {
       this.form[label] = model.RecordId
     },
     save () {
-      console.log(this.form)
       this.$v.$touch()
       if (this.$v.$error) {
         this.$toasted.show(this.$t('insert.fillRequireds'), {
@@ -1432,7 +1431,6 @@ export default {
         paymentType: this.customerPaymentTypes.paymentType,
         paymentTypeId: this.customerPaymentTypes.paymentTypeId
       })
-      console.log(this.form.customerPaymentTypes)
     },
     removeCustomerPaymentType (item) {
       this.form.customerPaymentTypes.splice(this.form.customerPaymentTypes.indexOf(item), 1)
