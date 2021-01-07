@@ -214,7 +214,8 @@ export const store = new Vuex.Store({
     benefitTypes: [],
     budgets: [],
     tciBreak1: [],
-    assets: []
+    assets: [],
+    routes: []
   },
   actions: {
     // sistem gereksinimleri
@@ -1038,6 +1039,30 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getRoutes ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+          'RouteTypeIds': [1],
+          'StatusIds': [1]
+        },
+        'branchId': 1,
+        'companyId': 1,
+        'Page': 1,
+        'PageRecordCount': 100
+      }
+      return axios.post('VisionNextRoute/api/Route/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setRoutes', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     getPaymentPeriods ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
@@ -1724,6 +1749,9 @@ export const store = new Vuex.Store({
     },
     setAssets (state, payload) {
       state.assets = payload
+    },
+    setRoutes (state, payload) {
+      state.routes = payload
     }
 
   }

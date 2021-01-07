@@ -359,7 +359,9 @@ export default {
       Type: null,
       Class: null,
       Customer: null,
-      detailPanelRecordId: 0
+      detailPanelRecordId: 0,
+      RecordId: null,
+      Deleted: 0
     }
   },
   computed: {
@@ -586,7 +588,9 @@ export default {
           ContractRelatedCustomers: [],
           ContractValidDates: [],
           ContractBenefits: [],
-          ContractAssets: []
+          ContractAssets: [],
+          RecordId: e.RecordId,
+          Deleted: 0
         }
         if (e.ContractRelatedCustomers) {
           e.ContractRelatedCustomers.map(item => {
