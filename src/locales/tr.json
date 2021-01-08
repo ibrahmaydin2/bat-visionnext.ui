@@ -309,6 +309,10 @@
     "FieldSurveyResultInsert": "Saha Araştırması Sonucu Oluştur",
     "FieldSurveyInsert": "Saha Araştırması Oluştur",
     "FixedTermInsert": "Vade Tanımı Oluştur",
+    "LoadingPlan": "Yükleme Planı",
+    "LoadingPlanInsert": "Yükleme Planı Oluştur",
+    "LoadingPlanUpdate": "Yükleme Planı Güncelle",
+    "LoadingPlanGet": "Yükleme Planı Görüntüle",
     "Settings": "Sistem Ayarları"
   },
   "insert": {
@@ -927,6 +931,10 @@
       "FinanceCode": "ERP Kodu",
       "ApproveStateId": "Onay Durumu",
       "CustomerFinanceCode": "Müşteri ERP Kodu"
+    },
+    "loadingplan": {
+      "items": "Ürün",
+      "PlanQuantity": "Yükleme Miktarı"
     }
   },
   "get": {
