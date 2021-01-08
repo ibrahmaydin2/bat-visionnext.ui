@@ -253,11 +253,8 @@ export const store = new Vuex.Store({
         })
     },
     logout ({ commit }, authData) {
-      return axios.post('VisionNextAuthentication/api/Authentication/LogOut', {
-        UserId: localStorage.getItem('UserId')
-      })
+      return axios.post('VisionNextAuthentication/api/Authentication/LogOut', authCompanyAndBranch, authHeader)
         .then(res => {
-          console.log(res)
           commit('logout')
         })
         .catch(err => {
