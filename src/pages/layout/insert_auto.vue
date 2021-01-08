@@ -60,7 +60,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {},
@@ -92,7 +94,7 @@ export default {
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
-        this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
         let model = {
           'model': this.form
