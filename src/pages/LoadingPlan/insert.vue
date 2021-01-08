@@ -126,7 +126,12 @@ export default {
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
       this.$store.dispatch('getItems')
-      this.$store.dispatch('getRoutes')
+
+      // Farklı yerlerde farklı parametreler aldığı için buradan parametre gönderiliyor
+      const routes = {
+        routeTypeIds: [1]
+      }
+      this.$store.dispatch('getRoutes', {...this.query, params: routes})
     },
     selectedItem (e) {
       if (e) {

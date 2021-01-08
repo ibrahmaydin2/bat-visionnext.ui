@@ -130,7 +130,12 @@ export default {
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
       this.$store.dispatch('getItems')
-      this.$store.dispatch('getRoutes')
+
+      // Farklı yerlerde farklı parametreler aldığı için buradan parametre gönderiliyor
+      const routes = {
+        routeTypeIds: [1]
+      }
+      this.$store.dispatch('getRoutes', {...this.query, params: routes})
       this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
     },
     selectedItem (e) {
@@ -224,12 +229,9 @@ export default {
         }
 
         if (this.routes && e.RouteId) {
-          console.log('1')
           let tmpArr = this.routes.filter(i => i.RecordId === e.RouteId)
-          console.log(tmpArr)
           this.routeLabel = tmpArr[0].Description1
         }
-
       }
     }
   }
