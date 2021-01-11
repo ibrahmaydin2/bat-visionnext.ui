@@ -215,7 +215,10 @@ export const store = new Vuex.Store({
     budgets: [],
     tciBreak1: [],
     assets: [],
-    routes: []
+    routes: [],
+    warehouses: [],
+    vanLoadingStatus: [],
+    itemForVanLoading: []
   },
   actions: {
     // sistem gereksinimleri
@@ -835,6 +838,29 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    acItems ({ state, commit }, query) {
+      let AndConditionModel = {}
+      AndConditionModel[query.searchField] = query.searchText
+      let dataQuery = {
+        AndConditionModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 50,
+        'page': 1
+      }
+      return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setItems', res.data.ListModel.BaseModels)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     getEmployeesByBranchId ({state, commit}) {
       let dataQuery = {
         'AndConditionModel': {},
@@ -1037,9 +1063,10 @@ export const store = new Vuex.Store({
         })
     },
     getRoutes ({state, commit}, query) {
+      console.log(query.params)
       let dataQuery = {
         'AndConditionModel': {
-          'RouteTypeIds': [1],
+          'RouteTypeIds': query.params.routeTypeIds,
           'StatusIds': [1]
         },
         'branchId': 1,
@@ -1287,6 +1314,82 @@ export const store = new Vuex.Store({
         .catch(err => {
           console.log(err.message)
           commit('setAssets', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getWarehouses ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+          'IsVehicle': 0,
+          'StatusIds': [1]
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setWarehouses', res.data.ListModel.BaseModels)
+          } else {
+            commit('setWarehouses', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setWarehouses', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getVanLoadingStatus ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextStockManagement/api/VanLoadingStatu/Search', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setVanLoadingStatus', res.data.ListModel.BaseModels)
+          } else {
+            commit('setVanLoadingStatus', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setVanLoadingStatus', [])
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getItemForVanLoading ({state, commit}, query) {
+      let dataQuery = {
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'routeId': query.params.routeId,
+        'itemCode': query.params.itemCode,
+        'warehouseId': query.params.warehouseId,
+        'loadingDate': query.params.loadingDate,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post('VisionNextItem/api/Item/GetItemSearchForVanLoading', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setItemForVanLoading', res.data.Model)
+          } else {
+            commit('setItemForVanLoading', [])
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('setItemForVanLoading', [])
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     }
@@ -1749,6 +1852,15 @@ export const store = new Vuex.Store({
     },
     setRoutes (state, payload) {
       state.routes = payload
+    },
+    setWarehouses (state, payload) {
+      state.warehouses = payload
+    },
+    setVanLoadingStatus (state, payload) {
+      state.vanLoadingStatus = payload
+    },
+    setItemForVanLoading (state, payload) {
+      state.itemForVanLoading = payload
     }
 
   }
