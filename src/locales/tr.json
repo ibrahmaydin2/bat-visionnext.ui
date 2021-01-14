@@ -313,6 +313,10 @@
     "LoadingPlanInsert": "Yükleme Planı Oluştur",
     "LoadingPlanUpdate": "Yükleme Planı Güncelle",
     "LoadingPlanGet": "Yükleme Planı Görüntüle",
+    "VanLoading": "Yükleme",
+    "VanLoadingInsert": "Yükleme Oluştur",
+    "VanLoadingUpdate": "Yükleme Güncelle",
+    "VanLoadingGet": "Yükleme Görüntüle",
     "Settings": "Sistem Ayarları"
   },
   "insert": {
@@ -935,6 +939,17 @@
     "loadingplan": {
       "items": "Ürün",
       "PlanQuantity": "Yükleme Miktarı"
+    },
+    "vanLoading": {
+      "items": "Ürün",
+      "itemCode": "Ürün Kodu",
+      "unit": "Birim",
+      "FromWhStockQuantity": "Stok Miktari",
+      "ToWhStockQuantity": "Mevcut",
+      "AverageSalesQuantity": "Ortalama Satis",
+      "LastSalesQuantity": "Son Satis",
+      "LastdaySalesQuantity": "Son Is Günü Satisi",
+      "SuggestedQuantity": "Önerilen Miktar"
     }
   },
   "get": {
@@ -984,6 +999,12 @@
         "questionLabel": "Soru",
         "answer": "Cevap"
       }
+    },
+    "vanLoading": {
+      "fromWarehouseId": "Yükleme Deposu",
+      "loadingDate": "Yükleme Tarihi",
+      "routeId": "Rota",
+      "isDone": "Yükleme Durumu"
     }
   },
   "general": {

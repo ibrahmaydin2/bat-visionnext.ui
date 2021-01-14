@@ -91,6 +91,13 @@ export default {
         this.form[label] = null
       }
     },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {

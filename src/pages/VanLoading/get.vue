@@ -15,113 +15,60 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.vanLoading.fromWarehouseId')}}:</b> {{ rowData.FromWarehouse ? rowData.FromWarehouse.Label : '' }}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.vanLoading.routeId')}}:</b> {{ rowData.Route ? rowData.Route.Label : '' }}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.vanLoading.loadingDate')}}:</b> {{ dateConvertFromTimezone(rowData.LoadingDate) }}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.vanLoading.isDone')}}:</b> <i :class="rowData.IsDone === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i> </span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Model_WarehouseTypeId')" active>
+        <b-tab :title="$t('get.detail')" active>
           <b-row>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
-                <div v-if="rowData.WarehouseTypeId === 76506193">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
-                </div>
-                <div v-if="rowData.WarehouseTypeId === 76506191">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
-                </div>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.locations')}}</h6>
-                <b-table responsive :items="rowData.WarehouseSuppliers" :fields="fields">
-                  <template #cell(SupplierBranchId)="data">
-                    {{data.item.SupplierBranch.Label}}
-                  </template>
-                  <template #cell(PurchaseWarehouseId)="data">
-                    {{data.item.PurchaseWarehouse.Label}}
-                  </template>
-                  <template #cell(ReturnWarehouseId)="data">
-                    {{data.item.ReturnWarehouse.Label}}
-                  </template>
-                </b-table>
+                <h6>{{$t('insert.loadingplan.items')}}</h6>
+                <b-table-simple responsive bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.vanLoading.items')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.unit')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.FromWhStockQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.ToWhStockQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.AverageSalesQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.LastSalesQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.LastdaySalesQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.SuggestedQuantity')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.VanLoadingItems" :key="i">
+                      <b-td>{{r.Item ? r.Item.Label : ''}}</b-td>
+                      <b-td>{{r.Unit ? r.Unit.Label : ''}}</b-td>
+                      <b-td>{{r.FromWhStockQuantity}}</b-td>
+                      <b-td>{{r.ToWhStockQuantity}}</b-td>
+                      <b-td>{{r.AverageSalesQuantity}}</b-td>
+                      <b-td>{{r.LastSalesQuantity}}</b-td>
+                      <b-td>{{r.LastdaySalesQuantity}}</b-td>
+                      <b-td>{{r.SuggestedQuantity}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab v-if="false" :title="$t('insert.other')">
-          <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.other')}}</h6>
-                <span><i class="far fa-circle" /> BranchId </span>
-                <p>{{ rowData.BranchId }}</p>
-                <span><i class="far fa-circle" /> CompanyId </span>
-                <p>{{ rowData.CompanyId }}</p>
-                <span><i class="far fa-circle" /> CreatedDateTime </span>
-                <p>{{ rowData.CreatedDateTime }}</p>
-                <span><i class="far fa-circle" /> CreatedUser </span>
-                <p>{{ rowData.CreatedUser }}</p>
-                <span><i class="far fa-circle" /> CustomerId </span>
-                <p>{{ rowData.CustomerId }}</p>
-                <span><i class="far fa-circle" /> EncryptedKey </span>
-                <p>{{ rowData.EncryptedKey }}</p>
-                <span><i class="far fa-circle" /> IsCustomerWarehouse </span>
-                <p>{{ rowData.IsCustomerWarehouse }}</p>
-                <span><i class="far fa-circle" /> IsVehicle </span>
-                <p>{{ rowData.IsVehicle }}</p>
-                <span><i class="far fa-circle" /> LocationId </span>
-                <p>{{ rowData.LocationId }}</p>
-                <span><i class="far fa-circle" /> ModifiedDateTime </span>
-                <p>{{ rowData.ModifiedDateTime }}</p>
-                <span><i class="far fa-circle" /> ModifiedUser </span>
-                <p>{{ rowData.ModifiedUser }}</p>
-                <span><i class="far fa-circle" /> RecordId </span>
-                <p>{{ rowData.RecordId }}</p>
-                <span><i class="far fa-circle" /> RecordState </span>
-                <p>{{ rowData.RecordState }}</p>
-                <span><i class="far fa-circle" /> RecordStatus </span>
-                <p>{{ rowData.RecordStatus }}</p>
-                <span><i class="far fa-circle" /> System </span>
-                <p>{{ rowData.System }}</p>
-                <span><i class="far fa-circle" /> WarehouseStocks </span>
-                <p>{{ rowData.WarehouseStocks }}</p>
-                <span><i class="far fa-circle" /> WarehouseSuppliers </span>
-                <p>{{ rowData.WarehouseSuppliers }}</p>
-              </b-card>
-            </b-col>
-           </b-row>
-         </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
   props: ['dataKey'],
+  mixins: [mixin],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
-      fields: [
-        {key: 'SupplierBranchId', label: 'Şube', sortable: true},
-        {key: 'PurchaseWarehouseId', label: 'Satın Alma Deposu', sortable: true},
-        {key: 'ReturnWarehouseId', label: 'İade Deposu', sortable: true}
-      ],
-      tempItems: [
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''}
-      ]
     }
   },
   mounted () {
@@ -136,7 +83,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextStockManagement/api/VanLoading', record: this.$route.params.url})
     }
   }
 }
