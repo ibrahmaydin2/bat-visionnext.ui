@@ -12,13 +12,19 @@
                   <h3>{{tableOperations.Title}}</h3>
                 </b-col>
                 <b-col cols="12" sm="12" md="9" class="pr-0 text-right">
-                  <b-button v-if="filterbtn" variant="info" size="sm" @click="clearFilters">
-                    <i class="fas fa-search-minus" /> {{$t('list.clear')}}
-                  </b-button>
-                  <!-- oluşturulan filtreyi kaydetme sistemi çalıştırıldığında bu fonksiyon aktifleşecek.
-                  <b-button v-if="filterbtn" variant="success" size="sm" @click="saveFilter">
-                    <i class="fas fa-save" /> {{$t('list.saveFilter')}}
-                  </b-button> -->
+                  <template v-if="isFiltered">
+                    <b-button variant="info" size="sm" @click="clearFilters">
+                      <i class="fas fa-search-minus" /> {{$t('list.clear')}}
+                    </b-button>
+                    <b-button id="submitButton" class="btn btn-warning btn-sm">
+                      <i class="fas fa-save" /> {{$t('list.saveFilter')}}
+                    </b-button>
+                    <b-popover target="submitButton" triggers="hover" placement="top">
+                      <template #title>{{$t('list.filterTitle')}}</template>
+                      <b-form-input v-model="filterTitle"/>
+                      <b-button @click="saveFilter" variant="warning" size="sm" class="w-100 mt-1"><i class="fas fa-check" /> {{$t('list.save')}}</b-button>
+                    </b-popover>
+                  </template>
                   <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
                   </b-button>
@@ -42,7 +48,15 @@
                       v-for="(flt, i) in tableOperations.Filters"
                       :key="'filter' + i"
                     >
-                      <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                      <!-- <i class="fas fa-file-pdf" /> {{dwn.Title}} -->
+                    </b-dropdown-item>
+                    <b-dropdown-item
+                      v-for="(flt, i) in tableFilters"
+                      :key="'filter' + i"
+                    >
+                    <router-link :to="{name: $route.name, query: {'page': 1, 'code': flt.Code}}">
+                      {{flt.Description1}}
+                    </router-link>
                     </b-dropdown-item>
                     <b-dropdown-divider />
                     <b-dropdown-item>{{$t('list.allFilters')}}</b-dropdown-item>
@@ -109,14 +123,11 @@ export default {
       thisRout: this.$route.name,
       pageTitle: this.$route.meta.title,
       createLink: this.$route.meta.createLink,
-      filterbtn: false
+      filterTitle: ''
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations'])
-  },
-  mounted () {
-    this.objlen(this.$route.query)
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
   },
   watch: {
     $route (to, from) {
@@ -124,27 +135,12 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
-      this.objlen(to.query)
     }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
-    objlen (e) {
-      var count = 0
-      var i
-      for (i in e) {
-        if (e.hasOwnProperty(i)) {
-          count++
-        }
-      }
-      if (count >= 1) {
-        this.filterbtn = true
-      } else {
-        this.filterbtn = false
-      }
-    },
     clearFilters () {
-      this.$router.push({name: this.$route.name})
+      this.$router.push({name: this.$route.name, query: {'page': 1}})
     },
     changeRows () {
       this.$store.commit('setTableRows', this.tableRowsAll)
@@ -194,6 +190,22 @@ export default {
         'userPortalId': 'K11081'
       }
       this.$store.dispatch('getDownloadLink', {...this.bom, api: apil, list: data, format: f})
+    },
+    filterOnFilters (e) {
+      this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})
+    },
+    saveFilter () {
+      const model = {
+        'recordId': 0,
+        'description1': this.filterTitle,
+        'recordState': 1,
+        'linkUrl': JSON.stringify(this.filterData),
+        'formId': this.tableOperations.Id
+      }
+      const modelForm = {
+        model
+      }
+      this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
     }
   }
 }

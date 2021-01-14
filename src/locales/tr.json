@@ -1043,6 +1043,8 @@
     "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
   },
   "list": {
+    "filterTitle": "Filtre İsmi",
+    "save": "Kaydet",
     "back": "Geri Dön",
     "allFilters": "Tüm Filtreler",
     "allRecords": "Tüm Kayıtlar",

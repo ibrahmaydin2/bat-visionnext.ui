@@ -94,11 +94,6 @@ export const store = new Vuex.Store({
         content: 'notify 5'
       }
     ],
-    tableFilters: [
-      { value: 'all', title: 'Tüm Kayıtlar' },
-      { value: 'today', title: 'Bu Günün Kayıtları' },
-      { value: 'month', title: 'Bu Ayın Kayıtları' }
-    ],
     insertHTML: null,
     insertRules: [],
     insertRequired: [],
@@ -108,14 +103,18 @@ export const store = new Vuex.Store({
     insertColumnType: [],
     insertDefaultValue: [],
     insertFormdata: [],
+    gridField: [],
     errorView: false,
     errorData: [],
     nextgrid: false,
+    isFiltered: false,
+    filterData: [],
     createCode: null,
     navigation: [],
     shortcuts: [],
     rowData: [],
     tableData: [],
+    tableFilters: [],
     autocompleteData: [],
     tableOperations: [],
     tableRows: [],
@@ -302,13 +301,16 @@ export const store = new Vuex.Store({
     },
     // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
-    getTableOperations ({ commit }, query) {
+    getTableOperations ({ state, commit }, query) {
       commit('bigLoaded', true)
       commit('setError', {view: false, info: null})
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
           if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
             commit('setTableOperations', res.data.UIPageModels[0])
+            // ilgili tablonun kayıtlı filtrelerini getirir.
+            this.dispatch('getFilters', {...this.query, FormId: res.data.UIPageModels[0].Id})
+
             if ((res.data.UIPageModels[0].SelectedColumns) && (res.data.UIPageModels[0].SelectedColumns.length >= 1)) {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
             } else {
@@ -317,21 +319,67 @@ export const store = new Vuex.Store({
             commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
 
             // başarılı -> tabloyu doldur.
-            this.dispatch('getTableData', {
-              ...this.query,
-              apiUrl: query.apiUrl,
-              api: query.api,
-              page: query.page,
-              count: query.count,
-              sort: query.sort,
-              searchField: query.where,
-              searchText: query.search
-            })
+            if (query.code) {
+              let filterdata = {
+                'BranchId': state.BranchId,
+                'CompanyId': state.CompanyId,
+                'code': query.code
+              }
+              return axios.post('VisionNextUIOperations/api/UIFormView/SearchFilterByCode', filterdata, authHeader)
+                .then(res => {
+                  if (res.data.IsCompleted === true) {
+                    this.dispatch('getTableData', {
+                      ...this.query,
+                      apiUrl: query.apiUrl,
+                      api: query.api,
+                      page: query.page,
+                      count: query.count,
+                      sort: query.sort,
+                      search: JSON.parse(res.data.Model.LinkUrl)
+                    })
+                  } else {
+                    commit('setError', {view: true, info: res.data.Message})
+                  }
+                })
+                .catch(err => {
+                  console.log(err)
+                  commit('setError', {view: true, info: 'Server Error'})
+                })
+            } else {
+              this.dispatch('getTableData', {
+                ...this.query,
+                apiUrl: query.apiUrl,
+                api: query.api,
+                page: query.page,
+                count: query.count,
+                sort: query.sort,
+                search: query.search
+              })
+            }
             commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {
             commit('setError', {view: true, info: res.data.Message})
             commit('bigLoaded', false)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          commit('setError', {view: true, info: 'Server Error'})
+        })
+    },
+    getFilters ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'FormId': query.FormId
+      }
+      return axios.post('VisionNextUIOperations/api/UiFormView/GetFilters', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setTableFilters', res.data.Filters)
+          } else {
+            commit('setError', {view: true, info: res.data.Message})
           }
         })
         .catch(err => {
@@ -363,9 +411,13 @@ export const store = new Vuex.Store({
 
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
-      if (query.searchField) {
-        AndConditionModel[query.searchField] = query.searchText
+      if (query.search) {
+        state.isFiltered = true
+        state.filterData = query.search
+        AndConditionModel = query.search
       } else {
+        state.isFiltered = false
+        state.filterData = []
         AndConditionModel = {}
       }
 
@@ -542,6 +594,7 @@ export const store = new Vuex.Store({
         'CompanyId': state.CompanyId,
         ...query.formdata
       }
+      console.log(dataQuery)
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
@@ -550,7 +603,11 @@ export const store = new Vuex.Store({
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
-            router.push({name: query.return})
+            if (query.return) {
+              router.push({name: query.return})
+            } else if (query.action) {
+              location.reload()
+            }
           } else {
             if (res.data.Validations) {
               let errs = res.data.Validations.Errors
@@ -669,6 +726,28 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             state.lookupWarehouse_type = res.data.Values
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      let dataQuery = {
+        'AndConditionModel': {},
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post(query.serviceUrl, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGridField', {data: res.data.ListModel.BaseModels, name: query.val})
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
@@ -1389,6 +1468,9 @@ export const store = new Vuex.Store({
     setTableData (state, payload) {
       state.tableData = payload
     },
+    setTableFilters (state, payload) {
+      state.tableFilters = payload
+    },
     setTableRows (state, payload) {
       state.tableRows = []
       state.tableRows = payload
@@ -1668,6 +1750,9 @@ export const store = new Vuex.Store({
     },
     setValues (state, payload) {
       state[payload.name] = payload.data.Values
+    },
+    setGridField (state, payload) {
+      state.gridField[payload.name] = payload.data
     },
     setEmployees (state, payload) {
       state.employees = payload

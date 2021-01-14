@@ -237,10 +237,12 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+let searchQ = {}
 export default {
   props: ['apiurl', 'apiparams'],
   data () {
     return {
+      grid: [],
       modalActionUrl: '',
       modalRecordId: '',
       modalRecord: '',
@@ -292,7 +294,7 @@ export default {
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField'])
   },
   methods: {
     showModal (action, url, id, data, query, message) {
@@ -359,12 +361,6 @@ export default {
       routeQ['field'] = this.sortField
       routeQ['sort'] = this.sort
       this.$router.push({name: this.$route.name, query: routeQ})
-
-      // if (this.$route.query.count) {
-      //   this.$router.push({name: this.$route.name, query: {'page': 1, 'count': this.$route.query.count, 'field': field, 'sort': sort}})
-      // } else {
-      //   this.$router.push({name: this.$route.name, query: {'page': 1, 'field': field, 'sort': sort}})
-      // }
     },
     filterBoolean (e) {
       this.searchOnTable(e, this.searchText.value)
@@ -372,29 +368,21 @@ export default {
     filterDate (e, date) {
       this.searchOnTable(e, date)
     },
-    searchOnTable (tableField, search) {
-      console.log(tableField, search)
-      this.tablefield = tableField
-      this.searched = search
-      this.$router.push({name: this.$route.name, query: {page: 1, search: search, where: tableField}})
-      this.searchText = null
+    filterLabel (e, i) {
+      this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
-    // onVehicleSearch (search, loading) {
-    //   if (search.length >= 3) {
-    //     this.searchVehicle(loading, search, this)
-    //   }
-    // },
-    // searchVehicle (loading, search, vm) {
-    //   this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    // },
+    searchOnTable (tableField, search) {
+      searchQ[tableField] = search
+      this.$store.dispatch('getTableData', {
+        ...this.query,
+        apiUrl: this.apiurl,
+        api: this.$route.name,
+        page: this.currentPage,
+        count: this.perPage,
+        search: searchQ
+      })
+    },
     getData (e, p, c, s) {
-      /*
-        DİKKAT
-        1. versiyonda iki fonksiyon birlikte çalışıyordu ancak bu problemlere sebep oluyordu.
-        bu versiyonda önce tableOperations çağırılıyor ve sonrasında tableData çalıştırılıyor.
-        getTableData fonksiyonu devredışı.
-      */
-      // this.$store.dispatch('getTableData', {...this.query, url: 'VisionNext' + e + '/api/' + e + '/Search', page: parseInt(p), count: parseInt(c), sort: s})
       this.$store.dispatch('getTableOperations', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -403,14 +391,12 @@ export default {
         page: parseInt(p),
         count: parseInt(c),
         sort: s,
-        where: this.$route.query.where,
-        search: this.$route.query.search
+        code: this.$route.query.code
       })
     }
   },
   watch: {
     $route (to, from) {
-      console.log('nextgrid')
       // sayfa değişikliklerini yakalamak ve içeriği güncellemek için bu bölüm şarttır.
       let sortOpt = {}
       if (to.query.count) {
@@ -443,6 +429,24 @@ export default {
       for (let t = 0; t < visibleRows.length; t++) {
         this.head.push(visibleRows[t])
       }
+      e.forEach(c => {
+        let control = c.modelControlUtil
+        if (control != null) {
+          switch (control.inputType) {
+            case 'DropDown':
+              this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
+              break
+            case 'AutoComplete':
+              // control.code: null
+              // control.isLookupTable: 0
+              // control.modelProperty: "CardTypeIds"
+              // control.serviceUrl: "/VisionNextCustomer/api/CustomerCardType/Search"
+              // control.upperObject: null
+
+              break
+          }
+        }
+      })
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.

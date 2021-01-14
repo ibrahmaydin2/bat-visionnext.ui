@@ -30,6 +30,10 @@
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-item class="text-center">
+            <p class="asc__auth-idea-verno"><span>V</span> {{system.version}}</p>
+          </b-dropdown-item>
         </b-dropdown>
 
         <div class="position-relative d-none">
@@ -101,7 +105,7 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   computed: {
-    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId'])
+    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId', 'system'])
   },
   methods: {
     ...mapMutations(['hamburger']),
@@ -286,4 +290,13 @@ export default {
     z-index: 9
   i:focus
     outline: none !important
+  .asc__auth-idea-verno
+    font-size: 10px
+    text-align: center
+    margin: 0
+    cursor: default
+    padding: 0px
+    & span
+      font-weight: 700
+      color: #ffa300
 </style>
