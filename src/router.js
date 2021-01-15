@@ -1,6 +1,6 @@
 /*
   |||||| DİKKAT ||||||
-  Index, Inser, Update, Get ekranları Layout altında "children" elementine tanımlanmalanacaktır.
+  Index, Insert, Update, Get ekranları Layout altında "children" elementine tanımlanmalanacaktır.
   -------------------------------------------------------------------------------------------------------------
   Yeni oluşturulacak ekranlar Route'dan kopyalanabilir.
   Yeni oluşturulmuş ekranları dil dosyalarında da tanımlamak gerekmektedir. (locales/tr||en.json)
