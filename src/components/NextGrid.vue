@@ -362,6 +362,9 @@ export default {
       routeQ['sort'] = this.sort
       this.$router.push({name: this.$route.name, query: routeQ})
     },
+    filterAutocomplete (e) {
+      this.searchOnTable(e, this.searchText.id)
+    },
     filterBoolean (e) {
       this.searchOnTable(e, this.searchText.value)
     },
