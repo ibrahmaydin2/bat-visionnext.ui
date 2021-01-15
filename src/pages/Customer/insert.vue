@@ -231,12 +231,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.city')">
-                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
+                <v-select v-model="locationCityLabel" :options="cities" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.distirict')">
-                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+                <v-select v-model="locationDistirictLabel" :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -331,7 +331,8 @@
             </b-col>
             <b-col cols="12" md="12" lg="12" class="text-right">
               <b-form-group>
-                <b-button @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                <b-button v-if="isLocationEditable" @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-pen"></i> {{$t('insert.edit')}}</b-button>
+                <b-button v-else @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -346,7 +347,10 @@
                 <b-tr v-for="(r, i) in form.customerLocations" :key="i">
                   <b-td>{{r.code}}</b-td>
                   <b-td>{{r.description1}}</b-td>
-                  <b-td class="text-center"><i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editCustomerLocation(r)" class="fas fa-pencil-alt mr-2 text-warning"></i>
+                    <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1206,7 +1210,10 @@ export default {
         touchpointTypeId: null
       },
       routeName: this.$route.meta.baseLink,
-      taxNumberReq: 10
+      taxNumberReq: 10,
+      locationCityLabel: null,
+      locationDistirictLabel: null,
+      isLocationEditable: false
     }
   },
   computed: {
@@ -1226,16 +1233,19 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_PRIORITY', name: 'touchpoints'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_TYPE', name: 'touchpoint_types'})
 
-      this.$store.dispatch('getCustomerCardType')
-      this.$store.dispatch('getCustomerCancelReasons')
-      this.$store.dispatch('getBanks')
-      this.$store.dispatch('getCurrency')
-      this.$store.dispatch('getItems')
-      this.$store.dispatch('getPaymentPeriods')
-      this.$store.dispatch('getStatementDays')
-      this.$store.dispatch('getPaymentTypes')
-      this.$store.dispatch('getCustomerLabels')
-      this.$store.dispatch('getCustomerLabelValues')
+      // this.$store.dispatch('getCustomerCardType')
+      // this.$store.dispatch('getCustomerCancelReasons')
+      // this.$store.dispatch('getBanks')
+      // this.$store.dispatch('getCurrency')
+      // this.$store.dispatch('getItems')
+      // this.$store.dispatch('getPaymentPeriods')
+      // this.$store.dispatch('getStatementDays')
+      // this.$store.dispatch('getPaymentTypes')
+      // this.$store.dispatch('getCustomerLabels')
+      // this.$store.dispatch('getCustomerLabelValues')
+
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -1286,20 +1296,23 @@ export default {
       }
     },
     selectedCity (e) {
-      console.log(e)
       if (e) {
         this.customerLocations.cityId = e.DecimalValue
+        this.locationCityLabel = e.Label
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
       } else {
         this.customerLocations.cityId = null
+        this.locationCityLabel = null
       }
     },
     selectedDistirict (e) {
       if (e) {
         this.customerLocations.districtId = e.DecimalValue
+        this.locationDistirictLabel = e.Label
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
       } else {
         this.customerLocations.districtId = null
+        this.locationDistirictLabel = null
       }
     },
     selectedBank (e) {
@@ -1437,29 +1450,59 @@ export default {
     },
 
     addCustomerLocations () {
-      this.form.customerLocations.push({
-        code: this.customerLocations.code,
-        description1: this.customerLocations.description1,
-        addressDetail: this.customerLocations.addressDetail,
-        phoneNumber1: this.customerLocations.phoneNumber1,
-        faxNumber: this.customerLocations.faxNumber,
-        addressDescription: this.customerLocations.addressDescription,
-        genexp1: this.customerLocations.genexp1,
-        contactName: this.customerLocations.contactName,
-        cityId: this.customerLocations.cityId,
-        xPosition: this.customerLocations.xPosition,
-        yPosition: this.customerLocations.yPosition,
-        districtId: this.customerLocations.districtId,
-        genexp2: this.customerLocations.genexp2,
-        postCode: this.customerLocations.postCode,
-        alias: this.customerLocations.alias,
-        isDefaultLocation: this.customerLocations.isDefaultLocation,
-        isInvoiceAddress: this.customerLocations.isInvoiceAddress,
-        isDeliveryAddress: this.customerLocations.isDeliveryAddress,
-        isRouteNode: this.customerLocations.isRouteNode
-      })
+      let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
+      if (filteredArr.length < 1) {
+        this.form.customerLocations.push({
+          code: this.customerLocations.code,
+          description1: this.customerLocations.description1,
+          addressDetail: this.customerLocations.addressDetail,
+          phoneNumber1: this.customerLocations.phoneNumber1,
+          faxNumber: this.customerLocations.faxNumber,
+          addressDescription: this.customerLocations.addressDescription,
+          genexp1: this.customerLocations.genexp1,
+          contactName: this.customerLocations.contactName,
+          cityId: this.customerLocations.cityId,
+          xPosition: this.customerLocations.xPosition,
+          yPosition: this.customerLocations.yPosition,
+          districtId: this.customerLocations.districtId,
+          genexp2: this.customerLocations.genexp2,
+          postCode: this.customerLocations.postCode,
+          alias: this.customerLocations.alias,
+          isDefaultLocation: this.customerLocations.isDefaultLocation,
+          isInvoiceAddress: this.customerLocations.isInvoiceAddress,
+          isDeliveryAddress: this.customerLocations.isDeliveryAddress,
+          isRouteNode: this.customerLocations.isRouteNode,
+          cityLabel: this.locationCityLabel,
+          districtLabel: this.locationDistirictLabel
+        })
+      } else {
+        let arrIndex = this.form.customerLocations.indexOf(filteredArr[0])
+        this.form.customerLocations[arrIndex] = {
+          code: this.customerLocations.code,
+          description1: this.customerLocations.description1,
+          addressDetail: this.customerLocations.addressDetail,
+          phoneNumber1: this.customerLocations.phoneNumber1,
+          faxNumber: this.customerLocations.faxNumber,
+          addressDescription: this.customerLocations.addressDescription,
+          genexp1: this.customerLocations.genexp1,
+          contactName: this.customerLocations.contactName,
+          cityId: this.customerLocations.cityId,
+          xPosition: this.customerLocations.xPosition,
+          yPosition: this.customerLocations.yPosition,
+          districtId: this.customerLocations.districtId,
+          genexp2: this.customerLocations.genexp2,
+          postCode: this.customerLocations.postCode,
+          alias: this.customerLocations.alias,
+          isDefaultLocation: this.customerLocations.isDefaultLocation,
+          isInvoiceAddress: this.customerLocations.isInvoiceAddress,
+          isDeliveryAddress: this.customerLocations.isDeliveryAddress,
+          isRouteNode: this.customerLocations.isRouteNode,
+          cityLabel: this.locationCityLabel,
+          districtLabel: this.locationDistirictLabel
+        }
+      }
 
-      this.customerLocations.code = null
+      this.customerLocations.code = `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length + 1 : 1}`
       this.customerLocations.description1 = null
       this.customerLocations.addressDetail = null
       this.customerLocations.phoneNumber1 = null
@@ -1478,6 +1521,16 @@ export default {
       this.customerLocations.isInvoiceAddress = null
       this.customerLocations.isDeliveryAddress = null
       this.customerLocations.isRouteNode = null
+      this.locationCityLabel = null
+      this.locationDistirictLabel = null
+      this.isLocationEditable = false
+    },
+    editCustomerLocation (item) {
+      this.isLocationEditable = true
+      let filteredArr = this.form.customerLocations[this.form.customerLocations.indexOf(item)]
+      this.customerLocations = filteredArr
+      this.locationCityLabel = filteredArr['cityLabel']
+      this.locationDistirictLabel = filteredArr['districtLabel']
     },
     removeCustomerLocation (item) {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
@@ -1540,7 +1593,9 @@ export default {
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
     insertDefaultValue (value) {
       Object.keys(value).forEach(el => {
-        this.form[el] = value[el]
+        if (el !== 'Code') {
+          this.form[el] = value[el]
+        }
       })
     }
   }

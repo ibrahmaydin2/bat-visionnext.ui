@@ -29,13 +29,13 @@
                 <h6>{{$t('insert.route.title')}}</h6>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CommercialTitle')}}</span><p>{{rowData.CommercialTitle}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Description1')}}</span><p>{{rowData.Description1}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p> -->
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxOffice')}}</span><p>{{rowData.TaxOffice}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxNumber')}}</span><p>{{rowData.TaxNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDutyFree')}}</span><p>{{rowData.IsDutyFree}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_UseEInvoice')}}</span><p>{{rowData.UseEInvoice}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span><p>{{rowData.IsTaxExemption}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDutyFree')}}</span> <p><i :class="rowData.IsDutyFree === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_UseEInvoice')}}</span> <p><i :class="rowData.UseEInvoice === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span> <p><i :class="rowData.IsTaxExemption === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CardTypeId')}}</span><p>{{rowData.CardType ? rowData.CardType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.Type ? rowData.Type : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesTypeId')}}</span><p>{{rowData.SalesType ? rowData.SalesType.Label : ''}}</p>
@@ -48,11 +48,20 @@
             <b-col cols="12" md="8">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerLocations')}}</h6>
-                <b-table responsive :items="locationItems" :fields="locationFields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                <b-table class="col-md-12" responsive :items="rowData.CustomerLocations" :fields="locationFields">
+                  <template #cell(IsDefaultLocation)="data">
+                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
                   </template>
-                  <template #cell(visit)="data">
+                  <template #cell(IsInvoiceAddress)="data">
+                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
+                  <template #cell(IsDeliveryAddress)="data">
+                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
+                  <template #cell(IsRouteNode)="data">
+                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
+                  <template #cell(IsVehicleLocation)="data">
                     <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
                   </template>
                 </b-table>
@@ -65,13 +74,12 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category1Id')}}</span><p>{{rowData.Category1Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category3Id')}}</span><p>{{rowData.Category3Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category2Id')}}</span><p>{{rowData.Category2Id}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category1Id')}}</span><p>{{rowData.Category1 ? rowData.Category1.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category2Id')}}</span><p>{{rowData.Category2 ? rowData.Category2.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category3Id')}}</span><p>{{rowData.Category3 ? rowData.Category3.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_GroupId')}}</span><p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup1Id')}}</span><p>{{rowData.DiscountGroup1Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup2Id')}}</span><p>{{rowData.DiscountGroup2Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup3Id')}}</span><p>{{rowData.DiscountGroup3Id}}</p>
+                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup3Id')}}</span><p>{{rowData.DiscountGroup3Id}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup5Id')}}</span><p>{{rowData.DiscountGroup5Id}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup6Id')}}</span><p>{{rowData.DiscountGroup6Id}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup7Id')}}</span><p>{{rowData.DiscountGroup7Id}}</p>
@@ -106,7 +114,7 @@
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentCredit')}}</span><p>{{rowData.CurrentCredit}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentRisk')}}</span><p>{{rowData.CurrentRisk}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsAutoBlockingOff')}}</span><p>{{rowData.IsAutoBlockingOff}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsBlocked')}}</span><p>{{rowData.IsBlocked}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsBlocked')}}</span> <p><i :class="rowData.IsBlocked === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BlockReasonId')}}</span><p>{{rowData.BlockReason ? rowData.BlockReason.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ManualInvoiceClosure')}}</span><p>{{rowData.ManualInvoiceClosure}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_InvoiceCombineRuleId')}}</span><p>{{rowData.InvoiceCombineRuleId}}</p>
@@ -117,12 +125,15 @@
             <b-col cols="12" md="8">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
-                <b-table responsive :items="creditHistoriesItems" :fields="creditHistoriesFields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
+                  <template #cell(Currency)="data">
+                    {{data.value.Label}}
                   </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  <template #cell(CreditStartDate)="data">
+                    {{dateConvertFromTimezone(data.value)}}
+                  </template>
+                  <template #cell(CreditEndDate)="data">
+                    {{dateConvertFromTimezone(data.value)}}
                   </template>
                 </b-table>
               </b-card>
@@ -135,19 +146,16 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.route.title')}}</h6>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DefaultPaymentTypeId')}}</span><p>{{rowData.DefaultPaymentType ? rowData.DefaultPaymentType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BankPaymentSystemId')}}</span><p>{{rowData.BankPaymentSystemId}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BankPaymentSystemId')}}</span><p>{{rowData.BankPaymentSystemId}}</p> -->
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PaymentPeriod')}}</span><p>{{rowData.PaymentPeriod}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
-                <b-table responsive :items="paymentTypeItems" :fields="paymentTypeFields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
-                  </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields">
+                   <template #cell(PaymentType)="data">
+                    {{data.value.Label}}
                   </template>
                 </b-table>
               </b-card>
@@ -155,13 +163,7 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
-                <b-table responsive :items="fixedTermItems" :fields="fixedTermFields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
-                  </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
-                  </template>
+                <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields">
                 </b-table>
               </b-card>
             </b-col>
@@ -171,7 +173,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
+                <h6>{{$t('insert.customer.CustomerItemDiscountCrts')}}</h6>
                 <b-table responsive :items="discountItems" :fields="discountFields">
                   <template #cell(customer)="data">
                     <kbd>{{data.item.code}}</kbd> {{data.value}}
@@ -454,47 +456,50 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
       locationFields: [
-        {key: 'Code', label: 'Code', sortable: true},
-        {key: 'Description1', label: 'Description1', sortable: true},
-        {key: 'AddressDetail', label: 'AddressDetail', sortable: true},
-        {key: 'city', label: 'city', sortable: true},
-        {key: 'distirict', label: 'distirict', sortable: true},
-        {key: 'AvenueId', label: 'AvenueId', sortable: true},
-        {key: 'StreetId', label: 'StreetId', sortable: true},
-        {key: 'PostCode', label: 'PostCode', sortable: true},
-        {key: 'XPosition', label: 'XPosition', sortable: true},
-        {key: 'YPosition', label: 'YPosition', sortable: true},
-        {key: 'AddressDescription', label: 'AddressDescription', sortable: true},
-        {key: 'ContactName', label: 'ContactName', sortable: true},
-        {key: 'PhoneNumber1', label: 'PhoneNumber1', sortable: true},
-        {key: 'PhoneNumber2', label: 'PhoneNumber2', sortable: true},
-        {key: 'IsDefaultLocation', label: 'IsDefaultLocation', sortable: true},
-        {key: 'IsInvoiceAddress', label: 'IsInvoiceAddress', sortable: true},
-        {key: 'IsDeliveryAddress', label: 'IsDeliveryAddress', sortable: true},
-        {key: 'Genexp1', label: 'Genexp1', sortable: true},
-        {key: 'Alias', label: 'Alias', sortable: true}
+        {key: 'Code', label: this.$t('insert.customer.Model_Code'), sortable: true},
+        {key: 'Description1', label: this.$t('insert.customer.Model_Description1Lokasyon'), sortable: true},
+        {key: 'AddressDetail', label: this.$t('insert.customer.Model_AddressDetail'), sortable: true},
+        {key: 'City', label: this.$t('insert.customer.Model_CityId'), sortable: true},
+        {key: 'Distirict', label: this.$t('insert.customer.Model_DistrictId'), sortable: true},
+        {key: 'Avenue', label: this.$t('insert.customer.Model_AvenueId'), sortable: true},
+        {key: 'Street', label: this.$t('insert.customer.Model_StreetId'), sortable: true},
+        {key: 'PostCode', label: this.$t('insert.customer.Model_PostCode'), sortable: true},
+        {key: 'XPosition', label: this.$t('insert.customer.Model_XPosition'), sortable: true},
+        {key: 'YPosition', label: this.$t('insert.customer.Model_YPosition'), sortable: true},
+        {key: 'AddressDescription', label: this.$t('insert.customer.Model_AddressDescription'), sortable: true},
+        {key: 'ContactName', label: this.$t('insert.customer.Model_GsmNumber'), sortable: true},
+        {key: 'PhoneNumber1', label: this.$t('insert.customer.Model_PhoneNumber1'), sortable: true},
+        {key: 'PhoneNumber2', label: this.$t('insert.customer.Model_PhoneNumber2'), sortable: true},
+        {key: 'IsDefaultLocation', label: this.$t('insert.customer.Model_IsDefaultLocation'), sortable: true},
+        {key: 'IsInvoiceAddress', label: this.$t('insert.customer.Model_IsInvoiceAddress'), sortable: true},
+        {key: 'IsDeliveryAddress', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
+        {key: 'IsRouteNode', label: this.$t('insert.customer.isRouteNode'), sortable: true},
+        {key: 'IsVehicleLocation', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
+        {key: 'Genexp1', label: this.$t('insert.customer.Model_Genexp1'), sortable: true},
+        {key: 'Alias', label: this.$t('insert.customer.Model_Alias'), sortable: true}
       ],
       creditHistoriesFields: [
-        {key: 'CreditDescriptionId', label: 'CreditDescriptionId', sortable: true},
-        {key: 'CreditAmount', label: 'CreditAmount', sortable: true},
-        {key: 'CurrencyId', label: 'CurrencyId', sortable: true},
-        {key: 'CreditLimit', label: 'CreditLimit', sortable: true},
-        {key: 'RiskLimit', label: 'RiskLimit', sortable: true},
-        {key: 'AllowOverLimit', label: 'AllowOverLimit', sortable: true},
-        {key: 'CreditStartDate', label: 'CreditStartDate', sortable: true},
-        {key: 'CreditEndDate', label: 'CreditEndDate', sortable: true}
+        {key: 'CreditDescription', label: this.$t('insert.customer.Model_CreditDescriptionId'), sortable: true},
+        {key: 'CreditAmount', label: this.$t('insert.customer.Model_CreditAmount'), sortable: true},
+        {key: 'Currency', label: this.$t('insert.customer.Model_CurrencyId'), sortable: true},
+        {key: 'CreditLimit', label: this.$t('insert.customer.CreditLimit'), sortable: true},
+        {key: 'RiskLimit', label: this.$t('insert.customer.Model_RiskLimit'), sortable: true},
+        {key: 'AllowOverLimit', label: this.$t('insert.customer.Model_AllowOverLimit'), sortable: true},
+        {key: 'CreditStartDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
+        {key: 'CreditEndDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true}
       ],
       paymentTypeFields: [
-        {key: 'PaymentTypeId', label: 'PaymentTypeId', sortable: true}
+        {key: 'PaymentType', label: this.$t('insert.customer.Model_PaymentTypeId'), sortable: true}
       ],
       fixedTermFields: [
-        {key: 'FixedTermId', label: 'FixedTermId', sortable: true}
+        {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
       ],
       discountFields: [
         {key: 'ColumnName', label: 'ColumnName', sortable: true},
@@ -503,38 +508,6 @@ export default {
         {key: 'EndDate', label: 'EndDate', sortable: true},
         {key: 'DiscountPercent1', label: 'DiscountPercent1', sortable: true},
         {key: 'DiscountPercent2', label: 'DiscountPercent2', sortable: true}
-      ],
-      locationItems: [
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''}
-      ],
-      creditHistoriesItems: [
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''}
-      ],
-      paymentTypeItems: [
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''}
-      ],
-      fixedTermItems: [
-        {FixedTermId: ''},
-        {FixedTermId: ''},
-        {FixedTermId: ''},
-        {FixedTermId: ''}
-      ],
-      discountItems: [
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''}
       ]
     }
   },

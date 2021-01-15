@@ -317,11 +317,14 @@
     "VanLoadingInsert": "Yükleme Oluştur",
     "VanLoadingUpdate": "Yükleme Güncelle",
     "VanLoadingGet": "Yükleme Görüntüle",
-    "Settings": "Sistem Ayarları"
+    "Settings": "Sistem Ayarları",
+    "TerminalLog": "Terminal Günlüğü",
+    "TerminalLogGet": "Terminal Günlüğü Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
+    "edit": "Düzenle",
     "submit": "Onayla",
     "cancel": "Vazgeç",
     "approveRejectSuccess": "İşlem Başarılı",
@@ -355,12 +358,15 @@
     "city": "Şehir",
     "distirict": "İlçe",
     "town": "Mahalle",
+    "remove": "İptal",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
       "surveyBranchId": "Şube Kodu",
       "employeeType": "Personel Tipi",
       "surveyBranch": "Şube Kodu",
+      "nameBranch": "Şube Adı",
+      "nameEmployee": "Personel Adı",
       "questions": "Soru",
       "questionId": "Soru",
       "questionLineId": "Sıra Numarası",
@@ -1005,6 +1011,20 @@
       "loadingDate": "Yükleme Tarihi",
       "routeId": "Rota",
       "isDone": "Yükleme Durumu"
+    },
+    "terminal": {
+      "Branch": "Şube",
+      "OperationType": "İşlem Tipi",
+      "Representative": "Personel",
+      "OperationState": "Operasyon Durumu",
+      "TransferMethod": "Transfer Metodu",
+      "OperationDate": "Operasyon Tarihi",
+      "OperationTime": "Operasyon Saati",
+      "TerminalVersion": "Terminal Versiyonu",
+      "TransferAppVersion": "Transfer Uygulama Versiyonu",
+      "UserDate": "Kullanıcı Tarihi",
+      "TransferFileName": "Dosya Adı",
+      "ErrorMessage": "Hata Mesajı"
     }
   },
   "general": {

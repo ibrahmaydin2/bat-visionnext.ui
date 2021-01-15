@@ -1063,7 +1063,6 @@ export const store = new Vuex.Store({
         })
     },
     getRoutes ({state, commit}, query) {
-      console.log(query.params)
       let dataQuery = {
         'AndConditionModel': {
           'RouteTypeIds': query.params.routeTypeIds,
@@ -1392,8 +1391,29 @@ export const store = new Vuex.Store({
           commit('setItemForVanLoading', [])
           commit('showAlert', { type: 'danger', msg: err.message })
         })
-    }
+    },
     // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
+    getSearchItems ({state, commit}, query) {
+      let dataQuery = {
+        'AndConditionModel': {
+        },
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    }
   },
   mutations: {
     setDev (state, payload) {
@@ -1789,6 +1809,9 @@ export const store = new Vuex.Store({
     },
     setCustomerLocationsList (state, payload) {
       state.customerLocationsList = payload
+    },
+    setSearchItems (state, payload) {
+      state[payload.name] = payload.data
     },
     setCustomerCardTypes (state, payload) {
       state.customerCardTypes = payload

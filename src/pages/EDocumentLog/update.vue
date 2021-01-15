@@ -283,12 +283,7 @@ export default {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
       this.form.Model.WarehouseType = null
-      this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-      this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
-      let model = {
-        'model': this.form
-      }
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: model, return: this.$route.meta.baseLink})
+      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
       if (e === 0) {

@@ -116,6 +116,11 @@ import EDocumentErrorManagementGet from '@/pages/EDocumentErrorManagement/get'
 import EDocumentErrorManagementInsert from '@/pages/EDocumentErrorManagement/insert'
 import EDocumentErrorManagementUpdate from '@/pages/EDocumentErrorManagement/update'
 
+import EDocumentLogIndex from '@/pages/EDocumentLog/'
+import EDocumentLogGet from '@/pages/EDocumentLog/get'
+import EDocumentLogInsert from '@/pages/EDocumentLog/insert'
+import EDocumentLogUpdate from '@/pages/EDocumentLog/update'
+
 import ServiceRecordsIndex from '@/pages/ServiceRecords/'
 import ServiceRecordsGet from '@/pages/ServiceRecords/get'
 import ServiceRecordsInsert from '@/pages/ServiceRecords/insert'
@@ -416,6 +421,11 @@ import TerminalLogGet from '@/pages/TerminalLog/get'
 import TerminalLogInsert from '@/pages/TerminalLog/insert'
 import TerminalLogUpdate from '@/pages/TerminalLog/update'
 
+import TerminalPasswordLogIndex from '@/pages/TerminalPasswordLog/'
+import TerminalPasswordLogGet from '@/pages/TerminalPasswordLog/get'
+import TerminalPasswordLogInsert from '@/pages/TerminalPasswordLog/insert'
+import TerminalPasswordLogUpdate from '@/pages/TerminalPasswordLog/update'
+
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
 import Register from '@/views/Auth/register'
@@ -440,6 +450,7 @@ const listIndex = [
   {path: '/KeyAccount', name: 'KeyAccount', component: KeyAccountIndex, meta: { title: i18n.t('router.KeyAccount'), createLink: 'KeyAccountInsert' }},
   {path: '/Service', name: 'Service', component: ServiceIndex, meta: { title: i18n.t('router.Service'), createLink: 'ServiceInsert' }},
   {path: '/EDocumentErrorManagement', name: 'EDocumentErrorManagement', component: EDocumentErrorManagementIndex, meta: { title: i18n.t('router.EDocumentErrorManagement'), createLink: 'EDocumentErrorManagementInsert' }},
+  {path: '/EDocumentLog', name: 'EDocumentLog', component: EDocumentLogIndex, meta: { title: i18n.t('router.EDocumentLog'), createLink: 'EDocumentLogInsert' }},
   {path: '/ServiceRecords', name: 'ServiceRecords', component: ServiceRecordsIndex, meta: { title: i18n.t('router.ServiceRecords'), createLink: 'ServiceRecordsInsert' }},
   {path: '/DailyPerformance', name: 'DailyPerformance', component: DailyPerformanceIndex, meta: { title: i18n.t('router.DailyPerformance'), createLink: 'DailyPerformanceInsert' }},
   {path: '/Failurefollowupform', name: 'Failurefollowupform', component: FailurefollowupformIndex, meta: { title: i18n.t('router.Failurefollowupform'), createLink: 'FailurefollowupformInsert' }},
@@ -501,7 +512,8 @@ const listIndex = [
   {path: '/PotentialCustomer', name: 'PotentialCustomer', component: PotentialCustomerIndex, meta: { title: i18n.t('router.PotentialCustomer'), createLink: 'PotentialCustomerInsert' }},
   {path: '/LoadingPlan', name: 'LoadingPlan', component: LoadingPlanIndex, meta: { title: i18n.t('router.LoadingPlan'), createLink: 'LoadingPlanInsert' }},
   {path: '/CashCard', name: 'CashCard', component: CashCardIndex, meta: { title: i18n.t('router.CashCard'), createLink: 'CashCardInsert' }},
-  {path: '/TerminalLog', name: 'TerminalLog', component: TerminalLogIndex, meta: { title: i18n.t('router.TerminalLog'), createLink: 'TerminalLogInsert' }}
+  {path: '/TerminalLog', name: 'TerminalLog', component: TerminalLogIndex, meta: { title: i18n.t('router.TerminalLog'), createLink: 'TerminalLogInsert' }},
+  {path: '/TerminalPasswordLog', name: 'TerminalPasswordLog', component: TerminalPasswordLogIndex, meta: { title: i18n.t('router.TerminalPasswordLog'), createLink: 'TerminalPasswordLogInsert' }}
 ]
 
 const listGet = [
@@ -515,6 +527,7 @@ const listGet = [
   { path: '/KeyAccount/:url', name: 'KeyAccountGet', component: KeyAccountGet, meta: { title: i18n.t('router.KeyAccountGet'), baseLink: 'KeyAccount' } },
   { path: '/Service/:url', name: 'ServiceGet', component: ServiceGet, meta: { title: i18n.t('router.ServiceGet'), baseLink: 'Service' } },
   { path: '/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementGet', component: EDocumentErrorManagementGet, meta: { title: i18n.t('router.EDocumentErrorManagementGet'), baseLink: 'EDocumentErrorManagement' } },
+  { path: '/EDocumentLog/:url', name: 'EDocumentLogGet', component: EDocumentLogGet, meta: { title: i18n.t('router.EDocumentLogGet'), baseLink: 'EDocumentLog' } },
   { path: '/ServiceRecords/:url', name: 'ServiceRecordsGet', component: ServiceRecordsGet, meta: { title: i18n.t('router.ServiceRecordsGet'), baseLink: 'ServiceRecords' } },
   { path: '/DailyPerformance/:url', name: 'DailyPerformanceGet', component: DailyPerformanceGet, meta: { title: i18n.t('router.DailyPerformanceGet'), baseLink: 'DailyPerformance' } },
   { path: '/Failurefollowupform/:url', name: 'FailurefollowupformGet', component: FailurefollowupformGet, meta: { title: i18n.t('router.FailurefollowupformGet'), baseLink: 'Failurefollowupform' } },
@@ -581,7 +594,8 @@ const listGet = [
   { path: '/PotentialCustomer/:url', name: 'PotentialCustomerGet', component: PotentialCustomerGet, meta: { title: i18n.t('router.PotentialCustomerGet'), baseLink: 'PotentialCustomer' } },
   { path: '/LoadingPlan/:url', name: 'LoadingPlanGet', component: LoadingPlanGet, meta: { title: i18n.t('router.LoadingPlanGet'), baseLink: 'LoadingPlan' } },
   { path: '/CashCard/:url', name: 'CashCardGet', component: CashCardGet, meta: { title: i18n.t('router.CashCardGet'), baseLink: 'CashCard' } },
-  { path: '/TerminalLog/:url', name: 'TerminalLogGet', component: TerminalLogGet, meta: { title: i18n.t('router.TerminalLogGet'), baseLink: 'TerminalLog' } }
+  { path: '/TerminalLog/:url', name: 'TerminalLogGet', component: TerminalLogGet, meta: { title: i18n.t('router.TerminalLogGet'), baseLink: 'TerminalLog' } },
+  { path: '/TerminalPasswordLog/:url', name: 'TerminalPasswordLogGet', component: TerminalPasswordLogGet, meta: { title: i18n.t('router.TerminalPasswordLogGet'), baseLink: 'TerminalPasswordLog' } }
 ]
 
 const listUpdate = [
@@ -595,6 +609,7 @@ const listUpdate = [
   { path: '/Update/KeyAccount/:url', name: 'KeyAccountUpdate', component: KeyAccountUpdate, meta: { title: i18n.t('router.KeyAccountUpdate'), baseLink: 'KeyAccount' } },
   { path: '/Update/Service/:url', name: 'ServiceUpdate', component: ServiceUpdate, meta: { title: i18n.t('router.ServiceUpdate'), baseLink: 'Service' } },
   { path: '/Update/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementUpdate', component: EDocumentErrorManagementUpdate, meta: { title: i18n.t('router.EDocumentErrorManagementUpdate'), baseLink: 'EDocumentErrorManagement' } },
+  { path: '/Update/EDocumentLog/:url', name: 'EDocumentLogUpdate', component: EDocumentLogUpdate, meta: { title: i18n.t('router.EDocumentLogUpdate'), baseLink: 'EDocumentLog' } },
   { path: '/Update/ServiceRecords/:url', name: 'ServiceRecordsUpdate', component: ServiceRecordsUpdate, meta: { title: i18n.t('router.ServiceRecordsUpdate'), baseLink: 'ServiceRecords' } },
   { path: '/Update/DailyPerformance/:url', name: 'DailyPerformanceUpdate', component: DailyPerformanceUpdate, meta: { title: i18n.t('router.DailyPerformanceUpdate'), baseLink: 'DailyPerformance' } },
   { path: '/Update/Failurefollowupform/:url', name: 'FailurefollowupformUpdate', component: FailurefollowupformUpdate, meta: { title: i18n.t('router.FailurefollowupformUpdate'), baseLink: 'Failurefollowupform' } },
@@ -661,7 +676,8 @@ const listUpdate = [
   { path: '/Update/PotentialCustomer/:url', name: 'PotentialCustomerUpdate', component: PotentialCustomerUpdate, meta: { title: i18n.t('router.PotentialCustomerUpdate'), baseLink: 'PotentialCustomer' } },
   { path: '/Update/LoadingPlan/:url', name: 'LoadingPlanUpdate', component: LoadingPlanUpdate, meta: { title: i18n.t('router.LoadingPlanUpdate'), baseLink: 'LoadingPlan' } },
   { path: '/Update/CashCard/:url', name: 'CashCardUpdate', component: CashCardUpdate, meta: { title: i18n.t('router.CashCardUpdate'), baseLink: 'CashCard' } },
-  { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } }
+  { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } },
+  { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } }
 ]
 
 const listInsert = [
@@ -675,6 +691,7 @@ const listInsert = [
   { path: '/Insert/KeyAccount', name: 'KeyAccountInsert', component: KeyAccountInsert, meta: { title: i18n.t('router.KeyAccountInsert'), baseLink: 'KeyAccount' } },
   { path: '/Insert/Service', name: 'ServiceInsert', component: ServiceInsert, meta: { title: i18n.t('router.ServiceInsert'), baseLink: 'Service' } },
   { path: '/Insert/EDocumentErrorManagement', name: 'EDocumentErrorManagementInsert', component: EDocumentErrorManagementInsert, meta: { title: i18n.t('router.EDocumentErrorManagementInsert'), baseLink: 'EDocumentErrorManagement' } },
+  { path: '/Insert/EDocumentLog', name: 'EDocumentLogInsert', component: EDocumentLogInsert, meta: { title: i18n.t('router.EDocumentLogInsert'), baseLink: 'EDocumentLog' } },
   { path: '/Insert/ServiceRecords', name: 'ServiceRecordsInsert', component: ServiceRecordsInsert, meta: { title: i18n.t('router.ServiceRecordsInsert'), baseLink: 'ServiceRecords' } },
   { path: '/Insert/DailyPerformance', name: 'DailyPerformanceInsert', component: DailyPerformanceInsert, meta: { title: i18n.t('router.DailyPerformanceInsert'), baseLink: 'DailyPerformance' } },
   { path: '/Insert/Failurefollowupform', name: 'FailurefollowupformInsert', component: FailurefollowupformInsert, meta: { title: i18n.t('router.FailurefollowupformInsert'), baseLink: 'Failurefollowupform' } },
@@ -741,7 +758,8 @@ const listInsert = [
   { path: '/Insert/PotentialCustomer', name: 'PotentialCustomerInsert', component: PotentialCustomerInsert, meta: { title: i18n.t('router.PotentialCustomerInsert'), baseLink: 'PotentialCustomer' } },
   { path: '/Insert/LoadingPlan', name: 'LoadingPlanInsert', component: LoadingPlanInsert, meta: { title: i18n.t('router.LoadingPlanInsert'), baseLink: 'LoadingPlan' } },
   { path: '/Insert/CashCard', name: 'CashCardInsert', component: CashCardInsert, meta: { title: i18n.t('router.CashCardInsert'), baseLink: 'CashCard' } },
-  { path: '/Insert/TerminalLog', name: 'TerminalLogInsert', component: TerminalLogInsert, meta: { title: i18n.t('router.TerminalLogInsert'), baseLink: 'TerminalLog' } }
+  { path: '/Insert/TerminalLog', name: 'TerminalLogInsert', component: TerminalLogInsert, meta: { title: i18n.t('router.TerminalLogInsert'), baseLink: 'TerminalLog' } },
+  { path: '/Insert/TerminalPasswordLog', name: 'TerminalPasswordLogInsert', component: TerminalPasswordLogInsert, meta: { title: i18n.t('router.TerminalPasswordLogInsert'), baseLink: 'TerminalPasswordLog' } }
 ]
 
 const routes = [
