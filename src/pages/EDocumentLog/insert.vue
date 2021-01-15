@@ -51,7 +51,6 @@
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
                 <v-select
-                  v-model="form.Model.WarehouseType"
                   :options="lookupWarehouse_type"
                   @input="selectedWarehouseType"
                   label="Label"
@@ -60,7 +59,7 @@
             </b-col>
             <b-col v-if="showVehicle" cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="VehicleName" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -72,7 +71,7 @@
             </b-col>
             <b-col v-if="showCustomer" cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select v-model="form.Model.Customer" label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
+                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -89,8 +88,8 @@
                 :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
               >
               <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
+                  <b-form-radio @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
@@ -159,7 +158,6 @@
               </b-tr>
             </b-tbody>
           </b-table-simple>
-          {{detailListData}}
         </b-tab>
       </b-tabs>
     </b-col>
@@ -167,6 +165,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -188,14 +187,9 @@ export default {
           IsCenterWarehouse: null,
           Code: null,
           Description1: null,
-          CustomerId: null,
-          Vehicle: null,
-          Customer: null,
-          RecordId: null,
-          Deleted: 0
+          CustomerId: null
         }
       },
-      VehicleName: '',
       detailListData: [],
       detailListBranch: '',
       detailListPurchaseWarehouseId: '',
@@ -211,56 +205,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['rowData', 'lookupWarehouse_type', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
+    ...mapState(['lookupWarehouse_type', 'createCode', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
   },
   watch: {
-    rowData: function (e) {
-      e.WarehouseSuppliers.map(item => {
-        this.form.Model.WarehouseSuppliers.push({
-          StatusId: item.StatusId,
-          SupplierBranchId: item.SupplierBranchId,
-          SupplierCustomerId: item.SupplierCustomerId,
-          CompanyId: item.CompanyId,
-          BranchId: item.BranchId,
-          CreatedUser: item.CreatedUser,
-          ModifiedUser: item.ModifiedUser,
-          ModifiedDateTime: item.ModifiedDateTime,
-          Deleted: item.Deleted,
-          System: item.System,
-          PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId
-        })
-
-        this.detailListData.push({
-          selectedBranch: item.SupplierBranch.Label,
-          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
-          selectedReturnWarehouseId: item.ReturnWarehouse.Label
-        })
-      })
-
-      this.selectedWarehouseType(e.WarehouseType)
-      if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.RecordId
-        this.VehicleName = e.Vehicle.Label
-        this.form.Model.VehicleId = e.VehicleId
-      }
-      // if'e koyulacak
-      if (e.Customer) {
-        this.form.Model.Customer = e.Customer.Label
-        this.form.Model.CustomerId = e.CustomerId
-      }
-
-      this.form.Model.Code = e.Code
-      this.form.Model.RecordId = e.RecordId
-      this.form.Model.Description1 = e.Description1
-      this.form.Model.WarehouseCapacity = e.WarehouseCapacity
-      this.form.Model.LicenseNumber = e.LicenseNumber
-      this.form.Model.FinanceCode = e.FinanceCode
-      if (e.StatusId === 1) {
-        this.dataStatus = true
-      } else {
-        this.dataStatus = true
-      }
+    createCode: function (e) {
+      this.form.Model.Code = e
     },
     dataStatus: function (e) {
       if (e === true) {
@@ -273,27 +222,23 @@ export default {
   mounted () {
     this.$store.commit('bigLoaded', false)
     this.getLookup()
-    this.getRowData()
+    this.getCode()
   },
   methods: {
-    getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
+    getCode () {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextWarehouse/api/Warehouse/GetCode'})
     },
     save () {
       this.form.companyId = this.CompanyId
       this.form.branchId = this.BranchId
-      this.form.Model.WarehouseType = null
-      this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-      this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
-      let model = {
-        'model': this.form
-      }
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: model, return: this.$route.meta.baseLink})
+
+      this.$store.dispatch('createData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedIsCustomer (e) {
       if (e === 0) {
         this.showCustomer = false
       } else {
+        this.form.Model.IsCenterWarehouse = e
         this.showCustomer = true
       }
     },
@@ -344,7 +289,7 @@ export default {
     },
     selectedWarehouseType (e) {
       this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e
+      this.form.Model.WarehouseType = e.Label
       // araç mı ?
       if (e.DecimalValue === 76506193) {
         this.showVehicle = true
@@ -356,10 +301,10 @@ export default {
       }
       // merkez depo mu ?
       if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCustomerWarehouse = 1
+        this.form.Model.IsCenterWarehouse = 1
         this.showCustomer = true
       } else {
-        this.form.Model.IsCustomerWarehouse = 0
+        this.form.Model.IsCenterWarehouse = 0
         this.showCustomer = false
       }
     },

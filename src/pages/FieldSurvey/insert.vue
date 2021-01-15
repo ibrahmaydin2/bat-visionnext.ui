@@ -111,7 +111,7 @@
           <b-row v-if="form.fieldSurveyBranchs">
             <b-table-simple bordered small>
               <b-thead>
-                <b-th width="90%"><span>{{$t('insert.FieldSurvey.surveyBranch')}}</span></b-th>
+                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameBranch')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -140,7 +140,7 @@
           <b-row v-if="form.fieldSurveyBranchs">
             <b-table-simple bordered small>
               <b-thead>
-                <b-th width="90%"><span>{{$t('insert.FieldSurvey.surveyBranch')}}</span></b-th>
+                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameEmployee')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -174,7 +174,7 @@
             </b-col>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.FieldSurvey.questionIsNecessary')" :class="detailPanelError">
-                <b-form-checkbox v-model="fieldSurveyQuestions.IsNecessary" name="check-button" switch>
+                <b-form-checkbox v-model="fieldSurveyQuestions.IsNecessary" name="check-button">
                   {{(fieldSurveyQuestions.IsNecessary) ? $t('insert.active'): $t('insert.passive')}}
                 </b-form-checkbox>
               </b-form-group>
@@ -265,7 +265,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins'
 export default {
+  mixins: [mixin],
   data () {
     return {
       validDatesReq: false,
@@ -273,7 +275,11 @@ export default {
         fieldSurveyBranchs: [],
         fieldSurveyEmployeeTypes: [],
         fieldSurveyQuestions: [],
-        fieldSurveyValidDates: []
+        fieldSurveyValidDates: [],
+        Code: null,
+        StatusId: null,
+        AnalysisTypeId: null,
+        ValidityTypeId: null
       },
       detailPanelError: '',
       fieldSurveyEmployeeTypes: {
@@ -342,7 +348,12 @@ export default {
         console.log(this.$v)
         this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
       } else {
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextFieldAnalysis/api/FieldSurvey`, formdata: this.form, return: this.routeName})
+        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
+        this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('createData', {...this.query, api: `VisionNextFieldAnalysis/api/FieldSurvey`, formdata: model, return: this.routeName})
       }
     },
     onAcBranchSearch (search, loading) {

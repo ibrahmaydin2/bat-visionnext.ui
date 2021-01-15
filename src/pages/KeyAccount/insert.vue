@@ -16,16 +16,6 @@
       </header>
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
-          <b-row>
-            <b-col>
-              <pre id="asc__codeHTML" v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-
       <section>
         <b-row>
           <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
@@ -717,12 +707,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.textNo')">
-                <b-form-input type="text" v-model="customerCreditHistories.textNo" />
+                <b-form-input type="number" v-model="customerCreditHistories.textNo" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.notaryNo')">
-                <b-form-input type="text" v-model="customerCreditHistories.notaryNo" />
+                <b-form-input type="number" v-model="customerCreditHistories.notaryNo" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -739,7 +729,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.allowOverLimit')">
-                <b-form-radio-group v-model="form.allowOverLimit">
+                <b-form-radio-group v-model="customerCreditHistories.allowOverLimit">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -952,7 +942,75 @@ export default {
         customerLabels: [],
         customerTouchpoints: [],
         SalesTypeId: 0,
-        RecordTypeId: 3
+        RecordTypeId: 3,
+        CurrentCredit: null,
+        CurrentRisk: null,
+        ZdebitAccountRemainder: null,
+        ZcreditAccountRemainder: null,
+        FinanceCode: null,
+        DiscountPercent1: null,
+        DeliveryDayParam: null,
+        TCIBreak1Id: null,
+        Statement: null,
+        StatementDay: null,
+        DiscountPercent2: null,
+        ManualInvoiceClosure: null,
+        SapCustomerId: null,
+        TCIBreak2Id: null,
+        IsDirectDebit: null,
+        AllowOverLimit: null,
+        Genexp1: null,
+        Code: null,
+        CardTypeId: null,
+        Description1: null,
+        CommercialTitle: null,
+        TaxOffice: null,
+        TaxNumber: null,
+        LicenseNumber: null,
+        StatusId: null,
+        StatusReasonId: null,
+        LicenseValidDate: null,
+        IsBlocked: null,
+        BlockReasonId: null,
+        IsOrderChangeUnitary: null,
+        UseEInvoice: null,
+        TradeLicenseNumber: null,
+        CustomerInvoiceTypeId: null,
+        TaxCustomerTypeId: null,
+        RouteCode: null,
+        IsWarehouseSale: null,
+        TextField1: null,
+        TextField2: null,
+        Barcode: null,
+        HoldsAsset: null,
+        Contracted: null,
+        LabelId: null,
+        LabelValueId: null,
+        CustomerRegion5Id: null,
+        MarketingRegion5Id: null,
+        Alias: null,
+        UseEDispatch: null,
+        Category3Id: null,
+        Category2Id: null,
+        Category1Id: null,
+        GroupId: null,
+        ClassId: null,
+        KindId: null,
+        OwnerTypeId: null,
+        ClassProposalId: null,
+        ClassProposalReasonId: null,
+        SalesMethodId: null,
+        GeographicEnvironmentId: null,
+        TradeFocusId: null,
+        InvoiceCombineRuleId: null,
+        SalesDocumentTypeId: null,
+        BackMarginGroupId: null,
+        DefaultPaymentTypeId: null,
+        PaymentPeriod: null,
+        PriceListCategoryId: null,
+        CreditLimit: null,
+        RiskLimit: null,
+        ReservedLimit: null
       },
       customerLocations: {
         code: null,
@@ -1074,8 +1132,17 @@ export default {
         })
       } else {
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
-        this.form.IsDirectDebit = this.form.IsDirectDebit ? 1 : 0
-        this.form.StatusId = this.form.StatusId ? 1 : 0
+        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
+        this.form.IsDirectDebit = this.checkConvertToNumber(this.form.IsDirectDebit)
+        this.form.IsBlocked = this.checkConvertToNumber(this.form.IsBlocked)
+        this.form.IsWarehouseSale = this.checkConvertToNumber(this.form.IsWarehouseSale)
+        this.form.UseEInvoice = this.checkConvertToNumber(this.form.UseEInvoice)
+        this.form.ManualSItem = this.checkConvertToNumber(this.form.ManualSItem)
+        this.form.IsOrderChangeUnitary = this.checkConvertToNumber(this.form.IsOrderChangeUnitary)
+        this.form.ManualInvoiceClosure = this.checkConvertToNumber(this.form.ManualInvoiceClosure)
+        this.form.AllowOverLimit = this.checkConvertToNumber(this.form.AllowOverLimit)
+        this.form.Statement = this.checkConvertToNumber(this.form.Statement)
+        this.form.UseEDispatch = this.checkConvertToNumber(this.form.UseEDispatch)
         let model = {
           'model': this.form
         }

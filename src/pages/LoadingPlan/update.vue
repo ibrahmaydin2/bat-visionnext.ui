@@ -153,7 +153,7 @@ export default {
       }
     },
     addItems () {
-      if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
+      if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         return
       }
