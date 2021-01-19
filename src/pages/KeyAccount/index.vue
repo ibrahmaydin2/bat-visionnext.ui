@@ -1,11 +1,13 @@
 <template>
-  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :apiparams="defquery" />
+  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" />
 </template>
 <script>
 export default {
   data () {
     return {
-      defquery: {recordTypeIds: [3, 4]}
+      model: {
+        recordTypeIds: [3, 4]
+      }
     }
   }
 }

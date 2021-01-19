@@ -49,12 +49,13 @@
         <b-tab :title="$t('insert.warehouse.Warehouse')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
-                <v-select
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
-                  label="Label"
-                />
+              <b-form-group
+                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
+              >
+              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
+                  <b-form-radio @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
               </b-form-group>
             </b-col>
             <b-col v-if="showVehicle" cols="12" md="3" lg="2">
@@ -79,18 +80,6 @@
                     {{ option.CommercialTitle }}
                   </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
               </b-form-group>
             </b-col>
           </b-row>
@@ -170,8 +159,6 @@ export default {
   data () {
     return {
       form: {
-        companyId: this.CompanyId,
-        branchId: this.BranchId,
         Model: {
           LocationId: null,
           IsVehicle: null,
@@ -221,7 +208,6 @@ export default {
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    this.getLookup()
     this.getCode()
   },
   methods: {
@@ -286,28 +272,30 @@ export default {
       this.detailListPurchaseWarehouseId = null
       this.detailListReturnWarehouseId = null
       this.form.Model.WarehouseSuppliers.push(b)
+      this.WarehouseSuppliers.selectedPurchaseWarehouseId = null
+      this.WarehouseSuppliers.selectedReturnWarehouseId = null
     },
-    selectedWarehouseType (e) {
-      this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e.Label
-      // araç mı ?
-      if (e.DecimalValue === 76506193) {
-        this.showVehicle = true
-        this.form.Model.IsVehicle = 1
-        this.$store.commit('setVehicleList', [])
-      } else {
-        this.form.Model.IsVehicle = 0
-        this.showVehicle = false
-      }
-      // merkez depo mu ?
-      if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCenterWarehouse = 1
-        this.showCustomer = true
-      } else {
-        this.form.Model.IsCenterWarehouse = 0
-        this.showCustomer = false
-      }
-    },
+    // selectedWarehouseType (e) {
+    //   this.form.Model.WarehouseTypeId = e.DecimalValue
+    //   this.form.Model.WarehouseType = e.Label
+    //   // araç mı ?
+    //   if (e.DecimalValue === 76506193) {
+    //     this.showVehicle = true
+    //     this.form.Model.IsVehicle = 1
+    //     this.$store.commit('setVehicleList', [])
+    //   } else {
+    //     this.form.Model.IsVehicle = 0
+    //     this.showVehicle = false
+    //   }
+    //   // merkez depo mu ?
+    //   if (e.DecimalValue === 76506191) {
+    //     this.form.Model.IsCenterWarehouse = 1
+    //     this.showCustomer = true
+    //   } else {
+    //     this.form.Model.IsCenterWarehouse = 0
+    //     this.showCustomer = false
+    //   }
+    // },
     onVehicleSearch (search, loading) {
       if (search.length >= 3) {
         this.searchVehicle(loading, search, this)
@@ -331,9 +319,6 @@ export default {
     },
     searchBranch (loading, search, vm) {
       this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    getLookup () {
-      this.$store.dispatch('lookupWareouseType')
     }
   }
 }

@@ -30,7 +30,7 @@
           </b-col>
           <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusReasonId + (insertRequired.StatusReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
-              <v-select :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
+              <v-select v-model="selectedCancelReason" disabled :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
@@ -1113,13 +1113,13 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.customer.labelId')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.labelValueId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.touchpointPriority')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.touchpointTypeId')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.customerTouchpoints" :key="i">
-                  <b-td>{{r.touchpointPriority}}</b-td>
+                  <b-td>{{r.touchpointPriorityNumber}}</b-td>
                   <b-td>{{r.touchpointTypeId}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerTouchpoint(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
@@ -1147,7 +1147,91 @@ export default {
         customerLabels: [],
         customerTouchpoints: [],
         SalesTypeId: 0,
-        RecordTypeId: 1
+        RecordTypeId: 1,
+        DebitAccountRemainder: null,
+        CreditAccountRemainder: null,
+        FinanceCode: null,
+        DiscountPercent1: null,
+        DiscountPercent2: null,
+        TciBreak1Id: null,
+        TciBreak2Id: null,
+        ManualInvoiceClosure: null,
+        IsBlackListed: null,
+        Statement: null,
+        StatementDay: null,
+        SapCustomerId: null,
+        AllowOverLimit: null,
+        DeliveryDayParam: null,
+        IsDirectDebit: null,
+        TextField1: null,
+        TextField2: null,
+        Barcode: null,
+        HoldsAsset: null,
+        Contracted: null,
+        DiscountGroup10Id: null,
+        DiscountGroup2Id: null,
+        DiscountGroup9Id: null,
+        SignNameId: null,
+        IsOpportunitySpot: null,
+        CustomerRegion5Id: null,
+        MarketingRegion5Id: null,
+        Code: null,
+        CardTypeId: null,
+        CommercialTitle: null,
+        LicenseNumber: null,
+        StatusId: null,
+        Description1: null,
+        LicenseValidDate: null,
+        StatusReasonId: null,
+        TypeId: null,
+        SalesVisitFrequency: null,
+        BlockReasonId: null,
+        TaxCustomerTypeId: null,
+        ServiceVisitFrequency: null,
+        IsBlocked: null,
+        TaxOffice: null,
+        RouteCode: null,
+        IsWarehouseSale: null,
+        TaxNumber: null,
+        UseEInvoice: null,
+        CustomerInvoiceTypeId: null,
+        ManualSItem: null,
+        IsRouteRegion: null,
+        IsOrderChangeUnitary: null,
+        CustomerEmail: null,
+        Category3Id: null,
+        Category2Id: null,
+        Category1Id: null,
+        GroupId: null,
+        ClassId: null,
+        SalesDocumentTypeId: null,
+        OwnerTypeId: null,
+        ClassProposalId: null,
+        ClassProposalReasonId: null,
+        SalesMethodId: null,
+        GeographicEnvironmentId: null,
+        TradeFocusId: null,
+        InvoiceCombineRuleId: null,
+        BackMarginGroupId: null,
+        DiscountGroup3Id: null,
+        DiscountGroup4Id: null,
+        DiscountGroup5Id: null,
+        DiscountGroup6Id: null,
+        DiscountGroup7Id: null,
+        DiscountGroup8Id: null,
+        DiscountGroup1Id: null,
+        KindId: null,
+        Activity1Id: null,
+        Activity2Id: null,
+        OutSourceOrderId: null,
+        DefaultPaymentTypeId: null,
+        PaymentPeriod: null,
+        PriceListCategoryId: null,
+        CreditLimit: null,
+        RiskLimit: null,
+        ReservedLimit: null,
+        CurrentCredit: null,
+        CurrentRisk: null
       },
       customerLocations: {
         code: null,
@@ -1213,7 +1297,8 @@ export default {
       taxNumberReq: 10,
       locationCityLabel: null,
       locationDistirictLabel: null,
-      isLocationEditable: false
+      isLocationEditable: false,
+      selectedCancelReason: null
     }
   },
   computed: {
@@ -1235,14 +1320,14 @@ export default {
 
       // this.$store.dispatch('getCustomerCardType')
       // this.$store.dispatch('getCustomerCancelReasons')
-      // this.$store.dispatch('getBanks')
-      // this.$store.dispatch('getCurrency')
-      // this.$store.dispatch('getItems')
-      // this.$store.dispatch('getPaymentPeriods')
-      // this.$store.dispatch('getStatementDays')
-      // this.$store.dispatch('getPaymentTypes')
-      // this.$store.dispatch('getCustomerLabels')
-      // this.$store.dispatch('getCustomerLabelValues')
+      this.$store.dispatch('getBanks')
+      this.$store.dispatch('getCurrency')
+      this.$store.dispatch('getItems')
+      this.$store.dispatch('getPaymentPeriods')
+      this.$store.dispatch('getStatementDays')
+      this.$store.dispatch('getPaymentTypes')
+      this.$store.dispatch('getCustomerLabels')
+      this.$store.dispatch('getCustomerLabelValues')
 
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
@@ -1303,6 +1388,8 @@ export default {
       } else {
         this.customerLocations.cityId = null
         this.locationCityLabel = null
+        this.customerLocations.districtId = null
+        this.locationDistirictLabel = null
       }
     },
     selectedDistirict (e) {
@@ -1400,7 +1487,7 @@ export default {
 
     addCustomerTouchpoint (item) {
       this.form.customerTouchpoints.push({
-        touchpointPriority: this.customerTouchpoints.touchpointPriority,
+        touchpointPriorityNumber: this.customerTouchpoints.touchpointPriority,
         touchpointTypeId: this.customerTouchpoints.touchpointTypeId
       })
     },
@@ -1597,6 +1684,16 @@ export default {
           this.form[el] = value[el]
         }
       })
+    },
+    cancelReasons (e) {
+      if (e) {
+        e.map(item => {
+          if (item.RecordId === 18) {
+            this.selectedCancelReason = item.Description1
+            this.selectedSearchType('statusReasonId', item)
+          }
+        })
+      }
     }
   }
 }

@@ -33,7 +33,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <b-col v-if="insertVisible.Keyword != null ? insertVisible.Keyword : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Keyword + (insertRequired.Keyword === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Keyword.$error }">

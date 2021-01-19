@@ -226,7 +226,7 @@
             </b-col>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.contract.BudgetMasterId')">
-                <v-select :options="budgets" @input="selectedSearchTypeDetail('BudgetMaster', $event)" label="Description1"></v-select>
+                <v-select :disabled="disableBenefit" :options="budgets" @input="selectedSearchTypeDetail('BudgetMaster', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
@@ -236,7 +236,7 @@
             </b-col>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.contract.BenefitBudget')">
-                <b-form-input type="text" v-model="BenefitBudget" />
+                <b-form-input :readonly="disableBenefit" type="text" v-model="BenefitBudget" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
@@ -352,7 +352,8 @@ export default {
       plannedServiceDate: null,
       asset: null,
       ApproveStateLabel: null,
-      detailPanelRecordId: 0
+      detailPanelRecordId: 0,
+      disableBenefit: false
     }
   },
   computed: {
@@ -407,6 +408,11 @@ export default {
     },
     selectedSearchTypeDetail (label, model) {
       if (model) {
+        if (label === 'BenefitType' && model.RecordId === 4) {
+          this.disableBenefit = true
+        } else {
+          this.disableBenefit = false
+        }
         this[label] = model
       } else {
         this[label] = null

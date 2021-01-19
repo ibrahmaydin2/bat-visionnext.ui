@@ -30,7 +30,7 @@
           </b-col>
           <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusReasonId + (insertRequired.StatusReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
-              <v-select v-model="StatusReason" :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
+              <v-select disabled v-model="StatusReason" :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
@@ -1163,13 +1163,13 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.customer.labelId')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.labelValueId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.touchpointPriority')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.touchpointTypeId')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.CustomerTouchpoints" :key="i">
-                  <b-td>{{r.TouchpointPriority}}</b-td>
+                  <b-td>{{r.TouchpointPriorityNumber}}</b-td>
                   <b-td>{{r.TouchpointTypeId}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerTouchpoint(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
@@ -1494,7 +1494,7 @@ export default {
     },
     addCustomerTouchpoint (item) {
       this.form.CustomerTouchpoints.push({
-        TouchpointPriority: this.customerTouchpoints.touchpointPriority,
+        TouchpointPriorityNumber: this.customerTouchpoints.touchpointPriority,
         TouchpointTypeId: this.customerTouchpoints.touchpointTypeId
       })
     },
