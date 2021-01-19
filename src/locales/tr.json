@@ -359,6 +359,7 @@
     "distirict": "İlçe",
     "town": "Mahalle",
     "remove": "İptal",
+    "createPassword": "Şifre Oluştur",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1024,7 +1025,10 @@
       "TransferAppVersion": "Transfer Uygulama Versiyonu",
       "UserDate": "Kullanıcı Tarihi",
       "TransferFileName": "Dosya Adı",
-      "ErrorMessage": "Hata Mesajı"
+      "ErrorMessage": "Hata Mesajı",
+      "Employee":"Personel",
+      "Keyword": "Anahtar",
+      "Password": "Şifre"
     }
   },
   "general": {
