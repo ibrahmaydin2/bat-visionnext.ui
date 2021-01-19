@@ -217,7 +217,8 @@ export const store = new Vuex.Store({
     routes: [],
     warehouses: [],
     vanLoadingStatus: [],
-    itemForVanLoading: []
+    itemForVanLoading: [],
+    creatorPassword: null
   },
   actions: {
     // sistem gereksinimleri
@@ -1492,6 +1493,24 @@ export const store = new Vuex.Store({
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
+    },
+    getPasswordCreator ({state, commit}, query) {
+      let dataQuery = {
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'keyword': query.keyword
+      }
+      return axios.post('VisionNextMobileApi/api/TerminalPasswordLog/GetPasswordCreator', dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setCreatorPassword', res.data.Model)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
     }
   },
   mutations: {
@@ -1969,6 +1988,9 @@ export const store = new Vuex.Store({
     },
     setItemForVanLoading (state, payload) {
       state.itemForVanLoading = payload
+    },
+    setCreatorPassword (state, payload) {
+      state.creatorPassword = payload
     }
 
   }

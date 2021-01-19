@@ -1,3 +1,3 @@
 <template>
-  <Nextgrid apiurl="VisionNextMobileApi/api/TerminalOperationLog/Search" />
+  <Nextgrid apiurl="VisionNextMobileApi/api/TerminalPasswordLog/Search" />
 </template>
