@@ -239,7 +239,7 @@
 import { mapState } from 'vuex'
 let searchQ = {}
 export default {
-  props: ['apiurl', 'apiparams'],
+  props: ['apiurl', 'apiparams', 'andConditionalModel'],
   data () {
     return {
       grid: [],
@@ -382,7 +382,8 @@ export default {
         api: this.$route.name,
         page: this.currentPage,
         count: this.perPage,
-        search: searchQ
+        search: searchQ,
+        andConditionalModel: this.andConditionalModel
       })
     },
     getData (e, p, c, s) {
@@ -394,7 +395,8 @@ export default {
         page: parseInt(p),
         count: parseInt(c),
         sort: s,
-        code: this.$route.query.code
+        code: this.$route.query.code,
+        andConditionalModel: this.andConditionalModel
       })
     }
   },

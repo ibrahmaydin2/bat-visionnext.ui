@@ -40,7 +40,7 @@
           </b-col>
           <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusReasonId + (insertRequired.StatusReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
-              <v-select :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
+              <v-select v-model="selectedCancelReason" disabled :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
@@ -1073,7 +1073,8 @@ export default {
         touchpointTypeId: null
       },
       routeName: this.$route.meta.baseLink,
-      taxNumberReq: 10
+      taxNumberReq: 10,
+      selectedCancelReason: null
     }
   },
   computed: {
@@ -1251,7 +1252,7 @@ export default {
 
     addCustomerTouchpoint (item) {
       this.form.customerTouchpoints.push({
-        touchpointPriority: this.customerTouchpoints.touchpointPriority,
+        touchpointPriorityNumber: this.customerTouchpoints.touchpointPriority,
         touchpointTypeId: this.customerTouchpoints.touchpointTypeId
       })
     },
@@ -1406,6 +1407,16 @@ export default {
       Object.keys(value).forEach(el => {
         this.form[el] = value[el]
       })
+    },
+    cancelReasons (e) {
+      if (e) {
+        e.map(item => {
+          if (item.RecordId === 18) {
+            this.selectedCancelReason = item.Description1
+            this.selectedSearchType('statusReasonId', item)
+          }
+        })
+      }
     }
   }
 }

@@ -37,7 +37,7 @@
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span> <p><i :class="rowData.IsTaxExemption === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
                 <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CardTypeId')}}</span><p>{{rowData.CardType ? rowData.CardType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.Type ? rowData.Type : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesTypeId')}}</span><p>{{rowData.SalesType ? rowData.SalesType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesDocumentTypeId')}}</span><p>{{rowData.SalesDocumentType ? rowData.SalesDocumentType.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PriceListCategoryId')}}</span><p>{{rowData.PriceListCategory ? rowData.PriceListCategory.Label : ''}}</p>
@@ -49,6 +49,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerLocations')}}</h6>
                 <b-table class="col-md-12" responsive :items="rowData.CustomerLocations" :fields="locationFields">
+                  <template #cell(City)="data">
+                    {{data.value.Label}}
+                  </template>
                   <template #cell(IsDefaultLocation)="data">
                     <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
                   </template>
@@ -126,6 +129,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
                 <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
+                  <template #cell(CreditDescription)="data">
+                    {{data.value.Label}}
+                  </template>
                   <template #cell(Currency)="data">
                     {{data.value.Label}}
                   </template>
@@ -174,278 +180,42 @@
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerItemDiscountCrts')}}</h6>
-                <b-table responsive :items="discountItems" :fields="discountFields">
-                  <template #cell(customer)="data">
-                    <kbd>{{data.item.code}}</kbd> {{data.value}}
+                <b-table responsive :items="rowData.CustomerItemDiscounts" :fields="discountFields">
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.tag')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <h6>{{$t('insert.customer.tag')}}</h6>
+                <b-table responsive :items="rowData.CustomerLabels" :fields="customerLabelFields">
+                  <template #cell(Label)="data">
+                    {{data.value.Label}}
                   </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  <template #cell(LabelValue)="data">
+                    {{data.value.Label}}
                   </template>
                 </b-table>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <b-tab :title="$t('insert.customer.customerTouchpoints')">
           <b-row>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.other')}}</h6>
-                <span><i class="far fa-circle" /> ApproveStateId </span>
-                <p>{{ rowData.ApproveStateId }}</p>
-                <span><i class="far fa-circle" /> Barcode </span>
-                <p>{{ rowData.Barcode }}</p>
-                <span><i class="far fa-circle" /> BlockReasonDesc </span>
-                <p>{{ rowData.BlockReasonDesc }}</p>
-                <span><i class="far fa-circle" /> BlockReasonId </span>
-                <p>{{ rowData.BlockReasonId }}</p>
-                <span><i class="far fa-circle" /> BranchId </span>
-                <p>{{ rowData.BranchId }}</p>
-                <span><i class="far fa-circle" /> CalculatedClass </span>
-                <p>{{ rowData.CalculatedClass }}</p>
-                <span><i class="far fa-circle" /> CalculatedClassId </span>
-                <p>{{ rowData.CalculatedClassId }}</p>
-                <span><i class="far fa-circle" /> CardTypeId </span>
-                <p>{{ rowData.CardTypeId }}</p>
-                <span><i class="far fa-circle" /> Category1 </span>
-                <p>{{ rowData.Category1 }}</p>
-                <span><i class="far fa-circle" /> Category2 </span>
-                <p>{{ rowData.Category2 }}</p>
-                <span><i class="far fa-circle" /> Category3 </span>
-                <p>{{ rowData.Category3 }}</p>
-                <span><i class="far fa-circle" /> Category4 </span>
-                <p>{{ rowData.Category4 }}</p>
-                <span><i class="far fa-circle" /> Category5 </span>
-                <p>{{ rowData.Category5 }}</p>
-                <span><i class="far fa-circle" /> Category6 </span>
-                <p>{{ rowData.Category6 }}</p>
-                <span><i class="far fa-circle" /> Category7 </span>
-                <p>{{ rowData.Category7 }}</p>
-                <span><i class="far fa-circle" /> Category8 </span>
-                <p>{{ rowData.Category8 }}</p>
-                <span><i class="far fa-circle" /> Category9 </span>
-                <p>{{ rowData.Category9 }}</p>
-                <span><i class="far fa-circle" /> CheckField1 </span>
-                <p>{{ rowData.CheckField1 }}</p>
-                <span><i class="far fa-circle" /> CheckField2 </span>
-                <p>{{ rowData.CheckField2 }}</p>
-                <span><i class="far fa-circle" /> CompanyId </span>
-                <p>{{ rowData.CompanyId }}</p>
-                <span><i class="far fa-circle" /> Contracted </span>
-                <p>{{ rowData.Contracted }}</p>
-                <span><i class="far fa-circle" /> Contractedo </span>
-                <p>{{ rowData.Contractedo ? rowData.Contractedo.Label : '' }}</p>
-                <span><i class="far fa-circle" /> CreatedDateTime </span>
-                <p>{{ rowData.CreatedDateTime }}</p>
-                <span><i class="far fa-circle" /> CreatedUser </span>
-                <p>{{ rowData.CreatedUser }}</p>
-                <span><i class="far fa-circle" /> CustomFixedTerms </span>
-                <p>{{ rowData.CustomFixedTerms }}</p>
-                <span><i class="far fa-circle" /> CustomerAccountTeams </span>
-                <p>{{ rowData.CustomerAccountTeams }}</p>
-                <span><i class="far fa-circle" /> CustomerAnalysisHistories </span>
-                <p>{{ rowData.CustomerAnalysisHistories }}</p>
-                <span><i class="far fa-circle" /> CustomerAssets </span>
-                <p>{{ rowData.CustomerAssets }}</p>
-                <span><i class="far fa-circle" /> CustomerContacts </span>
-                <p>{{ rowData.CustomerContacts }}</p>
-                <span><i class="far fa-circle" /> CustomerCreditHistories </span>
-                <p>{{ rowData.CustomerCreditHistories }}</p>
-                <span><i class="far fa-circle" /> CustomerItemDiscounts </span>
-                <p>{{ rowData.CustomerItemDiscounts }}</p>
-                <span><i class="far fa-circle" /> CustomerLabels </span>
-                <p>{{ rowData.CustomerLabels }}</p>
-                <span><i class="far fa-circle" /> CustomerLocations </span>
-                <p>{{ rowData.CustomerLocations }}</p>
-                <span><i class="far fa-circle" /> CustomerNotInBonuses </span>
-                <p>{{ rowData.CustomerNotInBonuses }}</p>
-                <span><i class="far fa-circle" /> CustomerNsItems </span>
-                <p>{{ rowData.CustomerNsItems }}</p>
-                <span><i class="far fa-circle" /> CustomerPaymentTypes </span>
-                <p>{{ rowData.CustomerPaymentTypes }}</p>
-                <span><i class="far fa-circle" /> CustomerRegion1Id </span>
-                <p>{{ rowData.CustomerRegion1Id }}</p>
-                <span><i class="far fa-circle" /> CustomerRegion2Id </span>
-                <p>{{ rowData.CustomerRegion2Id }}</p>
-                <span><i class="far fa-circle" /> CustomerRegion3Id </span>
-                <p>{{ rowData.CustomerRegion3Id }}</p>
-                <span><i class="far fa-circle" /> CustomerRegion4Id </span>
-                <p>{{ rowData.CustomerRegion4Id }}</p>
-                <span><i class="far fa-circle" /> CustomerSItems </span>
-                <p>{{ rowData.CustomerSItems }}</p>
-                <span><i class="far fa-circle" /> CustomerStatusHistories </span>
-                <p>{{ rowData.CustomerStatusHistories }}</p>
-                <span><i class="far fa-circle" /> DateField1 </span>
-                <p>{{ rowData.DateField1 }}</p>
-                <span><i class="far fa-circle" /> DateField2 </span>
-                <p>{{ rowData.DateField2 }}</p>
-                <span><i class="far fa-circle" /> DefaultLocation </span>
-                <p>{{ rowData.DefaultLocation }}</p>
-                <span><i class="far fa-circle" /> DefaultLocationId </span>
-                <p>{{ rowData.DefaultLocationId }}</p>
-                <span><i class="far fa-circle" /> DefaultPaymentTypeId </span>
-                <p>{{ rowData.DefaultPaymentTypeId }}</p>
-                <span><i class="far fa-circle" /> Deleted </span>
-                <p>{{ rowData.Deleted }}</p>
-                <span><i class="far fa-circle" /> DiscountGroup9Id </span>
-                <p>{{ rowData.DiscountGroup9Id }}</p>
-                <span><i class="far fa-circle" /> DiscountGroup10Id </span>
-                <p>{{ rowData.DiscountGroup10Id }}</p>
-                <span><i class="far fa-circle" /> EncryptedKey </span>
-                <p>{{ rowData.EncryptedKey }}</p>
-                <span><i class="far fa-circle" /> Field1Value </span>
-                <p>{{ rowData.Field1Value }}</p>
-                <span><i class="far fa-circle" /> Field2Value </span>
-                <p>{{ rowData.Field2Value }}</p>
-                <span><i class="far fa-circle" /> Field3Value </span>
-                <p>{{ rowData.Field3Value }}</p>
-                <span><i class="far fa-circle" /> Field4Value </span>
-                <p>{{ rowData.Field4Value }}</p>
-                <span><i class="far fa-circle" /> Field5Value </span>
-                <p>{{ rowData.Field5Value }}</p>
-                <span><i class="far fa-circle" /> GeographicEnvironmentId </span>
-                <p>{{ rowData.GeographicEnvironmentId }}</p>
-                <span><i class="far fa-circle" /> GroupId </span>
-                <p>{{ rowData.GroupId }}</p>
-                <span><i class="far fa-circle" /> HoldsAsset </span>
-                <p>{{ rowData.HoldsAsset }}</p>
-                <span><i class="far fa-circle" /> HoldsAsseto </span>
-                <p>{{ rowData.HoldsAsseto }}</p>
-                <span><i class="far fa-circle" /> IsDirectDebit </span>
-                <p>{{ rowData.IsDirectDebit }}</p>
-                <span><i class="far fa-circle" /> IsDutyFree </span>
-                <p>{{ rowData.IsDutyFree }}</p>
-                <span><i class="far fa-circle" /> IsFromPotential </span>
-                <p>{{ rowData.IsFromPotential }}</p>
-                <span><i class="far fa-circle" /> IsLicenseRequired </span>
-                <p>{{ rowData.IsLicenseRequired }}</p>
-                <span><i class="far fa-circle" /> IsOrderChangeUnitary </span>
-                <p>{{ rowData.IsOrderChangeUnitary }}</p>
-                <span><i class="far fa-circle" /> IsWarehouseSale </span>
-                <p>{{ rowData.IsWarehouseSale }}</p>
-                <span><i class="far fa-circle" /> Model_KindId </span>
-                <p>{{ rowData.Model_KindId }}</p>
-                <span><i class="far fa-circle" /> LicenseEndDate </span>
-                <p>{{ rowData.LicenseEndDate }}</p>
-                <span><i class="far fa-circle" /> LicenseNumber </span>
-                <p>{{ rowData.LicenseNumber }}</p>
-                <span><i class="far fa-circle" /> LicenseStartDate </span>
-                <p>{{ rowData.LicenseStartDate }}</p>
-                <span><i class="far fa-circle" /> ManualInvoiceClosure </span>
-                <p>{{ rowData.ManualInvoiceClosure }}</p>
-                <span><i class="far fa-circle" /> ManualSItem </span>
-                <p>{{ rowData.ManualSItem }}</p>
-                <span><i class="far fa-circle" /> MarketingRegion1 </span>
-                <p>{{ rowData.MarketingRegion1 }}</p>
-                <span><i class="far fa-circle" /> MarketingRegion2 </span>
-                <p>{{ rowData.MarketingRegion2 }}</p>
-                <span><i class="far fa-circle" /> MarketingRegion3 </span>
-                <p>{{ rowData.MarketingRegion3 }}</p>
-                <span><i class="far fa-circle" /> MarketingRegion4 </span>
-                <p>{{ rowData.MarketingRegion4 }}</p>
-                <span><i class="far fa-circle" /> MarketingRegion5 </span>
-                <p>{{ rowData.MarketingRegion5 }}</p>
-                <span><i class="far fa-circle" /> ModifiedDateTime </span>
-                <p>{{ rowData.ModifiedDateTime }}</p>
-                <span><i class="far fa-circle" /> ModifiedUser </span>
-                <p>{{ rowData.ModifiedUser }}</p>
-                <span><i class="far fa-circle" /> NumberField1 </span>
-                <p>{{ rowData.NumberField1 }}</p>
-                <span><i class="far fa-circle" /> NumberField2 </span>
-                <p>{{ rowData.NumberField2 }}</p>
-                <span><i class="far fa-circle" /> NumberField3 </span>
-                <p>{{ rowData.NumberField3 }}</p>
-                <span><i class="far fa-circle" /> NumberField4 </span>
-                <p>{{ rowData.NumberField4 }}</p>
-                <span><i class="far fa-circle" /> NumberField5 </span>
-                <p>{{ rowData.NumberField5 }}</p>
-                <span><i class="far fa-circle" /> OverdueAmount </span>
-                <p>{{ rowData.OverdueAmount }}</p>
-                <span><i class="far fa-circle" /> OwnerTypeId </span>
-                <p>{{ rowData.OwnerTypeId }}</p>
-                <span><i class="far fa-circle" /> PotentialCustomerRepresentativeId </span>
-                <p>{{ rowData.PotentialCustomerRepresentativeId }}</p>
-                <span><i class="far fa-circle" /> PotentialCustomerRouteType </span>
-                <p>{{ rowData.PotentialCustomerRouteType }}</p>
-                <span><i class="far fa-circle" /> PotentialDate </span>
-                <p>{{ rowData.PotentialDate }}</p>
-                <span><i class="far fa-circle" /> PriceListCategoryId </span>
-                <p>{{ rowData.PriceListCategoryId }}</p>
-                <span><i class="far fa-circle" /> RecordId </span>
-                <p>{{ rowData.RecordId }}</p>
-                <span><i class="far fa-circle" /> RecordState </span>
-                <p>{{ rowData.RecordState }}</p>
-                <span><i class="far fa-circle" /> RecordType </span>
-                <p>{{ rowData.RecordType }}</p>
-                <span><i class="far fa-circle" /> RefCustomer </span>
-                <p>{{ rowData.RefCustomer }}</p>
-                <span><i class="far fa-circle" /> RefCustomerId </span>
-                <p>{{ rowData.RefCustomerId }}</p>
-                <span><i class="far fa-circle" /> Region </span>
-                <p>{{ rowData.Region }}</p>
-                <span><i class="far fa-circle" /> RegionId </span>
-                <p>{{ rowData.RegionId }}</p>
-                <span><i class="far fa-circle" /> RelationId </span>
-                <p>{{ rowData.RelationId }}</p>
-                <span><i class="far fa-circle" /> Remainder </span>
-                <p>{{ rowData.Remainder }}</p>
-                <span><i class="far fa-circle" /> RepresentativeId </span>
-                <p>{{ rowData.RepresentativeId }}</p>
-                <span><i class="far fa-circle" /> SalesDocumentTypeId </span>
-                <p>{{ rowData.SalesDocumentTypeId }}</p>
-                <span><i class="far fa-circle" /> SalesMethodId </span>
-                <p>{{ rowData.SalesMethodId }}</p>
-                <span><i class="far fa-circle" /> SalesPriceChangeRate </span>
-                <p>{{ rowData.SalesPriceChangeRate }}</p>
-                <span><i class="far fa-circle" /> rowData.SalesTypeId </span>
-                <p>{{ rowData.SalesTypeId }}</p>
-                <span><i class="far fa-circle" /> SalesVisitFrequency </span>
-                <p>{{ rowData.SalesVisitFrequency }}</p>
-                <span><i class="far fa-circle" /> SelfServiceEnabled </span>
-                <p>{{ rowData.SelfServiceEnabled }}</p>
-                <span><i class="far fa-circle" /> SignNameId </span>
-                <p>{{ rowData.SignNameId }}</p>
-                <span><i class="far fa-circle" /> StatusId </span>
-                <p>{{ rowData.StatusId }}</p>
-                <span><i class="far fa-circle" /> StatusReasonId </span>
-                <p>{{ rowData.StatusReasonId }}</p>
-                <span><i class="far fa-circle" /> SurveyResultId </span>
-                <p>{{ rowData.SurveyResultId }}</p>
-                <span><i class="far fa-circle" /> System </span>
-                <p>{{ rowData.System }}</p>
-                <span><i class="far fa-circle" /> TextField1 </span>
-                <p>{{ rowData.TextField1 }}</p>
-                <span><i class="far fa-circle" /> TextField2 </span>
-                <p>{{ rowData.TextField2 }}</p>
-                <span><i class="far fa-circle" /> TextField3 </span>
-                <p>{{ rowData.TextField3 }}</p>
-                <span><i class="far fa-circle" /> TextField4 </span>
-                <p>{{ rowData.TextField4 }}</p>
-                <span><i class="far fa-circle" /> TextField5 </span>
-                <p>{{ rowData.TextField5 }}</p>
-                <span><i class="far fa-circle" /> TradeFocusId </span>
-                <p>{{ rowData.TradeFocusId }}</p>
-                <span><i class="far fa-circle" /> TradeLicenseNumber </span>
-                <p>{{ rowData.TradeLicenseNumber }}</p>
-                <span><i class="far fa-circle" /> TypeId </span>
-                <p>{{ rowData.TypeId }}</p>
-                <span><i class="far fa-circle" /> UpperCustomer </span>
-                <p>{{ rowData.UpperCustomer }}</p>
-                <span><i class="far fa-circle" /> UpperCustomerId </span>
-                <p>{{ rowData.UpperCustomerId }}</p>
-                <span><i class="far fa-circle" /> XPosition </span>
-                <p>{{ rowData.XPosition }}</p>
-                <span><i class="far fa-circle" /> YPosition </span>
-                <p>{{ rowData.YPosition }}</p>
-                <span><i class="far fa-circle" /> UsingReferenceNumber </span>
-                <p>{{ rowData.UsingReferenceNumber }}</p>
-                <span><i class="far fa-circle" /> ValidationEmployeeId </span>
-                <p>{{ rowData.ValidationEmployeeId }}</p>
-                <span><i class="far fa-circle" /> ZCreditAccountRemainder </span>
-                <p>{{ rowData.ZCreditAccountRemainder }}</p>
-                <span><i class="far fa-circle" /> ZDebitAccountRemainder </span>
-                <p>{{ rowData.ZDebitAccountRemainder }}</p>
-
+                <h6>{{$t('insert.customer.customerTouchpoints')}}</h6>
+                <b-table responsive :items="rowData.CustomerTouchpoints" :fields="customerTouchpointsFields">
+                  <template #cell(TouchpointPriority)="data">
+                    {{data.value.Label}}
+                  </template>
+                  <template #cell(TouchpointType)="data">
+                    {{data.value.Label}}
+                  </template>
+                </b-table>
               </b-card>
             </b-col>
           </b-row>
@@ -502,12 +272,21 @@ export default {
         {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
       ],
       discountFields: [
-        {key: 'ColumnName', label: 'ColumnName', sortable: true},
-        {key: 'ColumnValue', label: 'ColumnValue', sortable: true},
-        {key: 'StartDate', label: 'StartDate', sortable: true},
-        {key: 'EndDate', label: 'EndDate', sortable: true},
-        {key: 'DiscountPercent1', label: 'DiscountPercent1', sortable: true},
-        {key: 'DiscountPercent2', label: 'DiscountPercent2', sortable: true}
+        {key: 'Description1', label: 'Açıklama', sortable: true},
+        {key: 'TCIBreak1Id', label: 'TCI 1', sortable: true},
+        {key: 'TCIBreak2Id', label: 'TCI 2', sortable: true},
+        {key: 'StartDate', label: 'Başlangıç Tarihi', sortable: true},
+        {key: 'EndDate', label: 'Bitiş Tarihi', sortable: true},
+        {key: 'DiscountPercent1', label: 'Müşteri İndirimi 1', sortable: true},
+        {key: 'DiscountPercent2', label: 'Müşteri İndirimi 2', sortable: true}
+      ],
+      customerLabelFields: [
+        {key: 'Label', label: 'Etiket Tanımı', sortable: true},
+        {key: 'LabelValue', label: 'Etiket Değeri', sortable: true}
+      ],
+      customerTouchpointsFields: [
+        {key: 'TouchpointPriority', label: 'İletişim Fırsatı Seviyesi', sortable: true},
+        {key: 'TouchpointType', label: 'İletişim Fırsatı Tipi', sortable: true}
       ]
     }
   },

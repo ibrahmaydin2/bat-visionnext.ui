@@ -339,7 +339,8 @@ export const store = new Vuex.Store({
                       page: query.page,
                       count: query.count,
                       sort: query.sort,
-                      search: JSON.parse(res.data.Model.LinkUrl)
+                      search: JSON.parse(res.data.Model.LinkUrl),
+                      andConditionalModel: query.andConditionalModel
                     })
                   } else {
                     commit('setError', {view: true, info: res.data.Message})
@@ -357,7 +358,8 @@ export const store = new Vuex.Store({
                 page: query.page,
                 count: query.count,
                 sort: query.sort,
-                search: query.search
+                search: query.search,
+                andConditionalModel: query.andConditionalModel
               })
             }
             commit('hideAlert')
@@ -418,11 +420,16 @@ export const store = new Vuex.Store({
       if (query.search) {
         state.isFiltered = true
         state.filterData = query.search
-        AndConditionModel = query.search
+        AndConditionModel = {
+          ...query.search,
+          ...query.andConditionalModel
+        }
       } else {
         state.isFiltered = false
         state.filterData = []
-        AndConditionModel = {}
+        AndConditionModel = {
+          ...query.andConditionalModel
+        }
       }
 
       dataQuery = {
@@ -896,11 +903,12 @@ export const store = new Vuex.Store({
     },
     acWarehouse ({ state, commit }, query) {
       let AndConditionModel = {}
-      AndConditionModel[query.searchField] = query.searchText
-      AndConditionModel['isVehicle'] = 0
+      // AndConditionModel[query.searchField] = query.searchText
+      console.log(AndConditionModel)
+      console.log(state)
       let dataQuery = {
         AndConditionModel,
-        'branchId': state.BranchId,
+        'branchId': query.searchText,
         'companyId': state.CompanyId,
         'pagerecordCount': 50,
         'page': 1

@@ -18,21 +18,26 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <b-col cols="12" md="2">
+          <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.employee.Model_Code')"
+              :label="$t('insert.employee.Model_Code') + ' *'"
+              :class="{ 'form-group--error': $v.form.model.code.$error }"
             >
-              <b-form-input type="text" v-model="form.model.code" readonly />
+              <b-form-input type="text" v-model="form.model.code" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.employee.Model_Name')">
+            <b-form-group
+            :label="$t('insert.employee.Model_Name') + ' *'"
+            :class="{ 'form-group--error': $v.form.model.name.$error }"
+            >
               <b-form-input type="text" v-model="form.model.name" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
             <b-form-group
-              :label="$t('insert.employee.Model_Surname')"
+              :label="$t('insert.employee.Model_Surname') + ' *'"
+              :class="{ 'form-group--error': $v.form.model.surname.$error }"
             >
               <b-form-input type="text" v-model="form.model.surname" />
             </b-form-group>
@@ -181,7 +186,10 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_Identificationnumber')">
+              <b-form-group
+                :label="$t('insert.employee.Model_Identificationnumber') + ' *'"
+                :class="{ 'form-group--error': $v.form.model.taxNumber.$error }"
+              >
                 <b-form-input type="text" v-model="form.model.taxNumber" />
               </b-form-group>
             </b-col>
@@ -230,7 +238,10 @@
         <b-tab :title="$t('insert.employee.EmployeeContact')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_GsmNumber')">
+              <b-form-group
+              :label="$t('insert.employee.Model_GsmNumber') + ' *'"
+              :class="{ 'form-group--error': $v.form.model.gsmNumber.$error }"
+              >
                 <b-form-input type="text" v-model="form.model.gsmNumber" />
               </b-form-group>
             </b-col>
@@ -247,7 +258,10 @@
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.employee.Model_Email')">
+              <b-form-group
+                :label="$t('insert.employee.Model_Email') + ' *'"
+                :class="{ 'form-group--error': $v.form.model.email.$error }"
+              >
                 <b-form-input type="text" v-model="form.model.email" />
               </b-form-group>
             </b-col>
@@ -318,12 +332,41 @@
             </b-tbody>
           </b-table-simple>
         </b-tab>
+        <b-tab v-if="isTeam" :title="$t('insert.employee.Team')">
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.employee.Team')">
+                <v-select v-model="selectedEmployee" :options="employees" @input="selectedEmployees" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2" class="mr-auto">
+              <b-button @click="addEmployee" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i></b-button>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th>
+                  Personel Adı
+                </b-th>
+                <b-th></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in this.form.model.employeeTeams" :key="'dl' + i">
+                  <b-td>{{r.Name}}</b-td>
+                  <b-td><i @click="deleteEmployee(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
 import { mapState } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   data () {
@@ -353,7 +396,7 @@ export default {
           name: null,
           surname: null,
           groupId: null,
-          statusId: null,
+          statusId: 1,
           category1Id: null,
           other1: null,
           isTeam: null,
@@ -366,7 +409,8 @@ export default {
           isRepresentative: null,
           description1: null,
           deleted: 0,
-          eInvoiceSeqs: []
+          eInvoiceSeqs: [],
+          employeeTeams: []
         }
       },
       disabledCustomer: true,
@@ -374,11 +418,36 @@ export default {
       detailListData: [],
       selectedEInvoice: [],
       statusId: true,
-      isTeam: false
+      isTeam: false,
+      selectedEmployee: []
+    }
+  },
+  validations: {
+    form: {
+      model: {
+        code: {
+          required
+        },
+        name: {
+          required
+        },
+        surname: {
+          required
+        },
+        gsmNumber: {
+          required
+        },
+        email: {
+          required
+        },
+        taxNumber: {
+          required
+        }
+      }
     }
   },
   computed: {
-    ...mapState(['createCode', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'rowData'])
+    ...mapState(['createCode', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'rowData', 'employees'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
@@ -401,14 +470,20 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'BLOOD_TYPE', name: 'bloodTypes'})
       this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_CATEGORY_1', name: 'category1'})
       this.$store.dispatch('getLookups', {...this.query, type: 'SCORE_CARD_CLASS', name: 'scoreCards'})
+      this.$store.dispatch('getEmployeesByBranchId')
     },
     save () {
-      this.form.model.birthDate = this.form.model.birthDate ? new Date(this.form.model.birthDate).toISOString() : ''
-      this.form.model.employmentStartDate = this.form.model.employmentStartDate ? new Date(this.form.model.employmentStartDate).toISOString() : ''
-      this.form.model.employmentEndDate = this.form.model.employmentEndDate ? new Date(this.form.model.employmentEndDate).toISOString() : ''
-      this.form.model.statusId = this.statusId ? 1 : 0
-      this.form.model.isTeam = this.isTeam ? 1 : 0
-      this.$store.dispatch('createData', {...this.query, api: 'VisionNextEmployee/api/Employee', formdata: this.form, return: this.$route.meta.baseLink})
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
+      } else {
+        this.form.model.birthDate = this.form.model.birthDate ? new Date(this.form.model.birthDate).toISOString() : ''
+        this.form.model.employmentStartDate = this.form.model.employmentStartDate ? new Date(this.form.model.employmentStartDate).toISOString() : ''
+        this.form.model.employmentEndDate = this.form.model.employmentEndDate ? new Date(this.form.model.employmentEndDate).toISOString() : ''
+        this.form.model.statusId = this.statusId ? 1 : 0
+        this.form.model.isTeam = this.isTeam ? 1 : 0
+        this.$store.dispatch('createData', {...this.query, api: 'VisionNextEmployee/api/Employee', formdata: this.form, return: this.$route.meta.baseLink})
+      }
     },
     selectedType (e) {
       this.form.model.typeId = e.DecimalValue
@@ -433,6 +508,23 @@ export default {
     },
     selectedScoreCard (e) {
       this.form.model.scoreCardClassId = e.DecimalValue
+    },
+    selectedEmployees (e) {
+      if (e) {
+        this.selectedEmployee = e
+      } else {
+        this.selectedEmployee = null
+      }
+    },
+    addEmployee () {
+      this.form.model.employeeTeams.push({
+        EmployeeId: this.selectedEmployee.RecordId,
+        Name: this.selectedEmployee.Description1
+      })
+    },
+    deleteEmployee (item) {
+      let filteredArr = this.form.model.employeeTeams.filter(i => i.EmployeeId === item.EmployeeId)
+      this.form.model.employeeTeams.splice(this.form.model.employeeTeams.indexOf(filteredArr[0]), 1)
     },
     changeCustomer (e) {
       if (e === '1') {

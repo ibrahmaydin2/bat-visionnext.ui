@@ -66,12 +66,14 @@
           <b-row>
             <b-col v-if="insertVisible.SortOrder != null ? insertVisible.SortOrder : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.SortOrder" :class="{ 'form-group--error': $v.form.SortOrder.$error }">
-                <b-form-input type="text" v-model="form.SortOrder" :readonly="insertReadonly.SortOrder" />
+                <b-form-input @input="changeSortOrder" min="0" max="99" type="number" v-model="form.SortOrder" :readonly="insertReadonly.SortOrder" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ApproveStateId != null ? insertVisible.ApproveStateId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ApproveStateId" :class="{ 'form-group--error': $v.form.ApproveStateId.$error }">
                 <v-select
+                  disabled
+                  v-model="selectedApproveState"
                   :options="lookup.APPROVE_STATE"
                   @input="selectedType('ApproveStateId', $event)"
                   label="Label"
@@ -279,7 +281,8 @@ export default {
         Code: null,
         StatusId: null,
         AnalysisTypeId: null,
-        ValidityTypeId: null
+        ValidityTypeId: null,
+        SortOrder: null
       },
       detailPanelError: '',
       fieldSurveyEmployeeTypes: {
@@ -315,7 +318,8 @@ export default {
         endDate: null,
         statusId: null
       },
-      routeName: this.$route.meta.baseLink
+      routeName: this.$route.meta.baseLink,
+      selectedApproveState: null
     }
   },
   computed: {
@@ -345,7 +349,6 @@ export default {
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
-        console.log(this.$v)
         this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
       } else {
         this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
@@ -482,6 +485,12 @@ export default {
     },
     removeFieldSurveyValidDates (item) {
       this.form.fieldSurveyValidDates.splice(this.form.fieldSurveyValidDates.indexOf(item), 1)
+    },
+    changeSortOrder (e) {
+      if (e > 99 || e < 0) {
+        this.form.SortOrder = 0
+        this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.FieldSurvey.minMaxSort') })
+      }
     }
   },
   validations () {
@@ -504,6 +513,14 @@ export default {
     insertDefaultValue (value) {
       Object.keys(value).forEach(el => {
         this.form[el] = value[el]
+      })
+    },
+    lookup (e) {
+      e['APPROVE_STATE'].map(item => {
+        if (item.DecimalValue === 2100) {
+          this.selectedType('ApproveStateId', item)
+          this.selectedApproveState = item.Label
+        }
       })
     }
   }

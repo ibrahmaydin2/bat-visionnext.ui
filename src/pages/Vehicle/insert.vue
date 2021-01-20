@@ -18,21 +18,23 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <b-col cols="12" md="3" lg="2">
+          <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.vehicles.code')"
+              :label="$t('insert.vehicles.code') + ' *'"
+              :class="{ 'form-group--error': $v.form.model.code.$error }"
             >
-              <b-form-input type="text" v-model="form.model.code" readonly/>
+              <b-form-input type="text" v-model.trim="$v.form.model.code.$model" />
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
-            <b-form-group :label="$t('insert.vehicles.driver')">
+            <b-form-group :label="$t('insert.vehicles.driver')  + ' *'" :class="{ 'form-group--error': $v.form.model.defaultDriverEmployeeId.$error }">
               <v-select :options="employees" @input="selectedDriver" label="nameSurname"></v-select>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="3" lg="2">
             <b-form-group
-              :label="$t('insert.vehicles.plaque')"
+              :label="$t('insert.vehicles.plaque')  + ' *'"
+              :class="{ 'form-group--error': $v.form.model.vehiclePlateNumber.$error }"
             >
               <b-form-input type="text" v-model="form.model.vehiclePlateNumber"/>
             </b-form-group>
@@ -70,7 +72,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.vehicles.year')">
-                <b-form-input type="text" v-model="form.model.modelYear"/>
+                <b-form-input type="number" v-model="form.model.modelYear"/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -225,6 +227,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   data () {
@@ -236,7 +239,7 @@ export default {
           vehiclePlateNumber: null,
           defaultDriverEmployeeId: null,
           vehicleTypeId: null,
-          statusId: 1,
+          statusId: true,
           modelYear: null,
           brandId: null,
           modelId: null,
@@ -259,6 +262,21 @@ export default {
       selectedEmployee: null,
       replacmentDrivers: [],
       statusId: true
+    }
+  },
+  validations: {
+    form: {
+      model: {
+        code: {
+          required
+        },
+        vehiclePlateNumber: {
+          required
+        },
+        defaultDriverEmployeeId: {
+          required
+        }
+      }
     }
   },
   computed: {
@@ -353,9 +371,18 @@ export default {
       this.replacmentDrivers.splice(this.replacmentDrivers.indexOf(item), 1)
     },
     save () {
-      this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
-      this.form.model.statusId = this.statusId ? 1 : 0
-      this.$store.dispatch('createData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      } else {
+        this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
+        this.form.model.statusId = this.statusId ? 1 : 0
+        this.$store.dispatch('createData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
+      }
     }
   },
   watch: {

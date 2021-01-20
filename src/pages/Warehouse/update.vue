@@ -49,13 +49,13 @@
         <b-tab :title="$t('insert.warehouse.Warehouse')" active>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
-                <v-select
-                  v-model="form.Model.WarehouseType"
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
-                  label="Label"
-                />
+              <b-form-group
+                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
+              >
+              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
+                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
+                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
+                </b-form-radio-group>
               </b-form-group>
             </b-col>
             <b-col v-if="showVehicle" cols="12" md="3" lg="2">
@@ -80,18 +80,6 @@
                     {{ option.CommercialTitle }}
                   </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
               </b-form-group>
             </b-col>
           </b-row>
@@ -229,11 +217,11 @@ export default {
           PurchaseWarehouseId: item.PurchaseWarehouseId,
           ReturnWarehouseId: item.ReturnWarehouseId
         })
-
+        console.log(item)
         this.detailListData.push({
           selectedBranch: item.SupplierBranch.Label,
-          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
-          selectedReturnWarehouseId: item.ReturnWarehouse.Label
+          selectedPurchaseWarehouseId: item.PurchaseWarehouse ? item.PurchaseWarehouse.Label : '',
+          selectedReturnWarehouseId: item.ReturnWarehouse ? item.ReturnWarehouse.Label : ''
         })
       })
 
