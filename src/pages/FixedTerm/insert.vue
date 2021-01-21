@@ -124,6 +124,7 @@ export default {
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
+        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
         let model = {
           'model': this.form
         }
@@ -154,6 +155,13 @@ export default {
           this.form[el] = value[el]
         }
       })
+    },
+    dataStatus: function (e) {
+      if (e === true) {
+        this.form.StatusId = 1
+      } else {
+        this.form.StatusId = 0
+      }
     }
   }
 }

@@ -18,36 +18,28 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.fixedTerm.code')"
-            >
-              <b-form-input type="text" v-model="form.model.code" readonly />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.fixedTerm.period')"
-            >
-              <b-form-input type="text" v-model="form.model.period"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.fixedTerm.description1')"
-            >
-              <b-form-input type="text" v-model="form.model.description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.status')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+                    <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
+                <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+              </b-form-group>
+            </b-col>
+                    <b-col v-if="insertVisible.Period != null ? insertVisible.Period : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.Period + (insertRequired.Period === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Period.$error }">
+                <b-form-input type="text" v-model="form.Period" :readonly="insertReadonly.Period" />
+              </b-form-group>
+            </b-col>
+                <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+                <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+              </b-form-group>
+            </b-col>
+                     <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+                <b-form-checkbox v-model="dataStatus" name="check-button" switch>
+                  {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-col>
         </b-row>
       </section>
     </b-col>
@@ -55,47 +47,78 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {
-        model: {
-          code: '',
-          description1: '',
-          period: null,
-          statusId: null,
-          RecordId: null,
-          Deleted: 0
-        }
+        Code: null,
+        Period: null,
+        Description1: null,
+        Deleted: 0
       },
+      routeName: this.$route.meta.baseLink,
       dataStatus: null
     }
   },
   computed: {
-    ...mapState(['rowData'])
+    ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
-    this.getData()
+    this.getInsertPage(this.routeName)
   },
   methods: {
-    getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm', record: this.$route.params.url})
+    getInsertPage (e) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // her insert ekranının kuralları ve createCode değerini alır.
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextCommonApi/api/FixedTerm`, record: this.$route.params.url})
+    },
+    selectedType (label, model) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // standart dropdownların select işleminde alacağı değeri belirler.
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
     },
     save () {
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm', formdata: this.form, return: this.$route.meta.baseLink})
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      } else {
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNextCommonApi/api/${this.routeName}`, formdata: model, return: this.routeName})
+      }
+    }
+  },
+  validations () {
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    return {
+      form: this.insertRules
     }
   },
   watch: {
     rowData: function (e) {
       if (e) {
         console.log(e)
-        this.form.model = {
-          code: e.Code,
-          description1: e.Description1,
-          period: e.Period,
-          statusId: e.StatusId,
+        this.form = {
+          Code: e.Code,
+          Description1: e.Description1,
+          Period: e.Period,
+          StatusId: e.StatusId,
           RecordId: e.RecordId,
           Deleted: e.Deleted
         }
@@ -104,9 +127,9 @@ export default {
     },
     dataStatus: function (e) {
       if (e === true) {
-        this.form.model.statusId = 1
+        this.form.StatusId = 1
       } else {
-        this.form.model.statusId = 0
+        this.form.StatusId = 0
       }
     }
   }
