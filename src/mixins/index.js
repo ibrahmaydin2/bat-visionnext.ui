@@ -25,6 +25,16 @@ export default {
         return null
       }
       return !!number
+    },
+    tabValidationHelper () {
+      const tab = document.querySelectorAll('.nav-tabs .nav-item')
+      tab.forEach((tab, item) => {
+        const tabId = tab.querySelector('a').attributes['aria-controls'].value
+        let tabContent = document.getElementById(tabId)
+        if (tabContent.querySelector('fieldset').classList.contains('form-group--error')) {
+          tab.querySelector('a').className += ' ' + 'error-tab'
+        }
+      })
     }
   }
 }

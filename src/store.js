@@ -1780,6 +1780,7 @@ export const store = new Vuex.Store({
       this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
       if (state.developmentMode === true) {
         state.insertHTML = insertPageHTML
+        console.log(formData)
       }
       state.insertRules = rull
       state.insertRequired = star

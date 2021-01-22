@@ -10,7 +10,9 @@
             <router-link :to="{name: 'Dashboard' }">
               <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
+            <b-button @click="save()" id="submitButton" size="sm" variant="outline-success">{{$t('header.save')}}</b-button>
             <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <b-button @click="save()" id="submitButton" size="sm" variant="warning">{{$t('header.save')}}</b-button>
           </b-col>
         </b-row>
       </header>
@@ -50,7 +52,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.customer.Customer')">
+        <b-tab :title="$t('insert.customer.Customer')" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.CommercialTitle != null ? insertVisible.CommercialTitle : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CommercialTitle + (insertRequired.CommercialTitle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CommercialTitle.$error }">
@@ -210,7 +212,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerLocations')">
+        <b-tab :title="$t('insert.customer.CustomerLocations')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Code')">
@@ -218,7 +220,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Location_Description1')">
+              <b-form-group :label="$t('insert.customer.Model_Location_Description1')" :class="{ 'form-group--error': $v.customerLocations.description1.$error }">
                 <b-form-input type="text" v-model="customerLocations.description1" />
               </b-form-group>
             </b-col>
@@ -356,7 +358,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerClass')">
+        <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Category1Id + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
@@ -492,7 +494,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.AdditionalClassInformation')">
+        <b-tab :title="$t('insert.customer.AdditionalClassInformation')" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.DiscountGroup1Id != null ? insertVisible.DiscountGroup1Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DiscountGroup1Id + (insertRequired.DiscountGroup1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountGroup1Id.$error }">
@@ -588,7 +590,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')">
+        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
@@ -737,7 +739,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerCreditHistories')">
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
@@ -882,7 +884,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
+        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
           <b-row>
             <b-col>
               <b-row>
@@ -914,7 +916,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.detail')">
+        <b-tab :title="$t('insert.customer.detail')" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.TextField1 != null ? insertVisible.TextField1 : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TextField1 + (insertRequired.TextField1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TextField1.$error }">
@@ -998,7 +1000,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountCode')">
@@ -1057,7 +1059,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.tag')">
+        <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.labelId')">
@@ -1092,7 +1094,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.customerTouchpoints')">
+        <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.touchpointPriority')">
@@ -1298,7 +1300,8 @@ export default {
       locationCityLabel: null,
       locationDistirictLabel: null,
       isLocationEditable: false,
-      selectedCancelReason: null
+      selectedCancelReason: null,
+      isLocationTabError: false
     }
   },
   computed: {
@@ -1352,13 +1355,14 @@ export default {
       this.form[label] = model.RecordId
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
-        this.$toasted.show(this.$t('insert.fillRequireds'), {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
+        this.tabValidation()
       } else {
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
         this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
@@ -1378,6 +1382,13 @@ export default {
           'model': this.form
         }
         this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+      }
+    },
+    tabValidation () {
+      if (this.$v.form.$invalid) {
+        this.$nextTick(() => {
+          this.tabValidationHelper()
+        })
       }
     },
     selectedCity (e) {
@@ -1507,7 +1518,7 @@ export default {
     },
     addItemDiscount () {
       if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
-        this.$toasted.show(this.$t('insert.fillRequireds'), {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -1537,6 +1548,16 @@ export default {
     },
 
     addCustomerLocations () {
+      this.$v.customerLocations.$touch()
+      if (this.$v.customerLocations.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+
       let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
       if (filteredArr.length < 1) {
         this.form.customerLocations.push({
@@ -1624,7 +1645,7 @@ export default {
     },
     addCreditHistories () {
       if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
-        this.$toasted.show(this.$t('insert.fillRequireds'), {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -1664,7 +1685,12 @@ export default {
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     // insertRequireds
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      customerLocations: {
+        description1: {
+          required
+        }
+      }
     }
   },
   watch: {

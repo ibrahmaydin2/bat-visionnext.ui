@@ -41,7 +41,8 @@ export default {
         span
           margin-right: 5px
     & header
-      display: block
+      display: flex
+      justify-content: space-between
       border-bottom: 2px #f6f6f6 solid
       padding: 10px 15px 0 15px !important
       background: #fff
