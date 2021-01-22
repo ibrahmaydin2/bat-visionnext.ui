@@ -18,7 +18,13 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-        header
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
+                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
+              </b-form-checkbox>
+            </b-form-group>
+          </b-col>
         </b-row>
       </section>
     </b-col>
@@ -66,7 +72,8 @@ export default {
   data () {
     return {
       form: {},
-      routeName: this.$route.meta.baseLink
+      routeName: this.$route.meta.baseLink,
+      dataStatus: null
     }
   },
   computed: {
@@ -98,10 +105,19 @@ export default {
         this.form[label] = null
       }
     },
+    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
+    tabValidation () {
+      if (this.$v.form.$invalid) {
+        this.$nextTick(() => {
+          this.tabValidationHelper()
+        })
+      }
+    },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+        this.tabValidation()
       } else {
         let model = {
           'model': this.form
@@ -133,6 +149,14 @@ export default {
           this.form[el] = value[el]
         }
       })
+    },
+    // Status'un değerini true'dan 1'e çeviriyor
+    dataStatus: function (e) {
+      if (e === true) {
+        this.form.StatusId = 1
+      } else {
+        this.form.StatusId = 0
+      }
     }
   }
 }

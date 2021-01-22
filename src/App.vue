@@ -66,9 +66,12 @@ export default {
   .vs--disabled .vs__search,
   .vs--disabled .vs__selected
     background-color: #e9ecef !important
-  .btn-success
+  // .btn-warning
+  //   color: white !important
+  .btn-warning
     background: linear-gradient(45deg, #e88000, #ffa300) !important
     border-color: #dea559 !important
+    color: white !important
     &:focus
       background-color: #153d95 !important
       border-color: #e88000 !important
@@ -79,6 +82,19 @@ export default {
     &:hover
       background-color: #153d95 !important
       border-color: #e88000 !important
+  // .btn-success
+  //   background: linear-gradient(45deg, #e88000, #ffa300) !important
+  //   border-color: #dea559 !important
+  //   &:focus
+  //     background-color: #153d95 !important
+  //     border-color: #e88000 !important
+  //     box-shadow: 0 0 0 0.2rem #1e9dff20 !important
+  //   &:active
+  //     background-color: #153d95 !important
+  //     border-color: #e88000 !important
+  //   &:hover
+  //     background-color: #153d95 !important
+  //     border-color: #e88000 !important
   .btn-outline-primary
     color: #828282
     border-color: #828282 !important
