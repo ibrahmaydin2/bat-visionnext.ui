@@ -215,36 +215,36 @@
         <b-tab :title="$t('insert.customer.CustomerLocations')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Code')">
-                <b-form-input type="text" v-model="customerLocations.code" readonly/>
+              <b-form-group :label="$t('insert.customer.Model_Code') + ' *'" :class="{ 'form-group--error': $v.customerLocations.code.$error }">
+                <b-form-input type="text" v-model="customerLocations.code" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Location_Description1')" :class="{ 'form-group--error': $v.customerLocations.description1.$error }">
+              <b-form-group :label="$t('insert.customer.Model_Location_Description1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.description1.$error }">
                 <b-form-input type="text" v-model="customerLocations.description1" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="6" lg="4">
-              <b-form-group :label="$t('insert.customer.Model_AddressDetail')">
+              <b-form-group :label="$t('insert.customer.Model_AddressDetail') + ' *'" :class="{ 'form-group--error': $v.customerLocations.addressDetail.$error }">
                 <b-form-input type="text" v-model="customerLocations.addressDetail" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.city')">
+              <b-form-group :label="$t('insert.customer.city') + ' *'" :class="{ 'form-group--error': $v.customerLocations.cityId.$error }">
                 <v-select v-model="locationCityLabel" :options="cities" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.distirict')">
+              <b-form-group :label="$t('insert.customer.distirict') + ' *'" :class="{ 'form-group--error': $v.customerLocations.districtId.$error }">
                 <v-select v-model="locationDistirictLabel" :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PostCode')">
+              <b-form-group :label="$t('insert.customer.Model_PostCode') + ' *'" :class="{ 'form-group--error': $v.customerLocations.postCode.$error }">
                 <b-form-input type="text" v-model="customerLocations.postCode" />
               </b-form-group>
             </b-col>
@@ -271,7 +271,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1')">
+              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.phoneNumber1.$error }">
                 <b-form-input type="text" v-model="customerLocations.phoneNumber1" />
               </b-form-group>
             </b-col>
@@ -747,17 +747,17 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CurrencyId')">
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CurrencyId.$error }">
                 <v-select :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
+              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditDescriptionId.$error }">
                 <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditAmount')">
+              <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
                 <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
@@ -774,12 +774,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
+              <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
                 <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_RiskLimit')">
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
                 <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
@@ -801,12 +801,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditStartDate')">
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CreditStartDate.$error }">
                 <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditEndDate')">
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CreditEndDate.$error }">
                 <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
@@ -889,7 +889,7 @@
             <b-col>
               <b-row>
                 <b-col cols="12" md="6" lg="4">
-                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId')">
+                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId') + ' *'" :class="{ 'form-group--error': $v.customerPaymentTypes.paymentTypeId.$error }">
                     <v-select :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
                   </b-form-group>
                 </b-col>
@@ -1003,12 +1003,12 @@
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountCode')">
+              <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
                 <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountDescription')">
+              <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
                 <b-form-input type="text" v-model="customerItemDiscounts.description1" />
               </b-form-group>
             </b-col>
@@ -1059,15 +1059,15 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()"> <!--Ezer-->
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelId')">
+              <b-form-group :label="$t('insert.customer.labelId') + ' *'" :class="{ 'form-group--error': $v.customerLabels.labelId.$error }">
                 <v-select :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelValueId')">
+              <b-form-group :label="$t('insert.customer.labelValueId') + ' *'" :class="{ 'form-group--error': $v.customerLabels.labelValueId.$error }">
                 <v-select :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
@@ -1097,12 +1097,12 @@
         <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.touchpointPriority')">
+              <b-form-group :label="$t('insert.customer.touchpointPriority') + ' *'" :class="{ 'form-group--error': $v.customerTouchpoints.touchpointPriority.$error }">
                 <v-select :options="touchpoints" @input="selectedTouchpointPriority" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.touchpointTypeId')">
+              <b-form-group :label="$t('insert.customer.touchpointTypeId') + ' *'" :class="{ 'form-group--error': $v.customerTouchpoints.touchpointTypeId.$error }">
                 <v-select :options="touchpoint_types" @input="selectedTouchpointType" label="Label"></v-select>
               </b-form-group>
             </b-col>
@@ -1497,6 +1497,15 @@ export default {
     },
 
     addCustomerTouchpoint (item) {
+      this.$v.customerTouchpoints.$touch()
+      if (this.$v.customerTouchpoints.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       this.form.customerTouchpoints.push({
         touchpointPriorityNumber: this.customerTouchpoints.touchpointPriority,
         touchpointTypeId: this.customerTouchpoints.touchpointTypeId
@@ -1506,6 +1515,15 @@ export default {
       this.form.customerTouchpoints.splice(this.form.customerTouchpoints.indexOf(item), 1)
     },
     addCustomerLabel () {
+      this.$v.customerLabels.$touch()
+      if (this.$v.customerLabels.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       this.form.customerLabels.push({
         label: this.customerLabel,
         labelId: this.customerLabelId,
@@ -1517,6 +1535,7 @@ export default {
       this.form.customerLabels.splice(this.form.customerLabels.indexOf(item), 1)
     },
     addItemDiscount () {
+      this.$v.customerItemDiscounts.$touch()
       if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -1538,6 +1557,15 @@ export default {
       this.form.customerItemDiscounts.splice(this.form.customerItemDiscounts.indexOf(item), 1)
     },
     addCustomerPaymentType () {
+      this.$v.customerPaymentTypes.$touch()
+      if (this.$v.customerPaymentTypes.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       this.form.customerPaymentTypes.push({
         paymentType: this.customerPaymentTypes.paymentType,
         paymentTypeId: this.customerPaymentTypes.paymentTypeId
@@ -1644,13 +1672,14 @@ export default {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
     },
     addCreditHistories () {
-      if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
+      this.$v.customerCreditHistories.$touch()
+      if (this.$v.customerCreditHistories.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
-        return
+        return false
       }
       this.form.customerCreditHistories.push({
         creditAmount: this.customerCreditHistories.creditAmount,
@@ -1686,7 +1715,77 @@ export default {
     // insertRequireds
     return {
       form: this.insertRules,
-      customerLocations: {
+      customerLocations: {// Ezer-2
+        description1: {
+          required
+        },
+        code: {
+          required
+        },
+        addressDetail: {
+          required
+        },
+        postCode: {
+          required
+        },
+        phoneNumber1: {
+          required
+        },
+        cityId: {
+          required
+        },
+        districtId: {
+          required
+        }
+      },
+      customerCreditHistories: {
+        creditAmount: {
+          required
+        },
+        creditDescriptionId: {
+          required
+        },
+        CurrencyId: {
+          required
+        },
+        CreditStartDate: {
+          required
+        },
+        CreditEndDate: {
+          required
+        },
+        creditLimit: {
+          required
+        },
+        riskLimit: {
+          required
+        }
+      },
+      customerPaymentTypes: {
+        paymentTypeId: {
+          required
+        }
+      },
+      customerTouchpoints: {
+        touchpointPriority: {
+          required
+        },
+        touchpointTypeId: {
+          required
+        }
+      },
+      customerLabels: {
+        labelValueId: {
+          required
+        },
+        labelId: {
+          required
+        }
+      },
+      customerItemDiscounts: {
+        code: {
+          required
+        },
         description1: {
           required
         }
