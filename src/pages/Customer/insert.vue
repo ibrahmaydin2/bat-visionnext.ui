@@ -8,11 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="outline-success">{{$t('header.save')}}</b-button>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
-            <b-button @click="save()" id="submitButton" size="sm" variant="warning">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -1137,6 +1135,7 @@
 import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/index'
+// import AddButton from '../../components/AddButton'
 export default {
   mixins: [mixin],
   data () {
@@ -1338,17 +1337,20 @@ export default {
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // standart dropdownların select işleminde alacağı değeri belirler.
-      this.form[label] = model.DecimalValue
-
-      if (label === 'TaxCustomerTypeId') {
-        if (model.Code === 'TZK') {
-          this.taxNumberReq = 10
-        } else {
-          this.taxNumberReq = 11
+      if (model) {
+        this.form[label] = model.DecimalValue
+        if (label === 'TaxCustomerTypeId') {
+          if (model.Code === 'TZK') {
+            this.taxNumberReq = 10
+          } else {
+            this.taxNumberReq = 11
+          }
+          this.insertRules.TaxNumber = {
+            required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+          }
         }
-        this.insertRules.TaxNumber = {
-          required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
-        }
+      } else {
+        this.form[label] = null
       }
     },
     selectedSearchType (label, model) {
