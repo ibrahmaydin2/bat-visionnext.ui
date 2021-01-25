@@ -40,6 +40,8 @@ import Header from './components/Header'
 import ProgressTimeline from './components/ProgressTimeline'
 import Breadcrumb from './components/Breadcrumb'
 import ErrorPage from './components/Error'
+import AddButton from './components/AddButton'
+import CancelButton from './components/CancelButton'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -72,6 +74,8 @@ Vue.component('b-form-datepicker', BFormDatepicker)
 Vue.component('Nextgrid', Nextgrid)
 Vue.component('Nextform', Nextform)
 Vue.component('ErrorPage', ErrorPage)
+Vue.component('AddButton', AddButton)
+Vue.component('CancelButton', CancelButton)
 
 Vue.config.productionTip = false
 global.jQuery = jQuery
