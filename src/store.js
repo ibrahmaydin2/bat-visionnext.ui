@@ -1519,6 +1519,24 @@ export const store = new Vuex.Store({
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
+    },
+    getDownloadLink ({state, commit}, query) {
+      let dataQuery = {
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            console.log(res.data)
+            // commit('setCreatorPassword', res.data.Model)
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
     }
   },
   mutations: {

@@ -135,6 +135,12 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
+      console.log(this.thisRout)
+    },
+    tableOperations (e) {
+      if (e) {
+        console.log(e)
+      }
     }
   },
   methods: {
@@ -161,35 +167,36 @@ export default {
       // this.hideTableRow(hr)
     },
     downloadBtn (r, f, e) {
-      let apil = 'OrderLink'
-      let data
-      data = {
-        'infoType': '1',
-        'sapUserCode': '11081',
-        'operationType': e,
-        'visibleColumnList': [
-          'ConfirmationCodeDescription',
-          'SapCustomerCode',
-          'SapOrderNumber',
-          'SasNumber',
-          'OrderLineNumber',
-          'ProductType',
-          'ProductWeight',
-          'ProductWidthFormatted',
-          'ProductLengthFormatted',
-          'PackingTypeName',
-          'OrderQuantity',
-          'ShipmentQuantity',
-          'BalanceShipmentAmount',
-          'StockQuantity',
-          'UnitPrice',
-          'Currency',
-          'OrderAmountFormatted',
-          'DeliveryDate'
-        ],
-        'userPortalId': 'K11081'
-      }
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: apil, list: data, format: f})
+      console.log(r, f, e)
+      // let apil = 'OrderLink'
+      // let data
+      // data = {
+      //   'infoType': '1',
+      //   'sapUserCode': '11081',
+      //   'operationType': e,
+      //   'visibleColumnList': [
+      //     'ConfirmationCodeDescription',
+      //     'SapCustomerCode',
+      //     'SapOrderNumber',
+      //     'SasNumber',
+      //     'OrderLineNumber',
+      //     'ProductType',
+      //     'ProductWeight',
+      //     'ProductWidthFormatted',
+      //     'ProductLengthFormatted',
+      //     'PackingTypeName',
+      //     'OrderQuantity',
+      //     'ShipmentQuantity',
+      //     'BalanceShipmentAmount',
+      //     'StockQuantity',
+      //     'UnitPrice',
+      //     'Currency',
+      //     'OrderAmountFormatted',
+      //     'DeliveryDate'
+      //   ],
+      //   'userPortalId': 'K11081'
+      // }
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: 'VisionNextEmployee/api/Employee/Export'})
     },
     filterOnFilters (e) {
       this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})
