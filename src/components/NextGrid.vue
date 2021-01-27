@@ -25,22 +25,41 @@
               </b-button>
             </div>
             <div class="asc__nextgrid-table-header-filter">
-              <v-select
-                v-if="header.columnType === 'LabelValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-              <v-select
+
+              <div v-if="header.modelControlUtil != null">
+                <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
+                  <!-- Autocomplete yapılamadığı için şimdilik normal search'e çevrildi. -->
+                  <v-select
+                    label="Description1"
+                    :options="gridField[header.modelControlUtil.modelProperty]"
+                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
+                  >
+                  </v-select>
+                </div>
+                <div v-else>
+                  <v-select
+                    v-if="header.modelControlUtil.isLookupTable"
+                    label="Label"
+                    :options="lookup[header.modelControlUtil.code]"
+                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'lookup')"
+                  >
+                  </v-select>
+                  <v-select
+                    v-else
+                    label="Description1"
+                    :options="gridField[header.modelControlUtil.modelProperty]"
+                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
+                  >
+                  </v-select>
+                </div>
+              </div>
+
+              <!-- <v-select
                 v-if="header.columnType === 'CodeValue'"
                 v-once
                 label="title"
                 @open="onOpen(header.dataField, items)"
                 @click="filterAutocomplete(items)"
-                disabled
               >
               </v-select>
 
@@ -50,7 +69,6 @@
                 label="title"
                 @open="onOpen(header.dataField, items)"
                 @click="filterAutocomplete(items)"
-                disabled
               >
               </v-select>
 
@@ -60,7 +78,6 @@
                 label="title"
                 @open="onOpen(header.dataField, items)"
                 @click="filterAutocomplete(items)"
-                disabled
               >
               </v-select>
 
@@ -70,7 +87,6 @@
                 label="title"
                 @open="onOpen(header.dataField, items)"
                 @click="filterAutocomplete(items)"
-                disabled
               >
               </v-select>
 
@@ -80,9 +96,8 @@
                 label="title"
                 @open="onOpen(header.dataField, items)"
                 @click="filterAutocomplete(items)"
-                disabled
               >
-              </v-select>
+              </v-select> -->
 
               <!--<v-select
                 v-if="header.columnType === 'LabelValue'"
@@ -294,7 +309,7 @@ export default {
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup'])
   },
   methods: {
     showModal (action, url, id, data, query, message) {
@@ -374,6 +389,28 @@ export default {
     filterLabel (e, i) {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
+    selectedValue (label, model, type) {
+      if (model) {
+        if (type === 'lookup') {
+          this.andConditionalModel[label] = [model.DecimalValue]
+        } else {
+          this.andConditionalModel[label] = [model.RecordId]
+        }
+        this.searchOnTable()
+      } else {
+        delete this.andConditionalModel[label]
+        this.searchOnTable()
+      }
+    },
+    onSearch (header) {
+      console.log(this.selectedText)
+      // this.searchVehicle(loading, search, this)
+
+      // if (search.length >= 3) {
+      //   this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
+      //   // this.searchCustomer(loading, search, this)
+      // }
+    },
     searchOnTable (tableField, search) {
       searchQ[tableField] = search
       this.$store.dispatch('getTableData', {
@@ -439,7 +476,11 @@ export default {
         if (control != null) {
           switch (control.inputType) {
             case 'DropDown':
-              this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
+              if (control.isLookupTable) {
+                this.$store.dispatch('getAllLookups', {...this.query, type: control.code})
+              } else {
+                this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
+              }
               break
             case 'AutoComplete':
               // control.code: null
@@ -447,7 +488,6 @@ export default {
               // control.modelProperty: "CardTypeIds"
               // control.serviceUrl: "/VisionNextCustomer/api/CustomerCardType/Search"
               // control.upperObject: null
-
               break
           }
         }

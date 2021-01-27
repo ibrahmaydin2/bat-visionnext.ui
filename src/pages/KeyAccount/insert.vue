@@ -198,7 +198,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_Code')">
-                <b-form-input type="text" v-model="customerLocations.code" readonly/>
+                <b-form-input type="text" v-model="customerLocations.code" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
