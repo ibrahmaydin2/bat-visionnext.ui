@@ -391,6 +391,9 @@ export default {
     },
     selectedValue (label, model, type) {
       if (model) {
+        if (!this.andConditionalModel) {
+          this.andConditionalModel = {}
+        }
         if (type === 'lookup') {
           this.andConditionalModel[label] = [model.DecimalValue]
         } else {
@@ -404,14 +407,9 @@ export default {
     },
     onSearch (header) {
       console.log(this.selectedText)
-      // this.searchVehicle(loading, search, this)
-
-      // if (search.length >= 3) {
-      //   this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-      //   // this.searchCustomer(loading, search, this)
-      // }
     },
     searchOnTable (tableField, search) {
+      console.log('as')
       searchQ[tableField] = search
       this.$store.dispatch('getTableData', {
         ...this.query,

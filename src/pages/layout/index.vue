@@ -98,7 +98,7 @@
                     <b-dropdown-item
                       v-for="(dwn, i) in tableOperations.Downloads"
                       :key="'download' + i"
-                      @click="downloadBtn(thisRout,dwn.Action,dwn.Action)"
+                      @click="downloadBtn(thisRout,dwn)"
                     >
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
@@ -166,37 +166,8 @@ export default {
     hideRow (t) {
       // this.hideTableRow(hr)
     },
-    downloadBtn (r, f, e) {
-      console.log(r, f, e)
-      // let apil = 'OrderLink'
-      // let data
-      // data = {
-      //   'infoType': '1',
-      //   'sapUserCode': '11081',
-      //   'operationType': e,
-      //   'visibleColumnList': [
-      //     'ConfirmationCodeDescription',
-      //     'SapCustomerCode',
-      //     'SapOrderNumber',
-      //     'SasNumber',
-      //     'OrderLineNumber',
-      //     'ProductType',
-      //     'ProductWeight',
-      //     'ProductWidthFormatted',
-      //     'ProductLengthFormatted',
-      //     'PackingTypeName',
-      //     'OrderQuantity',
-      //     'ShipmentQuantity',
-      //     'BalanceShipmentAmount',
-      //     'StockQuantity',
-      //     'UnitPrice',
-      //     'Currency',
-      //     'OrderAmountFormatted',
-      //     'DeliveryDate'
-      //   ],
-      //   'userPortalId': 'K11081'
-      // }
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: 'VisionNextEmployee/api/Employee/Export'})
+    downloadBtn (r, f) {
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: `VisionNext${r}/api/${r}/Export`})
     },
     filterOnFilters (e) {
       this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})

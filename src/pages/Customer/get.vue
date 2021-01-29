@@ -8,7 +8,8 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div>
+            <GetFormField />
+            <!-- <div>
               <router-link :to="{name: `${$route.meta.baseLink}Insert`}">
                 <b-button class="border-0" size="sm" variant="success"><b-icon scale="1.25" shift-v="1.25" aria-hidden="true" icon="plus"></b-icon></b-button>
               </router-link>
@@ -21,7 +22,7 @@
               <router-link :to="{name: `${$route.meta.baseLink}Update`, params: {url: this.$route.params.url}}">
                 <b-button size="sm" variant="outline-warning"><b-icon scale="0.75" shift-v="0.75" aria-hidden="true" icon="pencil-fill"></b-icon></b-button>
               </router-link>
-            </div>
+            </div> -->
           </header>
         </b-col>
       </b-row>
@@ -36,32 +37,35 @@
       </b-row>
       <b-tabs>
         <b-tab :title="$t('insert.customer.Customer')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <!-- <h6>{{$t('insert.route.title')}}</h6> -->
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CommercialTitle')}}</span><p>{{rowData.CommercialTitle}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Description1')}}</span><p>{{rowData.Description1}}</p>
+              <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p> -->
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxOffice')}}</span><p>{{rowData.TaxOffice}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxNumber')}}</span><p>{{rowData.TaxNumber}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDutyFree')}}</span> <p><i :class="rowData.IsDutyFree === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_UseEInvoice')}}</span> <p><i :class="rowData.UseEInvoice === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span> <p><i :class="rowData.IsTaxExemption === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+              <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CardTypeId')}}</span><p>{{rowData.CardType ? rowData.CardType.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesTypeId')}}</span><p>{{rowData.SalesType ? rowData.SalesType.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesDocumentTypeId')}}</span><p>{{rowData.SalesDocumentType ? rowData.SalesDocumentType.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PriceListCategoryId')}}</span><p>{{rowData.PriceListCategory ? rowData.PriceListCategory.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesPriceChangeRate')}}</span><p>{{rowData.SalesPriceChangeRate}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DeliveryDayParam')}}</span><p>{{rowData.DeliveryDayParam}}</p>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerLocations')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CommercialTitle')}}</span><p>{{rowData.CommercialTitle}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Description1')}}</span><p>{{rowData.Description1}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p> -->
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxOffice')}}</span><p>{{rowData.TaxOffice}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxNumber')}}</span><p>{{rowData.TaxNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDutyFree')}}</span> <p><i :class="rowData.IsDutyFree === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_UseEInvoice')}}</span> <p><i :class="rowData.UseEInvoice === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsTaxExemption')}}</span> <p><i :class="rowData.IsTaxExemption === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CardTypeId')}}</span><p>{{rowData.CardType ? rowData.CardType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TypeId')}}</span><p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesTypeId')}}</span><p>{{rowData.SalesType ? rowData.SalesType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesDocumentTypeId')}}</span><p>{{rowData.SalesDocumentType ? rowData.SalesDocumentType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PriceListCategoryId')}}</span><p>{{rowData.PriceListCategory ? rowData.PriceListCategory.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesPriceChangeRate')}}</span><p>{{rowData.SalesPriceChangeRate}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DeliveryDayParam')}}</span><p>{{rowData.DeliveryDayParam}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.CustomerLocations')}}</h6>
-                <b-table class="col-md-12" responsive :items="rowData.CustomerLocations" :fields="locationFields">
+            <b-col cols="12" md="12">
+              <b-card>
+                <b-table responsive outlined :items="rowData.CustomerLocations" :fields="locationFields">
                   <template #cell(City)="data">
                     {{data.value.Label}}
                   </template>

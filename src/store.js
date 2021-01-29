@@ -218,7 +218,8 @@ export const store = new Vuex.Store({
     warehouses: [],
     vanLoadingStatus: [],
     itemForVanLoading: [],
-    creatorPassword: null
+    creatorPassword: null,
+    formFields: []
   },
   actions: {
     // sistem gereksinimleri
@@ -1521,20 +1522,44 @@ export const store = new Vuex.Store({
         })
     },
     getDownloadLink ({state, commit}, query) {
+      commit('bigLoaded', true)
       let dataQuery = {
+        'AndConditionModel': {
+        },
         'branchId': state.BranchId,
-        'companyId': state.CompanyId
+        'companyId': state.CompanyId,
+        'page': 1
       }
-      return axios.post(query.api, dataQuery, authHeader)
+
+      return axios.post(query.api, dataQuery, {
+        responseType: 'blob',
+        ...authHeader
+      }).then(res => {
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'excel.xlsx')
+        document.body.appendChild(link)
+        link.click()
+        commit('bigLoaded', false)
+      }).catch(err => {
+        commit('bigLoaded', false)
+        commit('showAlert', { type: 'danger', msg: err.message })
+      })
+    },
+    getFormFields ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
-          if (res.data.IsCompleted === true) {
-            console.log(res.data)
-            // commit('setCreatorPassword', res.data.Model)
+          commit('bigLoaded', false)
+          if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
+            commit('setFormFields', res.data.UIPageModels[0])
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
         .catch(err => {
+          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     }
@@ -2018,7 +2043,9 @@ export const store = new Vuex.Store({
     },
     setCreatorPassword (state, payload) {
       state.creatorPassword = payload
+    },
+    setFormFields (state, payload) {
+      state.formFields = payload
     }
-
   }
 })
