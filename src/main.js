@@ -42,6 +42,7 @@ import Breadcrumb from './components/Breadcrumb'
 import ErrorPage from './components/Error'
 import AddButton from './components/AddButton'
 import CancelButton from './components/CancelButton'
+import GetFormField from './components/GetFormField'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -76,6 +77,7 @@ Vue.component('Nextform', Nextform)
 Vue.component('ErrorPage', ErrorPage)
 Vue.component('AddButton', AddButton)
 Vue.component('CancelButton', CancelButton)
+Vue.component('GetFormField', GetFormField)
 
 Vue.config.productionTip = false
 global.jQuery = jQuery
