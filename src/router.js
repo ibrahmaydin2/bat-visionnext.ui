@@ -426,6 +426,26 @@ import TerminalPasswordLogGet from '@/pages/TerminalPasswordLog/get'
 import TerminalPasswordLogInsert from '@/pages/TerminalPasswordLog/insert'
 import TerminalPasswordLogUpdate from '@/pages/TerminalPasswordLog/update'
 
+import RouteBalanceIndex from '@/pages/RouteBalance/'
+import RouteBalanceGet from '@/pages/RouteBalance/get'
+import RouteBalanceInsert from '@/pages/RouteBalance/insert'
+import RouteBalanceUpdate from '@/pages/RouteBalance/update'
+
+import WarehouseMovementIndex from '@/pages/WarehouseMovement/'
+import WarehouseMovementGet from '@/pages/WarehouseMovement/get'
+import WarehouseMovementInsert from '@/pages/WarehouseMovement/insert'
+import WarehouseMovementUpdate from '@/pages/WarehouseMovement/update'
+
+import LoyaltyExpenseIndex from '@/pages/LoyaltyExpense/'
+import LoyaltyExpenseGet from '@/pages/LoyaltyExpense/get'
+import LoyaltyExpenseInsert from '@/pages/LoyaltyExpense/insert'
+import LoyaltyExpenseUpdate from '@/pages/LoyaltyExpense/update'
+
+import LoyaltyConsumptionIndex from '@/pages/LoyaltyConsumption/'
+import LoyaltyConsumptionGet from '@/pages/LoyaltyConsumption/get'
+import LoyaltyConsumptionInsert from '@/pages/LoyaltyConsumption/insert'
+import LoyaltyConsumptionUpdate from '@/pages/LoyaltyConsumption/update'
+
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
 import Register from '@/views/Auth/register'
@@ -513,7 +533,11 @@ const listIndex = [
   {path: '/LoadingPlan', name: 'LoadingPlan', component: LoadingPlanIndex, meta: { title: i18n.t('router.LoadingPlan'), createLink: 'LoadingPlanInsert' }},
   {path: '/CashCard', name: 'CashCard', component: CashCardIndex, meta: { title: i18n.t('router.CashCard'), createLink: 'CashCardInsert' }},
   {path: '/TerminalLog', name: 'TerminalLog', component: TerminalLogIndex, meta: { title: i18n.t('router.TerminalLog'), createLink: 'TerminalLogInsert' }},
-  {path: '/TerminalPasswordLog', name: 'TerminalPasswordLog', component: TerminalPasswordLogIndex, meta: { title: i18n.t('router.TerminalPasswordLog'), createLink: 'TerminalPasswordLogInsert' }}
+  {path: '/TerminalPasswordLog', name: 'TerminalPasswordLog', component: TerminalPasswordLogIndex, meta: { title: i18n.t('router.TerminalPasswordLog'), createLink: 'TerminalPasswordLogInsert' }},
+  {path: '/RouteBalance', name: 'RouteBalance', component: RouteBalanceIndex, meta: { title: i18n.t('router.RouteBalance'), createLink: 'RouteBalanceInsert' }},
+  {path: '/WarehouseMovement', name: 'WarehouseMovement', component: WarehouseMovementIndex, meta: { title: i18n.t('router.WarehouseMovement'), createLink: 'WarehouseMovementInsert' }},
+  {path: '/LoyaltyExpense', name: 'LoyaltyExpense', component: LoyaltyExpenseIndex, meta: { title: i18n.t('router.LoyaltyExpense'), createLink: 'LoyaltyExpenseInsert' }},
+  {path: '/LoyaltyConsumption', name: 'LoyaltyConsumption', component: LoyaltyConsumptionIndex, meta: { title: i18n.t('router.LoyaltyConsumption'), createLink: 'LoyaltyConsumptionInsert' }}
 ]
 
 const listGet = [
@@ -595,7 +619,11 @@ const listGet = [
   { path: '/LoadingPlan/:url', name: 'LoadingPlanGet', component: LoadingPlanGet, meta: { title: i18n.t('router.LoadingPlanGet'), baseLink: 'LoadingPlan' } },
   { path: '/CashCard/:url', name: 'CashCardGet', component: CashCardGet, meta: { title: i18n.t('router.CashCardGet'), baseLink: 'CashCard' } },
   { path: '/TerminalLog/:url', name: 'TerminalLogGet', component: TerminalLogGet, meta: { title: i18n.t('router.TerminalLogGet'), baseLink: 'TerminalLog' } },
-  { path: '/TerminalPasswordLog/:url', name: 'TerminalPasswordLogGet', component: TerminalPasswordLogGet, meta: { title: i18n.t('router.TerminalPasswordLogGet'), baseLink: 'TerminalPasswordLog' } }
+  { path: '/TerminalPasswordLog/:url', name: 'TerminalPasswordLogGet', component: TerminalPasswordLogGet, meta: { title: i18n.t('router.TerminalPasswordLogGet'), baseLink: 'TerminalPasswordLog' } },
+  { path: '/RouteBalance/:url', name: 'RouteBalanceGet', component: RouteBalanceGet, meta: { title: i18n.t('router.RouteBalanceGet'), baseLink: 'RouteBalance' } },
+  { path: '/WarehouseMovement/:url', name: 'WarehouseMovementGet', component: WarehouseMovementGet, meta: { title: i18n.t('router.WarehouseMovementGet'), baseLink: 'WarehouseMovement' } },
+  { path: '/LoyaltyExpense/:url', name: 'LoyaltyExpenseGet', component: LoyaltyExpenseGet, meta: { title: i18n.t('router.LoyaltyExpenseGet'), baseLink: 'LoyaltyExpense' } },
+  { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumption', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } }
 ]
 
 const listUpdate = [
@@ -677,7 +705,11 @@ const listUpdate = [
   { path: '/Update/LoadingPlan/:url', name: 'LoadingPlanUpdate', component: LoadingPlanUpdate, meta: { title: i18n.t('router.LoadingPlanUpdate'), baseLink: 'LoadingPlan' } },
   { path: '/Update/CashCard/:url', name: 'CashCardUpdate', component: CashCardUpdate, meta: { title: i18n.t('router.CashCardUpdate'), baseLink: 'CashCard' } },
   { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } },
-  { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } }
+  { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } },
+  { path: '/Update/RouteBalance/:url', name: 'RouteBalanceUpdate', component: RouteBalanceUpdate, meta: { title: i18n.t('router.RouteBalanceUpdate'), baseLink: 'RouteBalance' } },
+  { path: '/Update/WarehouseMovement/:url', name: 'WarehouseMovementUpdate', component: WarehouseMovementUpdate, meta: { title: i18n.t('router.WarehouseMovementUpdate'), baseLink: 'WarehouseMovement' } },
+  { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
+  { path: '/Update/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionUpdate', component: LoyaltyConsumptionUpdate, meta: { title: i18n.t('router.LoyaltyConsumptionUpdate'), baseLink: 'LoyaltyConsumption' } }
 ]
 
 const listInsert = [
@@ -759,7 +791,11 @@ const listInsert = [
   { path: '/Insert/LoadingPlan', name: 'LoadingPlanInsert', component: LoadingPlanInsert, meta: { title: i18n.t('router.LoadingPlanInsert'), baseLink: 'LoadingPlan' } },
   { path: '/Insert/CashCard', name: 'CashCardInsert', component: CashCardInsert, meta: { title: i18n.t('router.CashCardInsert'), baseLink: 'CashCard' } },
   { path: '/Insert/TerminalLog', name: 'TerminalLogInsert', component: TerminalLogInsert, meta: { title: i18n.t('router.TerminalLogInsert'), baseLink: 'TerminalLog' } },
-  { path: '/Insert/TerminalPasswordLog', name: 'TerminalPasswordLogInsert', component: TerminalPasswordLogInsert, meta: { title: i18n.t('router.TerminalPasswordLogInsert'), baseLink: 'TerminalPasswordLog' } }
+  { path: '/Insert/TerminalPasswordLog', name: 'TerminalPasswordLogInsert', component: TerminalPasswordLogInsert, meta: { title: i18n.t('router.TerminalPasswordLogInsert'), baseLink: 'TerminalPasswordLog' } },
+  { path: '/Insert/RouteBalance', name: 'RouteBalanceInsert', component: RouteBalanceInsert, meta: { title: i18n.t('router.RouteBalanceInsert'), baseLink: 'RouteBalance' } },
+  { path: '/Insert/WarehouseMovement', name: 'WarehouseMovementInsert', component: WarehouseMovementInsert, meta: { title: i18n.t('router.WarehouseMovementInsert'), baseLink: 'WarehouseMovement' } },
+  { path: '/Insert/LoyaltyExpense', name: 'LoyaltyExpenseInsert', component: LoyaltyExpenseInsert, meta: { title: i18n.t('router.LoyaltyExpenseInsert'), baseLink: 'LoyaltyExpense' } },
+  { path: '/Insert/LoyaltyConsumption', name: 'LoyaltyConsumptionInsert', component: LoyaltyConsumptionInsert, meta: { title: i18n.t('router.LoyaltyConsumptionInsert'), baseLink: 'LoyaltyConsumption' } }
 ]
 
 const routes = [

@@ -116,7 +116,7 @@
     "StockTransfer": "StockTransfer",
     "WarehouseStockHistory": "WarehouseStockHistory",
     "WarehouseStock": "WarehouseStock",
-    "BranchStockTransfer": "BranchStockTransfer",
+    "BranchStockTransfer": "Stok Transferi",
     "Order": "Order",
     "FieldAnalysisResult": "Aktivite Noktası Analiz Sonuçları",
     "ItemAnalysisResult": "Ürün Analizleri Sonuçları",
@@ -178,7 +178,7 @@
     "StockTransferGet": "StockTransferGet",
     "WarehouseStockHistoryGet": "WarehouseStockHistoryGet",
     "WarehouseStockGet": "WarehouseStockGet",
-    "BranchStockTransferGet": "BranchStockTransferGet",
+    "BranchStockTransferGet": "Stok Transferi Görüntüle",
     "OrderGet": "OrderGet",
     "FieldAnalysisResultGet": "Aktivite Noktası Analiz Sonuçları Görüntüle",
     "ItemAnalysisResultGet": "Ürün Analizleri Sonuçları Görüntüle",
@@ -240,7 +240,7 @@
     "StockTransferUpdate": "StockTransferUpdate",
     "WarehouseStockHistoryUpdate": "WarehouseStockHistoryUpdate",
     "WarehouseStockUpdate": "WarehouseStockUpdate",
-    "BranchStockTransferUpdate": "BranchStockTransferUpdate",
+    "BranchStockTransferUpdate": "Stok Transferi Güncelle",
     "OrderUpdate": "OrderUpdate",
     "FieldAnalysisResultUpdate": "FieldAnalysisResultUpdate",
     "ItemAnalysisResultUpdate": "ItemAnalysisResultUpdate",
@@ -302,7 +302,7 @@
     "StockTransferInsert": "StockTransferInsert",
     "WarehouseStockHistoryInsert": "WarehouseStockHistoryInsert",
     "WarehouseStockInsert": "WarehouseStockInsert",
-    "BranchStockTransferInsert": "BranchStockTransferInsert",
+    "BranchStockTransferInsert": "Stok Transferi Oluştur",
     "OrderInsert": "OrderInsert",
     "FieldAnalysisResultInsert": "FieldAnalysisResultInsert",
     "ItemAnalysisResultInsert": "ItemAnalysisResultInsert",
@@ -961,6 +961,15 @@
       "LastSalesQuantity": "Son Satis",
       "LastdaySalesQuantity": "Son Is Günü Satisi",
       "SuggestedQuantity": "Önerilen Miktar"
+    },
+    "BranchStockTransfer": {
+      "Items": "Ürün",
+      "ItemCode": "Ürün Kodu",
+      "Unit": "Birim",
+      "PlanQuantity": "Miktar",
+      "Description1": "Açıklama",
+      "FromWhStockQuantity": "Çıkış Depo Stoğu",
+      "ToWhStockQuantity": "Giriş Depo Stoğu"
     }
   },
   "get": {

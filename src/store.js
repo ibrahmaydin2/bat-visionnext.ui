@@ -218,7 +218,9 @@ export const store = new Vuex.Store({
     warehouses: [],
     vanLoadingStatus: [],
     itemForVanLoading: [],
-    creatorPassword: null
+    creatorPassword: null,
+    branches: [],
+    stockStatus: []
   },
   actions: {
     // sistem gereksinimleri
