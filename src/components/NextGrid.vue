@@ -161,7 +161,7 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="item in items" :key="'item' + item.Code">
+        <b-tr v-for="(item, i) in items" :key="i">
           <b-td v-for="h in head" :key="h.dataField">
             <!-- eğer value gönderirlerse bu fonksiyonu çalıştırıcaz.
             <template v-if="h.value">
@@ -463,6 +463,7 @@ export default {
     },
     tableRows: function (e) {
       this.head = []
+      let lookups = ''
       const visibleRows = e.filter(item => item.visible === true)
       const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       this.head.push(opt)
@@ -475,7 +476,8 @@ export default {
           switch (control.inputType) {
             case 'DropDown':
               if (control.isLookupTable) {
-                this.$store.dispatch('getAllLookups', {...this.query, type: control.code})
+                lookups += control.code + ','
+                // this.$store.dispatch('getAllLookups', {...this.query, type: control.code})
               } else {
                 this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
               }
@@ -490,6 +492,11 @@ export default {
           }
         }
       })
+      if (lookups.length > 0) {
+        lookups = lookups.slice(0, -1)
+        this.$store.dispatch('getAllLookups', {...this.query, type: lookups})
+      }
+
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.

@@ -116,7 +116,7 @@
     "StockTransfer": "StockTransfer",
     "WarehouseStockHistory": "WarehouseStockHistory",
     "WarehouseStock": "WarehouseStock",
-    "BranchStockTransfer": "BranchStockTransfer",
+    "BranchStockTransfer": "Stok Transferi",
     "Order": "Order",
     "FieldAnalysisResult": "Aktivite Noktası Analiz Sonuçları",
     "ItemAnalysisResult": "Ürün Analizleri Sonuçları",
@@ -178,7 +178,7 @@
     "StockTransferGet": "StockTransferGet",
     "WarehouseStockHistoryGet": "WarehouseStockHistoryGet",
     "WarehouseStockGet": "WarehouseStockGet",
-    "BranchStockTransferGet": "BranchStockTransferGet",
+    "BranchStockTransferGet": "Stok Transferi Görüntüle",
     "OrderGet": "OrderGet",
     "FieldAnalysisResultGet": "Aktivite Noktası Analiz Sonuçları Görüntüle",
     "ItemAnalysisResultGet": "Ürün Analizleri Sonuçları Görüntüle",
@@ -240,7 +240,7 @@
     "StockTransferUpdate": "StockTransferUpdate",
     "WarehouseStockHistoryUpdate": "WarehouseStockHistoryUpdate",
     "WarehouseStockUpdate": "WarehouseStockUpdate",
-    "BranchStockTransferUpdate": "BranchStockTransferUpdate",
+    "BranchStockTransferUpdate": "Stok Transferi Güncelle",
     "OrderUpdate": "OrderUpdate",
     "FieldAnalysisResultUpdate": "FieldAnalysisResultUpdate",
     "ItemAnalysisResultUpdate": "ItemAnalysisResultUpdate",
@@ -302,18 +302,31 @@
     "StockTransferInsert": "StockTransferInsert",
     "WarehouseStockHistoryInsert": "WarehouseStockHistoryInsert",
     "WarehouseStockInsert": "WarehouseStockInsert",
-    "BranchStockTransferInsert": "BranchStockTransferInsert",
+    "BranchStockTransferInsert": "Stok Transferi Oluştur",
     "OrderInsert": "OrderInsert",
     "FieldAnalysisResultInsert": "FieldAnalysisResultInsert",
     "ItemAnalysisResultInsert": "ItemAnalysisResultInsert",
     "FieldSurveyResultInsert": "Saha Araştırması Sonucu Oluştur",
     "FieldSurveyInsert": "Saha Araştırması Oluştur",
     "FixedTermInsert": "Vade Tanımı Oluştur",
-    "Settings": "Sistem Ayarları"
+    "LoadingPlan": "Yükleme Planı",
+    "LoadingPlanInsert": "Yükleme Planı Oluştur",
+    "LoadingPlanUpdate": "Yükleme Planı Güncelle",
+    "LoadingPlanGet": "Yükleme Planı Görüntüle",
+    "VanLoading": "Yükleme",
+    "VanLoadingInsert": "Yükleme Oluştur",
+    "VanLoadingUpdate": "Yükleme Güncelle",
+    "VanLoadingGet": "Yükleme Görüntüle",
+    "Settings": "Sistem Ayarları",
+    "TerminalLog": "Terminal Günlüğü",
+    "TerminalPasswordLog": "Terminal Operasyon Şifresi",
+    "TerminalPasswordLogInsert": "Terminal Operasyon Şifresi Oluştur",
+    "TerminalLogGet": "Terminal Günlüğü Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
+    "edit": "Düzenle",
     "submit": "Onayla",
     "cancel": "Vazgeç",
     "approveRejectSuccess": "İşlem Başarılı",
@@ -347,12 +360,17 @@
     "city": "Şehir",
     "distirict": "İlçe",
     "town": "Mahalle",
+    "remove": "İptal",
+    "createPassword": "Şifre Oluştur",
+    "sameItemError": "Aynı üründen 2 defa ekleyemezsiniz.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
       "surveyBranchId": "Şube Kodu",
       "employeeType": "Personel Tipi",
       "surveyBranch": "Şube Kodu",
+      "nameBranch": "Şube Adı",
+      "nameEmployee": "Personel Adı",
       "questions": "Soru",
       "questionId": "Soru",
       "questionLineId": "Sıra Numarası",
@@ -366,7 +384,8 @@
       "description1": "Açiklama",
       "sortOrder": "Görünüm Sirasi",
       "approveStateId": "Onay Durumu",
-      "isNecessary": "Zorunlu"
+      "isNecessary": "Zorunlu",
+      "minMaxSort": "0-99 arasında değer girebilirsiniz."
     },
     "fieldSurveyValidDates": {
       "description1": "Soru",
@@ -512,7 +531,8 @@
       "category1": "Personel Kategorisi 1",
       "scoreCardClasses": "Score Card Sınıfı",
       "group": "Grup",
-      "personalType": "Personel Tipi"
+      "personalType": "Personel Tipi",
+      "Team": "Takım"
     },
     "customer": {
       "Model_StatusReasonId": "Durum Nedeni",
@@ -908,7 +928,50 @@
       "StatusReason": "Statü",
       "customer": "Müşteri",
       "startDate": "Başlangıç Tarihi",
-      "endDate": "Bitiş Tarihi"
+      "endDate": "Bitiş Tarihi",
+      "BenefitTypeId": "Kazanim Tipi*",
+      "BudgetMasterId": "Bütçe",
+      "currency": "Para Birimi*",
+      "BenefitBudget": "Toplam Bütçe",
+      "TciBreak1Id": "TCI",
+      "plannedServiceDate": "Planlanan Servis Tarihi*",
+      "assetId": "Varlık*",
+      "validRequiredDates": "Lütfen Tarih Alanlarını Doldurun",
+      "GroupId": "Grup",
+      "TypeId": "Kontrat Tipi",
+      "ClassId": "Sınıf",
+      "CustomerId": "Müşteri",
+      "BrandId": "Yatırım Markası",
+      "StatusId": "Durum",
+      "GenExp": "Açıklama",
+      "FinanceCode": "ERP Kodu",
+      "ApproveStateId": "Onay Durumu",
+      "CustomerFinanceCode": "Müşteri ERP Kodu"
+    },
+    "loadingplan": {
+      "items": "Ürün",
+      "PlanQuantity": "Yükleme Miktarı"
+    },
+    "vanLoading": {
+      "items": "Ürün",
+      "itemCode": "Ürün Kodu",
+      "unit": "Birim",
+      "FromWhStockQuantity": "Stok Miktari",
+      "ToWhStockQuantity": "Mevcut",
+      "AverageSalesQuantity": "Ortalama Satis",
+      "LastSalesQuantity": "Son Satis",
+      "LastdaySalesQuantity": "Son Is Günü Satisi",
+      "SuggestedQuantity": "Önerilen Miktar"
+    },
+    "BranchStockTransfer": {
+      "Items": "Ürün",
+      "ItemCode": "Ürün Kodu",
+      "Unit": "Birim",
+      "PlanQuantity": "Miktar",
+      "Description1": "Açıklama",
+      "FromWhStockQuantity": "Çıkış Depo Stoğu",
+      "ToWhStockQuantity": "Giriş Depo Stoğu",
+      "errorPlanQuantity": "Girilen değer çıkış depo stoğundan fazla olamaz."
     }
   },
   "get": {
@@ -958,6 +1021,29 @@
         "questionLabel": "Soru",
         "answer": "Cevap"
       }
+    },
+    "vanLoading": {
+      "fromWarehouseId": "Yükleme Deposu",
+      "loadingDate": "Yükleme Tarihi",
+      "routeId": "Rota",
+      "isDone": "Yükleme Durumu"
+    },
+    "terminal": {
+      "Branch": "Şube",
+      "OperationType": "İşlem Tipi",
+      "Representative": "Personel",
+      "OperationState": "Operasyon Durumu",
+      "TransferMethod": "Transfer Metodu",
+      "OperationDate": "Operasyon Tarihi",
+      "OperationTime": "Operasyon Saati",
+      "TerminalVersion": "Terminal Versiyonu",
+      "TransferAppVersion": "Transfer Uygulama Versiyonu",
+      "UserDate": "Kullanıcı Tarihi",
+      "TransferFileName": "Dosya Adı",
+      "ErrorMessage": "Hata Mesajı",
+      "Employee":"Personel",
+      "Keyword": "Anahtar",
+      "Password": "Şifre"
     }
   },
   "general": {
@@ -1017,6 +1103,8 @@
     "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
   },
   "list": {
+    "filterTitle": "Filtre İsmi",
+    "save": "Kaydet",
     "back": "Geri Dön",
     "allFilters": "Tüm Filtreler",
     "allRecords": "Tüm Kayıtlar",
@@ -1045,8 +1133,6 @@
     "create": "Oluştur",
     "chartTitle": "Test Statülerine Göre Dağılım",
     "title": "Gen Panelleri & Tek Gen Kitleri",
-    "primaryTestDesc": "Birincil test talebi oluşturmak için elinizde bulunan kan taşıma kiti üzerindeki referans numarasını giriniz.",
-    "secondTestDesc": "İkincil test talebi oluşturmak için hasta adı ve soyadı veya referans numarası giriniz.",
     "secondTestSelect": "İkincil test talebi oluşturmak istediğiniz hastayı seçiniz."
   },
   "sidebar": {

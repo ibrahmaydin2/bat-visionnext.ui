@@ -1099,16 +1099,16 @@ export default {
       // this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
       this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
 
-      this.$store.dispatch('getCustomerCardType')
-      this.$store.dispatch('getCustomerCancelReasons')
-      this.$store.dispatch('getBanks')
-      this.$store.dispatch('getCurrency')
       this.$store.dispatch('getItems')
-      this.$store.dispatch('getPaymentPeriods')
       this.$store.dispatch('getStatementDays')
-      this.$store.dispatch('getPaymentTypes')
-      this.$store.dispatch('getCustomerLabels')
-      this.$store.dispatch('getCustomerLabelValues')
+
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currency'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm/Search', name: 'paymentPeriods'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/Label/Search', name: 'customerLabels'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getData', {...this.query, api: `VisionNextCustomer/api/Customer`, record: this.$route.params.url})
     },
     selectedType (label, model) {

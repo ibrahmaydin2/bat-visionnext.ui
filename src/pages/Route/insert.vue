@@ -297,9 +297,9 @@ export default {
   },
   methods: {
     getDatas () {
-      this.$store.dispatch('getEmployeesByBranchId')
-      this.$store.dispatch('getVehiclesByBranchId')
-      this.$store.dispatch('getRouteTypesByBranchId')
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
     },
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextRoute/api/Route/GetCode'})
@@ -422,7 +422,14 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.selectedCustomerArr = e
-        this.$store.dispatch('getCustomerLocationByCustomerIds', {...this.query, customerIds: [e.RecordId]})
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextCustomer/api/CustomerLocation/Search',
+          name: 'customerLocationsList',
+          andConditionModel: {
+            customerIds: [e.RecordId]
+          }
+        })
       } else {
         this.selectedCustomerArr = []
         this.selectedLocationArr = []

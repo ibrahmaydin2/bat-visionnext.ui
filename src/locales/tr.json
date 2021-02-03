@@ -362,6 +362,7 @@
     "town": "Mahalle",
     "remove": "İptal",
     "createPassword": "Şifre Oluştur",
+    "sameItemError": "Aynı üründen 2 defa ekleyemezsiniz.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -969,7 +970,20 @@
       "PlanQuantity": "Miktar",
       "Description1": "Açıklama",
       "FromWhStockQuantity": "Çıkış Depo Stoğu",
-      "ToWhStockQuantity": "Giriş Depo Stoğu"
+      "ToWhStockQuantity": "Giriş Depo Stoğu",
+      "errorPlanQuantity": "Girilen değer çıkış depo stoğundan fazla olamaz.",
+      "MovementNumber": "Stok Fiş No",
+      "RepresentativeId": "Personel",
+      "DocumentDate": "Bel. Tarihi",
+      "FromBranchId": "Çıkış Şube",
+      "ToBranchId": "Giriş Şube",
+      "MovementTime": "Bel. Saati",
+      "FromWarehouseId": "Çıkış Depo",
+      "ToWarehouseId": "Giriş Depo",
+      "GenExp1": "Açıklama",
+      "FromStatusId": "Çıkış Statü",
+      "ToStatusId": "Giriş Statü",
+      "Canceled": "İptal Edildi"
     }
   },
   "get": {
@@ -1131,8 +1145,6 @@
     "create": "Oluştur",
     "chartTitle": "Test Statülerine Göre Dağılım",
     "title": "Gen Panelleri & Tek Gen Kitleri",
-    "primaryTestDesc": "Birincil test talebi oluşturmak için elinizde bulunan kan taşıma kiti üzerindeki referans numarasını giriniz.",
-    "secondTestDesc": "İkincil test talebi oluşturmak için hasta adı ve soyadı veya referans numarası giriniz.",
     "secondTestSelect": "İkincil test talebi oluşturmak istediğiniz hastayı seçiniz."
   },
   "sidebar": {

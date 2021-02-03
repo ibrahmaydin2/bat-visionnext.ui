@@ -137,11 +137,14 @@ export default {
       this.$store.dispatch('getVanLoadingStatus')
       this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
 
-      // Farklı yerlerde farklı parametreler aldığı için buradan parametre gönderiliyor
-      const routes = {
-        routeTypeIds: [1, 6]
-      }
-      this.$store.dispatch('getRoutes', {...this.query, params: routes})
+      this.$store.dispatch('getSearchItems', {...this.query,
+        api: 'VisionNextRoute/api/Route/Search',
+        name: 'routes',
+        andConditionModel: {
+          'RouteTypeIds': [1],
+          'StatusIds': [1]
+        }
+      })
     },
     selectedSearchType (label, model) {
       if (model) {
@@ -152,11 +155,21 @@ export default {
     },
     onItemSearch (search, loading) {
       if (search.length >= 3) {
+        loading(true)
         this.searchItem(loading, search, this)
       }
     },
     searchItem (loading, search, vm) {
-      this.$store.dispatch('acItems', {...this.query, searchField: 'Description1', searchText: search})
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     },
     selectedItem (e) {
       if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {

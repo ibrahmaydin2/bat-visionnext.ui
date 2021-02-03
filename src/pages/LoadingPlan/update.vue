@@ -131,11 +131,14 @@ export default {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
       this.$store.dispatch('getItems')
 
-      // Farklı yerlerde farklı parametreler aldığı için buradan parametre gönderiliyor
-      const routes = {
-        routeTypeIds: [1]
-      }
-      this.$store.dispatch('getRoutes', {...this.query, params: routes})
+      this.$store.dispatch('getSearchItems', {...this.query,
+        api: 'VisionNextRoute/api/Route/Search',
+        name: 'routes',
+        andConditionModel: {
+          'RouteTypeIds': [1],
+          'StatusIds': [1]
+        }
+      })
       this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
     },
     selectedItem (e) {

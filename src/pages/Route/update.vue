@@ -313,9 +313,9 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
     },
     getDatas () {
-      this.$store.dispatch('getEmployeesByBranchId')
-      this.$store.dispatch('getVehiclesByBranchId')
-      this.$store.dispatch('getRouteTypesByBranchId')
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
     },
     getLookups () {
       // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
@@ -413,7 +413,14 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.selectedCustomerArr = e
-        this.$store.dispatch('getCustomerLocationByCustomerIds', {...this.query, customerIds: [e.RecordId]})
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextCustomer/api/CustomerLocation/Search',
+          name: 'customerLocationsList',
+          andConditionModel: {
+            customerIds: [e.RecordId]
+          }
+        })
       } else {
         this.selectedCustomerArr = []
         this.selectedLocationArr = []

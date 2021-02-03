@@ -284,7 +284,7 @@ export default {
   mounted () {
     this.$store.commit('bigLoaded', false)
     this.getData()
-    this.$store.dispatch('getEmployeesByBranchId')
+    this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
     this.getLookups()
   },
   methods: {

@@ -9,20 +9,6 @@
           <header>
             <Breadcrumb :title="rowData.Description1" />
             <GetFormField />
-            <!-- <div>
-              <router-link :to="{name: `${$route.meta.baseLink}Insert`}">
-                <b-button class="border-0" size="sm" variant="success"><b-icon scale="1.25" shift-v="1.25" aria-hidden="true" icon="plus"></b-icon></b-button>
-              </router-link>
-              <router-link :to="{name: `${$route.meta.baseLink}Update`, params: {url: this.$route.params.url}}">
-                <b-button class="border-0" size="sm" variant="warning"><b-icon scale="0.75" shift-v="0.75" aria-hidden="true" icon="pencil-fill"></b-icon></b-button>
-              </router-link>
-              <router-link :to="{name: `${$route.meta.baseLink}Insert`}">
-                <b-button size="sm" variant="outline-success"><b-icon scale="1.25" shift-v="1.25" aria-hidden="true" icon="plus"></b-icon></b-button>
-              </router-link>
-              <router-link :to="{name: `${$route.meta.baseLink}Update`, params: {url: this.$route.params.url}}">
-                <b-button size="sm" variant="outline-warning"><b-icon scale="0.75" shift-v="0.75" aria-hidden="true" icon="pencil-fill"></b-icon></b-button>
-              </router-link>
-            </div> -->
           </header>
         </b-col>
       </b-row>

@@ -60,12 +60,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_UserGroupId')">
-                <v-select v-model="group" :options="employeeGroups" @input="selectedGroup" label="Label"></v-select>
+                <v-select v-model="group" :options="lookup.EMPLOYEE_GROUP" @input="selectedGroup" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.category1')">
-                <v-select v-model="category" :options="category1" @input="selectedCategory1" label="Label"></v-select>
+                <v-select v-model="category" :options="lookup.EMPLOYEE_CATEGORY_1" @input="selectedCategory1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -97,7 +97,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.scoreCardClasses')">
-                <v-select v-model="scoreCard" :options="scoreCards" @input="selectedScoreCard" label="Label"></v-select>
+                <v-select v-model="scoreCard" :options="lookup.SCORE_CARD_CLASS" @input="selectedScoreCard" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -120,7 +120,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.personalType')">
-                <v-select v-model="type" :options="employeeTypes" @input="selectedType" label="Label"></v-select>
+                <v-select v-model="type" :options="lookup.EMPLOYEE_TYPE" @input="selectedType" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -182,7 +182,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_EducationId')">
-                <v-select v-model="education" :options="educationStatus" @input="selectedEducation" label="Label"></v-select>
+                <v-select v-model="education" :options="lookup.EDUCATION" @input="selectedEducation" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -195,7 +195,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.employee.Model_BloodType')">
-                <v-select v-model="bloodType" :options="bloodTypes" @input="selectedBloodType" label="title"></v-select>
+                <v-select v-model="bloodType" :options="lookup.BLOOD_TYPE" @input="selectedBloodType" label="title"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -420,7 +420,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['rowData', 'employeeTypes', 'priceList', 'educationStatus', 'bloodTypes', 'employeeGroups', 'category1', 'scoreCards', 'branch', 'employees'])
+    ...mapState(['rowData', 'priceList', 'branch', 'employees'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
@@ -436,14 +436,9 @@ export default {
       this.$store.dispatch('getBranchData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
     },
     getLookup () {
-      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_TYPE', name: 'employeeTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'EDUCATION', name: 'educationStatus'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_GROUP', name: 'employeeGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'BLOOD_TYPE', name: 'bloodTypes'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'EMPLOYEE_CATEGORY_1', name: 'category1'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'SCORE_CARD_CLASS', name: 'scoreCards'})
-      this.$store.dispatch('getEmployeesByBranchId')
+      let lookups = 'EMPLOYEE_TYPE,EDUCATION,EMPLOYEE_GROUP,BLOOD_TYPE,EMPLOYEE_CATEGORY_1,SCORE_CARD_CLASS'
+      this.$store.dispatch('getAllLookups', {...this.query, type: lookups})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
     },
     save () {
       this.$v.$touch()
