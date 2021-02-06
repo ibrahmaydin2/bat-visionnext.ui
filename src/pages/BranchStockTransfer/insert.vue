@@ -45,8 +45,8 @@
           </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
+              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
+                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -64,7 +64,7 @@
             </b-col>
             <b-col v-if="insertVisible.FromWarehouseId != null ? insertVisible.FromWarehouseId : developmentMode" cols="12" md="4">
               <b-form-group :label="insertTitle.FromWarehouseId + (insertRequired.FromWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromWarehouseId.$error }">
-                <v-select :options="warehouseList" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1"></v-select>
+                <v-select v-model="fromWarehouse" :options="warehouseList" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FromStatusId != null ? insertVisible.FromStatusId : developmentMode" cols="12" md="4">
@@ -79,7 +79,7 @@
             </b-col>
             <b-col v-if="insertVisible.ToWarehouseId != null ? insertVisible.ToWarehouseId : developmentMode" cols="12" md="4">
               <b-form-group :label="insertTitle.ToWarehouseId + (insertRequired.ToWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToWarehouseId.$error }">
-                <v-select :options="warehouseListTo" @input="selectedSearchType('ToWarehouseId', $event)" label="Description1"></v-select>
+                <v-select v-model="toWarehouse" :options="warehouseListTo" @input="selectedSearchType('ToWarehouseId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ToStatusId != null ? insertVisible.ToStatusId : developmentMode" cols="12" md="4">
@@ -112,7 +112,7 @@
             </b-col>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.BranchStockTransfer.PlanQuantity')">
-                <b-form-input type="number" min="0" :max="maxPlanQuantity" v-model="BranchStockTransferItems.PlanQuantity" />
+                <b-form-input type="number" min="0" :max="maxPlanQuantity" v-model="BranchStockTransferItems.Quantity" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" class="ml-auto">
@@ -160,7 +160,7 @@ export default {
       form: {
         MovementNumber: null,
         GenExp1: null,
-        StatusId: null,
+        StatusId: 1,
         FromBranchId: null,
         FromWarehouseId: null,
         FromStatusId: null,
@@ -177,7 +177,7 @@ export default {
         Deleted: 0,
         System: 0,
         RecordState: 2,
-        StatusId: null,
+        StatusId: 1,
         Code: null,
         Description1: null,
         ItemId: null,
@@ -194,18 +194,16 @@ export default {
         PlanQuantity: null
       },
       routeName: this.$route.meta.baseLink,
-      dataStatus: null,
+      dataStatus: true,
       tmpSelectedItem: [],
-      detailPanelRecordId: 0,
       maxPlanQuantity: null,
-      item: null
+      item: null,
+      fromWarehouse: null,
+      toWarehouse: null
     }
   },
   computed: {
-    ...mapState(['items', 'employees', 'stockStatus', 'BranchId', 'warehouseList', 'warehouseListTo', 'branches', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'fromWarehouseStocks', 'toWarehouseStocks']),
-    planQuantity () {
-      return this.BranchStockTransferItems.PlanQuantity
-    }
+    ...mapState(['items', 'employees', 'stockStatus', 'BranchId', 'warehouseList', 'warehouseListTo', 'branches', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'fromWarehouseStocks', 'toWarehouseStocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -242,7 +240,7 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         if (label !== 'RepresentativeId' && this.form.BranchStockTransferItems.length > 0) {
-          if (confirm('Değişiklik yapmanın tüm yaptığınız değişiklikleri etkiler. Emin misiniz?')) {
+          if (confirm(this.$t('insert.BranchStockTransfer.changeQuestion'))) {
             this.form.BranchStockTransferItems = []
             this.BranchStockTransferItems = []
           } else {
@@ -258,6 +256,14 @@ export default {
         }
       } else {
         this.form[label] = null
+      }
+      if (label === 'FromBranchId') {
+        this.form['FromWarehouseId'] = null
+        this.fromWarehouse = null
+      }
+      if (label === 'ToBranchId') {
+        this.form['ToWarehouseId'] = null
+        this.toWarehouse = null
       }
     },
     selectedItem (e) {
@@ -297,7 +303,7 @@ export default {
       }
     },
     addItems () {
-      if (this.tmpSelectedItem.length < 1 || !this.BranchStockTransferItems.PlanQuantity) {
+      if (this.tmpSelectedItem.length < 1 || !this.BranchStockTransferItems.Quantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         return false
       }
@@ -306,9 +312,9 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.BranchStockTransferItems.PlanQuantity > this.maxPlanQuantity) {
+      if (this.BranchStockTransferItems.Quantity > this.maxPlanQuantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.BranchStockTransferItems.PlanQuantity = this.maxPlanQuantity
+        this.BranchStockTransferItems.Quantity = this.maxPlanQuantity
         return false
       }
       this.form.BranchStockTransferItems.push({
@@ -326,10 +332,10 @@ export default {
         Description1: this.tmpSelectedItem.Description1,
         LineNumber: 0,
         FromWhStockQuantity: this.BranchStockTransferItems.FromWhStockQuantity,
-        // FromWhUnitId: this.tmpSelectedItem.FromWhUnitId,
+        // FromWhUnitId: this.tmpSelectedItem.UnitId,
         ToWhStockQuantity: this.BranchStockTransferItems.ToWhStockQuantity,
-        // ToWhUnitId: this.tmpSelectedItem.ToWhUnitId,
-        Quantity: this.BranchStockTransferItems.PlanQuantity
+        // ToWhUnitId: this.tmpSelectedItem.UnitId,
+        Quantity: this.BranchStockTransferItems.Quantity
       })
     },
     removeItems (item) {
@@ -345,6 +351,7 @@ export default {
     },
     save () {
       this.$v.$touch()
+      console.log(this.form.StatusId)
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
@@ -377,15 +384,9 @@ export default {
         this.form.MovementNumber = e
       }
     },
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'MovementNumber') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     // Status'un değerini true'dan 1'e çeviriyor
     dataStatus: function (e) {
+      console.log(e)
       if (e === true) {
         this.form.StatusId = 1
       } else {
@@ -398,21 +399,14 @@ export default {
         this.BranchStockTransferItems.FromWhStockQuantity = e[0].Quantity
       } else {
         this.maxPlanQuantity = 0
-        this.BranchStockTransferItems.FromWhStockQuantity = null
+        this.BranchStockTransferItems.FromWhStockQuantity = 0
       }
     },
     toWarehouseStocks (e) {
       if (e.length > 0) {
         this.BranchStockTransferItems.ToWhStockQuantity = e[0].Quantity
       } else {
-        this.BranchStockTransferItems.ToWhStockQuantity = null
-      }
-    },
-    planQuantity (e) {
-      if (e) {
-        if (e > this.maxPlanQuantity) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        }
+        this.BranchStockTransferItems.ToWhStockQuantity = 0
       }
     }
   }

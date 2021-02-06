@@ -74,7 +74,6 @@ import KeyAccountUpdate from '@/pages/KeyAccount/update' // güncelleme
 import BranchStockTransferIndex from '@/pages/BranchStockTransfer/'
 import BranchStockTransferGet from '@/pages/BranchStockTransfer/get'
 import BranchStockTransferInsert from '@/pages/BranchStockTransfer/insert'
-import BranchStockTransferUpdate from '@/pages/BranchStockTransfer/update'
 
 import OrderIndex from '@/pages/Order/'
 import OrderGet from '@/pages/Order/get'
@@ -434,7 +433,6 @@ import RouteBalanceUpdate from '@/pages/RouteBalance/update'
 import WarehouseMovementIndex from '@/pages/WarehouseMovement/'
 import WarehouseMovementGet from '@/pages/WarehouseMovement/get'
 import WarehouseMovementInsert from '@/pages/WarehouseMovement/insert'
-import WarehouseMovementUpdate from '@/pages/WarehouseMovement/update'
 
 import LoyaltyExpenseIndex from '@/pages/LoyaltyExpense/'
 import LoyaltyExpenseGet from '@/pages/LoyaltyExpense/get'
@@ -692,7 +690,6 @@ const listUpdate = [
   { path: '/Update/StockTransfer/:url', name: 'StockTransferUpdate', component: StockTransferUpdate, meta: { title: i18n.t('router.StockTransferUpdate'), baseLink: 'StockTransfer' } },
   { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
   { path: '/Update/WarehouseStock/:url', name: 'WarehouseStockUpdate', component: WarehouseStockUpdate, meta: { title: i18n.t('router.WarehouseStockUpdate'), baseLink: 'WarehouseStock' } },
-  { path: '/Update/BranchStockTransfer/:url', name: 'BranchStockTransferUpdate', component: BranchStockTransferUpdate, meta: { title: i18n.t('router.BranchStockTransferUpdate'), baseLink: 'BranchStockTransfer' } },
   { path: '/Update/Order/:url', name: 'OrderUpdate', component: OrderUpdate, meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'OrderUpdate' } },
   { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldAnalysisResult/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResult' } },
@@ -707,7 +704,6 @@ const listUpdate = [
   { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } },
   { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } },
   { path: '/Update/RouteBalance/:url', name: 'RouteBalanceUpdate', component: RouteBalanceUpdate, meta: { title: i18n.t('router.RouteBalanceUpdate'), baseLink: 'RouteBalance' } },
-  { path: '/Update/WarehouseMovement/:url', name: 'WarehouseMovementUpdate', component: WarehouseMovementUpdate, meta: { title: i18n.t('router.WarehouseMovementUpdate'), baseLink: 'WarehouseMovement' } },
   { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
   { path: '/Update/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionUpdate', component: LoyaltyConsumptionUpdate, meta: { title: i18n.t('router.LoyaltyConsumptionUpdate'), baseLink: 'LoyaltyConsumption' } }
 ]
