@@ -82,7 +82,7 @@ export default {
       & p
         font-style: normal
         padding-bottom: 10px
-        border-bottom: 1px solid #e2dfdf
+        border-bottom: 1px solid #f79055
         margin-left: 15px
     .tabs
       .nav-tabs

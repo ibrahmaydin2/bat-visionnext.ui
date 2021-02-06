@@ -3,52 +3,67 @@
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
-    <div v-if="rowData" class="asc__showPage-container">
+    <div class="asc__showPage-container">
       <b-row>
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
+            <GetFormField />
           </header>
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{ rowData.Code }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.contract.Description1')}}:</b> {{ rowData.Description1 }}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.BranchStockTransfer.MovementNumber')}}:</b> {{rowData.MovementNumber}}</span>
+            <span><i class="fas fa-user" />  <b>{{$t('insert.BranchStockTransfer.RepresentativeId')}}:</b> {{rowData.Representative && rowData.Representative.Label }}</span>
+            <span><i class="fas fa-taxi" />  <b>{{$t('insert.WarehouseMovement.MovementTypeId')}}:</b> {{rowData.MovementType && rowData.MovementType.Label }}</span>
+            <span><i class="fas fa-calendar-alt" />  <b>{{$t('insert.BranchStockTransfer.DocumentDate')}}:</b> {{dateConvertFromTimezone(rowData.MovementDate)}}</span>
+            <span><i class="fas fa-align-left" />  <b>{{$t('insert.WarehouseMovement.Description1')}}:</b> {{rowData.Description1}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
-          <b-row>
-            <!-- <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('get.detail')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.loadingplan.PlanQuantity')}}</span> <p>{{rowData.PlanQuantity}}</p>
-              </b-card>
-            </b-col> -->
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.loadingplan.items')}}</h6>
-                <b-table-simple responsive hover small>
-                  <b-thead head-variant="light">
-                    <b-tr>
-                      <b-th>{{$t('insert.loadingplan.items')}}</b-th>
-                      <b-th>{{$t('insert.loadingplan.PlanQuantity')}}</b-th>
-                    </b-tr>
-                  </b-thead>
-                  <b-tbody>
-                    <tr v-for="(result, i) in rowData.LoadingPlanItems" :key="i">
-                      <b-td>{{ result.Item ? result.Item.Label : '' }}</b-td>
-                      <b-td>{{ result.PlanQuantity }}</b-td>
-                    </tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
+        <b-tab :title="$t('insert.customer.Customer')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.FromWarehouseId')}}</span><p>{{rowData.FromWarehouse && rowData.FromWarehouse.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.WarehouseMovement.RouteId')}}</span><p>{{rowData.Route && rowData.Route.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.FromStatusId')}}</span><p>{{rowData.FromStatus && rowData.FromStatus.Label }}</p>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToWarehouseId')}}</span><p>{{rowData.ToWarehouse && rowData.ToWarehouse.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.WarehouseMovement.VehicleId')}}</span><p>{{rowData.Vehicle && rowData.Vehicle.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToStatusId')}}</span><p>{{rowData.ToStatus && rowData.ToStatus.Label }}</p>
+            </b-card>
+            <b-card class="col-12 asc__showPage-card">
+              <!-- <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
+                <template #cell(Item)="data">
+                  {{data.value.Label}}
+                </template>
+              </b-table> -->
+              <b-table-simple responsive hover small>
+                <b-thead>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.Items')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.FromWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ToWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.PlanQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(r, i) in rowData.WarehouseMovementItems" :key="i">
+                    <b-td>{{r.Item && r.Item.Code}}</b-td>
+                    <b-td>{{r.Item && r.Item.Label}}</b-td>
+                    <b-td>{{r.FromWhStockQuantity}}</b-td>
+                    <b-td>{{r.ToWhStockQuantity}}</b-td>
+                    <b-td>{{r.Quantity}}</b-td>
+                    <b-td><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-card>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -59,10 +74,17 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
-  props: ['dataKey'],
   mixins: [mixin],
+  props: ['dataKey'],
   data () {
     return {
+      fields: [
+        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
+        {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
+        {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
+        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
+        {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
+      ]
     }
   },
   mounted () {
@@ -77,7 +99,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/WarehouseMovement', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextWarehouse/api/${this.$route.meta.baseLink}`, record: this.$route.params.url})
     }
   }
 }

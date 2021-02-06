@@ -36,8 +36,31 @@
               <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToStatusId')}}</span><p>{{rowData.ToStatus && rowData.ToStatus.Label }}</p>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
-              <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
-              </b-table>
+              <!-- <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
+                <template #cell(Item)="data">
+                  {{data.value.Label}}
+                </template>
+              </b-table> -->
+              <b-table-simple responsive hover small>
+                <b-thead>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.Items')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.FromWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ToWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.Unit')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.PlanQuantity')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(r, i) in rowData.BranchStockTransferItems" :key="i">
+                    <b-td>{{r.Item && r.Item.Code}}</b-td>
+                    <b-td>{{r.Item && r.Item.Label}}</b-td>
+                    <b-td>{{r.FromWhStockQuantity}}</b-td>
+                    <b-td>{{r.ToWhStockQuantity}}</b-td>
+                    <b-td>{{r.Item && r.Unit.Label}}</b-td>
+                    <b-td>{{r.Quantity}}</b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
             </b-card>
           </b-row>
         </b-tab>
@@ -54,7 +77,7 @@ export default {
   data () {
     return {
       fields: [
-        {key: 'Code', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
+        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
         {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
         {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
         {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
