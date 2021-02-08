@@ -621,7 +621,7 @@ const listGet = [
   { path: '/RouteBalance/:url', name: 'RouteBalanceGet', component: RouteBalanceGet, meta: { title: i18n.t('router.RouteBalanceGet'), baseLink: 'RouteBalance' } },
   { path: '/WarehouseMovement/:url', name: 'WarehouseMovementGet', component: WarehouseMovementGet, meta: { title: i18n.t('router.WarehouseMovementGet'), baseLink: 'WarehouseMovement' } },
   { path: '/LoyaltyExpense/:url', name: 'LoyaltyExpenseGet', component: LoyaltyExpenseGet, meta: { title: i18n.t('router.LoyaltyExpenseGet'), baseLink: 'LoyaltyExpense' } },
-  { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumption', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } }
+  { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionGet', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } }
 ]
 
 const listUpdate = [

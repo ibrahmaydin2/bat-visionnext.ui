@@ -3,52 +3,34 @@
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
-    <div v-if="rowData" class="asc__showPage-container">
+    <div class="asc__showPage-container">
       <b-row>
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
+            <GetFormField />
           </header>
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="12">
           <section>
+            <span><i class="fas fa-code" />  <b>{{$t('get.LoyaltyConsumption.Code')}}:</b> {{rowData.Code}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{ rowData.Code }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.contract.Description1')}}:</b> {{ rowData.Description1 }}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
-          <b-row>
-            <!-- <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('get.detail')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.loadingplan.PlanQuantity')}}</span> <p>{{rowData.PlanQuantity}}</p>
-              </b-card>
-            </b-col> -->
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.loadingplan.items')}}</h6>
-                <b-table-simple responsive hover small>
-                  <b-thead head-variant="light">
-                    <b-tr>
-                      <b-th>{{$t('insert.loadingplan.items')}}</b-th>
-                      <b-th>{{$t('insert.loadingplan.PlanQuantity')}}</b-th>
-                    </b-tr>
-                  </b-thead>
-                  <b-tbody>
-                    <tr v-for="(result, i) in rowData.LoadingPlanItems" :key="i">
-                      <b-td>{{ result.Item ? result.Item.Label : '' }}</b-td>
-                      <b-td>{{ result.PlanQuantity }}</b-td>
-                    </tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
+        <b-tab :title="$t('insert.customer.Customer')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.RepresentativeId')}}</span><p>{{rowData.Representative && rowData.Representative.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.CustomerId')}}</span><p>{{rowData.Customer && rowData.Customer.Label }}</p>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.TransactionDate')}}</span><p>{{dateConvertFromTimezone(rowData.TransactionDate)}}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.Description')}}</span><p>{{rowData.Description1}}</p>
+            </b-card>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -59,10 +41,11 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
-  props: ['dataKey'],
   mixins: [mixin],
+  props: ['dataKey'],
   data () {
     return {
+      fields: []
     }
   },
   mounted () {
@@ -77,7 +60,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextStockManagement/api/LoadingPlan', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextLoyalty/api/${this.$route.meta.baseLink}`, record: this.$route.params.url})
     }
   }
 }

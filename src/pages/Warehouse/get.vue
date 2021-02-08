@@ -15,8 +15,8 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.Warehouse.StatusId')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('get.Warehouse.Code')}}:</b> {{rowData.Code}}</span>
           </section>
         </b-col>
       </b-row>
@@ -26,17 +26,23 @@
             <b-col cols="12" md="4">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
                 <div v-if="rowData.WarehouseTypeId === 76506193">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
+                  <span><i class="far fa-circle" /> {{$t('get.Warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
                 </div>
                 <div v-if="rowData.WarehouseTypeId === 76506191">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
-                </div>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
+                  <span><i class="far fa-circle" /> {{$t('get.Warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
+                </div>-->
+                <!-- <span><i class="far fa-circle" /> {{$t('get.Warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p> -->
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.IsVehicle')}}</span><p><i :class="rowData.IsVehicle === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.VehicleId')}}</span><p>{{rowData.Vehicle && rowData.Vehicle.Label }}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('get.Warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p> -->
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode2')}}</span> <p>{{rowData.FinanceCode2}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.IsVirtualWarehouse')}}</span> <p><i :class="rowData.IsVirtualWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.NonSapWarehouse')}}</span> <p><i :class="rowData.NonSapWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode2')}}</span> <p>{{rowData.FinanceCode2}}</p>
               </b-card>
             </b-col>
             <b-col cols="12" md="8">

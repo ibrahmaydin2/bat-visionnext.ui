@@ -90,10 +90,10 @@ export default {
         ConsumptionScore: null,
         TransactionDate: null,
         RepresentativeId: null,
-        StatusId: null
+        StatusId: 1
       },
       routeName: this.$route.meta.baseLink,
-      dataStatus: null
+      dataStatus: true
     }
   },
   computed: {

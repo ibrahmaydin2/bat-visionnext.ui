@@ -293,7 +293,7 @@
     "GeneralLedgerMatchingInsert": "GeneralLedgerMatchingInsert",
     "BankAccountingMatchingInsert": "BankAccountingMatchingInsert",
     "StocksInsert": "StocksInsert",
-    "StockAdjustmentInsert": "StockAdjustmentInsert",
+    "StockAdjustmentInsert": "Stok Düzenleme Oluştur",
     "InventoryTransactionViewInsert": "InventoryTransactionViewInsert",
     "StockTransferInsert": "StockTransferInsert",
     "WarehouseStockHistoryInsert": "WarehouseStockHistoryInsert",
@@ -320,7 +320,15 @@
     "TerminalLogGet": "Terminal Günlüğü Görüntüle",
     "WarehouseMovement": "Stok Hareketleri",
     "WarehouseMovementInsert": "Stok Hareketleri Oluştur",
-    "WarehouseMovementGet": "Stok Hareketleri Görüntüle"
+    "WarehouseMovementGet": "Stok Hareketleri Görüntüle",
+    "LoyaltyExpense": "Sadakat Puan Harcama",
+    "LoyaltyExpenseInsert": "Sadakat Puan Harcama Oluştur",
+    "LoyaltyExpenseGet": "Sadakat Puan Harcama Görüntüle",
+    "LoyaltyConsumption": "Müşteri Güncel Puanları",
+    "LoyaltyConsumptionGet": "Müşteri Güncel Puanları Görüntüle",
+    "PotentialCustomer": "Potansiyel Müşteri",
+    "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle"
+    
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -1109,8 +1117,33 @@
       "ConsumptionScore": "Kazanılan Puan",
       "TransactionDate": "İşlem Tarihi",
       "RepresentativeId": "Personel"
+    },
+    "LoyaltyConsumption": {
+      "title": "Müşteri Güncel Puanları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "CustomerId": "Müşteri",
+      "LoyaltyId": "Sakadat Uygulaması",
+      "ConsumptionScore": "Kazanılan Puan",
+      "TransactionDate": "İşlem Tarihi",
+      "RepresentativeId": "Personel"
+    },
+    "Warehouse": {
+      "title":"Depo Ana Kayıtları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "IsVehicle": "Araç Deposu Mu?",
+      "FinanceCode": "ERP Kodu",
+      "FinanceCode2": "Finans Kodu",
+      "IsVirtualWarehouse": "Sanal Depo Mu?",
+      "NonSapWarehouse": "Non-SAP",
+      "VehicleId": "Araç",
+      "LicenseNumber": "Lisans Numarası"
     }
   },
+  
   "general": {
     "pleaseWait": "Lütfen Bekleyin...",
     "loggined": "Oturum Açılıyor",

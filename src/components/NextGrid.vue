@@ -496,7 +496,6 @@ export default {
         lookups = lookups.slice(0, -1)
         this.$store.dispatch('getAllLookups', {...this.query, type: lookups})
       }
-
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.

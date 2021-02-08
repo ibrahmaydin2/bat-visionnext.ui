@@ -26,11 +26,11 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.Stock.FromWarehouseId')}}</span><p>{{rowData.FromWarehouse && rowData.FromWarehouse.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('get.Stock.ToWarehouseId')}}</span><p>{{rowData.ToWarehouse && rowData.ToWarehouse.Label }}</p>
               <span><i class="far fa-circle" /> {{$t('get.Stock.MovementTypeId')}}</span><p>{{rowData.MovementType && rowData.MovementType.Label }}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.Stock.FromStatusId')}}</span><p>{{rowData.FromStatus && rowData.FromStatus.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('get.Stock.ToStatusId')}}</span><p>{{rowData.ToStatus && rowData.ToStatus.Label }}</p>
               <span><i class="far fa-circle" /> {{$t('get.Stock.RepresentativeId')}}</span><p>{{rowData.Representative && rowData.Representative.Label }}</p>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
@@ -43,7 +43,7 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
                   <b-th><span>{{$t('insert.BranchStockTransfer.Items')}}</span></b-th>
-                  <b-th><span>{{$t('insert.BranchStockTransfer.FromWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ToWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.BranchStockTransfer.Unit')}}</span></b-th>
                   <b-th><span>{{$t('insert.BranchStockTransfer.PlanQuantity')}}</span></b-th>
                 </b-thead>
@@ -51,7 +51,7 @@
                   <b-tr v-for="(r, i) in rowData.StockAdjustmentItems" :key="i">
                     <b-td>{{r.Item && r.Item.Code}}</b-td>
                     <b-td>{{r.Item && r.Item.Label}}</b-td>
-                    <b-td>{{r.FromWhStockQuantity}}</b-td>
+                    <b-td>{{r.ToWhStockQuantity}}</b-td>
                     <b-td>{{r.Item && r.Unit.Label}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
                   </b-tr>
@@ -75,7 +75,7 @@ export default {
       fields: [
         {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
         {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
-        {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
+        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
         {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
         {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
       ]
