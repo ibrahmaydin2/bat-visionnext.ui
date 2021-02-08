@@ -62,14 +62,14 @@
       <b-tabs>
         <b-tab :title="$t('insert.BranchStockTransfer.Items')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.FromWarehouseId != null ? insertVisible.FromWarehouseId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.FromWarehouseId + (insertRequired.FromWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromWarehouseId.$error }">
-                <v-select :options="warehouses" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1"></v-select>
+            <b-col v-if="insertVisible.ToWarehouseId != null ? insertVisible.ToWarehouseId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.ToWarehouseId + (insertRequired.ToWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToWarehouseId.$error }">
+                <v-select :options="warehouses" @input="selectedSearchType('ToWarehouseId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.FromStatusId != null ? insertVisible.FromStatusId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.FromStatusId + (insertRequired.FromStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromStatusId.$error }">
-                <v-select :options="stockStatus" @input="selectedSearchType('FromStatusId', $event)" label="Description1"></v-select>
+            <b-col v-if="insertVisible.ToStatusId != null ? insertVisible.ToStatusId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.ToStatusId + (insertRequired.ToStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToStatusId.$error }">
+                <v-select :options="stockStatus" @input="selectedSearchType('ToStatusId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -81,8 +81,8 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.BranchStockTransfer.FromWhStockQuantity')">
-                <b-form-input type="text" v-model="StockAdjustmentItems.FromWhStockQuantity" readonly/>
+              <b-form-group :label="$t('insert.BranchStockTransfer.ToWhStockQuantity')">
+                <b-form-input type="text" v-model="StockAdjustmentItems.ToWhStockQuantity" readonly/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
@@ -104,7 +104,7 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
                   <b-th><span>{{$t('insert.BranchStockTransfer.Items')}}</span></b-th>
-                  <b-th><span>{{$t('insert.BranchStockTransfer.FromWhStockQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.BranchStockTransfer.ToWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.BranchStockTransfer.PlanQuantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
@@ -112,7 +112,7 @@
                   <b-tr v-for="(r, i) in form.StockAdjustmentItems" :key="i">
                     <b-td>{{r.Code}}</b-td>
                     <b-td>{{r.Description1}}</b-td>
-                    <b-td>{{r.FromWhStockQuantity}}</b-td>
+                    <b-td>{{r.ToWhStockQuantity}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -143,8 +143,8 @@ export default {
         MovementTypeId: null,
         MovementTime: null,
         Description1: null,
-        FromWarehouseId: null,
-        FromStatusId: null,
+        ToWarehouseId: null,
+        ToStatusId: null,
         StockAdjustmentItems: []
       },
       routeName: this.$route.meta.baseLink,
@@ -156,7 +156,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'warehouses', 'items', 'fromWarehouseStocks'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'warehouses', 'items', 'toWarehouseStocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -217,12 +217,12 @@ export default {
           this.$store.dispatch('getSearchItems', {
             ...this.query,
             api: 'VisionNextWarehouse/api/WarehouseStock/Search',
-            name: 'fromWarehouseStocks',
+            name: 'toWarehouseStocks',
             andConditionModel: {
               BranchIds: [localStorage.getItem('BranchId')],
-              WarehouseIds: [this.form.FromWarehouseId],
+              WarehouseIds: [this.form.ToWarehouseId],
               ItemIds: [e.RecordId],
-              StatusIds: [this.form.FromStatusId]
+              StatusIds: [this.form.ToStatusId]
             }
           })
         }
@@ -260,8 +260,7 @@ export default {
         RecordId: this.tmpSelectedItem.RecordId,
         Description1: this.tmpSelectedItem.Description1,
         LineNumber: 0,
-        FromWhStockQuantity: this.StockAdjustmentItems.FromWhStockQuantity,
-        // FromWhUnitId: this.tmpSelectedItem.UnitId,
+        ToWhStockQuantity: this.StockAdjustmentItems.ToWhStockQuantity,
         // ToWhUnitId: this.tmpSelectedItem.UnitId,
         Quantity: this.StockAdjustmentItems.Quantity
       })
@@ -278,7 +277,7 @@ export default {
       this.$store.commit('setSearchItems', payload)
       this.tmpSelectedItem = null
       this.item = null
-      this.StockAdjustmentItems.FromWhStockQuantity = 0
+      this.StockAdjustmentItems.ToWhStockQuantity = 0
       this.StockAdjustmentItems.Quantity = 0
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
@@ -325,13 +324,13 @@ export default {
         this.form.StatusId = 0
       }
     },
-    fromWarehouseStocks (e) {
+    toWarehouseStocks (e) {
       if (e.length > 0) {
         this.maxPlanQuantity = e[0].Quantity
-        this.StockAdjustmentItems.FromWhStockQuantity = e[0].Quantity
+        this.StockAdjustmentItems.ToWhStockQuantity = e[0].Quantity
       } else {
         this.maxPlanQuantity = 0
-        this.StockAdjustmentItems.FromWhStockQuantity = 0
+        this.StockAdjustmentItems.ToWhStockQuantity = 0
       }
     }
   }
