@@ -305,16 +305,16 @@ export default {
         Code: this.tmpSelectedItem.Code,
         ItemId: this.tmpSelectedItem.RecordId,
         UnitSetId: this.tmpSelectedItem.UnitSetId,
-        // UnitId: this.tmpSelectedItem.UnitId,
+        UnitId: this.tmpSelectedItem.UnitId,
         ConvFact1: 1,
         ConvFact2: 1,
         RecordId: this.tmpSelectedItem.RecordId,
         Description1: this.tmpSelectedItem.Description1,
         LineNumber: 0,
         FromWhStockQuantity: this.WarehouseMovementItems.FromWhStockQuantity,
-        // FromWhUnitId: this.tmpSelectedItem.UnitId,
+        FromWhUnitId: this.tmpSelectedItem.UnitId,
         ToWhStockQuantity: this.WarehouseMovementItems.ToWhStockQuantity,
-        // ToWhUnitId: this.tmpSelectedItem.UnitId,
+        ToWhUnitId: this.tmpSelectedItem.UnitId,
         Quantity: this.WarehouseMovementItems.Quantity
       })
       this.cleanItem()

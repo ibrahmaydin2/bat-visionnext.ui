@@ -23,9 +23,9 @@
               <b-form-input type="text" v-model="form.MovementNumber" :readonly="insertReadonly.MovementNumber" />
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.DocumentDate != null ? insertVisible.DocumentDate : developmentMode" :start-weekday="1" cols="12" md="2">
-            <b-form-group :label="insertTitle.DocumentDate + (insertRequired.DocumentDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DocumentDate.$error }">
-              <b-form-datepicker v-model="form.DocumentDate" />
+          <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
+            <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
+              <b-form-datepicker v-model="form.MovementDate" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -40,7 +40,7 @@
           </b-col>
           <b-col v-if="insertVisible.MovementTypeId != null ? insertVisible.MovementTypeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementTypeId + (insertRequired.MovementTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTypeId.$error }">
-              <v-select :options="movementTypes" @input="selectedSearchType('MovementTypeId', $event)" label="Description1"></v-select>
+              <v-select v-model="selectedmovementTypes" disabled :options="movementTypes" @input="selectedSearchType('MovementTypeId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
@@ -138,7 +138,7 @@ export default {
         RecordState: 2,
         StatusId: 1,
         MovementNumber: null,
-        DocumentDate: null,
+        MovementDate: null,
         RepresentativeId: null,
         MovementTypeId: null,
         MovementTime: null,
@@ -149,6 +149,7 @@ export default {
       },
       routeName: this.$route.meta.baseLink,
       dataStatus: true,
+      selectedmovementTypes: null,
       StockAdjustmentItems: [],
       item: null,
       tmpSelectedItem: [],
@@ -241,11 +242,6 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.StockAdjustmentItems.Quantity > this.maxPlanQuantity) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.StockAdjustmentItems.Quantity = this.maxPlanQuantity
-        return false
-      }
       this.form.StockAdjustmentItems.push({
         Deleted: 0,
         System: 0,
@@ -254,14 +250,14 @@ export default {
         Code: this.tmpSelectedItem.Code,
         ItemId: this.tmpSelectedItem.RecordId,
         UnitSetId: this.tmpSelectedItem.UnitSetId,
-        // UnitId: this.tmpSelectedItem.UnitId,
+        UnitId: this.tmpSelectedItem.UnitId,
         ConvFact1: 1,
         ConvFact2: 1,
         RecordId: this.tmpSelectedItem.RecordId,
         Description1: this.tmpSelectedItem.Description1,
         LineNumber: 0,
         ToWhStockQuantity: this.StockAdjustmentItems.ToWhStockQuantity,
-        // ToWhUnitId: this.tmpSelectedItem.UnitId,
+        ToWhUnitId: this.tmpSelectedItem.UnitId,
         Quantity: this.StockAdjustmentItems.Quantity
       })
       this.cleanItem()
@@ -294,6 +290,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.MovementDate = this.dateConvertToISo(this.form.MovementDate)
         let model = {
           'model': this.form
         }
@@ -331,6 +328,16 @@ export default {
       } else {
         this.maxPlanQuantity = 0
         this.StockAdjustmentItems.ToWhStockQuantity = 0
+      }
+    },
+    movementTypes (e) {
+      if (e) {
+        e.map(item => {
+          if (item.RecordId === 6) {
+            this.selectedmovementTypes = item.Description1
+            this.selectedSearchType('MovementTypeId', item)
+          }
+        })
       }
     }
   }
