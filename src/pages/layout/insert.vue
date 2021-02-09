@@ -35,6 +35,8 @@ export default {
     height: 300px
     overflow: auto
     margin: 1rem 0
+  .v-none
+    visibility: hidden !important
   .asc__general-addingLoader
     display: none
     color: #ffa300

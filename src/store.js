@@ -1196,29 +1196,29 @@ export const store = new Vuex.Store({
     },
 
     // AutoComplete isteklerinin ortak fonksiyonu
-    getAutoCompleteItems ({ state, commit }, query) {
-      let AndConditionModel = {}
-      AndConditionModel[query.searchField] = query.searchText
-      let dataQuery = {
-        AndConditionModel,
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 50,
-        'page': 1
-      }
-      return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setItems', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
+    // getAutoCompleteItems ({ state, commit }, query) {
+    //   let AndConditionModel = {}
+    //   AndConditionModel[query.searchField] = query.searchText
+    //   let dataQuery = {
+    //     AndConditionModel,
+    //     'branchId': state.BranchId,
+    //     'companyId': state.CompanyId,
+    //     'pagerecordCount': 50,
+    //     'page': 1
+    //   }
+    //   return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
+    //     .then(res => {
+    //       if (res.data.IsCompleted === true) {
+    //         commit('setItems', res.data.ListModel.BaseModels)
+    //       } else {
+    //         commit('showAlert', { type: 'danger', msg: res.data.Message })
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err.message)
+    //       commit('showAlert', { type: 'danger', msg: err.message })
+    //     })
+    // },
     getPasswordCreator ({state, commit}, query) {
       let dataQuery = {
         'branchId': state.BranchId,

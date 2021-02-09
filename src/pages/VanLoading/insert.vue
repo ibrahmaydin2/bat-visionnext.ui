@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -54,7 +54,12 @@
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.vanLoading.items')">
-                <v-select v-model="item" :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1"></v-select>
+                <v-select v-model="itemLabel" :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
+                <AddButton @click.native="addItem()" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -113,7 +118,8 @@ export default {
       selectedDone: null,
       routeName: this.$route.meta.baseLink,
       loadingQuantity: null,
-      item: null,
+      item: [],
+      itemLabel: null,
       RecordId: 0
     }
   },
@@ -170,49 +176,58 @@ export default {
       })
     },
     selectedItem (e) {
-      if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        this.item = null
-        return false
-      }
       if (e) {
-        this.item = e.Description1
-        const datas = {
-          'routeId': this.form.routeId,
-          'itemCode': e.Code,
-          'warehouseId': this.form.fromWarehouseId,
-          'loadingDate': this.dateConvertToISo(this.form.loadingDate)
-        }
-        this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas}).then(res => {
-          this.detailPanelRecordId++
-          this.form.vanLoadingItems.push({
-            Deleted: 0,
-            System: 0,
-            RecordState: 2,
-            StatusId: 1,
-            itemId: e.RecordId,
-            unitId: this.itemForVanLoading.UnitId,
-            FromWhStockQuantity: this.itemForVanLoading.FromWhStockQuantity,
-            ToWhStockQuantity: this.itemForVanLoading.ToWhStockQuantity,
-            AverageSalesQuantity: this.itemForVanLoading.AverageSalesQuantity,
-            LastSalesQuantity: this.itemForVanLoading.LastSalesQuantity,
-            LastdaySalesQuantity: this.itemForVanLoading.LastdaySalesQuantity,
-            SuggestedQuantity: this.itemForVanLoading.SuggestedQuantity,
-            LoadingQuantity: this.itemForVanLoading.LoadingQuantity,
-            unitSetId: this.itemForVanLoading.UnitSetId,
-            ConvFact1: this.itemForVanLoading.ConvFact1,
-            ConvFact2: this.itemForVanLoading.ConvFact2,
-            RecordId: this.detailPanelRecordId
-          })
-        })
+        this.itemLabel = e.Description1
+        this.item = e
       } else {
-        this.item = null
+        this.itemLabel = null
         this.form.vanLoadingItems = []
       }
-      console.log(this.form.vanLoadingItems)
+    },
+    addItem () {
+      console.log(this.form)
+      if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+        this.itemLabel = null
+        this.item = []
+        return false
+      }
+      const datas = {
+        'routeId': this.form.routeId,
+        'itemCode': this.item.Code,
+        'warehouseId': this.form.fromWarehouseId,
+        'loadingDate': this.dateConvertToISo(this.form.loadingDate)
+      }
+      this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas}).then(res => {
+        if (!this.itemForVanLoading) {
+          this.itemLabel = null
+          return false
+        }
+        this.detailPanelRecordId++
+        this.form.vanLoadingItems.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          itemId: this.item.RecordId,
+          unitId: this.itemForVanLoading.UnitId,
+          FromWhStockQuantity: this.itemForVanLoading.FromWhStockQuantity,
+          ToWhStockQuantity: this.itemForVanLoading.ToWhStockQuantity,
+          AverageSalesQuantity: this.itemForVanLoading.AverageSalesQuantity,
+          LastSalesQuantity: this.itemForVanLoading.LastSalesQuantity,
+          LastdaySalesQuantity: this.itemForVanLoading.LastdaySalesQuantity,
+          SuggestedQuantity: this.itemForVanLoading.SuggestedQuantity,
+          LoadingQuantity: this.itemForVanLoading.LoadingQuantity,
+          unitSetId: this.itemForVanLoading.UnitSetId,
+          ConvFact1: this.itemForVanLoading.ConvFact1,
+          ConvFact2: this.itemForVanLoading.ConvFact2,
+          RecordId: this.detailPanelRecordId
+        })
+      })
     },
     removeVanLoadingItems (item) {
       this.form.vanLoadingItems.splice(this.form.vanLoadingItems.indexOf(item), 1)
+      this.item = []
     },
     save () {
       this.$v.$touch()

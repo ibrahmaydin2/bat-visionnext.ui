@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">Kaydet</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,26 +18,15 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Code')"
-            >
-              <b-form-input type="text" v-model="form.Model.Code" readonly />
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.Code" :class="{ 'form-group--error': $v.form.Code.$error }">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Description1')"
-            >
-              <b-form-input type="text" v-model="form.Model.Description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_StatusId')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.StatusId" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
+                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </b-form-group>
           </b-col>
@@ -46,120 +35,233 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" active>
+        <b-tab :title="$t('insert.FieldSurvey.FieldSurveyDefinitions')" :active="!developmentMode">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
+            <b-col v-if="insertVisible.AnalysisTypeId != null ? insertVisible.AnalysisTypeId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.AnalysisTypeId" :class="{ 'form-group--error': $v.form.AnalysisTypeId.$error }">
                 <v-select
-                  v-model="form.Model.WarehouseType"
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
+                  v-model="AnalysisType"
+                  :options="lookup.FIELD_SURVEY_TYPE"
+                  @input="selectedType('AnalysisTypeId', $event)"
                   label="Label"
                 />
               </b-form-group>
             </b-col>
-            <b-col v-if="showVehicle" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="VehicleName" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.VehiclePlateNumber }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="showCustomer" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select v-model="form.Model.Customer" label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
+            <b-col v-if="insertVisible.ValidityTypeId != null ? insertVisible.ValidityTypeId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.ValidityTypeId" :class="{ 'form-group--error': $v.form.ValidityTypeId.$error }">
+                <v-select
+                  v-model="ValidityType"
+                  :options="lookup.ANALYSIS_VALIDITY_TYPE"
+                  @input="selectedType('ValidityTypeId', $event)"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
+            <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="4">
+              <b-form-group :label="insertTitle.Description1" :class="{ 'form-group--error': $v.form.Description1.$error }">
+                <b-form-textarea v-model="form.Description1" placeholder="" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_WarehouseCapacity')"
-              >
-                <b-form-input type="text" v-model="form.Model.WarehouseCapacity"/>
+            <b-col v-if="insertVisible.SortOrder != null ? insertVisible.SortOrder : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.SortOrder" :class="{ 'form-group--error': $v.form.SortOrder.$error }">
+                <b-form-input @input="changeSortOrder" min="0" max="99" type="number" v-model="form.SortOrder" :readonly="insertReadonly.SortOrder" />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_LicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.Model.LicenseNumber"/>
+            <b-col v-if="insertVisible.ApproveStateId != null ? insertVisible.ApproveStateId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.ApproveStateId" :class="{ 'form-group--error': $v.form.ApproveStateId.$error }">
+                <v-select
+                  disabled
+                  v-model="selectedApproveState"
+                  :options="lookup.APPROVE_STATE"
+                  @input="selectedType('ApproveStateId', $event)"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_FinanceCode')"
-              >
-                <b-form-input type="text" v-model="form.Model.FinanceCode"/>
+            <b-col v-if="insertVisible.IsNecessary != null ? insertVisible.IsNecessary : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.IsNecessary" :class="{ 'form-group--error': $v.form.IsNecessary.$error }">
+                <b-form-checkbox v-model="form.IsNecessary" name="check-button" switch>
+                  {{(form.IsNecessary) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.WarehouseSuppliers')">
-          <b-table-simple bordered small>
-            <b-thead>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.SupplierBranchId')">
-                  <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedPurchaseWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedReturnWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
-                <b-form-group>
-                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
-                </b-form-group>
-              </b-th>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
-                <b-td>{{r.selectedBranch}}</b-td>
-                <b-td>{{r.selectedPurchaseWarehouseId}}</b-td>
-                <b-td>{{r.selectedReturnWarehouseId}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-          {{detailListData}}
+
+        <b-tab :title="$t('insert.FieldSurvey.Branches')">
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-form-group :label="$t('insert.FieldSurvey.surveyBranchId')" :class="detailPanelError">
+                <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onAcBranchSearch" @input="selectAcBranch">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.BranchCommercialTitle }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <b-button @click="addFieldSurveyBranchs" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row v-if="form.fieldSurveyBranchs">
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameBranch')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.fieldSurveyBranchs" :key="i">
+                  <b-td>{{r.surveyBranch}}</b-td>
+                  <b-td class="text-center"><i @click="removeFieldSurveyBranchs(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+
+        <b-tab :title="$t('insert.FieldSurvey.employeeType')">
+          <b-row>
+            <b-col cols="12" md="4">
+              <b-form-group :label="$t('insert.FieldSurvey.employeeType')" :class="detailPanelError">
+                <v-select label="Label" :filterable="false" :options="detailLookup.EMPLOYEE_TYPE" @input="selectEployeeTypeId($event)" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <b-button @click="addFieldSurveyEmployeeType" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row v-if="form.fieldSurveyBranchs">
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameEmployee')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.fieldSurveyEmployeeTypes" :key="i">
+                  <b-td>{{r.employeeType}}</b-td>
+                  <b-td class="text-center"><i @click="removeFieldSurveyEmployee(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+
+        <b-tab :title="$t('insert.FieldSurvey.questions')">
+          <b-row>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.FieldSurvey.questionId')" :class="detailPanelError">
+                <v-select label="Description1" :filterable="false" :options="analysisQuestions" @search="onAcAnalysisQuestions" @input="selectAcAnalysisQuestions">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.FieldSurvey.questionLineId')" :class="detailPanelError">
+                <b-form-input type="text" v-model="fieldSurveyQuestions.lineNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.FieldSurvey.questionIsNecessary')" :class="detailPanelError">
+                <b-form-checkbox v-model="fieldSurveyQuestions.IsNecessary" name="check-button">
+                  {{(fieldSurveyQuestions.IsNecessary) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <b-button @click="addFieldSurveyQuestions" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row v-if="form.fieldSurveyQuestions">
+            <b-col>
+              <b-table-simple bordered small>
+                <b-thead>
+                  <b-th width="40%"><span>{{$t('insert.FieldSurvey.question')}}</span></b-th>
+                  <b-th><span>{{$t('insert.FieldSurvey.questionLine')}}</span></b-th>
+                  <b-th><span>{{$t('insert.FieldSurvey.questionIsNecessary')}}</span></b-th>
+                  <b-th width="40px"><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(r, i) in form.fieldSurveyQuestions" :key="i">
+                    <b-td>{{r.question}}</b-td>
+                    <b-td>{{r.lineNumber}}</b-td>
+                    <b-td><i :class="'' + r.IsNecessary == 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></b-td>
+                    <b-td class="text-center"><i @click="removeFieldSurveyQuestions(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.FieldSurvey.validDates')" v-if="validDatesReq">
+          <b-row>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.fieldSurveyValidDates.description1')" :class="detailPanelError">
+                <b-form-input type="text" v-model="fieldSurveyValidDates.description1" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group :label="$t('insert.fieldSurveyValidDates.startDate')" :class="detailPanelError">
+                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.startDate')" size="sm" v-once v-model="fieldSurveyValidDates.startDate" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group :label="$t('insert.fieldSurveyValidDates.endDate')" :class="detailPanelError">
+                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.endDate')" size="sm" v-once v-model="fieldSurveyValidDates.endDate" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group :label="$t('insert.FieldSurvey.statusId')" :class="detailPanelError">
+                <b-form-checkbox v-model="fieldSurveyValidDates.statusId" name="check-button" switch>
+                  {{(fieldSurveyValidDates.statusId) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <b-button @click="addFieldSurveyValidDates" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row v-if="form.fieldSurveyValidDates">
+            <b-col>
+              <b-table-simple bordered small>
+                <b-thead>
+                  <b-th width="40%"><span>{{$t('insert.fieldSurveyValidDates.description1')}}</span></b-th>
+                  <b-th><span>{{$t('insert.fieldSurveyValidDates.startDate')}}</span></b-th>
+                  <b-th><span>{{$t('insert.fieldSurveyValidDates.endDate')}}</span></b-th>
+                  <b-th><span>{{$t('insert.fieldSurveyValidDates.statusId')}}</span></b-th>
+                  <b-th width="40px"><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(r, i) in form.fieldSurveyValidDates" :key="i">
+                    <b-td>{{r.description1}}</b-td>
+                    <b-td>{{r.startDate}}</b-td>
+                    <b-td>{{r.endDate}}</b-td>
+                    <b-td><i :class="'' + r.statusId == 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></b-td>
+                    <b-td class="text-center"><i @click="removeFieldSurveyValidDates(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -167,228 +269,342 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins'
 export default {
+  mixins: [mixin],
   data () {
     return {
+      validDatesReq: false,
       form: {
-        companyId: this.CompanyId,
-        branchId: this.BranchId,
-        Model: {
-          LocationId: null,
-          IsVehicle: null,
-          IsCustomerWarehouse: null,
-          StatusId: 1,
-          LicenseNumber: null,
-          FinanceCode: null,
-          WarehouseSuppliers: [],
-          VehicleId: null,
-          WarehouseCapacity: null,
-          WarehouseTypeId: null,
-          WarehouseType: null,
-          IsCenterWarehouse: null,
-          Code: null,
-          Description1: null,
-          CustomerId: null,
-          Vehicle: null,
-          Customer: null,
-          RecordId: null,
-          Deleted: 0
-        }
+        fieldSurveyBranchs: [],
+        fieldSurveyEmployeeTypes: [],
+        fieldSurveyQuestions: [],
+        fieldSurveyValidDates: [],
+        Code: null,
+        StatusId: null,
+        AnalysisTypeId: null,
+        ValidityTypeId: null,
+        SortOrder: null,
+        Description1: null,
+        RecordId: null,
+        Deleted: 0
       },
-      VehicleName: '',
-      detailListData: [],
-      detailListBranch: '',
-      detailListPurchaseWarehouseId: '',
-      detailListReturnWarehouseId: '',
-      WarehouseSuppliers: {
-        selectedBranch: '',
-        selectedPurchaseWarehouseId: '',
-        selectedReturnWarehouseId: ''
+      detailPanelError: '',
+      fieldSurveyEmployeeTypes: {
+        code: null,
+        description1: null,
+        recordState: 2,
+        employeeTypeId: null,
+        employeeType: null,
+        statusId: null
       },
-      dataStatus: true,
-      showCustomer: false,
-      showVehicle: false
+      fieldSurveyBranchs: {
+        description1: null,
+        recordState: 2,
+        surveyBranch: null,
+        surveyBranchId: null,
+        statusId: null
+      },
+      fieldSurveyQuestions: {
+        code: null,
+        description1: null,
+        recordState: 2,
+        question: null,
+        questionId: null,
+        lineNumber: null,
+        statusId: null,
+        IsNecessary: null
+      },
+      fieldSurveyValidDates: {
+        code: null,
+        description1: null,
+        recordState: 2,
+        startDate: null,
+        endDate: null,
+        statusId: null
+      },
+      routeName: this.$route.meta.baseLink,
+      selectedApproveState: null,
+      AnalysisType: null,
+      ValidityType: null
     }
   },
   computed: {
-    ...mapState(['rowData', 'lookupWarehouse_type', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'rowData', 'branchList', 'analysisQuestions']),
+    // filteredCustomerPaymentType () {
+    //   return this.CustomerPaymentTypesArr.filter(item => {
+    //     return item.RecordState !== 4
+    //   })
+    // }
   },
-  watch: {
-    rowData: function (e) {
-      e.WarehouseSuppliers.map(item => {
-        this.form.Model.WarehouseSuppliers.push({
-          StatusId: item.StatusId,
-          SupplierBranchId: item.SupplierBranchId,
-          SupplierCustomerId: item.SupplierCustomerId,
-          CompanyId: item.CompanyId,
-          BranchId: item.BranchId,
-          CreatedUser: item.CreatedUser,
-          ModifiedUser: item.ModifiedUser,
-          ModifiedDateTime: item.ModifiedDateTime,
-          Deleted: item.Deleted,
-          System: item.System,
-          PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId
-        })
-
-        this.detailListData.push({
-          selectedBranch: item.SupplierBranch.Label,
-          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
-          selectedReturnWarehouseId: item.ReturnWarehouse.Label
-        })
-      })
-
-      this.selectedWarehouseType(e.WarehouseType)
-      if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.RecordId
-        this.VehicleName = e.Vehicle.Label
-        this.form.Model.VehicleId = e.VehicleId
-      }
-      // if'e koyulacak
-      if (e.Customer) {
-        this.form.Model.Customer = e.Customer.Label
-        this.form.Model.CustomerId = e.CustomerId
-      }
-
-      this.form.Model.Code = e.Code
-      this.form.Model.RecordId = e.RecordId
-      this.form.Model.Description1 = e.Description1
-      this.form.Model.WarehouseCapacity = e.WarehouseCapacity
-      this.form.Model.LicenseNumber = e.LicenseNumber
-      this.form.Model.FinanceCode = e.FinanceCode
-      if (e.StatusId === 1) {
-        this.dataStatus = true
+  mounted () {
+    this.getInsertPage(this.routeName)
+  },
+  methods: {
+    getInsertPage (e) {
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFieldAnalysis/api/${e}/GetCode`})
+      this.$store.dispatch('getDetailPanelLookups', {...this.query, type: 'EMPLOYEE_TYPE'})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/FieldSurvey', record: this.$route.params.url})
+    },
+    selectedType (label, model) {
+      if (model) {
+        this.form[label] = model.DecimalValue
+        if ((label === 'ValidityTypeId') && (parseInt(model.DecimalValue) === 463633)) {
+          this.validDatesReq = true
+        } else {
+          this.validDatesReq = false
+        }
       } else {
-        this.dataStatus = true
+        this.form[label] = null
       }
     },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.Model.StatusId = 1
+    save () {
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
       } else {
-        this.form.Model.StatusId = 0
+        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
+        this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
+        console.log(this.form)
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFieldAnalysis/api/FieldSurvey`, formdata: model, return: this.routeName})
+      }
+    },
+    onAcBranchSearch (search, loading) {
+      if (search.length >= 3) {
+        this.searchAcBranch(loading, search, this)
+      }
+    },
+    searchAcBranch (loading, search, vm) {
+      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
+    },
+    selectAcBranch (e) {
+      this.fieldSurveyBranchs.surveyBranch = e.BranchCommercialTitle
+      this.fieldSurveyBranchs.surveyBranchId = e.RecordId
+    },
+    onAcAnalysisQuestions (search, loading) {
+      if (search.length >= 3) {
+        this.searchAcAnalysisQuestions(loading, search, this)
+      }
+    },
+    searchAcAnalysisQuestions (loading, search, vm) {
+      this.$store.dispatch('acAnalysisQuestions', {...this.query, searchField: 'Description1', searchText: search})
+    },
+    selectAcAnalysisQuestions (e) {
+      this.fieldSurveyQuestions.question = e.Description1
+      this.fieldSurveyQuestions.questionId = e.RecordId
+    },
+    selectEployeeTypeId (e) {
+      this.fieldSurveyEmployeeTypes.employeeType = e.Label
+      this.fieldSurveyEmployeeTypes.employeeTypeId = e.DecimalValue
+    },
+    addFieldSurveyBranchs () {
+      if (this.fieldSurveyBranchs.surveyBranchId != null) {
+        this.detailPanelError = ''
+        this.form.fieldSurveyBranchs.push({
+          description1: this.fieldSurveyBranchs.description1,
+          recordState: 2,
+          surveyBranch: this.fieldSurveyBranchs.surveyBranch,
+          surveyBranchId: this.fieldSurveyBranchs.surveyBranchId,
+          statusId: this.fieldSurveyBranchs.statusId
+        })
+        this.fieldSurveyBranchs.description1 = null
+        this.fieldSurveyBranchs.recordState = 2
+        this.fieldSurveyBranchs.surveyBranch = null
+        this.fieldSurveyBranchs.surveyBranchId = null
+        this.fieldSurveyBranchs.statusId = null
+      } else {
+        this.detailPanelError = 'form-group--error'
+      }
+    },
+    addFieldSurveyEmployeeType () {
+      if (this.fieldSurveyEmployeeTypes.employeeTypeId != null) {
+        this.detailPanelError = ''
+        this.form.fieldSurveyEmployeeTypes.push({
+          code: this.fieldSurveyEmployeeTypes.code,
+          description1: this.fieldSurveyEmployeeTypes.description1,
+          recordState: 2,
+          employeeTypeId: this.fieldSurveyEmployeeTypes.employeeTypeId,
+          employeeType: this.fieldSurveyEmployeeTypes.employeeType,
+          statusId: this.fieldSurveyEmployeeTypes.statusId
+        })
+        this.fieldSurveyEmployeeTypes.code = null
+        this.fieldSurveyEmployeeTypes.description1 = null
+        this.fieldSurveyEmployeeTypes.recordState = 2
+        this.fieldSurveyEmployeeTypes.employeeTypeId = null
+        this.fieldSurveyEmployeeTypes.employeeType = null
+        this.fieldSurveyEmployeeTypes.statusId = null
+      } else {
+        this.detailPanelError = 'form-group--error'
+      }
+    },
+    addFieldSurveyQuestions () {
+      if (this.fieldSurveyQuestions.questionId != null) {
+        this.detailPanelError = ''
+        this.form.fieldSurveyQuestions.push({
+          code: this.fieldSurveyQuestions.code,
+          description1: this.fieldSurveyQuestions.description1,
+          recordState: 2,
+          question: this.fieldSurveyQuestions.question,
+          questionId: this.fieldSurveyQuestions.questionId,
+          lineNumber: this.fieldSurveyQuestions.lineNumber,
+          statusId: this.fieldSurveyQuestions.statusId,
+          IsNecessary: this.fieldSurveyQuestions.IsNecessary === true ? 1 : 0
+        })
+        this.fieldSurveyQuestions.code = null
+        this.fieldSurveyQuestions.description1 = null
+        this.fieldSurveyQuestions.recordState = 2
+        this.fieldSurveyQuestions.question = null
+        this.fieldSurveyQuestions.questionId = null
+        this.fieldSurveyQuestions.lineNumber = null
+        this.fieldSurveyQuestions.statusId = null
+        this.fieldSurveyQuestions.IsNecessary = null
+      } else {
+        this.detailPanelError = 'form-group--error'
+      }
+    },
+    addFieldSurveyValidDates () {
+      if (this.fieldSurveyValidDates.description1 != null) {
+        this.detailPanelError = ''
+        this.form.fieldSurveyValidDates.push({
+          code: this.fieldSurveyValidDates.code,
+          description1: this.fieldSurveyValidDates.description1,
+          recordState: 2,
+          startDate: this.fieldSurveyValidDates.startDate,
+          endDate: this.fieldSurveyValidDates.endDate,
+          statusId: this.fieldSurveyValidDates.statusId === true ? 1 : 0
+        })
+        this.fieldSurveyValidDates.code = null
+        this.fieldSurveyValidDates.description1 = null
+        this.fieldSurveyValidDates.recordState = 2
+        this.fieldSurveyValidDates.startDate = null
+        this.fieldSurveyValidDates.endDate = null
+        this.fieldSurveyValidDates.statusId = null
+      } else {
+        this.detailPanelError = 'form-group--error'
+      }
+    },
+    removeFieldSurveyBranchs (item) {
+      this.form.fieldSurveyBranchs[this.form.fieldSurveyBranchs.indexOf(item)].recordState = 4
+    },
+    removeFieldSurveyEmployee (item) {
+      this.form.fieldSurveyEmployeeTypes[this.form.fieldSurveyEmployeeTypes.indexOf(item)].recordState = 4
+    },
+    removeFieldSurveyQuestions (item) {
+      this.form.fieldSurveyQuestions[this.form.fieldSurveyQuestions.indexOf(item)].recordState = 4
+    },
+    removeFieldSurveyValidDates (item) {
+      this.form.fieldSurveyValidDates[this.form.fieldSurveyValidDates.indexOf(item)].recordState = 4
+    },
+    changeSortOrder (e) {
+      if (e > 99 || e < 0) {
+        this.form.SortOrder = 0
+        this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.FieldSurvey.minMaxSort') })
       }
     }
   },
-  mounted () {
-    this.$store.commit('bigLoaded', false)
-    this.getLookup()
-    this.getRowData()
+  validations () {
+    return {
+      form: this.insertRules
+    }
   },
-  methods: {
-    getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
-    },
-    save () {
-      this.form.companyId = this.CompanyId
-      this.form.branchId = this.BranchId
-      this.form.Model.WarehouseType = null
-      this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-      this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
-      let model = {
-        'model': this.form
-      }
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: model, return: this.$route.meta.baseLink})
-    },
-    selectedIsCustomer (e) {
-      if (e === 0) {
-        this.showCustomer = false
-      } else {
-        this.showCustomer = true
-      }
-    },
-    selectedVehicle (e) {
-      this.form.Model.VehicleId = e.RecordId
-    },
-    selectedCustomer (e) {
-      this.form.Model.CustomerId = e.RecordId
-    },
-    selectedBranch (e) {
-      this.WarehouseSuppliers.selectedBranch = e.RecordId
-      this.detailListBranch = e.BranchCommercialTitle
-      this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
-    },
-    selectedPurchaseWarehouseId (e) {
-      this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
-      this.detailListPurchaseWarehouseId = e.Description1
-    },
-    selectedReturnWarehouseId (e) {
-      this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
-      this.detailListReturnWarehouseId = e.Description1
-    },
-    addDetailList () {
-      let a = {
-        selectedBranch: this.detailListBranch,
-        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.detailListReturnWarehouseId
-      }
-      let b = {
-        StatusId: null,
-        SupplierBranchId: this.WarehouseSuppliers.selectedBranch,
-        SupplierCustomerId: 46733004.0,
-        CompanyId: this.CompanyId,
-        BranchId: this.BranchId,
-        CreatedUser: 1.0,
-        ModifiedUser: null,
-        ModifiedDateTime: null,
-        Deleted: 0,
-        System: 0,
-        PurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
-      }
-      this.detailListData.push(a)
-      this.detailListBranch = null
-      this.detailListPurchaseWarehouseId = null
-      this.detailListReturnWarehouseId = null
-      this.form.Model.WarehouseSuppliers.push(b)
-    },
-    selectedWarehouseType (e) {
-      this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e
-      // araç mı ?
-      if (e.DecimalValue === 76506193) {
-        this.showVehicle = true
-        this.form.Model.IsVehicle = 1
-        this.$store.commit('setVehicleList', [])
-      } else {
-        this.form.Model.IsVehicle = 0
-        this.showVehicle = false
-      }
-      // merkez depo mu ?
-      if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCustomerWarehouse = 1
-        this.showCustomer = true
-      } else {
-        this.form.Model.IsCustomerWarehouse = 0
-        this.showCustomer = false
+  watch: {
+    rowData (e) {
+      if (e) {
+        this.form = {
+          fieldSurveyBranchs: [],
+          fieldSurveyEmployeeTypes: [],
+          fieldSurveyQuestions: [],
+          fieldSurveyValidDates: [],
+          Code: e.Code,
+          StatusId: this.numberConvertToString(e.StatusId),
+          AnalysisTypeId: e.AnalysisTypeId,
+          ValidityTypeId: e.ValidityTypeId,
+          SortOrder: e.SortOrder,
+          Description1: e.Description1,
+          IsNecessary: this.numberConvertToString(e.IsNecessary),
+          RecordId: e.RecordId,
+          Deleted: e.Deleted
+        }
+        if (e.AnalysisType) {
+          this.AnalysisType = e.AnalysisType.Label
+        }
+        if (e.ValidityType) {
+          this.ValidityType = e.ValidityType.Label
+        }
+        if (e.ValidityTypeId === 463633) {
+          this.validDatesReq = true
+        } else {
+          this.validDatesReq = false
+        }
+        if (e.FieldSurveyBranchs) {
+          e.FieldSurveyBranchs.map(item => {
+            this.form.fieldSurveyBranchs.push({
+              description1: item.Description1,
+              recordState: 3,
+              surveyBranchId: item.SurveyBranchId,
+              statusId: item.StatusId,
+              code: item.Code,
+              updatedProperties: [],
+              fieldSurveyId: e.RecordId,
+              deleted: 0
+            })
+          })
+        }
+
+        if (e.FieldSurveyEmployeeTypes) {
+          e.FieldSurveyEmployeeTypes.map(item => {
+            this.form.fieldSurveyEmployeeTypes.push({
+              code: item.Code,
+              description1: item.Description1,
+              recordState: 3,
+              employeeTypeId: item.EmployeeTypeId,
+              statusId: item.StatusId
+            })
+          })
+        }
+        if (e.FieldSurveyQuestions) {
+          e.FieldSurveyQuestions.map(item => {
+            this.form.fieldSurveyQuestions.push({
+              code: item.Code,
+              description1: item.Description1,
+              recordState: 3,
+              questionId: item.QuestionId,
+              lineNumber: item.LineNumber,
+              statusId: item.StatusId,
+              isNecessary: this.checkConvertToNumber(item.IsNecessary)
+            })
+          })
+        }
+        if (e.FieldSurveyValidDates) {
+          e.FieldSurveyValidDates.map(item => {
+            this.form.fieldSurveyValidDates.push({
+              code: item.Code,
+              description1: item.Description1,
+              recordState: 3,
+              startDate: this.dateConvertFromTimezone(item.StartDate),
+              endDate: this.dateConvertFromTimezone(item.endDate),
+              statusId: this.numberConvertToString(item.StatusId)
+            })
+          })
+        }
       }
     },
-    onVehicleSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchVehicle(loading, search, this)
+    lookup (e) {
+      e['APPROVE_STATE'].map(item => {
+        if (item.DecimalValue === 2100) {
+          this.selectedType('ApproveStateId', item)
+          this.selectedApproveState = item.Label
+        }
+      })
+    },
+    validDatesReq (e) {
+      if (e) {
+        this.validDatesReq = e
       }
-    },
-    onCustomerSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchCustomer(loading, search, this)
-      }
-    },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchBranch(loading, search, this)
-      }
-    },
-    searchVehicle (loading, search, vm) {
-      this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    },
-    searchCustomer (loading, search, vm) {
-      this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-    },
-    searchBranch (loading, search, vm) {
-      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    getLookup () {
-      this.$store.dispatch('lookupWareouseType')
     }
   }
 }
