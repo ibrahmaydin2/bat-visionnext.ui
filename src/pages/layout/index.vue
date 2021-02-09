@@ -105,7 +105,7 @@
                   </b-dropdown>
                 </b-col>
               </b-row>
-              <b-overlay :show="bigLoading" rounded="sm">
+              <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
                 <router-view />
                 <div class="clearfix" />
               </b-overlay>

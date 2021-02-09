@@ -41,6 +41,7 @@ import ProgressTimeline from './components/ProgressTimeline'
 import Breadcrumb from './components/Breadcrumb'
 import ErrorPage from './components/Error'
 import AddButton from './components/AddButton'
+import AddDetailButton from './components/AddDetailButton'
 import CancelButton from './components/CancelButton'
 import GetFormField from './components/GetFormField'
 
@@ -76,6 +77,7 @@ Vue.component('Nextgrid', Nextgrid)
 Vue.component('Nextform', Nextform)
 Vue.component('ErrorPage', ErrorPage)
 Vue.component('AddButton', AddButton)
+Vue.component('AddDetailButton', AddDetailButton)
 Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 

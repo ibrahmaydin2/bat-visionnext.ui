@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -330,20 +330,20 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFieldAnalysis/api/${e}/GetCode`})
       this.$store.dispatch('getDetailPanelLookups', {...this.query, type: 'EMPLOYEE_TYPE'})
     },
     selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
-      this.form[label] = model.DecimalValue
-      if ((label === 'ValidityTypeId') && (parseInt(model.DecimalValue) === 463633)) {
-        this.validDatesReq = true
+      if (model) {
+        this.form[label] = model.DecimalValue
+        if ((label === 'ValidityTypeId') && (parseInt(model.DecimalValue) === 463633)) {
+          this.validDatesReq = true
+        } else {
+          this.validDatesReq = false
+        }
       } else {
-        this.validDatesReq = false
+        this.form[label] = null
       }
     },
     save () {
