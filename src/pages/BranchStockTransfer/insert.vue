@@ -28,9 +28,9 @@
                 <v-select :options="employees" @input="selectedSearchType('RepresentativeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.DocumentDate != null ? insertVisible.DocumentDate : developmentMode" :start-weekday="1" cols="12" md="2">
-              <b-form-group :label="insertTitle.DocumentDate + (insertRequired.DocumentDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DocumentDate.$error }">
-                <b-form-datepicker v-model="form.DocumentDate" />
+            <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
+              <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
+                <b-form-datepicker v-model="form.MovementDate" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -168,7 +168,7 @@ export default {
         ToWarehouseId: null,
         ToStatusId: null,
         RepresentativeId: null,
-        DocumentDate: null,
+        MovementDate: null,
         MovementTime: null,
         BranchStockTransferItems: [],
         Canceled: 0
