@@ -120,7 +120,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.fieldSurveyBranchs" :key="i">
-                  <b-td>{{r.surveyBranch}}</b-td>
+                  <b-td>{{r.surveyBranchs}}</b-td>
                   <b-td class="text-center"><i @click="removeFieldSurveyBranchs(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -149,7 +149,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.fieldSurveyEmployeeTypes" :key="i">
-                  <b-td>{{r.employeeType}}</b-td>
+                  <b-td>{{r.employeeTypes}}</b-td>
                   <b-td class="text-center"><i @click="removeFieldSurveyEmployee(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -200,7 +200,7 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(r, i) in form.fieldSurveyQuestions" :key="i">
-                    <b-td>{{r.question}}</b-td>
+                    <b-td>{{r.questions}}</b-td>
                     <b-td>{{r.lineNumber}}</b-td>
                     <b-td><i :class="'' + r.IsNecessary == 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></b-td>
                     <b-td class="text-center"><i @click="removeFieldSurveyQuestions(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -295,13 +295,11 @@ export default {
         description1: null,
         recordState: 2,
         employeeTypeId: null,
-        employeeType: null,
         statusId: null
       },
       fieldSurveyBranchs: {
         description1: null,
         recordState: 2,
-        surveyBranch: null,
         surveyBranchId: null,
         statusId: null
       },
@@ -309,7 +307,6 @@ export default {
         code: null,
         description1: null,
         recordState: 2,
-        question: null,
         questionId: null,
         lineNumber: null,
         statusId: null,
@@ -330,7 +327,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'rowData', 'branchList', 'analysisQuestions']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'rowData', 'branchList', 'analysisQuestions'])
     // filteredCustomerPaymentType () {
     //   return this.CustomerPaymentTypesArr.filter(item => {
     //     return item.RecordState !== 4
@@ -382,7 +379,7 @@ export default {
       this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
     },
     selectAcBranch (e) {
-      this.fieldSurveyBranchs.surveyBranch = e.BranchCommercialTitle
+      this.fieldSurveyBranchs.surveyBranchs = e.BranchCommercialTitle
       this.fieldSurveyBranchs.surveyBranchId = e.RecordId
     },
     onAcAnalysisQuestions (search, loading) {
@@ -394,11 +391,11 @@ export default {
       this.$store.dispatch('acAnalysisQuestions', {...this.query, searchField: 'Description1', searchText: search})
     },
     selectAcAnalysisQuestions (e) {
-      this.fieldSurveyQuestions.question = e.Description1
+      this.fieldSurveyQuestions.questions = e.Description1
       this.fieldSurveyQuestions.questionId = e.RecordId
     },
     selectEployeeTypeId (e) {
-      this.fieldSurveyEmployeeTypes.employeeType = e.Label
+      this.fieldSurveyEmployeeTypes.employeeTypes = e.Label
       this.fieldSurveyEmployeeTypes.employeeTypeId = e.DecimalValue
     },
     addFieldSurveyBranchs () {
@@ -407,13 +404,13 @@ export default {
         this.form.fieldSurveyBranchs.push({
           description1: this.fieldSurveyBranchs.description1,
           recordState: 2,
-          surveyBranch: this.fieldSurveyBranchs.surveyBranch,
+          surveyBranchs: this.fieldSurveyBranchs.surveyBranchs,
           surveyBranchId: this.fieldSurveyBranchs.surveyBranchId,
           statusId: this.fieldSurveyBranchs.statusId
         })
         this.fieldSurveyBranchs.description1 = null
         this.fieldSurveyBranchs.recordState = 2
-        this.fieldSurveyBranchs.surveyBranch = null
+        this.fieldSurveyBranchs.surveyBranchs = null
         this.fieldSurveyBranchs.surveyBranchId = null
         this.fieldSurveyBranchs.statusId = null
       } else {
@@ -428,14 +425,14 @@ export default {
           description1: this.fieldSurveyEmployeeTypes.description1,
           recordState: 2,
           employeeTypeId: this.fieldSurveyEmployeeTypes.employeeTypeId,
-          employeeType: this.fieldSurveyEmployeeTypes.employeeType,
+          employeeTypes: this.fieldSurveyEmployeeTypes.employeeTypes,
           statusId: this.fieldSurveyEmployeeTypes.statusId
         })
         this.fieldSurveyEmployeeTypes.code = null
         this.fieldSurveyEmployeeTypes.description1 = null
         this.fieldSurveyEmployeeTypes.recordState = 2
         this.fieldSurveyEmployeeTypes.employeeTypeId = null
-        this.fieldSurveyEmployeeTypes.employeeType = null
+        this.fieldSurveyEmployeeTypes.employeeTypes = null
         this.fieldSurveyEmployeeTypes.statusId = null
       } else {
         this.detailPanelError = 'form-group--error'
@@ -448,7 +445,7 @@ export default {
           code: this.fieldSurveyQuestions.code,
           description1: this.fieldSurveyQuestions.description1,
           recordState: 2,
-          question: this.fieldSurveyQuestions.question,
+          questions: this.fieldSurveyQuestions.questions,
           questionId: this.fieldSurveyQuestions.questionId,
           lineNumber: this.fieldSurveyQuestions.lineNumber,
           statusId: this.fieldSurveyQuestions.statusId,
@@ -457,7 +454,7 @@ export default {
         this.fieldSurveyQuestions.code = null
         this.fieldSurveyQuestions.description1 = null
         this.fieldSurveyQuestions.recordState = 2
-        this.fieldSurveyQuestions.question = null
+        this.fieldSurveyQuestions.questions = null
         this.fieldSurveyQuestions.questionId = null
         this.fieldSurveyQuestions.lineNumber = null
         this.fieldSurveyQuestions.statusId = null

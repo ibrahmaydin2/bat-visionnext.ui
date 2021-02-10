@@ -264,7 +264,7 @@ import mixin from '../mixins/index'
 let searchQ = {}
 export default {
   props: ['apiurl', 'apiparams', 'andConditionalModel'],
-  mixins: [mixin],
+  mixins: [mixin],
   data () {
     return {
       grid: [],

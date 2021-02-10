@@ -20,7 +20,7 @@
         <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.Model_Code')">
-                <b-form-input type="text" v-model="form.Code" readonly />
+                <b-form-input type="text" v-model="form.Code" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" md="4" lg="3">
