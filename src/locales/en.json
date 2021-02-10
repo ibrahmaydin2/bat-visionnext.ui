@@ -740,7 +740,8 @@
       "locations": "Hizmet Alınan Depolar",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "Customer": "Müşteri"
+      "Customer": "Müşteri",
+      "vehicleRequired": "Vehicle is required."
     },
     "item": {
       "Detail": "Detaylar",

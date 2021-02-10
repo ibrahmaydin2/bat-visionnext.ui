@@ -801,7 +801,7 @@ export const store = new Vuex.Store({
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery)
+      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setVehicleList', res.data.ListModel.BaseModels)
