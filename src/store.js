@@ -729,8 +729,10 @@ export const store = new Vuex.Store({
     },
     // LOOKUP servisleri
     getGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      console.log(query.model)
+
       let dataQuery = {
-        'AndConditionModel': {},
+        'AndConditionModel': query.model ? query.model : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
@@ -1195,7 +1197,7 @@ export const store = new Vuex.Store({
         })
     },
 
-    // AutoComplete isteklerinin ortak fonksiyonu
+    // AutoComplete isteklerinin ortak fonksiyonu Not: getSearchItems ile birleştirildi.
     // getAutoCompleteItems ({ state, commit }, query) {
     //   let AndConditionModel = {}
     //   AndConditionModel[query.searchField] = query.searchText

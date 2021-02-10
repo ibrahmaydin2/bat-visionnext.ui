@@ -142,6 +142,14 @@
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
               />
+              <b-form-input
+                v-if="header.columnType === 'Time'"
+                v-once
+                v-mask="'##:##:##'"
+                placeholder="00:00:00"
+                v-model="searchText"
+                @keydown.enter="filterTime(header.dataField, searchText)"
+              />
 
               <b-form-input
                 v-if="header.columnType === 'String'"
@@ -252,9 +260,11 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../mixins/index'
 let searchQ = {}
 export default {
   props: ['apiurl', 'apiparams', 'andConditionalModel'],
+  mixins: [mixin],
   data () {
     return {
       grid: [],
@@ -384,7 +394,10 @@ export default {
       this.searchOnTable(e, this.searchText.value)
     },
     filterDate (e, date) {
-      this.searchOnTable(e, date)
+      this.searchOnTable(e, this.dateConvertToISo(date))
+    },
+    filterTime (e, time) {
+      this.searchOnTable(e, time)
     },
     filterLabel (e, i) {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
@@ -405,11 +418,31 @@ export default {
         this.searchOnTable()
       }
     },
+    onAutoCompleteSearch (header, text, c) {
+      // console.log(c)
+      // // this.$store.dispatch('getSearchItems', {
+      // //   ...this.query,
+      // //   api: 'VisionNextItem/api/Item/Search',
+      // //   name: 'items',
+      // //   andConditionModel: {
+      // //     Description1: search
+      // //   }
+      // // }).then(res => {
+      // //   loading(false)
+      // // })
+      // const andConditionModel = {
+      //   Description1: text
+      // }
+      // this.$store.dispatch('getGridFields', {...this.query, serviceUrl: header.serviceUrl, val: header.modelProperty, model: andConditionModel}).then((res) => {
+
+      //   console.log(gridField[header.modelControlUtil.modelProperty])
+
+      // })
+    },
     onSearch (header) {
       console.log(this.selectedText)
     },
     searchOnTable (tableField, search) {
-      console.log('as')
       searchQ[tableField] = search
       this.$store.dispatch('getTableData', {
         ...this.query,

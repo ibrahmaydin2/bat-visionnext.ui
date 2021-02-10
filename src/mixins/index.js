@@ -26,6 +26,11 @@ export default {
       }
       return !!number
     },
+    getNowDate () {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      return today
+    },
     tabValidationHelper () {
       const tab = document.querySelectorAll('.nav-tabs .nav-item')
       tab.forEach((tab, item) => {

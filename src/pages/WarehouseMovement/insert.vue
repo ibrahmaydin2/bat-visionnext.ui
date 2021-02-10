@@ -35,7 +35,11 @@
           </b-col>
           <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-              <v-select :options="employees" @input="selectedSearchType('RepresentativeId', $event)" label="Description1"></v-select>
+              <v-select :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTypeId != null ? insertVisible.MovementTypeId : developmentMode" cols="12" md="2">
@@ -206,7 +210,6 @@ export default {
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextWarehouse/api/${e}/GetCode`})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/StockStatus/Search', name: 'stockStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
@@ -223,6 +226,24 @@ export default {
         ...this.query,
         api: 'VisionNextItem/api/Item/Search',
         name: 'items',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
+    onEmployeeSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchEmployee(loading, search, this)
+      }
+    },
+    searchEmployee (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextEmployee/api/Employee/Search',
+        name: 'employees',
         andConditionModel: {
           Description1: search
         }
