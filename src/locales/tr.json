@@ -748,7 +748,8 @@
       "locations": "Hizmet Alınan Depolar",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "Customer": "Müşteri"
+      "Customer": "Müşteri",
+      "vehicleRequired": "Araç bilgisi zorunludur."
     },
     "item": {
       "Detail": "Detaylar",
