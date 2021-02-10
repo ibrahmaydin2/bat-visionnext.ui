@@ -488,7 +488,7 @@
       "replacementDrivers": "Yedek Sürücüler"
     },
     "employee": {
-      "Model_Code": "Sistem Kodu",
+      "Model_Code": "Personel Kodu",
       "Model_Name": "Adı",
       "Model_Surname": "Soyadı",
       "state": "Durum",
@@ -723,7 +723,7 @@
       "description1": "Açıklama"
     },
     "warehouse": {
-      "Model_Code": "Sistem Kodu",
+      "Model_Code": "Depo Kodu",
       "Model_Description1": "Adı",
       "Model_StatusId": "Durum",
       "Model_WarehouseTypeId": "Depo Tipi",
@@ -755,7 +755,7 @@
     },
     "item": {
       "Detail": "Detaylar",
-      "Model_Code": "Sistem Kodu",
+      "Model_Code": "Ürün Kodu",
       "Model_Description1": "Adı",
       "Model_StatusId": "Durum",
       "Model_FinanceCode": "Finans Kodu",
