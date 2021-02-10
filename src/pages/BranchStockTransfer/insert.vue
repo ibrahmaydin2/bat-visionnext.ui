@@ -25,7 +25,11 @@
           </b-col>
             <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-                <v-select :options="employees" @input="selectedSearchType('RepresentativeId', $event)" label="Description1"></v-select>
+                <v-select :options="employees"  @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -217,13 +221,30 @@ export default {
 
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branches'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/StockStatus/Search', name: 'stockStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
     },
     onItemsSearch (search, loading) {
       if (search.length >= 3) {
         loading(true)
         this.searchItems(loading, search, this)
       }
+    },
+    onEmployeeSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchEmployee(loading, search, this)
+      }
+    },
+    searchEmployee (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextEmployee/api/Employee/Search',
+        name: 'employees',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     },
     searchItems (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
@@ -351,12 +372,12 @@ export default {
     },
     save () {
       this.$v.$touch()
-      console.log(this.form.StatusId)
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
         this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
+        this.form.MovementDate = this.dateConvertToISo(this.form.MovementDate)
         let model = {
           'model': this.form
         }

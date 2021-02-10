@@ -25,17 +25,28 @@
           </b-col>
           <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
-              <b-form-datepicker v-model="form.MovementDate" />
+              <b-form-datepicker v-model="form.MovementDate" :locale="$i18n.locale" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementTime + (insertRequired.MovementTime === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTime.$error }">
-              <b-form-timepicker v-model="form.MovementTime"></b-form-timepicker>
+              <b-form-timepicker
+                v-model="form.MovementTime"
+                :placeholder="$t('insert.chooseTime')"
+                :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
+                :label-no-time-selected="$t('insert.chooseTime')"
+                :label-close-button="$t('insert.close')"
+                close-button-variant="outline-danger"
+              ></b-form-timepicker>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-              <v-select :options="employees" @input="selectedSearchType('RepresentativeId', $event)" label="Description1"></v-select>
+              <v-select :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTypeId != null ? insertVisible.MovementTypeId : developmentMode" cols="12" md="2">
@@ -138,10 +149,10 @@ export default {
         RecordState: 2,
         StatusId: 1,
         MovementNumber: null,
-        MovementDate: null,
+        MovementDate: this.getNowDate(),
         RepresentativeId: null,
         MovementTypeId: null,
-        MovementTime: null,
+        MovementTime: '00:00:00',
         Description1: null,
         ToWarehouseId: null,
         ToStatusId: null,
@@ -169,7 +180,6 @@ export default {
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/StockStatus/Search', name: 'stockStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/WarehouseMovementType/Search', name: 'movementTypes'})
     },
@@ -184,6 +194,24 @@ export default {
         ...this.query,
         api: 'VisionNextItem/api/Item/Search',
         name: 'items',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
+    onEmployeeSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchEmployee(loading, search, this)
+      }
+    },
+    searchEmployee (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextEmployee/api/Employee/Search',
+        name: 'employees',
         andConditionModel: {
           Description1: search
         }

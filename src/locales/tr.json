@@ -370,6 +370,8 @@
     "remove": "İptal",
     "createPassword": "Şifre Oluştur",
     "sameItemError": "Aynı üründen 2 defa ekleyemezsiniz.",
+    "chooseTime": "Saat Seçiniz",
+    "close": "Kapat",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
