@@ -979,7 +979,9 @@
       "AverageSalesQuantity": "Ortalama Satis",
       "LastSalesQuantity": "Son Satis",
       "LastdaySalesQuantity": "Son Is Günü Satisi",
-      "SuggestedQuantity": "Önerilen Miktar"
+      "SuggestedQuantity": "Önerilen Miktar",
+      "Description1": "Açıklama",
+      "LoadingQuantity": "Yüklenen"
     },
     "BranchStockTransfer": {
       "Items": "Ürün",

@@ -54,7 +54,47 @@
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.vanLoading.items')">
-                <v-select v-model="item" :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1"></v-select>
+                <v-select v-model="itemLabel" :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.FromWhStockQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.FromWhStockQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.ToWhStockQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.ToWhStockQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.AverageSalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.AverageSalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LastSalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LastSalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LastdaySalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LastdaySalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.SuggestedQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.SuggestedQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LoadingQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LoadingQuantity" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" class="text-right ml-auto">
+              <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
+                <AddDetailButton @click.native="addItem()" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -63,25 +103,25 @@
               <b-table-simple responsive bordered small>
                 <b-thead>
                   <b-th><span>{{$t('insert.vanLoading.items')}}</span></b-th>
-                  <b-th><span>{{$t('insert.vanLoading.unit')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.FromWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.ToWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.AverageSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.LastSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.LastdaySalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.SuggestedQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.vanLoading.LoadingQuantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(r, i) in filteredVanLoadingItems" :key="i">
-                    <b-td>{{r.Item ? r.Item.Label : ''}}</b-td>
-                    <b-td>{{r.Unit ? r.Unit.Label : ''}}</b-td>
+                    <b-td>{{r.Description1}}</b-td>
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
                     <b-td>{{r.AverageSalesQuantity}}</b-td>
                     <b-td>{{r.LastSalesQuantity}}</b-td>
                     <b-td>{{r.LastdaySalesQuantity}}</b-td>
                     <b-td>{{r.SuggestedQuantity}}</b-td>
+                    <b-td>{{r.LoadingQuantity}}</b-td>
                     <b-td class="text-center"><i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -116,7 +156,10 @@ export default {
       item: null,
       RecordId: 0,
       warehouse: null,
-      route: null
+      route: null,
+      itemLabel: null,
+      vanLoadingItems: []
+
     }
   },
   computed: {
@@ -130,13 +173,18 @@ export default {
   },
   methods: {
     getInsertPage (e) {
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getWarehouses')
-      this.$store.dispatch('getVanLoadingStatus')
-      this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
-
+      this.$store.dispatch('getSearchItems', {...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/Search',
+        name: 'warehouses',
+        andConditionModel: {
+          'IsVehicle': 0,
+          'StatusIds': [1]
+        }
+      })
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/VanLoadingStatu/Search', name: 'vanLoadingStatus'})
       this.$store.dispatch('getSearchItems', {...this.query,
         api: 'VisionNextRoute/api/Route/Search',
         name: 'routes',
@@ -145,6 +193,7 @@ export default {
           'StatusIds': [1]
         }
       })
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
     },
     selectedSearchType (label, model) {
       if (model) {
@@ -172,52 +221,49 @@ export default {
       })
     },
     selectedItem (e) {
-      if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        this.item = null
-        return false
-      }
       if (e) {
-        this.item = e.Description1
+        this.itemLabel = e.Description1
+        this.item = e
         const datas = {
           'routeId': this.form.routeId,
-          'itemCode': e.Code,
+          'itemCode': this.item.Code,
           'warehouseId': this.form.fromWarehouseId,
           'loadingDate': this.dateConvertToISo(this.form.loadingDate)
         }
-        this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas}).then(res => {
-          this.detailPanelRecordId++
-          if (this.itemForVanLoading) {
-            this.form.vanLoadingItems.push({
-              Deleted: 0,
-              System: 0,
-              RecordState: 2,
-              StatusId: 1,
-              itemId: e.RecordId,
-              unitId: this.itemForVanLoading.UnitId,
-              FromWhStockQuantity: this.itemForVanLoading.FromWhStockQuantity,
-              ToWhStockQuantity: this.itemForVanLoading.ToWhStockQuantity,
-              AverageSalesQuantity: this.itemForVanLoading.AverageSalesQuantity,
-              LastSalesQuantity: this.itemForVanLoading.LastSalesQuantity,
-              LastdaySalesQuantity: this.itemForVanLoading.LastdaySalesQuantity,
-              SuggestedQuantity: this.itemForVanLoading.SuggestedQuantity,
-              LoadingQuantity: this.itemForVanLoading.LoadingQuantity,
-              unitSetId: this.itemForVanLoading.UnitSetId,
-              ConvFact1: this.itemForVanLoading.ConvFact1,
-              ConvFact2: this.itemForVanLoading.ConvFact2,
-              RecordId: this.detailPanelRecordId
-            })
-          }
-        })
+        this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas})
       } else {
-        this.item = null
-        this.$store.commit('setItemForVanLoading', [])
+        this.itemLabel = null
+        this.form.vanLoadingItems = []
       }
+    },
+    addItem () {
+      this.detailPanelRecordId++
+      this.form.vanLoadingItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        ItemId: this.item.RecordId,
+        UnitId: this.vanLoadingItems.UnitId,
+        FromWhStockQuantity: this.vanLoadingItems.FromWhStockQuantity,
+        ToWhStockQuantity: this.vanLoadingItems.ToWhStockQuantity,
+        AverageSalesQuantity: this.vanLoadingItems.AverageSalesQuantity,
+        LastSalesQuantity: this.vanLoadingItems.LastSalesQuantity,
+        LastdaySalesQuantity: this.vanLoadingItems.LastdaySalesQuantity,
+        SuggestedQuantity: this.vanLoadingItems.SuggestedQuantity,
+        LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
+        unitSetId: this.vanLoadingItems.UnitSetId,
+        ConvFact1: this.vanLoadingItems.ConvFact1,
+        ConvFact2: this.vanLoadingItems.ConvFact2,
+        RecordId: this.detailPanelRecordId,
+        Description1: this.vanLoadingItems.Description1
+      })
+      this.vanLoadingItems = []
+      this.itemLabel = null
     },
     removeVanLoadingItems (item) {
       this.form.vanLoadingItems.splice(this.form.vanLoadingItems.indexOf(item), 1)
       if (item.RecordState !== 2) {
-        console.log(item)
         this.form.vanLoadingItems.push({
           Deleted: 1,
           System: 0,
@@ -277,6 +323,10 @@ export default {
           RecordId: e.RecordId
         }
 
+        e.VanLoadingItems.map(item => {
+          item.Description1 = item.Item && item.Item.Label
+        })
+
         if (e.Route) {
           this.route = e.Route.Label
         }
@@ -285,8 +335,25 @@ export default {
         }
       }
     },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    itemForVanLoading (e) {
+      if (e) {
+        this.vanLoadingItems = {
+          Description1: this.itemLabel,
+          UnitId: e.UnitId,
+          FromWhStockQuantity: e.FromWhStockQuantity,
+          ToWhStockQuantity: e.ToWhStockQuantity,
+          AverageSalesQuantity: e.AverageSalesQuantity,
+          LastSalesQuantity: e.LastSalesQuantity,
+          LastdaySalesQuantity: e.LastdaySalesQuantity,
+          SuggestedQuantity: e.SuggestedQuantity,
+          ItemId: this.item.RecordId,
+          LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
+          unitSetId: e.UnitSetId,
+          ConvFact1: e.ConvFact1,
+          ConvFact2: e.ConvFact2
+        }
+      }
+    },
     vanLoadingStatus (e) {
       if (e) {
         e.map(item => {

@@ -58,8 +58,43 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.FromWhStockQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.FromWhStockQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.ToWhStockQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.ToWhStockQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.AverageSalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.AverageSalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LastSalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LastSalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LastdaySalesQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LastdaySalesQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.SuggestedQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.SuggestedQuantity" readonly />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3">
+              <b-form-group :label="$t('insert.vanLoading.LoadingQuantity')">
+                <b-form-input type="text" v-model="vanLoadingItems.LoadingQuantity" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" class="text-right ml-auto">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
-                <AddButton @click.native="addItem()" />
+                <AddDetailButton @click.native="addItem()" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -68,25 +103,25 @@
               <b-table-simple responsive bordered small>
                 <b-thead>
                   <b-th><span>{{$t('insert.vanLoading.items')}}</span></b-th>
-                  <b-th><span>{{$t('insert.vanLoading.unit')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.FromWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.ToWhStockQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.AverageSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.LastSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.LastdaySalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.vanLoading.SuggestedQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.vanLoading.LoadingQuantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(r, i) in form.vanLoadingItems" :key="i">
-                    <b-td>{{r.Item ? r.Item.Label : ''}}</b-td>
-                    <b-td>{{r.Unit ? r.Unit.Label : ''}}</b-td>
+                    <b-td>{{r.Description1}}</b-td>
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
                     <b-td>{{r.AverageSalesQuantity}}</b-td>
                     <b-td>{{r.LastSalesQuantity}}</b-td>
                     <b-td>{{r.LastdaySalesQuantity}}</b-td>
                     <b-td>{{r.SuggestedQuantity}}</b-td>
+                    <b-td>{{r.LoadingQuantity}}</b-td>
                     <b-td class="text-center"><i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -120,11 +155,12 @@ export default {
       loadingQuantity: null,
       item: [],
       itemLabel: null,
-      RecordId: 0
+      RecordId: 0,
+      vanLoadingItems: []
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -179,51 +215,78 @@ export default {
       if (e) {
         this.itemLabel = e.Description1
         this.item = e
+        console.log(this.item)
+        // if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
+        //   this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+        //   this.itemLabel = null
+        //   this.item = []
+        //   return false
+        // }
+
+        const datas = {
+          'routeId': this.form.routeId,
+          'itemCode': this.item.Code,
+          'warehouseId': this.form.fromWarehouseId,
+          'loadingDate': this.dateConvertToISo(this.form.loadingDate)
+        }
+        this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas})
+        // this.vanLoadingItems = {
+        //   Description1: e.Description1,
+        //   UnitId: e.UnitId,
+        //   FromWhStockQuantity: e.FromWhStockQuantity,
+        //   ToWhStockQuantity: e.ToWhStockQuantity,
+        //   AverageSalesQuantity: e.AverageSalesQuantity,
+        //   LastSalesQuantity: e.LastSalesQuantity,
+        //   LastdaySalesQuantity: e.LastdaySalesQuantity,
+        //   SuggestedQuantity: e.SuggestedQuantity
+        // }
       } else {
         this.itemLabel = null
         this.form.vanLoadingItems = []
       }
     },
     addItem () {
-      console.log(this.form)
-      if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        this.itemLabel = null
-        this.item = []
-        return false
-      }
-      const datas = {
-        'routeId': this.form.routeId,
-        'itemCode': this.item.Code,
-        'warehouseId': this.form.fromWarehouseId,
-        'loadingDate': this.dateConvertToISo(this.form.loadingDate)
-      }
-      this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas}).then(res => {
-        if (!this.itemForVanLoading) {
-          this.itemLabel = null
-          return false
-        }
-        this.detailPanelRecordId++
-        this.form.vanLoadingItems.push({
-          Deleted: 0,
-          System: 0,
-          RecordState: 2,
-          StatusId: 1,
-          itemId: this.item.RecordId,
-          unitId: this.itemForVanLoading.UnitId,
-          FromWhStockQuantity: this.itemForVanLoading.FromWhStockQuantity,
-          ToWhStockQuantity: this.itemForVanLoading.ToWhStockQuantity,
-          AverageSalesQuantity: this.itemForVanLoading.AverageSalesQuantity,
-          LastSalesQuantity: this.itemForVanLoading.LastSalesQuantity,
-          LastdaySalesQuantity: this.itemForVanLoading.LastdaySalesQuantity,
-          SuggestedQuantity: this.itemForVanLoading.SuggestedQuantity,
-          LoadingQuantity: this.itemForVanLoading.LoadingQuantity,
-          unitSetId: this.itemForVanLoading.UnitSetId,
-          ConvFact1: this.itemForVanLoading.ConvFact1,
-          ConvFact2: this.itemForVanLoading.ConvFact2,
-          RecordId: this.detailPanelRecordId
-        })
+      // if (!this.form.routeId || !this.form.fromWarehouseId || !this.form.loadingDate) {
+      //   this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      //   this.itemLabel = null
+      //   this.item = []
+      //   return false
+      // }
+      // const datas = {
+      //   'routeId': this.form.routeId,
+      //   'itemCode': this.item.Code,
+      //   'warehouseId': this.form.fromWarehouseId,
+      //   'loadingDate': this.dateConvertToISo(this.form.loadingDate)
+      // }
+      // this.$store.dispatch('getItemForVanLoading', {...this.query, params: datas}).then(res => {
+      //   if (!this.itemForVanLoading) {
+      //     this.itemLabel = null
+      //     return false
+      //   }
+      this.detailPanelRecordId++
+      this.form.vanLoadingItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        ItemId: this.item.RecordId,
+        UnitId: this.vanLoadingItems.UnitId,
+        FromWhStockQuantity: this.vanLoadingItems.FromWhStockQuantity,
+        ToWhStockQuantity: this.vanLoadingItems.ToWhStockQuantity,
+        AverageSalesQuantity: this.vanLoadingItems.AverageSalesQuantity,
+        LastSalesQuantity: this.vanLoadingItems.LastSalesQuantity,
+        LastdaySalesQuantity: this.vanLoadingItems.LastdaySalesQuantity,
+        SuggestedQuantity: this.vanLoadingItems.SuggestedQuantity,
+        LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
+        unitSetId: this.vanLoadingItems.UnitSetId,
+        ConvFact1: this.vanLoadingItems.ConvFact1,
+        ConvFact2: this.vanLoadingItems.ConvFact2,
+        RecordId: this.detailPanelRecordId,
+        Description1: this.vanLoadingItems.Description1
       })
+      this.vanLoadingItems = []
+      this.itemLabel = null
+      // })
     },
     removeVanLoadingItems (item) {
       this.form.vanLoadingItems.splice(this.form.vanLoadingItems.indexOf(item), 1)
@@ -252,9 +315,6 @@ export default {
     }
   },
   watch: {
-
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
     insertDefaultValue (value) {
       Object.keys(value).forEach(el => {
         if (el !== 'Code') {
@@ -270,6 +330,25 @@ export default {
             this.selectedDone = item.Description1
           }
         })
+      }
+    },
+    itemForVanLoading (e) {
+      if (e) {
+        this.vanLoadingItems = {
+          Description1: this.itemLabel,
+          UnitId: e.UnitId,
+          FromWhStockQuantity: e.FromWhStockQuantity,
+          ToWhStockQuantity: e.ToWhStockQuantity,
+          AverageSalesQuantity: e.AverageSalesQuantity,
+          LastSalesQuantity: e.LastSalesQuantity,
+          LastdaySalesQuantity: e.LastdaySalesQuantity,
+          SuggestedQuantity: e.SuggestedQuantity,
+          ItemId: this.item.RecordId,
+          LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
+          unitSetId: e.UnitSetId,
+          ConvFact1: e.ConvFact1,
+          ConvFact2: e.ConvFact2
+        }
       }
     }
   }

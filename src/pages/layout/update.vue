@@ -31,6 +31,8 @@ export default {
   .asc__general-addingLoader
     display: none
     color: #ffa300
+  .v-none
+    visibility: hidden !important
   .asc__updatePage
     margin-bottom: 2rem
     & header
