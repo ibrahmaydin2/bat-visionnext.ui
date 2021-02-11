@@ -1487,9 +1487,7 @@ export const store = new Vuex.Store({
           case 'Radio':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-checkbox v-model="form.${fieldName}" name="check-button" switch>
-                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.${fieldName}" type="number" toggle />  
               </b-form-group>
             </b-col>`
             if (parseInt(fieldDefaultValue) === 1) {
@@ -1502,9 +1500,7 @@ export const store = new Vuex.Store({
           case 'Check':
             inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-checkbox v-model="form.${fieldName}" name="check-button">
-                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.${fieldName}" type="number" />  
               </b-form-group>
             </b-col>`
             dflvl[fieldName] = parseInt(fieldDefaultValue)

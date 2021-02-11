@@ -1,5 +1,5 @@
 <template>
-    <b-form-checkbox v-model="model" name="check-button" switch>
+    <b-form-checkbox v-model="model" name="check-button" :switch="toggle">
       {{model ? textActive : textPassive}}
     </b-form-checkbox>
 </template>
@@ -19,7 +19,8 @@ export default {
     passiveText: String,
     value: {
       type: [Boolean, Number]
-    }
+    },
+    toggle: Boolean
   },
   model: {
     prop: 'value',
@@ -35,7 +36,7 @@ export default {
   mounted () {
     this.textActive = this.activeText ? this.activeText : this.$t('insert.active')
     this.textPassive = this.passiveText ? this.passiveText : this.$t('insert.passive')
-    this.model = this.type === 'boolean' ? this.value : this.value === 1
+    this.model = this.type === 'boolean' ? this.value : this.value === 1 || this.value === true
   },
   watch: {
     model (newValue) {
