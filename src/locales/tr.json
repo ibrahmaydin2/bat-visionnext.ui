@@ -725,6 +725,7 @@
     "warehouse": {
       "Model_Code": "Depo Kodu",
       "Model_Description1": "Adı",
+      "Model_Description": "Açıklama",
       "Model_StatusId": "Durum",
       "Model_WarehouseTypeId": "Depo Tipi",
       "Model_VehicleId": "Araç",
@@ -751,7 +752,14 @@
       "status": "Durum",
       "code": "Sistem Kodu",
       "Customer": "Müşteri",
-      "vehicleRequired": "Araç bilgisi zorunludur."
+      "vehicleRequired": "Araç bilgisi zorunludur.",
+      "NonSapWarehouse": "Non-SAP",
+      "Model_IsVehicle": "Araç Deposu",
+      "Model_IsVirtualWarehouse": "Sanal Depo",
+      "ErpCode": "ERP Kodu",
+      "Address" : "Adres",
+      "CityId" : "İl",
+      "DistrictId" : "İlçe"
     },
     "item": {
       "Detail": "Detaylar",
