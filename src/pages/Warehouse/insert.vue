@@ -30,9 +30,7 @@
             </b-col>
             <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-                <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                  {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.StatusId" type="number" toggle />
               </b-form-group>
             </b-col>
         </b-row>
@@ -44,16 +42,14 @@
           <b-row>
             <b-col v-if="insertVisible.NonSapWarehouse != null ? insertVisible.NonSapWarehouse : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.NonSapWarehouse + (insertRequired.NonSapWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.NonSapWarehouse.$error }">
-                <b-form-checkbox v-model="NonSapWarehouse" name="check-button" switch>
-                  {{(NonSapWarehouse) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select :disabled="!IsVehicle" label="VehiclePlateNumber" :options="vehicleList" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicleList" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -65,16 +61,12 @@
             </b-col>
             <b-col v-if="insertVisible.IsVehicle != null ? insertVisible.IsVehicle : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.IsVehicle + (insertRequired.IsVehicle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVehicle.$error }">
-                <b-form-checkbox v-model="IsVehicle" name="check-button" switch>
-                  {{(IsVehicle) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.IsVehicle" type="number" toggle />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsVirtualWarehouse != null ? insertVisible.IsVirtualWarehouse : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.IsVirtualWarehouse + (insertRequired.IsVirtualWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVirtualWarehouse.$error }">
-                <b-form-checkbox v-model="IsVirtualWarehouse" name="check-button" switch>
-                  {{(IsVirtualWarehouse) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                 <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
@@ -95,7 +87,7 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="!IsVehicle && !IsVirtualWarehouse">
+          <b-row v-if="!form.IsVehicle && !form.IsVirtualWarehouse">
             <b-col v-if="insertVisible.Address != null ? insertVisible.Address : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.Address + (insertRequired.Address === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Address.$error }">
                 <b-form-textarea v-model="form.Address" placeholder="" />
@@ -113,7 +105,7 @@
               </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="!IsVehicle">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle">
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'">
@@ -183,8 +175,8 @@ export default {
         RecordState: 2,
         Code: null,
         Description1: null,
-        StatusId: null,
-        IsVehicle: null,
+        StatusId: 1,
+        IsVehicle: 0,
         VehicleId: null,
         LicenseNumber: null,
         FinanceCode: null,
@@ -192,8 +184,8 @@ export default {
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: null,
-        NonSapWarehouse: null,
+        IsVirtualWarehouse: 0,
+        NonSapWarehouse: 0,
         WarehouseSuppliers: []
       },
       routeName: this.$route.meta.baseLink,
@@ -204,10 +196,7 @@ export default {
         returnWarehouse: null
       },
       warehouseSuppliers: [],
-      selectedDistrict: null,
-      IsVehicle: null,
-      IsVirtualWarehouse: null,
-      NonSapWarehouse: null
+      selectedDistrict: null
     }
   },
   computed: {
@@ -254,12 +243,12 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
-        if (this.IsVehicle && !this.form.VehicleId) {
+        if (this.form.IsVehicle && !this.form.VehicleId) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.warehouse.vehicleRequired') })
           return
         }
 
-        if (!this.IsVehicle) {
+        if (!this.form.IsVehicle) {
           this.form.WarehouseSuppliers = this.warehouseSuppliers.map((item) => {
             var newItem = {
               Deleted: 0,
@@ -273,17 +262,13 @@ export default {
             return newItem
           })
 
-          if (this.IsVehicle) {
+          if (this.form.IsVehicle) {
             this.form.Address = null
             this.form.CityId = null
             this.form.DistrictId = null
             this.VehicleId = null
           }
         }
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        this.form.IsVehicle = this.IsVehicle ? this.checkConvertToNumber(this.IsVehicle) : 0
-        this.form.IsVirtualWarehouse = this.IsVirtualWarehouse ? this.checkConvertToNumber(this.IsVirtualWarehouse) : 0
-        this.form.NonSapWarehouse = this.NonSapWarehouse ? this.checkConvertToNumber(this.NonSapWarehouse) : 0
 
         let model = {
           'model': this.form
@@ -363,14 +348,6 @@ export default {
           this.form[el] = value[el]
         }
       })
-    },
-    // Status'un değerini true'dan 1'e çeviriyor
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.StatusId = 1
-      } else {
-        this.form.StatusId = 0
-      }
     }
   }
 }

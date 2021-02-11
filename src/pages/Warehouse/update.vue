@@ -30,9 +30,7 @@
             </b-col>
             <b-col lg="3">
               <b-form-group :label="$t('insert.warehouse.Model_StatusId')">
-                <b-form-checkbox v-model="StatusId" name="check-button" switch>
-                  {{(StatusId) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.StatusId" type="number" toggle />
               </b-form-group>
             </b-col>
         </b-row>
@@ -44,16 +42,14 @@
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.NonSapWarehouse')">
-                <b-form-checkbox v-model="NonSapWarehouse" name="check-button" switch>
-                  {{(NonSapWarehouse) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="vehicleName" :disabled="!IsVehicle" label="VehiclePlateNumber" :options="vehicleList" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select v-model="vehicleName" :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicleList" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -65,16 +61,12 @@
             </b-col>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.Model_IsVehicle')">
-                <b-form-checkbox v-model="IsVehicle" name="check-button" switch>
-                  {{(IsVehicle) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.IsVehicle" type="number" toggle />
               </b-form-group>
             </b-col>
             <b-col>
               <b-form-group :label="$t('insert.warehouse.Model_IsVirtualWarehouse')">
-                <b-form-checkbox v-model="IsVirtualWarehouse" name="check-button" switch>
-                  {{(IsVirtualWarehouse) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
@@ -95,7 +87,7 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="!IsVehicle && !IsVirtualWarehouse">
+          <b-row v-if="!form.IsVehicle && !form.IsVirtualWarehouse">
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.Address')">
                 <b-form-textarea v-model="form.Address" placeholder="" />
@@ -113,7 +105,7 @@
               </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="!IsVehicle">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle">
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'">
@@ -199,11 +191,7 @@ export default {
       warehouseSuppliers: [],
       selectedDistrict: null,
       selectedCity: null,
-      vehicleName: null,
-      StatusId: null,
-      IsVehicle: null,
-      IsVirtualWarehouse: null,
-      NonSapWarehouse: null
+      vehicleName: null
     }
   },
   computed: {
@@ -248,12 +236,12 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
-        if (this.IsVehicle && !this.form.VehicleId) {
+        if (this.form.IsVehicle && !this.form.VehicleId) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.warehouse.vehicleRequired') })
           return
         }
 
-        if (!this.IsVehicle) {
+        if (!this.form.IsVehicle) {
           this.form.WarehouseSuppliers = this.warehouseSuppliers.map((item) => {
             var newItem = {
               Deleted: item.Deleted,
@@ -271,17 +259,13 @@ export default {
             return newItem
           })
 
-          if (this.IsVehicle) {
+          if (this.form.IsVehicle) {
             this.form.Address = null
             this.form.CityId = null
             this.form.DistrictId = null
-            this.VehicleId = null
+            this.form.VehicleId = null
           }
         }
-        this.form.StatusId = this.checkConvertToNumber(this.StatusId)
-        this.form.IsVehicle = this.checkConvertToNumber(this.IsVehicle)
-        this.form.IsVirtualWarehouse = this.checkConvertToNumber(this.IsVirtualWarehouse)
-        this.form.NonSapWarehouse = this.checkConvertToNumber(this.NonSapWarehouse)
 
         let model = {
           'Model': this.form
@@ -346,10 +330,8 @@ export default {
       this.form.WarehouseType = e
       // araç mı ?
       if (e.DecimalValue === 76506193) {
-        this.IsVehicle = true
         this.form.IsVehicle = 1
       } else {
-        this.IsVehicle = false
         this.form.IsVehicle = 0
       }
     }
@@ -377,14 +359,6 @@ export default {
           this.form[el] = value[el]
         }
       })
-    },
-    // Status'un değerini true'dan 1'e çeviriyor
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.StatusId = 1
-      } else {
-        this.form.StatusId = 0
-      }
     },
     rowData: function (e) {
       if (!e) {
@@ -429,10 +403,11 @@ export default {
           this.form.Vehicle = e.RecordId
         }
       }
-      this.IsVehicle = this.numberConvertToString(e.IsVehicle)
-      this.StatusId = this.numberConvertToString(e.StatusId)
-      this.NonSapWarehouse = e.NonSapWarehouse === null ? false : this.numberConvertToString(e.NonSapWarehouse)
-      this.IsVirtualWarehouse = this.numberConvertToString(e.IsVirtualWareHouse)
+      console.log(e)
+      this.form.IsVehicle = e.IsVehicle == null ? 0 : e.IsVehicle
+      this.form.StatusId = e.StatusId == null ? 0 : e.StatusId
+      this.form.NonSapWarehouse = e.NonSapWarehouse == null ? 0 : e.NonSapWarehouse
+      this.form.IsVirtualWarehouse = e.IsVirtualWareHouse == null ? 0 : e.IsVirtualWareHouse
       this.form.Code = e.Code
       this.form.RecordId = e.RecordId
       this.form.Description1 = e.Description1
