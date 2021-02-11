@@ -1,5 +1,5 @@
 <template>
-  <b-button id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+  <b-button id="submitButton" size="sm" variant="success">{{$t('insert.add')}}</b-button>
 </template>
 <script>
 export default {

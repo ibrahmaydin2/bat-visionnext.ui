@@ -106,6 +106,15 @@
                 </b-col>
               </b-row>
               <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+                <template #overlay>
+                  <b-icon
+                    icon="arrow-clockwise"
+                    animation="spin"
+                    scale="8"
+                    shift-v="16"
+                    shift-h="16"
+                  ></b-icon>
+                </template>
                 <router-view />
                 <div class="clearfix" />
               </b-overlay>
