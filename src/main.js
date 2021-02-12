@@ -45,6 +45,7 @@ import AddDetailButton from './components/AddDetailButton'
 import CancelButton from './components/CancelButton'
 import GetFormField from './components/GetFormField'
 import NextCheckBox from './components/NextCheckBox'
+import NextAddress from './components/NextAddress'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -82,6 +83,7 @@ Vue.component('AddDetailButton', AddDetailButton)
 Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
+Vue.component('NextAddress', NextAddress)
 
 Vue.config.productionTip = false
 global.jQuery = jQuery

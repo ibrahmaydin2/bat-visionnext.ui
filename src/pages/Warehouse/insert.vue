@@ -19,8 +19,8 @@
       <section>
         <b-row>
             <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.Model_Code')">
-                <b-form-input type="text" v-model="form.Code" />
+              <b-form-group :label="$t('insert.warehouse.Model_Code') + (insertRequired.Code === true ? ' *' : '')">
+                <b-form-input type="text" v-model="form.Code"/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" md="4" lg="3">
@@ -87,23 +87,7 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="!form.IsVehicle && !form.IsVirtualWarehouse">
-            <b-col v-if="insertVisible.Address != null ? insertVisible.Address : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.Address + (insertRequired.Address === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Address.$error }">
-                <b-form-textarea v-model="form.Address" placeholder="" />
-              </b-form-group>
-            </b-col>
-             <b-col v-if="insertVisible.CityId != null ? insertVisible.CityId : developmentMode" md="4" lg="3">
-                <b-form-group :label="insertTitle.CityId + (insertRequired.CityId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CityId.$error }">
-                  <v-select :options="cities" @input="selectCity" label="Label"></v-select>
-                </b-form-group>
-              </b-col>
-              <b-col v-if="insertVisible.DistrictId != null ? insertVisible.DistrictId : developmentMode" md="4" lg="3">
-                <b-form-group :label="insertTitle.DistrictId + (insertRequired.DistrictId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DistrictId.$error }">
-                  <v-select v-model="selectedDistrict" :options="distiricts" @input="selectDistirict" label="Label" :disabled="!form.CityId"></v-select>
-                </b-form-group>
-              </b-col>
-          </b-row>
+          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle">
           <b-row>
@@ -175,8 +159,8 @@ export default {
         RecordState: 2,
         Code: null,
         Description1: null,
-        StatusId: 1,
-        IsVehicle: 0,
+        StatusId: Number,
+        IsVehicle: Number,
         VehicleId: null,
         LicenseNumber: null,
         FinanceCode: null,
@@ -184,23 +168,22 @@ export default {
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: 0,
-        NonSapWarehouse: 0,
+        IsVirtualWarehouse: Number,
+        NonSapWarehouse: Number,
         WarehouseSuppliers: []
       },
       routeName: this.$route.meta.baseLink,
-      dataStatus: null,
       warehouseSupplier: {
         supplierBranch: null,
         purchaseWarehouse: null,
         returnWarehouse: null
       },
       warehouseSuppliers: [],
-      selectedDistrict: null
+      address: {}
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicleList', 'cities', 'distiricts', 'branchList', 'warehouseList'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicleList', 'branchList', 'warehouseList'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -211,7 +194,6 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -267,6 +249,10 @@ export default {
             this.form.CityId = null
             this.form.DistrictId = null
             this.VehicleId = null
+          } else {
+            this.form.CityId = this.address.CityId
+            this.form.DistrictId = this.address.DistrictId
+            this.form.AddressDetail = this.address.Address
           }
         }
 
@@ -275,20 +261,6 @@ export default {
         }
         this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
       }
-    },
-    selectCity (e) {
-      if (e) {
-        this.form.CityId = e.DecimalValue
-        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
-      } else {
-        this.form.CityId = null
-      }
-
-      this.form.DistrictId = null
-      this.selectedDistrict = null
-    },
-    selectDistirict (e) {
-      this.form.DistrictId = e ? e.DecimalValue : null
     },
     selectedVehicle (e) {
       this.form.VehicleId = e.RecordId

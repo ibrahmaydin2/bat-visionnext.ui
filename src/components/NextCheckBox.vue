@@ -18,7 +18,7 @@ export default {
     activeText: String,
     passiveText: String,
     value: {
-      type: [Boolean, Number]
+      type: Number | Boolean
     },
     toggle: Boolean
   },
@@ -30,13 +30,18 @@ export default {
     return {
       textActive: '',
       textPassive: '',
-      model: false
+      model: false,
+      selectedValue: null
     }
   },
   mounted () {
     this.textActive = this.activeText ? this.activeText : this.$t('insert.active')
     this.textPassive = this.passiveText ? this.passiveText : this.$t('insert.passive')
     this.model = this.type === 'boolean' ? this.value : this.value === 1 || this.value === true
+    if (this.type === 'number') {
+      this.selectedValue = this.value === true || this.value === 1 ? 1 : 0
+      this.$emit('valuechange', this.selectedValue)
+    }
   },
   watch: {
     model (newValue) {
@@ -46,7 +51,7 @@ export default {
       }
     },
     value (newValue) {
-      let val = this.type === 'boolean' ? newValue : newValue === 1
+      let val = this.type === 'boolean' ? newValue : newValue === 1 || this.value === true
       if (val !== this.model) {
         this.model = val
       }
