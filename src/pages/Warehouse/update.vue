@@ -78,7 +78,7 @@
             </b-col>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.ErpCode')">
-                <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+                <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" required/>
               </b-form-group>
             </b-col>
             <b-col md="4" lg="3">
@@ -87,23 +87,7 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="!form.IsVehicle && !form.IsVirtualWarehouse">
-            <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.Address')">
-                <b-form-textarea v-model="form.Address" placeholder="" />
-              </b-form-group>
-            </b-col>
-             <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.CityId')">
-                  <v-select v-model="selectedCity" :options="cities" @input="selectCity" label="Label"></v-select>
-                </b-form-group>
-              </b-col>
-              <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.DistrictId')">
-                  <v-select v-model="selectedDistrict" :options="distiricts" @input="selectDistirict" label="Label" :disabled="!form.CityId"></v-select>
-                </b-form-group>
-              </b-col>
-          </b-row>
+          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle">
           <b-row>
@@ -189,13 +173,12 @@ export default {
       dataStatus: null,
       warehouseSupplier: {},
       warehouseSuppliers: [],
-      selectedDistrict: null,
-      selectedCity: null,
-      vehicleName: null
+      vehicleName: null,
+      address: {}
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicleList', 'cities', 'distiricts', 'branchList', 'warehouseList', 'rowData'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicleList', 'branchList', 'warehouseList', 'rowData'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
@@ -203,7 +186,6 @@ export default {
   },
   methods: {
     getRowData (e) {
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
       this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url})
     },
     selectedType (label, model) {
@@ -264,6 +246,10 @@ export default {
             this.form.CityId = null
             this.form.DistrictId = null
             this.form.VehicleId = null
+          } else {
+            this.form.CityId = this.address.CityId
+            this.form.DistrictId = this.address.DistrictId
+            this.form.AddressDetail = this.address.Address
           }
         }
 
@@ -273,20 +259,6 @@ export default {
 
         this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: model, return: this.$route.meta.baseLink})
       }
-    },
-    selectCity (e) {
-      if (e) {
-        this.form.CityId = e.DecimalValue
-        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
-      } else {
-        this.form.CityId = null
-      }
-
-      this.form.DistrictId = null
-      this.selectedDistrict = null
-    },
-    selectDistirict (e) {
-      this.form.DistrictId = e ? e.DecimalValue : null
     },
     selectedVehicle (e) {
       this.form.VehicleId = e.RecordId
@@ -364,7 +336,6 @@ export default {
       if (!e) {
         return
       }
-      console.log(e.WarehouseSuppliers)
       e.WarehouseSuppliers.map(item => {
         this.warehouseSuppliers.push({
           supplierBranch: {
@@ -403,7 +374,6 @@ export default {
           this.form.Vehicle = e.RecordId
         }
       }
-      console.log(e)
       this.form.IsVehicle = e.IsVehicle == null ? 0 : e.IsVehicle
       this.form.StatusId = e.StatusId == null ? 0 : e.StatusId
       this.form.NonSapWarehouse = e.NonSapWarehouse == null ? 0 : e.NonSapWarehouse
@@ -414,29 +384,18 @@ export default {
       this.form.LicenseNumber = e.LicenseNumber
       this.form.FinanceCode = e.FinanceCode
       this.form.FinanceCode2 = e.FinanceCode2
-      this.form.Address = e.Address
       this.form.Deleted = e.Deleted
       this.form.System = e.System
       this.form.RecordState = e.RecordState == null ? 0 : e.RecordState
-      if (e.CityId > 0) {
-        this.selectedCity = this.cities.find(c => c.DecimalValue === e.CityId)
-        this.form.CityId = e.CityId
-        this.selectCity({
-          DecimalValue: e.CityId
-        })
+      this.address = {
+        CityId: e.CityId,
+        DistrictId: e.DistrictId,
+        Address: e.Address
       }
-      this.SelectedDistrictId = e.DistrictId
       if (e.StatusId === 1) {
         this.dataStatus = true
       } else {
         this.dataStatus = false
-      }
-    },
-    distiricts: function (e) {
-      if (e && this.SelectedDistrictId) {
-        this.selectedDistrict = e.find(c => c.DecimalValue === this.SelectedDistrictId)
-        this.form.DistrictId = this.SelectedDistrictId
-        this.SelectedDistrictId = null
       }
     }
   }
