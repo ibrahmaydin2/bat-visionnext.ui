@@ -136,7 +136,7 @@ export default {
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextLoyalty/api/Loyalty`, formdata: model, return: this.routeName})
+        this.$store.dispatch('createData', {...this.query, api: `VisionNextLoyalty/api/LoyaltyExpense`, formdata: model, return: this.routeName})
       }
     }
   },

@@ -640,6 +640,45 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
+    createRouteBalance ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        ...query.formdata
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+            if (query.return) {
+              router.push({name: query.return})
+            } else if (query.action) {
+              location.reload()
+            }
+          } else {
+            if (res.data.Validations) {
+              let errs = res.data.Validations.Errors
+              for (let i = 0; i < errs.length; i++) {
+                let errmsg = errs[i].States
+                for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                }
+              }
+            } else {
+              commit('showAlert', { type: 'validation', msg: res.data.Message })
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
     updateData ({ state, commit }, query) {
       let dataQuery = {
         'BranchId': state.BranchId,
@@ -1179,6 +1218,7 @@ export const store = new Vuex.Store({
         'AndConditionModel': {
           ...query.andConditionModel
         },
+        ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 1000,
@@ -1186,14 +1226,23 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
+          // Şimdilik koyuldu geri alınacak
+
+          if (query.name === 'fromRouteBalances' || query.name === 'toRouteBalances') {
+            commit('setSearchItems', {data: res.data, name: query.name})
+            return
+          }
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
+            commit('bigLoaded', false)
           } else {
+            commit('setSearchItems', {data: [], name: query.name})
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
+          commit('bigLoaded', false)
         })
     },
 
@@ -1666,6 +1715,7 @@ export const store = new Vuex.Store({
       if (typeof state[payload.name] === 'undefined') {
         Vue.set(state, payload.name, [])
       }
+      console.log(payload)
       state[payload.name] = payload.data
     },
     setVehicleList (state, payload) {

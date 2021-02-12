@@ -1024,6 +1024,20 @@
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı"
+    },
+    "RouteBalance": {
+      "Detail": "Detaylar",
+      "Day1": "Pts",
+      "Day2": "Sal",
+      "Day3": "Çar",
+      "Day4": "Per",
+      "Day5": "Cum",
+      "Day6": "Cts",
+      "Day7": "Paz",
+      "CustomerCode": "Kod",
+      "CustomerDesc": "Ad",
+      "LocationDesc": "Lokasyon",
+      "Selected": "Seç"
     }
   },
   "get": {
