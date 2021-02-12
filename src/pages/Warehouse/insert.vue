@@ -219,7 +219,7 @@ export default {
         })
       }
     },
-    save () {   
+    save () {
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
