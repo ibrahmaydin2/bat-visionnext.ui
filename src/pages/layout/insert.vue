@@ -5,7 +5,16 @@
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-overlay :show="bigLoading" rounded="sm">
+          <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+            <template #overlay>
+              <b-icon
+                icon="arrow-clockwise"
+                animation="spin"
+                scale="8"
+                shift-v="16"
+                shift-h="16"
+              ></b-icon>
+            </template>
             <b-card class="asc__insertPage" no-body>
               <router-view/>
             </b-card>

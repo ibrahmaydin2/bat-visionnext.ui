@@ -26,6 +26,12 @@ export default {
       }
       return !!number
     },
+    checkConvertDayToNumber (text) {
+      if (text === null) {
+        return 0
+      }
+      return text ? 1 : 0
+    },
     getNowDate () {
       const now = new Date()
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
