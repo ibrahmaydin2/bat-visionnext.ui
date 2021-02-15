@@ -107,12 +107,12 @@
               </b-col>
             <b-col v-if="insertVisible.IsWarehouseSale != null ? insertVisible.IsWarehouseSale : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.IsWarehouseSale + (insertRequired.IsWarehouseSale === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsWarehouseSale.$error }">
-                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle />  
+                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsOrderChangeUnitary != null ? insertVisible.IsOrderChangeUnitary : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.IsOrderChangeUnitary + (insertRequired.IsOrderChangeUnitary === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsOrderChangeUnitary.$error }">
-                <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle />  
+                <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle />
               </b-form-group>
             </b-col>
             <!-- <b-col v-if="insertVisible.CustomerLocations.PhoneNumber1 != null ? insertVisible.CustomerLocations.PhoneNumber1 : developmentMode" cols="12" md="3">
