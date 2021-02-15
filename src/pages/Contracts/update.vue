@@ -439,7 +439,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.CustomerId = e.RecordId
-        this.$store.dispatch('getCustomerContracts', {...this.query, ids: [e.RecordId]})
+        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
       } else {
         this.form.CustomerId = null
         this.$store.commit('setCustomerContracts', [])

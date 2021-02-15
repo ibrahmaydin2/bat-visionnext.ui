@@ -7,7 +7,6 @@ import router from './router'
 import i18n from './i18n'
 import { required, not } from 'vuelidate/lib/validators'
 
-Vue.use(Vuex)
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
 export default axios
@@ -199,7 +198,6 @@ export const store = new Vuex.Store({
     currency: [],
     // items: [],
     paymentPeriods: [],
-    statementDays: [],
     paymentTypes: [],
     customerLabels: [],
     customerLabelValues: [],
@@ -1018,172 +1016,6 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getStatementDays ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextSystem/api/SysDay/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setStatementDays', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getContractTypes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextContractManagement/api/ContractType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setContractTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerContracts ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-          'customerIds': query.ids
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 1000,
-        'page': 1,
-        'OrderByColumns': []
-      }
-      return axios.post('VisionNextContractManagement/api/Contract/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerContracts', res.data.ListModel.BaseModels)
-          } else {
-            commit('setCustomerContracts', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          commit('setCustomerContracts', [])
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getBenefitTypes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextContractManagement/api/ContractBenefitType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setBenefitTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('setBenefitTypes', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setBenefitTypes', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getBudgets ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextBudget/api/BudgetMaster/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setBudgets', res.data.ListModel.BaseModels)
-          } else {
-            commit('setBudgets', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setBudgets', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getAssets ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextAsset/api/Asset/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setAssets', res.data.ListModel.BaseModels)
-          } else {
-            commit('setAssets', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setAssets', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getVanLoadingStatus ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextStockManagement/api/VanLoadingStatu/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setVanLoadingStatus', res.data.ListModel.BaseModels)
-          } else {
-            commit('setVanLoadingStatus', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setVanLoadingStatus', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
     getItemForVanLoading ({state, commit}, query) {
       let dataQuery = {
         'branchId': state.BranchId,
@@ -1245,31 +1077,6 @@ export const store = new Vuex.Store({
           commit('bigLoaded', false)
         })
     },
-
-    // AutoComplete isteklerinin ortak fonksiyonu Not: getSearchItems ile birleştirildi.
-    // getAutoCompleteItems ({ state, commit }, query) {
-    //   let AndConditionModel = {}
-    //   AndConditionModel[query.searchField] = query.searchText
-    //   let dataQuery = {
-    //     AndConditionModel,
-    //     'branchId': state.BranchId,
-    //     'companyId': state.CompanyId,
-    //     'pagerecordCount': 50,
-    //     'page': 1
-    //   }
-    //   return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
-    //     .then(res => {
-    //       if (res.data.IsCompleted === true) {
-    //         commit('setItems', res.data.ListModel.BaseModels)
-    //       } else {
-    //         commit('showAlert', { type: 'danger', msg: res.data.Message })
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err.message)
-    //       commit('showAlert', { type: 'danger', msg: err.message })
-    //     })
-    // },
     getPasswordCreator ({state, commit}, query) {
       let dataQuery = {
         'branchId': state.BranchId,
@@ -1711,7 +1518,6 @@ export const store = new Vuex.Store({
       if (typeof state[payload.name] === 'undefined') {
         Vue.set(state, payload.name, [])
       }
-      console.log(payload)
       state[payload.name] = payload.data
     },
     setVehicleList (state, payload) {
@@ -1729,44 +1535,11 @@ export const store = new Vuex.Store({
     setWarehouseListTo (state, payload) {
       state.warehouseListTo = payload
     },
-    // setBanks (state, payload) {
-    //   state.banks = payload
-    // },
-    // setCurrency (state, payload) {
-    //   state.currency = payload
-    // },
     setItems (state, payload) {
       state.items = payload
     },
-    // setPaymentPeriods (state, payload) {
-    //   state.paymentPeriods = payload
-    // },
-    setStatementDays (state, payload) {
-      payload.map(item => {
-        item.Label = item.DayNumber + ' ' + item.Description1
-      })
-      state.statementDays = payload
-    },
-    setCustomerLabels (state, payload) {
-      state.customerLabels = payload
-    },
-    setContractTypes (state, payload) {
-      state.contractTypes = payload
-    },
     setCustomerContracts (state, payload) {
       state.customerContracts = payload
-    },
-    setBenefitTypes (state, payload) {
-      state.benefitTypes = payload
-    },
-    setBudgets (state, payload) {
-      state.budgets = payload
-    },
-    setAssets (state, payload) {
-      state.assets = payload
-    },
-    setVanLoadingStatus (state, payload) {
-      state.vanLoadingStatus = payload
     },
     setItemForVanLoading (state, payload) {
       state.itemForVanLoading = payload
