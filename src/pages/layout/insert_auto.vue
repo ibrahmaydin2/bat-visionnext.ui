@@ -20,7 +20,7 @@
         <b-row>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="dataStatus" toggle/>
+              <NextCheckBox v-model="form.StatusId" type="number" toggle/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -70,8 +70,7 @@ export default {
   data () {
     return {
       form: {},
-      routeName: this.$route.meta.baseLink,
-      dataStatus: null
+      routeName: this.$route.meta.baseLink
     }
   },
   computed: {
@@ -147,14 +146,6 @@ export default {
           this.form[el] = value[el]
         }
       })
-    },
-    // Status'un değerini true'dan 1'e çeviriyor
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.StatusId = 1
-      } else {
-        this.form.StatusId = 0
-      }
     }
   }
 }
