@@ -38,7 +38,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" :active="true">
+        <b-tab :title="$t('insert.warehouse.Warehouse')" :active="true" @click.prevent="tabValidation()">
           <b-row>
             <b-col v-if="insertVisible.NonSapWarehouse != null ? insertVisible.NonSapWarehouse : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.NonSapWarehouse + (insertRequired.NonSapWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.NonSapWarehouse.$error }">
@@ -49,7 +49,7 @@
           <b-row>
             <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicleList" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -89,10 +89,10 @@
           </b-row>
           <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
             <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'">
+              <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.supplierBranch.$error }">
                   <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
                     <template slot="no-options">
                       {{$t('insert.min3')}}
@@ -104,12 +104,12 @@
                 </b-form-group>
             </b-col>
              <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
+                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.purchaseWarehouse.$error }">
                   <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
                 </b-form-group>
               </b-col>
               <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
+                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.returnWarehouse.$error }">
                   <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
                 </b-form-group>
               </b-col>
@@ -148,6 +148,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
@@ -183,7 +184,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicleList', 'branchList', 'warehouseList'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicles', 'branchList', 'warehouseList'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -220,9 +221,13 @@ export default {
       }
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
         this.tabValidation()
       } else {
         if (this.form.IsVehicle && !this.form.VehicleId) {
@@ -267,7 +272,16 @@ export default {
     },
     onVehicleSearch (search, loading) {
       if (search.length >= 3) {
-        this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextVehicle/api/Vehicle/Search',
+          name: 'vehicles',
+          andConditionModel: {
+            Description1: search
+          }
+        }).then(res => {
+          loading(false)
+        })
       }
     },
     onBranchSearch (search, loading) {
@@ -280,10 +294,16 @@ export default {
       this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
     },
     addItems () {
-      if (!this.warehouseSupplier.supplierBranch || !this.warehouseSupplier.supplierBranch.RecordId) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      this.$v.warehouseSupplier.$touch()
+      if (this.$v.warehouseSupplier.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
         return false
       }
+
       let filteredArr = this.warehouseSuppliers.filter(i => i.supplierBranch.RecordId === this.warehouseSupplier.supplierBranch.RecordId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
@@ -292,6 +312,7 @@ export default {
 
       this.warehouseSuppliers.push(this.warehouseSupplier)
       this.warehouseSupplier = {}
+      this.$v.warehouseSupplier.$reset()
     },
     removeItems (item) {
       this.warehouseSuppliers.splice(this.warehouseSuppliers.indexOf(item), 1)
@@ -301,7 +322,18 @@ export default {
     // bu fonksiyonda güncelleme yapılmayacak!
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      warehouseSupplier: {
+        supplierBranch: {
+          required
+        },
+        purchaseWarehouse: {
+          required
+        },
+        returnWarehouse: {
+          required
+        }
+      }
     }
   },
   watch: {
