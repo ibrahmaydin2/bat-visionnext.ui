@@ -371,11 +371,11 @@ export default {
       this.$store.dispatch('getLookups', {...this.query, type: 'TCI_BREAKDOWN', name: 'tciBreak1'})
 
       // Search
-      this.$store.dispatch('getContractTypes')
-      this.$store.dispatch('getCurrency')
-      this.$store.dispatch('getBenefitTypes')
-      this.$store.dispatch('getBudgets')
-      this.$store.dispatch('getAssets')
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/ContractType/Search', name: 'contractTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currency'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/ContractBenefitType/Search', name: 'benefitTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/Asset/Search', name: 'assets'})
     },
     selectedType (label, model) {
       if (model) {
@@ -429,7 +429,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.CustomerId = e.RecordId
-        this.$store.dispatch('getCustomerContracts', {...this.query, ids: [e.RecordId]})
+        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
       } else {
         this.form.CustomerId = null
         this.$store.commit('setCustomerContracts', [])
