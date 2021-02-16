@@ -531,7 +531,12 @@
       "scoreCardClasses": "Score Card Sınıfı",
       "group": "Grup",
       "personalType": "Personel Tipi",
-      "Team": "Takım"
+      "Team": "Takım",
+      "groupInfo": "Grup Bilgileri",
+      "prefix": "Prefix",
+      "category": "Personal Category",
+      "EmployeeInfo": "Employee Information",
+      "TeamPersonalName": "Team Personal Name"
     },
     "customer": {
       "Model_StatusReasonId": "Durum Nedeni",
