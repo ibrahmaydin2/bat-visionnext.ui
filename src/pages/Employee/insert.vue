@@ -61,11 +61,11 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.Category1 != null ? insertVisible.Category1 : developmentMode" md="4" lg="3">
-              <b-form-group :label="$t('insert.employee.category') + (insertRequired.Category1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1.$error }">
+            <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" md="4" lg="3">
+              <b-form-group :label="$t('insert.employee.category') + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
                 <v-select
                   :options="lookup.EMPLOYEE_CATEGORY_1"
-                  @input="selectedType('Category1', $event)"
+                  @input="selectedType('Category1Id', $event)"
                   label="Label"
                 />
               </b-form-group>
@@ -77,7 +77,7 @@
             </b-col>
             <b-col v-if="insertVisible.IsTeam != null ? insertVisible.IsTeam : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.IsTeam + (insertRequired.IsTeam === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsTeam.$error }">
-                <NextCheckBox v-model="form.IsTeam" type="number" />
+                <NextCheckBox v-model="form.IsTeam" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
@@ -99,7 +99,7 @@
             </b-col>
             <b-col v-if="insertVisible.CreateCustomerRecord != null ? insertVisible.CreateCustomerRecord : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.CreateCustomerRecord + (insertRequired.CreateCustomerRecord === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CreateCustomerRecord.$error }">
-                <NextCheckBox v-model="form.CreateCustomerRecord" type="number" />
+                <NextCheckBox v-model="form.CreateCustomerRecord" type="number" toggle/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -127,7 +127,7 @@
           <b-row>
             <b-col v-if="insertVisible.IsRepresentative != null ? insertVisible.IsRepresentative : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.IsRepresentative + (insertRequired.IsRepresentative === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsRepresentative.$error }">
-                <NextCheckBox v-model="form.IsRepresentative" type="number" />
+                <NextCheckBox v-model="form.IsRepresentative" type="number" toggle />
               </b-form-group>
             </b-col>
         </b-row>
@@ -168,7 +168,7 @@
           </b-col>
           <b-col v-if="insertVisible.TaxNumber != null ? insertVisible.TaxNumber : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.TaxNumber + (insertRequired.TaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxNumber.$error }">
-              <b-form-input type="text" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" />
+              <b-form-input type="text" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl" />
             </b-form-group>
           </b-col>
         </b-row>
@@ -236,24 +236,24 @@
         <b-row>
           <b-col v-if="insertVisible.Telephone1 != null ? insertVisible.Telephone1 : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Telephone1 + (insertRequired.Telephone1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone1.$error }">
-              <b-form-input type="text" v-model="form.Telephone1" :readonly="insertReadonly.Telephone1" />
+              <b-form-input type="text" v-model="form.Telephone1" :readonly="insertReadonly.Telephone1" maxLength="10" :oninput="maxLengthControl" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Telephone2 != null ? insertVisible.Telephone2 : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Telephone2 + (insertRequired.Telephone2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone2.$error }">
-              <b-form-input type="text" v-model="form.Telephone2" :readonly="insertReadonly.Telephone2" />
+              <b-form-input type="text" v-model="form.Telephone2" :readonly="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.GsmNumber != null ? insertVisible.GsmNumber : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.GsmNumber + (insertRequired.GsmNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GsmNumber.$error }">
-              <b-form-input type="text" v-model="form.GsmNumber" :readonly="insertReadonly.GsmNumber" />
+            <b-form-group :label="insertTitle.GsmNumber + (insertRequired.GsmNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GsmNumber.$error }" >
+              <b-form-input type="text" v-model="form.GsmNumber" :readonly="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl" />
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
           <b-col v-if="insertVisible.FaxNumber != null ? insertVisible.FaxNumber : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.FaxNumber + (insertRequired.FaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FaxNumber.$error }">
-              <b-form-input type="text" v-model="form.FaxNumber" :readonly="insertReadonly.FaxNumber" />
+              <b-form-input type="text" v-model="form.FaxNumber" :readonly="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Email != null ? insertVisible.Email : developmentMode" md="4" lg="3">
@@ -338,7 +338,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
-import { required } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -347,10 +347,10 @@ export default {
         Code: null,
         Name: null,
         Surname: null,
-        TypeId: null,
-        GroupId: null,
-        StatusId: null,
-        Category1: null,
+        TypeId: 0,
+        GroupId: 0,
+        StatusId: 1,
+        Category1Id: 0,
         FinanceCode1: null,
         FinanceCode2: null,
         SapHrCode: null,
@@ -369,16 +369,16 @@ export default {
         MontSize: null,
         OvercoatSize: null,
         ShoeSize: null,
-        IsTeam: null,
-        PriceListCategoryId: null,
-        CreateCustomerRecord: null,
-        UserGroupId: null,
-        EducationId: null,
+        IsTeam: 0,
+        PriceListCategoryId: 0,
+        CreateCustomerRecord: 0,
+        UserGroupId: 0,
+        EducationId: 0,
         DenimSize: null,
         CorduroySize: null,
-        BloodTypeId: null,
+        BloodTypeId: 0,
         ScoreCardClassId: null,
-        IsRepresentative: null,
+        IsRepresentative: 0,
         EmployeeTeams: [],
         EInvoiceSeqs: []
       },
@@ -387,7 +387,8 @@ export default {
       employeeTeams: [],
       selectedEInvoice: null,
       selectedEInvoices: [],
-      eInvoiceSeqsList: []
+      eInvoiceSeqsList: [],
+      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);'
     }
   },
   computed: {
@@ -434,6 +435,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
         this.form.EmployeeTeams = this.employeeTeams.map((item) => {
           var newItem = {
             Deleted: 0,
@@ -528,8 +530,35 @@ export default {
     }
   },
   validations () {
+    let form = this.insertRules
+    form.TaxNumber = {
+      required,
+      minLength: minLength(11),
+      maxLength: maxLength(11)
+    }
+    form.Telephone1 = {
+      minLength: minLength(10),
+      maxLength: maxLength(10)
+    }
+    form.Telephone2 = {
+      minLength: minLength(10),
+      maxLength: maxLength(10)
+    }
+    form.GsmNumber = {
+      required,
+      minLength: minLength(10),
+      maxLength: maxLength(10)
+    }
+    form.FaxNumber = {
+      minLength: minLength(10),
+      maxLength: maxLength(10)
+    }
+    form.Email = {
+      required,
+      email
+    }
     return {
-      form: this.insertRules,
+      form: form,
       employeeTeam: {
         required
       },
@@ -554,9 +583,11 @@ export default {
     rowData (e) {
       if (e) {
         this.eInvoiceSeqsList = e.EInvoiceSeqs
-        this.eInvoiceSeqsList.map(item => {
-          item.Label = item.Prefix + ' ' + item.Year + ' ' + item.EInvoiceType.Label
-        })
+        if (this.eInvoiceSeqsList) {
+          this.eInvoiceSeqsList.map(item => {
+            item.Label = item.Prefix + ' ' + item.Year + ' ' + item.EInvoiceType.Label
+          })
+        }
       }
     }
   }
