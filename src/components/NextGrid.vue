@@ -250,10 +250,10 @@
         aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
       </b-col> -->
     </b-row>
-    <b-modal ref="RejectModal" hide-footer hide-header>
+    <b-modal id="approve-reject-modal" ref="RejectModal" hide-footer hide-header>
       <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
     </b-modal>
-    <b-modal ref="ApproveModal" hide-footer hide-header>
+    <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
     </b-modal>
   </div>
@@ -466,6 +466,9 @@ export default {
         code: this.$route.query.code,
         andConditionalModel: this.andConditionalModel
       })
+    },
+    closeApproveModal () {
+      this.$bvModal.hide('approve-modal')
     }
   },
   watch: {
