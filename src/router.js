@@ -315,6 +315,16 @@ import BankTransactionGet from '@/pages/BankTransaction/get'
 import BankTransactionInsert from '@/pages/BankTransaction/insert'
 import BankTransactionUpdate from '@/pages/BankTransaction/update'
 
+import CSCardIndex from '@/pages/CSCard/'
+import CSCardGet from '@/pages/CSCard/get'
+import CSCardInsert from '@/pages/CSCard/insert'
+import CSCardUpdate from '@/pages/CSCard/update'
+
+import AccountTransactionIndex from '@/pages/AccountTransaction/'
+import AccountTransactionGet from '@/pages/AccountTransaction/get'
+import AccountTransactionInsert from '@/pages/AccountTransaction/insert'
+import AccountTransactionUpdate from '@/pages/AccountTransaction/update'
+
 import CreditCardIndex from '@/pages/CreditCard/'
 import CreditCardGet from '@/pages/CreditCard/get'
 import CreditCardInsert from '@/pages/CreditCard/insert'
@@ -500,6 +510,8 @@ const listIndex = [
   {path: '/PriceList', name: 'PriceList', component: PriceListIndex, meta: { title: i18n.t('router.PriceList'), createLink: 'PriceListInsert' }},
   {path: '/CheckOperations', name: 'CheckOperations', component: CheckOperationsIndex, meta: { title: i18n.t('router.CheckOperations'), createLink: 'CheckOperationsInsert' }},
   {path: '/BankTransaction', name: 'BankTransaction', component: BankTransactionIndex, meta: { title: i18n.t('router.BankTransaction'), createLink: 'BankTransactionInsert' }},
+  {path: '/CSCard', name: 'CSCard', component: CSCardIndex, meta: { title: i18n.t('router.CSCard'), createLink: 'CSCardInsert' }},
+  {path: '/AccountTransaction', name: 'AccountTransaction', component: AccountTransactionIndex, meta: { title: i18n.t('router.AccountTransaction'), createLink: 'AccountTransactionInsert' }},
   {path: '/CreditCard', name: 'CreditCard', component: CreditCardIndex, meta: { title: i18n.t('router.CreditCard'), createLink: 'CreditCardInsert' }},
   {path: '/CashTransactions', name: 'CashTransactions', component: CashTransactionsIndex, meta: { title: i18n.t('router.CashTransactions'), createLink: 'CashTransactionsInsert' }},
   {path: '/Accounting', name: 'Accounting', component: AccountingIndex, meta: { title: i18n.t('router.Accounting'), createLink: 'AccountingInsert' }},
@@ -585,6 +597,8 @@ const listGet = [
   { path: '/PriceList/:url', name: 'PriceListGet', component: PriceListGet, meta: { title: i18n.t('router.PriceListGet'), baseLink: 'PriceList' } },
   { path: '/CheckOperations/:url', name: 'CheckOperationsGet', component: CheckOperationsGet, meta: { title: i18n.t('router.CheckOperationsGet'), baseLink: 'CheckOperations' } },
   { path: '/BankTransaction/:url', name: 'BankTransactionGet', component: BankTransactionGet, meta: { title: i18n.t('router.BankTransactionGet'), baseLink: 'BankTransaction' } },
+  { path: '/CSCard/:url', name: 'CSCardGet', component: CSCardGet, meta: { title: i18n.t('router.CSCardGet'), baseLink: 'CSCard' } },
+  { path: '/AccountTransaction/:url', name: 'AccountTransactionGet', component: AccountTransactionGet, meta: { title: i18n.t('router.AccountTransactionGet'), baseLink: 'AccountTransaction' } },
   { path: '/CreditCard/:url', name: 'CreditCardGet', component: CreditCardGet, meta: { title: i18n.t('router.CreditCardGet'), baseLink: 'CreditCard' } },
   { path: '/CashTransactions/:url', name: 'CashTransactionsGet', component: CashTransactionsGet, meta: { title: i18n.t('router.CashTransactionsGet'), baseLink: 'CashTransactions' } },
   { path: '/Accounting/:url', name: 'AccountingGet', component: AccountingGet, meta: { title: i18n.t('router.AccountingGet'), baseLink: 'Accounting' } },
@@ -670,6 +684,8 @@ const listUpdate = [
   { path: '/Update/PriceList/:url', name: 'PriceListUpdate', component: PriceListUpdate, meta: { title: i18n.t('router.PriceListUpdate'), baseLink: 'PriceList' } },
   { path: '/Update/CheckOperations/:url', name: 'CheckOperationsUpdate', component: CheckOperationsUpdate, meta: { title: i18n.t('router.CheckOperationsUpdate'), baseLink: 'CheckOperations' } },
   { path: '/Update/BankTransaction/:url', name: 'BankTransactionUpdate', component: BankTransactionUpdate, meta: { title: i18n.t('router.BankTransactionUpdate'), baseLink: 'BankTransaction' } },
+  { path: '/Update/CSCard/:url', name: 'CSCardUpdate', component: CSCardUpdate, meta: { title: i18n.t('router.CSCardUpdate'), baseLink: 'CSCard' } },
+  { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: CreditCardUpdate, meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
   { path: '/Update/CashTransactions/:url', name: 'CashTransactionsUpdate', component: CashTransactionsUpdate, meta: { title: i18n.t('router.CashTransactionsUpdate'), baseLink: 'CashTransactions' } },
   { path: '/Update/Accounting/:url', name: 'AccountingUpdate', component: AccountingUpdate, meta: { title: i18n.t('router.AccountingUpdate'), baseLink: 'Accounting' } },
@@ -753,6 +769,8 @@ const listInsert = [
   { path: '/Insert/PriceList', name: 'PriceListInsert', component: PriceListInsert, meta: { title: i18n.t('router.PriceListInsert'), baseLink: 'PriceList' } },
   { path: '/Insert/CheckOperations', name: 'CheckOperationsInsert', component: CheckOperationsInsert, meta: { title: i18n.t('router.CheckOperationsInsert'), baseLink: 'CheckOperations' } },
   { path: '/Insert/BankTransaction', name: 'BankTransactionInsert', component: BankTransactionInsert, meta: { title: i18n.t('router.BankTransactionInsert'), baseLink: 'BankTransaction' } },
+  { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
+  { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
   { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: CreditCardInsert, meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/CashTransactions', name: 'CashTransactionsInsert', component: CashTransactionsInsert, meta: { title: i18n.t('router.CashTransactionsInsert'), baseLink: 'CashTransactions' } },
   { path: '/Insert/Accounting', name: 'AccountingInsert', component: AccountingInsert, meta: { title: i18n.t('router.AccountingInsert'), baseLink: 'Accounting' } },
