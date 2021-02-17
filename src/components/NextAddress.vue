@@ -12,7 +12,7 @@
       </b-col>
       <b-col md="4" lg="3">
         <b-form-group :label="$t('insert.warehouse.DistrictId')" >
-          <v-select v-model="selectedDistrict" :options="distiricts" label="Label" @input="selectDistrict" :disabled="!selectedCity.DecimalValue"></v-select>
+          <v-select v-model="selectedDistrict" :options="distiricts" label="Label" @input="selectDistrict" :disabled="!selectedCity || !selectedCity.DecimalValue"></v-select>
         </b-form-group>
       </b-col>
    </b-row>

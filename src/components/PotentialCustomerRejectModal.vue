@@ -12,12 +12,14 @@
         <p>{{message}}</p>
       </b-col>
       <b-col v-if="((data.ApproveStateId != null) || (data.ApproveStateId != ''))" cols="12" class="asc__modal-approveModal-footer">
-        <!-- <b-button type="button" @click="closeModal" variant="danger" size="sm" class="float-left">
-          <i class="fas fa-times" /> {{$t('insert.cancel')}}
-        </b-button> -->
-        <b-button type="button" @click="submit()" variant="warning" class="float-right">
-          <i class="fas fa-check" /> {{$t('insert.submit')}}
-        </b-button>
+        <b-button-group class="w-100">
+          <b-button type="button" @click="closeModal()" variant="danger" size="lg" >
+            {{$t('insert.cancel')}}
+          </b-button>
+          <b-button id="submitButton" type="button" size="lg" @click="submit()" variant="success" >
+            {{$t('insert.submit')}}
+          </b-button>
+        </b-button-group>
       </b-col>
     </b-row>
   </b-overlay>
@@ -38,7 +40,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$root.$emit('bv::hide::modal', 'RejectModal', '#btnShow')
+      this.$root.$emit('bv::hide::modal', 'approve-reject-modal')
     },
     submit () {
       if ((this.data.ApproveStateId === null) || (this.data.ApproveStateId === '')) {

@@ -1587,7 +1587,6 @@ export default {
         })
       } else {
         let arrIndex = this.form.CustomerLocations.indexOf(filteredArr[0])
-        console.log(this.customerLocations)
         this.form.CustomerLocations[arrIndex] = {
           Code: this.customerLocations.Code,
           Description1: this.customerLocations.Description1,

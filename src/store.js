@@ -970,29 +970,6 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    acItems ({ state, commit }, query) {
-      let AndConditionModel = {}
-      AndConditionModel[query.searchField] = query.searchText
-      let dataQuery = {
-        AndConditionModel,
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 50,
-        'page': 1
-      }
-      return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setItems', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
     // aşağıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
     getItems ({state, commit}, query) {
       let dataQuery = {
@@ -1135,6 +1112,37 @@ export const store = new Vuex.Store({
         .catch(err => {
           commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    approvePotentialCustomer ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        ...query.formdata
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post(query.api + '/ApprovePotentialCustomer', dataQuery, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+            console.log(query.return)
+            router.push({name: query.return})
+          } else {
+            let errs = res.data.Validations.Errors
+            for (let i = 0; i < errs.length; i++) {
+              let errmsg = errs[i].States
+              for (let x = 0; x < errmsg.length; x++) {
+                commit('showAlert', { type: 'validation', msg: errmsg })
+              }
+            }
+          }
+        })
+        .catch(err => {
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     }
   },

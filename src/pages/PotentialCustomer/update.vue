@@ -25,6 +25,15 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" :active="!developmentMode">
           <b-row>
+            <b-row>
+              <b-col>
+              <pre v-if="developmentMode" class="asc__codeHTML">
+                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
+                  {{codeInCode}}
+                </span>
+              </pre>
+            </b-col>
+            </b-row>
             <b-col v-if="insertVisible.CommercialTitle != null ? insertVisible.CommercialTitle : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CommercialTitle + (insertRequired.CommercialTitle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CommercialTitle.$error }">
                 <b-form-input type="text" v-model="form.CommercialTitle" :readonly="insertReadonly.CommercialTitle" />
@@ -51,20 +60,30 @@
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TypeId != null ? insertVisible.TypeId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.TypeId + (insertRequired.TypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TypeId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
+              <b-form-group :label="insertTitle.TypeId + (insertRequired.TypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TypeId.$error }">
+                <v-select
+                  v-model="Type"
+                  :options="lookup.CUSTOMER_TYPE"
+                  @input="selectedType('TypeId', $event)"
+                  label="Label"
+                />
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.DefaultPaymentTypeId != null ? insertVisible.DefaultPaymentTypeId : developmentMode" cols="12" md="3">
                 <b-form-group :label="insertTitle.DefaultPaymentTypeId + (insertRequired.DefaultPaymentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultPaymentTypeId.$error }">
-                  <v-select :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
+                  <v-select v-model="DefaultPaymentType" :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
                 </b-form-group>
-              </b-col>
+            </b-col>
             <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
+              <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
+                <v-select
+                  v-model="PriceListCategory"
+                  :options="lookup.PRICE_LIST_CATEGORY_TYPE"
+                  @input="selectedType('PriceListCategoryId', $event)"
+                  label="Label"
+                />
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.Barcode != null ? insertVisible.Barcode : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.Barcode + (insertRequired.Barcode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Barcode.$error }">
                 <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
@@ -75,56 +94,55 @@
                 <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
               </b-form-group>
             </b-col>
-            <!-- <b-col v-if="insertVisible.CustomerLocations.CityId != null ? insertVisible.CustomerLocations.CityId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.CustomerLocations.CityId + (insertRequired.CustomerLocations.CityId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerLocations.CityId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
-            <b-col v-if="insertVisible.CustomerLocations.DistrictId != null ? insertVisible.CustomerLocations.DistrictId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.CustomerLocations.DistrictId + (insertRequired.CustomerLocations.DistrictId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerLocations.DistrictId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
-            <b-col v-if="insertVisible.CustomerLocations.AddressDetail != null ? insertVisible.CustomerLocations.AddressDetail : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerLocations.AddressDetail + (insertRequired.CustomerLocations.AddressDetail === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerLocations.AddressDetail.$error }">
-                <b-form-input type="text" v-model="form.CustomerLocations.AddressDetail" :readonly="insertReadonly.CustomerLocations.AddressDetail" />
-              </b-form-group>
-            </b-col> -->
             <b-col v-if="insertVisible.Statement != null ? insertVisible.Statement : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.Statement + (insertRequired.Statement === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Statement.$error }">
                 <b-form-input type="text" v-model="form.Statement" :readonly="insertReadonly.Statement" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.InvoiceCombineRuleId != null ? insertVisible.InvoiceCombineRuleId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.InvoiceCombineRuleId + (insertRequired.InvoiceCombineRuleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.InvoiceCombineRuleId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
+              <b-form-group :label="insertTitle.InvoiceCombineRuleId + (insertRequired.InvoiceCombineRuleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.InvoiceCombineRuleId.$error }">
+                <v-select
+                  v-model="InvoiceCombineRule"
+                  :options="lookup.INVOICE_COMBINE_RULE"
+                  @input="selectedType('InvoiceCombineRuleId', $event)"
+                  label="Label"
+                />
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.SalesDocumentTypeId != null ? insertVisible.SalesDocumentTypeId : developmentMode" cols="12" md="3">
-                <b-form-group :label="insertTitle.SalesDocumentTypeId + (insertRequired.SalesDocumentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesDocumentTypeId.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>
+              <b-form-group :label="insertTitle.SalesDocumentTypeId + (insertRequired.SalesDocumentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesDocumentTypeId.$error }">
+                <v-select
+                  v-model="SalesDocumentType"
+                  :options="lookup.SALES_DOCUMENT_TYPE"
+                  @input="selectedType('SalesDocumentTypeId', $event)"
+                  label="Label"
+                />
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.IsWarehouseSale != null ? insertVisible.IsWarehouseSale : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.IsWarehouseSale + (insertRequired.IsWarehouseSale === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsWarehouseSale.$error }">
-                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle />  
+                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsOrderChangeUnitary != null ? insertVisible.IsOrderChangeUnitary : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.IsOrderChangeUnitary + (insertRequired.IsOrderChangeUnitary === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsOrderChangeUnitary.$error }">
-                <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle />  
+                <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle />
               </b-form-group>
             </b-col>
-            <!-- <b-col v-if="insertVisible.CustomerLocations.PhoneNumber1 != null ? insertVisible.CustomerLocations.PhoneNumber1 : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerLocations.PhoneNumber1 + (insertRequired.CustomerLocations.PhoneNumber1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerLocations.PhoneNumber1.$error }">
-                <b-form-input type="text" v-model="form.CustomerLocations.PhoneNumber1" :readonly="insertReadonly.CustomerLocations.PhoneNumber1" />
+          </b-row>
+          <hr>
+          <NextAddress v-model="address" />
+          <b-row>
+            <b-col cols="12" md="3" lg="3">
+              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1')">
+                <b-form-input type="text" v-model="CustomerLocations.PhoneNumber1" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.CustomerLocations.PhoneNumber2 != null ? insertVisible.CustomerLocations.PhoneNumber2 : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerLocations.PhoneNumber2 + (insertRequired.CustomerLocations.PhoneNumber2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerLocations.PhoneNumber2.$error }">
-                <b-form-input type="text" v-model="form.CustomerLocations.PhoneNumber2" :readonly="insertReadonly.CustomerLocations.PhoneNumber2" />
+            <b-col cols="12" md="3" lg="3">
+              <b-form-group :label="$t('insert.customer.Model_FaxNumber')">
+                <b-form-input type="text" v-model="CustomerLocations.FaxNumber" />
               </b-form-group>
-            </b-col> -->
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -154,20 +172,24 @@ export default {
         SalesDocumentTypeId: null,
         IsWarehouseSale: null,
         IsOrderChangeUnitary: null,
-        CustomerLocation: {
-          CityId: null,
-          DistrictId: null,
-          AddressDetail: null,
-          PhoneNumber1: null,
-          PhoneNumber2: null
-        }
+        CustomerLocations: []
       },
       routeName: this.$route.meta.baseLink,
-      dataStatus: null
+      dataStatus: null,
+      Type: null,
+      DefaultPaymentType: null,
+      PriceListCategory: null,
+      InvoiceCombineRule: null,
+      SalesDocumentType: null,
+      address: {},
+      CustomerLocations: {
+        PhoneNumber1: null,
+        FaxNumber: null
+      }
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'rowData', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'paymentTypes'])
+    ...mapState(['developmentMode', 'insertHTML', 'rowData', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'paymentTypes'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -208,10 +230,20 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        const defaultCustomerLocation = this.form.CustomerLocations[0]
+        if (defaultCustomerLocation) {
+          defaultCustomerLocation.AddressDetail = this.address.Address
+          defaultCustomerLocation.DistrictId = this.address.DistrictId
+          defaultCustomerLocation.CityId = this.address.CityId
+          if (this.CustomerLocations) {
+            defaultCustomerLocation.PhoneNumber1 = this.CustomerLocations.PhoneNumber1
+            defaultCustomerLocation.FaxNumber = this.CustomerLocations.FaxNumber
+          }
+        }
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.$store.dispatch('approvePotentialCustomer', {...this.query, api: `VisionNextCustomer/api/Customer`, formdata: model, return: this.routeName})
       }
     }
   },
@@ -229,6 +261,7 @@ export default {
     rowData: function (e) {
       if (e) {
         this.form = {
+          RecordId: this.$route.params.url,
           CommercialTitle: e.CommercialTitle,
           TaxOffice: e.TaxOffice,
           TaxNumber: e.TaxNumber,
@@ -244,8 +277,72 @@ export default {
           SalesDocumentTypeId: e.SalesDocumentTypeId,
           IsWarehouseSale: e.IsWarehouseSale,
           IsOrderChangeUnitary: e.IsOrderChangeUnitary,
-          CustomerLocations: e.CustomerLocations
+          CustomerLocations: [
+            {
+              'updatedProperties': [
+                'AddressDetail',
+                'PhoneNumber1',
+                'FaxNumber',
+                'CityId',
+                'DistrictId'
+              ],
+              'AddressDetail': '',
+              'PhoneNumber1': '',
+              'FaxNumber': '',
+              'CityId': null,
+              'DistrictId': null,
+              'Deleted': 0,
+              'System': 0,
+              'RecordId': null,
+              'CustomerId': null
+            }
+          ],
+          'updatedProperties': [
+            'Description1',
+            'TaxOffice',
+            'TaxNumber',
+            'Barcode',
+            'DefaultPaymentTypeId',
+            'PriceListCategoryId',
+            'LicenseNumber',
+            'InvoiceCombineRuleId',
+            'DeliveryDayParam',
+            'SalesDocumentTypeId',
+            'IsOrderChangeUnitary',
+            'IsWarehouseSale',
+            'RecordTypeId',
+            'CurrentRisk',
+            'CardTypeId',
+            'TypeId'
+          ]
         }
+        e.CustomerLocations.map(item => {
+          if (item.IsDefaultLocation) {
+            this.address = {
+              CityId: item.CityId,
+              DistrictId: item.DistrictId,
+              Address: item.AddressDetail
+            }
+            this.form.CustomerLocations[0].RecordId = item.RecordId
+            this.form.CustomerLocations[0].CustomerId = item.CustomerId
+          }
+        })
+      }
+      if (e.Type) {
+        this.Type = e.Type.Label
+      }
+      if (e.DefaultPaymentType) {
+        this.DefaultPaymentType = e.DefaultPaymentType.Label
+      }
+      if (e.PriceListCategory) {
+        this.PriceListCategory = e.PriceListCategory.Label
+      }
+      if (e.InvoiceCombineRuleId && this.lookup.INVOICE_COMBINE_RULE) {
+        let tmpArr = this.lookup.INVOICE_COMBINE_RULE.filter(i => i.DecimalValue === e.InvoiceCombineRuleId)
+        this.InvoiceCombineRule = tmpArr[0].Label
+      }
+      if (e.SalesDocumentType) {
+        this.SalesDocumentType = e.SalesDocumentType.Label
       }
     }
   }

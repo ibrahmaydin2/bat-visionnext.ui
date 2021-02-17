@@ -10,13 +10,13 @@
       </b-col>
       <b-col cols="12" class="asc__modal-approveModal-footer">
         <b-button-group class="w-100">
-          <b-button type="button" @click="$bvModal.hide('ApproveModal')" variant="danger" size="lg" >
+          <b-button type="button" @click="closeModal()" variant="danger" size="lg" >
             {{$t('insert.cancel')}}
           </b-button>
-          <b-button type="button" variant="warning" size="lg" >
+          <b-button @click="goUpdate" type="button" variant="warning" size="lg" >
             {{$t('insert.edit')}}
           </b-button>
-          <b-button type="button" size="lg" @click="submit()" variant="success" >
+          <b-button id="submitButton" type="button" size="lg" @click="submit()" variant="success" >
             {{$t('insert.submit')}}
           </b-button>
         </b-button-group>
@@ -26,7 +26,6 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -46,9 +45,7 @@ export default {
       //   duration: '3000'
       // })
       this.status = true
-      let update = {
-        'companyId': this.data.CompanyId,
-        'branchId': this.data.BranchId,
+      let model = {
         'model': {
           'recordId': this.recordId,
           'code': this.data.Code,
@@ -91,28 +88,39 @@ export default {
           'system': 0
         }
       }
-      return axios.post(this.action, update, {
-        headers: {
-          'key': localStorage.getItem('Key')
-        }
+      this.$store.dispatch('approvePotentialCustomer', {...this.query, api: `VisionNextCustomer/api/Customer`, formdata: model, return: null}).then(res => {
+        this.status = false
+        this.closeModal()
       })
-        .then(res => {
-          this.status = false
-          this.$toasted.show(this.$t('insert.approveRejectSuccess'), {
-            type: 'success',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        })
-        .catch(err => {
-          this.status = false
-          this.$toasted.show(this.$t('insert.approveRejectError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          console.log(err)
-        })
+
+      // return axios.post(this.action, update, {
+      //   headers: {
+      //     'key': localStorage.getItem('Key')
+      //   }
+      // })
+      //   .then(res => {
+      //     this.status = false
+      //     this.$toasted.show(this.$t('insert.approveRejectSuccess'), {
+      //       type: 'success',
+      //       keepOnHover: true,
+      //       duration: '3000'
+      //     })
+      //   })
+      //   .catch(err => {
+      //     this.status = false
+      //     this.$toasted.show(this.$t('insert.approveRejectError'), {
+      //       type: 'error',
+      //       keepOnHover: true,
+      //       duration: '3000'
+      //     })
+      //     console.log(err)
+      //   })
+    },
+    goUpdate () {
+      this.$router.push({name: 'PotentialCustomerUpdate', params: { url: this.recordId }})
+    },
+    closeModal () {
+      this.$root.$emit('bv::hide::modal', 'approve-modal')
     }
   },
   mounted () {
