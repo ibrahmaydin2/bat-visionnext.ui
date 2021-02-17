@@ -327,8 +327,11 @@
     "LoyaltyConsumption": "Müşteri Güncel Puanları",
     "LoyaltyConsumptionGet": "Müşteri Güncel Puanları Görüntüle",
     "PotentialCustomer": "Potansiyel Müşteri",
-    "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle"
-    
+    "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
+    "CashCard": "Nakit Ödeme",
+    "CashCardInsert": "Yeni Nakit Ödeme",
+    "CashCardUpdate": "Nakit Ödeme Güncelle",
+    "CashCardGet": "Nakit Ödeme Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -761,6 +764,12 @@
       "CityId" : "İl",
       "DistrictId" : "İlçe"
     },
+    "cashcard": {
+      "Code": "Nakit Ödeme Kodu",
+      "CashCard": "Nakit Ödeme Ana Kayıtları",
+      "status": "Durum",
+      "code": "Sistem Kodu"
+    },
     "item": {
       "Detail": "Detaylar",
       "Model_Code": "Ürün Kodu",
@@ -1168,6 +1177,21 @@
       "NonSapWarehouse": "Non-SAP",
       "VehicleId": "Araç",
       "LicenseNumber": "Lisans Numarası"
+    },
+    "CashCard": {
+      "title":"Nakit Ödeme Ana Kayıtları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "CustomerId": "Müşteri",
+      "DocumentNumber": "Belge Numarası",
+      "DocumentDate": "Belge Tarihi",
+      "PaymentDate": "Ödeme Tarihi",
+      "CashTotal": "Tutar",
+      "CurrencyId": "Para Birimi",
+      "RepresentativeId": "Saha Personeli",
+      "RouteId": "Rota",
+      "CashCardTypeId": "İşlem Tipi"
     }
   },
   
