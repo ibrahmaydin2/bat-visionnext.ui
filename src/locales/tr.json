@@ -774,7 +774,8 @@
       "Code": "Kredi Kartı İşlem Kodu",
       "CreditCard": "Kredi Kartı Ana Kayıtları",
       "status": "Durum",
-      "code": "Sistem Kodu"
+      "code": "Sistem Kodu",
+      "reminder": "Müşteri Bakiyesi"
     },
     "item": {
       "Detail": "Detaylar",
