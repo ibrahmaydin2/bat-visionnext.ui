@@ -303,19 +303,10 @@ export default {
       })
     },
     rowData: function (e) {
-      console.log(e)
       if (!e) {
         return
       }
       this.form = e
-      // this.form.Code = e.Code
-      // this.form.CustomerId = e.CustomerId
-      // this.form.DocumentNumber = e.DocumentNumber
-      // this.form.RecordId = e.RecordId
-      // this.form.Description1 = e.Description1
-      // this.form.Deleted = e.Deleted
-      // this.form.System = e.System
-      // this.form.RecordState = e.RecordState == null ? 0 : e.RecordState
       if (e.Customer) {
         this.customerLabel = e.Customer.Label
       }

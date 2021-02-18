@@ -101,7 +101,6 @@
     "PriceList": "PriceList",
     "CheckOperations": "CheckOperations",
     "BankTransaction": "BankTransaction",
-    "CreditCard": "CreditCard",
     "CashTransactions": "CashTransactions",
     "Accounting": "Accounting",
     "AccountCodeDescription": "AccountCodeDescription",
@@ -163,7 +162,6 @@
     "PriceListGet": "PriceListGet",
     "CheckOperationsGet": "CheckOperationsGet",
     "BankTransactionGet": "BankTransactionGet",
-    "CreditCardGet": "CreditCardGet",
     "CashTransactionsGet": "CashTransactionsGet",
     "AccountingGet": "AccountingGet",
     "AccountCodeDescriptionGet": "AccountCodeDescriptionGet",
@@ -225,7 +223,6 @@
     "PriceListUpdate": "PriceListUpdate",
     "CheckOperationsUpdate": "CheckOperationsUpdate",
     "BankTransactionUpdate": "BankTransactionUpdate",
-    "CreditCardUpdate": "CreditCardUpdate",
     "CashTransactionsUpdate": "CashTransactionsUpdate",
     "AccountingUpdate": "AccountingUpdate",
     "AccountCodeDescriptionUpdate": "AccountCodeDescriptionUpdate",
@@ -283,7 +280,6 @@
     "PriceListInsert": "PriceListInsert",
     "CheckOperationsInsert": "CheckOperationsInsert",
     "BankTransactionInsert": "BankTransactionInsert",
-    "CreditCardInsert": "CreditCardInsert",
     "CashTransactionsInsert": "CashTransactionsInsert",
     "AccountingInsert": "AccountingInsert",
     "AccountCodeDescriptionInsert": "AccountCodeDescriptionInsert",
@@ -331,7 +327,11 @@
     "CashCard": "Nakit Ödeme",
     "CashCardInsert": "Yeni Nakit Ödeme",
     "CashCardUpdate": "Nakit Ödeme Güncelle",
-    "CashCardGet": "Nakit Ödeme Görüntüle"
+    "CashCardGet": "Nakit Ödeme Görüntüle",
+    "CreditCard": "Kredi Kartı İşlemleri",
+    "CreditCardInsert": "Yeni Kredi Kartı İşlemi",
+    "CreditCardUpdate": "Kredi Kartı İşlemi Güncelle",
+    "CreditCardGet": "Kredi Kartı İşlemi Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -775,6 +775,13 @@
       "status": "Durum",
       "code": "Sistem Kodu"
     },
+    "creditcard": {
+      "Code": "Kredi Kartı İşlem Kodu",
+      "CreditCard": "Kredi Kartı Ana Kayıtları",
+      "status": "Durum",
+      "code": "Sistem Kodu",
+      "reminder": "Müşteri Bakiyesi"
+    },
     "item": {
       "Detail": "Detaylar",
       "Model_Code": "Ürün Kodu",
@@ -1196,6 +1203,24 @@
       "CurrencyId": "Para Birimi",
       "RepresentativeId": "Saha Personeli",
       "RouteId": "Rota",
+      "CashCardTypeId": "İşlem Tipi"
+    },
+    "CreditCard": {
+      "title":"Kredi Kartı Ana Kayıtları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "CustomerId": "Müşteri",
+      "ApproveNumber": "Onay No",
+      "DocumentNumber": "Belge Numarası",
+      "DocumentDate": "Belge Tarihi",
+      "Bank": "Bank",
+      "CreditCardTotal": "Kredi Kartı Tutarı",
+      "CurrencyId": "Para Birimi",
+      "CardNumber": "Kart Numarası",
+      "RepresentativeId": "Saha Personeli",
+      "RouteId": "Rota",
+      "IsBatcardTransaction": "BATCard Tahsilatı",
       "CashCardTypeId": "İşlem Tipi"
     }
   },
