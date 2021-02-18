@@ -61,22 +61,22 @@
             </b-col>
             <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CurrencyId + (insertRequired.CurrencyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrencyId.$error }">
-                <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1"></v-select>
+                <v-select v-model="Currency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TransactionTypeId != null ? insertVisible.TransactionTypeId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.TransactionTypeId + (insertRequired.TransactionTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionTypeId.$error }">
-                <v-select :options="transactionTypes" @input="selectedSearchType('TransactionTypeId', $event)" label="Description1"></v-select>
+                <v-select v-model="transactionType" :options="transactionTypes" @input="selectedSearchType('TransactionTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TransactionTotal != null ? insertVisible.TransactionTotal : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.TransactionTotal + (insertRequired.TransactionTotal === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionTotal.$error }">
-                <b-form-input type="text" v-model="form.TransactionTotal" :readonly="insertReadonly.TransactionTotal" />
+                <b-form-input type="number" v-model="form.TransactionTotal" :readonly="insertReadonly.TransactionTotal" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
-                <v-select :options="banks"  @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1">
+                <v-select v-model="BankId" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -90,12 +90,12 @@
             </b-col>
             <b-col v-if="insertVisible.BankBranchId != null ? insertVisible.BankBranchId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.BankBranchId + (insertRequired.BankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankBranchId.$error }">
-                <v-select :options="bankBranches" @input="selectedSearchType('BankBranchId', $event)" label="Description1"></v-select>
+                <v-select v-model="BankBranchId" :options="bankBranches" @input="selectedSearchType('BankBranchId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CustomerBankId != null ? insertVisible.CustomerBankId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerBankId + (insertRequired.CustomerBankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankId.$error }">
-                <v-select :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1">
+                <v-select v-model="CustomerBankId" :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -104,7 +104,7 @@
             </b-col>
             <b-col v-if="insertVisible.CustomerBankBranchId != null ? insertVisible.CustomerBankBranchId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerBankBranchId + (insertRequired.CustomerBankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankBranchId.$error }">
-                <v-select :options="customerBankBranches" @input="selectedSearchType('CustomerBankBranchId', $event)" label="Description1"></v-select>
+                <v-select v-model="CustomerBankBranchId" :options="customerBankBranches" @input="selectedSearchType('CustomerBankBranchId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CustomerBankAccountNumber != null ? insertVisible.CustomerBankAccountNumber : developmentMode" cols="12" md="3">
@@ -149,7 +149,13 @@ export default {
       routeName: this.$route.meta.baseLink,
       bankBranches: [],
       customerBankBranches: [],
-      CustomerId: null
+      CustomerId: null,
+      Currency: null,
+      transactionType: null,
+      BankId: null,
+      BankBranchId: null,
+      CustomerBankId: null,
+      CustomerBankBranchId: null
     }
   },
   computed: {
@@ -168,7 +174,6 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this[label] = model.Description1
         if (label === 'BankId') {
           this.$store.dispatch('getAllData', {...this.query, api: 'VisionNextBank/api/Bank/Get', record: model.RecordId, name: 'bankItems'})
         } else if (label === 'CustomerBankId') {
@@ -251,27 +256,23 @@ export default {
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextBank/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNextBank/api/${this.routeName}`, formdata: model, return: this.routeName})
       }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
       form: this.insertRules
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
     rowData (e) {
       if (e) {
         this.form = {
           StatusId: e.StatusId,
           Code: e.Code,
           CustomerId: e.CustomerId,
-          DocumentDate: this.dateConvertFromTimezone(e.DocumentDate),
+          DocumentDate: this.dateConvertToISo(e.DocumentDate),
           DocumentNumber: e.DocumentNumber,
           CurrencyId: e.CurrencyId,
           TransactionTypeId: e.TransactionTypeId,
@@ -294,24 +295,43 @@ export default {
           const andConditionModel = {
             RecordIds: [e.Customer.DecimalValue]
           }
-          this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', andConditionModel).then(res => {
-            const model = {
-              RecordId: e.Customer.DecimalValue,
-              Description1: e.Customer.Label
-            }
-            this.selectedSearchType('CustomerId', model)
+          this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', andConditionModel).then(() => {
+            this.CustomerId = e.Customer.Label
           })
         }
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
+        if (e.Bank) {
+          const andConditionModel = {
+            RecordIds: [e.Bank.DecimalValue]
+          }
+          this.searchItemsByModel('VisionNextBank/api/Bank/Search', 'banks', andConditionModel).then(() => {
+            this.BankId = e.Bank.Label
+            if (e.BankBranch) {
+              this.$store.dispatch('getAllData', {...this.query, api: 'VisionNextBank/api/Bank/Get', record: e.Bank.DecimalValue, name: 'bankItems'}).then(() => {
+                this.BankBranchId = e.BankBranch.Label
+              })
+            }
+          })
         }
-      })
+        if (e.CustomerBank) {
+          const andConditionModel = {
+            RecordIds: [e.CustomerBank.DecimalValue]
+          }
+          this.searchItemsByModel('VisionNextBank/api/Bank/Search', 'customerBanks', andConditionModel).then(() => {
+            this.CustomerBankId = e.CustomerBank.Label
+            if (e.CustomerBankBranch) {
+              this.$store.dispatch('getAllData', {...this.query, api: 'VisionNextBank/api/Bank/Get', record: e.CustomerBank.DecimalValue, name: 'customerBankItems'}).then(() => {
+                this.CustomerBankBranchId = e.CustomerBankBranch.Label
+              })
+            }
+          })
+        }
+        if (e.Currency) {
+          this.Currency = e.Currency.Label
+        }
+        if (e.TransactionType) {
+          this.transactionType = e.TransactionType.Label
+        }
+      }
     },
     bankItems (e) {
       if (e) {
