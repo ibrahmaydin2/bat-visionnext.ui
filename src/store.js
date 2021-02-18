@@ -295,7 +295,6 @@ export const store = new Vuex.Store({
             commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
           } else {
             commit('showAlert', { type: 'catch', msg: res.data })
-            console.log(res)
           }
         })
         .catch(err => {
@@ -604,7 +603,6 @@ export const store = new Vuex.Store({
         'CompanyId': state.CompanyId,
         ...query.formdata
       }
-      console.log(dataQuery)
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
@@ -766,8 +764,6 @@ export const store = new Vuex.Store({
     },
     // LOOKUP servisleri
     getGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
-      console.log(query.model)
-
       let dataQuery = {
         'AndConditionModel': query.model ? query.model : {},
         'branchId': state.BranchId,
@@ -1128,7 +1124,6 @@ export const store = new Vuex.Store({
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
-            console.log(query.return)
             router.push({name: query.return})
           } else {
             let errs = res.data.Validations.Errors
@@ -1144,6 +1139,29 @@ export const store = new Vuex.Store({
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
+    },
+    // Sayfa içindeki get metodlarının ortak fonksiyonu
+    getAllData ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'RecordId': query.record
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGetItems', {data: res.data.Model, name: query.name})
+            commit('bigLoaded', false)
+          } else {
+            commit('setGetItems', {data: [], name: query.name})
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+          commit('bigLoaded', false)
+        })
     }
   },
   mutations: {
@@ -1158,7 +1176,6 @@ export const store = new Vuex.Store({
       switch (payload.type) {
         case 'catch':
           if (payload.msg.status === 401) {
-            console.log(payload.msg)
             store.commit('logout')
           }
           this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
@@ -1523,6 +1540,12 @@ export const store = new Vuex.Store({
       state.branch = payload
     },
     setSearchItems (state, payload) {
+      if (typeof state[payload.name] === 'undefined') {
+        Vue.set(state, payload.name, [])
+      }
+      state[payload.name] = payload.data
+    },
+    setGetItems (state, payload) {
       if (typeof state[payload.name] === 'undefined') {
         Vue.set(state, payload.name, [])
       }
