@@ -61,8 +61,8 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" md="4" lg="3">
-              <b-form-group :label="$t('insert.employee.category') + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
+            <b-col v-if="insertVisible.Category1 != null ? insertVisible.Category1 : developmentMode" md="4" lg="3">
+              <b-form-group :label="$t('insert.employee.category') + (insertRequired.Category1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1.$error }">
                 <v-select
                   :options="lookup.EMPLOYEE_CATEGORY_1"
                   @input="selectedType('Category1Id', $event)"
@@ -585,7 +585,7 @@ export default {
         this.eInvoiceSeqsList = e.EInvoiceSeqs
         if (this.eInvoiceSeqsList) {
           this.eInvoiceSeqsList.map(item => {
-            item.Label = item.Prefix + ' ' + item.Year + ' ' + item.EInvoiceType.Label
+            item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
           })
         }
       }
