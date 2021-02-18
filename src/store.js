@@ -1372,9 +1372,9 @@ export const store = new Vuex.Store({
               </b-form-group>
             </b-col>`
             if (parseInt(fieldDefaultValue) === 1) {
-              dflvl[fieldName] = true
+              dflvl[fieldName] = 1
             } else {
-              dflvl[fieldName] = false
+              dflvl[fieldName] = 0
             }
             break
 
