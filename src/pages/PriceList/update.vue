@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">Kaydet</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,27 +18,19 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Code')"
-            >
-              <b-form-input type="text" v-model="form.Model.Code" readonly />
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" md="3" lg="3">
+            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Description1')"
-            >
-              <b-form-input type="text" v-model="form.Model.Description1"/>
+          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" md="3" lg="3">
+            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_StatusId')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="3" lg="3">
+            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -46,120 +38,70 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" active>
+        <b-tab :title="$t('insert.PriceList.PriceList')">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
+            <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" md="3" lg="3">
+              <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
                 <v-select
-                  v-model="form.Model.WarehouseType"
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
+                  :options="lookup.PRICE_LIST_CATEGORY_TYPE"
+                  @input="selectedType('PriceListCategoryId', $event)"
                   label="Label"
+                  v-model="priceListCategory"
                 />
               </b-form-group>
             </b-col>
-            <b-col v-if="showVehicle" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="VehicleName" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.VehiclePlateNumber }}
-                  </template>
-                </v-select>
+            <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" md="3" lg="3">
+              <b-form-group :label="insertTitle.CurrencyId + (insertRequired.CurrencyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrencyId.$error }">
+                <v-select
+                  :options="currencies"
+                  @input="selectedSearchType('CurrencyId', $event)"
+                  label="Description1"
+                  v-model="currency"
+                />
               </b-form-group>
             </b-col>
-            <b-col v-if="showCustomer" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select v-model="form.Model.Customer" label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
+            <b-col v-if="insertVisible.BeginDate != null ? insertVisible.BeginDate : developmentMode" :start-weekday="1" md="3" lg="3">
+              <b-form-group :label="insertTitle.BeginDate + (insertRequired.BeginDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BeginDate.$error }">
+                <b-form-datepicker v-model="form.BeginDate" />
+              </b-form-group>
+            </b-col>
+             <b-col v-if="insertVisible.EndDate != null ? insertVisible.EndDate : developmentMode" :start-weekday="1" md="3" lg="3">
+              <b-form-group :label="insertTitle.EndDate + (insertRequired.EndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EndDate.$error }">
+                <b-form-datepicker v-model="form.EndDate" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
+            <b-col md="4" lg="3">
+              <b-form-group :label="$t('insert.PriceList.Product')">
+                <b-form-input type="text" @input="onProductSearch($event)"/>
               </b-form-group>
+            </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="12">
+            <b-table responsive autoWidth bordered small id="product-list" :per-page="20" :current-page="currentPage" :items="products" :fields="fields">
+              <template #cell(IsVatIncluded)="data">
+                <NextCheckBox v-model="data.item.IsVatIncluded" type="number" toggle/>
+              </template>
+              <template #cell(UseConsumerPrice)="data">
+                <NextCheckBox v-model="data.item.UseConsumerPrice" type="number" toggle/>
+              </template>
+              <template #cell(SalesPrice)="data">
+                <b-form-input type="number" v-model="data.item.SalesPrice"/>
+              </template>
+              <template #cell(ConsumerPrice)="data">
+                <b-form-input type="number" v-model="data.item.ConsumerPrice"/>
+              </template>
+            </b-table>
+            <b-pagination
+              :total-rows="products.length"
+              v-model="currentPage"
+              :per-page="20"
+              aria-controls="product-list"
+            ></b-pagination>
             </b-col>
           </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_WarehouseCapacity')"
-              >
-                <b-form-input type="text" v-model="form.Model.WarehouseCapacity"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_LicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.Model.LicenseNumber"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_FinanceCode')"
-              >
-                <b-form-input type="text" v-model="form.Model.FinanceCode"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.warehouse.WarehouseSuppliers')">
-          <b-table-simple bordered small>
-            <b-thead>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.SupplierBranchId')">
-                  <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedPurchaseWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedReturnWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
-                <b-form-group>
-                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
-                </b-form-group>
-              </b-th>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
-                <b-td>{{r.selectedBranch}}</b-td>
-                <b-td>{{r.selectedPurchaseWarehouseId}}</b-td>
-                <b-td>{{r.selectedReturnWarehouseId}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-          {{detailListData}}
         </b-tab>
       </b-tabs>
     </b-col>
@@ -167,226 +109,222 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {
-        companyId: this.CompanyId,
-        branchId: this.BranchId,
-        Model: {
-          LocationId: null,
-          IsVehicle: null,
-          IsCustomerWarehouse: null,
-          StatusId: 1,
-          LicenseNumber: null,
-          FinanceCode: null,
-          WarehouseSuppliers: [],
-          VehicleId: null,
-          WarehouseCapacity: null,
-          WarehouseTypeId: null,
-          WarehouseType: null,
-          IsCenterWarehouse: null,
-          Code: null,
-          Description1: null,
-          CustomerId: null,
-          Vehicle: null,
-          Customer: null,
-          RecordId: null,
-          Deleted: 0
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        CurrencyId: null,
+        BeginDate: null,
+        EndDate: null,
+        PriceListCategoryId: null,
+        StatusId: null,
+        RecordId: null,
+        EncryptedKey: null,
+        Code: null,
+        Description1: null,
+        PriceListItems: null
+      },
+      routeName: this.$route.meta.baseLink,
+      products: [],
+      userProducts: [],
+      allUserProducts: [],
+      currentPage: 1,
+      priceListCategory: null,
+      currency: null,
+      fields: [
+        {
+          key: 'Code',
+          label: this.$t('insert.PriceList.ProductCode'),
+          thClass: 'list-textbox-width'
+        },
+        {
+          key: 'Description1',
+          label: this.$t('insert.PriceList.ProductName'),
+          thClass: 'list-textbox-width'
+        },
+        {
+          key: 'IsVatIncluded',
+          label: this.$t('insert.PriceList.IsVatIncluded'),
+          thClass: 'list-checkbox-width'
+        },
+        {
+          key: 'UseConsumerPrice',
+          label: this.$t('insert.PriceList.UseConsumerPrice'),
+          thClass: 'list-checkbox-width'
+        },
+        {
+          key: 'SalesPrice',
+          label: this.$t('insert.PriceList.SalesPrice'),
+          thClass: 'list-textbox-width'
+        },
+        {
+          key: 'ConsumerPrice',
+          label: this.$t('insert.PriceList.ConsumerPrice'),
+          thClass: 'list-textbox-width'
         }
-      },
-      VehicleName: '',
-      detailListData: [],
-      detailListBranch: '',
-      detailListPurchaseWarehouseId: '',
-      detailListReturnWarehouseId: '',
-      WarehouseSuppliers: {
-        selectedBranch: '',
-        selectedPurchaseWarehouseId: '',
-        selectedReturnWarehouseId: ''
-      },
-      dataStatus: true,
-      showCustomer: false,
-      showVehicle: false
+      ]
     }
   },
   computed: {
-    ...mapState(['rowData', 'lookupWarehouse_type', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
-  },
-  watch: {
-    rowData: function (e) {
-      e.WarehouseSuppliers.map(item => {
-        this.form.Model.WarehouseSuppliers.push({
-          StatusId: item.StatusId,
-          SupplierBranchId: item.SupplierBranchId,
-          SupplierCustomerId: item.SupplierCustomerId,
-          CompanyId: item.CompanyId,
-          BranchId: item.BranchId,
-          CreatedUser: item.CreatedUser,
-          ModifiedUser: item.ModifiedUser,
-          ModifiedDateTime: item.ModifiedDateTime,
-          Deleted: item.Deleted,
-          System: item.System,
-          PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId
-        })
-
-        this.detailListData.push({
-          selectedBranch: item.SupplierBranch.Label,
-          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
-          selectedReturnWarehouseId: item.ReturnWarehouse.Label
-        })
-      })
-
-      this.selectedWarehouseType(e.WarehouseType)
-      if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.RecordId
-        this.VehicleName = e.Vehicle.Label
-        this.form.Model.VehicleId = e.VehicleId
-      }
-      // if'e koyulacak
-      if (e.Customer) {
-        this.form.Model.Customer = e.Customer.Label
-        this.form.Model.CustomerId = e.CustomerId
-      }
-
-      this.form.Model.Code = e.Code
-      this.form.Model.RecordId = e.RecordId
-      this.form.Model.Description1 = e.Description1
-      this.form.Model.WarehouseCapacity = e.WarehouseCapacity
-      this.form.Model.LicenseNumber = e.LicenseNumber
-      this.form.Model.FinanceCode = e.FinanceCode
-      if (e.StatusId === 1) {
-        this.dataStatus = true
-      } else {
-        this.dataStatus = true
-      }
-    },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.Model.StatusId = 1
-      } else {
-        this.form.Model.StatusId = 0
-      }
-    }
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'currencies', 'allProducts', 'rowData'])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
-    this.getLookup()
-    this.getRowData()
+    this.getInsertPage(this.routeName)
   },
   methods: {
-    getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
+    getInsertPage (e) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // her insert ekranının kuralları ve createCode değerini alır.
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/${e}/GetCode`})
+      this.getLists()
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextFinance/api/${e}`, record: this.$route.params.url})
+    },
+    selectedType (label, model) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // standart dropdownların select işleminde alacağı değeri belirler.
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
+    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
+    tabValidation () {
+      if (this.$v.form.$invalid) {
+        this.$nextTick(() => {
+          this.tabValidationHelper()
+        })
+      }
     },
     save () {
-      this.form.companyId = this.CompanyId
-      this.form.branchId = this.BranchId
-      this.form.Model.WarehouseType = null
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
-    },
-    selectedIsCustomer (e) {
-      if (e === 0) {
-        this.showCustomer = false
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
       } else {
-        this.showCustomer = true
+        if (this.allUserProducts.filter(p => !p.SalesPrice || p.SalesPrice === '' || !p.ConsumerPrice || p.ConsumerPrice === '').length > 0) {
+          this.$toasted.show(this.$t('insert.PriceList.PricesRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+
+        this.form.PriceListItems = this.allUserProducts.map((item) => {
+          item.RecordState = 3
+          item.IsVatIncluded = item.IsVatIncluded ? item.IsVatIncluded : 0
+          item.UseConsumerPrice = item.UseConsumerPrice ? item.UseConsumerPrice : 0
+          item.ConsumerPrice = parseFloat(item.ConsumerPrice)
+          item.SalesPrice = parseFloat(item.SalesPrice)
+          return item
+        })
+        this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFinance/api/${this.routeName}`, formdata: model, return: this.$route.meta.baseLink})
       }
     },
-    selectedVehicle (e) {
-      this.form.Model.VehicleId = e.RecordId
+    getLists () {
+      let allLookups = 'PRICE_LIST_CATEGORY_TYPE'
+      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextItem/api/Item/Search', name: 'allProducts'})
     },
-    selectedCustomer (e) {
-      this.form.Model.CustomerId = e.RecordId
-    },
-    selectedBranch (e) {
-      this.WarehouseSuppliers.selectedBranch = e.RecordId
-      this.detailListBranch = e.BranchCommercialTitle
-      this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
-    },
-    selectedPurchaseWarehouseId (e) {
-      this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
-      this.detailListPurchaseWarehouseId = e.Description1
-    },
-    selectedReturnWarehouseId (e) {
-      this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
-      this.detailListReturnWarehouseId = e.Description1
-    },
-    addDetailList () {
-      let a = {
-        selectedBranch: this.detailListBranch,
-        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.detailListReturnWarehouseId
-      }
-      let b = {
-        StatusId: null,
-        SupplierBranchId: this.WarehouseSuppliers.selectedBranch,
-        SupplierCustomerId: 46733004.0,
-        CompanyId: this.CompanyId,
-        BranchId: this.BranchId,
-        CreatedUser: 1.0,
-        ModifiedUser: null,
-        ModifiedDateTime: null,
-        Deleted: 0,
-        System: 0,
-        PurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
-      }
-      this.detailListData.push(a)
-      this.detailListBranch = null
-      this.detailListPurchaseWarehouseId = null
-      this.detailListReturnWarehouseId = null
-      this.form.Model.WarehouseSuppliers.push(b)
-    },
-    selectedWarehouseType (e) {
-      this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e
-      // araç mı ?
-      if (e.DecimalValue === 76506193) {
-        this.showVehicle = true
-        this.form.Model.IsVehicle = 1
-        this.$store.commit('setVehicleList', [])
+    onProductSearch (value) {
+      if (!value || value === '') {
+        this.products = this.allUserProducts
       } else {
-        this.form.Model.IsVehicle = 0
-        this.showVehicle = false
-      }
-      // merkez depo mu ?
-      if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCustomerWarehouse = 1
-        this.showCustomer = true
-      } else {
-        this.form.Model.IsCustomerWarehouse = 0
-        this.showCustomer = false
+        this.products = this.allUserProducts.filter(p => p.Description1 ? p.Description1.toLocaleLowerCase().includes(value.toLocaleLowerCase()) : false)
       }
     },
-    onVehicleSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchVehicle(loading, search, this)
+    mergeLists (allProducts) {
+      if (allProducts.length === 0 || this.userProducts.length === 0 || this.allUserProducts.length > 0) {
+        return
+      }
+      this.allUserProducts = this.userProducts.map((product) => {
+        var selectedProduct = this.allProducts.find(p => p.RecordId === product.ItemId)
+        if (selectedProduct) {
+          product.Description1 = selectedProduct.Description1
+          product.Code = selectedProduct.Code
+        }
+        return product
+      })
+      this.products = this.allUserProducts
+    }
+  },
+  validations () {
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    return {
+      form: this.insertRules
+    }
+  },
+  watch: {
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // her insert ekranı sistemden gelen kodla çalışır.
+    createCode (e) {
+      if (e) {
+        this.form.Code = e
       }
     },
-    onCustomerSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchCustomer(loading, search, this)
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        if (el !== 'Code') {
+          this.form[el] = value[el]
+        }
+      })
+    },
+    allProducts (value) {
+      var filteredValue = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)
+      this.mergeLists(filteredValue)
+    },
+    rowData (e) {
+      if (e) {
+        this.form = e
+        this.priceListCategory = e.PriceListCategory
+        this.userProducts = e.PriceListItems
+        if (this.allProducts) {
+          this.mergeLists(this.allProducts.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8))
+        }
+        if (this.currencies) {
+          this.currency = this.currencies.find(c => c.RecordId === e.CurrencyId)
+        }
       }
     },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchBranch(loading, search, this)
+    currencies (value) {
+      if (value) {
+        this.currency = value.find(c => c.RecordId === this.form.CurrencyId)
       }
-    },
-    searchVehicle (loading, search, vm) {
-      this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    },
-    searchCustomer (loading, search, vm) {
-      this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-    },
-    searchBranch (loading, search, vm) {
-      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    getLookup () {
-      this.$store.dispatch('lookupWareouseType')
     }
   }
 }
 </script>
-<style lang="sass">
+<style lang="css">
+.list-checkbox-width{
+  width: 10% !important
+}
+.list-textbox-width{
+  width: 20% !important
+}
 </style>
