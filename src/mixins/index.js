@@ -46,6 +46,14 @@ export default {
           tab.querySelector('a').className += ' ' + 'error-tab'
         }
       })
+    },
+    searchItemsByModel (api, name, model) {
+      return this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: api,
+        name: name,
+        andConditionModel: model
+      })
     }
   }
 }
