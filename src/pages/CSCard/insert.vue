@@ -62,9 +62,9 @@
                 <b-form-datepicker v-model="form.DocumentDate" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.TransactionTypeId != null ? insertVisible.TransactionTypeId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.TransactionTypeId + (insertRequired.TransactionTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionTypeId.$error }">
-                <v-select :options="transactionTypes" @input="selectedSearchType('TransactionTypeId', $event)" label="Description1"></v-select>
+            <b-col v-if="insertVisible.CsTypeId != null ? insertVisible.CsTypeId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CsTypeId + (insertRequired.CsTypeId === true ? ' *' : '')" >
+                <v-select :options="csTypes" @input="selectedSearchType('CsTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.DueDate != null ? insertVisible.DueDate : developmentMode" :start-weekday="1" cols="12" md="3">
@@ -101,7 +101,7 @@
             </b-col>
             <b-col v-if="insertVisible.CorrespondentBranchId != null ? insertVisible.CorrespondentBranchId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CorrespondentBranchId + (insertRequired.CorrespondentBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CorrespondentBranchId.$error }">
-                <v-select :options="correspondentBranchs" @input="selectedType('CorrespondentBranchId', $event)" label="Label"></v-select>
+                <v-select :disabled="!branchsValid" :options="branchs" v-model="branchs.Description1" @input="selectedSearchType('CorrespondentBranchId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" cols="12" md="3">
@@ -111,7 +111,7 @@
             </b-col>
             <b-col v-if="insertVisible.CsTotal != null ? insertVisible.CsTotal : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CsTotal + (insertRequired.CsTotal === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CsTotal.$error }">
-                <b-form-input type="text" v-model="form.CsTotal" :readonly="insertReadonly.CsTotal" />
+                <b-form-input type="number" v-model="form.CsTotal" :readonly="insertReadonly.CsTotal" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="3">
@@ -136,6 +136,11 @@
                     {{ option.Description1 }}
                   </template>
                 </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
+              <b-form-group :label="$t('insert.creditcard.reminder')">
+                <b-form-input type="text" v-model="customerReminder" :disabled="true"/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -178,16 +183,17 @@ export default {
   data () {
     return {
       form: {
-        Deleted: null,
-        System: null,
-        RecorState: null,
-        StatusId: null,
+        Deleted: 0,
+        System: 0,
+        RecorState: 2,
+        StatusId: 1,
         Code: null,
         Description1: null,
         CustomerId: null,
         DocumentNumber: null,
         DocumentDate: null,
-        TransactionTypeId: null,
+        CsTypeId: null,
+        TransactionTypeId: 2400,
         DueDate: null,
         SerialNumber: null,
         Owner: null,
@@ -198,16 +204,20 @@ export default {
         CsTotal: null,
         RepresentativeId: null,
         RouteId: null,
-        SystemCurrencyRate: null,
-        DocumentCreationTypeId: null,
+        CurrencyRate: 0,
+        SystemCurrencyRate: 0,
+        DocumentCreationTypeId: 621,
         CurrencyCsTotal: null,
         CorrespondentBranch: null
       },
-      routeName: this.$route.meta.baseLink
+      customerReminder: null,
+      routeName: this.$route.meta.baseLink,
+      branchs: [],
+      branchsValid: false
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'banks', 'routes', 'representatives', 'transactionTypes', 'correspondentBranchs'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'banks', 'routes', 'representatives', 'csTypes'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -217,6 +227,8 @@ export default {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: 'CsCard'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextFinance/api/CsType/Search', name: 'csTypes'})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/CsCard/GetCode`})
     },
     selectedType (label, model) {
@@ -232,10 +244,24 @@ export default {
       if (model) {
         this.form[label] = model.RecordId
         if (label === 'BankId') {
-          this.$store.dispatch('getData', {...this.query, api: 'VisionNextBank/api/Bank', record: model.RecordId})
+          this.branchs = []
+          this.$api.post({RecordId: model.RecordId}, 'Bank', 'Bank/Get').then((res) => {
+            this.branchsValid = true
+            this.branchs = res.Model.BankBranches
+          })
+        }
+        if (label === 'CustomerId') {
+          this.customerReminder = model.Remainder
         }
       } else {
         this.form[label] = null
+        if (label === 'BankId') {
+          this.branchsValid = false
+          this.branchs = []
+        }
+        if (label === 'CustomerId') {
+          this.customerReminder = null
+        }
       }
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
@@ -324,10 +350,11 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.CurrencyCsTotal = this.form.CsTotal
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.$store.dispatch('createData', {...this.query, api: `VisionNextFinance/api/CSCard`, formdata: model, return: this.routeName})
       }
     }
   },
