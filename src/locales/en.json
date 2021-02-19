@@ -1128,7 +1128,8 @@
     "supportMail": "Hata Bildir",
     "homepage": "Ana Sayfa",
     "notifications": "Bildirimler",
-    "notifyItems": "{x} Bildirim"
+    "notifyItems": "{x} Bildirim",
+    "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
     "BloodTransfusion": "BloodTransfusion",

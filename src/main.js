@@ -21,6 +21,7 @@ import VueTheMask from 'vue-the-mask'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import Sortable from 'vue-sortable'
+import { ApiManager } from './managers/api-manager'
 
 import draggable from 'vuedraggable'
 import VueGoogleCharts from 'vue-google-charts'
@@ -84,6 +85,8 @@ Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
 Vue.component('NextAddress', NextAddress)
+
+Vue.prototype.$api = new ApiManager();
 
 Vue.config.productionTip = false
 global.jQuery = jQuery
