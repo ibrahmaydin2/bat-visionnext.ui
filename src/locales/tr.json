@@ -1247,6 +1247,21 @@
       "RouteId": "Rota",
       "IsBatcardTransaction": "BATCard Tahsilatı",
       "CashCardTypeId": "İşlem Tipi"
+    },
+    "BankTransaction": {
+      "Customer": "Müşteri",
+      "DocumentDate": "Tarih",
+      "DocumentNumber": "SAP Doküman No",
+      "Currency": "Para Birimi",
+      "TransactionType": "İşlem Tipi",
+      "TransactionTotal": "Tutar",
+      "Bank": "Banka",
+      "BankAccountNumber": "Hesap Numarası",
+      "BankBranch": "Banka Şubesi",
+      "CustomerBank": "Müşteri Bankası",
+      "CustomerBankBranch": "Müşteri Bankası Şube",
+      "CustomerBankAccountNumber": "Müşteri Hesap Numarası",
+      "Description1": "Açıklama"
     }
   },
   
