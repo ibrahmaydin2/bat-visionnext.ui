@@ -28,11 +28,9 @@
               <b-form-input type="text" v-model="form.Description" :readonly="insertReadonly.Description" />
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="3">
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
             </b-form-group>
           </b-col>
         </b-row>
@@ -44,12 +42,20 @@
           <b-row>
             <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-                <v-select :options="employees" @input="selectedSearchType('RepresentativeId', $event)" label="Description1"></v-select>
+                <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select :options="customers" @input="selectedSearchType('CustomerId', $event)" label="Description1"></v-select>
+                <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="3">
@@ -90,10 +96,9 @@ export default {
         ConsumptionScore: null,
         TransactionDate: null,
         RepresentativeId: null,
-        StatusId: 1
+        StatusId: Number
       },
-      routeName: this.$route.meta.baseLink,
-      dataStatus: true
+      routeName: this.$route.meta.baseLink
     }
   },
   computed: {
@@ -108,8 +113,8 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       // this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/Customer/Search', name: 'customers'})
+      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/Customer/Search', name: 'customers'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextLoyalty/api/Loyalty/Search', name: 'loyalities'})
     },
     selectedSearchType (label, model) {
@@ -118,6 +123,30 @@ export default {
       } else {
         this.form[label] = null
       }
+    },
+    searchEmployee (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextEmployee/api/Employee/Search', 'employees', model).then(res => {
+        loading(false)
+      })
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+        loading(false)
+      })
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
     tabValidation () {
@@ -133,6 +162,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.TransactionDate = this.dateConvertToISo(this.form.TransactionDate)
         let model = {
           'model': this.form
         }
@@ -155,24 +185,17 @@ export default {
         this.form.Code = e
       }
     },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
     insertDefaultValue (value) {
       Object.keys(value).forEach(el => {
         if (el !== 'Code') {
+          console.log(el)
+          console.log(value[el])
           this.form[el] = value[el]
         }
       })
-    },
-    // Status'un değerini true'dan 1'e çeviriyor
-    dataStatus: function (e) {
-      console.log(e)
-      if (e === true) {
-        this.form.StatusId = 1
-      } else {
-        this.form.StatusId = 0
-      }
     }
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
   }
 }
 </script>
