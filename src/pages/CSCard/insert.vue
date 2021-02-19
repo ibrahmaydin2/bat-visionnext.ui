@@ -18,6 +18,16 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="3">
+            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            </b-form-group>
+          </b-col>
+          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="3">
+            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            </b-form-group>
+          </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
               <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -30,6 +40,104 @@
       <b-tabs>
         <b-tab :title="$t('firsttab')" :active="!developmentMode">
           <b-row>
+            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
+                <v-select label="Description1" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedSearchType('CustomerId', $event)" >
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.DocumentNumber != null ? insertVisible.DocumentNumber : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.DocumentNumber + (insertRequired.DocumentNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DocumentNumber.$error }">
+                <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.DocumentDate != null ? insertVisible.DocumentDate : developmentMode" :start-weekday="1" cols="12" md="3">
+              <b-form-group :label="insertTitle.DocumentDate + (insertRequired.DocumentDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DocumentDate.$error }">
+                <b-form-datepicker v-model="form.DocumentDate" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.TransactionTypeId != null ? insertVisible.TransactionTypeId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.TransactionTypeId + (insertRequired.TransactionTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionTypeId.$error }">
+                <v-select :options="transactionTypes" @input="selectedSearchType('TransactionTypeId', $event)" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.DueDate != null ? insertVisible.DueDate : developmentMode" :start-weekday="1" cols="12" md="3">
+              <b-form-group :label="insertTitle.DueDate + (insertRequired.DueDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DueDate.$error }">
+                <b-form-datepicker v-model="form.DueDate" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.SerialNumber != null ? insertVisible.SerialNumber : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.SerialNumber + (insertRequired.SerialNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SerialNumber.$error }">
+                <b-form-input type="text" v-model="form.SerialNumber" :readonly="insertReadonly.SerialNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.Owner != null ? insertVisible.Owner : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.Owner + (insertRequired.Owner === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Owner.$error }">
+                <b-form-input type="text" v-model="form.Owner" :readonly="insertReadonly.Owner" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.PayCity != null ? insertVisible.PayCity : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.PayCity + (insertRequired.PayCity === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PayCity.$error }">
+                <v-select :options="lookup.CITY" @input="selectedType('PayCity', $event)" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
+                <v-select label="Description1" :filterable="false" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" >
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CorrespondentBranchId != null ? insertVisible.CorrespondentBranchId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CorrespondentBranchId + (insertRequired.CorrespondentBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CorrespondentBranchId.$error }">
+                <v-select :options="correspondentBranchs" @input="selectedType('CorrespondentBranchId', $event)" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CurrencyId + (insertRequired.CurrencyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrencyId.$error }">
+                <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CsTotal != null ? insertVisible.CsTotal : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CsTotal + (insertRequired.CsTotal === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CsTotal.$error }">
+                <b-form-input type="text" v-model="form.CsTotal" :readonly="insertReadonly.CsTotal" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
+                <v-select label="Description1" :filterable="false" :options="representatives" @search="onRepresentativeSearch" @input="selectedSearchType('RepresentativeId', $event)" >
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
+                <v-select label="Description1" :filterable="false" :options="routes" @search="onRouteSearch" @input="selectedSearchType('RouteId', $event)" >
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
           </b-row>
         </b-tab>
         <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
@@ -69,12 +177,37 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      form: {},
+      form: {
+        Deleted: null,
+        System: null,
+        RecorState: null,
+        StatusId: null,
+        Code: null,
+        Description1: null,
+        CustomerId: null,
+        DocumentNumber: null,
+        DocumentDate: null,
+        TransactionTypeId: null,
+        DueDate: null,
+        SerialNumber: null,
+        Owner: null,
+        PayCity: null,
+        BankId: null,
+        CorrespondentBranchId: null,
+        CurrencyId: null,
+        CsTotal: null,
+        RepresentativeId: null,
+        RouteId: null,
+        SystemCurrencyRate: null,
+        DocumentCreationTypeId: null,
+        CurrencyCsTotal: null,
+        CorrespondentBranch: null
+      },
       routeName: this.$route.meta.baseLink
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'banks', 'routes', 'representatives', 'transactionTypes', 'correspondentBranchs'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -83,8 +216,8 @@ export default {
     getInsertPage (e) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
+      this.$store.dispatch('getInsertRules', {...this.query, api: 'CsCard'})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/CsCard/GetCode`})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -98,6 +231,9 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
+        if (label === 'BankId') {
+          this.$store.dispatch('getData', {...this.query, api: 'VisionNextBank/api/Bank', record: model.RecordId})
+        }
       } else {
         this.form[label] = null
       }
@@ -109,6 +245,78 @@ export default {
           this.tabValidationHelper()
         })
       }
+    },
+    onCustomerSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchCustomer(loading, search, this)
+      }
+    },
+    searchCustomer (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
+    onRepresentativeSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchRepresentative(loading, search, this)
+      }
+    },
+    searchRepresentative (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextEmployee/api/Employee/Search',
+        name: 'representatives',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
+    onRouteSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchRoute(loading, search, this)
+      }
+    },
+    searchRoute (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextRoute/api/Route/Search',
+        name: 'routes',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
+    onBankSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchBank(loading, search, this)
+      }
+    },
+    searchBank (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextBank/api/Bank/Search',
+        name: 'banks',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     },
     save () {
       this.$v.$touch()
