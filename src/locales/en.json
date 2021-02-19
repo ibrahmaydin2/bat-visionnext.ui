@@ -1033,7 +1033,9 @@
       "PriceListCategoryId": "Price List Category Type",
       "Currency": "Currency",
       "BeginDate": "Validity Start",
-      "EndDate": "Validity End"
+      "EndDate": "Validity End",
+      "Active" : "Active",
+      "Passive" : "Passive"
     }
   },
   "get": {
@@ -1220,5 +1222,21 @@
   "form": {
     "createOk": "Başarılı",
     "pleaseWait":"Lütfen Bekleyin"
+  },
+  "Warehouse": {
+    "title":"Depo Ana Kayıtları",
+    "StatusId": "Durum",
+    "Description": "Açıklama",
+    "Code": "Depo Kodu",
+    "IsVehicle": "Araç Deposu",
+    "FinanceCode": "ERP Kodu",
+    "FinanceCode2": "Finans Kodu",
+    "IsVirtualWarehouse": "Sanal Depo",
+    "NonSapWarehouse": "Non-SAP",
+    "VehicleId": "Araç",
+    "LicenseNumber": "Lisans Numarası",
+    "Address": "Adres",
+    "CityId": "İl",
+    "DistrictId": "İlçe"
   }
 }

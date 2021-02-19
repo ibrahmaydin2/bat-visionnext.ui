@@ -1078,7 +1078,9 @@
       "PriceListCategoryId": "Fiyat Listesi Kategori Tipi",
       "CurrencyId": "Para Birimi",
       "BeginDate": "Geçerlilik Başlangıcı",
-      "EndDate": "Geçerlilik Başlangıcı"
+      "EndDate": "Geçerlilik Başlangıcı",
+      "Active" : "Aktif",
+      "Passive" : "Pasif"
     }
   },
   "get": {
@@ -1201,14 +1203,17 @@
       "title":"Depo Ana Kayıtları",
       "StatusId": "Durum",
       "Description": "Açıklama",
-      "Code": "Kodu",
-      "IsVehicle": "Araç Deposu Mu?",
+      "Code": "Depo Kodu",
+      "IsVehicle": "Araç Deposu",
       "FinanceCode": "ERP Kodu",
       "FinanceCode2": "Finans Kodu",
-      "IsVirtualWarehouse": "Sanal Depo Mu?",
+      "IsVirtualWarehouse": "Sanal Depo",
       "NonSapWarehouse": "Non-SAP",
       "VehicleId": "Araç",
-      "LicenseNumber": "Lisans Numarası"
+      "LicenseNumber": "Lisans Numarası",
+      "Address": "Adres",
+      "CityId": "İl",
+      "DistrictId": "İlçe"
     },
     "CashCard": {
       "title":"Nakit Ödeme Ana Kayıtları",

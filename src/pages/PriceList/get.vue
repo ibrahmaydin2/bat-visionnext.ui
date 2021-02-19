@@ -17,7 +17,7 @@
           <section>
             <span><i class="fas fa-code" /><b>{{$t('insert.PriceList.Code')}}:</b> {{rowData.Code}}</span>
             <span><i class="fas fa-code" /><b>{{$t('insert.PriceList.Description1')}}:</b> {{rowData.Description1}}</span>
-            <span><i class="fas fa-check" /><b>{{$t('insert.PriceList.Status')}}: </b><i :class="rowData.StatusId === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></span>
+            <span><i class="fas fa-check" /><b>{{$t('insert.PriceList.Status')}}: </b>{{ rowData.StatusId === 1 ? $t('insert.PriceList.Active') : $t('insert.PriceList.Passive') }}</span>
           </section>
         </b-col>
       </b-row>
