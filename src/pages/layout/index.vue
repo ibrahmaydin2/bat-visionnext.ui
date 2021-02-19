@@ -144,7 +144,6 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
-      console.log(this.thisRout)
     },
     tableOperations (e) {
       if (e) {
@@ -258,7 +257,6 @@ export default {
         text-align: left
         width: 140px
         border: 1px #ddd solid
-        background: #fff
         &::after
           float: right
           margin-top: 7px
