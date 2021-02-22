@@ -35,6 +35,7 @@
                 <span><i class="far fa-circle" /> {{$t('get.CashCard.RepresentativeId')}}</span> <p>{{rowData.Representative && rowData.Representative.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CashCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CashCard.CashCardTypeId')}}</span> <p>{{rowData.CashCardType && rowData.CashCardType.Label}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.cashcard.reminder')}}</span> <p>{{customerReminder}}</p>
             </b-card>
           </b-row>
         </b-tab>
@@ -48,6 +49,7 @@ export default {
   props: ['dataKey'],
   data () {
     return {
+      customerReminder: null
     }
   },
   mounted () {
@@ -63,6 +65,13 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CashCard', record: this.$route.params.url})
+    }
+  },
+  watch: {
+    rowData: function (e) {
+      this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+        this.customerReminder = res.Model.Remainder
+      })
     }
   }
 }

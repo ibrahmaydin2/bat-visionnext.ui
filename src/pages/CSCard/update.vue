@@ -183,16 +183,16 @@ export default {
   data () {
     return {
       form: {
-        Deleted: 0,
-        System: 0,
-        RecorState: 2,
-        StatusId: 1,
+        Deleted: null,
+        System: null,
+        RecorState: null,
+        StatusId: null,
         Code: null,
         Description1: null,
         CustomerId: null,
         DocumentNumber: null,
         DocumentDate: null,
-        TransactionTypeId: 2400,
+        TransactionTypeId: null,
         DueDate: null,
         SerialNumber: null,
         Owner: null,
@@ -203,9 +203,9 @@ export default {
         CsTotal: null,
         RepresentativeId: null,
         RouteId: null,
-        CurrencyRate: 0,
-        SystemCurrencyRate: 0,
-        DocumentCreationTypeId: 621,
+        CurrencyRate: null,
+        SystemCurrencyRate: null,
+        DocumentCreationTypeId: null,
         CurrencyCsTotal: null,
         CorrespondentBranch: null
       },
@@ -370,22 +370,6 @@ export default {
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     rowData: function (e) {
       if (!e) {
         return
@@ -393,6 +377,9 @@ export default {
       this.form = e
       if (e.Customer) {
         this.customerLabel = e.Customer.Label
+        this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       }
       if (e.Currency) {
         this.currencyLabel = e.Currency.Label

@@ -69,7 +69,7 @@
             </b-col>
             <b-col v-if="insertVisible.CashTotal != null ? insertVisible.CashTotal : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CashTotal + (insertRequired.CashTotal === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CashTotal.$error }">
-                <b-form-input type="text" v-model="form.CashTotal" :readonly="insertReadonly.CashTotal" />
+                <b-form-input type="number" v-model="form.CashTotal" :readonly="insertReadonly.CashTotal" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" cols="12" md="3">
@@ -104,6 +104,11 @@
             <b-col v-if="insertVisible.CashCardTypeId != null ? insertVisible.CashCardTypeId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CashCardTypeId + (insertRequired.CashCardTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CashCardTypeId.$error }">
                 <v-select :options="cashCardTypes" @input="selectedSearchType('CashCardTypeId', $event)" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
+              <b-form-group :label="$t('insert.creditcard.reminder')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+                <b-form-input type="text" v-model="customerReminder" :disabled="true"/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -161,8 +166,13 @@ export default {
         RepresentativeId: null,
         RouteId: null,
         CashCardTypeId: null,
-        SystemCurrencyRate: 0
+        CurrencyRate: 0,
+        CurrencyCashTotal: null,
+        DocumentCreationTypeId: 621,
+        SystemCurrencyRate: 0,
+        IsManuelClosure: 0
       },
+      customerReminder: null,
       routeName: this.$route.meta.baseLink
     }
   },
@@ -193,8 +203,14 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
+        if (label === 'CustomerId') {
+          this.customerReminder = model.Remainder
+        }
       } else {
         this.form[label] = null
+        if (label === 'CustomerId') {
+          this.customerReminder = null
+        }
       }
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
@@ -266,10 +282,13 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.CurrencyCashTotal = this.form.CashTotal
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
+        this.form.PaymentDate = this.dateConvertToISo(this.form.PaymentDate)
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.$store.dispatch('createData', {...this.query, api: `VisionNextFinance/api/CashCard`, formdata: model, return: this.routeName})
       }
     }
   },
@@ -287,16 +306,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>

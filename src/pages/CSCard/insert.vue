@@ -191,7 +191,7 @@ export default {
         Description1: null,
         CustomerId: null,
         DocumentNumber: null,
-        DocumentDate: null,
+        DocumentDate: new Date(),
         CsTypeId: null,
         TransactionTypeId: 2400,
         DueDate: null,
@@ -208,7 +208,8 @@ export default {
         SystemCurrencyRate: 0,
         DocumentCreationTypeId: 621,
         CurrencyCsTotal: null,
-        CorrespondentBranch: null
+        CorrespondentBranch: null,
+        IsManuelClosure: 0
       },
       customerReminder: null,
       routeName: this.$route.meta.baseLink,
@@ -351,6 +352,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CurrencyCsTotal = this.form.CsTotal
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
         let model = {
           'model': this.form
         }
@@ -372,16 +374,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>
