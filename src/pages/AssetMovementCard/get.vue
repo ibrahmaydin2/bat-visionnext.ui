@@ -136,7 +136,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/PurchaseReturnInvoice', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextAsset/api/AssetMovementCard', record: this.$route.params.url})
     }
   }
 }
