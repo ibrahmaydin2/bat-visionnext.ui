@@ -160,7 +160,7 @@
     "PremiumOrderGet": "PremiumOrderGet",
     "CurrentAccountTransactionsGet": "CurrentAccountTransactionsGet",
     "DebtArrangementGet": "DebtArrangementGet",
-    "PriceListGet": "PriceListGet",
+    "PriceListGet": "Fiyat Listesi",
     "CheckOperationsGet": "CheckOperationsGet",
     "BankTransactionGet": "BankTransactionGet",
     "CreditCardGet": "CreditCardGet",
@@ -222,7 +222,7 @@
     "PremiumOrderUpdate": "PremiumOrderUpdate",
     "CurrentAccountTransactionsUpdate": "CurrentAccountTransactionsUpdate",
     "DebtArrangementUpdate": "DebtArrangementUpdate",
-    "PriceListUpdate": "PriceListUpdate",
+    "PriceListUpdate": "Fiyat Listesi Güncelle",
     "CheckOperationsUpdate": "CheckOperationsUpdate",
     "BankTransactionUpdate": "BankTransactionUpdate",
     "CreditCardUpdate": "CreditCardUpdate",
@@ -280,7 +280,7 @@
     "PremiumOrderInsert": "PremiumOrderInsert",
     "CurrentAccountTransactionsInsert": "CurrentAccountTransactionsInsert",
     "DebtArrangementInsert": "DebtArrangementInsert",
-    "PriceListInsert": "PriceListInsert",
+    "PriceListInsert": "Fiyat Listesi Ekle",
     "CheckOperationsInsert": "CheckOperationsInsert",
     "BankTransactionInsert": "BankTransactionInsert",
     "CreditCardInsert": "CreditCardInsert",
@@ -320,7 +320,10 @@
     "TerminalLogGet": "Terminal Günlüğü Görüntüle",
     "WarehouseMovement": "Stok Hareketleri",
     "WarehouseMovementInsert": "Stok Hareketleri Oluştur",
-    "WarehouseMovementGet": "Stok Hareketleri Görüntüle"
+    "WarehouseMovementGet": "Stok Hareketleri Görüntüle",
+    "PriceListUpdate ": "Fiyat Listesi Güncelle",
+    "PriceList ": "Fiyat Listesi",
+    "PriceListGet ": "Fiyat Listesi"
   },
   "insert": {
     "rejectModal": "Reddet",

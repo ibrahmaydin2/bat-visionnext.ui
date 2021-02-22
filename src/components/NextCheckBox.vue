@@ -1,5 +1,5 @@
 <template>
-    <b-form-checkbox v-model="model" name="check-button" :switch="toggle">
+    <b-form-checkbox v-model="model" name="check-button" :switch="toggle" :disabled="disabled">
       {{model ? textActive : textPassive}}
     </b-form-checkbox>
 </template>
@@ -20,7 +20,8 @@ export default {
     value: {
       type: Number | Boolean
     },
-    toggle: Boolean
+    toggle: Boolean,
+    disabled: Boolean
   },
   model: {
     prop: 'value',

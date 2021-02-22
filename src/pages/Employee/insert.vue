@@ -278,7 +278,7 @@
         <b-row>
           <b-col md="2" class="ml-auto">
             <b-form-group>
-              <b-button @click="addPersonalTeam()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              <AddDetailButton @click.native="addPersonalTeam" />
             </b-form-group>
           </b-col>
         </b-row>
@@ -310,7 +310,7 @@
         <b-row>
           <b-col md="2" class="ml-auto">
             <b-form-group>
-              <b-button @click="addPrefix()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              <AddDetailButton @click.native="addPrefix" />
             </b-form-group>
           </b-col>
         </b-row>
@@ -387,8 +387,7 @@ export default {
       employeeTeams: [],
       selectedEInvoice: null,
       selectedEInvoices: [],
-      eInvoiceSeqsList: [],
-      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);'
+      eInvoiceSeqsList: []
     }
   },
   computed: {

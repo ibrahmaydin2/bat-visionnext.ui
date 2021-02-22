@@ -1,4 +1,9 @@
 export default {
+  data () {
+    return {
+      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);'
+    }
+  },
   methods: {
     dateConvertFromTimezone: function (date) {
       if (!date || typeof date === 'undefined') {

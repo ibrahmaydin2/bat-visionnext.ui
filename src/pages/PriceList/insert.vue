@@ -83,7 +83,7 @@
                 <NextCheckBox v-model="data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(UseConsumerPrice)="data">
-                <NextCheckBox v-model="data.item.UseConsumerPrice" type="number" toggle/>
+                <NextCheckBox v-model="data.item.UseConsumerPrice" :disabled="!data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(SalesPrice)="data">
                 <b-form-input type="number" v-model="data.item.SalesPrice"/>
