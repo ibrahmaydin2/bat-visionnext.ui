@@ -37,6 +37,7 @@
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.SerialNumber')}}</span> <p>{{rowData.SerialNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.PayCity')}}</span> <p>{{rowData.PayCity}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.cscard.reminder')}}</span> <p>{{customerReminder}}</p>
             </b-card>
           </b-row>
         </b-tab>
@@ -50,6 +51,7 @@ export default {
   props: ['dataKey'],
   data () {
     return {
+      customerReminder: null
     }
   },
   mounted () {
@@ -65,6 +67,13 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CsCard', record: this.$route.params.url})
+    }
+  },
+  watch: {
+    rowData: function (e) {
+      this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+        this.customerReminder = res.Model.Remainder
+      })
     }
   }
 }

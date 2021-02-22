@@ -67,9 +67,9 @@
                 <b-form-datepicker v-model="form.DocumentDate" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.Bank != null ? insertVisible.Bank : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.Bank + (insertRequired.Bank === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Bank.$error }">
-                <v-select label="Description1" :filterable="false" :options="banks" @search="onBankSearch" @input="selectedSearchType('Bank', $event)" >
+            <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
+                <v-select label="Description1" :filterable="false" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" >
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -172,15 +172,16 @@ export default {
         CustomerId: null,
         ApproveNumber: null,
         DocumentNumber: null,
-        DocumentDate: null,
-        Bank: null,
+        DocumentDate: new Date(),
+        BankId: null,
         CreditCardTotal: null,
         CurrencyId: null,
         CardNumber: null,
         RepresentativeId: null,
         RouteId: null,
         IsBatcardTransaction: null,
-        SystemCurrencyRate: 0
+        SystemCurrencyRate: 0,
+        IsManuelClosure: 0
       },
       customerReminder: null,
       routeName: this.$route.meta.baseLink
@@ -311,10 +312,11 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.$store.dispatch('createData', {...this.query, api: `VisionNextFinance/api/CreditCard`, formdata: model, return: this.routeName})
       }
     }
   },
@@ -332,16 +334,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>

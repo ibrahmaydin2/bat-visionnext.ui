@@ -106,6 +106,11 @@
                 <v-select v-model="cashCardTypeLabel" :options="cashCardTypes" @input="selectedSearchType('CashCardTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
+            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
+              <b-form-group :label="$t('insert.creditcard.reminder')">
+                <b-form-input type="text" v-model="customerReminder" :disabled="true"/>
+              </b-form-group>
+            </b-col>
           </b-row>
         </b-tab>
         <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
@@ -163,6 +168,7 @@ export default {
         CashCardTypeId: null,
         SystemCurrencyRate: null
       },
+      customerReminder: null,
       routeName: this.$route.meta.baseLink,
       customerLabel: null,
       currencyLabel: null,
@@ -198,8 +204,14 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
+        if (label === 'CustomerId') {
+          this.customerReminder = model.Remainder
+        }
       } else {
         this.form[label] = null
+        if (label === 'CustomerId') {
+          this.customerReminder = null
+        }
       }
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
@@ -286,22 +298,6 @@ export default {
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     rowData: function (e) {
       if (!e) {
         return
@@ -309,6 +305,9 @@ export default {
       this.form = e
       if (e.Customer) {
         this.customerLabel = e.Customer.Label
+        this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       }
       if (e.Currency) {
         this.currencyLabel = e.Currency.Label

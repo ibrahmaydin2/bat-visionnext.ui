@@ -67,9 +67,9 @@
                 <b-form-datepicker v-model="form.DocumentDate" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.Bank != null ? insertVisible.Bank : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.Bank + (insertRequired.Bank === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Bank.$error }">
-                <v-select v-model="bankLabel" label="Description1" :filterable="false" :options="banks" @search="onBankSearch" @input="selectedSearchType('Bank', $event)" >
+            <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
+                <v-select v-model="bankLabel" label="Description1" :filterable="false" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" >
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -164,24 +164,24 @@ export default {
   data () {
     return {
       form: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
+        Deleted: null,
+        System: null,
+        RecordState: null,
+        StatusId: null,
         Code: null,
         Description1: null,
         CustomerId: null,
         ApproveNumber: null,
         DocumentNumber: null,
         DocumentDate: null,
-        Bank: null,
+        BankId: null,
         CreditCardTotal: null,
         CurrencyId: null,
         CardNumber: null,
         RepresentativeId: null,
         RouteId: null,
         IsBatcardTransaction: null,
-        SystemCurrencyRate: 0
+        SystemCurrencyRate: null
       },
       customerReminder: null,
       routeName: this.$route.meta.baseLink,
@@ -331,22 +331,6 @@ export default {
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     rowData: function (e) {
       if (!e) {
         return
@@ -354,6 +338,9 @@ export default {
       this.form = e
       if (e.Customer) {
         this.customerLabel = e.Customer.Label
+        this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       }
       if (e.Bank) {
         this.bankLabel = e.Bank.Label
