@@ -54,6 +54,24 @@ export default {
         name: name,
         andConditionModel: model
       })
+    },
+    getFormatDataByType (data, type, lang) {
+      let value = ''
+      switch (type) {
+        case 'text':
+          value = data
+          break
+        case 'object':
+          value = data ? data.Label : '-'
+          break
+        case 'check':
+          value = data === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
+          break
+        default:
+          value = '-'
+      }
+      let result = `<span><i class="far fa-circle"></i> ${this.$t(lang)}</span><p>${value}</p>`
+      return result
     }
   }
 }
