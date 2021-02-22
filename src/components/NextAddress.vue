@@ -1,17 +1,17 @@
 <template>
    <b-row>
-      <b-col md="4" lg="3">
-        <b-form-group :label="$t('insert.warehouse.Address')" >
-           <b-form-textarea v-model="selectedAddress" placeholder="" />
+      <b-col cols="12" md="4" lg="3">
+        <b-form-group :label="$t('insert.warehouse.Address') + (required ? ' *' : '')" :class="{'form-group--error': addressError }">
+           <b-form-textarea v-model="selectedAddress" placeholder=""/>
          </b-form-group>
       </b-col>
-      <b-col md="4" lg="3">
-        <b-form-group :label="$t('insert.warehouse.CityId')" >
+      <b-col cols="12" md="4" lg="3">
+        <b-form-group :label="$t('insert.warehouse.CityId') + (required ? ' *' : '')" :class="{'form-group--error': cityError }">
           <v-select  v-model="selectedCity" :options="cities" label="Label" @input="selectCity"></v-select>
         </b-form-group>
       </b-col>
-      <b-col md="4" lg="3">
-        <b-form-group :label="$t('insert.warehouse.DistrictId')" >
+      <b-col cols="12" md="4" lg="3">
+        <b-form-group :label="$t('insert.warehouse.DistrictId') + (required ? ' *' : '')" :class="{'form-group--error': districtError }">
           <v-select v-model="selectedDistrict" :options="distiricts" label="Label" @input="selectDistrict" :disabled="!selectedCity || !selectedCity.DecimalValue"></v-select>
         </b-form-group>
       </b-col>
@@ -25,8 +25,10 @@ export default {
   mixins: [mixin],
   props: {
     value: {},
-    insertTitle: {},
-    insertRequired: {}
+    addressError: false,
+    cityError: false,
+    districtError: false,
+    required: null
   },
   model: {
     prop: 'value',
@@ -75,7 +77,9 @@ export default {
       this.$emit('valuechange', {
         CityId: this.selectedValue.CityId,
         DistrictId: this.selectedValue.DistrictId,
-        Address: newValue
+        Address: newValue,
+        CityName: this.selectedValue.CityName,
+        DistrictName: this.selectedValue.DistrictName
       })
     },
     distiricts: function (e) {
@@ -94,28 +98,36 @@ export default {
     selectCity (city) {
       if (city) {
         this.selectedValue.CityId = city.DecimalValue
+        this.selectedValue.CityName = city.Label
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: city.DecimalValue})
       } else {
         this.selectedValue.CityId = null
+        this.selectedValue.CityName = null
       }
       if (!this.districtId) {
         this.selectedValue.DistrictId = null
+        this.selectedValue.DistrictName = null
         this.selectedDistrict = null
       }
 
       this.$emit('valuechange', {
         CityId: this.selectedValue.CityId,
         DistrictId: this.selectedValue.DistrictId,
-        Address: this.selectedValue.Address
+        Address: this.selectedValue.Address,
+        CityName: this.selectedValue.CityName,
+        DistrictName: this.selectedValue.DistrictName
       })
     },
     selectDistrict (district) {
       if (district) {
-        this.selectedValue.DistrictId = district ? district.DecimalValue : null
+        this.selectedValue.DistrictId = district.DecimalValue
+        this.selectedValue.DistrictName = district.Label
         this.$emit('valuechange', {
           CityId: this.selectedValue.CityId,
           DistrictId: this.selectedValue.DistrictId,
-          Address: this.selectedValue.Address
+          Address: this.selectedValue.Address,
+          CityName: this.selectedValue.CityName,
+          DistrictName: this.selectedValue.DistrictName
         })
       }
     }

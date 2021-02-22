@@ -49,7 +49,7 @@
           <b-row>
             <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select :disabled="form.IsVehicle === 0" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -87,9 +87,9 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
+          <NextAddress v-show="form.IsVehicle === 0 && form.IsVirtualWarehouse === 0" v-model="address" />
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="form.IsVehicle === 0" @click.prevent="tabValidation()">
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.supplierBranch.$error }">
@@ -117,7 +117,7 @@
           <b-row>
             <b-col md="2" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addItems" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -160,8 +160,8 @@ export default {
         RecordState: 2,
         Code: null,
         Description1: null,
-        StatusId: Number,
-        IsVehicle: Number,
+        StatusId: 1,
+        IsVehicle: 0,
         VehicleId: null,
         LicenseNumber: null,
         FinanceCode: null,
@@ -169,8 +169,8 @@ export default {
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: Number,
-        NonSapWarehouse: Number,
+        IsVirtualWarehouse: 0,
+        NonSapWarehouse: 0,
         WarehouseSuppliers: []
       },
       routeName: this.$route.meta.baseLink,
@@ -230,7 +230,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.form.IsVehicle && !this.form.VehicleId) {
+        if (this.form.IsVehicle === 1 && !this.form.VehicleId) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.warehouse.vehicleRequired') })
           return
         }

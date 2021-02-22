@@ -85,7 +85,7 @@
                 <NextCheckBox v-model="data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(UseConsumerPrice)="data">
-                <NextCheckBox v-model="data.item.UseConsumerPrice" type="number" toggle/>
+                <NextCheckBox v-model="data.item.UseConsumerPrice" :disabled="!data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(SalesPrice)="data">
                 <b-form-input type="number" v-model="data.item.SalesPrice"/>
@@ -257,7 +257,7 @@ export default {
       }
     },
     mergeLists (allProducts) {
-      if (allProducts.length === 0 || this.userProducts.length === 0 || this.allUserProducts.length > 0) {
+      if (!allProducts || allProducts.length === 0 || !this.userProducts || this.userProducts.length === 0 || !this.allUserProducts || this.allUserProducts.length > 0) {
         return
       }
       this.allUserProducts = this.userProducts.map((product) => {
@@ -296,12 +296,25 @@ export default {
       })
     },
     allProducts (value) {
-      var filteredValue = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)
-      this.mergeLists(filteredValue)
+      if (value) {
+        var filteredValue = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)
+        this.mergeLists(filteredValue)
+      }
     },
     rowData (e) {
       if (e) {
-        this.form = e
+        this.form.Deleted = e.Deleted
+        this.form.System = e.System
+        this.form.RecordState = e.RecordState
+        this.form.CurrencyId = e.CurrencyId
+        this.form.BeginDate = e.BeginDate
+        this.form.EndDate = e.EndDate
+        this.form.PriceListCategoryId = e.PriceListCategoryId
+        this.form.StatusId = e.StatusId
+        this.form.RecordId = e.RecordId
+        this.form.EncryptedKey = e.EncryptedKey
+        this.form.Code = e.Code
+        this.form.Description1 = e.Description1
         this.priceListCategory = e.PriceListCategory
         this.userProducts = e.PriceListItems
         if (this.allProducts) {
