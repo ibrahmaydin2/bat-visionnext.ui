@@ -1,3 +1,3 @@
 <template>
-  <Nextgrid apiurl="VisionNextFinance/api/CSCard/Search" />
+  <Nextgrid apiurl="VisionNextFinance/api/CsCard/Search" />
 </template>

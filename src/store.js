@@ -1371,10 +1371,10 @@ export const store = new Vuex.Store({
                 <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
               </b-form-group>
             </b-col>`
-            if (parseInt(fieldDefaultValue) === 1) {
+            if (fieldDefaultValue === null) {
               dflvl[fieldName] = 1
             } else {
-              dflvl[fieldName] = 0
+              dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
             break
 

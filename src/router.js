@@ -451,6 +451,61 @@ import LoyaltyConsumptionGet from '@/pages/LoyaltyConsumption/get'
 import LoyaltyConsumptionInsert from '@/pages/LoyaltyConsumption/insert'
 import LoyaltyConsumptionUpdate from '@/pages/LoyaltyConsumption/update'
 
+import RmaIndex from '@/pages/Rma/'
+import RmaGet from '@/pages/Rma/get'
+import RmaInsert from '@/pages/Rma/insert'
+import RmaUpdate from '@/pages/Rma/update'
+
+import RmaOrderIndex from '@/pages/RmaOrder/'
+import RmaOrderGet from '@/pages/RmaOrder/get'
+import RmaOrderInsert from '@/pages/RmaOrder/insert'
+import RmaOrderUpdate from '@/pages/RmaOrder/update'
+
+import FixedTermCampaignIndex from '@/pages/FixedTermCampaign/'
+import FixedTermCampaignGet from '@/pages/FixedTermCampaign/get'
+import FixedTermCampaignInsert from '@/pages/FixedTermCampaign/insert'
+import FixedTermCampaignUpdate from '@/pages/FixedTermCampaign/update'
+
+import DiscountReasonIndex from '@/pages/DiscountReason/'
+import DiscountReasonGet from '@/pages/DiscountReason/get'
+import DiscountReasonInsert from '@/pages/DiscountReason/insert'
+import DiscountReasonUpdate from '@/pages/DiscountReason/update'
+
+import PriceDiscountTransactionIndex from '@/pages/PriceDiscountTransaction/'
+import PriceDiscountTransactionGet from '@/pages/PriceDiscountTransaction/get'
+import PriceDiscountTransactionInsert from '@/pages/PriceDiscountTransaction/insert'
+import PriceDiscountTransactionUpdate from '@/pages/PriceDiscountTransaction/update'
+
+import SalesReturnWaybillIndex from '@/pages/SalesReturnWaybill/'
+import SalesReturnWaybillGet from '@/pages/SalesReturnWaybill/get'
+import SalesReturnWaybillInsert from '@/pages/SalesReturnWaybill/insert'
+import SalesReturnWaybillUpdate from '@/pages/SalesReturnWaybill/update'
+
+import PurchaseReturnWaybillIndex from '@/pages/PurchaseReturnWaybill/'
+import PurchaseReturnWaybillGet from '@/pages/PurchaseReturnWaybill/get'
+import PurchaseReturnWaybillInsert from '@/pages/PurchaseReturnWaybill/insert'
+import PurchaseReturnWaybillUpdate from '@/pages/PurchaseReturnWaybill/update'
+
+import AssetIndex from '@/pages/Asset/'
+import AssetGet from '@/pages/Asset/get'
+import AssetInsert from '@/pages/Asset/insert'
+import AssetUpdate from '@/pages/Asset/update'
+
+import AssetLocationIndex from '@/pages/AssetLocation/'
+import AssetLocationGet from '@/pages/AssetLocation/get'
+import AssetLocationInsert from '@/pages/AssetLocation/insert'
+import AssetLocationUpdate from '@/pages/AssetLocation/update'
+
+import AssetMovementCardIndex from '@/pages/AssetMovementCard/'
+import AssetMovementCardGet from '@/pages/AssetMovementCard/get'
+import AssetMovementCardInsert from '@/pages/AssetMovementCard/insert'
+import AssetMovementCardUpdate from '@/pages/AssetMovementCard/update'
+
+import OverDueDebitSearchIndex from '@/pages/OverDueDebitSearch/'
+import OverDueDebitSearchGet from '@/pages/OverDueDebitSearch/get'
+import OverDueDebitSearchInsert from '@/pages/OverDueDebitSearch/insert'
+import OverDueDebitSearchUpdate from '@/pages/OverDueDebitSearch/update'
+
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
 import Register from '@/views/Auth/register'
@@ -543,7 +598,18 @@ const listIndex = [
   {path: '/TerminalPasswordLog', name: 'TerminalPasswordLog', component: TerminalPasswordLogIndex, meta: { title: i18n.t('router.TerminalPasswordLog'), createLink: 'TerminalPasswordLogInsert' }},
   {path: '/WarehouseMovement', name: 'WarehouseMovement', component: WarehouseMovementIndex, meta: { title: i18n.t('router.WarehouseMovement'), createLink: 'WarehouseMovementInsert' }},
   {path: '/LoyaltyExpense', name: 'LoyaltyExpense', component: LoyaltyExpenseIndex, meta: { title: i18n.t('router.LoyaltyExpense'), createLink: 'LoyaltyExpenseInsert' }},
-  {path: '/LoyaltyConsumption', name: 'LoyaltyConsumption', component: LoyaltyConsumptionIndex, meta: { title: i18n.t('router.LoyaltyConsumption'), createLink: 'LoyaltyConsumptionInsert' }}
+  {path: '/LoyaltyConsumption', name: 'LoyaltyConsumption', component: LoyaltyConsumptionIndex, meta: { title: i18n.t('router.LoyaltyConsumption'), createLink: 'LoyaltyConsumptionInsert' }},
+  {path: '/Rma', name: 'Rma', component: RmaIndex, meta: { title: i18n.t('router.Rma'), createLink: 'RmaInsert' }},
+  {path: '/RmaOrder', name: 'RmaOrder', component: RmaOrderIndex, meta: { title: i18n.t('router.RmaOrder'), createLink: 'RmaOrderInsert' }},
+  {path: '/FixedTermCampaign', name: 'FixedTermCampaign', component: FixedTermCampaignIndex, meta: { title: i18n.t('router.FixedTermCampaign'), createLink: 'FixedTermCampaignInsert' }},
+  {path: '/DiscountReason', name: 'DiscountReason', component: DiscountReasonIndex, meta: { title: i18n.t('router.DiscountReason'), createLink: 'DiscountReasonInsert' }},
+  {path: '/PriceDiscountTransaction', name: 'PriceDiscountTransaction', component: PriceDiscountTransactionIndex, meta: { title: i18n.t('router.PriceDiscountTransaction'), createLink: 'PriceDiscountTransactionInsert' }},
+  {path: '/SalesReturnWaybill', name: 'SalesReturnWaybill', component: SalesReturnWaybillIndex, meta: { title: i18n.t('router.SalesReturnWaybill'), createLink: 'SalesReturnWaybillInsert' }},
+  {path: '/PurchaseReturnWaybill', name: 'PurchaseReturnWaybill', component: PurchaseReturnWaybillIndex, meta: { title: i18n.t('router.PurchaseReturnWaybill'), createLink: 'PurchaseReturnWaybillInsert' }},
+  {path: '/Asset', name: 'Asset', component: AssetIndex, meta: { title: i18n.t('router.Asset'), createLink: 'AssetInsert' }},
+  {path: '/AssetLocation', name: 'AssetLocation', component: AssetLocationIndex, meta: { title: i18n.t('router.AssetLocation'), createLink: 'AssetLocationInsert' }},
+  {path: '/AssetMovementCard', name: 'AssetMovementCard', component: AssetMovementCardIndex, meta: { title: i18n.t('router.AssetMovementCard'), createLink: 'AssetMovementCardInsert' }},
+  {path: '/OverDueDebitSearch', name: 'OverDueDebitSearch', component: OverDueDebitSearchIndex, meta: { title: i18n.t('router.OverDueDebitSearch'), createLink: 'OverDueDebitSearchInsert' }}
 ]
 
 const listGet = [
@@ -630,7 +696,19 @@ const listGet = [
   { path: '/TerminalPasswordLog/:url', name: 'TerminalPasswordLogGet', component: TerminalPasswordLogGet, meta: { title: i18n.t('router.TerminalPasswordLogGet'), baseLink: 'TerminalPasswordLog' } },
   { path: '/WarehouseMovement/:url', name: 'WarehouseMovementGet', component: WarehouseMovementGet, meta: { title: i18n.t('router.WarehouseMovementGet'), baseLink: 'WarehouseMovement' } },
   { path: '/LoyaltyExpense/:url', name: 'LoyaltyExpenseGet', component: LoyaltyExpenseGet, meta: { title: i18n.t('router.LoyaltyExpenseGet'), baseLink: 'LoyaltyExpense' } },
-  { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionGet', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } }
+  { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionGet', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/Rma/:url', name: 'RmaGet', component: RmaGet, meta: { title: i18n.t('router.RmaGet'), baseLink: 'Rma' } },
+  { path: '/RmaOrder/:url', name: 'RmaOrderGet', component: RmaOrderGet, meta: { title: i18n.t('router.RmaOrderGet'), baseLink: 'RmaOrder' } },
+  { path: '/FixedTermCampaign/:url', name: 'FixedTermCampaignGet', component: FixedTermCampaignGet, meta: { title: i18n.t('router.FixedTermCampaignGet'), baseLink: 'FixedTermCampaign' } },
+  { path: '/DiscountReason/:url', name: 'DiscountReasonGet', component: DiscountReasonGet, meta: { title: i18n.t('router.DiscountReasonGet'), baseLink: 'DiscountReason' } },
+  { path: '/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionGet', component: PriceDiscountTransactionGet, meta: { title: i18n.t('router.PriceDiscountTransactionGet'), baseLink: 'PriceDiscountTransaction' } },
+  { path: '/SalesReturnWaybill/:url', name: 'SalesReturnWaybillGet', component: SalesReturnWaybillGet, meta: { title: i18n.t('router.SalesReturnWaybillGet'), baseLink: 'SalesReturnWaybill' } },
+  { path: '/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillGet', component: PurchaseReturnWaybillGet, meta: { title: i18n.t('router.PurchaseReturnWaybillGet'), baseLink: 'PurchaseReturnWaybill' } },
+  { path: '/Asset/:url', name: 'AssetGet', component: AssetGet, meta: { title: i18n.t('router.AssetGet'), baseLink: 'Asset' } },
+  { path: '/AssetLocation/:url', name: 'AssetLocationGet', component: AssetLocationGet, meta: { title: i18n.t('router.AssetLocationGet'), baseLink: 'AssetLocation' } },
+  { path: '/AssetMovementCard/:url', name: 'AssetMovementCardGet', component: AssetMovementCardGet, meta: { title: i18n.t('router.AssetMovementCardGet'), baseLink: 'AssetMovementCard' } },
+  { path: '/OverDueDebitSearch/:url', name: 'OverDueDebitSearchGet', component: OverDueDebitSearchGet, meta: { title: i18n.t('router.OverDueDebitSearchGet'), baseLink: 'OverDueDebitSearch' } }
+
 ]
 
 const listUpdate = [
@@ -715,7 +793,18 @@ const listUpdate = [
   { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } },
   { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } },
   { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
-  { path: '/Update/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionUpdate', component: LoyaltyConsumptionUpdate, meta: { title: i18n.t('router.LoyaltyConsumptionUpdate'), baseLink: 'LoyaltyConsumption' } }
+  { path: '/Update/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionUpdate', component: LoyaltyConsumptionUpdate, meta: { title: i18n.t('router.LoyaltyConsumptionUpdate'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/Update/Rma/:url', name: 'RmaUpdate', component: RmaUpdate, meta: { title: i18n.t('router.RmaUpdate'), baseLink: 'Rma' } },
+  { path: '/Update/RmaOrder/:url', name: 'RmaOrderUpdate', component: RmaOrderUpdate, meta: { title: i18n.t('router.RmaOrderUpdate'), baseLink: 'RmaOrder' } },
+  { path: '/Update/FixedTermCampaign/:url', name: 'FixedTermCampaignUpdate', component: FixedTermCampaignUpdate, meta: { title: i18n.t('router.FixedTermCampaignUpdate'), baseLink: 'FixedTermCampaign' } },
+  { path: '/Update/DiscountReason/:url', name: 'DiscountReasonUpdate', component: DiscountReasonUpdate, meta: { title: i18n.t('router.DiscountReasonUpdate'), baseLink: 'DiscountReason' } },
+  { path: '/Update/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionUpdate', component: PriceDiscountTransactionUpdate, meta: { title: i18n.t('router.PriceDiscountTransactionUpdate'), baseLink: 'PriceDiscountTransaction' } },
+  { path: '/Update/SalesReturnWaybill/:url', name: 'SalesReturnWaybillUpdate', component: SalesReturnWaybillUpdate, meta: { title: i18n.t('router.SalesReturnWaybillUpdate'), baseLink: 'SalesReturnWaybill' } },
+  { path: '/Update/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillUpdate', component: PurchaseReturnWaybillUpdate, meta: { title: i18n.t('router.PurchaseReturnWaybillUpdate'), baseLink: 'PurchaseReturnWaybill' } },
+  { path: '/Update/Asset/:url', name: 'AssetUpdate', component: AssetUpdate, meta: { title: i18n.t('router.AssetUpdate'), baseLink: 'Asset' } },
+  { path: '/Update/AssetLocation/:url', name: 'AssetLocationUpdate', component: AssetLocationUpdate, meta: { title: i18n.t('router.AssetLocationUpdate'), baseLink: 'AssetLocation' } },
+  { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
+  { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } }
 ]
 
 const listInsert = [
@@ -803,7 +892,18 @@ const listInsert = [
   { path: '/Insert/RouteBalance', name: 'RouteBalance', component: RouteBalanceInsert, meta: { title: i18n.t('router.RouteBalanceInsert'), baseLink: 'RouteBalance' } },
   { path: '/Insert/WarehouseMovement', name: 'WarehouseMovementInsert', component: WarehouseMovementInsert, meta: { title: i18n.t('router.WarehouseMovementInsert'), baseLink: 'WarehouseMovement' } },
   { path: '/Insert/LoyaltyExpense', name: 'LoyaltyExpenseInsert', component: LoyaltyExpenseInsert, meta: { title: i18n.t('router.LoyaltyExpenseInsert'), baseLink: 'LoyaltyExpense' } },
-  { path: '/Insert/LoyaltyConsumption', name: 'LoyaltyConsumptionInsert', component: LoyaltyConsumptionInsert, meta: { title: i18n.t('router.LoyaltyConsumptionInsert'), baseLink: 'LoyaltyConsumption' } }
+  { path: '/Insert/LoyaltyConsumption', name: 'LoyaltyConsumptionInsert', component: LoyaltyConsumptionInsert, meta: { title: i18n.t('router.LoyaltyConsumptionInsert'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/Insert/Rma', name: 'RmaInsert', component: RmaInsert, meta: { title: i18n.t('router.RmaInsert'), baseLink: 'Rma' } },
+  { path: '/Insert/RmaOrder', name: 'RmaOrderInsert', component: RmaOrderInsert, meta: { title: i18n.t('router.RmaOrderInsert'), baseLink: 'RmaOrder' } },
+  { path: '/Insert/FixedTermCampaign', name: 'FixedTermCampaignInsert', component: FixedTermCampaignInsert, meta: { title: i18n.t('router.FixedTermCampaignInsert'), baseLink: 'FixedTermCampaign' } },
+  { path: '/Insert/DiscountReason', name: 'DiscountReasonInsert', component: DiscountReasonInsert, meta: { title: i18n.t('router.DiscountReasonInsert'), baseLink: 'DiscountReason' } },
+  { path: '/Insert/PriceDiscountTransaction', name: 'PriceDiscountTransactionInsert', component: PriceDiscountTransactionInsert, meta: { title: i18n.t('router.PriceDiscountTransactionInsert'), baseLink: 'PriceDiscountTransaction' } },
+  { path: '/Insert/SalesReturnWaybill', name: 'SalesReturnWaybillInsert', component: SalesReturnWaybillInsert, meta: { title: i18n.t('router.SalesReturnWaybillInsert'), baseLink: 'SalesReturnWaybill' } },
+  { path: '/Insert/PurchaseReturnWaybill', name: 'PurchaseReturnWaybillInsert', component: PurchaseReturnWaybillInsert, meta: { title: i18n.t('router.PurchaseReturnWaybillInsert'), baseLink: 'PurchaseReturnWaybill' } },
+  { path: '/Insert/Asset', name: 'AssetInsert', component: AssetInsert, meta: { title: i18n.t('router.AssetInsert'), baseLink: 'Asset' } },
+  { path: '/Insert/AssetLocation', name: 'AssetLocationInsert', component: AssetLocationInsert, meta: { title: i18n.t('router.AssetLocationInsert'), baseLink: 'AssetLocation' } },
+  { path: '/Insert/AssetMovementCard', name: 'AssetMovementCardInsert', component: AssetMovementCardInsert, meta: { title: i18n.t('router.AssetMovementCardInsert'), baseLink: 'AssetMovementCard' } },
+  { path: '/Insert/OverDueDebitSearch', name: 'OverDueDebitSearchInsert', component: OverDueDebitSearchInsert, meta: { title: i18n.t('router.OverDueDebitSearchInsert'), baseLink: 'OverDueDebitSearch' } }
 ]
 
 const routes = [

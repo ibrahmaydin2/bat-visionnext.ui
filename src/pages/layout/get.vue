@@ -7,6 +7,8 @@
         <div :class="style.viewPush">
           <b-overlay :show="bigLoading" rounded="sm">
             <b-card class="asc__getPage" no-body>
+              <!-- <Breadcrumb title="aasdasdas" /> -->
+              <!-- <GetFormField /> -->
               <router-view/>
               <div class="clearfix" />
             </b-card>
@@ -25,6 +27,9 @@ export default {
   },
   computed: {
     ...mapState(['style', 'bigLoading'])
+  },
+  mounted () {
+    console.log(this.$route)
   }
 }
 </script>

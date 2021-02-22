@@ -100,7 +100,7 @@
     "DebtArrangement": "DebtArrangement",
     "PriceList": "Fiyat Listesi",
     "CheckOperations": "CheckOperations",
-    "BankTransaction": "BankTransaction",
+    "BankTransaction": "Havale/EFT",
     "CashTransactions": "CashTransactions",
     "Accounting": "Accounting",
     "AccountCodeDescription": "AccountCodeDescription",
@@ -161,7 +161,7 @@
     "DebtArrangementGet": "DebtArrangementGet",
     "PriceListGet": "Fiyat Listesi",
     "CheckOperationsGet": "CheckOperationsGet",
-    "BankTransactionGet": "BankTransactionGet",
+    "BankTransactionGet": "Havale/EFT Görüntüle",
     "CashTransactionsGet": "CashTransactionsGet",
     "AccountingGet": "AccountingGet",
     "AccountCodeDescriptionGet": "AccountCodeDescriptionGet",
@@ -222,7 +222,7 @@
     "DebtArrangementUpdate": "DebtArrangementUpdate",
     "PriceListUpdate": "Fiyat Listesi Güncelle",
     "CheckOperationsUpdate": "CheckOperationsUpdate",
-    "BankTransactionUpdate": "BankTransactionUpdate",
+    "BankTransactionUpdate": "Havale/EFT Güncelle",
     "CashTransactionsUpdate": "CashTransactionsUpdate",
     "AccountingUpdate": "AccountingUpdate",
     "AccountCodeDescriptionUpdate": "AccountCodeDescriptionUpdate",
@@ -279,7 +279,7 @@
     "DebtArrangementInsert": "DebtArrangementInsert",
     "PriceListInsert": "Fiyat Listesi Ekle",
     "CheckOperationsInsert": "CheckOperationsInsert",
-    "BankTransactionInsert": "BankTransactionInsert",
+    "BankTransactionInsert": "Havale/EFT Oluştur",
     "CashTransactionsInsert": "CashTransactionsInsert",
     "AccountingInsert": "AccountingInsert",
     "AccountCodeDescriptionInsert": "AccountCodeDescriptionInsert",
@@ -333,7 +333,11 @@
     "CreditCardUpdate": "Kredi Kartı İşlemi Güncelle",
     "CreditCardGet": "Kredi Kartı İşlemi Görüntüle",
     "PriceListUpdate ": "Fiyat Listesi Güncelle",
-    "PriceListGet ": "Fiyat Listesi"
+    "PriceListGet ": "Fiyat Listesi",
+    "CsCard": "Çek İşlemleri",
+    "CsCardInsert": "Yeni Çek İşlemi",
+    "CsCardUpdate": "Çek İşlemi Güncelle",
+    "CsCardGet": "Çek İşlemi Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -777,11 +781,19 @@
       "Code": "Nakit Ödeme Kodu",
       "CashCard": "Nakit Ödeme Ana Kayıtları",
       "status": "Durum",
-      "code": "Sistem Kodu"
+      "code": "Sistem Kodu",
+      "reminder": "Müşteri Bakiyesi"
     },
     "creditcard": {
       "Code": "Kredi Kartı İşlem Kodu",
       "CreditCard": "Kredi Kartı Ana Kayıtları",
+      "status": "Durum",
+      "code": "Sistem Kodu",
+      "reminder": "Müşteri Bakiyesi"
+    },
+    "cscard": {
+      "Code": "Çek İşlem Kodu",
+      "CsCard": "Çek İşlem Ana Kayıtları",
       "status": "Durum",
       "code": "Sistem Kodu",
       "reminder": "Müşteri Bakiyesi"
@@ -1249,6 +1261,41 @@
       "RouteId": "Rota",
       "IsBatcardTransaction": "BATCard Tahsilatı",
       "CashCardTypeId": "İşlem Tipi"
+    },
+    "CsCard": {
+      "title":"Çek İşlem Ana Kayıtları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "CustomerId": "Müşteri",
+      "DocumentNumber": "Belge Numarası",
+      "DocumentDate": "Belge Tarihi",
+      "CsType": "İşlem Tipi",
+      "DueDate": "Ödeme Tarihi",
+      "SerialNumber": "Seri No",
+      "Owner": "Çekin Sahibi",
+      "PayCity": "İl",
+      "Bank": "Bank",
+      "CorrespondentBranch": "Banka Şubesi",
+      "CurrencyId": "Para Birimi",
+      "CsTotal": "Çek Tutarı",
+      "RepresentativeId": "Saha Personeli",
+      "RouteId": "Rota"
+    },
+    "BankTransaction": {
+      "Customer": "Müşteri",
+      "DocumentDate": "Tarih",
+      "DocumentNumber": "SAP Doküman No",
+      "Currency": "Para Birimi",
+      "TransactionType": "İşlem Tipi",
+      "TransactionTotal": "Tutar",
+      "Bank": "Banka",
+      "BankAccountNumber": "Hesap Numarası",
+      "BankBranch": "Banka Şubesi",
+      "CustomerBank": "Müşteri Bankası",
+      "CustomerBankBranch": "Müşteri Bankası Şube",
+      "CustomerBankAccountNumber": "Müşteri Hesap Numarası",
+      "Description1": "Açıklama"
     }
   },
   
