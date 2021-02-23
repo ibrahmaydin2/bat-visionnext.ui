@@ -670,12 +670,12 @@
               </b-col>
                 <b-col v-if="insertVisible.DiscountPercent1 != null ? insertVisible.DiscountPercent1 : developmentMode" cols="12" md="2">
                 <b-form-group :label="insertTitle.DiscountPercent1 + (insertRequired.DiscountPercent1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent1.$error }">
-                  <b-form-input type="text" v-model="form.DiscountPercent1" :readonly="insertReadonly.DiscountPercent1" />
+                  <b-form-input type="number" v-model="form.DiscountPercent1" :readonly="insertReadonly.DiscountPercent1" />
                 </b-form-group>
               </b-col>
                 <b-col v-if="insertVisible.DiscountPercent2 != null ? insertVisible.DiscountPercent2 : developmentMode" cols="12" md="2">
                 <b-form-group :label="insertTitle.DiscountPercent2 + (insertRequired.DiscountPercent2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent2.$error }">
-                  <b-form-input type="text" v-model="form.DiscountPercent2" :readonly="insertReadonly.DiscountPercent2" />
+                  <b-form-input type="number" v-model="form.DiscountPercent2" :readonly="insertReadonly.DiscountPercent2" />
                 </b-form-group>
               </b-col>
                 <b-col v-if="insertVisible.SapCustomerId != null ? insertVisible.SapCustomerId : developmentMode" cols="12" md="2">
@@ -1027,7 +1027,14 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountCode')">
-                <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
+                <v-select :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
+                    <template slot="no-options">
+                      {{$t('insert.min3')}}
+                    </template>
+                    <template slot="option" slot-scope="option">
+                      {{ option.Description1 }}
+                    </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1313,12 +1320,9 @@ export default {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'credits'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_PRIORITY', name: 'touchpoints'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_TOUCHPOINT_TYPE', name: 'touchpoint_types'})
-
-      this.$store.dispatch('getItems')
 
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
@@ -1534,7 +1538,7 @@ export default {
     },
     addItemDiscount () {
       if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
-        this.$toasted.show(this.$t('insert.fillRequireds'), {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -1687,7 +1691,7 @@ export default {
     },
     addCreditHistories () {
       if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
-        this.$toasted.show(this.$t('insert.fillRequireds'), {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -1723,6 +1727,24 @@ export default {
     },
     selectedOptions (type, label) {
       this[type] = label
+    },
+    onItemsSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchItems(loading, search, this)
+      }
+    },
+    searchItems (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     }
   },
   validations () {
