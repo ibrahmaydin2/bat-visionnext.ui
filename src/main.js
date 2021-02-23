@@ -28,6 +28,10 @@ import VueGoogleCharts from 'vue-google-charts'
 
 import {VueMasonryPlugin} from 'vue-masonry'
 
+// multiple date datepicker
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+
 import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'
 import Carousel from './components/Carousel'
@@ -62,6 +66,7 @@ Vue.use(Autocomplete)
 Vue.use(VueTheMask)
 Vue.use(VueGoogleCharts)
 Vue.use(VueMasonryPlugin)
+Vue.use(DatePicker)
 
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
@@ -85,6 +90,7 @@ Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
 Vue.component('NextAddress', NextAddress)
+Vue.component('DatePicker', DatePicker)
 
 Vue.prototype.$api = new ApiManager();
 

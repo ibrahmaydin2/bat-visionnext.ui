@@ -127,14 +127,20 @@
                 label="title"
               />
 
-              <b-form-datepicker
+              <!-- <b-form-datepicker
                 v-if="header.columnType === 'Date'"
                 v-once
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
-              />
-
+              /> -->
+              <date-picker
+                v-if="header.columnType === 'Date'"
+                range
+                type="date"
+                v-model="rangeDate"
+                @input="filterRangeDate(header.dataField, searchText)"
+              ></date-picker>
               <b-form-datepicker
                 v-if="header.columnType === 'DateTime'"
                 v-once
@@ -288,7 +294,8 @@ export default {
       searchBoolean: [
         { value: 1, title: 'Aktif' },
         { value: 0, title: 'Pasif' }
-      ]
+      ],
+      rangeDate: []
     }
   },
   mounted () {
@@ -395,6 +402,17 @@ export default {
     },
     filterDate (e, date) {
       this.searchOnTable(e, this.dateConvertToISo(date))
+    },
+    filterRangeDate (e, date) {
+      let model = {
+        ...this.andConditionalModel,
+        BeginValue: this.dateConvertToISo(this.rangeDate[0]),
+        EndValue: this.dateConvertToISo(this.rangeDate[1])
+      }
+      let obj = {}
+      obj[e] = model
+      this.andConditionalModel = obj
+      this.searchOnTable()
     },
     filterTime (e, time) {
       this.searchOnTable(e, time)

@@ -38,8 +38,8 @@ export default {
       return today
     },
     tabValidationHelper () {
-      const tab = document.querySelectorAll('.nav-tabs .nav-item')
-      tab.forEach((tab, item) => {
+      const tabs = document.querySelectorAll('.nav-tabs .nav-item')
+      tabs.forEach((tab, item) => {
         const tabId = tab.querySelector('a').attributes['aria-controls'].value
         let tabContent = document.getElementById(tabId)
         if (tabContent.querySelector('fieldset').classList.contains('form-group--error')) {
