@@ -55,18 +55,24 @@ export default {
   watch: {
     value (newValue) {
       if (newValue) {
-        if (newValue.DistrictId && this.selectedValue.DistrictId !== newValue.DistrictId) {
+        if (!newValue.DistrictId) {
+          this.selectedDistrict = null
+        } else if (newValue.DistrictId && this.selectedValue.DistrictId !== newValue.DistrictId) {
           this.districtId = newValue.DistrictId
           this.selectedValue.DistrictId = newValue.DistrictId
         }
-        if (newValue.CityId && this.selectedValue.CityId !== newValue.CityId) {
+        if (!newValue.CityId) {
+          this.selectedCity = null
+        } else if (newValue.CityId && this.selectedValue.CityId !== newValue.CityId) {
           this.selectedValue.CityId = newValue.CityId
           this.selectedCity = this.cities.find(c => c.DecimalValue === newValue.CityId)
           this.selectCity({
             DecimalValue: newValue.CityId
           })
         }
-        if (newValue.Address && this.selectedValue.Address !== newValue.Address) {
+        if (!newValue.Address) {
+          this.selectedAddress = null
+        } else if (newValue.Address && this.selectedValue.Address !== newValue.Address) {
           this.selectedValue.Address = newValue.Address
           this.selectedAddress = newValue.Address
         }

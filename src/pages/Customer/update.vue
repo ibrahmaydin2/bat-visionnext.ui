@@ -205,12 +205,12 @@
         <b-tab :title="$t('insert.customer.CustomerLocations')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Code')">
-                <b-form-input type="text" v-model="customerLocations.Code" readonly/>
+               <b-form-group :label="$t('insert.customer.Model_Code') + ' *'" :class="{ 'form-group--error': $v.customerLocations.Code.$error }">
+                <b-form-input type="text" v-model="customerLocations.Code"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Location_Description1')">
+               <b-form-group :label="$t('insert.customer.Model_Location_Description1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.Description1.$error }">
                 <b-form-input type="text" v-model="customerLocations.Description1" />
               </b-form-group>
             </b-col>
@@ -224,7 +224,7 @@
           />
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PostCode')">
+              <b-form-group :label="$t('insert.customer.Model_PostCode') + ' *'" :class="{ 'form-group--error': $v.customerLocations.postCode.$error }">
                 <b-form-input type="text" v-model="customerLocations.postCode" />
               </b-form-group>
             </b-col>
@@ -251,7 +251,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1')">
+              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.phoneNumber1.$error }">
                 <b-form-input type="text" v-model="customerLocations.phoneNumber1" />
               </b-form-group>
             </b-col>
@@ -313,8 +313,6 @@
             </b-col>
             <b-col cols="12" md="12" lg="12" class="text-right">
               <b-form-group>
-                <b-button v-if="isLocationEditable" @click="removeEditableInputs" class="mt-4" variant="danger" size="sm"><i class="fa fa-pen"></i> {{$t('insert.remove')}}</b-button>
-                <b-button v-if="isLocationEditable" @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-pen"></i> {{$t('insert.edit')}}</b-button>
                 <AddDetailButton @click.native="addCustomerLocations" />
               </b-form-group>
             </b-col>
@@ -324,14 +322,21 @@
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.isRouteNode')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.CustomerLocations" :key="i">
                   <b-td>{{r.Code}}</b-td>
                   <b-td>{{r.Description1}}</b-td>
+                  <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
+                  <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
+                  <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
+                  <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editCustomerLocation(r)" class="fas fa-pencil-alt mr-2 text-warning"></i>
                     <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -903,8 +908,8 @@
             <b-col>
               <b-row>
                 <b-col cols="12" md="6" lg="4">
-                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId')">
-                    <v-select :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
+                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId') + ' *'" :class="{ 'form-group--error': $v.customerPaymentTypes.paymentTypeId.$error }">
+                    <v-select v-model="customerPaymentType" :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
                   </b-form-group>
                 </b-col>
                 <b-col cols="12" md="3" lg="2">
@@ -1080,13 +1085,13 @@
         <b-tab :title="$t('insert.customer.tag')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelId')">
-                <v-select :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
+               <b-form-group :label="$t('insert.customer.labelId') + ' *'" :class="{ 'form-group--error': $v.customerTag.tagDefinition.$error }">
+                <v-select v-model="customerTag.tagDefinition" :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelValueId')">
-                <v-select :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
+               <b-form-group :label="$t('insert.customer.labelValueId') + ' *'" :class="{ 'form-group--error': $v.customerTag.tagValue.$error }">
+                <v-select v-model="customerTag.tagValue" :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1103,7 +1108,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.CustomerLabels" :key="i">
+                <b-tr v-for="(r, i) in CustomerLabels" :key="i">
                   <b-td>{{r.Label && r.Label.Label ? r.Label.Label : r.Label}}</b-td>
                   <b-td>{{r.LabelValue && r.LabelValue.Label ? r.LabelValue.Label : r.LabelValue}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -1115,13 +1120,13 @@
         <b-tab :title="$t('insert.customer.customerTouchpoints')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.touchpointPriority')">
-                <v-select :options="touchpoints" @input="selectedTouchpointPriority" label="Label"></v-select>
+              <b-form-group :label="$t('insert.customer.touchpointPriority') + ' *'" :class="{ 'form-group--error': $v.customerTouchpoints.TouchpointPriorityNumber.$error }">
+                <v-select v-model="touchpointPriority" :options="touchpoints" @input="selectedTouchpointPriority" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.touchpointTypeId')">
-                <v-select :options="touchpoint_types" @input="selectedTouchpointType" label="Label"></v-select>
+              <b-form-group :label="$t('insert.customer.touchpointTypeId') + ' *'" :class="{ 'form-group--error': $v.customerTouchpoints.TouchpointTypeId.$error }">
+                <v-select v-model="touchpointTypeId" :options="touchpoint_types" @input="selectedTouchpointType" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1138,7 +1143,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.CustomerTouchpoints" :key="i">
+                <b-tr v-for="(r, i) in (form.CustomerTouchpoints ? form.CustomerTouchpoints.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{r.TouchpointPriority && r.TouchpointPriority.Label ?  r.TouchpointPriority.Label : r.TouchpointPriorityLabel}}</b-td>
                   <b-td>{{r.TouchpointType && r.TouchpointType.Label ? r.TouchpointType.Label : r.TouchpointTypeIdLabel}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerTouchpoint(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -1270,7 +1275,7 @@ export default {
         tciBreak2Id: null
       },
       customerTouchpoints: {
-        TouchpointPriority: null,
+        TouchpointPriorityNumber: null,
         TouchpointTypeId: null,
         TouchpointPriorityLabel: null,
         TouchpointTypeIdLabel: null
@@ -1281,7 +1286,15 @@ export default {
       locationDistirictLabel: null,
       isLocationEditable: false,
       address: {},
-      customerType: null
+      customerType: null,
+      touchpointPriority: null,
+      touchpointTypeId: null,
+      customerPaymentType: null,
+      customerTag: {
+        tagDefinition: null,
+        tagValue: null
+      },
+      CustomerLabels: []
     }
   },
   computed: {
@@ -1316,6 +1329,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
       this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/Bank/Search', name: 'banks'})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -1345,6 +1359,13 @@ export default {
           duration: '3000'
         })
       } else {
+        this.form.CustomerLabels = this.CustomerLabels.map((item) => {
+          var newItem = {
+            LabelId: item.LabelId,
+            LabelValueId: item.LabelValueId
+          }
+          return newItem
+        })
         this.form.AllowOverLimit = this.form.AllowOverLimit === true || this.form.AllowOverLimit === 1 ? 1 : 0
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
         this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
@@ -1439,10 +1460,10 @@ export default {
     },
     selectedTouchpointPriority (e) {
       if (e) {
-        this.customerTouchpoints.TouchpointPriority = e.DecimalValue
+        this.customerTouchpoints.TouchpointPriorityNumber = e.DecimalValue
         this.customerTouchpoints.TouchpointPriorityLabel = e.Label
       } else {
-        this.customerTouchpoints.TouchpointPriority = null
+        this.customerTouchpoints.TouchpointPriorityNumber = null
         this.customerTouchpoints.TouchpointPriorityLabel = null
       }
     },
@@ -1455,29 +1476,61 @@ export default {
         this.customerTouchpoints.TouchpointTypeIdLabel = null
       }
     },
-    addCustomerTouchpoint (item) {
+    addCustomerTouchpoint () {
+      this.$v.customerTouchpoints.$touch()
+      if (this.$v.customerTouchpoints.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.CustomerTouchpoints.filter(i => i.TouchpointTypeId === this.customerTouchpoints.TouchpointTypeId && i.TouchpointPriorityNumber === this.customerTouchpoints.TouchpointPriorityNumber)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.customerTouchpoints.RecordState = 2
       this.form.CustomerTouchpoints.push(this.customerTouchpoints)
+      this.touchpointTypeId = null
+      this.touchpointPriorityNumber = null
+      this.customerTouchpoints = {}
+      this.$v.customerTouchpoints.$reset()
     },
     removeCustomerTouchpoint (item) {
-      this.form.CustomerTouchpoints.splice(this.form.CustomerTouchpoints.indexOf(item), 1)
+      if (item.RecordId) {
+        item.RecordState = 4
+      } else {
+        this.form.CustomerTouchpoints.splice(this.form.CustomerTouchpoints.indexOf(item), 1)
+      }
     },
     addCustomerLabel () {
-      this.form.CustomerLabels.push({
+      this.$v.customerTag.$touch()
+      if (this.$v.customerTag.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.CustomerLabels.filter(i => i.LabelId === this.customerTag.tagDefinition.RecordId && i.LabelValueId === this.customerTag.tagValue.RecordId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.CustomerLabels.push({
         Label: this.customerLabel,
         LabelId: this.customerLabelId,
         LabelValue: this.customerLabelValue,
         LabelValueId: this.customerLabelValueId
       })
-
-      // this.CustomerLabelsArr.push({
-      //   Label: this.customerLabel,
-      //   LabelId: this.customerLabelId,
-      //   LabelValue: this.customerLabel,
-      //   LabelValueId: this.customerLabelValue
-      // })
+      this.customerTag = {}
+      this.$v.customerTag.$reset()
     },
     removeCustomerLabel (item) {
-      this.form.CustomerLabels.splice(this.form.CustomerLabels.indexOf(item), 1)
+      this.CustomerLabels.splice(this.CustomerLabels.indexOf(item), 1)
     },
     addItemDiscount () {
       if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
@@ -1501,6 +1554,20 @@ export default {
       this.form.CustomerItemDiscounts.splice(this.form.CustomerItemDiscounts.indexOf(item), 1)
     },
     addCustomerPaymentType () {
+      this.$v.customerPaymentTypes.$touch()
+      if (this.$v.customerPaymentTypes.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.CustomerPaymentTypes.filter(i => i.PaymentTypeId === this.customerPaymentTypes.paymentTypeId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
       this.form.CustomerPaymentTypes.push({
         PaymentTypeId: this.customerPaymentTypes.paymentTypeId,
         RecordState: 2
@@ -1510,6 +1577,9 @@ export default {
         PaymentTypeId: this.customerPaymentTypes.paymentTypeId,
         RecordState: 2
       })
+      this.customerPaymentType = null
+      this.customerPaymentTypes = {}
+      this.$v.customerPaymentTypes.$reset()
     },
     removeCustomerPaymentType (item) {
       this.CustomerPaymentTypesArr[this.CustomerPaymentTypesArr.indexOf(item)].RecordState = 4
@@ -1528,59 +1598,34 @@ export default {
         return false
       }
       let filteredArr = this.form.CustomerLocations.filter(i => i.Code === this.customerLocations.Code)
-      if (filteredArr.length < 1) {
-        this.form.CustomerLocations.push({
-          Code: this.customerLocations.Code,
-          Description1: this.customerLocations.Description1,
-          addressDetail: this.customerLocations.addressDetail,
-          phoneNumber1: this.customerLocations.phoneNumber1,
-          faxNumber: this.customerLocations.faxNumber,
-          addressDescription: this.customerLocations.addressDescription,
-          genexp1: this.customerLocations.genexp1,
-          contactName: this.customerLocations.contactName,
-          cityId: this.customerLocations.cityId,
-          xPosition: this.customerLocations.xPosition,
-          yPosition: this.customerLocations.yPosition,
-          districtId: this.customerLocations.districtId,
-          genexp2: this.customerLocations.genexp2,
-          postCode: this.customerLocations.postCode,
-          alias: this.customerLocations.alias,
-          isDefaultLocation: this.customerLocations.isDefaultLocation,
-          isInvoiceAddress: this.customerLocations.isInvoiceAddress,
-          isDeliveryAddress: this.customerLocations.isDeliveryAddress,
-          isRouteNode: this.customerLocations.isRouteNode,
-          cityLabel: this.locationCityLabel,
-          districtLabel: this.locationDistirictLabel,
-          RecordState: 2
-        })
-      } else {
-        let arrIndex = this.form.CustomerLocations.indexOf(filteredArr[0])
-        this.form.CustomerLocations[arrIndex] = {
-          Code: this.customerLocations.Code,
-          Description1: this.customerLocations.Description1,
-          addressDetail: this.customerLocations.addressDetail,
-          phoneNumber1: this.customerLocations.phoneNumber1,
-          faxNumber: this.customerLocations.faxNumber,
-          addressDescription: this.customerLocations.addressDescription,
-          genexp1: this.customerLocations.genexp1,
-          contactName: this.customerLocations.contactName,
-          cityId: this.customerLocations.cityId,
-          xPosition: this.customerLocations.xPosition,
-          yPosition: this.customerLocations.yPosition,
-          districtId: this.customerLocations.districtId,
-          genexp2: this.customerLocations.genexp2,
-          postCode: this.customerLocations.postCode,
-          alias: this.customerLocations.alias,
-          isDefaultLocation: this.customerLocations.isDefaultLocation,
-          isInvoiceAddress: this.customerLocations.isInvoiceAddress,
-          isDeliveryAddress: this.customerLocations.isDeliveryAddress,
-          isRouteNode: this.customerLocations.isRouteNode,
-          cityLabel: this.locationCityLabel,
-          districtLabel: this.locationDistirictLabel,
-          RecordState: 3,
-          RecordId: this.customerLocations.RecordId
-        }
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
       }
+      this.form.CustomerLocations.push({
+        Code: this.customerLocations.Code,
+        Description1: this.customerLocations.Description1,
+        addressDetail: this.address.Address,
+        phoneNumber1: this.customerLocations.phoneNumber1,
+        faxNumber: this.customerLocations.faxNumber,
+        addressDescription: this.customerLocations.addressDescription,
+        genexp1: this.customerLocations.genexp1,
+        contactName: this.customerLocations.contactName,
+        cityId: this.customerLocations.cityId,
+        xPosition: this.customerLocations.xPosition,
+        yPosition: this.customerLocations.yPosition,
+        districtId: this.customerLocations.districtId,
+        genexp2: this.customerLocations.genexp2,
+        postCode: this.customerLocations.postCode,
+        alias: this.customerLocations.alias,
+        isDefaultLocation: this.customerLocations.isDefaultLocation,
+        isInvoiceAddress: this.customerLocations.isInvoiceAddress,
+        isDeliveryAddress: this.customerLocations.isDeliveryAddress,
+        isRouteNode: this.customerLocations.isRouteNode,
+        cityLabel: this.locationCityLabel,
+        districtLabel: this.locationDistirictLabel,
+        RecordState: 2
+      })
       this.removeEditableInputs()
     },
     editCustomerLocation (item) {
@@ -1637,6 +1682,8 @@ export default {
       tmpCode = Number(tmpCode[1].trim())
       tmpCode += 1
       this.customerLocations.Code = `${this.form.Code} - ${tmpCode}`
+      this.address = {}
+      this.$v.customerLocations.$reset()
     },
     addCreditHistories () {
       if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
@@ -1684,10 +1731,10 @@ export default {
     let validation = {
       form: this.insertRules,
       customerLocations: {
-        description1: {
+        Description1: {
           required
         },
-        code: {
+        Code: {
           required
         },
         addressDetail: {
@@ -1703,6 +1750,27 @@ export default {
           required
         },
         districtId: {
+          required
+        }
+      },
+      customerTouchpoints: {
+        TouchpointPriorityNumber: {
+          required
+        },
+        TouchpointTypeId: {
+          required
+        }
+      },
+      customerPaymentTypes: {
+        paymentTypeId: {
+          required
+        }
+      },
+      customerTag: {
+        tagDefinition: {
+          required
+        },
+        tagValue: {
           required
         }
       }
@@ -1818,13 +1886,13 @@ export default {
           CustomerCreditHistories: e.CustomerCreditHistories,
           CustomerPaymentTypes: e.CustomerPaymentTypes,
           CustomerItemDiscounts: e.CustomerItemDiscounts,
-          CustomerLabels: e.CustomerLabels,
           CustomerTouchpoints: e.CustomerTouchpoints,
           RecordId: e.RecordId,
           SalesTypeId: 0,
           RecordTypeId: e.RecordTypeId,
           Deleted: 0
         }
+        this.CustomerLabels = e.CustomerLabels
         this.customerLocations.Code = `${this.form.Code} - ${this.form.CustomerLocations.length ? this.form.CustomerLocations.length + 1 : 1}`
 
         // Detay panellerin doldurulması
