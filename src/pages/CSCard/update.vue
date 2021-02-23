@@ -392,6 +392,11 @@ export default {
       }
       if (e.Bank) {
         this.bankLabel = e.Bank.Label
+        this.branchs = []
+        this.$api.post({RecordId: e.Bank.RecordId}, 'Bank', 'Bank/Get').then((res) => {
+          this.branchsValid = true
+          this.branchs = res.Model.BankBranches
+        })
       }
     }
   }
