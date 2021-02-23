@@ -324,6 +324,7 @@
     "LoyaltyConsumptionGet": "Müşteri Güncel Puanları Görüntüle",
     "PotentialCustomer": "Potansiyel Müşteri",
     "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
+    "PotentialCustomerUpdate": "Potansiyel Müşteri Onayla",
     "CashCard": "Nakit Ödeme",
     "CashCardInsert": "Yeni Nakit Ödeme",
     "CashCardUpdate": "Nakit Ödeme Güncelle",
