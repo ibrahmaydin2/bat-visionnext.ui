@@ -25,7 +25,7 @@
           </b-col>
           <b-col v-if="insertVisible.DefaultDriverEmployeeId != null ? insertVisible.DefaultDriverEmployeeId : developmentMode" cols="12" md="4" lg="3">
             <b-form-group :label="insertTitle.DefaultDriverEmployeeId + (insertRequired.DefaultDriverEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultDriverEmployeeId.$error }">
-              <v-select :options="employees" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
+              <v-select :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.VehiclePlateNumber != null ? insertVisible.VehiclePlateNumber : developmentMode" cols="12" md="4" lg="3">
@@ -160,7 +160,7 @@
           <b-row>
             <b-col cols="12" md="4" lg="3">
               <b-form-group  :label="$t('insert.vehicles.replacementDriver') + ' *'" :class="{ 'form-group--error': $v.selectedEmployee.$error }">
-                <v-select v-model="selectedEmployee" :options="employees" label="nameSurname"></v-select>
+                <v-select v-model="selectedEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" label="nameSurname"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
