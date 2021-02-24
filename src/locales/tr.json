@@ -497,7 +497,10 @@
       "distirict":"İlçe",
       "city":"Şehir",
       "Model_PhoneNumber2": "Telefon (2)",
-      "replacementDrivers": "Yedek Sürücüler"
+      "replacementDrivers": "Yedek Sürücüler",
+      "driverName": "İsim",
+      "driverCode": "Kod",
+      "replacementDriver": "Yedek Sürücü"
     },
     "employee": {
       "Model_Code": "Personel Kodu",
