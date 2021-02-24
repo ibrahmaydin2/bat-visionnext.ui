@@ -1179,7 +1179,7 @@ export default {
         this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
       }
     },
-    selectedBank (e) {debugger
+    selectedBank (e) {
       if (e) {
         this.customerCreditHistories.bankId = e.RecordId
       } else {
@@ -1411,7 +1411,7 @@ export default {
     removeCustomerLocation (item) {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
     },
-    addCreditHistories () {debugger
+    addCreditHistories () {
       this.$v.customerCreditHistories.$touch()
       if (this.$v.customerCreditHistories.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
