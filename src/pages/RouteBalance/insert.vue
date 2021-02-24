@@ -1,5 +1,5 @@
 <template>
-  <b-row class="asc__insertPage">
+  <b-row class="asc__insertPage route-balance">
     <b-col cols="12">
       <header>
         <b-row>
@@ -37,26 +37,37 @@
       <b-tabs>
         <b-tab :title="$t('insert.RouteBalance.Detail')" active>
           <b-row>
-            <b-col cols="5">
+            <b-col cols="4" class="m-auto">
+              <b-form-input type="text" v-model="searchFromRoute" @input="fromRouteFilter" placeholder="Search Route" />
+            </b-col>
+            <b-col cols="12" class="mt-2">
               <b-table
-                :items="fromRouteBalances"
+                :items="filteredFromRoutes"
                 :fields="fields"
                 select-mode="multi"
                 responsive
                 ref="selectableTable"
                 selectable
+                bordered
+                :busy="fromLoadingTable"
+                tbody-tr-class="bg-white"
                 @row-selected="onRowFromSelected"
               >
                 <!-- Example scoped slot for select state illustrative purposes -->
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
-                    <span class="sr-only">Selected</span>
                   </template>
                   <template v-else>
                     <span aria-hidden="true">&nbsp;</span>
                     <span class="sr-only">Not selected</span>
                   </template>
+                </template>
+                <template #table-busy>
+                  <div class="text-center text-danger my-2">
+                    <b-spinner type="grow" class="align-middle"></b-spinner>
+                    <strong>Tablo içeriği için rota seçiniz</strong>
+                  </div>
                 </template>
                 <template #cell(Day1Value)="row">
                   <b-form-checkbox v-model="row.item.Day1Value"></b-form-checkbox>
@@ -81,22 +92,27 @@
                 </template>
               </b-table>
             </b-col>
-            <b-col cols="2" class="route-balance-button-box">
-              <b-button variant="primary mb-2" @click="moveFromRoute">
-                <b-icon icon="arrow-right"></b-icon>
+            <b-col cols="12" class="route-balance-button-box mb-2 mt-2">
+              <b-button variant="success" class="mr-2" @click="moveFromRoute">
+                <b-icon icon="arrow-down"></b-icon>
               </b-button>
-              <b-button variant="primary mb-2" @click="moveToRoute">
-                <b-icon icon="arrow-left"></b-icon>
+              <b-button variant="success" class="ml-2" @click="moveToRoute">
+                <b-icon icon="arrow-up"></b-icon>
               </b-button>
             </b-col>
-            <b-col cols="5">
+            <b-col cols="4" class="m-auto">
+              <b-form-input type="text" v-model="searchToRoute" @input="toRouteFilter" placeholder="Search Route" />
+            </b-col>
+            <b-col cols="12" class="mt-2">
               <b-table
-                :items="toRouteBalances"
+                :items="filteredToRoutes"
                 :fields="fields"
                 select-mode="multi"
                 responsive
                 ref="selectableTable"
+                :busy="toLoadingTable"
                 selectable
+                bordered
                 @row-selected="onRowToSelected"
               >
                 <!-- Example scoped slot for select state illustrative purposes -->
@@ -109,6 +125,12 @@
                     <span aria-hidden="true">&nbsp;</span>
                     <span class="sr-only">Not selected</span>
                   </template>
+                </template>
+                <template #table-busy>
+                  <div class="text-center text-danger my-2">
+                    <b-spinner type="grow" class="align-middle"></b-spinner>
+                    <strong>Tablo içeriği için rota seçiniz</strong>
+                  </div>
                 </template>
                 <template #cell(Day1Value)="row">
                   <b-form-checkbox v-model="row.item.Day1Value"></b-form-checkbox>
@@ -154,7 +176,6 @@ export default {
         ToRouteDetails: []
       },
       fields: [
-        {key: 'Selected', label: this.$t('insert.RouteBalance.Selected'), sortable: false},
         {key: 'CustomerCode', label: this.$t('insert.RouteBalance.CustomerCode'), sortable: false},
         {key: 'CustomerDesc', label: this.$t('insert.RouteBalance.CustomerDesc'), sortable: false},
         {key: 'LocationDesc', label: this.$t('insert.RouteBalance.LocationDesc'), sortable: false},
@@ -168,11 +189,33 @@ export default {
       ],
       fromSelecteds: [],
       toSelecteds: [],
-      routeName: this.$route.meta.baseLink
+      routeName: this.$route.meta.baseLink,
+      fromLoadingTable: true,
+      toLoadingTable: true,
+      searchFromRoute: null,
+      searchToRoute: null,
+      fromText: '',
+      toText: ''
     }
   },
   computed: {
-    ...mapState(['routes', 'fromRouteBalances', 'toRouteBalances'])
+    ...mapState(['routes', 'fromRouteBalances', 'toRouteBalances']),
+    filteredFromRoutes () {
+      if (this.fromText.length > 0) {
+        return this.fromRouteBalances.filter((route) => {
+          return route.CustomerCode.toLocaleLowerCase('tr').includes(this.fromText) || (route.CustomerDesc.toLocaleLowerCase('tr').includes(this.fromText)) || (route.LocationDesc.toLocaleLowerCase('tr').includes(this.fromText))
+        })
+      }
+      return this.fromRouteBalances
+    },
+    filteredToRoutes () {
+      if (this.toText.length > 0) {
+        return this.toRouteBalances.filter((route) => {
+          return route.CustomerCode.toLocaleLowerCase('tr').includes(this.toText) || (route.CustomerDesc.toLocaleLowerCase('tr').includes(this.toText)) || (route.LocationDesc.toLocaleLowerCase('tr').includes(this.toText))
+        })
+      }
+      return this.toRouteBalances
+    }
   },
   mounted () {
     this.getDatas()
@@ -188,8 +231,10 @@ export default {
           RouteId: model.RecordId
         }
         if (label === 'FromRouteId') {
+          this.fromLoadingTable = true
           this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/RouteBalanceSearch', name: 'fromRouteBalances', props: props})
         } else {
+          this.toLoadingTable = true
           this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/RouteBalanceSearch', name: 'toRouteBalances', props: props})
         }
       } else {
@@ -204,8 +249,6 @@ export default {
       }
     },
     save () {
-      // 3723192820
-      // 3723192784
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
@@ -220,16 +263,21 @@ export default {
       this.toSelecteds = items
     },
     moveFromRoute () {
+      if (this.fromSelecteds.length < 1 || !this.form.FromRouteId || !this.form.ToRouteId) {
+        alert('rota seç')
+        return
+      }
       this.fromSelecteds.forEach(i => {
         var check = false
         this.toRouteBalances.forEach(s => {
           if (s.CustomerCode === i.CustomerCode) {
             check = true
-            alert('Zaten mevcut')
-            return false
+            alert(`${i.CustomerCode} zaten mevcut`)
+            this.fromSelecteds.splice(this.fromSelecteds.indexOf(i), 1)
           }
         })
         if (!check) {
+          i.RecordState = 2
           this.toRouteBalances.push(i)
           this.fromRouteBalances.splice(this.fromRouteBalances.indexOf(i), 1)
         }
@@ -244,13 +292,47 @@ export default {
           'Day7Value': this.checkConvertDayToNumber(i.Day7Value)
         })
       })
+      this.fromSelecteds = []
+      this.$refs.selectableTable.clearSelected()
     },
     moveToRoute () {
-
+      if (this.toSelecteds.length < 1 || !this.form.FromRouteId || !this.form.ToRouteId) {
+        alert('rota seç')
+        return
+      }
+      this.toSelecteds.forEach(i => {
+        var check = false
+        this.fromRouteBalances.forEach(s => {
+          if (s.CustomerCode === i.CustomerCode) {
+            check = true
+            alert('Zaten mevcut')
+            return false
+          }
+        })
+        if (!check) {
+          i.RecordState = 2
+          this.fromRouteBalances.push(i)
+          this.toRouteBalances.splice(this.toRouteBalances.indexOf(i), 1)
+        }
+        this.form.ToRouteDetails.push({
+          'DetailId': i.RouteDetailId,
+          'Day1Value': this.checkConvertDayToNumber(i.Day1Value),
+          'Day2Value': this.checkConvertDayToNumber(i.Day2Value),
+          'Day3Value': this.checkConvertDayToNumber(i.Day3Value),
+          'Day4Value': this.checkConvertDayToNumber(i.Day4Value),
+          'Day5Value': this.checkConvertDayToNumber(i.Day5Value),
+          'Day6Value': this.checkConvertDayToNumber(i.Day6Value),
+          'Day7Value': this.checkConvertDayToNumber(i.Day7Value)
+        })
+      })
+      this.toSelecteds = []
+    },
+    fromRouteFilter (text) {
+      this.fromText = text.toLocaleLowerCase('tr')
+    },
+    toRouteFilter (text) {
+      this.toText = text.toLocaleLowerCase('tr')
     }
-    // selectAllRows () {
-    //   this.$refs.selectableTable.selectAllRows()
-    // }
   },
   validations () {
     return {
@@ -267,16 +349,29 @@ export default {
   watch: {
     fromRouteBalances (e) {
       if (e) {
-        console.log(e)
+        this.fromLoadingTable = false
+      }
+    },
+    toRouteBalances (e) {
+      if (e) {
+        this.toLoadingTable = false
       }
     }
   }
 }
 </script>
 <style lang="sass">
- .route-balance-button-box
-   display: flex
-   flex-direction: column
-   align-items: center
-   justify-content: center
+  .route-balance
+    .route-balance-button-box
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: center
+      button
+        border-radius: unset
+    table tbody
+      color: black
+      .table-active
+        background-color: #28a745 !important
+        color: white
 </style>

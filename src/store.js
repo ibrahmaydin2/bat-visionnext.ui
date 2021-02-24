@@ -1031,12 +1031,6 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
-          // Şimdilik koyuldu geri alınacak
-
-          if (query.name === 'fromRouteBalances' || query.name === 'toRouteBalances') {
-            commit('setSearchItems', {data: res.data, name: query.name})
-            return
-          }
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
             commit('bigLoaded', false)
