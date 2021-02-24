@@ -1366,7 +1366,9 @@ export default {
         this.form.CustomerLabels = this.CustomerLabels.map((item) => {
           var newItem = {
             LabelId: item.LabelId,
-            LabelValueId: item.LabelValueId
+            LabelValueId: item.LabelValueId,
+            RecordState: item.RecordId && !item.RecordState ? 3 : item.RecordState,
+            RecordId: item.RecordId
           }
           return newItem
         })
@@ -1525,10 +1527,10 @@ export default {
         return false
       }
       this.CustomerLabels.push({
-        Label: this.customerLabel,
-        LabelId: this.customerLabelId,
-        LabelValue: this.customerLabelValue,
-        LabelValueId: this.customerLabelValueId
+        label: this.customerTag.tagDefinition.Description1,
+        labelId: this.customerTag.tagDefinition.RecordId,
+        labelValue: this.customerTag.tagValue.Description1,
+        labelValueId: this.customerTag.tagValue.RecordId
       })
       this.customerTag = {}
       this.$v.customerTag.$reset()
