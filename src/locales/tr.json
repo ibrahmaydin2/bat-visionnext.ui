@@ -339,7 +339,8 @@
     "CsCard": "Çek İşlemleri",
     "CsCardInsert": "Yeni Çek İşlemi",
     "CsCardUpdate": "Çek İşlemi Güncelle",
-    "CsCardGet": "Çek İşlemi Görüntüle"
+    "CsCardGet": "Çek İşlemi Görüntüle",
+    "RouteBalance": "Rota Dengeleme"
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -1065,6 +1066,7 @@
       "title": "Sadakat Puanı"
     },
     "RouteBalance": {
+      "Route": "Rota",
       "Detail": "Detaylar",
       "Day1": "Pts",
       "Day2": "Sal",
