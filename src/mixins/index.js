@@ -64,13 +64,16 @@ export default {
       let value = ''
       switch (type) {
         case 'text':
-          value = data
+          value = data !== null ? data : '-'
           break
         case 'object':
           value = data ? data.Label : '-'
           break
         case 'check':
           value = data === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
+          break
+        case 'date':
+          value = data !== null ? this.dateConvertFromTimezone(data) : '-'
           break
         default:
           value = '-'
