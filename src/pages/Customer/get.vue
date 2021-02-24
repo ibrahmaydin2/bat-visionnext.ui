@@ -18,9 +18,6 @@
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData.Code}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_StatusReasonId')}}:</b> {{rowData.StatusReason ? rowData.StatusReason.Label : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.customer.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <!-- <span v-html="getFormatDataByType(rowData.Code, 'text', 'fas fa-code', 'insert.customer.code')"></span>
-            <span v-html="getFormatDataByType(rowData.StatusReason, 'object', 'fas fa-code', 'insert.customer.Model_StatusReasonId')"></span>
-            <span v-html="getFormatDataByType(rowData.Status, 'object', 'fas fa-check', 'insert.customer.status')"></span> -->
           </section>
         </b-col>
       </b-row>

@@ -728,7 +728,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CurrencyId.$error }">
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
                 <v-select :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
@@ -782,12 +782,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CreditStartDate.$error }">
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
                 <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.CreditEndDate.$error }">
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
                 <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
@@ -850,15 +850,15 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.debtor')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.bail')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.customerCreditHistories" :key="i">
                   <b-td>{{r.creditAmount}}</b-td>
-                  <b-td>{{r.debtor}}</b-td>
-                  <b-td>{{r.bail}}</b-td>
+                  <b-td>{{r.creditLimit}}</b-td>
+                  <b-td>{{r.riskLimit}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -1508,7 +1508,7 @@ export default {
     },
     addItemDiscount () {
       this.$v.customerItemDiscounts.$touch()
-      if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
+      if (this.$v.customerItemDiscounts.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -1524,6 +1524,8 @@ export default {
         tciBreak1Id: this.customerItemDiscounts.tciBreak1Id,
         tciBreak2Id: this.customerItemDiscounts.tciBreak2Id
       })
+      this.customerItemDiscounts = {}
+      this.$v.customerItemDiscounts.$reset()
     },
     removeItemDiscount (item) {
       this.form.customerItemDiscounts.splice(this.form.customerItemDiscounts.indexOf(item), 1)
@@ -1662,6 +1664,8 @@ export default {
         allowOverLimit: this.customerCreditHistories.allowOverLimit,
         plate: this.customerCreditHistoriesplate
       })
+      this.customerCreditHistories = null
+      this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
       this.form.customerCreditHistories.splice(this.form.customerCreditHistories.indexOf(item), 1)
@@ -1721,13 +1725,13 @@ export default {
         creditDescriptionId: {
           required
         },
-        CurrencyId: {
+        currencyId: {
           required
         },
-        CreditStartDate: {
+        creditStartDate: {
           required
         },
-        CreditEndDate: {
+        creditEndDate: {
           required
         },
         creditLimit: {
