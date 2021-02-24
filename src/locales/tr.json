@@ -1402,7 +1402,8 @@
   },
   "header": {
     "save": "Kaydet",
-    "cancel": "Vazgeç"
+    "cancel": "Vazgeç",
+    "confirm": "Onayla"
   },
   "form": {
     "createOk": "Başarılı",

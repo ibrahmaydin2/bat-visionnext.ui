@@ -108,11 +108,10 @@
               <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
                 <template #overlay>
                   <b-icon
-                    icon="arrow-clockwise"
-                    animation="spin"
+                    icon="three-dots"
+                    animation="cylon"
                     scale="8"
-                    shift-v="16"
-                    shift-h="16"
+                    variant="warning"
                   ></b-icon>
                 </template>
                 <router-view />

@@ -70,25 +70,25 @@
                   </div>
                 </template>
                 <template #cell(Day1Value)="row">
-                  <b-form-checkbox v-model="row.item.Day1Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day1Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day2Value)="row">
-                  <b-form-checkbox v-model="row.item.Day2Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day2Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day3Value)="row">
-                  <b-form-checkbox v-model="row.item.Day3Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day3Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day4Value)="row">
-                  <b-form-checkbox v-model="row.item.Day4Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day4Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day5Value)="row">
-                  <b-form-checkbox v-model="row.item.Day5Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day5Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day6Value)="row">
-                  <b-form-checkbox v-model="row.item.Day6Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day6Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day7Value)="row">
-                  <b-form-checkbox v-model="row.item.Day7Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day7Value" type="number" :showText="false"/>
                 </template>
               </b-table>
             </b-col>
@@ -133,25 +133,25 @@
                   </div>
                 </template>
                 <template #cell(Day1Value)="row">
-                  <b-form-checkbox v-model="row.item.Day1Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day1Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day2Value)="row">
-                  <b-form-checkbox v-model="row.item.Day2Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day2Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day3Value)="row">
-                  <b-form-checkbox v-model="row.item.Day3Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day3Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day4Value)="row">
-                  <b-form-checkbox v-model="row.item.Day4Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day4Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day5Value)="row">
-                  <b-form-checkbox v-model="row.item.Day5Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day5Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day6Value)="row">
-                  <b-form-checkbox v-model="row.item.Day6Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day6Value" type="number" :showText="false"/>
                 </template>
                 <template #cell(Day7Value)="row">
-                  <b-form-checkbox v-model="row.item.Day7Value"></b-form-checkbox>
+                  <NextCheckBox v-model="row.item.Day7Value" type="number" :showText="false"/>
                 </template>
               </b-table>
             </b-col>
@@ -254,6 +254,8 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
         this.$store.dispatch('createRouteBalance', {...this.query, api: `VisionNextRoute/api/Route/${this.routeName}`, formdata: this.form, return: this.routeName})
+        this.form.FromRouteDetails = []
+        this.form.ToRouteDetails = []
       }
     },
     onRowFromSelected (items) {

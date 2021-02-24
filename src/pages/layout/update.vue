@@ -5,7 +5,15 @@
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-overlay :show="bigLoading" rounded="sm">
+          <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+            <template #overlay>
+              <b-icon
+                icon="three-dots"
+                animation="cylon"
+                scale="8"
+                variant="warning"
+              ></b-icon>
+            </template>
             <b-card class="asc__updatePage" no-body>
               <router-view/>
             </b-card>

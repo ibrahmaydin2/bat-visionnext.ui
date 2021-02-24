@@ -10,7 +10,7 @@
             <router-link :to="{name: 'Dashboard' }">
               <CancelButton />
             </router-link>
-            <AddButton @click.native="save()" />
+            <AddButton @click.native="save()" :title="$t('header.confirm')" />
           </b-col>
         </b-row>
       </header>

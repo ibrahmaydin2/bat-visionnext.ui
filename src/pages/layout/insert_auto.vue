@@ -83,7 +83,13 @@ export default {
     getInsertPage (e) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
+      this.$store.dispatch('getInsertRules', {...this.query, api: e}).then(() => {
+        Object.keys(this.insertDefaultValue).forEach(el => {
+          if (this.insertDefaultValue[el] && el !== 'Code') {
+            this.form[el] = this.insertDefaultValue[el]
+          }
+        })
+      })
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
     },
     selectedType (label, model) {
@@ -137,15 +143,6 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
     }
   }
 }

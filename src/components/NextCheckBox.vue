@@ -1,6 +1,6 @@
 <template>
     <b-form-checkbox v-model="model" name="check-button" :switch="toggle" :disabled="disabled">
-      {{model ? textActive : textPassive}}
+      <span v-if="showText">{{model ? textActive : textPassive}}</span>
     </b-form-checkbox>
 </template>
 <script>
@@ -21,7 +21,11 @@ export default {
       type: Number | Boolean
     },
     toggle: Boolean,
-    disabled: Boolean
+    disabled: Boolean,
+    showText: {
+      type: Boolean,
+      default: true
+    }
   },
   model: {
     prop: 'value',
