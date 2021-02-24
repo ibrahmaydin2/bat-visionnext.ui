@@ -9,17 +9,17 @@
         <p>{{message}}</p>
       </b-col>
       <b-col cols="12" class="asc__modal-approveModal-footer">
-        <b-button-group class="w-100">
-          <b-button type="button" @click="closeModal()" variant="danger" size="lg" >
+        <div class="w-100 text-right">
+          <b-button type="button" @click="closeModal()" variant="danger" size="md" >
             {{$t('insert.cancel')}}
           </b-button>
-          <b-button @click="goUpdate" type="button" variant="warning" size="lg" >
+          <b-button @click="goUpdate" type="button" variant="warning" size="md" >
             {{$t('insert.edit')}}
           </b-button>
-          <b-button id="submitButton" type="button" size="lg" @click="submit()" variant="success" >
+          <b-button id="submitButton" type="button" size="md" @click="submit()" variant="success" >
             {{$t('insert.submit')}}
           </b-button>
-        </b-button-group>
+        </div>
       </b-col>
     </b-row>
   </b-overlay>

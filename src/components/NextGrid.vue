@@ -139,15 +139,22 @@
                 range
                 type="date"
                 v-model="rangeDate"
-                @input="filterRangeDate(header.dataField, searchText)"
+                @change="filterRangeDate(header.dataField, searchText)"
               ></date-picker>
-              <b-form-datepicker
+              <date-picker
+                v-if="header.columnType === 'DateTime'"
+                range
+                type="date"
+                v-model="rangeDate"
+                @change="filterRangeDate(header.dataField, searchText)"
+              ></date-picker>
+              <!-- <b-form-datepicker
                 v-if="header.columnType === 'DateTime'"
                 v-once
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
-              />
+              /> -->
               <b-form-input
                 v-if="header.columnType === 'Time'"
                 v-once
@@ -269,7 +276,17 @@ import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 let searchQ = {}
 export default {
-  props: ['apiurl', 'apiparams', 'andConditionalModel'],
+  // props: ['apiurl', 'apiparams']
+  props: {
+    apiurl: String,
+    apiparams: String,
+    andConditionalModel: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    }
+  },
   mixins: [mixin],
   data () {
     return {
@@ -405,13 +422,14 @@ export default {
     },
     filterRangeDate (e, date) {
       let model = {
-        ...this.andConditionalModel,
         BeginValue: this.dateConvertToISo(this.rangeDate[0]),
         EndValue: this.dateConvertToISo(this.rangeDate[1])
       }
-      let obj = {}
-      obj[e] = model
-      this.andConditionalModel = obj
+      console.log(this.andConditionalModel)
+      // let obj = {}
+      // obj[e] = model
+      // this.andConditionalModel = obj
+      this.andConditionalModel[e] = model
       this.searchOnTable()
     },
     filterTime (e, time) {
@@ -620,6 +638,8 @@ export default {
           color: #000
       .asc__nextgrid-table-header-filter
         position: relative
+        input
+          height: 28px
     .asc__nextgrid-table-footer
       padding: 10px 0 0 0
       height: 50px
