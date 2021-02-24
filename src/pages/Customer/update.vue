@@ -106,6 +106,7 @@
                   :options="lookup.CUSTOMER_BLOCK_REASON"
                   @input="selectedType('BlockReasonId', $event)"
                   label="Label"
+                  :disabled="true"
                 />
               </b-form-group>
             </b-col>
@@ -766,17 +767,17 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CurrencyId')">
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
                 <v-select :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
+              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditDescriptionId.$error }">
                 <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditAmount')">
+              <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
                 <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0"  type="text" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
@@ -793,18 +794,18 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
+              <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
                 <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_RiskLimit')">
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
                 <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.landOffice')">
-                <b-form-input  :disabled="customerCreditHistories.creditDescriptionCode !== 'IM'" type="text" v-model="customerCreditHistories.landOffice" />
+                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode !== 'IM'" type="text" v-model="customerCreditHistories.landOffice" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -820,12 +821,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditStartDate')">
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
                 <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditEndDate')">
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
                 <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
@@ -888,15 +889,15 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.debtor')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.bail')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.CustomerCreditHistories" :key="i">
                   <b-td>{{r.CreditAmount}}</b-td>
-                  <b-td>{{r.Debtor}}</b-td>
-                  <b-td>{{r.Bail}}</b-td>
+                  <b-td>{{r.CreditLimit}}</b-td>
+                  <b-td>{{r.RiskLimit}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -1026,7 +1027,7 @@
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountCode')">
+              <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
                 <v-select :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
                     <template slot="no-options">
                       {{$t('insert.min3')}}
@@ -1038,7 +1039,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountDescription')">
+              <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
                 <b-form-input type="text" v-model="customerItemDiscounts.description1" />
               </b-form-group>
             </b-col>
@@ -1539,7 +1540,8 @@ export default {
       this.CustomerLabels.splice(this.CustomerLabels.indexOf(item), 1)
     },
     addItemDiscount () {
-      if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
+      this.$v.customerItemDiscounts.$touch()
+      if (this.$v.customerItemDiscounts.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -1548,13 +1550,15 @@ export default {
         return
       }
       this.form.CustomerItemDiscounts.push({
-        code: this.customerItemDiscounts.code,
+        Code: this.customerItemDiscounts.code,
         Description1: this.customerItemDiscounts.description1,
         DiscountPercent1: this.customerItemDiscounts.discountPercent1,
         DiscountPercent2: this.customerItemDiscounts.discountPercent2,
-        tciBreak1Id: this.customerItemDiscounts.tciBreak1Id,
-        tciBreak2Id: this.customerItemDiscounts.tciBreak2Id
+        TCIBreak1Id: this.customerItemDiscounts.tciBreak1Id,
+        TCIBreak2Id: this.customerItemDiscounts.tciBreak2Id
       })
+      this.customerItemDiscounts = {}
+      this.$v.customerItemDiscounts.$reset()
     },
     removeItemDiscount (item) {
       this.form.CustomerItemDiscounts.splice(this.form.CustomerItemDiscounts.indexOf(item), 1)
@@ -1692,37 +1696,40 @@ export default {
       this.$v.customerLocations.$reset()
     },
     addCreditHistories () {
-      if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
+      this.$v.customerCreditHistories.$touch()
+      if (this.$v.customerCreditHistories.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
-        return
+        return false
       }
       this.form.CustomerCreditHistories.push({
         CreditAmount: this.customerCreditHistories.creditAmount,
-        creditDescriptionId: this.customerCreditHistories.creditDescriptionId,
-        creditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
-        bankId: this.customerCreditHistories.bankId,
-        currencyId: this.customerCreditHistories.currencyId,
-        creditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
+        CreditDescriptionId: this.customerCreditHistories.creditDescriptionId,
+        CreditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
+        BankId: this.customerCreditHistories.bankId,
+        CurrencyId: this.customerCreditHistories.currencyId,
+        CreditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
         Debtor: this.customerCreditHistories.debtor,
         Bail: this.customerCreditHistories.bail,
-        textDate: this.dateConvertToISo(this.customerCreditHistories.textDate),
-        landOffice: this.customerCreditHistories.landOffice,
-        notaryDate: this.dateConvertToISo(this.customerCreditHistories.notaryDate),
-        traficRegistry: this.customerCreditHistories.traficRegistry,
-        textNo: this.customerCreditHistories.textNo,
-        creditLimit: this.customerCreditHistories.creditLimit,
-        notaryNo: this.customerCreditHistories.notaryNo,
-        plateNumber: this.customerCreditHistories.plateNumber,
-        riskLimit: this.customerCreditHistories.riskLimit,
-        mortgageValue: this.customerCreditHistories.mortgageValue,
-        dbsPriority: this.customerCreditHistories.dbsPriority,
-        allowOverLimit: this.customerCreditHistories.allowOverLimit,
-        plate: this.customerCreditHistoriesplate
+        TextDate: this.dateConvertToISo(this.customerCreditHistories.textDate),
+        LandOffice: this.customerCreditHistories.landOffice,
+        NotaryDate: this.dateConvertToISo(this.customerCreditHistories.notaryDate),
+        TraficRegistry: this.customerCreditHistories.traficRegistry,
+        TextNo: this.customerCreditHistories.textNo,
+        CreditLimit: this.customerCreditHistories.creditLimit,
+        NotaryNo: this.customerCreditHistories.notaryNo,
+        PlateNumber: this.customerCreditHistories.plateNumber,
+        RiskLimit: this.customerCreditHistories.riskLimit,
+        MortgageValue: this.customerCreditHistories.mortgageValue,
+        DbsPriority: this.customerCreditHistories.dbsPriority,
+        AllowOverLimit: this.customerCreditHistories.allowOverLimit,
+        Plate: this.customerCreditHistoriesplate
       })
+      this.customerCreditHistories = null
+      this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
       this.form.CustomerCreditHistories.splice(this.form.CustomerCreditHistories.indexOf(item), 1)
@@ -1795,6 +1802,37 @@ export default {
           required
         },
         tagValue: {
+          required
+        }
+      },
+      customerCreditHistories: {
+        creditAmount: {
+          required
+        },
+        creditDescriptionId: {
+          required
+        },
+        currencyId: {
+          required
+        },
+        creditStartDate: {
+          required
+        },
+        creditEndDate: {
+          required
+        },
+        creditLimit: {
+          required
+        },
+        riskLimit: {
+          required
+        }
+      },
+      customerItemDiscounts: {
+        code: {
+          required
+        },
+        description1: {
           required
         }
       }
