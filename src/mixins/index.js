@@ -47,7 +47,8 @@ export default {
       tabs.forEach((tab, item) => {
         const tabId = tab.querySelector('a').attributes['aria-controls'].value
         let tabContent = document.getElementById(tabId)
-        if (tabContent.querySelector('fieldset').classList.contains('form-group--error')) {
+        var errorItems = tabContent.querySelector('.form-group--error')
+        if (errorItems) {
           tab.querySelector('a').className += ' ' + 'error-tab'
         }
       })
@@ -80,6 +81,17 @@ export default {
       }
       let result = `<span><i class="far fa-circle"></i> ${this.$t(lang)}</span><p>${value}</p>`
       return result
+    },
+    isString (evt) {
+      if (evt) {
+        let turkishCharKeyCodes = [199, 214, 220, 231, 246, 252, 286, 287, 304, 305, 350, 351]
+        let charCode = evt.keyCode
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode === 8 || turkishCharKeyCodes.includes(charCode)) {
+          return true
+        } else {
+          evt.preventDefault()
+        }
+      }
     }
   }
 }
