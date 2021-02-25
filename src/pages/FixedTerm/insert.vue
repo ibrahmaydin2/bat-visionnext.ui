@@ -44,10 +44,9 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import insertMixin from '../../mixins/insert'
 export default {
-  mixins: [mixin],
+  mixins: [insertMixin],
   data () {
     return {
       form: {
@@ -55,26 +54,13 @@ export default {
         Period: null,
         Description1: null
       },
-      routeName: this.$route.meta.baseLink
+      routeName1: 'CommonApi'
     }
   },
-  computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
-  },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (el !== 'Code' && this.insertDefaultValue[el]) {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
-      })
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextCommonApi/api/${e}/GetCode`})
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -84,22 +70,7 @@ export default {
           duration: '3000'
         })
       } else {
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextCommonApi/api/${this.routeName}`, formdata: model, return: this.routeName})
-      }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
-    }
-  },
-  watch: {
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
+        this.createData()
       }
     }
   }

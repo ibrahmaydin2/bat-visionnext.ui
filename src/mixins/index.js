@@ -1,7 +1,15 @@
 export default {
   data () {
     return {
-      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);'
+      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
+      routeName: this.$route.meta.baseLink,
+      routeName1: '',
+      routeName2: ''
+    }
+  },
+  validations () {
+    return {
+      form: this.insertRules
     }
   },
   methods: {
@@ -91,6 +99,35 @@ export default {
         } else {
           evt.preventDefault()
         }
+      }
+    },
+    selectedType (label, model) {
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
+    tabValidation () {
+      if (this.$v.form.$invalid) {
+        this.$nextTick(() => {
+          this.tabValidationHelper()
+        })
+      }
+    },
+    setRouteNames () {
+      if (!this.routeName1) {
+        this.routeName1 = this.routeName
+      }
+      if (!this.routeName2) {
+        this.routeName2 = this.routeName
       }
     }
   }

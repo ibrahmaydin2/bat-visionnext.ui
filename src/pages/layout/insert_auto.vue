@@ -64,88 +64,45 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import insertMixin from '../../mixins/insert'
 export default {
-  mixins: [mixin],
+  mixins: [insertMixin],
   data () {
     return {
-      form: {},
-      routeName: this.$route.meta.baseLink
+      form: {}
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
+    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
+    ...mapState([''])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (this.insertDefaultValue[el] && el !== 'Code') {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
-      })
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-    },
-    selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
+      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
+      // lookup harici dataya ihtiyaç yoksa silinebilir
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
         this.tabValidation()
       } else {
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules
-    }
-  },
-  watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
     }
   }
 }
 </script>
-<style lang="sass">
-</style>

@@ -44,10 +44,9 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import updateMixin from '../../mixins/update'
 export default {
-  mixins: [mixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
@@ -56,20 +55,15 @@ export default {
         Description1: null,
         Deleted: 0
       },
-      routeName: this.$route.meta.baseLink
+      routeName1: 'CommonApi'
     }
   },
-  computed: {
-    ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
-  },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.getData().then(() => {
+      this.setModel()
+    })
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getData', {...this.query, api: `VisionNextCommonApi/api/FixedTerm`, record: this.$route.params.url})
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -79,20 +73,11 @@ export default {
           duration: '3000'
         })
       } else {
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNextCommonApi/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.updateData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
-    }
-  },
-  watch: {
-    rowData: function (e) {
+    },
+    setModel () {
+      let e = this.rowData
       if (e) {
         this.form = {
           Code: e.Code,
