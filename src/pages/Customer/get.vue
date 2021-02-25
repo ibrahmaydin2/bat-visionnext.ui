@@ -7,7 +7,7 @@
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb :title="rowData.Description1" />
+            <Breadcrumb :title="rowData ? rowData.Description1 : ''" />
             <GetFormField />
           </header>
         </b-col>
@@ -15,7 +15,7 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData.Code && rowData.Code}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_StatusReasonId')}}:</b> {{rowData.StatusReason ? rowData.StatusReason.Label : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.customer.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>

@@ -17,7 +17,7 @@
             {{$t('insert.edit')}}
           </b-button>
           <b-button id="submitButton" type="button" size="md" @click="submit()" variant="success" >
-            {{$t('insert.submit')}}
+            {{$t('insert.confirm')}}
           </b-button>
         </div>
       </b-col>

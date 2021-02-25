@@ -17,7 +17,7 @@
             {{$t('insert.cancel')}}
           </b-button>
           <b-button id="submitButton" type="button" size="lg" @click="submit()" variant="success" >
-            {{$t('insert.submit')}}
+            {{$t('insert.rejectModal')}}
           </b-button>
         </b-button-group>
       </b-col>

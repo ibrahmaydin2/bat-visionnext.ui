@@ -425,10 +425,6 @@ export default {
         BeginValue: this.dateConvertToISo(this.rangeDate[0]),
         EndValue: this.dateConvertToISo(this.rangeDate[1])
       }
-      console.log(this.andConditionalModel)
-      // let obj = {}
-      // obj[e] = model
-      // this.andConditionalModel = obj
       this.andConditionalModel[e] = model
       this.searchOnTable()
     },
