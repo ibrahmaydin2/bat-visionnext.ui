@@ -193,9 +193,9 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/index'
+import updateMixin from '../../mixins/update'
 export default {
-  mixins: [mixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
@@ -252,7 +252,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'employees']),
+    ...mapState(['employees']),
     vehicleReplacementDrivers () {
       return this.form.VehicleReplacementDrivers ? this.form.VehicleReplacementDrivers.filter(item => {
         return item.RecordState !== 4
@@ -260,17 +260,14 @@ export default {
     }
   },
   mounted () {
+    this.getData().then(() => {
+      this.setModel()
+    })
     this.getInsertPage(this.routeName)
-    this.getData()
   },
   methods: {
     getInsertPage (e) {
-      this.$store.commit('bigLoaded', false)
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
-    },
-    getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', record: this.$route.params.url})
     },
     addReplacementDriver () {
       this.$v.selectedEmployee.$touch()
@@ -315,44 +312,11 @@ export default {
         this.tabValidation()
       } else {
         this.form.ContractEndDate = this.form.ContractEndDate ? new Date(this.form.ContractEndDate).toISOString() : ''
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.updateData()
       }
     },
-    selectedType (label, model) {
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    }
-  },
-  watch: {
-    employees (e) {
-      if (e) {
-        e.map(item => {
-          item.nameSurname = `${item.Name} ${item.Surname}`
-        })
-        this.defaultDriverEmployee = e.find(d => d.RecordId === this.form.DefaultDriverEmployeeId)
-      }
-    },
-    rowData (e) {
+    setModel () {
+      let e = this.rowData
       if (e) {
         this.form = {
           Code: e.Code,
@@ -402,6 +366,16 @@ export default {
             RecordId: item.RecordId
           })
         })
+      }
+    }
+  },
+  watch: {
+    employees (e) {
+      if (e) {
+        e.map(item => {
+          item.nameSurname = `${item.Name} ${item.Surname}`
+        })
+        this.defaultDriverEmployee = e.find(d => d.RecordId === this.form.DefaultDriverEmployeeId)
       }
     }
   }

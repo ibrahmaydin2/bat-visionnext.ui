@@ -193,9 +193,9 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/index'
+import insertMixin from '../../mixins/insert'
 export default {
-  mixins: [mixin],
+  mixins: [insertMixin],
   data () {
     return {
       form: {
@@ -223,7 +223,6 @@ export default {
         ContractEndDate: null,
         VehicleReplacementDrivers: []
       },
-      routeName: this.$route.meta.baseLink,
       selectedEmployee: null
     }
   },
@@ -236,16 +235,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'employees'])
+    ...mapState(['employees'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
     getInsertPage (e) {
-      this.$store.commit('bigLoaded', false)
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
     },
     addReplacementDriver () {
@@ -286,47 +283,11 @@ export default {
         this.tabValidation()
       } else {
         this.form.ContractEndDate = this.form.ContractEndDate ? new Date(this.form.ContractEndDate).toISOString() : ''
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
-      }
-    },
-    selectedType (label, model) {
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
+        this.createData()
       }
     }
   },
   watch: {
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     employees (e) {
       if (e) {
         e.map(item => {
