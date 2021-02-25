@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
+            <GetFormField />
           </header>
         </b-col>
       </b-row>

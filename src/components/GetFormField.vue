@@ -1,13 +1,15 @@
 <template>
   <div class="d-flex">
-    <b-button-toolbar aria-label="Toolbar with button groups and dropdown menu">
-      <b-button-group class="mx-1">
-        <b-button class="bg-orange text-white font-weight-bold" title="Save file">
-          <b-icon icon="plus" aria-hidden="true"></b-icon>
-        </b-button>
-        <b-button class="bg-orange text-white font-weight-bold" title="Load file">
-          <b-icon icon="pencil" aria-hidden="true"></b-icon>
-        </b-button>
+    <b-button-toolbar>
+      <b-button-group class="header-btn-group" v-for="(opt, x) in filteredRouteActions" :key="'opt' + x">
+        <router-link :to="{name: opt.Action, params: {url: $route.params.url}}">
+          <b-button class="bg-orange text-white font-weight-bold rounded-0 mr-1" size="sm">
+            <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="plus" aria-hidden="false" size="sm"></b-icon>
+          </b-button>
+        </router-link>
+          <!-- <b-button class="bg-orange text-white font-weight-bold rounded-0" size="sm">
+            <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="pencil" aria-hidden="false" size="sm"></b-icon>
+          </b-button> -->
       </b-button-group>
     </b-button-toolbar>
     <b-dropdown v-if="formFields && formFields.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
@@ -15,29 +17,27 @@
         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
       </template>
       <b-dropdown-group id="dropdown-group-1" header="Group 1">
-        <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-item v-for="(opt, x) in filteredRouteActions" :key="'opt' + x">
           <router-link :to="{name: opt.Action, params: {url: $route.params.url}}">
             <i class="far fa-arrow-alt-circle-right" /> {{ opt.Title }}
           </router-link>
         </b-dropdown-item>
       </b-dropdown-group>
-      <b-dropdown-group id="dropdown-group-2" header="Workflow">
-        <b-dropdown-item><i class="far fa-user" /> Text 1 Deneme</b-dropdown-item>
-        <b-dropdown-item><i class="far fa-envelope-open" /> Text 2 Deneme</b-dropdown-item>
-        <b-dropdown-item><i class="far fa-thumbs-up" /> Text 3 Deneme</b-dropdown-item>
-        <b-dropdown-item><i class="far fa-lemon" /> Text 4 Deneme</b-dropdown-item>
-      </b-dropdown-group>
+      <Workflow />
       <!-- <b-dropdown-text class="text-center"><b>Header</b></b-dropdown-text> -->
     </b-dropdown>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import Workflow from './Workflow'
 export default {
   data () {
     return {
     }
+  },
+  components: {
+    Workflow
   },
   computed: {
     ...mapState(['formFields']),
@@ -51,27 +51,27 @@ export default {
     this.$store.dispatch('getFormFields', { ...this.query, api: this.$route.meta.baseLink })
   },
   methods: {
-  },
-  watch: {
-    formFields (e) {
-      if (e) {
-        console.log(e)
-      }
-    }
   }
 }
 </script>
 <style lang="sass">
+  .header-btn-group
+    button
+      height: 30px
   .bg-orange
     background-color: #f78b4e
     border: none
     &:hover
       background: #f78b4e
   .bat__workflow-dropdown
+    height: 30px
     .bat__workflow-dropdown-btn
       &:hover
         color: black !important
         text-decoration: none !important
+      &:focus
+        text-decoration: none !important
+        box-shadow: unset
     .dropdown-menu
       box-shadow: 0 0 10px #a2a2a2
       max-height: 400px

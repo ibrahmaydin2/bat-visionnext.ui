@@ -384,6 +384,10 @@
     "sameItemError": "Aynı üründen 2 defa ekleyemezsiniz.",
     "chooseTime": "Saat Seçiniz",
     "close": "Kapat",
+    "confirm": "Onayla",
+    "success": "Başarılı",
+    "pleaseChooseField": "Lütfen Seçim Yapınız",
+    "errorProcess": "Kayıt Bulunamadı",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
