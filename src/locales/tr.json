@@ -520,7 +520,7 @@
       "no": "Hayır",
       "Model_taxNumber": "T.C. Kimlik Numarası",
       "Model_FinanceCode1": "Finans Müşteri Kodu",
-      "Model_PriceListCategoryId": "Müşteri Fiyat Listesi",
+      "Model_PriceListCategoryId": "Fiyat Listesi Kategori Tipi",
       "Model_Personal": "Kişisel Bilgiler",
       "Model_BirthDate": "Doğum Tarihi",
       "Model_EmploymentStartDate": "Personel İşe Giriş Tarihi",
@@ -549,7 +549,7 @@
       "Model_BankBranchId": "Banka Şube Adı",
       "EmployeePrefix": "Önek",
       "Model_Prefix": "Önek",
-      "Model_UserGroupId": "Personel Grubu",
+      "Model_UserGroupId": "Kullanıcı Grubu",
       "category1": "Personel Kategorisi 1",
       "scoreCardClasses": "Score Card Sınıfı",
       "group": "Grup",
@@ -561,7 +561,9 @@
       "EmployeeInfo": "Personel Bilgileri",
       "TeamPersonalName": "Takım Personeli Adı",
       "PersonalDesciption": "Personel Açıklaması",
-      "CreateCustomerRecord": "Müşteri Kaydı Oluştur"
+      "CreateCustomerRecord": "Müşteri Kaydı Oluştur",
+      "Model_UserPersonalGroup": "Personel Grubu",
+      "chooseDate": "Tarih Seçiniz"
     },
     "customer": {
       "Model_StatusReasonId": "Durum Nedeni",

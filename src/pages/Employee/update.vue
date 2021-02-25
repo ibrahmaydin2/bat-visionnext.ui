@@ -42,12 +42,12 @@
           <b-row>
             <b-col v-if="insertVisible.Name != null ? insertVisible.Name : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.Name + (insertRequired.Name === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Name.$error }">
-                <b-form-input type="text" v-model="form.Name" :readonly="insertReadonly.Name" />
+                <b-form-input type="text" v-model="form.Name" :readonly="insertReadonly.Name" @keypress="isString($event)" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Surname != null ? insertVisible.Surname : developmentMode"  md="4" lg="3">
               <b-form-group :label="insertTitle.Surname + (insertRequired.Surname === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Surname.$error }">
-                <b-form-input type="text" v-model="form.Surname" :readonly="insertReadonly.Surname" />
+                <b-form-input type="text" v-model="form.Surname" :readonly="insertReadonly.Surname" @keypress="isString($event)" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.GroupId != null ? insertVisible.GroupId : developmentMode" md="4" lg="3">
@@ -164,12 +164,12 @@
         <b-row>
           <b-col v-if="insertVisible.EmploymentStartDate != null ? insertVisible.EmploymentStartDate : developmentMode" :start-weekday="1" md="4" lg="3">
             <b-form-group :label="insertTitle.EmploymentStartDate + (insertRequired.EmploymentStartDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EmploymentStartDate.$error }">
-              <b-form-datepicker v-model="form.EmploymentStartDate" />
+              <b-form-datepicker v-model="form.EmploymentStartDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.EmploymentEndDate != null ? insertVisible.EmploymentEndDate : developmentMode" :start-weekday="1" md="4" lg="3">
             <b-form-group :label="insertTitle.EmploymentEndDate + (insertRequired.EmploymentEndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EmploymentEndDate.$error }">
-              <b-form-datepicker v-model="form.EmploymentEndDate" />
+              <b-form-datepicker v-model="form.EmploymentEndDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.TaxNumber != null ? insertVisible.TaxNumber : developmentMode" md="4" lg="3">
@@ -181,7 +181,7 @@
         <b-row>
           <b-col v-if="insertVisible.BirthDate != null ? insertVisible.BirthDate : developmentMode" :start-weekday="1" md="4" lg="3">
             <b-form-group :label="insertTitle.BirthDate + (insertRequired.BirthDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BirthDate.$error }">
-              <b-form-datepicker v-model="form.BirthDate" />
+              <b-form-datepicker v-model="form.BirthDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.TShirtSize != null ? insertVisible.TShirtSize : developmentMode" md="4" lg="3">
@@ -244,24 +244,24 @@
         <b-row>
           <b-col v-if="insertVisible.Telephone1 != null ? insertVisible.Telephone1 : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Telephone1 + (insertRequired.Telephone1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone1.$error }">
-              <b-form-input type="text" v-model="form.Telephone1" :readonly="insertReadonly.Telephone1" maxLength="10" :oninput="maxLengthControl" />
+              <b-form-input type="number" v-model="form.Telephone1" :readonly="insertReadonly.Telephone1" maxLength="10" :oninput="maxLengthControl" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Telephone2 != null ? insertVisible.Telephone2 : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Telephone2 + (insertRequired.Telephone2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone2.$error }">
-              <b-form-input type="text" v-model="form.Telephone2" :readonly="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
+              <b-form-input type="number" v-model="form.Telephone2" :readonly="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.GsmNumber != null ? insertVisible.GsmNumber : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.GsmNumber + (insertRequired.GsmNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GsmNumber.$error }">
-              <b-form-input type="text" v-model="form.GsmNumber" :readonly="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
+              <b-form-input type="number" v-model="form.GsmNumber" :readonly="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
             </b-form-group>
           </b-col>
         </b-row>
         <b-row>
           <b-col v-if="insertVisible.FaxNumber != null ? insertVisible.FaxNumber : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.FaxNumber + (insertRequired.FaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FaxNumber.$error }">
-              <b-form-input type="text" v-model="form.FaxNumber" :readonly="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl"/>
+              <b-form-input type="number" v-model="form.FaxNumber" :readonly="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl"/>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Email != null ? insertVisible.Email : developmentMode" md="4" lg="3">
@@ -616,9 +616,11 @@ export default {
     branch (e) {
       if (e) {
         this.eInvoiceSeqsList = e.EInvoiceSeqs
-        this.eInvoiceSeqsList.map(item => {
-          item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
-        })
+        if (this.eInvoiceSeqsList) {
+          this.eInvoiceSeqsList.map(item => {
+            item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
+          })
+        }
       }
     },
     rowData (e) {
