@@ -77,6 +77,9 @@ export default {
     ...mapState([''])
   },
   mounted () {
+    this.createManualCode()
+    // update işlemiyse
+    // this.getData().then(() => {})
     this.getInsertPage(this.routeName)
   },
   methods: {
@@ -95,6 +98,8 @@ export default {
         this.tabValidation()
       } else {
         this.createData()
+        // update işlemiyse
+        // this.updateData()
       }
     }
   },
