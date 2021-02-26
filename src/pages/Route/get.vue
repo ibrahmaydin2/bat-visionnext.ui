@@ -39,13 +39,13 @@
                 <p>{{(rowData.Supervisor) ? rowData.Supervisor.Label : ''}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.control')}}</span>
                 <p>{{(rowData.VisitStartControl) ? rowData.VisitStartControl.Label : ''}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.city')}}</span>
-                <p></p>
+                <span><i class="far fa-circle" /> {{$t('insert.route.city')}}</span>
+                <p>{{rowData.City}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.distirict')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.town')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
+                <p>{{rowData.Description1}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.town')}}</span>
+                <p></p> -->
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
                 <p></p>
                 <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
                 <p></p> -->
@@ -215,6 +215,11 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
+    }
+  },
+  watch: {
+    rowData: function (e) {
+      console.log(e)
     }
   }
 }

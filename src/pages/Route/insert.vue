@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Route' }">
               <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
             <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
@@ -22,7 +22,7 @@
             <b-form-group
               :label="$t('insert.route.code')"
             >
-              <b-form-input type="text" v-model="form.model.code" readonly />
+              <b-form-input type="text" v-model="form.model.code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
@@ -38,12 +38,8 @@
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.state')"
-            >
-              <b-form-checkbox v-model="statusId" name="check-button" switch>
-                {{(statusId) ? $t('insert.route.active'): $t('insert.route.passive')}}
-              </b-form-checkbox>
+            <b-form-group :label="$t('insert.route.state')">
+              <NextCheckBox v-model="form.model.statusId" type="number" toggle/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -55,12 +51,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.routeGroup')">
-                <v-select :options="routeGroups" @input="selectedRouteGroup" label="Label"></v-select>
+                <v-select :options="lookup.ROUTE_GROUP" @input="selectedRouteGroup" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.routeClass')">
-                <v-select :options="routeClasses" @input="selectedRouteClass" label="Label"></v-select>
+                <v-select :options="lookup.ROUTE_CLASS" @input="selectedRouteClass" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -79,7 +75,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.control')">
-                <v-select :options="visitStartControls" @input="selectedControl" label="Label"></v-select>
+                <v-select :options="lookup.VISIT_START_CONTROL" @input="selectedControl" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -106,17 +102,17 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.city')">
-                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
+                <v-select :options="lookup.CITY" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.distirict')">
-                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+                <v-select :disabled="!cityValid" :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="4" lg="4">
-              <b-form-group :label="$t('insert.route.distirict')">
-                <v-select multiple v-model="selectedParishes" :options="avenues" @input="selectedAvenue" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.route.parish')">
+                <v-select :disabled="!distirictValid" :options="avenues" @input="selectedAvenue" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -144,7 +140,13 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.LocationId')">
-                <v-select label="Description1" :options="customerLocationsList" @input="selectedCustomerLocation">
+                <v-select label="Description1" :filterable="false" :options="customerLocationsList"  @search="onLocationSearch" @input="selectedSearchType('LocationId', $event)" >
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                  <template slot="option" slot-scope="option">
+                    {{ option.Description1 }}
+                  </template>
                 </v-select>
               </b-form-group>
             </b-col>
@@ -249,6 +251,9 @@ export default {
     return {
       form: {
         model: {
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
           code: null,
           description1: null,
           representativeId: null,
@@ -256,18 +261,17 @@ export default {
           routeTypeId: null,
           routeClassId: null,
           routeGroupId: null,
-          statusId: null,
+          statusId: 1,
           customerRegion5Id: null,
           isMultidayRoute: null,
           isSuperRoute: null,
           visitStartControlId: null,
           cityId: null,
           districtId: null,
-          parishIds: [],
+          parishIds: null,
           routeDetails: []
         }
       },
-      statusId: null,
       showCustomerRegion: false,
       customerRegionLabel: '',
       selectedParishes: [],
@@ -282,44 +286,35 @@ export default {
       DaysFrequency: null,
       selectedCustomerArr: [],
       selectedLocationArr: [],
-      customerLocationTable: []
+      customerLocationTable: [],
+      cityValid: null,
+      distirictValid: null
     }
   },
   computed: {
-    ...mapState(['cities', 'distiricts', 'avenues', 'createCode', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'distiricts', 'avenues', 'createCode', 'employees', 'vehicles', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList', 'lookup'])
   },
   mounted () {
     // this.$store.commit('setCities', false)
     this.$store.commit('bigLoaded', false)
-    this.getLookups()
-    this.getCode()
     this.getDatas()
   },
   methods: {
     getDatas () {
+      this.$store.dispatch('getInsertRules', {...this.query, api: 'Route'})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextRoute/api/Route/GetCode'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
     },
-    getCode () {
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextRoute/api/Route/GetCode'})
-    },
-    getLookups () {
-      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_CLASS', name: 'routeClasses'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_GROUP', name: 'routeGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'VISIT_START_CONTROL', name: 'visitStartControls'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
-    },
     save () {
-      this.form.model.statusId = this.statusId ? 1 : 0
-      if (this.selectedParishes.length > 0) {
-        this.selectedParishes.map(item => {
-          this.form.model.parishIds.push(item.DecimalValue)
-        })
-      } else {
-        this.form.model.parishIds = []
-      }
+      // if (this.selectedParishes.length > 0) {
+      //   this.selectedParishes.map(item => {
+      //     this.form.model.parishIds.push(item.DecimalValue)
+      //   })
+      // } else {
+      //   this.form.model.parishIds = []
+      // }
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextRoute/api/Route', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedRouteType (e) {
@@ -380,17 +375,21 @@ export default {
     selectedCity (e) {
       if (e) {
         this.form.model.cityId = e.DecimalValue
+        this.cityValid = true
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
       } else {
+        this.form.model.districtId = null
         this.form.model.cityId = null
       }
     },
     selectedDistirict (e) {
       if (e) {
         this.form.model.districtId = e.DecimalValue
+        this.distirictValid = true
         this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
       } else {
         this.form.model.districtId = null
+        this.form.model.parishIds = null
       }
     },
     selectedAvenue (e) {
@@ -442,6 +441,24 @@ export default {
         this.selectedLocationArr = []
       }
     },
+    onLocationSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchLocation(loading, search, this)
+      }
+    },
+    searchLocation (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/CustomerLocation/Search',
+        name: 'customerLocationsList',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
+    },
     addCustomerLocation () {
       if (this.selectedCustomerArr.length < 1 || this.selectedLocationArr < 1) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -487,9 +504,7 @@ export default {
   },
   watch: {
     createCode (e) {
-      if (e) {
-        this.form.model.code = e
-      }
+      this.form.model.code = e
     },
     employees (e) {
       if (e) {

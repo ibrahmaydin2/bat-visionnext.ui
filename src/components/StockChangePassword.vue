@@ -31,11 +31,6 @@
 export default {
   data () {
     return {
-      form: {
-        BranchId: null,
-        CompanyId: null,
-        RecordId: null
-      },
       changeStockPassword: null
     }
   },
@@ -44,9 +39,7 @@ export default {
   },
   methods: {
     ChangeStockPassword () {
-      this.form.BranchId = localStorage.getItem('BranchId')
-      this.form.CompanyId = localStorage.getItem('CompanyId')
-      this.$api.post({RecordId: this.form.RecordId}, 'MobileApi', 'StockChangePassword/CreatePassword').then((res) => {
+      this.$api.post({}, 'MobileApi', 'StockChangePassword/CreatePassword').then((res) => {
         this.changeStockPassword = res.Password
       })
     }
