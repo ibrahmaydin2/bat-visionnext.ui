@@ -340,7 +340,9 @@
     "CsCardInsert": "Yeni Çek İşlemi",
     "CsCardUpdate": "Çek İşlemi Güncelle",
     "CsCardGet": "Çek İşlemi Görüntüle",
-    "RouteBalance": "Rota Dengeleme"
+    "RouteBalance": "Rota Dengeleme",
+    "AccountTransaction": "Cari Hesap Hareketleri",
+    "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle"
   },
   "insert": {
     "rejectModal": "Reddet",
@@ -1308,6 +1310,19 @@
       "CustomerBankBranch": "Müşteri Bankası Şube",
       "CustomerBankAccountNumber": "Müşteri Hesap Numarası",
       "Description1": "Açıklama"
+    },
+    "AccountTransaction": {
+      "AT": "Cari Hesap Hareketleri",
+      "CustomerId": "Müşteri",
+      "DocumentNumber": "Belge Numarası",
+      "DocumentDate": "Belge Tarihi",
+      "TransactionTypeId": "Doküman Tipi",
+      "AccountTransaction": "Borç/Alacak",
+      "Credit": "Alacak",
+      "CurrencyId": "Para Birimi",
+      "Remainder": "Bakiye",
+      "CreditAccountRemainder": "Bakiye Durumu",
+      "Genexp1": "Açıklama"
     }
   },
   
