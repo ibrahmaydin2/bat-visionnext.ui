@@ -24,7 +24,7 @@
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.FinanceCode + (insertRequired.FinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode.$error }">
+              <b-form-group :label="insertTitle.FinanceCode">
                 <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
               </b-form-group>
             </b-col>
@@ -33,11 +33,9 @@
                 <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+            <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-                <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                  {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
+                <NextCheckBox v-model="form.StatusId" type="number" toggle />
               </b-form-group>
             </b-col>
         </b-row>
@@ -139,11 +137,14 @@ export default {
   data () {
     return {
       form: {
+        DeleteId: 0,
+        System: 0,
+        RecordState: 2,
         bankBranches: [],
         Code: null,
         Description1: null,
         FinanceCode: null,
-        StatusId: null
+        StatusId: 1
       },
       bankBranches: {
         Code: null,
@@ -179,7 +180,6 @@ export default {
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
         let model = {
           'model': this.form
         }
@@ -187,7 +187,6 @@ export default {
       }
     },
     addbankBranches () {
-      console.log(this.bankBranches)
       let filteredArr = this.form.bankBranches.filter(i => i.code === this.bankBranches.Code)
       if (filteredArr.length < 1) {
         this.form.bankBranches.push({
