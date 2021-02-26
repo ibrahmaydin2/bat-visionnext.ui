@@ -1,5 +1,5 @@
 <template>
-    <b-form-checkbox v-model="model" name="check-button" :switch="toggle">
+    <b-form-checkbox :disabled="(!disabledValid === true ? false : true)" v-model="model" name="check-button" :switch="toggle">
       {{model ? textActive : textPassive}}
     </b-form-checkbox>
 </template>
@@ -17,6 +17,7 @@ export default {
     },
     activeText: String,
     passiveText: String,
+    disabledValid: Number | Boolean,
     value: {
       type: Number | Boolean
     },

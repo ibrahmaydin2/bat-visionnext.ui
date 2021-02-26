@@ -66,7 +66,7 @@
             </b-col>
             <b-col v-if="insertVisible.IsVirtualWarehouse != null ? insertVisible.IsVirtualWarehouse : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.IsVirtualWarehouse + (insertRequired.IsVirtualWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVirtualWarehouse.$error }">
-                 <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle />
+                 <NextCheckBox :disabledValid="form.IsVehicle" v-model="form.IsVirtualWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
@@ -160,7 +160,7 @@ export default {
         RecordState: 2,
         Code: null,
         Description1: null,
-        StatusId: Number,
+        StatusId: 1,
         IsVehicle: Number,
         VehicleId: null,
         LicenseNumber: null,
@@ -253,7 +253,7 @@ export default {
             this.form.Address = null
             this.form.CityId = null
             this.form.DistrictId = null
-            this.VehicleId = null
+            this.form.IsVirtualWarehouse = null
           } else {
             this.form.CityId = this.address.CityId
             this.form.DistrictId = this.address.DistrictId
@@ -343,16 +343,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>
