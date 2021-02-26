@@ -7,10 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'KeyAccount' }">
-              <CancelButton />
+            <router-link :to="{name: 'Dashboard' }">
+              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
-            <AddButton @click.native="save()" />
+            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
           </b-col>
         </b-row>
       </header>
@@ -20,7 +20,7 @@
         <b-row>
           <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" :disabled="form.Code !== null"/>
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.RecordTypeId != null ? insertVisible.RecordTypeId : developmentMode" cols="12" md="2">
@@ -45,7 +45,9 @@
           </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="true"></NextCheckBox>
+              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
+                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
+              </b-form-checkbox>
             </b-form-group>
           </b-col>
         </b-row>
@@ -53,7 +55,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.customer.Customer')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.Customer')">
           <b-row>
             <b-col v-if="insertVisible.CommercialTitle != null ? insertVisible.CommercialTitle : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CommercialTitle + (insertRequired.CommercialTitle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CommercialTitle.$error }">
@@ -88,7 +90,7 @@
             </b-col>
             <b-col v-if="insertVisible.TaxNumber != null ? insertVisible.TaxNumber : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TaxNumber + (insertRequired.TaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxNumber.$error }">
-                <b-form-input type="number" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" :maxLength="taxNumberReq" :oninput="maxLengthControl"/>
+                <b-form-input type="text" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Alias != null ? insertVisible.Alias : developmentMode" cols="12" md="2">
@@ -109,8 +111,6 @@
                   :options="lookup.CUSTOMER_BLOCK_REASON"
                   @input="selectedType('BlockReasonId', $event)"
                   label="Label"
-                  :disabled="true"
-                  v-model="customerBlackReason"
                 />
               </b-form-group>
             </b-col>
@@ -150,63 +150,83 @@
             </b-col>
             <b-col v-if="insertVisible.LicenseValidDate != null ? insertVisible.LicenseValidDate : developmentMode" :start-weekday="1" cols="12" md="2">
               <b-form-group :label="insertTitle.LicenseValidDate + (insertRequired.LicenseValidDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LicenseValidDate.$error }">
-                <b-form-datepicker :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.LicenseValidDate" />
+                <b-form-datepicker v-model="form.LicenseValidDate" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.IsBlocked != null ? insertVisible.IsBlocked : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsBlocked + (insertRequired.IsBlocked === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsBlocked.$error }">
-                 <NextCheckBox v-model="form.IsBlocked" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.IsBlocked" name="check-button" switch>
+                  {{(form.IsBlocked) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsOrderChangeUnitary != null ? insertVisible.IsOrderChangeUnitary : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsOrderChangeUnitary + (insertRequired.IsOrderChangeUnitary === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsOrderChangeUnitary.$error }">
-                  <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.IsOrderChangeUnitary" name="check-button" switch>
+                  {{(form.IsOrderChangeUnitary) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.UseEDispatch != null ? insertVisible.UseEDispatch : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.UseEDispatch + (insertRequired.UseEDispatch === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UseEDispatch.$error }">
-                  <NextCheckBox v-model="form.UseEDispatch" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.UseEDispatch" name="check-button" switch>
+                  {{(form.UseEDispatch) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsWarehouseSale != null ? insertVisible.IsWarehouseSale : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsWarehouseSale + (insertRequired.IsWarehouseSale === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsWarehouseSale.$error }">
-                  <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.IsWarehouseSale" name="check-button" switch>
+                  {{(form.IsWarehouseSale) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.UseEInvoice != null ? insertVisible.UseEInvoice : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.UseEInvoice + (insertRequired.UseEInvoice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UseEInvoice.$error }">
-                  <NextCheckBox v-model="form.UseEInvoice" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.UseEInvoice" name="check-button" switch>
+                  {{(form.UseEInvoice) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerLocations')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Code') + ' *'" :class="{ 'form-group--error': $v.customerLocations.code.$error }">
+              <b-form-group :label="$t('insert.customer.Model_Code')">
                 <b-form-input type="text" v-model="customerLocations.code" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_Location_Description1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.description1.$error }">
+              <b-form-group :label="$t('insert.customer.Model_Location_Description1')">
                 <b-form-input type="text" v-model="customerLocations.description1" />
               </b-form-group>
             </b-col>
           </b-row>
-          <NextAddress
-            v-model="address"
-            :required="true"
-            :address-error="$v.customerLocations.addressDetail.$error"
-            :city-error="$v.customerLocations.cityId.$error"
-            :district-error="$v.customerLocations.districtId.$error"
-          />
+          <b-row>
+            <b-col cols="12" md="6" lg="4">
+              <b-form-group :label="$t('insert.customer.Model_AddressDetail')">
+                <b-form-input type="text" v-model="customerLocations.addressDetail" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.city')">
+                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.customer.distirict')">
+                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PostCode') + ' *'" :class="{ 'form-group--error': $v.customerLocations.postCode.$error }">
+              <b-form-group :label="$t('insert.customer.Model_PostCode')">
                 <b-form-input type="text" v-model="customerLocations.postCode" />
               </b-form-group>
             </b-col>
@@ -233,7 +253,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.phoneNumber1.$error }">
+              <b-form-group :label="$t('insert.customer.Model_PhoneNumber1')">
                 <b-form-input type="text" v-model="customerLocations.phoneNumber1" />
               </b-form-group>
             </b-col>
@@ -290,7 +310,7 @@
             </b-col>
             <b-col cols="12" md="12" lg="12" class="text-right">
               <b-form-group>
-                <AddDetailButton @click.native="addCustomerLocations" />
+                <b-button @click="addCustomerLocations" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -299,57 +319,44 @@
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.isRouteNode')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.customerLocations" :key="i">
                   <b-td>{{r.code}}</b-td>
                   <b-td>{{r.description1}}</b-td>
-                  <b-td>{{r.isDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                  <b-td>{{r.isInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                  <b-td>{{r.isDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                  <b-td>{{r.isRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerClass')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerClass')">
           <b-row>
             <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Category1Id + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
                 <v-select
                   :options="lookup.CUSTOMER_CATEGORY_1"
-                  @input="selectedType('Category1Id', $event); customerCategory2 = null; customerCategory3 = null"
+                  @input="selectedType('Category1Id', $event)"
                   label="Label"
-                  v-model="customerCategory1"
                 />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Category2Id != null ? insertVisible.Category2Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Category2Id + (insertRequired.Category2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category2Id.$error }">
                 <v-select
-                  :options="lookup.CUSTOMER_CATEGORY_2.filter(x => (customerCategory1 && x.UpperValue == customerCategory1.Label) || !customerCategory1)"
+                  :options="lookup.CUSTOMER_CATEGORY_2"
                   @input="selectedType('Category2Id', $event)"
                   label="Label"
-                  v-model="customerCategory2"
-                  :disabled="!customerCategory1"
                 />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Category3Id != null ? insertVisible.Category3Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Category3Id + (insertRequired.Category3Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category3Id.$error }">
                 <v-select
-                  :options="lookup.CUSTOMER_CATEGORY_3.filter(x => (customerCategory2 && x.UpperValue == customerCategory2.Label) || !customerCategory2)"
+                  :options="lookup.CUSTOMER_CATEGORY_3"
                   @input="selectedType('Category3Id', $event)"
                   label="Label"
-                  v-model="customerCategory3"
-                  :disabled="!customerCategory2"
                 />
               </b-form-group>
             </b-col>
@@ -359,7 +366,6 @@
                   :options="lookup.CUSTOMER_GROUP"
                   @input="selectedType('GroupId', $event)"
                   label="Label"
-                  v-model="customerGroup"
                 />
               </b-form-group>
             </b-col>
@@ -371,7 +377,6 @@
                   :options="lookup.CUSTOMER_CLASS"
                   @input="selectedType('ClassId', $event)"
                   label="Label"
-                  v-model="customerClass"
                 />
               </b-form-group>
             </b-col>
@@ -381,7 +386,6 @@
                     :options="lookup.SALES_DOCUMENT_TYPE"
                     @input="selectedType('SalesDocumentTypeId', $event)"
                     label="Label"
-                    v-model="salesDocumentType"
                   />
                 </b-form-group>
               </b-col>
@@ -438,7 +442,6 @@
                   :options="lookup.INVOICE_COMBINE_RULE"
                   @input="selectedType('InvoiceCombineRuleId', $event)"
                   label="Label"
-                  v-model="invoiceCombineRule"
                 />
               </b-form-group>
             </b-col>
@@ -462,6 +465,10 @@
                 />
               </b-form-group>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.AdditionalClassInformation')">
+          <b-row>
             <b-col v-if="insertVisible.KindId != null ? insertVisible.KindId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.KindId + (insertRequired.KindId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.KindId.$error }">
                 <v-select
@@ -473,7 +480,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerFinancialInfo')">
           <b-row>
             <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
@@ -486,24 +493,24 @@
             </b-col>
             <b-col v-if="insertVisible.CreditLimit != null ? insertVisible.CreditLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CreditLimit + (insertRequired.CreditLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CreditLimit.$error }">
-                <b-form-input type="number" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" />
+                <b-form-input type="text" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.RiskLimit != null ? insertVisible.RiskLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.RiskLimit + (insertRequired.RiskLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RiskLimit.$error }">
-                <b-form-input type="number" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" />
+                <b-form-input type="text" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CurrentCredit != null ? insertVisible.CurrentCredit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentCredit + (insertRequired.CurrentCredit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentCredit.$error }">
-                <b-form-input type="number" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" />
+                <b-form-input type="text" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.CurrentRisk != null ? insertVisible.CurrentRisk : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentRisk + (insertRequired.CurrentRisk === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentRisk.$error }">
-                <b-form-input type="number" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" />
+                <b-form-input type="text" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ReservedLimit != null ? insertVisible.ReservedLimit : developmentMode" cols="12" md="2">
@@ -518,36 +525,36 @@
             </b-col>
             <b-col v-if="insertVisible.ZdebitAccountRemainder != null ? insertVisible.ZdebitAccountRemainder : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ZdebitAccountRemainder + (insertRequired.ZdebitAccountRemainder === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ZdebitAccountRemainder.$error }">
-                <b-form-input type="number" v-model="form.ZdebitAccountRemainder" :readonly="insertReadonly.ZdebitAccountRemainder" />
+                <b-form-input type="text" v-model="form.ZdebitAccountRemainder" :readonly="insertReadonly.ZdebitAccountRemainder" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ZcreditAccountRemainder != null ? insertVisible.ZcreditAccountRemainder : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ZcreditAccountRemainder + (insertRequired.ZcreditAccountRemainder === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ZcreditAccountRemainder.$error }">
-                <b-form-input type="number" v-model="form.ZcreditAccountRemainder" :readonly="insertReadonly.ZcreditAccountRemainder" />
+                <b-form-input type="text" v-model="form.ZcreditAccountRemainder" :readonly="insertReadonly.ZcreditAccountRemainder" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.DiscountPercent1 != null ? insertVisible.DiscountPercent1 : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.DiscountPercent1 + (insertRequired.DiscountPercent1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent1.$error }">
-                <b-form-input type="number" v-model="form.DiscountPercent1" :readonly="insertReadonly.DiscountPercent1" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.DiscountPercent2 != null ? insertVisible.DiscountPercent2 : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.DiscountPercent2 + (insertRequired.DiscountPercent2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent2.$error }">
-                <b-form-input type="number" v-model="form.DiscountPercent2" :readonly="insertReadonly.DiscountPercent2" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.SapCustomerId != null ? insertVisible.SapCustomerId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.SapCustomerId + (insertRequired.SapCustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SapCustomerId.$error }">
-                <b-form-input type="text" v-model="form.SapCustomerId" :readonly="insertReadonly.SapCustomerId" />
-              </b-form-group>
-            </b-col>
+                <b-col v-if="insertVisible.DiscountPercent1 != null ? insertVisible.DiscountPercent1 : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.DiscountPercent1 + (insertRequired.DiscountPercent1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent1.$error }">
+                  <b-form-input type="text" v-model="form.DiscountPercent1" :readonly="insertReadonly.DiscountPercent1" />
+                </b-form-group>
+              </b-col>
+                <b-col v-if="insertVisible.DiscountPercent2 != null ? insertVisible.DiscountPercent2 : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.DiscountPercent2 + (insertRequired.DiscountPercent2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DiscountPercent2.$error }">
+                  <b-form-input type="text" v-model="form.DiscountPercent2" :readonly="insertReadonly.DiscountPercent2" />
+                </b-form-group>
+              </b-col>
+                <b-col v-if="insertVisible.SapCustomerId != null ? insertVisible.SapCustomerId : developmentMode" cols="12" md="2">
+                <b-form-group :label="insertTitle.SapCustomerId + (insertRequired.SapCustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SapCustomerId.$error }">
+                  <b-form-input type="text" v-model="form.SapCustomerId" :readonly="insertReadonly.SapCustomerId" />
+                </b-form-group>
+              </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.DeliveryDayParam != null ? insertVisible.DeliveryDayParam : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DeliveryDayParam + (insertRequired.DeliveryDayParam === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DeliveryDayParam.$error }">
-                <b-form-input type="number" v-model="form.DeliveryDayParam" :readonly="insertReadonly.DeliveryDayParam" />
+                <b-form-input type="text" v-model="form.DeliveryDayParam" :readonly="insertReadonly.DeliveryDayParam" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.PaymentPeriod != null ? insertVisible.PaymentPeriod : developmentMode" cols="12" md="2">
@@ -555,20 +562,20 @@
                 <v-select :options="paymentPeriods" @input="selectedSearchType('PaymentPeriod', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.TCIBreak1Id != null ? insertVisible.TCIBreak1Id : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.TCIBreak1Id + (insertRequired.TCIBreak1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TCIBreak1Id.$error }">
+            <b-col v-if="insertVisible.TciBreak1Id != null ? insertVisible.TciBreak1Id : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.TciBreak1Id + (insertRequired.TciBreak1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TciBreak1Id.$error }">
                 <v-select
                   :options="lookup.TCI_BREAKDOWN"
-                  @input="selectedType('TCIBreak1Id', $event)"
+                  @input="selectedType('TciBreak1Id', $event)"
                   label="Label"
                 />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.TCIBreak2Id != null ? insertVisible.TCIBreak2Id : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.TCIBreak2Id + (insertRequired.TCIBreak2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TCIBreak2Id.$error }">
+            <b-col v-if="insertVisible.TciBreak2Id != null ? insertVisible.TciBreak2Id : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.TciBreak2Id + (insertRequired.TciBreak2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TciBreak2Id.$error }">
                 <v-select
                   :options="lookup.TCI_BREAKDOWN"
-                  @input="selectedType('TCIBreak2Id', $event)"
+                  @input="selectedType('TciBreak2Id', $event)"
                   label="Label"
                 />
               </b-form-group>
@@ -577,41 +584,45 @@
           <b-row>
             <b-col v-if="insertVisible.StatementDay != null ? insertVisible.StatementDay : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.StatementDay + (insertRequired.StatementDay === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDay.$error }">
-                <v-select
-                :options="statementDays"
-                @input="selectedSearchType('StatementDay', $event)"
-                label="Description1"
-                :disabled="!form.Statement"></v-select>
+                <v-select :options="statementDays" @input="selectedSearchType('StatementDay', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.DefaultPaymentTypeId != null ? insertVisible.DefaultPaymentTypeId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DefaultPaymentTypeId + (insertRequired.DefaultPaymentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultPaymentTypeId.$error }">
-                <v-select v-model="paymentType" :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
+                <v-select :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.AllowOverLimit != null ? insertVisible.AllowOverLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.AllowOverLimit + (insertRequired.AllowOverLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.AllowOverLimit.$error }">
-                <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.AllowOverLimit" name="check-button">
+                  {{(form.AllowOverLimit) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsDirectDebit != null ? insertVisible.IsDirectDebit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsDirectDebit + (insertRequired.IsDirectDebit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsDirectDebit.$error }">
-                <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle :disabled="paymentType.Code !== 'AH'"></NextCheckBox>
+                <b-form-checkbox v-model="form.IsDirectDebit" name="check-button">
+                  {{(form.IsDirectDebit) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ManualInvoiceClosure != null ? insertVisible.ManualInvoiceClosure : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ManualInvoiceClosure + (insertRequired.ManualInvoiceClosure === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ManualInvoiceClosure.$error }">
-                <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle :disabled="true"></NextCheckBox>
+                <b-form-checkbox v-model="form.ManualInvoiceClosure" name="check-button">
+                  {{(form.ManualInvoiceClosure) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.Statement != null ? insertVisible.Statement : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.Statement + (insertRequired.Statement === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Statement.$error }">
-                <NextCheckBox v-model="form.Statement" type="number" toggle></NextCheckBox>
+                <b-form-checkbox v-model="form.Statement" name="check-button">
+                  {{(form.Statement) ? $t('insert.active'): $t('insert.passive')}}
+                </b-form-checkbox>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerCreditHistories')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
@@ -619,106 +630,106 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
-                <v-select  :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId')">
+                <v-select :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditDescriptionId.$error }">
+              <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId')">
                 <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditAmount" />
+              <b-form-group :label="$t('insert.customer.Model_CreditAmount')">
+                <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.debtor')">
-                <b-form-input  :disabled="customerCreditHistories.creditDescriptionCode!== 'SN'" type="text" v-model="customerCreditHistories.debtor" />
+                <b-form-input type="text" v-model="customerCreditHistories.debtor" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bail')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'KF' || customerCreditHistories.creditDescriptionCode!== 'SN'" type="text" v-model="customerCreditHistories.bail" />
+                <b-form-input type="text" v-model="customerCreditHistories.bail" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditLimit" />
+              <b-form-group :label="$t('insert.customer.Model_CreditLimit')">
+                <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.riskLimit" />
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit')">
+                <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.landOffice')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode !== 'IM'" type="text" v-model="customerCreditHistories.landOffice" />
+                <b-form-input type="text" v-model="customerCreditHistories.landOffice" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.plate')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode !== 'IM'" type="text" v-model="customerCreditHistories.plate" />
+                <b-form-input type="text" v-model="customerCreditHistories.plate" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.textDate')">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.textDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.textDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate')">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.notaryDate')">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.notaryDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.notaryDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.traficRegistry')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'MV'" type="text" v-model="customerCreditHistories.traficRegistry" />
+                <b-form-input type="text" v-model="customerCreditHistories.traficRegistry" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.textNo')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'IM'" type="number" v-model="customerCreditHistories.textNo" />
+                <b-form-input type="number" v-model="customerCreditHistories.textNo" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.notaryNo')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'MV'" type="number" v-model="customerCreditHistories.notaryNo" />
+                <b-form-input type="number" v-model="customerCreditHistories.notaryNo" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.plateNumber')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'MV'" type="text" v-model="customerCreditHistories.plateNumber" />
+                <b-form-input type="text" v-model="customerCreditHistories.plateNumber" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.mortgageValue')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'IM'" type="text" v-model="customerCreditHistories.mortgageValue" />
+                <b-form-input type="text" v-model="customerCreditHistories.mortgageValue" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.allowOverLimit')">
-                <b-form-radio-group :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" v-model="customerCreditHistories.allowOverLimit">
+                <b-form-radio-group v-model="customerCreditHistories.allowOverLimit">
                   <b-form-radio value="1">{{$t('insert.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -728,7 +739,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2" class="ml-auto">
               <b-form-group>
-                <AddDetailButton @click.native="addCreditHistories" />
+                <b-button @click="addCreditHistories" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -736,33 +747,33 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.debtor')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.bail')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.customerCreditHistories" :key="i">
                   <b-td>{{r.creditAmount}}</b-td>
-                  <b-td>{{r.creditLimit}}</b-td>
-                  <b-td>{{r.riskLimit}}</b-td>
+                  <b-td>{{r.debtor}}</b-td>
+                  <b-td>{{r.bail}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
           <b-row>
             <b-col>
               <b-row>
                 <b-col cols="12" md="6" lg="4">
-                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId') + ' *'" :class="{ 'form-group--error': $v.customerPaymentTypes.paymentTypeId.$error }">
-                    <v-select  v-model="customerPaymentType" :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
+                  <b-form-group :label="$t('insert.customer.Model_PaymentTypeId')">
+                    <v-select :options="paymentTypes" @input="selectedPaymentTypeArr" label="Description1"></v-select>
                   </b-form-group>
                 </b-col>
                 <b-col cols="12" md="3" lg="2">
                   <b-form-group>
-                    <AddDetailButton @click.native="addCustomerPaymentType" />
+                    <b-button @click="addCustomerPaymentType" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -783,7 +794,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.detail')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.detail')">
           <b-row>
             <b-col v-if="insertVisible.TextField1 != null ? insertVisible.TextField1 : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TextField1 + (insertRequired.TextField1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TextField1.$error }">
@@ -822,22 +833,10 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
-                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.Description1 }}
-                    </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
+              <b-form-group :label="$t('insert.customer.discountDescription')">
                 <b-form-input type="text" v-model="customerItemDiscounts.description1" />
               </b-form-group>
             </b-col>
@@ -865,7 +864,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group>
-                <AddDetailButton @click.native="addItemDiscount" />
+                <b-button @click="addItemDiscount" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -888,21 +887,21 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.tag')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.tag')">
           <b-row>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelId') + ' *'" :class="{ 'form-group--error': $v.customerTag.tagDefinition.$error }">
-                <v-select v-model="customerTag.tagDefinition" :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
+              <b-form-group :label="$t('insert.customer.labelId')">
+                <v-select :options="customerLabels" @input="selectedLabelId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.labelValueId') + ' *'" :class="{ 'form-group--error': $v.customerTag.tagValue.$error }">
-                <v-select v-model="customerTag.tagValue" :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
+              <b-form-group :label="$t('insert.customer.labelValueId')">
+                <v-select :options="customerLabelValues" @input="selectedLabelValueId" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group>
-                <AddDetailButton @click.native="addCustomerLabel" />
+                <b-button @click="addCustomerLabel" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -1029,10 +1028,10 @@ export default {
         genexp2: null,
         postCode: null,
         alias: null,
-        isDefaultLocation: 0,
-        isInvoiceAddress: 0,
-        isDeliveryAddress: 0,
-        isRouteNode: 0
+        isDefaultLocation: null,
+        isInvoiceAddress: null,
+        isDeliveryAddress: null,
+        isRouteNode: null
       },
       customerCreditHistories: {
         creditAmount: null,
@@ -1055,8 +1054,7 @@ export default {
         mortgageValue: null,
         dbsPriority: null,
         allowOverLimit: null,
-        plate: null,
-        creditDescriptionCode: null
+        plate: null
       },
       customerPaymentTypes: {
         paymentType: null,
@@ -1068,8 +1066,7 @@ export default {
         discountPercent1: null,
         discountPercent2: null,
         tciBreak1Id: null,
-        tciBreak2Id: null,
-        product: null
+        tciBreak2Id: null
       },
       customerTouchpoints: {
         touchpointPriority: null,
@@ -1077,38 +1074,11 @@ export default {
       },
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
-      selectedCancelReason: null,
-      locationDistirictLabel: null,
-      locationCityLabel: null,
-      address: {},
-      customerCategory1: null,
-      customerCategory2: null,
-      customerCategory3: null,
-      customerPaymentType: null,
-      customerTag: {
-        tagDefinition: null,
-        tagValue: null
-      },
-      paymentType: {}
+      selectedCancelReason: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits']),
-    customerBlackReason: function () {
-      return this.lookup && this.lookup.CUSTOMER_BLOCK_REASON ? this.lookup.CUSTOMER_BLOCK_REASON[0] : {}
-    },
-    customerGroup: function () {
-      return this.lookup && this.lookup.CUSTOMER_GROUP ? this.lookup.CUSTOMER_GROUP[2] : {}
-    },
-    customerClass: function () {
-      return this.lookup && this.lookup.CUSTOMER_CLASS ? this.lookup.CUSTOMER_CLASS[0] : {}
-    },
-    salesDocumentType: function () {
-      return this.lookup && this.lookup.SALES_DOCUMENT_TYPE ? this.lookup.SALES_DOCUMENT_TYPE[1] : {}
-    },
-    invoiceCombineRule: function () {
-      return this.lookup && this.lookup.INVOICE_COMBINE_RULE ? this.lookup.INVOICE_COMBINE_RULE[2] : {}
-    }
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'cities', 'credits'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -1119,7 +1089,10 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextCustomer/api/Customer/GetCode`})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
       this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'credits'})
+
+      this.$store.dispatch('getItems')
 
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
@@ -1129,7 +1102,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/Label/Search', name: 'customerLabels'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/Bank/Search', name: 'banks'})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -1151,9 +1123,10 @@ export default {
       this.form[label] = model.RecordId
     },
     save () {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
+      console.log(this.form)
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$toasted.show(this.$t('insert.fillRequireds'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -1166,17 +1139,32 @@ export default {
         this.form.IsWarehouseSale = this.checkConvertToNumber(this.form.IsWarehouseSale)
         this.form.UseEInvoice = this.checkConvertToNumber(this.form.UseEInvoice)
         this.form.ManualSItem = this.checkConvertToNumber(this.form.ManualSItem)
-        this.form.IsRouteRegion = this.checkConvertToNumber(this.form.IsRouteRegion)
         this.form.IsOrderChangeUnitary = this.checkConvertToNumber(this.form.IsOrderChangeUnitary)
         this.form.ManualInvoiceClosure = this.checkConvertToNumber(this.form.ManualInvoiceClosure)
         this.form.AllowOverLimit = this.checkConvertToNumber(this.form.AllowOverLimit)
-        this.form.IsBlackListed = this.checkConvertToNumber(this.form.IsBlackListed)
         this.form.Statement = this.checkConvertToNumber(this.form.Statement)
-        this.form.IsOpportunitySpot = this.checkConvertToNumber(this.form.IsOpportunitySpot)
+        this.form.UseEDispatch = this.checkConvertToNumber(this.form.UseEDispatch)
         let model = {
           'model': this.form
         }
         this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+      }
+    },
+    selectedCity (e) {
+      console.log(e)
+      if (e) {
+        this.customerLocations.cityId = e.DecimalValue
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
+      } else {
+        this.customerLocations.cityId = null
+      }
+    },
+    selectedDistirict (e) {
+      if (e) {
+        this.customerLocations.districtId = e.DecimalValue
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
+      } else {
+        this.customerLocations.districtId = null
       }
     },
     selectedBank (e) {
@@ -1196,10 +1184,8 @@ export default {
     selectedCreditDescription (e) {
       if (e) {
         this.customerCreditHistories.creditDescriptionId = e.DecimalValue
-        this.customerCreditHistories.creditDescriptionCode = e.Code
       } else {
         this.customerCreditHistories.creditDescriptionId = null
-        this.customerCreditHistories.creditDescriptionCode = null
       }
     },
     selectedPaymentTypeArr (e) {
@@ -1263,6 +1249,7 @@ export default {
         this.customerTouchpoints.touchpointTypeId = null
       }
     },
+
     addCustomerTouchpoint (item) {
       this.form.customerTouchpoints.push({
         touchpointPriorityNumber: this.customerTouchpoints.touchpointPriority,
@@ -1273,42 +1260,25 @@ export default {
       this.form.customerTouchpoints.splice(this.form.customerTouchpoints.indexOf(item), 1)
     },
     addCustomerLabel () {
-      this.$v.customerTag.$touch()
-      if (this.$v.customerTag.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.customerLabels.filter(i => i.labelId === this.customerTag.tagDefinition.RecordId && i.labelValueId === this.customerTag.tagValue.RecordId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
       this.form.customerLabels.push({
         label: this.customerLabel,
         labelId: this.customerLabelId,
         labelValue: this.customerLabel,
         labelValueId: this.customerLabelValue
       })
-      this.customerTag = {}
-      this.$v.customerTag.$reset()
     },
     removeCustomerLabel (item) {
       this.form.customerLabels.splice(this.form.customerLabels.indexOf(item), 1)
     },
     addItemDiscount () {
-      this.$v.customerItemDiscounts.$touch()
-      if (this.$v.customerItemDiscounts.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
+      // if (!this.customerItemDiscounts.code || !this.customerItemDiscounts.description1) {
+      //   this.$toasted.show(this.$t('insert.fillRequireds'), {
+      //     type: 'error',
+      //     keepOnHover: true,
+      //     duration: '3000'
+      //   })
+      //   return
+      // }
       this.form.customerItemDiscounts.push({
         code: this.customerItemDiscounts.code,
         description1: this.customerItemDiscounts.description1,
@@ -1317,53 +1287,22 @@ export default {
         tciBreak1Id: this.customerItemDiscounts.tciBreak1Id,
         tciBreak2Id: this.customerItemDiscounts.tciBreak2Id
       })
-      this.customerItemDiscounts = {}
-      this.$v.customerItemDiscounts.$reset()
     },
     removeItemDiscount (item) {
       this.form.customerItemDiscounts.splice(this.form.customerItemDiscounts.indexOf(item), 1)
     },
     addCustomerPaymentType () {
-      this.$v.customerPaymentTypes.$touch()
-      if (this.$v.customerPaymentTypes.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.customerPaymentTypes.filter(i => i.paymentType === this.customerPaymentTypes.paymentType)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
       this.form.customerPaymentTypes.push({
         paymentType: this.customerPaymentTypes.paymentType,
         paymentTypeId: this.customerPaymentTypes.paymentTypeId
       })
-      this.customerPaymentType = null
-      this.customerPaymentTypes = {}
-      this.$v.customerPaymentTypes.$reset()
+      console.log(this.form.customerPaymentTypes)
     },
     removeCustomerPaymentType (item) {
       this.form.customerPaymentTypes.splice(this.form.customerPaymentTypes.indexOf(item), 1)
     },
+
     addCustomerLocations () {
-      this.$v.customerLocations.$touch()
-      if (this.$v.customerLocations.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
       this.form.customerLocations.push({
         code: this.customerLocations.code,
         description1: this.customerLocations.description1,
@@ -1405,22 +1344,19 @@ export default {
       this.customerLocations.isInvoiceAddress = null
       this.customerLocations.isDeliveryAddress = null
       this.customerLocations.isRouteNode = null
-      this.address = {}
-      this.$v.customerLocations.$reset()
     },
     removeCustomerLocation (item) {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
     },
     addCreditHistories () {
-      this.$v.customerCreditHistories.$touch()
-      if (this.$v.customerCreditHistories.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
+      // if (!this.customerCreditHistories.creditAmount || !this.customerCreditHistories.creditDescriptionId || !this.customerCreditHistories.creditStartDate || !this.customerCreditHistories.bankId || !this.customerCreditHistories.currencyId || !this.customerCreditHistories.creditEndDate) {
+      //   this.$toasted.show(this.$t('insert.fillRequireds'), {
+      //     type: 'error',
+      //     keepOnHover: true,
+      //     duration: '3000'
+      //   })
+      //   return
+      // }
       this.form.customerCreditHistories.push({
         creditAmount: this.customerCreditHistories.creditAmount,
         creditDescriptionId: this.customerCreditHistories.creditDescriptionId,
@@ -1444,110 +1380,16 @@ export default {
         allowOverLimit: this.customerCreditHistories.allowOverLimit,
         plate: this.customerCreditHistoriesplate
       })
-      this.customerCreditHistories = {}
-      this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
       this.form.customerCreditHistories.splice(this.form.customerCreditHistories.indexOf(item), 1)
-    },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
-    onItemsSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchItems(loading, search, this)
-      }
-    },
-    searchItems (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
-        name: 'items',
-        andConditionModel: {
-          Description1: search
-        }
-      }).then(res => {
-        loading(false)
-      })
     }
   },
   validations () {
     // bu fonksiyonda güncelleme yapılmayacak!
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
-      form: this.insertRules,
-      customerLocations: {
-        description1: {
-          required
-        },
-        code: {
-          required
-        },
-        addressDetail: {
-          required
-        },
-        postCode: {
-          required
-        },
-        phoneNumber1: {
-          required
-        },
-        cityId: {
-          required
-        },
-        districtId: {
-          required
-        }
-      },
-      customerPaymentTypes: {
-        paymentTypeId: {
-          required
-        }
-      },
-      customerTag: {
-        tagDefinition: {
-          required
-        },
-        tagValue: {
-          required
-        }
-      },
-      customerCreditHistories: {
-        creditAmount: {
-          required
-        },
-        creditDescriptionId: {
-          required
-        },
-        currencyId: {
-          required
-        },
-        creditStartDate: {
-          required
-        },
-        creditEndDate: {
-          required
-        },
-        creditLimit: {
-          required
-        },
-        riskLimit: {
-          required
-        }
-      },
-      customerItemDiscounts: {
-        code: {
-          required
-        },
-        description1: {
-          required
-        }
-      }
+      form: this.insertRules
     }
   },
   watch: {
@@ -1581,15 +1423,6 @@ export default {
         e.map(item => {
           item.Label = item.DayNumber + ' ' + item.Description1
         })
-      }
-    },
-    address (value) {
-      if (value) {
-        this.customerLocations.cityId = value.CityId
-        this.customerLocations.districtId = value.DistrictId
-        this.customerLocations.addressDetail = value.Address
-        this.locationDistirictLabel = value.CityName
-        this.locationCityLabel = value.DistrictName
       }
     }
   }

@@ -1031,6 +1031,12 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
+          // Şimdilik koyuldu geri alınacak
+
+          if (query.name === 'fromRouteBalances' || query.name === 'toRouteBalances') {
+            commit('setSearchItems', {data: res.data, name: query.name})
+            return
+          }
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
             commit('bigLoaded', false)
@@ -1305,7 +1311,7 @@ export const store = new Vuex.Store({
         formData += fieldName + ': null,' + '\n'
         switch (rule.ColumnType) {
           case 'Id':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
@@ -1314,7 +1320,7 @@ export const store = new Vuex.Store({
             break
 
           case 'String':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3"">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
@@ -1323,7 +1329,7 @@ export const store = new Vuex.Store({
             break
 
           case 'LabelValue':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
               </b-form-group>
@@ -1333,7 +1339,7 @@ export const store = new Vuex.Store({
 
           case 'Select':
             if (fieldDefaultValue != null) {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
                 <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                   <v-select
                     :options="lookup.${fieldDefaultValue}"
@@ -1345,7 +1351,7 @@ export const store = new Vuex.Store({
 
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
                 <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                   <v-select />
                 </b-form-group>
@@ -1353,27 +1359,27 @@ export const store = new Vuex.Store({
             }
             break
           case 'SelectSearch':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <v-select />
               </b-form-group>
             </b-col>`
             break
           case 'Radio':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
               </b-form-group>
             </b-col>`
-            if (fieldDefaultValue === null) {
+            if (parseInt(fieldDefaultValue) === 1) {
               dflvl[fieldName] = 1
             } else {
-              dflvl[fieldName] = parseInt(fieldDefaultValue)
+              dflvl[fieldName] = 0
             }
             break
 
           case 'Check':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <NextCheckBox v-model="form.${fieldName}" type="number" />
               </b-form-group>
@@ -1382,7 +1388,7 @@ export const store = new Vuex.Store({
             break
 
           case 'DateTime':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-datepicker v-model="form.${fieldName}" />
               </b-form-group>
@@ -1391,7 +1397,7 @@ export const store = new Vuex.Store({
             break
 
           case 'Text':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
+            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
                 <b-form-textarea v-model="form.${fieldName}" placeholder="" />
               </b-form-group>

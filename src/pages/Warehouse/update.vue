@@ -117,7 +117,7 @@
           <b-row>
             <b-col md="2" class="ml-auto">
               <b-form-group>
-                <AddDetailButton @click.native="addItems" />
+                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -157,8 +157,8 @@ export default {
       form: {
         Code: null,
         Description1: null,
-        StatusId: 1,
-        IsVehicle: 0,
+        StatusId: null,
+        IsVehicle: null,
         VehicleId: null,
         LicenseNumber: null,
         FinanceCode: null,
@@ -166,8 +166,8 @@ export default {
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: 0,
-        NonSapWarehouse: 0,
+        IsVirtualWarehouse: null,
+        NonSapWarehouse: null,
         WarehouseSuppliers: []
       },
       routeName: this.$route.meta.baseLink,

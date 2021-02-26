@@ -1,17 +1,4 @@
 export default {
-  data () {
-    return {
-      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
-      routeName: this.$route.meta.baseLink,
-      routeName1: '',
-      routeName2: ''
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
-    }
-  },
   methods: {
     dateConvertFromTimezone: function (date) {
       if (!date || typeof date === 'undefined') {
@@ -51,12 +38,11 @@ export default {
       return today
     },
     tabValidationHelper () {
-      const tabs = document.querySelectorAll('.nav-tabs .nav-item')
-      tabs.forEach((tab, item) => {
+      const tab = document.querySelectorAll('.nav-tabs .nav-item')
+      tab.forEach((tab, item) => {
         const tabId = tab.querySelector('a').attributes['aria-controls'].value
         let tabContent = document.getElementById(tabId)
-        var errorItems = tabContent.querySelector('.form-group--error')
-        if (errorItems) {
+        if (tabContent.querySelector('fieldset').classList.contains('form-group--error')) {
           tab.querySelector('a').className += ' ' + 'error-tab'
         }
       })
@@ -68,67 +54,6 @@ export default {
         name: name,
         andConditionModel: model
       })
-    },
-    getFormatDataByType (data, type, lang) {
-      let value = ''
-      switch (type) {
-        case 'text':
-          value = data !== null ? data : '-'
-          break
-        case 'object':
-          value = data ? data.Label : '-'
-          break
-        case 'check':
-          value = data === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
-          break
-        case 'date':
-          value = data !== null ? this.dateConvertFromTimezone(data) : '-'
-          break
-        default:
-          value = '-'
-      }
-      let result = `<span><i class="far fa-circle"></i> ${this.$t(lang)}</span><p>${value}</p>`
-      return result
-    },
-    isString (evt) {
-      if (evt) {
-        let turkishCharKeyCodes = [199, 214, 220, 231, 246, 252, 286, 287, 304, 305, 350, 351]
-        let charCode = evt.keyCode
-        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode === 8 || turkishCharKeyCodes.includes(charCode)) {
-          return true
-        } else {
-          evt.preventDefault()
-        }
-      }
-    },
-    selectedType (label, model) {
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
-    setRouteNames () {
-      if (!this.routeName1) {
-        this.routeName1 = this.routeName
-      }
-      if (!this.routeName2) {
-        this.routeName2 = this.routeName
-      }
     }
   }
 }

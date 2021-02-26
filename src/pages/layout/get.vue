@@ -5,18 +5,8 @@
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
-            <template #overlay>
-              <b-icon
-                icon="three-dots"
-                animation="cylon"
-                scale="8"
-                variant="warning"
-              ></b-icon>
-            </template>
+          <b-overlay :show="bigLoading" rounded="sm">
             <b-card class="asc__getPage" no-body>
-              <!-- <Breadcrumb title="aasdasdas" /> -->
-              <!-- <GetFormField /> -->
               <router-view/>
               <div class="clearfix" />
             </b-card>
@@ -35,9 +25,6 @@ export default {
   },
   computed: {
     ...mapState(['style', 'bigLoading'])
-  },
-  mounted () {
-    console.log(this.$route)
   }
 }
 </script>

@@ -127,34 +127,21 @@
                 label="title"
               />
 
-              <!-- <b-form-datepicker
+              <b-form-datepicker
                 v-if="header.columnType === 'Date'"
                 v-once
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
-              /> -->
-              <date-picker
-                v-if="header.columnType === 'Date'"
-                range
-                type="date"
-                v-model="rangeDate"
-                @change="filterRangeDate(header.dataField, searchText)"
-              ></date-picker>
-              <date-picker
-                v-if="header.columnType === 'DateTime'"
-                range
-                type="date"
-                v-model="rangeDate"
-                @change="filterRangeDate(header.dataField, searchText)"
-              ></date-picker>
-              <!-- <b-form-datepicker
+              />
+
+              <b-form-datepicker
                 v-if="header.columnType === 'DateTime'"
                 v-once
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
-              /> -->
+              />
               <b-form-input
                 v-if="header.columnType === 'Time'"
                 v-once
@@ -276,17 +263,7 @@ import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 let searchQ = {}
 export default {
-  // props: ['apiurl', 'apiparams']
-  props: {
-    apiurl: String,
-    apiparams: String,
-    andConditionalModel: {
-      type: Object,
-      default: function () {
-        return {}
-      }
-    }
-  },
+  props: ['apiurl', 'apiparams', 'andConditionalModel'],
   mixins: [mixin],
   data () {
     return {
@@ -311,8 +288,7 @@ export default {
       searchBoolean: [
         { value: 1, title: 'Aktif' },
         { value: 0, title: 'Pasif' }
-      ],
-      rangeDate: []
+      ]
     }
   },
   mounted () {
@@ -419,14 +395,6 @@ export default {
     },
     filterDate (e, date) {
       this.searchOnTable(e, this.dateConvertToISo(date))
-    },
-    filterRangeDate (e, date) {
-      let model = {
-        BeginValue: this.dateConvertToISo(this.rangeDate[0]),
-        EndValue: this.dateConvertToISo(this.rangeDate[1])
-      }
-      this.andConditionalModel[e] = model
-      this.searchOnTable()
     },
     filterTime (e, time) {
       this.searchOnTable(e, time)
@@ -634,8 +602,6 @@ export default {
           color: #000
       .asc__nextgrid-table-header-filter
         position: relative
-        input
-          height: 28px
     .asc__nextgrid-table-footer
       padding: 10px 0 0 0
       height: 50px

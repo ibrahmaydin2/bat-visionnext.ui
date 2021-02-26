@@ -1,3 +1,3 @@
 <template>
-  <Nextgrid apiurl="VisionNextInvoice/api/SalesReturnInvoice/Search" />
+  <Nextgrid apiurl="VisionNextWarehouse/api/Warehouse/Search" />
 </template>

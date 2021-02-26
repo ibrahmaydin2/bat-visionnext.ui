@@ -45,25 +45,6 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
-                <v-select :options="banks"  @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.BankBranchId != null ? insertVisible.BankBranchId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.BankBranchId + (insertRequired.BankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankBranchId.$error }">
-                <v-select :options="bankBranches" @input="selectedSearchType('BankBranchId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.BankAccountNumber != null ? insertVisible.BankAccountNumber : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.BankAccountNumber + (insertRequired.BankAccountNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankAccountNumber.$error }">
-                <b-form-input type="text" v-model="form.BankAccountNumber" :readonly="insertReadonly.BankAccountNumber" />
-              </b-form-group>
-            </b-col>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
                 <v-select :options="customers"  @search="onCustomerSearch" @input="selectedSearchType('CustomerId', $event)" label="Description1">
@@ -71,25 +52,6 @@
                     {{$t('insert.min3')}}
                   </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerBankId != null ? insertVisible.CustomerBankId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerBankId + (insertRequired.CustomerBankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankId.$error }">
-                <v-select :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerBankBranchId != null ? insertVisible.CustomerBankBranchId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerBankBranchId + (insertRequired.CustomerBankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankBranchId.$error }">
-                <v-select :options="customerBankBranches" @input="selectedSearchType('CustomerBankBranchId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerBankAccountNumber != null ? insertVisible.CustomerBankAccountNumber : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CustomerBankAccountNumber + (insertRequired.CustomerBankAccountNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankAccountNumber.$error }">
-                <b-form-input type="text" v-model="form.CustomerBankAccountNumber" :readonly="insertReadonly.CustomerBankAccountNumber" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.DocumentNumber != null ? insertVisible.DocumentNumber : developmentMode" cols="12" md="3">
@@ -110,6 +72,44 @@
             <b-col v-if="insertVisible.TransactionTotal != null ? insertVisible.TransactionTotal : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.TransactionTotal + (insertRequired.TransactionTotal === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionTotal.$error }">
                 <b-form-input type="text" v-model="form.TransactionTotal" :readonly="insertReadonly.TransactionTotal" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
+                <v-select :options="banks"  @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.BankAccountNumber != null ? insertVisible.BankAccountNumber : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankAccountNumber + (insertRequired.BankAccountNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankAccountNumber.$error }">
+                <b-form-input type="text" v-model="form.BankAccountNumber" :readonly="insertReadonly.BankAccountNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.BankBranchId != null ? insertVisible.BankBranchId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.BankBranchId + (insertRequired.BankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankBranchId.$error }">
+                <v-select :options="bankBranches" @input="selectedSearchType('BankBranchId', $event)" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CustomerBankId != null ? insertVisible.CustomerBankId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CustomerBankId + (insertRequired.CustomerBankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankId.$error }">
+                <v-select :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CustomerBankBranchId != null ? insertVisible.CustomerBankBranchId : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CustomerBankBranchId + (insertRequired.CustomerBankBranchId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankBranchId.$error }">
+                <v-select :options="customerBankBranches" @input="selectedSearchType('CustomerBankBranchId', $event)" label="Description1"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.CustomerBankAccountNumber != null ? insertVisible.CustomerBankAccountNumber : developmentMode" cols="12" md="3">
+              <b-form-group :label="insertTitle.CustomerBankAccountNumber + (insertRequired.CustomerBankAccountNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankAccountNumber.$error }">
+                <b-form-input type="text" v-model="form.CustomerBankAccountNumber" :readonly="insertReadonly.CustomerBankAccountNumber" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -159,13 +159,7 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (this.insertDefaultValue[el] && el !== 'Code') {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
-      })
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextBank/api/${e}/GetCode`})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/BankTransactionType/Search', name: 'transactionTypes'})
@@ -283,13 +277,13 @@ export default {
     },
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    // insertDefaultValue (value) {
-    //   Object.keys(value).forEach(el => {
-    //     if (value[el] && el !== 'Code') {
-    //       this.form[el] = value[el]
-    //     }
-    //   })
-    // },
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        if (el !== 'Code') {
+          this.form[el] = value[el]
+        }
+      })
+    },
     bankItems (e) {
       if (e) {
         this.bankBranches = e.BankBranches

@@ -25,64 +25,64 @@
          <b-tab :title="$t('insert.employee.EmployeeInfo')" :active="true">
            <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Name, 'text', 'insert.employee.Model_Name')"></div>
-              <div v-html="getFormatDataByType(rowData.Surname, 'text', 'insert.employee.Model_Surname')"></div>
-              <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.employee.Model_UserPersonalGroup')"></div>
-              <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.employee.category')"></div>
-              <div v-html="getFormatDataByType(rowData.Other1, 'text', 'insert.employee.Model_Description')"></div>
-              <div v-html="getFormatDataByType(rowData.IsTeam, 'check', 'insert.employee.Model_Team')"></div>
-              <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.employee.Model_PriceListCategoryId')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Name')}}</span><p>{{rowData.Name}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Surname')}}</span><p>{{rowData.Surname}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_UserGroupId')}}</span><p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.category')}}</span><p>{{rowData.Category1 ? rowData.Category1.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Description')}}</span><p>{{rowData.Other1}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Team')}}</span><p><i :class="rowData.IsTeam === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_PriceListCategoryId')}}</span><p>{{rowData.PriceListCategory ? rowData.PriceListCategory.Label : ''}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.FinanceCode1, 'text', 'insert.employee.Model_ERPCustomerCode')"></div>
-              <div v-html="getFormatDataByType(rowData.CreateCustomerRecord, 'check', 'insert.employee.CreateCustomerRecord')"></div>
-              <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'insert.employee.Model_ERPSupplierCode')"></div>
-              <div v-html="getFormatDataByType(rowData.ScoreCardClass, 'object', 'insert.employee.scoreCardClasses')"></div>
-              <div v-html="getFormatDataByType(rowData.SapHrCode, 'text', 'insert.employee.Model_SAPSrCode')"></div>
-              <div v-html="getFormatDataByType(rowData.IsRepresentative, 'check', 'insert.employee.Model_IsRepresentative')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPCustomerCode')}}</span><p>{{rowData.FinanceCode1}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.CreateCustomerRecord')}}</span><p><i :class="rowData.CreateCustomerRecord === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ERPSupplierCode')}}</span><p>{{rowData.FinanceCode2}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.scoreCardClasses')}}</span><p>{{rowData.ScoreCardClass ? rowData.ScoreCardClass.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_SAPSrCode')}}</span><p>{{rowData.SapHrCode}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_IsRepresentative')}}</span><p><i :class="rowData.IsRepresentative === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
             </b-card>
           </b-row>
          </b-tab>
         <b-tab :title="$t('insert.employee.groupInfo')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.employee.personalType')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.personalType')}}</span><p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.employee.Model_UserGroupId')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_UserGroupId')}}</span><p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
             </b-card>
          </b-row>
         </b-tab>
         <b-tab :title="$t('insert.employee.Model_Personal')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.EmploymentStartDate, 'date', 'insert.employee.Model_EmploymentStartDate')"></div>
-              <div v-html="getFormatDataByType(rowData.EmploymentEndDate, 'date', 'insert.employee.Model_EmploymentEndDate')"></div>
-              <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.employee.Model_Identificationnumber')"></div>
-               <div v-html="getFormatDataByType(rowData.BirthDate, 'date', 'insert.employee.Model_BirthDate')"></div>
-              <div v-html="getFormatDataByType(rowData.TShirtSize, 'text', 'insert.employee.Model_TShirtSize')"></div>
-              <div v-html="getFormatDataByType(rowData.MontSize, 'text', 'insert.employee.Model_ShirtSize')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentStartDate')}}</span><p>{{dateConvertFromTimezone(rowData.EmploymentStartDate)}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EmploymentEndDate')}}</span><p>{{dateConvertFromTimezone(rowData.EmploymentEndDate)}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Identificationnumber')}}</span><p>{{rowData.TaxNumber}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BirthDate')}}</span><p>{{dateConvertFromTimezone(rowData.BirthDate)}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_TShirtSize')}}</span><p>{{rowData.TShirtSize}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ShirtSize')}}</span><p>{{rowData.MontSize}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.OvercoatSize, 'text', 'insert.employee.Model_CoatSize')"></div>
-              <div v-html="getFormatDataByType(rowData.ShoeSize, 'text', 'insert.employee.Model_Shoesize')"></div>
-              <div v-html="getFormatDataByType(rowData.Education, 'object', 'insert.employee.Model_EducationId')"></div>
-               <div v-html="getFormatDataByType(rowData.DenimSize, 'text', 'insert.employee.Model_JeansSize')"></div>
-              <div v-html="getFormatDataByType(rowData.CorduroySize, 'text', 'insert.employee.Model_ClothTrousersSize')"></div>
-              <div v-html="getFormatDataByType(rowData.BloodType, 'object', 'insert.employee.Model_BloodType')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_CoatSize')}}</span><p>{{rowData.OvercoatSize}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Shoesize')}}</span><p>{{rowData.ShoeSize}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_EducationId')}}</span><p>{{rowData.Education ? rowData.Education.Label : ''}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_JeansSize')}}</span><p>{{rowData.DenimSize}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_ClothTrousersSize')}}</span><p>{{rowData.CorduroySize}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_BloodType')}}</span><p>{{rowData.BloodType ? rowData.BloodType.Label : ''}}</p>
             </b-card>
          </b-row>
         </b-tab>
         <b-tab :title="$t('insert.employee.EmployeeContact')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Telephone1, 'text', 'insert.employee.Model_Telephone1')"></div>
-              <div v-html="getFormatDataByType(rowData.Telephone2, 'text', 'insert.employee.Model_Telephone2')"></div>
-              <div v-html="getFormatDataByType(rowData.GsmNumber, 'text', 'insert.employee.Model_GsmNumber')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone1')}}</span><p>{{rowData.Telephone1}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Telephone2')}}</span><p>{{rowData.Telephone2}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_GsmNumber')}}</span><p>{{rowData.GsmNumber}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.FaxNumber, 'text', 'insert.employee.Model_Fax')"></div>
-              <div v-html="getFormatDataByType(rowData.Email, 'text', 'insert.employee.Model_Email')"></div>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Fax')}}</span><p>{{rowData.FaxNumber}}</p>
+              <span><i class="far fa-circle" /> {{$t('insert.employee.Model_Email')}}</span><p>{{rowData.Email}}</p>
             </b-card>
           </b-row>
         </b-tab>
@@ -150,3 +150,5 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+</style>

@@ -18,7 +18,7 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="4" lg="3">
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
               <NextCheckBox v-model="form.StatusId" type="number" toggle/>
             </b-form-group>
@@ -64,50 +64,91 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import insertMixin from '../../mixins/insert'
+import mixin from '../../mixins/index'
 export default {
-  mixins: [insertMixin],
+  mixins: [mixin],
   data () {
     return {
-      form: {}
+      form: {},
+      routeName: this.$route.meta.baseLink
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState([''])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
   },
   mounted () {
-    this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // her insert ekranının kuralları ve createCode değerini alır.
+      this.$store.dispatch('getInsertRules', {...this.query, api: e})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
+    },
+    selectedType (label, model) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // standart dropdownların select işleminde alacağı değeri belirler.
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
+    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
+    tabValidation () {
+      if (this.$v.form.$invalid) {
+        this.$nextTick(() => {
+          this.tabValidationHelper()
+        })
+      }
     },
     save () {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
-        this.createData()
-        // update işlemiyse
-        // this.updateData()
+        let model = {
+          'model': this.form
+        }
+        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
       }
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // her insert ekranı sistemden gelen kodla çalışır.
+    createCode (e) {
+      if (e) {
+        this.form.Code = e
+      }
+    },
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
+    insertDefaultValue (value) {
+      Object.keys(value).forEach(el => {
+        if (el !== 'Code') {
+          this.form[el] = value[el]
+        }
+      })
     }
   }
 }
 </script>
+<style lang="sass">
+</style>

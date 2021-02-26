@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Route' }">
               <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
             <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
@@ -22,7 +22,7 @@
             <b-form-group
               :label="$t('insert.route.code')"
             >
-              <b-form-input type="text" v-model="form.model.code" readonly />
+              <b-form-input type="text" v-model="form.model.code"/>
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
@@ -38,12 +38,8 @@
             </b-form-group>
           </b-col>
           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.state')"
-            >
-              <b-form-checkbox v-model="statusId" name="check-button" switch>
-                {{(statusId) ? $t('insert.route.active'): $t('insert.route.passive')}}
-              </b-form-checkbox>
+            <b-form-group :label="$t('insert.route.state')">
+              <NextCheckBox v-model="form.model.statusId" type="number" toggle/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -106,17 +102,17 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.city')">
-                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
+                <v-select :options="lookup.CITY" v-model="city" @input="selectedCity" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.route.distirict')">
-                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+                <v-select :disabled="!cityValid" v-model="district" :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.town')">
-                <b-form-input type="text" v-model="form.town"/>
+              <b-form-group :label="$t('insert.route.parish')">
+                <v-select :disabled="!distirictValid" :options="avenues" @input="selectedAvenue" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -295,16 +291,17 @@ export default {
       DaysFrequency: null,
       selectedCustomerArr: [],
       selectedLocationArr: [],
-      customerLocationTable: []
+      customerLocationTable: [],
+      cityValid: null,
+      distirictValid: null
     }
   },
   computed: {
-    ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList'])
+    ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList', 'lookup', 'avenues'])
   },
   mounted () {
     // this.$store.commit('setCities', false)
     this.$store.commit('bigLoaded', false)
-    this.getLookups()
     this.getDatas()
     this.getRowData()
   },
@@ -313,19 +310,12 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
     },
     getDatas () {
+      this.$store.dispatch('getInsertRules', {...this.query, api: 'Route'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
     },
-    getLookups () {
-      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_CLASS', name: 'routeClasses'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_GROUP', name: 'routeGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'VISIT_START_CONTROL', name: 'visitStartControls'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
-    },
     save () {
-      this.form.model.statusId = this.statusId ? 1 : 0
       this.$store.dispatch('updateData', {...this.query, api: 'VisionNextRoute/api/Route', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedRouteType (e) {
@@ -384,12 +374,31 @@ export default {
       }
     },
     selectedCity (e) {
-      this.city = e.title
-      this.$store.commit('setDistiricts', e.plaka)
+      if (e) {
+        this.form.model.cityId = e.DecimalValue
+        this.cityValid = true
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
+      } else {
+        this.form.model.districtId = null
+        this.form.model.cityId = null
+      }
     },
     selectedDistirict (e) {
-      console.log(e)
-      this.distirict = e.id
+      if (e) {
+        this.form.model.districtId = e.DecimalValue
+        this.distirictValid = true
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
+      } else {
+        this.form.model.districtId = null
+        this.form.model.parishIds = null
+      }
+    },
+    selectedAvenue (e) {
+      if (e.length > 0) {
+        this.selectedParishes = e
+      } else {
+        this.selectedParishes = []
+      }
     },
     selectedEmployee (e) {
       if (e) {
@@ -482,6 +491,7 @@ export default {
   watch: {
     rowData (e) {
       if (e) {
+        console.log(e)
         this.form.model = {
           code: e.Code,
           description1: e.Description1,
@@ -518,6 +528,17 @@ export default {
         }
         if (e.VisitStartControl) {
           this.visitStartControl = e.VisitStartControl.Label
+        }
+        if (e.City) {
+          this.city = e.City.Label
+          this.selectedCity(e.City)
+        }
+        if (e.District) {
+          this.district = e.District.Label
+          this.selectedDistirict(e.City)
+        }
+        if (e.Parish) {
+          this.parish = e.Parish.Label
         }
         if (e.RouteType) {
           let payload = {

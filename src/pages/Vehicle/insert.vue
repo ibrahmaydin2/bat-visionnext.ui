@@ -7,10 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Vehicle' }">
-              <CancelButton />
+            <router-link :to="{name: 'Dashboard' }">
+              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
             </router-link>
-            <AddButton @click.native="save()" />
+            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
           </b-col>
         </b-row>
       </header>
@@ -18,29 +18,39 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="4" lg="3">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" />
+          <b-col cols="12" md="3" lg="2">
+            <b-form-group
+              :label="$t('insert.vehicles.code') + ' *'"
+              :class="{ 'form-group--error': $v.form.model.code.$error }"
+            >
+              <b-form-input type="text" v-model.trim="$v.form.model.code.$model" />
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.DefaultDriverEmployeeId != null ? insertVisible.DefaultDriverEmployeeId : developmentMode" cols="12" md="4" lg="3">
-            <b-form-group :label="insertTitle.DefaultDriverEmployeeId + (insertRequired.DefaultDriverEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultDriverEmployeeId.$error }">
-              <v-select :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
+          <b-col cols="12" md="3" lg="2">
+            <b-form-group :label="$t('insert.vehicles.driver')  + ' *'" :class="{ 'form-group--error': $v.form.model.defaultDriverEmployeeId.$error }">
+              <v-select :options="employees" @input="selectedDriver" label="nameSurname"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.VehiclePlateNumber != null ? insertVisible.VehiclePlateNumber : developmentMode" cols="12" md="4" lg="3">
-            <b-form-group :label="insertTitle.VehiclePlateNumber + (insertRequired.VehiclePlateNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehiclePlateNumber.$error }">
-              <b-form-input type="text" v-model="form.VehiclePlateNumber"/>
+          <b-col cols="12" md="3" lg="2">
+            <b-form-group
+              :label="$t('insert.vehicles.plaque')  + ' *'"
+              :class="{ 'form-group--error': $v.form.model.vehiclePlateNumber.$error }"
+            >
+              <b-form-input type="text" v-model="form.model.vehiclePlateNumber"/>
             </b-form-group>
           </b-col>
-            <b-col v-if="insertVisible.AssetNumber != null ? insertVisible.AssetNumber : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.AssetNumber + (insertRequired.AssetNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.AssetNumber.$error }">
-                <b-form-input type="text" v-model="form.AssetNumber"/>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.assetNo')">
+                <b-form-input type="text" v-model="form.model.assetNumber"/>
               </b-form-group>
             </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="4" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+          <b-col cols="12" md="3" lg="2">
+            <b-form-group
+              :label="$t('insert.vehicles.state')"
+            >
+              <b-form-checkbox v-model="statusId" name="check-button" switch>
+                {{(statusId) ? $t('insert.vehicles.active'): $t('insert.vehicles.passive')}}
+              </b-form-checkbox>
             </b-form-group>
           </b-col>
         </b-row>
@@ -48,49 +58,57 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" active  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
-            <b-col v-if="insertVisible.BrandId != null ? insertVisible.BrandId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.BrandId + (insertRequired.BrandId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BrandId.$error }">
-                <v-select :options="lookup.VEHICLE_BRAND" @input="selectedType('BrandId', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.trademark')">
+                <v-select :options="vehicleBrands" @input="selectedVehicleBrand" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.ModelId != null ? insertVisible.ModelId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ModelId + (insertRequired.ModelId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ModelId.$error }">
-                <v-select :options="lookup.VEHICLE_MODEL" @input="selectedType('ModelId', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.model')">
+                <v-select :options="vehicleModels" @input="selectedVehicleModel" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.ModelYear != null ? insertVisible.ModelYear : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ModelYear + (insertRequired.ModelYear === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ModelYear.$error }">
-                <b-form-input type="number" v-model="form.ModelYear"/>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.year')">
+                <b-form-input type="number" v-model="form.model.modelYear"/>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.VehicleTypeId != null ? insertVisible.VehicleTypeId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.VehicleTypeId + (insertRequired.VehicleTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleTypeId.$error }">
-                <v-select :options="lookup.VEHICLE_TYPE" @input="selectedType('VehicleTypeId', $event)" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.IsRouteVehicle != null ? insertVisible.IsRouteVehicle : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.IsRouteVehicle + (insertRequired.IsRouteVehicle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsRouteVehicle.$error }">
-                <b-form-radio-group id="radio-group-route-vehicle" v-model="form.IsRouteVehicle">
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group
+                :label="$t('insert.vehicles.isRouteVehicle')"
+              >
+                <b-form-radio-group id="radio-group-route-vehicle" v-model="form.model.isRouteVehicle">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.IsBranchLocation != null ? insertVisible.IsBranchLocation : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.IsBranchLocation + (insertRequired.IsBranchLocation === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsBranchLocation.$error }">
-                <b-form-radio-group id="radio-group-is-asset" v-model="form.IsBranchLocation">
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.vehicleType')">
+                <v-select :options="vehicleTypes" @input="selectedVehicleType" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group
+                :label="$t('insert.vehicles.isStore')"
+              >
+                <b-form-radio-group id="radio-group-is-store" v-model="form.model.useAsWarehouse">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.UseAsWarehouse != null ? insertVisible.UseAsWarehouse : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.UseAsWarehouse + (insertRequired.UseAsWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UseAsWarehouse.$error }">
-                <b-form-radio-group id="radio-group-is-store" v-model="form.UseAsWarehouse">
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group
+                :label="$t('insert.vehicles.isAsset')"
+              >
+                <b-form-radio-group id="radio-group-is-asset" v-model="form.model.isBranchLocation">
                   <b-form-radio value="1">{{$t('insert.vehicles.yes')}}</b-form-radio>
                   <b-form-radio value="0">{{$t('insert.vehicles.no')}}</b-form-radio>
                 </b-form-radio-group>
@@ -98,88 +116,105 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.vehicles.additionalInfo')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.vehicles.additionalInfo')">
           <b-row>
-            <b-col v-if="insertVisible.UsageTypeId != null ? insertVisible.UsageTypeId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.UsageTypeId + (insertRequired.UsageTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UsageTypeId.$error }">
-                <v-select :options="lookup.USAGE_TYPE" @input="selectedType('UsageTypeId', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.vehicleKind')">
+                <v-select :options="vehicleUsageTypes" @input="selectedVehicleUsageType" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.ColorId != null ? insertVisible.ColorId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ColorId + (insertRequired.ColorId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ColorId.$error }">
-                <v-select :options="lookup.COLOR" @input="selectedType('ColorId', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.colorCode')">
+                <v-select :options="vehicleColors" @input="selectedVehicleColor" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.VolumeCp != null ? insertVisible.VolumeCp : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.VolumeCp + (insertRequired.VolumeCp === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VolumeCp.$error }">
-                <b-form-input type="number" v-model="form.VolumeCp"/>
+          </b-row>
+          <!-- <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.sideAwningType')">
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.backrest')">
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.truckLogo')">
+              </b-form-group>
+            </b-col>
+          </b-row> -->
+          <b-row>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.volumeCapacity')">
+                <b-form-input type="number" v-model="form.model.volumeCp"/>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.volumeUnit')">
+                <v-select :options="vehicleUnits" @input="selectedVolumeUnit" label="Label"></v-select>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.weightCapacity')">
+                <b-form-input type="number" v-model="form.model.weightCp"/>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.weightUnit')">
+                <v-select :options="vehicleUnits" @input="selectedWeightUnit" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.VolumeCpUnitId != null ? insertVisible.VolumeCpUnitId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.VolumeCpUnitId + (insertRequired.VolumeCpUnitId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VolumeCpUnitId.$error }">
-                <v-select :options="lookup.UNIT" @input="selectedType('VolumeCpUnitId', $event)" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.WeightCp != null ? insertVisible.WeightCp : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.WeightCp + (insertRequired.WeightCp === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.WeightCp.$error }">
-                <b-form-input type="number" v-model="form.WeightCp"/>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.WeightCpUnitId != null ? insertVisible.WeightCpUnitId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.WeightCpUnitId + (insertRequired.WeightCpUnitId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.WeightCpUnitId.$error }">
-                <v-select :options="lookup.UNIT" @input="selectedType('WeightCpUnitId', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.contractEndDate')">
+                <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.model.ContractEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.Category1Id + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
-                <v-select :options="lookup.VEHICLE_CATEGORY_1" @input="selectedType('Category1Id', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.vehicleCategory1')">
+                <v-select :options="vehicleCategory1" @input="selectedCategory1" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.Category2Id != null ? insertVisible.Category2Id : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.Category2Id + (insertRequired.Category2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category2Id.$error }">
-                <v-select :options="lookup.VEHICLE_CATEGORY_2" @input="selectedType('Category2Id', $event)" label="Label"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.vehicleCategory2')">
+                <v-select :options="vehicleCategory2" @input="selectedCategory2" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.Category3Id != null ? insertVisible.Category3Id : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.Category3Id + (insertRequired.Category3Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category3Id.$error }">
-                <v-select :options="lookup.VEHICLE_CATEGORY_3" @input="selectedType('Category3Id', $event)" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ContractEndDate != null ? insertVisible.ContractEndDate : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ContractEndDate + (insertRequired.ContractEndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ContractEndDate.$error }">
-                <b-form-datepicker id="contract-datepicker" :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.ContractEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group :label="$t('insert.vehicles.vehicleCategory3')">
+                <v-select :options="vehicleCategory3" @input="selectedCategory3" label="Label"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.vehicles.replacementDrivers')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.vehicles.replacementDrivers')">
           <b-row>
-            <b-col cols="12" md="4" lg="3">
-              <b-form-group  :label="$t('insert.vehicles.replacementDriver') + ' *'" :class="{ 'form-group--error': $v.selectedEmployee.$error }">
-                <v-select v-model="selectedEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" label="nameSurname"></v-select>
+            <b-col cols="12" md="3" lg="2">
+              <b-form-group>
+                <v-select v-model="selectedEmployee" :options="employees" @input="selectedReplacementDriver" label="nameSurname"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group>
-                <AddDetailButton @click.native="addReplacementDriver" />
+                <b-button @click="addReplacementDriver()" size="sm" variant="success">{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
-            <b-col cols="12">
-              <b-table-simple responsive bordered small>
+            <b-col cols="12" md="12" lg="12">
+              <b-table-simple>
                 <b-thead>
-                  <b-th><span>{{$t('insert.vehicles.driverName')}}</span></b-th>
-                  <b-th><span>{{$t('insert.vehicles.driverCode')}}</span></b-th>
-                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                  <tr>
+                    <th>İsim</th>
+                    <th>Kod</th>
+                  </tr>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(v, i) in form.VehicleReplacementDrivers" :key="i">
-                    <b-td>{{v.Description1}}</b-td>
-                    <b-td>{{v.Code}}</b-td>
-                    <b-td class="text-center"><i @click="deleteReplacementDriver(v)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-tr v-for="(r, i) in replacmentDrivers" :key="'dl' + i">
+                    <b-td>{{r.nameSurname}}</b-td>
+                    <b-td>{{r.code}}</b-td>
+                    <b-td><i @click="deleteReplacementDriver(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -193,101 +228,169 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
+
 export default {
-  mixins: [insertMixin],
   data () {
     return {
       form: {
-        Code: null,
-        AssetNumber: null,
-        VehiclePlateNumber: null,
-        DefaultDriverEmployeeId: null,
-        VehicleTypeId: null,
-        StatusId: 1,
-        ModelYear: null,
-        BrandId: null,
-        ModelId: null,
-        UseAsWarehouse: 0,
-        IsRouteVehicle: 0,
-        IsBranchLocation: 0,
-        UsageTypeId: null,
-        Category1Id: null,
-        Category2Id: null,
-        Category3Id: null,
-        VolumeCpUnitId: null,
-        VolumeCp: null,
-        WeightCpUnitId: null,
-        WeightCp: null,
-        ColorId: null,
-        ContractEndDate: null,
-        VehicleReplacementDrivers: []
+        model: {
+          code: null,
+          assetNumber: null,
+          vehiclePlateNumber: null,
+          defaultDriverEmployeeId: null,
+          vehicleTypeId: null,
+          statusId: true,
+          modelYear: null,
+          brandId: null,
+          modelId: null,
+          useAsWarehouse: 0,
+          isRouteVehicle: 0,
+          isBranchLocation: 0,
+          usageTypeId: null,
+          category1Id: null,
+          category2Id: null,
+          category3Id: null,
+          volumeCpUnitId: null,
+          volumeCp: null,
+          weightCpUnitId: null,
+          weightCp: null,
+          colorId: null,
+          contractEndDate: null,
+          vehicleReplacementDrivers: []
+        }
       },
-      selectedEmployee: null
+      selectedEmployee: null,
+      replacmentDrivers: [],
+      statusId: true
     }
   },
-  validations () {
-    return {
-      form: this.insertRules,
-      selectedEmployee: {
-        required
+  validations: {
+    form: {
+      model: {
+        code: {
+          required
+        },
+        vehiclePlateNumber: {
+          required
+        },
+        defaultDriverEmployeeId: {
+          required
+        }
       }
     }
   },
   computed: {
-    ...mapState(['employees'])
+    ...mapState(['createCode', 'employees', 'vehicleTypes', 'vehicleBrands', 'vehicleModels', 'vehicleUsageTypes', 'vehicleCategory1', 'vehicleCategory2', 'vehicleCategory3', 'vehicleColors', 'vehicleUnits'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
-    this.createManualCode()
+    this.$store.commit('bigLoaded', false)
+    this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+    this.getLookups()
+    this.getCode()
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+    getCode () {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextVehicle/api/Vehicle/GetCode'})
+    },
+    getLookups () {
+      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_TYPE', name: 'vehicleTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_BRAND', name: 'vehicleBrands'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_MODEL', name: 'vehicleModels'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'USAGE_TYPE', name: 'vehicleUsageTypes'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_1', name: 'vehicleCategory1'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_2', name: 'vehicleCategory2'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'VEHICLE_CATEGORY_3', name: 'vehicleCategory3'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'COLOR', name: 'vehicleColors'})
+      this.$store.dispatch('getLookups', {...this.query, type: 'UNIT', name: 'vehicleUnits'})
+    },
+    selectedDriver (e) {
+      if (e) {
+        this.form.model.defaultDriverEmployeeId = e.RecordId
+      } else {
+        this.form.model.defaultDriverEmployeeId = null
+      }
+    },
+    selectedVehicleType (e) {
+      this.form.model.vehicleTypeId = e.DecimalValue
+    },
+    selectedVehicleBrand (e) {
+      this.form.model.brandId = e.DecimalValue
+    },
+    selectedVehicleModel (e) {
+      this.form.model.modelId = e.DecimalValue
+    },
+    selectedVehicleUsageType (e) {
+      this.form.model.usageTypeId = e.DecimalValue
+    },
+    selectedVehicleColor (e) {
+      this.form.model.colorId = e.DecimalValue
+    },
+    selectedCategory1 (e) {
+      this.form.model.category1Id = e.DecimalValue
+    },
+    selectedCategory2 (e) {
+      this.form.model.category2Id = e.DecimalValue
+    },
+    selectedCategory3 (e) {
+      this.form.model.category3Id = e.DecimalValue
+    },
+    selectedVolumeUnit (e) {
+      this.form.model.volumeCpUnitId = e.DecimalValue
+    },
+    selectedWeightUnit (e) {
+      this.form.model.weightCpUnitId = e.DecimalValue
+    },
+    selectedReplacementDriver (e) {
+      this.selectedEmployee = e
     },
     addReplacementDriver () {
-      this.$v.selectedEmployee.$touch()
-      if (this.$v.selectedEmployee.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
+      if (!this.selectedEmployee) {
+        console.log('Sürücü Seçin')
+        return
       }
-      let filteredArr = this.form.VehicleReplacementDrivers.filter(v => v.Code === this.selectedEmployee.Code)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      this.form.VehicleReplacementDrivers.push({
-        Description1: this.selectedEmployee.Name + ' ' + this.selectedEmployee.Surname,
-        Code: this.selectedEmployee.Code,
-        DriverId: this.selectedEmployee.RecordId,
-        RecordState: 2
+      this.form.model.vehicleReplacementDrivers.push({
+        code: '',
+        description1: this.selectedEmployee.Name + ' ' + this.selectedEmployee.Surname,
+        driverId: this.selectedEmployee.RecordId,
+        recordState: 2
+      })
+      this.replacmentDrivers.push({
+        nameSurname: this.selectedEmployee.Name + ' ' + this.selectedEmployee.Surname,
+        code: this.selectedEmployee.Code,
+        id: this.selectedEmployee.RecordId
       })
       this.selectedEmployee = null
-      this.$v.selectedEmployee.$reset()
     },
     deleteReplacementDriver (item) {
-      this.form.VehicleReplacementDrivers.splice(this.form.VehicleReplacementDrivers.indexOf(item), 1)
+      console.log(item)
+      // Model içerisindeki eInvoiceSeqs dizisinden elemanın çıkarılması
+      let filteredArr = this.form.model.vehicleReplacementDrivers.filter(i => i.driverId === item.id)
+      this.form.model.vehicleReplacementDrivers.splice(this.form.model.vehicleReplacementDrivers.indexOf(filteredArr[0]), 1)
+
+      this.replacmentDrivers.splice(this.replacmentDrivers.indexOf(item), 1)
     },
     save () {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
+      this.$v.$touch()
+      if (this.$v.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
-        this.tabValidation()
       } else {
-        this.form.ContractEndDate = this.form.ContractEndDate ? new Date(this.form.ContractEndDate).toISOString() : ''
-        this.createData()
+        this.form.model.contractEndDate = this.form.model.contractEndDate ? new Date(this.form.model.contractEndDate).toISOString() : ''
+        this.form.model.statusId = this.statusId ? 1 : 0
+        this.$store.dispatch('createData', {...this.query, api: 'VisionNextVehicle/api/Vehicle', formdata: this.form, return: this.$route.meta.baseLink})
       }
     }
   },
   watch: {
+    createCode (e) {
+      if (e) {
+        this.form.model.code = e
+      }
+    },
     employees (e) {
       if (e) {
         e.map(item => {
@@ -298,3 +401,5 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+</style>

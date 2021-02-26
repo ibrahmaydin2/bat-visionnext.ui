@@ -49,7 +49,7 @@
           <b-row>
             <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select :disabled="form.IsVehicle === 0" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -66,7 +66,7 @@
             </b-col>
             <b-col v-if="insertVisible.IsVirtualWarehouse != null ? insertVisible.IsVirtualWarehouse : developmentMode" md="4" lg="3">
               <b-form-group :label="insertTitle.IsVirtualWarehouse + (insertRequired.IsVirtualWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVirtualWarehouse.$error }">
-                 <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle />
+                 <NextCheckBox :disabledValid="form.IsVehicle" v-model="form.IsVirtualWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
@@ -87,9 +87,9 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <NextAddress v-show="form.IsVehicle === 0 && form.IsVirtualWarehouse === 0" v-model="address" />
+          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="form.IsVehicle === 0" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
             <b-col md="4" lg="3">
               <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.supplierBranch.$error }">
@@ -117,7 +117,7 @@
           <b-row>
             <b-col md="2" class="ml-auto">
               <b-form-group>
-                <AddDetailButton @click.native="addItems" />
+                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -161,16 +161,16 @@ export default {
         Code: null,
         Description1: null,
         StatusId: 1,
-        IsVehicle: 0,
+        IsVehicle: Number,
         VehicleId: null,
-        LicenseNumber: null,
         FinanceCode: null,
+        LicenseNumber: null,
         FinanceCode2: null,
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: 0,
-        NonSapWarehouse: 0,
+        IsVirtualWarehouse: Number,
+        NonSapWarehouse: Number,
         WarehouseSuppliers: []
       },
       routeName: this.$route.meta.baseLink,
@@ -230,7 +230,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.form.IsVehicle === 1 && !this.form.VehicleId) {
+        if (this.form.IsVehicle && !this.form.VehicleId) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.warehouse.vehicleRequired') })
           return
         }
@@ -253,7 +253,7 @@ export default {
             this.form.Address = null
             this.form.CityId = null
             this.form.DistrictId = null
-            this.VehicleId = null
+            this.form.IsVirtualWarehouse = null
           } else {
             this.form.CityId = this.address.CityId
             this.form.DistrictId = this.address.DistrictId
@@ -343,16 +343,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>

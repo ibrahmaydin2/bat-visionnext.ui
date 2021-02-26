@@ -33,17 +33,7 @@ export class ApiManager {
       data: request,
       headers: {'key': localStorage.getItem('Key')}
     }).then(function (response) {
-      if (response.data.IsCompleted === true) {
-        return response.data
-      } else {
-        let errs = response.data.Validations.Errors
-        for (let i = 0; i < errs.length; i++) {
-          let errmsg = errs[i].States
-          for (let x = 0; x < errmsg.length; x++) {
-            store.commit('showAlert', { type: 'validation', msg: errmsg })
-          }
-        }
-      }
+      return response.data
     }).catch(this.handleError)
   }
 
@@ -51,6 +41,7 @@ export class ApiManager {
     let message = 'Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.'
     if (error && error.response && error.response.data) {
       message = error.response.data.message
+      console.log(message)
     }
     store.commit('showAlert', { type: 'danger', msg: message })
     return Promise.reject(error)

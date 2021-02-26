@@ -6,7 +6,7 @@ export default {
   data () {
     return {
       model: {
-        RecordTypeIds: [1, 2]
+        recordTypeIds: [1, 2]
       }
     }
   }

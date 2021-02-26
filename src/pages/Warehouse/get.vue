@@ -35,8 +35,8 @@
                 <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode2')}}</span> <p>{{rowData.FinanceCode2}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.Warehouse.Address')}}</span> <p>{{rowData.Address}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.CityId')}}</span><p>{{city.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.DistrictId')}}</span><p>{{district.Label}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.CityId')}}</span><p>{{rowData.City ? rowData.City.Label : ''}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.Warehouse.DistrictId')}}</span><p>{{rowData.District ? rowData.District.Label : ''}}</p>
             </b-card>
           </b-row>
         </b-tab>
@@ -70,18 +70,14 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      city: {},
-      district: {}
     }
   },
   mounted () {
     this.getData()
     this.$store.commit('bigLoaded', false)
-    let allLookups = 'CITY,DISTRICT'
-    this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },
   computed: {
-    ...mapState(['rowData', 'style', 'lookup'])
+    ...mapState(['rowData', 'style'])
   },
   methods: {
     closeQuick () {
@@ -89,19 +85,6 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
-    }
-  },
-  watch: {
-    lookup: {
-      handler (val) {
-        if (val.CITY && this.rowData.CityId) {
-          this.city = val.CITY.find(c => c.DecimalValue === this.rowData.CityId)
-        }
-        if (val.DISTRICT && this.rowData.DistrictId) {
-          this.district = val.DISTRICT.find(c => c.DecimalValue === this.rowData.DistrictId)
-        }
-      },
-      deep: true
     }
   }
 }
