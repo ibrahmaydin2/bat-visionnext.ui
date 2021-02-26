@@ -66,7 +66,7 @@
             </b-col>
             <b-col>
               <b-form-group :label="insertTitle.IsVirtualWarehouse + (insertRequired.IsVirtualWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVirtualWarehouse.$error }">
-                <NextCheckBox :disabledValid="form.IsVehicle" v-model="form.IsVirtualWarehouse" type="number" toggle />
+                <NextCheckBox :disabled="form.IsVehicle ? true : false" v-model="form.IsVirtualWarehouse" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
