@@ -462,7 +462,8 @@
       "control": "Ziyaret Başlama Kontrolü",
       "city": "Şehir",
       "distirict": "İlçe",
-      "town": "Mahalle"
+      "town": "Mahalle",
+      "parish": "Mahalle"
     },
     "vehicles": {
       "code": "Araç Kodu",
