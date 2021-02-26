@@ -79,7 +79,7 @@
           <b-row>
             <b-col v-if="insertVisible.TaxOffice != null ? insertVisible.TaxOffice : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TaxOffice + (insertRequired.TaxOffice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxOffice.$error }">
-                 <b-form-input type="number" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" :maxLength="taxNumberReq" :oninput="maxLengthControl"/>
+                 <b-form-input type="text" v-model="form.TaxOffice" :readonly="insertReadonly.TaxOffice" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TaxNumber != null ? insertVisible.TaxNumber : developmentMode" cols="12" md="2">
