@@ -18,35 +18,46 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
               <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" :disabled="form.Code !== null"/>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.RecordTypeId != null ? insertVisible.RecordTypeId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.RecordTypeId + (insertRequired.RecordTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RecordTypeId.$error }">
-              <b-form-input type="text" v-model="form.RecordTypeId" :readonly="insertReadonly.RecordTypeId" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" md="3" lg="3">
             <b-form-group :label="insertTitle.SalesTypeId + (insertRequired.SalesTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesTypeId.$error }">
               <b-form-input type="text" v-model="form.SalesTypeId" :readonly="insertReadonly.SalesTypeId" />
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.CardTypeId != null ? insertVisible.CardTypeId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.CardTypeId != null ? insertVisible.CardTypeId : developmentMode" md="3" lg="3">
             <b-form-group :label="insertTitle.CardTypeId + (insertRequired.CardTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CardTypeId.$error }">
               <v-select :options="customerCardTypes" @input="selectedSearchType('CardTypeId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.StatusReasonId + (insertRequired.StatusReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
               <v-select v-model="selectedCancelReason" disabled :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
               <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="true"></NextCheckBox>
             </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col v-if="insertVisible.RecordTypeId != null ? insertVisible.RecordTypeId : developmentMode" md="3" lg="3">
+            <b-form-group :label="insertTitle.RecordTypeId + (insertRequired.RecordTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RecordTypeId.$error }">
+              <v-select v-model="recordType" :options="recordTypeList" @input="selectedSearchType('RecordTypeId', $event)" label="Description1"></v-select>
+            </b-form-group>
+          </b-col>
+          <b-col v-if="form.RecordTypeId === 4" cols="12" md="3" lg="3">
+            <b-form-group :label="$t('insert.customer.mainOfBranch') + (' *')" :class="{ 'form-group--error': $v.mainBranch.RecordId.$error }">
+              <v-select v-model="mainBranch" :options="(!customers ? [] : customers.filter(c => c.RecordTypeId === 3 && c.StatusId === 1))" @search="onCustomerSearch" @input="selectedSearchType('UpperCustomerId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+              </b-form-group>
           </b-col>
         </b-row>
       </section>
@@ -943,7 +954,7 @@ export default {
         customerLabels: [],
         customerTouchpoints: [],
         SalesTypeId: 0,
-        RecordTypeId: 3,
+        RecordTypeId: null,
         CurrentCredit: null,
         CurrentRisk: null,
         ZdebitAccountRemainder: null,
@@ -1011,7 +1022,8 @@ export default {
         PriceListCategoryId: null,
         CreditLimit: null,
         RiskLimit: null,
-        ReservedLimit: null
+        ReservedLimit: null,
+        UpperCustomerId: null
       },
       customerLocations: {
         code: null,
@@ -1089,26 +1101,19 @@ export default {
         tagDefinition: null,
         tagValue: null
       },
-      paymentType: {}
+      paymentType: {},
+      recordTypeList: [],
+      recordType: null,
+      mainBranch: {},
+      customerBlackReason: {},
+      customerGroup: {},
+      customerClass: {},
+      salesDocumentType: {},
+      invoiceCombineRule: {}
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits']),
-    customerBlackReason: function () {
-      return this.lookup && this.lookup.CUSTOMER_BLOCK_REASON ? this.lookup.CUSTOMER_BLOCK_REASON[0] : {}
-    },
-    customerGroup: function () {
-      return this.lookup && this.lookup.CUSTOMER_GROUP ? this.lookup.CUSTOMER_GROUP[2] : {}
-    },
-    customerClass: function () {
-      return this.lookup && this.lookup.CUSTOMER_CLASS ? this.lookup.CUSTOMER_CLASS[0] : {}
-    },
-    salesDocumentType: function () {
-      return this.lookup && this.lookup.SALES_DOCUMENT_TYPE ? this.lookup.SALES_DOCUMENT_TYPE[1] : {}
-    },
-    invoiceCombineRule: function () {
-      return this.lookup && this.lookup.INVOICE_COMBINE_RULE ? this.lookup.INVOICE_COMBINE_RULE[2] : {}
-    }
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits', 'customers'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -1130,6 +1135,14 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/Bank/Search', name: 'banks'})
+      this.recordTypeList = [{
+        RecordId: 3,
+        Description1: this.$t('insert.customer.main')
+      },
+      {
+        RecordId: 4,
+        Description1: this.$t('insert.customer.branch')
+      }]
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -1152,7 +1165,8 @@ export default {
     },
     save () {
       this.$v.form.$touch()
-      if (this.$v.form.$error) {
+      this.$v.mainBranch.$touch()
+      if (this.$v.form.$error || this.$v.mainBranch.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -1474,11 +1488,38 @@ export default {
       }).then(res => {
         loading(false)
       })
+    },
+    onCustomerSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchCustomer(loading, search, this)
+      }
+    },
+    searchCustomer (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        andConditionModel: {
+          Description1: search,
+          RecordTypeId: 3
+        }
+      }).then(res => {
+        loading(false)
+      })
     }
   },
   validations () {
     // bu fonksiyonda güncelleme yapılmayacak!
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    let mainBranch = {}
+    if (this.form.RecordTypeId === 4) {
+      mainBranch.RecordId = {
+        required
+      }
+    } else {
+      mainBranch.RecordId = {}
+    }
     return {
       form: this.insertRules,
       customerLocations: {
@@ -1547,7 +1588,8 @@ export default {
         description1: {
           required
         }
-      }
+      },
+      mainBranch: mainBranch
     }
   },
   watch: {
@@ -1591,9 +1633,32 @@ export default {
         this.locationDistirictLabel = value.CityName
         this.locationCityLabel = value.DistrictName
       }
+    },
+    lookup: {
+      handler (val) {
+        if (val.CUSTOMER_BLOCK_REASON && val.CUSTOMER_BLOCK_REASON.length > 0) {
+          this.customerBlackReason = this.lookup.CUSTOMER_BLOCK_REASON[0]
+          this.form.BlockReasonId = this.customerBlackReason.DecimalValue
+        }
+        if (val.CUSTOMER_GROUP && val.CUSTOMER_GROUP.length > 2) {
+          this.customerGroup = this.lookup.CUSTOMER_GROUP[2]
+          this.form.GroupId = this.customerGroup.DecimalValue
+        }
+        if (val.CUSTOMER_CLASS && val.CUSTOMER_CLASS.length > 0) {
+          this.customerClass = this.lookup.CUSTOMER_CLASS[0]
+          this.form.ClassId = this.customerClass.DecimalValue
+        }
+        if (val.SALES_DOCUMENT_TYPE && val.SALES_DOCUMENT_TYPE.length > 1) {
+          this.salesDocumentType = this.lookup.SALES_DOCUMENT_TYPE[1]
+          this.form.SalesDocumentTypeId = this.salesDocumentType.DecimalValue
+        }
+        if (val.INVOICE_COMBINE_RULE && val.INVOICE_COMBINE_RULE.length > 2) {
+          this.invoiceCombineRule = this.lookup.INVOICE_COMBINE_RULE[2]
+          this.form.InvoiceCombineRuleId = this.invoiceCombineRule.DecimalValue
+        }
+      },
+      deep: true
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
