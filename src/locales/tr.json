@@ -742,7 +742,13 @@
       "labelValueId": "Etiket Değeri",
       "customerTouchpoints": "Tüketici İletişim Fırsatları",
       "touchpointPriority": "İletişim Fırsatı Seviyesi",
-      "touchpointTypeId": "İletişim Fırsatı Tipi"
+      "touchpointTypeId": "İletişim Fırsatı Tipi",
+      "main": "Merkez",
+      "branch": "Şube",
+      "mainOfBranch": "Merkez Müşteri",
+      "Branchs": "Şubeler",
+      "BranchCode": "Şube Kodu",
+      "BranchName": "Şube Adı"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

@@ -18,34 +18,36 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
               <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" :disabled="form.Code !== null"/>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.RecordTypeId != null ? insertVisible.RecordTypeId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.RecordTypeId + (insertRequired.RecordTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RecordTypeId.$error }">
-              <b-form-input type="text" v-model="form.RecordTypeId" :readonly="insertReadonly.RecordTypeId" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.SalesTypeId + (insertRequired.SalesTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesTypeId.$error }">
               <b-form-input type="text" v-model="form.SalesTypeId" :readonly="insertReadonly.SalesTypeId" />
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.CardTypeId != null ? insertVisible.CardTypeId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.CardTypeId != null ? insertVisible.CardTypeId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.CardTypeId + (insertRequired.CardTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CardTypeId.$error }">
               <v-select v-model="CardType" :options="customerCardTypes" @input="selectedSearchType('CardTypeId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.StatusReasonId != null ? insertVisible.StatusReasonId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.StatusReasonId + (insertRequired.StatusReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusReasonId.$error }">
               <v-select disabled v-model="StatusReason" :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="3" lg="3">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
               <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="true"></NextCheckBox>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row v-if="form.RecordTypeId === 4 && upperCustomer !== null">
+          <b-col md="12" lg="12">
+            <b-form-group :label="$t('insert.customer.mainOfBranch')">
+              <a :href="`/Update/KeyAccount/${upperCustomer.DecimalValue}`"> {{upperCustomer.Label}}</a>
             </b-form-group>
           </b-col>
         </b-row>
@@ -483,6 +485,26 @@
                 />
               </b-form-group>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab v-if="form.RecordTypeId === 3" :title="$t('insert.customer.Branchs')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.BranchCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.BranchName')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(b, i) in branchs" :key="i">
+                  <b-td>{{b.Code}}</b-td>
+                  <b-td>{{b.Description1}}</b-td>
+                  <b-td class="text-center">
+                    <a :href="`/Update/KeyAccount/${b.RecordId}`"><i class="fas fa-edit text-success" /></a>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
@@ -1074,11 +1096,12 @@ export default {
         tagDefinition: null,
         tagValue: null
       },
-      CustomerLabels: []
+      CustomerLabels: [],
+      upperCustomer: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'rowData', 'credits']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'rowData', 'credits', 'branchs']),
     filteredCustomerPaymentType () {
       return this.CustomerPaymentTypesArr.filter(item => {
         return item.RecordState !== 4
@@ -1465,6 +1488,16 @@ export default {
       }).then(res => {
         loading(false)
       })
+    },
+    getBranchs (customerId) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'branchs',
+        andConditionModel: {
+          UpperCustomerIds: [customerId]
+        }
+      })
     }
   },
   validations () {
@@ -1553,6 +1586,9 @@ export default {
     },
     rowData (e) {
       if (e) {
+        if (e.RecordTypeId === 3) {
+          this.getBranchs(e.RecordId)
+        }
         this.form = {
           CommercialTitle: e.CommercialTitle,
           Description1: e.Description1,
@@ -1648,6 +1684,7 @@ export default {
         this.form.CustomerLabels = e.CustomerLabels
         this.CustomerPaymentTypesArr.push(...e.CustomerPaymentTypes)
         this.customerLocations.code = `${this.form.Code} - ${this.form.CustomerLocations.length ? this.form.CustomerLocations.length + 1 : 1}`
+        this.upperCustomer = e.UpperCustomer
         if (e.CardType) {
           this.CardType = e.CardType.Label
           // this.selectedOptions('CardType', e.CardType.Label)

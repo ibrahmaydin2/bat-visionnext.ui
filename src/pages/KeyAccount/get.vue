@@ -33,6 +33,7 @@
               <div v-html="getFormatDataByType(rowData.IsDutyFree, 'check', 'insert.customer.Model_IsDutyFree')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.IsTaxExemption, 'check', 'insert.customer.Model_IsTaxExemption')"></div>
+              <div v-if="rowData.RecordTypeId === 4 && rowData.UpperCustomer != null"><span><i class="far fa-circle"></i>{{$t('insert.customer.mainOfBranch')}}</span><p><a :href="`/KeyAccount/${rowData.UpperCustomer.DecimalValue}`"> {{rowData.UpperCustomer.Label}}</a></p></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.CustomerInvoiceType, 'object', 'insert.customer.Model_CustomerInvoiceTypeId')"></div>
@@ -103,6 +104,30 @@
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field4')}}</span><p>{{rowData.Field4}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field5')}}</span><p>{{rowData.Field5}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TextField6')}}</span><p>{{rowData.TextField6}}</p>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab v-if="rowData.RecordTypeId === 3" :title="$t('insert.customer.Branchs')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.BranchCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.BranchName')}}</span></b-th>
+                    <b-th><span>{{$t('list.operations')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(b, i) in branchs" :key="i">
+                      <b-td>{{b.Code}}</b-td>
+                      <b-td>{{b.Description1}}</b-td>
+                      <b-td class="text-center">
+                        <a :href="`/KeyAccount/${b.RecordId}`"><i class="fas fa-arrow-right text-success" /></a>
+                      </b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
@@ -569,7 +594,7 @@ export default {
     this.$store.commit('bigLoaded', false)
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData', 'style', 'branchs'])
   },
   methods: {
     closeQuick () {
@@ -577,6 +602,23 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
+    },
+    getBranchs (customerId) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'branchs',
+        andConditionModel: {
+          UpperCustomerIds: [customerId]
+        }
+      })
+    }
+  },
+  watch: {
+    rowData (e) {
+      if (e) {
+        this.getBranchs(e.RecordId)
+      }
     }
   }
 }
