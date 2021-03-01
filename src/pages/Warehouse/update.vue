@@ -149,7 +149,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/update'
 export default {
   mixins: [mixin],
   data () {
@@ -179,17 +179,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicles', 'branchList', 'warehouseList', 'rowData'])
+    ...mapState(['vehicles', 'branchList', 'warehouseList'])
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    this.getRowData(this.routeName)
+    this.getData().then(() => {
+      this.setModel()
+    })
   },
   methods: {
-    getRowData (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url})
-    },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // standart dropdownların select işleminde alacağı değeri belirler.
@@ -258,12 +256,71 @@ export default {
             this.form.AddressDetail = this.address.Address
           }
         }
+        this.updateData()
+      }
+    },
+    setModel () {
+      let e = this.rowData
+      e.WarehouseSuppliers.map(item => {
+        this.warehouseSuppliers.push({
+          supplierBranch: {
+            RecordId: item.SupplierBranchId,
+            BranchCommercialTitle: item.SupplierBranch.Label
+          },
+          SupplierCustomerId: item.SupplierCustomerId,
+          WarehouseId: item.WarehouseId,
+          CompanyId: item.CompanyId,
+          BranchId: item.BranchId,
+          CreatedUser: item.CreatedUser,
+          ModifiedUser: item.ModifiedUser,
+          ModifiedDateTime: item.ModifiedDateTime,
+          Deleted: item.Deleted,
+          System: item.System,
+          purchaseWarehouse: {
+            RecordId: item.PurchaseWarehouseId,
+            Description1: item.PurchaseWarehouse ? item.PurchaseWarehouse.Label : ''
+          },
+          returnWarehouse: {
+            RecordId: item.ReturnWarehouseId,
+            Description1: item.ReturnWarehouse ? item.ReturnWarehouse.Label : ''
+          },
+          RecordId: item.RecordId,
+          RecordState: item.RecordState
+        })
+      })
 
-        let model = {
-          'Model': this.form
+      this.form.VehicleId = e.VehicleId
+      if (e.Vehicle) {
+        this.vehicleName = e.Vehicle.Label
+      }
+      if (e.WarehouseType) {
+        this.selectedWarehouseType(e.WarehouseType)
+        if (e.WarehouseTypeId === 76506193) {
+          this.form.Vehicle = e.RecordId
         }
-
-        this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: model, return: this.$route.meta.baseLink})
+      }
+      this.form.IsVehicle = e.IsVehicle == null ? 0 : e.IsVehicle
+      this.form.StatusId = e.StatusId == null ? 0 : e.StatusId
+      this.form.NonSapWarehouse = e.NonSapWarehouse == null ? 0 : e.NonSapWarehouse
+      this.form.IsVirtualWarehouse = e.IsVirtualWareHouse == null ? 0 : e.IsVirtualWareHouse
+      this.form.Code = e.Code
+      this.form.RecordId = e.RecordId
+      this.form.Description1 = e.Description1
+      this.form.LicenseNumber = e.LicenseNumber
+      this.form.FinanceCode = e.FinanceCode
+      this.form.FinanceCode2 = e.FinanceCode2
+      this.form.Deleted = e.Deleted
+      this.form.System = e.System
+      this.form.RecordState = e.RecordState == null ? 0 : e.RecordState
+      this.address = {
+        CityId: e.CityId,
+        DistrictId: e.DistrictId,
+        Address: e.Address
+      }
+      if (e.StatusId === 1) {
+        this.dataStatus = true
+      } else {
+        this.dataStatus = false
       }
     },
     selectedVehicle (e) {
@@ -331,8 +388,25 @@ export default {
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    if (this.form.IsVehicle === 0 && this.form.IsVirtualWarehouse === 0) {
+      this.insertRequired.LicenseNumber = true
+      this.insertRules.LicenseNumber = {
+        required
+      }
+    } else {
+      this.insertRules.LicenseNumber = {}
+      this.insertRequired.LicenseNumber = false
+    }
+    if (this.form.IsVehicle === 0) {
+      this.insertRequired.VehicleId = false
+      this.insertRules.VehicleId = {}
+    } else {
+      this.form.IsVirtualWarehouse = 0
+      this.insertRules.VehicleId = {
+        required
+      }
+      this.insertRequired.VehicleId = true
+    }
     return {
       form: this.insertRules,
       warehouseSupplier: {
@@ -345,90 +419,6 @@ export default {
         returnWarehouse: {
           required
         }
-      }
-    }
-  },
-  watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
-    rowData: function (e) {
-      if (!e) {
-        return
-      }
-      e.WarehouseSuppliers.map(item => {
-        this.warehouseSuppliers.push({
-          supplierBranch: {
-            RecordId: item.SupplierBranchId,
-            BranchCommercialTitle: item.SupplierBranch.Label
-          },
-          SupplierCustomerId: item.SupplierCustomerId,
-          WarehouseId: item.WarehouseId,
-          CompanyId: item.CompanyId,
-          BranchId: item.BranchId,
-          CreatedUser: item.CreatedUser,
-          ModifiedUser: item.ModifiedUser,
-          ModifiedDateTime: item.ModifiedDateTime,
-          Deleted: item.Deleted,
-          System: item.System,
-          purchaseWarehouse: {
-            RecordId: item.PurchaseWarehouseId,
-            Description1: item.PurchaseWarehouse ? item.PurchaseWarehouse.Label : ''
-          },
-          returnWarehouse: {
-            RecordId: item.ReturnWarehouseId,
-            Description1: item.ReturnWarehouse ? item.ReturnWarehouse.Label : ''
-          },
-          RecordId: item.RecordId,
-          RecordState: item.RecordState
-        })
-      })
-
-      this.form.VehicleId = e.VehicleId
-      if (e.Vehicle) {
-        this.vehicleName = e.Vehicle.Label
-      }
-      if (e.WarehouseType) {
-        this.selectedWarehouseType(e.WarehouseType)
-        if (e.WarehouseTypeId === 76506193) {
-          this.form.Vehicle = e.RecordId
-        }
-      }
-      this.form.IsVehicle = e.IsVehicle == null ? 0 : e.IsVehicle
-      this.form.StatusId = e.StatusId == null ? 0 : e.StatusId
-      this.form.NonSapWarehouse = e.NonSapWarehouse == null ? 0 : e.NonSapWarehouse
-      this.form.IsVirtualWarehouse = e.IsVirtualWareHouse == null ? 0 : e.IsVirtualWareHouse
-      this.form.Code = e.Code
-      this.form.RecordId = e.RecordId
-      this.form.Description1 = e.Description1
-      this.form.LicenseNumber = e.LicenseNumber
-      this.form.FinanceCode = e.FinanceCode
-      this.form.FinanceCode2 = e.FinanceCode2
-      this.form.Deleted = e.Deleted
-      this.form.System = e.System
-      this.form.RecordState = e.RecordState == null ? 0 : e.RecordState
-      this.address = {
-        CityId: e.CityId,
-        DistrictId: e.DistrictId,
-        Address: e.Address
-      }
-      if (e.StatusId === 1) {
-        this.dataStatus = true
-      } else {
-        this.dataStatus = false
       }
     }
   }

@@ -24,12 +24,14 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.RepresentativeId')}}</span><p>{{rowData.Representative && rowData.Representative.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.LoyaltyId')}}</span><p>{{rowData.Loyalty && rowData.Loyalty.Label }}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.BranchId')}}</span><p>{{rowData.Branch && rowData.Branch.Label }}</p>
               <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.CustomerId')}}</span><p>{{rowData.Customer && rowData.Customer.Label }}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.TransactionDate')}}</span><p>{{dateConvertFromTimezone(rowData.TransactionDate)}}</p>
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.Description')}}</span><p>{{rowData.Description1}}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.ConsumptionScore')}}</span><p>{{rowData.ConsumptionScore}}</p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.ToplamKazanılanPuan')}}</span><p></p>
+              <span><i class="far fa-circle" /> {{$t('get.LoyaltyConsumption.ToplamHarcananPuan')}}</span><p></p>
             </b-card>
           </b-row>
         </b-tab>
@@ -60,7 +62,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: `VisionNextLoyalty/api/${this.$route.meta.baseLink}`, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: `VisionNextLoyalty/api/LoyaltyConsumption`, record: this.$route.params.url})
     }
   }
 }

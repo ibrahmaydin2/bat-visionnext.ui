@@ -1228,10 +1228,13 @@
       "Description": "Açıklama",
       "Code": "Kodu",
       "CustomerId": "Müşteri",
+      "BranchId": "Şube",
       "LoyaltyId": "Sakadat Uygulaması",
-      "ConsumptionScore": "Kazanılan Puan",
+      "ConsumptionScore": "Güncel Puan",
       "TransactionDate": "İşlem Tarihi",
-      "RepresentativeId": "Personel"
+      "RepresentativeId": "Personel",
+      "ToplamKazanılanPuan": "Toplam Kazanılan Puan",
+      "ToplamHarcananPuan": "Toplam Harcanan Puan"
     },
     "Warehouse": {
       "title":"Depo Ana Kayıtları",

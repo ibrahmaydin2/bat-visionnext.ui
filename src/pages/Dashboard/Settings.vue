@@ -34,10 +34,12 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.params.url,
       stockChangePasswordValid: false
     }
   },
   mounted () {
+    this.getInsertPage(this.routeName)
   },
   computed: {
   },
@@ -46,6 +48,13 @@ export default {
   methods: {
     stockChangeActive: function (value) {
       if (value === true) {
+        this.stockChangePasswordValid = true
+      } else {
+        this.stockChangePasswordValid = false
+      }
+    },
+    getInsertPage (e) {
+      if (e === 'stock-change-password') {
         this.stockChangePasswordValid = true
       } else {
         this.stockChangePasswordValid = false
