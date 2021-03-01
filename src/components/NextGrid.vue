@@ -28,13 +28,13 @@
 
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
-                  <!-- Autocomplete yapılamadığı için şimdilik normal search'e çevrildi. -->
-                  <v-select
-                    label="Description1"
-                    :options="gridField[header.modelControlUtil.modelProperty]"
-                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
-                  >
-                  </v-select>
+                  <autocomplete
+                    @click="onClickAutoComplete(header.modelControlUtil)"
+                    :search="onAutoCompleteSearch"
+                    class="autocomplete-search"
+                    :get-result-value="getResultValue"
+                    @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
+                  />
                 </div>
                 <div v-else>
                   <v-select
@@ -312,7 +312,9 @@ export default {
         { value: 1, title: 'Aktif' },
         { value: 0, title: 'Pasif' }
       ],
-      rangeDate: []
+      rangeDate: [],
+      selectedHeader: null
+      // autoGridField: []
     }
   },
   mounted () {
@@ -450,29 +452,29 @@ export default {
         this.searchOnTable()
       }
     },
-    onAutoCompleteSearch (header, text, c) {
-      // console.log(c)
-      // // this.$store.dispatch('getSearchItems', {
-      // //   ...this.query,
-      // //   api: 'VisionNextItem/api/Item/Search',
-      // //   name: 'items',
-      // //   andConditionModel: {
-      // //     Description1: search
-      // //   }
-      // // }).then(res => {
-      // //   loading(false)
-      // // })
-      // const andConditionModel = {
-      //   Description1: text
-      // }
-      // this.$store.dispatch('getGridFields', {...this.query, serviceUrl: header.serviceUrl, val: header.modelProperty, model: andConditionModel}).then((res) => {
-
-      //   console.log(gridField[header.modelControlUtil.modelProperty])
-
-      // })
+    onAutoCompleteSearch (input) {
+      if (input.length < 3) { return [] }
+      const andConditionModel = {
+        Description1: input
+      }
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel}).then((res) => {
+        return res
+      })
     },
-    onSearch (header) {
-      console.log(this.selectedText)
+    getResultValue (result) {
+      return result.Description1
+    },
+    handleSubmit (label, model) {
+      if (model) {
+        if (!this.andConditionalModel) {
+          this.andConditionalModel = {}
+        }
+        this.andConditionalModel[label] = [model.RecordId]
+        this.searchOnTable()
+      } else {
+        delete this.andConditionalModel[label]
+        this.searchOnTable()
+      }
     },
     searchOnTable (tableField, search) {
       searchQ[tableField] = search
@@ -501,6 +503,9 @@ export default {
     },
     closeApproveModal () {
       this.$bvModal.hide('approve-modal')
+    },
+    onClickAutoComplete (header) {
+      this.selectedHeader = header
     }
   },
   watch: {
@@ -587,6 +592,32 @@ export default {
       height: 81vh
       max-height: inherit
       margin-bottom: 0px
+      .autocomplete-search
+        .autocomplete
+          text-align: center
+        .autocomplete-input
+          outline: none
+          padding-left: 10px
+          background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Ik0yMSAyMWwtNC00Ii8+PC9zdmc+)
+          background-repeat: no-repeat
+          background-position: center right 10px
+          background-size: 16px
+          background-color: white
+          border-radius: 5px
+          border: solid 1px lightgray
+        input::-webkit-input-placeholder
+          color: #656665
+          text-transform: initial !important
+        .autocomplete-result-list
+          line-height: 1.15
+          padding: 0
+          margin-top: 5px
+        .autocomplete-result
+          cursor: pointer
+          padding: 10px
+          text-align: left
+          border-bottom: 0.5px solid rgba(0,0,0,.16)
+          background: none
     .router-link-exact-active
       background: #007bff
       color: #fff
