@@ -87,7 +87,7 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
+          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address"/>
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
@@ -149,7 +149,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -184,7 +184,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'vehicles', 'branchList', 'warehouseList'])
+    ...mapState(['vehicles', 'branchList', 'warehouseList'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -193,35 +193,12 @@ export default {
     getInsertPage (e) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-    },
-    selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
+      this.createManualCode()
     },
     save () {
       this.$v.form.$touch()
+      console.log(this.form.IsVehicle)
+
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -261,10 +238,7 @@ export default {
           }
         }
 
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     },
     selectedVehicle (e) {
@@ -321,6 +295,25 @@ export default {
   validations () {
     // bu fonksiyonda güncelleme yapılmayacak!
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    if (this.form.IsVehicle === 0 && this.form.IsVirtualWarehouse === 0) {
+      this.insertRequired.LicenseNumber = true
+      this.insertRules.LicenseNumber = {
+        required
+      }
+    } else {
+      this.insertRules.LicenseNumber = {}
+      this.insertRequired.LicenseNumber = false
+    }
+    if (this.form.IsVehicle === 0) {
+      this.insertRequired.VehicleId = false
+      this.insertRules.VehicleId = {}
+    } else {
+      this.form.IsVirtualWarehouse = 0
+      this.insertRules.VehicleId = {
+        required
+      }
+      this.insertRequired.VehicleId = true
+    }
     return {
       form: this.insertRules,
       warehouseSupplier: {
@@ -339,20 +332,6 @@ export default {
   watch: {
     // bu fonksiyonda güncelleme yapılmayacak!
     // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    }
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    // insertDefaultValue (value) {
-    //   Object.keys(value).forEach(el => {
-    //     if (el !== 'Code') {
-    //       this.form[el] = value[el]
-    //     }
-    //   })
-    // }
   }
 }
 </script>
