@@ -51,10 +51,22 @@
             </b-form-group>
           </b-col>
           <b-col v-if="form.RecordTypeId === 4" cols="12" md="3" lg="3">
-            <b-form-group :label="$t('insert.customer.mainOfBranch') + (' *')" :class="{ 'form-group--error': $v.mainBranch.RecordId.$error }">
-              <v-select v-model="mainBranch" :options="(!customers ? [] : customers.filter(c => c.RecordTypeId === 3 && c.StatusId === 1))" @search="onCustomerSearch" @input="selectedSearchType('UpperCustomerId', $event)" label="Description1">
+            <b-form-group :label="$t('insert.customer.mainOfBranch') + (' *')" :class="{ 'form-group--error': $v.mainBranch.customer.$error }">
+              <v-select v-model="mainBranch.customer" :options="(!customers ? [] : customers.filter(c => c.RecordTypeId === 3 && c.StatusId === 1))" @search="onCustomerSearch" @input="selectedSearchType('UpperCustomerId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
+                </template>
+              </v-select>
+              </b-form-group>
+          </b-col>
+          <b-col v-if="form.RecordTypeId === 4" cols="12" md="3" lg="3">
+            <b-form-group :label="$t('insert.customer.AuthorizedBranch') + (' *')" :class="{ 'form-group--error': $v.mainBranch.branch.$error }">
+              <v-select v-model="mainBranch.branch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+                <template slot="option" slot-scope="option">
+                  {{ option.BranchCommercialTitle }}
                 </template>
               </v-select>
               </b-form-group>
@@ -941,7 +953,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -1025,6 +1037,8 @@ export default {
         ReservedLimit: null,
         UpperCustomerId: null
       },
+      routeName1: 'Customer',
+      routeName2: 'Customer',
       customerLocations: {
         code: null,
         description1: null,
@@ -1102,9 +1116,11 @@ export default {
         tagValue: null
       },
       paymentType: {},
-      recordTypeList: [],
       recordType: null,
-      mainBranch: {},
+      mainBranch: {
+        customer: null,
+        branch: null
+      },
       customerBlackReason: {},
       customerGroup: {},
       customerClass: {},
@@ -1113,17 +1129,28 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits', 'customers'])
+    ...mapState(['statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits', 'customers', 'recordTypeList', 'branchList'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    var selectedCustomer = this.$store.state.SelectedCustomer
+    if (selectedCustomer && selectedCustomer.RecordId > 0) {
+      this.mainBranch.customer = selectedCustomer
+      this.form.UpperCustomerId = selectedCustomer.RecordId
+      this.form.RecordTypeId = 4
+      this.$store.commit('setValues', {
+        name: 'SelectedCustomer',
+        data: {
+          Values: {}
+        }
+      })
+    }
   },
   methods: {
     getInsertPage (e) {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextCustomer/api/Customer/GetCode`})
+      this.createManualCode()
       this.$store.dispatch('getLookups', {...this.query, type: 'CREDIT_DESCRIPTION', name: 'credits'})
 
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/CustomerCardType/Search', name: 'customerCardTypes'})
@@ -1135,14 +1162,14 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/Bank/Search', name: 'banks'})
-      this.recordTypeList = [{
-        RecordId: 3,
-        Description1: this.$t('insert.customer.main')
-      },
-      {
-        RecordId: 4,
-        Description1: this.$t('insert.customer.branch')
-      }]
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/CustomerRecordType/Search',
+        name: 'recordTypeList',
+        andConditionModel: {
+          RecordIds: [3, 4]
+        }
+      })
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -1159,9 +1186,6 @@ export default {
           required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
         }
       }
-    },
-    selectedSearchType (label, model) {
-      this.form[label] = model.RecordId
     },
     save () {
       this.$v.form.$touch()
@@ -1187,10 +1211,20 @@ export default {
         this.form.IsBlackListed = this.checkConvertToNumber(this.form.IsBlackListed)
         this.form.Statement = this.checkConvertToNumber(this.form.Statement)
         this.form.IsOpportunitySpot = this.checkConvertToNumber(this.form.IsOpportunitySpot)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+        var branchId = this.$store.state.BranchId
+        this.$store.commit('setValues', {
+          name: 'BranchId',
+          data: {
+            Values: this.mainBranch.branch.RecordId.toString()
+          }
+        })
+        this.createData()
+        this.$store.commit('setValues', {
+          name: 'BranchId',
+          data: {
+            Values: branchId
+          }
+        })
       }
     },
     selectedBank (e) {
@@ -1464,13 +1498,6 @@ export default {
     removeCustomerCreditHistory (item) {
       this.form.customerCreditHistories.splice(this.form.customerCreditHistories.indexOf(item), 1)
     },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
     onItemsSearch (search, loading) {
       if (search.length >= 3) {
         loading(true)
@@ -1507,6 +1534,23 @@ export default {
       }).then(res => {
         loading(false)
       })
+    },
+    onBranchSearch (search, loading) {
+      if (search.length >= 3) {
+        this.searchBranch(loading, search, this)
+      }
+    },
+    searchBranch (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextBranch/api/Branch/Search',
+        name: 'branchList',
+        andConditionModel: {
+          BranchCommercialTitle: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     }
   },
   validations () {
@@ -1514,11 +1558,15 @@ export default {
     // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     let mainBranch = {}
     if (this.form.RecordTypeId === 4) {
-      mainBranch.RecordId = {
+      mainBranch.customer = {
+        required
+      }
+      mainBranch.branch = {
         required
       }
     } else {
-      mainBranch.RecordId = {}
+      mainBranch.customer = {}
+      mainBranch.branch = {}
     }
     return {
       form: this.insertRules,
@@ -1595,19 +1643,6 @@ export default {
   watch: {
     // bu fonksiyonda güncelleme yapılmayacak!
     // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-        this.customerLocations.code = `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length : 1}`
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        this.form[el] = value[el]
-      })
-    },
     cancelReasons (e) {
       if (e) {
         e.map(item => {
@@ -1658,6 +1693,11 @@ export default {
         }
       },
       deep: true
+    },
+    recordTypeList (value) {
+      if (value && value.length > 0 && this.form.RecordTypeId) {
+        this.recordType = value.find(a => a.RecordId === this.form.RecordTypeId)
+      }
     }
   }
 }
