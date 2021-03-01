@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData ? rowData.Description1 : ''" />
-            <GetFormField />
+            <GetFormField v-model="workFlowModel"/>
           </header>
         </b-col>
       </b-row>
@@ -235,6 +235,11 @@ export default {
   props: ['dataKey'],
   data () {
     return {
+      workFlowModel: {
+        ControllerName: 'Customer',
+        ClassName: 'Customer',
+        PageName: 'pg_Customer'
+      },
       locationFields: [
         {key: 'Code', label: this.$t('insert.customer.Model_Code'), sortable: true},
         {key: 'Description1', label: this.$t('insert.customer.Model_Description1Lokasyon'), sortable: true},

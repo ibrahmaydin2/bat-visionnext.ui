@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.value && this.value.ControllerName && this.value.ClassName && this.value.PageName">
     <b-dropdown-group header="Workflow">
       <b-dropdown-item @click="getWorkFlowProcessModel(workFlow.RecordId)" v-for="(workFlow, i) in workFlowList" :key="i">
         <!-- <i class="far fa-list-alt" /> -->
@@ -28,6 +28,13 @@
 <script>
 export default {
   name: 'Workflow',
+  props: {
+    value: {}
+  },
+  model: {
+    prop: 'value',
+    event: 'valuechange'
+  },
   data () {
     return {
       workFlowList: [],
@@ -44,10 +51,13 @@ export default {
   },
   methods: {
     getAllData () {
+      if (!this.value || !this.value.ControllerName || !this.value.ClassName || !this.value.PageName) {
+        return
+      }
       let request = {
-        'ControllerName': 'Customer', // T_UI_FROM ActionUrl
-        'ClassName': 'Customer', // T_SYS_TABLE ObjectName
-        'PageName': 'pg_Customer' // T_SYS_FORM
+        'ControllerName': this.value.ControllerName, // 'Customer', // T_UI_FROM ActionUrl
+        'ClassName': this.value.ClassName, // 'Customer', // T_SYS_TABLE ObjectName
+        'PageName': this.value.PageName // 'pg_Customer' // T_SYS_FORM
       }
       // let request = {
       //   'ControllerName': this.baseLink, // T_UI_FROM ActionUrl

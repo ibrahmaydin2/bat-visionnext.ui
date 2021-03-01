@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
+             <GetFormField v-model="workFlowModel"/>
           </header>
         </b-col>
       </b-row>
@@ -264,87 +264,11 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
-      locationFields: [
-        {key: 'Code', label: this.$t('insert.customer.Model_Code'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.customer.Model_Description1Lokasyon'), sortable: true},
-        {key: 'AddressDetail', label: this.$t('insert.customer.Model_AddressDetail'), sortable: true},
-        {key: 'City', label: this.$t('insert.customer.Model_CityId'), sortable: true},
-        {key: 'Distirict', label: this.$t('insert.customer.Model_DistrictId'), sortable: true},
-        {key: 'Avenue', label: this.$t('insert.customer.Model_AvenueId'), sortable: true},
-        {key: 'Street', label: this.$t('insert.customer.Model_StreetId'), sortable: true},
-        {key: 'PostCode', label: this.$t('insert.customer.Model_PostCode'), sortable: true},
-        {key: 'XPosition', label: this.$t('insert.customer.Model_XPosition'), sortable: true},
-        {key: 'YPosition', label: this.$t('insert.customer.Model_YPosition'), sortable: true},
-        {key: 'AddressDescription', label: this.$t('insert.customer.Model_AddressDescription'), sortable: true},
-        {key: 'ContactName', label: this.$t('insert.customer.Model_GsmNumber'), sortable: true},
-        {key: 'PhoneNumber1', label: this.$t('insert.customer.Model_PhoneNumber1'), sortable: true},
-        {key: 'PhoneNumber2', label: this.$t('insert.customer.Model_PhoneNumber2'), sortable: true},
-        {key: 'IsDefaultLocation', label: this.$t('insert.customer.Model_IsDefaultLocation'), sortable: true},
-        {key: 'IsInvoiceAddress', label: this.$t('insert.customer.Model_IsInvoiceAddress'), sortable: true},
-        {key: 'IsDeliveryAddress', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
-        {key: 'IsRouteNode', label: this.$t('insert.customer.isRouteNode'), sortable: true},
-        {key: 'IsVehicleLocation', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
-        {key: 'Genexp1', label: this.$t('insert.customer.Model_Genexp1'), sortable: true},
-        {key: 'Alias', label: this.$t('insert.customer.Model_Alias'), sortable: true}
-      ],
-      creditHistoriesFields: [
-        {key: 'CreditDescription', label: this.$t('insert.customer.Model_CreditDescriptionId'), sortable: true},
-        {key: 'CreditAmount', label: this.$t('insert.customer.Model_CreditAmount'), sortable: true},
-        {key: 'Currency', label: this.$t('insert.customer.Model_CurrencyId'), sortable: true},
-        {key: 'CreditLimit', label: this.$t('insert.customer.CreditLimit'), sortable: true},
-        {key: 'RiskLimit', label: this.$t('insert.customer.Model_RiskLimit'), sortable: true},
-        {key: 'AllowOverLimit', label: this.$t('insert.customer.Model_AllowOverLimit'), sortable: true},
-        {key: 'CreditStartDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
-        {key: 'CreditEndDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true}
-      ],
-      paymentTypeFields: [
-        {key: 'PaymentType', label: this.$t('insert.customer.Model_PaymentTypeId'), sortable: true}
-      ],
-      fixedTermFields: [
-        {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
-      ],
-      discountFields: [
-        {key: 'Description1', label: 'Açıklama', sortable: true},
-        {key: 'TCIBreak1Id', label: 'TCI 1', sortable: true},
-        {key: 'TCIBreak2Id', label: 'TCI 2', sortable: true},
-        {key: 'StartDate', label: 'Başlangıç Tarihi', sortable: true},
-        {key: 'EndDate', label: 'Bitiş Tarihi', sortable: true},
-        {key: 'DiscountPercent1', label: 'Müşteri İndirimi 1', sortable: true},
-        {key: 'DiscountPercent2', label: 'Müşteri İndirimi 2', sortable: true}
-      ],
-      locationItems: [
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''},
-        {Code: '', Description1: '', AddressDetail: '', city: '', distirict: '', AvenueId: '', StreetId: '', PostCode: '', XPosition: '', YPosition: '', AddressDescription: '', ContactName: '', PhoneNumber1: '', PhoneNumber2: '', IsDefaultLocation: '', IsInvoiceAddress: '', IsDeliveryAddress: '', Genexp1: '', Alias: ''}
-      ],
-      creditHistoriesItems: [
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''},
-        {CreditDescriptionId: '', CreditAmount: '', CurrencyId: '', CreditLimit: '', RiskLimit: '', AllowOverLimit: '', CreditStartDate: '', CreditEndDate: ''}
-      ],
-      paymentTypeItems: [
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''},
-        {PaymentTypeId: ''}
-      ],
-      fixedTermItems: [
-        {FixedTermId: ''},
-        {FixedTermId: ''},
-        {FixedTermId: ''},
-        {FixedTermId: ''}
-      ],
-      discountItems: [
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''},
-        {ColumnName: '', ColumnValue: '', StartDate: '', EndDate: '', DiscountPercent1: '', DiscountPercent2: ''}
-      ]
+      workFlowModel: {
+        ControllerName: 'Customer',
+        ClassName: 'Customer',
+        PageName: 'pg_KeyAccount'
+      }
     }
   },
   mounted () {
