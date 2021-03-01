@@ -73,7 +73,7 @@ export default {
       let value = ''
       switch (type) {
         case 'text':
-          value = data !== null ? data : '-'
+          value = data !== null && data !== undefined ? data : '-'
           break
         case 'object':
           value = data ? data.Label : '-'

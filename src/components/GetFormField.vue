@@ -28,7 +28,7 @@
           </router-link>
         </b-dropdown-item>
       </b-dropdown-group> -->
-      <Workflow />
+      <Workflow v-model="value"/>
       <!-- <b-dropdown-text class="text-center"><b>Header</b></b-dropdown-text> -->
     </b-dropdown>
   </div>
@@ -37,6 +37,13 @@
 import { mapState } from 'vuex'
 import Workflow from './Workflow'
 export default {
+  props: {
+    value: {}
+  },
+  model: {
+    prop: 'value',
+    event: 'valuechange'
+  },
   data () {
     return {
       baseLink: this.$route.meta.baseLink

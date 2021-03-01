@@ -217,7 +217,8 @@ export const store = new Vuex.Store({
     creatorPassword: null,
     formFields: [],
     branches: [],
-    stockStatus: []
+    stockStatus: [],
+    SelectedCustomer: {}
   },
   actions: {
     // sistem gereksinimleri

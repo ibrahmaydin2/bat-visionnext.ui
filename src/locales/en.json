@@ -628,7 +628,7 @@
       "Model_ManualInvoiceClosure" : "Manuel Fatura Kapatma",
       "Model_InvoiceCombineRuleId" : "Fatura Birleştirme Kuralı",
       "Model_FinanceCode" : "Finans Kodu",
-      "Model_CustomerRegion5Id" : "Diğer",
+      "Model_CustomerRegion5Id" : "Müşteri Bölgesi",
       "Model_CreditDescriptionId" : "Teminat Tanım",
       "Model_CreditAmount" : "Teminat Tutarı",
       "Model_CurrencyId" : "Para Birimi",
@@ -724,7 +724,17 @@
       "mainOfBranch": "Merkez Müşteri",
       "Branchs": "Şubeler",
       "BranchCode": "Şube Kodu",
-      "BranchName": "Şube Adı"
+      "BranchName": "Şube Adı",
+      "AuthorizedBranch": "Yetkili Şube",
+      "TradeLicenseNumber":"Ticaret Sicil No",
+      "MarketingRegion5Id": "Pazarlama Bölgesi",
+      "RouteCode": "Rota Kodu",
+      "LicenseValidDate": "Lisans Geçerlilik Tarihi",
+      "IsOrderChangeUnitary": "Sipariş Değiştirilebilir",
+      "UseEDispatch": "E_İrsaliye Kullan",
+      "IsWarehouseSale": "Depo Satış",
+      "ZdebitAccountRemainder": "Borç Bakiyesi",
+      "ZcreditAccountRemainder": "Alacak Bakiyesi"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

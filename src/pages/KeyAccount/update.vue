@@ -489,16 +489,25 @@
         </b-tab>
         <b-tab v-if="form.RecordTypeId === 3" :title="$t('insert.customer.Branchs')" @click.prevent="tabValidation()">
           <b-row>
+            <b-col cols="12" md="3" lg="2" class="ml-auto">
+              <b-form-group>
+                <AddDetailButton @click.native="addBranch" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.BranchCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.BranchName')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.AuthorizedBranch')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(b, i) in branchs" :key="i">
                   <b-td>{{b.Code}}</b-td>
                   <b-td>{{b.Description1}}</b-td>
+                  <b-td>{{allBranchs != null ? allBranchs.find(x => x.RecordId === b.BranchId).Description1 : ''}}</b-td>
                   <b-td class="text-center">
                     <a :href="`/Update/KeyAccount/${b.RecordId}`"><i class="fas fa-edit text-success" /></a>
                   </b-td>
@@ -951,7 +960,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in (CustomerLabels ? CustomerLabels.filter(c => c.RecordState !== 4) : [])" :key="i">
+                <b-tr v-for="(r, i) in (CustomerLabels != null ? CustomerLabels.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{r.Label && r.Label.Label ? r.Label.Label : r.Label}}</b-td>
                   <b-td>{{r.LabelValue && r.LabelValue.Label ? r.LabelValue.Label : r.LabelValue}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -980,7 +989,7 @@ export default {
       Category1: null,
       Category2: null,
       Category3: null,
-      DefaultPaymentType: null,
+      DefaultPaymentType: {},
       PriceListCategory: null,
       CustomerRegion5: null,
       DiscountGroup1: null,
@@ -1101,7 +1110,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'rowData', 'credits', 'branchs']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'rowData', 'credits', 'branchs', 'allBranchs']),
     filteredCustomerPaymentType () {
       return this.CustomerPaymentTypesArr.filter(item => {
         return item.RecordState !== 4
@@ -1498,6 +1507,15 @@ export default {
           UpperCustomerIds: [customerId]
         }
       })
+    },
+    addBranch () {
+      this.$store.commit('setValues', {
+        name: 'SelectedCustomer',
+        data: {
+          Values: this.rowData
+        }
+      })
+      this.$router.push('/Insert/KeyAccount')
     }
   },
   validations () {
@@ -1826,6 +1844,18 @@ export default {
           this.TCIBreak2 = e.TCIBreak2.Label
         }
         this.form.CustomerLocations = e.CustomerLocations
+      }
+    },
+    branchs (e) {
+      if (e && e.length > 0) {
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextBranch/api/Branch/Search',
+          name: 'allBranchs',
+          andConditionModel: {
+            RecordIds: [...new Set(e.map(x => x.BranchId))]
+          }
+        })
       }
     },
     address (value) {
