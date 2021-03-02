@@ -1089,7 +1089,8 @@
       "Canceled": "İptal Edildi"
     },
     "LoyaltyExpense": {
-      "title": "Sadakat Puanı"
+      "title": "Sadakat Puanı",
+      "chooseDate":"Tarih Seçiniz"
     },
     "RouteBalance": {
       "Route": "Rota",

@@ -129,6 +129,12 @@ export default {
       if (!this.routeName2) {
         this.routeName2 = this.routeName
       }
+    },
+    convertLookupValueToSearchValue (lookupValue) {
+      return {
+        RecordId: lookupValue.DecimalValue,
+        Description1: lookupValue.Label
+      }
     }
   }
 }
