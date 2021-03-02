@@ -33,7 +33,7 @@ if (localStorage.getItem('BranchId')) {
 export const store = new Vuex.Store({
   state: {
     // sistem gereksinimleri
-    developmentMode: true,
+    developmentMode: false,
     bigLoading: true,
     style: {
       icon: 'asc__header-hamburger asc__header-hamburger-active d-inline-block',
