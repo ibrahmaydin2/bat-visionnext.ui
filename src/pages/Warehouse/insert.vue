@@ -91,28 +91,22 @@
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.supplierBranch.$error }">
-                  <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-            </b-col>
-             <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.purchaseWarehouse.$error }">
-                  <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
-                </b-form-group>
-              </b-col>
-              <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.returnWarehouse.$error }">
-                  <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
-                </b-form-group>
-              </b-col>
+          <NextFormGroup :title="$t('insert.warehouse.SupplierBranchId')" :error="$v.warehouseSupplier.supplierBranch" :required="true">
+            <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
+              <template slot="no-options">
+                {{$t('insert.min3')}}
+              </template>
+              <template slot="option" slot-scope="option">
+                {{ option.BranchCommercialTitle }}
+              </template>
+            </v-select>
+          </NextFormGroup>
+           <NextFormGroup :title="$t('insert.warehouse.PurchaseWarehouseId')" :error="$v.warehouseSupplier.purchaseWarehouse" :required="true">
+              <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
+           </NextFormGroup>
+           <NextFormGroup :title="$t('insert.warehouse.ReturnWarehouseId')" :error="$v.warehouseSupplier.returnWarehouse" :required="true">
+              <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
+            </NextFormGroup>
           </b-row>
           <b-row>
             <b-col md="2" class="ml-auto">

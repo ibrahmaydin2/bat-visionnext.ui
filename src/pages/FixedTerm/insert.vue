@@ -18,26 +18,18 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="3" lg="3">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
               <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Period != null ? insertVisible.Period : developmentMode" cols="12" md="3" lg="3">
-            <b-form-group :label="insertTitle.Period + (insertRequired.Period === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Period.$error }">
+          </NextFormGroup>
+          <NextFormGroup item-key="Period" :error="$v.form.Period">
               <b-form-input type="number" v-model="form.Period" :readonly="insertReadonly.Period" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="3" lg="3">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="3" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
               <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-            </b-form-group>
-          </b-col>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>

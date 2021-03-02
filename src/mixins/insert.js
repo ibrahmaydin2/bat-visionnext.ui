@@ -24,12 +24,15 @@ export default {
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
-      Object.keys(this.insertDefaultValue).forEach(el => {
-        if (el !== 'Code' && this.insertDefaultValue[el]) {
-          this.form[el] = this.insertDefaultValue[el]
-        }
+    
+    if (!this.insertRules || this.insertRules.length === 0) {
+      this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
+        Object.keys(this.insertDefaultValue).forEach(el => {
+          if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
+            this.form[el] = this.insertDefaultValue[el]
+          }
+        })
       })
-    })
+    }
   }
 }
