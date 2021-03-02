@@ -326,6 +326,7 @@
     "PriceListGet ": "Fiyat Listesi"
   },
   "insert": {
+    "chooseDate": "Tarih Seçiniz",
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
     "edit": "Düzenle",

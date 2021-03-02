@@ -51,6 +51,7 @@ import CancelButton from './components/CancelButton'
 import GetFormField from './components/GetFormField'
 import NextCheckBox from './components/NextCheckBox'
 import NextAddress from './components/NextAddress'
+import NextFormGroup from './components/NextFormGroup'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -91,6 +92,7 @@ Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
 Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)
+Vue.component('NextFormGroup', NextFormGroup)
 
 Vue.prototype.$api = new ApiManager();
 

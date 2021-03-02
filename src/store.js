@@ -33,7 +33,7 @@ if (localStorage.getItem('BranchId')) {
 export const store = new Vuex.Store({
   state: {
     // sistem gereksinimleri
-    developmentMode: false,
+    developmentMode: true,
     bigLoading: true,
     style: {
       icon: 'asc__header-hamburger asc__header-hamburger-active d-inline-block',
@@ -1330,66 +1330,52 @@ export const store = new Vuex.Store({
         formData += fieldName + ': null,' + '\n'
         switch (rule.ColumnType) {
           case 'Id':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'String':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3"">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'LabelValue':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Select':
             if (fieldDefaultValue != null) {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-                <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <v-select
-                    :options="lookup.${fieldDefaultValue}"
-                    @input="selectedType('${fieldName}', $event)"
-                    label="Label"
-                  />
-                </b-form-group>
-              </b-col>`
+              inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+                <v-select
+                  :options="lookup.${fieldDefaultValue}"
+                  @input="selectedType('${fieldName}', $event)"
+                  label="Label"
+                />
+              </NextFormGroup>`
 
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-                <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>`
+              inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+                <v-select />
+              </NextFormGroup>`
             }
             break
           case 'SelectSearch':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <v-select />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <v-select />
+            </NextFormGroup>`
             break
           case 'Radio':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
+            </NextFormGroup>`
             if (fieldDefaultValue === null) {
               dflvl[fieldName] = 1
             } else {
@@ -1398,29 +1384,23 @@ export const store = new Vuex.Store({
             break
 
           case 'Check':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <NextCheckBox v-model="form.${fieldName}" type="number" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" />
+            </NextFormGroup>`
             dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
 
           case 'DateTime':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-datepicker v-model="form.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-datepicker v-model="form.${fieldName}" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Text':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-textarea v-model="form.${fieldName}" placeholder="" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-textarea v-model="form.${fieldName}" placeholder="" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
         }
