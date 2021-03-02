@@ -16,20 +16,22 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('get.LoyaltyExpense.FinanceCode')}}:</b> {{rowData.FinanceCode}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.LoyaltyExpense.StatusId')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.customer.Customer')" active>
+        <b-tab title="$t('insert.LoyaltyExpense.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyExpense.RepresentativeId')}}</span><p>{{rowData.Representative && rowData.Representative.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyExpense.CustomerId')}}</span><p>{{rowData.Customer && rowData.Customer.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.Description, 'text', 'get.LoyaltyExpense.Description')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.LoyaltyExpense.RepresentativeId')"></div>
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.LoyaltyExpense.CustomerId')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyExpense.TransactionDate')}}</span><p>{{dateConvertFromTimezone(rowData.TransactionDate)}}</p>
-              <span><i class="far fa-circle" /> {{$t('get.LoyaltyExpense.Description')}}</span><p>{{rowData.Description1}}</p>
+              <div v-html="getFormatDataByType(rowData.Loyalty, 'object', 'get.LoyaltyExpense.LoyaltyId')"></div>
+              <div v-html="getFormatDataByType(rowData.ConsumptionScore, 'text', 'get.LoyaltyExpense.ConsumptionScore')"></div>
+              <div v-html="getFormatDataByType(rowData.TransactionDate, 'date', 'get.LoyaltyExpense.TransactionDate')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -45,13 +47,6 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      fields: [
-        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
-        {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
-        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
-        {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
-      ]
     }
   },
   mounted () {

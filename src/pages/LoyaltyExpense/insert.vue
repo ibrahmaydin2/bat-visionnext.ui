@@ -37,10 +37,10 @@
       </section>
     </b-col>
     <b-col cols="12">
-      <b-tabs>
+      <b-tabs>{{insertTitle}}
         <b-tab :title="$t('insert.LoyaltyExpense.title')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="3">
+            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
                 <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
                   <template slot="no-options">
@@ -49,7 +49,7 @@
                 </v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
+            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
                 <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
@@ -58,21 +58,21 @@
                 </v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="3">
+            <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.LoyaltyId + (insertRequired.LoyaltyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LoyaltyId.$error }">
                 <v-select :options="loyalities" @input="selectedSearchType('LoyaltyId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.ConsumptionScore != null ? insertVisible.ConsumptionScore : developmentMode" cols="12" md="3">
+            <b-col v-if="insertVisible.ConsumptionScore != null ? insertVisible.ConsumptionScore : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.ConsumptionScore + (insertRequired.ConsumptionScore === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ConsumptionScore.$error }">
                 <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore" />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="3">
+            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.TransactionDate + (insertRequired.TransactionDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionDate.$error }">
-                <b-form-datepicker v-model="form.TransactionDate" />
+                <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.LoyaltyExpense.chooseDate')"  />
               </b-form-group>
             </b-col>
           </b-row>
@@ -83,7 +83,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -98,31 +98,19 @@ export default {
         RepresentativeId: null,
         StatusId: Number
       },
-      routeName: this.$route.meta.baseLink
+      routeName1: 'Loyalty'
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'employees', 'customers', 'loyalities'])
+    ...mapState(['employees', 'customers', 'loyalities'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      // this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
-      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCustomer/api/Customer/Search', name: 'customers'})
+      this.createManualCode()
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextLoyalty/api/Loyalty/Search', name: 'loyalities'})
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -148,56 +136,21 @@ export default {
         loading(false)
       })
     },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        this.tabValidation()
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
         this.form.TransactionDate = this.dateConvertToISo(this.form.TransactionDate)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextLoyalty/api/LoyaltyExpense`, formdata: model, return: this.routeName})
+        this.createData()
       }
-    }
-  },
-  validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    return {
-      form: this.insertRules
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          console.log(el)
-          console.log(value[el])
-          this.form[el] = value[el]
-        }
-      })
-    }
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
   }
 }
 </script>
-<style lang="sass">
-</style>
