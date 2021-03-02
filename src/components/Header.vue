@@ -73,13 +73,11 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import Search from './Search'
 import Sidebar from './Sidebar'
 import SidebarRight from './SidebarRight'
 export default {
   components: {
     Sidebar,
-    Search,
     SidebarRight
   },
   data () {
