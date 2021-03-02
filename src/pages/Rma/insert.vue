@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">Kaydet</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,27 +18,9 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Code')"
-            >
-              <b-form-input type="text" v-model="form.Model.Code" readonly />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Description1')"
-            >
-              <b-form-input type="text" v-model="form.Model.Description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_StatusId')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="4" lg="3">
+            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -46,118 +28,137 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" active>
+        <b-tab :title="$t('firsttab')" :active="!developmentMode">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
+            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
+                <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.WarehouseId != null ? insertVisible.WarehouseId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.WarehouseId + (insertRequired.WarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.WarehouseId.$error }">
+                <v-select :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
+                <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RmaStatusId != null ? insertVisible.RmaStatusId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RmaStatusId + (insertRequired.RmaStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RmaStatusId.$error }">
                 <v-select
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
+                  :options="lookup.RMA_STATUS"
+                  @input="selectedType('RmaStatusId', $event)"
                   label="Label"
                 />
               </b-form-group>
             </b-col>
-            <b-col v-if="showVehicle" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
+            <b-col v-if="insertVisible.ApproveEmployeeId != null ? insertVisible.ApproveEmployeeId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.ApproveEmployeeId + (insertRequired.ApproveEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ApproveEmployeeId.$error }">
+                <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.VehiclePlateNumber }}
                   </template>
                 </v-select>
               </b-form-group>
             </b-col>
-            <b-col v-if="showCustomer" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
+            <b-col v-if="insertVisible.ApproveNumber != null ? insertVisible.ApproveNumber : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.ApproveNumber + (insertRequired.ApproveNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ApproveNumber.$error }">
+                <b-form-input type="text" v-model="form.ApproveNumber" :readonly="insertReadonly.ApproveNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RmaTypeId != null ? insertVisible.RmaTypeId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RmaTypeId + (insertRequired.RmaTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RmaTypeId.$error }">
+                <v-select
+                  :options="lookup.RETURN_TYPE"
+                  @input="selectedType('RmaTypeId', $event)"
+                  label="Label"
+                />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.ApproveDate != null ? insertVisible.ApproveDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.ApproveDate + (insertRequired.ApproveDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ApproveDate.$error }">
+                <b-form-datepicker v-model="form.ApproveDate" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.PriceDate != null ? insertVisible.PriceDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.PriceDate + (insertRequired.PriceDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceDate.$error }">
+                <b-form-datepicker v-model="form.PriceDate" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.Genexp1 != null ? insertVisible.Genexp1 : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.Genexp1 + (insertRequired.Genexp1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Genexp1.$error }">
+                <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RmaDate != null ? insertVisible.RmaDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RmaDate + (insertRequired.RmaDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RmaDate.$error }">
+                <b-form-datepicker v-model="form.RmaDate" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.GrvNumber != null ? insertVisible.GrvNumber : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.GrvNumber + (insertRequired.GrvNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GrvNumber.$error }">
+                <b-form-input type="text" v-model="form.GrvNumber" :readonly="insertReadonly.GrvNumber" />
+              </b-form-group>
+            </b-col>
+            <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
+                <v-select :options="routes"  @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
                   </template>
                 </v-select>
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_WarehouseCapacity')"
-              >
-                <b-form-input type="text" v-model="form.Model.WarehouseCapacity"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_LicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.Model.LicenseNumber"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_FinanceCode')"
-              >
-                <b-form-input type="text" v-model="form.Model.FinanceCode"/>
+            <b-col v-if="insertVisible.RmaReasonId != null ? insertVisible.RmaReasonId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RmaReasonId + (insertRequired.RmaReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RmaReasonId.$error }">
+                <v-select :options="rmaReasons"  @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.WarehouseSuppliers')">
-          <b-table-simple bordered small>
-            <b-thead>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.SupplierBranchId')">
-                  <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedPurchaseWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedReturnWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
-                <b-form-group>
-                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
-                </b-form-group>
-              </b-th>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
-                <b-td>{{r.selectedBranch}}</b-td>
-                <b-td>{{r.selectedPurchaseWarehouseId}}</b-td>
-                <b-td>{{r.selectedReturnWarehouseId}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
+        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
+          <b-row>
+            <b-col>
+              <pre v-if="developmentMode" class="asc__codeHTML">
+                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
+                  {{codeInCode}}
+                </span>
+              </pre>
+            </b-col>
+          </b-row>
+          <b-row>
+          </b-row>
+          <b-row>
+            <b-col>
+              <code>{{form}}</code>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <h3>Form Elements</h3>
+              <p>
+                {{insertFormdata}}
+              </p>
+            </b-col>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -165,178 +166,143 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import insertMixin from '../../mixins/insert'
 export default {
+  mixins: [insertMixin],
   data () {
     return {
       form: {
-        companyId: this.CompanyId,
-        branchId: this.BranchId,
-        Model: {
-          LocationId: null,
-          IsVehicle: null,
-          IsCustomerWarehouse: null,
-          StatusId: 1,
-          LicenseNumber: null,
-          FinanceCode: null,
-          WarehouseSuppliers: [],
-          VehicleId: null,
-          WarehouseCapacity: null,
-          WarehouseTypeId: null,
-          WarehouseType: null,
-          IsCenterWarehouse: null,
-          Code: null,
-          Description1: null,
-          CustomerId: null
-        }
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CustomerId: null,
+        WarehouseId: null,
+        RepresentativeId: null,
+        RmaStatusId: null,
+        ApproveEmployeeId: null,
+        ApproveNumber: null,
+        RmaTypeId: null,
+        ApproveDate: null,
+        PriceDate: null,
+        Genexp1: null,
+        RmaDate: null,
+        GrvNumber: null,
+        RouteId: null,
+        RmaReasonId: null,
+        RmaLines: []
       },
-      detailListData: [],
-      detailListBranch: '',
-      detailListPurchaseWarehouseId: '',
-      detailListReturnWarehouseId: '',
-      WarehouseSuppliers: {
-        selectedBranch: '',
-        selectedPurchaseWarehouseId: '',
-        selectedReturnWarehouseId: ''
-      },
-      dataStatus: true,
-      showCustomer: false,
-      showVehicle: false
+      RmaLines: {
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        LineNumber: 0,
+        ItemId: null,
+        RmaReasonId: null,
+        UnitSetId: null,
+        UnitId: null,
+        ConvFact1: 1,
+        ConvFact2: 1,
+        Quantity: null,
+        RmaQuantity1: null,
+        RmaUnit1Id: null,
+        Price: null
+      }
     }
   },
   computed: {
-    ...mapState(['lookupWarehouse_type', 'createCode', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
+    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
+    ...mapState(['customers', 'employees', 'warehouses', 'routes', 'rmaReasons'])
   },
-  watch: {
-    createCode: function (e) {
-      this.form.Model.Code = e
+  mounted () {
+    this.createManualCode()
+    // update işlemiyse
+    // this.getData().then(() => {})
+    this.getInsertPage(this.routeName)
+  },
+  methods: {
+    searchEmployee (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextEmployee/api/Employee/Search', 'employees', model).then(res => {
+        loading(false)
+      })
     },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.Model.StatusId = 1
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', model).then(res => {
+        loading(false)
+      })
+    },
+    searchRoute (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextRoute/api/Route/Search', 'routes', model).then(res => {
+        loading(false)
+      })
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+        loading(false)
+      })
+    },
+    searchRmaReason (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
+        loading(false)
+      })
+    },
+    save () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
       } else {
-        this.form.Model.StatusId = 0
+        this.createData()
+        // update işlemiyse
+        // this.updateData()
       }
     }
   },
-  mounted () {
-    this.$store.commit('bigLoaded', false)
-    this.getLookup()
-    this.getCode()
-  },
-  methods: {
-    getCode () {
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextWarehouse/api/Warehouse/GetCode'})
-    },
-    save () {
-      this.form.companyId = this.CompanyId
-      this.form.branchId = this.BranchId
-
-      this.$store.dispatch('createData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
-    },
-    selectedIsCustomer (e) {
-      if (e === 0) {
-        this.showCustomer = false
-      } else {
-        this.form.Model.IsCenterWarehouse = e
-        this.showCustomer = true
-      }
-    },
-    selectedVehicle (e) {
-      this.form.Model.VehicleId = e.RecordId
-    },
-    selectedCustomer (e) {
-      this.form.Model.CustomerId = e.RecordId
-    },
-    selectedBranch (e) {
-      this.WarehouseSuppliers.selectedBranch = e.RecordId
-      this.detailListBranch = e.BranchCommercialTitle
-      this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
-    },
-    selectedPurchaseWarehouseId (e) {
-      this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
-      this.detailListPurchaseWarehouseId = e.Description1
-    },
-    selectedReturnWarehouseId (e) {
-      this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
-      this.detailListReturnWarehouseId = e.Description1
-    },
-    addDetailList () {
-      let a = {
-        selectedBranch: this.detailListBranch,
-        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.detailListReturnWarehouseId
-      }
-      let b = {
-        StatusId: null,
-        SupplierBranchId: this.WarehouseSuppliers.selectedBranch,
-        SupplierCustomerId: 46733004.0,
-        CompanyId: this.CompanyId,
-        BranchId: this.BranchId,
-        CreatedUser: 1.0,
-        ModifiedUser: null,
-        ModifiedDateTime: null,
-        Deleted: 0,
-        System: 0,
-        PurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
-      }
-      this.detailListData.push(a)
-      this.detailListBranch = null
-      this.detailListPurchaseWarehouseId = null
-      this.detailListReturnWarehouseId = null
-      this.form.Model.WarehouseSuppliers.push(b)
-    },
-    selectedWarehouseType (e) {
-      this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e.Label
-      // araç mı ?
-      if (e.DecimalValue === 76506193) {
-        this.showVehicle = true
-        this.form.Model.IsVehicle = 1
-        this.$store.commit('setVehicleList', [])
-      } else {
-        this.form.Model.IsVehicle = 0
-        this.showVehicle = false
-      }
-      // merkez depo mu ?
-      if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCenterWarehouse = 1
-        this.showCustomer = true
-      } else {
-        this.form.Model.IsCenterWarehouse = 0
-        this.showCustomer = false
-      }
-    },
-    onVehicleSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchVehicle(loading, search, this)
-      }
-    },
-    onCustomerSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchCustomer(loading, search, this)
-      }
-    },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchBranch(loading, search, this)
-      }
-    },
-    searchVehicle (loading, search, vm) {
-      this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    },
-    searchCustomer (loading, search, vm) {
-      this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-    },
-    searchBranch (loading, search, vm) {
-      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    getLookup () {
-      this.$store.dispatch('lookupWareouseType')
+  validations () {
+    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
+    return {
+      form: this.insertRules
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
