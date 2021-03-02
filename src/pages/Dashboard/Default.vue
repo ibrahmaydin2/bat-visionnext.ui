@@ -27,12 +27,8 @@
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
-import Search from '../../components/Search'
 
 export default {
-  components: {
-    Search
-  },
   data () {
     return {
       collapseIcon: true,
@@ -66,7 +62,7 @@ export default {
     this.hamburger('open')
   },
   computed: {
-    ...mapState(['searchRes', 'errorMessage'])
+    ...mapState(['errorMessage'])
   },
   watch: {
   },
