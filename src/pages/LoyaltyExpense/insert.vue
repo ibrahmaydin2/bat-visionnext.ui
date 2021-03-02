@@ -18,63 +18,50 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="3">
-            <b-form-group :label="insertTitle.FinanceCode + (insertRequired.FinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode.$error }">
-              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description != null ? insertVisible.Description : developmentMode" cols="12" md="3">
-            <b-form-group :label="insertTitle.Description + (insertRequired.Description === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description.$error }">
-              <b-form-input type="text" v-model="form.Description" :readonly="insertReadonly.Description" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
+            <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description" :error="$v.form.Description">
+            <b-form-input type="text" v-model="form.Description" :readonly="insertReadonly.Description" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
-      <b-tabs>{{insertTitle}}
-        <b-tab :title="$t('insert.LoyaltyExpense.title')" :active="!developmentMode">
+      <b-tabs>
+        <b-tab :title="$t('insert.LoyaltyExpense.title')">
           <b-row>
-            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-                <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.LoyaltyId + (insertRequired.LoyaltyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LoyaltyId.$error }">
-                <v-select :options="loyalities" @input="selectedSearchType('LoyaltyId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
+              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <v-select :options="customers" @search="searchCustomer" @input="selectCustomerId($event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
+              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Label" :disabled="!form.CustomerId || form.CustomerId === 0"/>
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.ConsumptionScore != null ? insertVisible.ConsumptionScore : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ConsumptionScore + (insertRequired.ConsumptionScore === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ConsumptionScore.$error }">
-                <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.TransactionDate + (insertRequired.TransactionDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionDate.$error }">
-                <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.LoyaltyExpense.chooseDate')"  />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.LoyaltyExpense.currentScore')">
+              <b-form-input type="text" v-model="currentScore" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ConsumptionScore" :error="$v.form.ConsumptionScore">
+              <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
+              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')"  />
+            </NextFormGroup>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -98,11 +85,14 @@ export default {
         RepresentativeId: null,
         StatusId: Number
       },
-      routeName1: 'Loyalty'
+      routeName1: 'Loyalty',
+      loyalities: [],
+      currentScore: null,
+      loyalty: null
     }
   },
   computed: {
-    ...mapState(['employees', 'customers', 'loyalities'])
+    ...mapState(['employees', 'customers', 'loyaltySummary'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -110,7 +100,6 @@ export default {
   methods: {
     getInsertPage (e) {
       this.createManualCode()
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextLoyalty/api/Loyalty/Search', name: 'loyalities'})
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -136,6 +125,33 @@ export default {
         loading(false)
       })
     },
+    selectCustomerId (value) {
+      this.form.CustomerId = value ? value.RecordId : null
+      this.form.LoyaltyId = null
+      this.loyalty = {}
+      let model = {
+        CustomerIds: [this.form.CustomerId]
+      }
+      this.$api.post({AndConditionModel: model}, 'Loyalty', 'LoyaltyCustomer/Search').then((res) => {
+        this.loyalities = res.ListModel && res.ListModel.BaseModels ? res.ListModel.BaseModels.map(l => l.Loyalty).filter((v, i, a) => a.findIndex(t => (t.DecimalValue === v.DecimalValue)) === i) : []
+      })
+      this.getConsumptionScore()
+    },
+    selectLoyaltyId (value) {
+      this.form.LoyaltyId = value ? value.DecimalValue : null
+      this.getConsumptionScore()
+    },
+    getConsumptionScore () {
+      if (this.form.CustomerId > 0 && this.form.LoyaltyId > 0) {
+        let model = {
+          CustomerIds: [this.form.CustomerId],
+          LoyaltyIds: [this.form.LoyaltyId]
+        }
+        this.$api.post({AndConditionModel: model}, 'Loyalty', 'LoyaltySummary/Search').then((res) => {
+          this.currentScore = res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length ? res.ListModel.BaseModels[0].CurrentScore : 0
+        })
+      }
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -145,6 +161,14 @@ export default {
           duration: '3000'
         })
       } else {
+        if (this.form.ConsumptionScore > this.currentScore) {
+          this.$toasted.show(this.$t('insert.LoyaltyExpense.scoreException'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.form.TransactionDate = this.dateConvertToISo(this.form.TransactionDate)
         this.createData()
       }

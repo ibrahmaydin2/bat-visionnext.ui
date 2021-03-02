@@ -21,7 +21,7 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab title="$t('insert.LoyaltyExpense.title')" active>
+        <b-tab :title="$t('insert.LoyaltyExpense.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Description, 'text', 'get.LoyaltyExpense.Description')"></div>

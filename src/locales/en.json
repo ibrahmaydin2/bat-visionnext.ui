@@ -1059,6 +1059,12 @@
       "EndDate": "Geçerlilik Başlangıcı",
       "Active" : "Aktif",
       "Passive" : "Pasif"
+    },
+    "LoyaltyExpense": {
+      "title": "Sadakat Puanı",
+      "chooseDate":"Tarih Seçiniz",
+      "currentScore": "Kazanılan Puan",
+      "scoreException": "Harcama tutarı kazanılan turadan büyüktür!"
     }
   },
   "get": {
