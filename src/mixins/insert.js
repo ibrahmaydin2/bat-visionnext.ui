@@ -24,7 +24,6 @@ export default {
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    
     if (!this.insertRules || this.insertRules.length === 0) {
       this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
         Object.keys(this.insertDefaultValue).forEach(el => {

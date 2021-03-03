@@ -410,7 +410,7 @@
       "analysisTypeId": "Analiz Tipi",
       "validityTypeId": "Geçerlilik Tipi",
       "description1": "Açiklama",
-      "sortOrder": "Görünüm Sirasi",
+      "sortOrder": "Görünüm Sırası",
       "approveStateId": "Onay Durumu",
       "isNecessary": "Zorunlu",
       "minMaxSort": "0-99 arasında değer girebilirsiniz."

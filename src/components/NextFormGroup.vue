@@ -6,7 +6,7 @@
   </b-col>
 </template>
 <script>
-import mixin from '../mixins/insert'
+import mixin from '../mixins/index'
 export default {
   mixins: [mixin],
   name: 'NextFormGroup',
