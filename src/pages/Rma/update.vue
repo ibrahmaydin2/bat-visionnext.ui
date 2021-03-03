@@ -26,24 +26,24 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.RMA.RMA')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customerName" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouseName" :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="warehouse" :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representativeName" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -52,12 +52,13 @@
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <v-select
                 :options="lookup.RMA_STATUS"
+                v-model="rmaStatus"
                 @input="selectedType('RmaStatusId', $event)"
                 label="Label"
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1">
+              <v-select v-model="approveEmloyee" :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -69,6 +70,7 @@
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
               <v-select
                 :options="lookup.RETURN_TYPE"
+                v-model="rmaType"
                 @input="selectedType('RmaTypeId', $event)"
                 label="Label"
               />
@@ -89,14 +91,14 @@
               <b-form-input type="text" v-model="form.GrvNumber" :readonly="insertReadonly.GrvNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <v-select :options="routes"  @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
+              <v-select :options="routes" v-model="route" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select :options="rmaReasons"  @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+              <v-select :options="rmaReasons" v-model="rmaReason" @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -134,7 +136,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in rmaLines" :key="i">
+                  <b-tr v-for="(w, i) in (rmaLines != null ? rmaLines.filter(f => f.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
@@ -201,7 +203,14 @@ export default {
         }
       },
       rmaLines: [],
-      customerName: null,
+      customer: null,
+      warehouse: null,
+      representative: null,
+      approveEmloyee: null,
+      rmaStatus: null,
+      rmaType: null,
+      route: null,
+      rmaReason: null,
       routeName1: 'Rma'
     }
   },
@@ -310,7 +319,7 @@ export default {
       this.$v.rmaLine.$reset()
     },
     removeItems (item) {
-      this.rmaLines.splice(this.rmaLines.indexOf(item), 1)
+      this.rmaLines[this.rmaLines.indexOf(item)].RecordState = 4
     },
     initRmaLine (value) {
       this.rmaLine.UnitSetId = value.UnitSetId
@@ -363,90 +372,70 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaLines = this.rmaLines
+        this.form.RmaLines = this.rmaLines.map((item) => {
+          var newItem = {
+            Deleted: item.Deleted,
+            System: item.System,
+            RecordState: item.RecordState,
+            StatusId: item.StatusId,
+            RecordId: item.RecordId,
+            LineNumber: item.LineNumber,
+            ItemId: item.ItemId,
+            RmaReasonId: item.RmaReasonId,
+            UnitSetId: item.UnitSetId,
+            UnitId: item.UnitId,
+            ConvFact1: item.ConvFact1,
+            ConvFact2: item.ConvFact2,
+            Quantity: item.Quantity,
+            RmaQuantity1: item.RmaQuantity1,
+            RmaUnit1Id: item.RmaUnit1Id,
+            Price: item.Price,
+            Item: {
+              Description1: item.Item.Description1,
+              Code: item.Item.Code,
+              RecordId: item.Item.RecordId
+            }
+          }
+          return newItem
+        })
         this.updateData()
       }
     },
     setModel () {
       let e = this.rowData
-      // e.RmaLines.map(item => {
-      //   this.rmaLines.push({
-      //     supplierBranch: {
-      //       RecordId: item.SupplierBranchId,
-      //       BranchCommercialTitle: item.SupplierBranch.Label
-      //     },
-      //     SupplierCustomerId: item.SupplierCustomerId,
-      //     WarehouseId: item.WarehouseId,
-      //     CompanyId: item.CompanyId,
-      //     BranchId: item.BranchId,
-      //     CreatedUser: item.CreatedUser,
-      //     ModifiedUser: item.ModifiedUser,
-      //     ModifiedDateTime: item.ModifiedDateTime,
-      //     Deleted: item.Deleted,
-      //     System: item.System,
-      //     purchaseWarehouse: {
-      //       RecordId: item.PurchaseWarehouseId,
-      //       Description1: item.PurchaseWarehouse ? item.PurchaseWarehouse.Label : ''
-      //     },
-      //     returnWarehouse: {
-      //       RecordId: item.ReturnWarehouseId,
-      //       Description1: item.ReturnWarehouse ? item.ReturnWarehouse.Label : ''
-      //     },
-      //     RecordId: item.RecordId,
-      //     RecordState: item.RecordState
-      //   })
-      // })
-
-      // this.form.VehicleId = e.VehicleId
-      // if (e.Vehicle) {
-      //   this.vehicleName = e.Vehicle.Label
-      // }
-      // if (e.WarehouseType) {
-      //   this.selectedWarehouseType(e.WarehouseType)
-      //   if (e.WarehouseTypeId === 76506193) {
-      //     this.form.Vehicle = e.RecordId
-      //   }
-      // }
-
-      // this.address = {
-      //   CityId: e.CityId,
-      //   DistrictId: e.DistrictId,
-      //   Address: e.Address
-      // }
-      // if (e.StatusId === 1) {
-      //   this.dataStatus = true
-      // } else {
-      //   this.dataStatus = false
-      // }
-
-      this.form.StatusId = e.StatusId == null ? 0 : e.StatusId
-      this.form.Deleted = e.Deleted
-      this.form.System = e.System
-      this.form.RecordState = e.RecordState == null ? 0 : e.RecordState
-      this.form.CustomerId = e.CustomerId
-      if (e.Customer) {
-        this.customerName = e.Customer.Label
-      }
-      // form: {
-      //   Deleted: 0,
-      //   System: 0,
-      //   RecordState: 2,
-      //   CustomerId: null,
-      //   WarehouseId: null,
-      //   RepresentativeId: null,
-      //   RmaStatusId: null,
-      //   ApproveEmployeeId: null,
-      //   ApproveNumber: null,
-      //   RmaTypeId: null,
-      //   ApproveDate: null,
-      //   PriceDate: null,
-      //   Genexp1: null,
-      //   RmaDate: null,
-      //   GrvNumber: null,
-      //   RouteId: null,
-      //   RmaReasonId: null,
-      //   RmaLines: []
-      // },
+      e.RmaLines.map(item => {
+        this.rmaLines.push({
+          Item: {
+            Description1: item.Item.Label,
+            Code: item.Item.Code,
+            RecordId: item.Item.DecimalValue
+          },
+          Deleted: item.Deleted,
+          System: item.System,
+          RecordState: 3,
+          StatusId: item.StatusId,
+          LineNumber: item.LineNumber,
+          ItemId: item.ItemId,
+          RmaReasonId: item.RmaReasonId,
+          ConvFact1: item.ConvFact1,
+          ConvFact2: item.ConvFact2,
+          Quantity: item.Quantity,
+          Price: item.Price,
+          UnitSetId: item.UnitSetId,
+          UnitId: item.UnitId,
+          RmaQuantity1: item.Quantity,
+          RmaUnit1Id: item.UnitId
+        })
+      })
+      this.form = e
+      this.customer = this.convertLookupValueToSearchValue(e.Customer)
+      this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
+      this.representative = this.convertLookupValueToSearchValue(e.Representative)
+      this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
+      this.route = this.convertLookupValueToSearchValue(e.Route)
+      this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
+      this.rmaStatus = e.RmaStatus
+      this.rmaType = e.RmaType
     }
   },
   validations () {

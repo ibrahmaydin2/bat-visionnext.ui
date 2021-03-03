@@ -3,143 +3,104 @@
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
-    <div v-if="rowData" class="asc__showPage-container">
+    <div class="asc__showPage-container">
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
+            <Breadcrumb />
           </header>
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Model_WarehouseTypeId')" active>
+        <b-tab :title="$t('get.RMA.RMA')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.RMA.Customer')"></div>
+              <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'get.RMA.Warehouse')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.RMA.Representative')"></div>
+              <div v-html="getFormatDataByType(RmaStatus, 'object', 'get.RMA.RmaStatus')"></div>
+              <div v-html="getFormatDataByType(rowData.ApproveEmployee, 'object', 'get.RMA.ApproveEmployee')"></div>
+              <div v-html="getFormatDataByType(rowData.ApproveNumber, 'text', 'get.RMA.ApproveNumber')"></div>
+              <div v-html="getFormatDataByType(RmaType, 'object', 'get.RMA.RmaType')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.ApproveDate, 'date', 'get.RMA.ApproveDate')"></div>
+              <div v-html="getFormatDataByType(rowData.PriceDate, 'date', 'get.RMA.PriceDate')"></div>
+              <div v-html="getFormatDataByType(rowData.Genexp1, 'text', 'get.RMA.Genexp1')"></div>
+              <div v-html="getFormatDataByType(rowData.RmaDate, 'date', 'get.RMA.RmaDate')"></div>
+              <div v-html="getFormatDataByType(rowData.GrvNumber, 'text', 'get.RMA.GrvNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.RMA.Route')"></div>
+              <div v-html="getFormatDataByType(rowData.RmaReason, 'object', 'get.RMA.RmaReason')"></div>
+            </b-card>
+          </b-row>
+          <hr />
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
-                <div v-if="rowData.WarehouseTypeId === 76506193">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
-                </div>
-                <div v-if="rowData.WarehouseTypeId === 76506191">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
-                </div>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.locations')}}</h6>
-                <b-table responsive :items="rowData.WarehouseSuppliers" :fields="fields">
-                  <template #cell(SupplierBranchId)="data">
-                    {{data.item.SupplierBranch.Label}}
-                  </template>
-                  <template #cell(PurchaseWarehouseId)="data">
-                    {{data.item.PurchaseWarehouse.Label}}
-                  </template>
-                  <template #cell(ReturnWarehouseId)="data">
-                    {{data.item.ReturnWarehouse.Label}}
-                  </template>
-                </b-table>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                  <b-tr v-for="(w, i) in (rowData.RmaLines != null ? rowData.RmaLines.filter(f => f.RecordState !== 4) : [])" :key="i">
+                      <b-td>{{w.Item.Label}}</b-td>
+                      <b-td>{{w.Item.Code}}</b-td>
+                      <b-td>{{w.Quantity}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab v-if="false" :title="$t('insert.other')">
-          <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.other')}}</h6>
-                <span><i class="far fa-circle" /> BranchId </span>
-                <p>{{ rowData.BranchId }}</p>
-                <span><i class="far fa-circle" /> CompanyId </span>
-                <p>{{ rowData.CompanyId }}</p>
-                <span><i class="far fa-circle" /> CreatedDateTime </span>
-                <p>{{ rowData.CreatedDateTime }}</p>
-                <span><i class="far fa-circle" /> CreatedUser </span>
-                <p>{{ rowData.CreatedUser }}</p>
-                <span><i class="far fa-circle" /> CustomerId </span>
-                <p>{{ rowData.CustomerId }}</p>
-                <span><i class="far fa-circle" /> EncryptedKey </span>
-                <p>{{ rowData.EncryptedKey }}</p>
-                <span><i class="far fa-circle" /> IsCustomerWarehouse </span>
-                <p>{{ rowData.IsCustomerWarehouse }}</p>
-                <span><i class="far fa-circle" /> IsVehicle </span>
-                <p>{{ rowData.IsVehicle }}</p>
-                <span><i class="far fa-circle" /> LocationId </span>
-                <p>{{ rowData.LocationId }}</p>
-                <span><i class="far fa-circle" /> ModifiedDateTime </span>
-                <p>{{ rowData.ModifiedDateTime }}</p>
-                <span><i class="far fa-circle" /> ModifiedUser </span>
-                <p>{{ rowData.ModifiedUser }}</p>
-                <span><i class="far fa-circle" /> RecordId </span>
-                <p>{{ rowData.RecordId }}</p>
-                <span><i class="far fa-circle" /> RecordState </span>
-                <p>{{ rowData.RecordState }}</p>
-                <span><i class="far fa-circle" /> RecordStatus </span>
-                <p>{{ rowData.RecordStatus }}</p>
-                <span><i class="far fa-circle" /> System </span>
-                <p>{{ rowData.System }}</p>
-                <span><i class="far fa-circle" /> WarehouseStocks </span>
-                <p>{{ rowData.WarehouseStocks }}</p>
-                <span><i class="far fa-circle" /> WarehouseSuppliers </span>
-                <p>{{ rowData.WarehouseSuppliers }}</p>
-              </b-card>
-            </b-col>
-           </b-row>
-         </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
-      fields: [
-        {key: 'SupplierBranchId', label: 'Şube', sortable: true},
-        {key: 'PurchaseWarehouseId', label: 'Satın Alma Deposu', sortable: true},
-        {key: 'ReturnWarehouseId', label: 'İade Deposu', sortable: true}
-      ],
-      tempItems: [
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''}
-      ]
+      RmaStatus: {},
+      RmaType: {}
     }
   },
   mounted () {
     this.getData()
     this.$store.commit('bigLoaded', false)
+    let allLookups = 'RMA_STATUS,RETURN_TYPE'
+    this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData', 'style', 'lookup'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextRma/api/Rma', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextRma/api/Rma', record: this.$route.params.url}).then(() => {
+        if (this.lookup.RMA_STATUS && this.lookup.RMA_STATUS.length > 0 && this.rowData.RmaStatusId > 0) {
+          this.RmaStatus = this.lookup.RMA_STATUS.find(a => a.DecimalValue === this.rowData.RmaStatusId)
+        }
+        if (this.lookup.RETURN_TYPE && this.lookup.RETURN_TYPE.length > 0 && this.rowData.RmaTypeId > 0) {
+          this.RmaType = this.lookup.RETURN_TYPE.find(a => a.DecimalValue === this.rowData.RmaTypeId)
+        }
+      })
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
