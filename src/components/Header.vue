@@ -16,7 +16,10 @@
           <b-dropdown-header id="dropdown-header-label">
             <i class="fas fa-network-wired" /> {{$t('general.branches')}}
           </b-dropdown-header>
-          <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
+          <b-col>
+            <b-form-input v-model="searchBranch" :placeholder="$t('nav.search')" />
+          </b-col>
+          <b-dropdown-item v-for="(branch, i) in filteredUserBranches" :key="'branch' + i">
             <span @click="changeBranch(branch)">
               {{branch.Desciption}}
             </span>
@@ -89,7 +92,8 @@ export default {
       windowHeight: 0,
       toggleLang: 'English',
       modalHeader: '',
-      modalContent: ''
+      modalContent: '',
+      searchBranch: ''
     }
   },
   created () {
@@ -103,7 +107,16 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   computed: {
-    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId', 'system'])
+    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId', 'system']),
+    filteredUserBranches () {
+      if (this.searchBranch.length > 0) {
+        return this.UserBranches.filter((branch) => {
+          return branch.Desciption.toLocaleLowerCase('tr').includes(this.searchBranch)
+        })
+      } else {
+        return this.UserBranches
+      }
+    }
   },
   methods: {
     ...mapMutations(['hamburger']),
@@ -222,6 +235,7 @@ export default {
         max-height: 50vh
         overflow-x: auto
         padding-bottom: 15px
+        will-change: unset !important
         .dropdown-item
           font-size: 12px
           white-space: normal

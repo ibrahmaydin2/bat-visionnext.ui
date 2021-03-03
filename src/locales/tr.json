@@ -12,7 +12,8 @@
     "Item": "Ürün Kayıtları",
     "Branch": "Şube Kayıtları",
     "Warehouse": "Depo Kayıtları",
-    "Customer": "Müşteri Kayıtları"
+    "Customer": "Müşteri Kayıtları",
+    "search": "Ara"
   },
   "router": {
     "Service": "Servis",

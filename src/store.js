@@ -484,6 +484,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res
         })
         .catch(err => {
           console.log(err)
@@ -1285,6 +1286,12 @@ export const store = new Vuex.Store({
     },
     setTableRowsAll (state, payload) {
       state.tableRowsAll = []
+      payload.sort((a, b) => {
+        if (a.visible === b.visible) {
+          return a.label.localeCompare(b.label)
+        }
+        return b.visible - a.visible
+      })
       state.tableRowsAll = payload
     },
     setLookUp (state, payload) {
