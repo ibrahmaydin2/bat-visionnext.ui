@@ -484,6 +484,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res
         })
         .catch(err => {
           console.log(err)

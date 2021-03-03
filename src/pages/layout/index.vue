@@ -184,7 +184,19 @@ export default {
           el += ',' + tbl[i].dataField
         }
       }
-      this.$store.dispatch('setSelectedRows', {...this.query, FormId: this.tableOperations.Id, Columns: el})
+      const path = this.$route.path.split('/')[1]
+
+      this.$store.dispatch('setSelectedRows', {...this.query, FormId: this.tableOperations.Id, Columns: el}).then(res => {
+        if (res.data.IsCompleted === true) {
+          this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
+            if (r.IsCompleted) {
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
+                
+              })
+            }
+          })
+        }
+      })
     },
     hideRow (t) {
       // this.hideTableRow(hr)
