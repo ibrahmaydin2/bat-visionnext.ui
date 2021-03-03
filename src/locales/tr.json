@@ -410,7 +410,7 @@
       "analysisTypeId": "Analiz Tipi",
       "validityTypeId": "Geçerlilik Tipi",
       "description1": "Açiklama",
-      "sortOrder": "Görünüm Sirasi",
+      "sortOrder": "Görünüm Sırası",
       "approveStateId": "Onay Durumu",
       "isNecessary": "Zorunlu",
       "minMaxSort": "0-99 arasında değer girebilirsiniz."
@@ -1091,7 +1091,9 @@
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",
-      "chooseDate":"Tarih Seçiniz"
+      "chooseDate":"Tarih Seçiniz",
+      "currentScore": "Kazanılan Puan",
+      "scoreException": "Harcama tutarı kazanılan turadan büyüktür!"
     },
     "RouteBalance": {
       "Route": "Rota",
