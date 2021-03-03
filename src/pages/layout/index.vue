@@ -135,7 +135,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData']),
+    // sortTableRowsAll () {
+    //   // this.tableRowsAll.slice(0).sort((a, b) => a.name.localeCompare(b.name))
+    //   return this.tableRowsAll.slice(0).sort((a, b) => {
+    //     if (a.visible === b.visible) {
+    //       return a.label.localeCompare(b.label)
+    //     }
+    //     return b.visible - a.visible
+    //   })
+    // }
   },
   watch: {
     $route (to, from) {
@@ -143,17 +152,24 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
-    },
-    tableOperations (e) {
-      if (e) {
-        console.log(e)
-      }
     }
+    // tableRowsAll: {
+    //   handler (e) {
+    //     e.sort((a, b) => {
+    //       if (a.visible === b.visible) {
+    //         return a.label.localeCompare(b.label)
+    //       }
+    //       return b.visible - a.visible
+    //     })
+    //   },
+    //   deep: true
+    // }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
     clearFilters () {
       this.$router.push({name: this.$route.name, query: {'page': 1}})
+      this.$router.go(0)
     },
     changeRows () {
       this.$store.commit('setTableRows', this.tableRowsAll)
