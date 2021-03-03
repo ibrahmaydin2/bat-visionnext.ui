@@ -1129,6 +1129,12 @@
       "EndDate": "Geçerlilik Başlangıcı",
       "Active" : "Aktif",
       "Passive" : "Pasif"
+    },
+    "RMA": {
+      "Item": "Ürün Kodu",
+      "ItemName": "Ürün Adı",
+      "Quantity": "İade Miktarı",
+      "Price": "Liste Miktarı"
     }
   },
   "get": {

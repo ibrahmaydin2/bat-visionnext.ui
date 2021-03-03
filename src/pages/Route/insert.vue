@@ -18,28 +18,24 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.code')"
-            >
-              <b-form-input type="text" v-model="form.model.code"/>
+          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.route.rotaType')">
+          <b-col v-if="insertVisible.RouteTypeId != null ? insertVisible.RouteTypeId : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.RouteTypeId + (insertRequired.RouteTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteTypeId.$error }">
               <v-select :options="routeTypes" @input="selectedRouteType" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.name')"
-            >
-              <b-form-input type="text" v-model="form.model.description1"/>
+          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </b-form-group>
           </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.route.state')">
-              <NextCheckBox v-model="form.model.statusId" type="number" toggle/>
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
             </b-form-group>
           </b-col>
         </b-row>
@@ -49,25 +45,33 @@
       <b-tabs>
         <b-tab :title="$t('insert.route.detail')" active>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.routeGroup')">
-                <v-select :options="lookup.ROUTE_GROUP" @input="selectedRouteGroup" label="Label"></v-select>
+            <b-col v-if="insertVisible.RouteGroupId != null ? insertVisible.RouteGroupId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.RouteGroupId + (insertRequired.RouteGroupId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteGroupId.$error }">
+                <v-select
+                  :options="lookup.ROUTE_GROUP"
+                  @input="selectedRouteGroup"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.routeClass')">
-                <v-select :options="lookup.ROUTE_CLASS" @input="selectedRouteClass" label="Label"></v-select>
+            <b-col v-if="insertVisible.RouteClassId != null ? insertVisible.RouteClassId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.RouteClassId + (insertRequired.RouteClassId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteClassId.$error }">
+                <v-select
+                  :options="lookup.ROUTE_CLASS"
+                  @input="selectedType('RouteClassId', $event)"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.vehicle')">
+            <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
                 <v-select :options="vehicles" @input="selectedVehicle" label="VehiclePlateNumber"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.personel')">
+            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
                 <v-select :options="employees" @input="selectedEmployee" label="nameSurname"></v-select>
               </b-form-group>
             </b-col>
@@ -78,41 +82,45 @@
                 <v-select :options="lookup.VISIT_START_CONTROL" @input="selectedControl" label="Label"></v-select>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.route.multiDayRoute')"
-              >
-                <b-form-radio-group id="radio-group-multi-day" v-model="form.model.isMultidayRoute">
-                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
-                </b-form-radio-group>
+            <b-col v-if="insertVisible.IsMultidayRoute != null ? insertVisible.IsMultidayRoute : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.IsMultidayRoute + (insertRequired.IsMultidayRoute === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsMultidayRoute.$error }">
+                <NextCheckBox v-model="form.IsMultidayRoute" type="number" toggle />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.route.superRoute')"
-              >
-                <b-form-radio-group id="radio-group-super-route" v-model="form.model.isSuperRoute">
-                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
-                </b-form-radio-group>
+            <b-col v-if="insertVisible.IsSuperRoute != null ? insertVisible.IsSuperRoute : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.IsSuperRoute + (insertRequired.IsSuperRoute === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsSuperRoute.$error }">
+                <NextCheckBox v-model="form.IsSuperRoute" type="number" toggle />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.city')">
-                <v-select :options="lookup.CITY" @input="selectedCity" label="Label"></v-select>
+            <b-col v-if="insertVisible.CityId != null ? insertVisible.CityId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.CityId + (insertRequired.CityId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CityId.$error }">
+                <v-select
+                  :options="lookup.CITY"
+                  @input="selectedCity"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.distirict')">
-                <v-select :disabled="!cityValid" :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
+            <b-col v-if="insertVisible.DistrictId != null ? insertVisible.DistrictId : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.DistrictId + (insertRequired.DistrictId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DistrictId.$error }">
+                <v-select
+                  :disabled="!cityValid"
+                  :options="distiricts"
+                  @input="selectedDistirict"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.parish')">
-                <v-select :disabled="!distirictValid" :options="avenues" @input="selectedAvenue" label="Label"></v-select>
+            <b-col v-if="insertVisible.ParishIds != null ? insertVisible.ParishIds : developmentMode" cols="12" md="3" lg="2">
+              <b-form-group :label="insertTitle.ParishIds + (insertRequired.ParishIds === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ParishIds.$error }">
+                <v-select
+                  :disabled="!distirictValid"
+                  :options="avenues"
+                  @input="selectedAvenue"
+                  label="Label"
+                />
               </b-form-group>
             </b-col>
           </b-row>
@@ -236,6 +244,32 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
+          <b-row>
+            <b-col>
+              <pre v-if="developmentMode" class="asc__codeHTML">
+                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
+                  {{codeInCode}}
+                </span>
+              </pre>
+            </b-col>
+          </b-row>
+          <b-row>
+          </b-row>
+          <b-row>
+            <b-col>
+              <code>{{form}}</code>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <h3>Form Elements</h3>
+              <p>
+                {{insertFormdata}}
+              </p>
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
