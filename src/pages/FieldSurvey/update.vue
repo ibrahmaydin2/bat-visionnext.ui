@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'FieldSurvey' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -18,18 +18,12 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Code" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.StatusId" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+          </NextFormGroup>
+           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
+           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -37,66 +31,48 @@
       <b-tabs>
         <b-tab :title="$t('insert.FieldSurvey.FieldSurveyDefinitions')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.AnalysisTypeId != null ? insertVisible.AnalysisTypeId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.AnalysisTypeId" :class="{ 'form-group--error': $v.form.AnalysisTypeId.$error }">
-                <v-select
-                  v-model="AnalysisType"
-                  :options="lookup.FIELD_SURVEY_TYPE"
-                  @input="selectedType('AnalysisTypeId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ValidityTypeId != null ? insertVisible.ValidityTypeId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.ValidityTypeId" :class="{ 'form-group--error': $v.form.ValidityTypeId.$error }">
-                <v-select
-                  v-model="ValidityType"
-                  :options="lookup.ANALYSIS_VALIDITY_TYPE"
-                  @input="selectedType('ValidityTypeId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="AnalysisTypeId" :error="$v.form.AnalysisTypeId">
+              <v-select
+                v-model="analysisType"
+                :options="lookup.FIELD_SURVEY_TYPE"
+                @input="selectedType('AnalysisTypeId', $event)"
+                label="Label"
+              />
+            </NextFormGroup>
+            <NextFormGroup item-key="ValidityTypeId" :error="$v.form.ValidityTypeId">
+              <v-select
+                v-model="validityType"
+                :options="lookup.ANALYSIS_VALIDITY_TYPE"
+                @input="selectedType('ValidityTypeId', $event)"
+                label="Label"
+              />
+            </NextFormGroup>
+             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+                 <b-form-input type="text" v-model="form.Description1"/>
+             </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="4">
-              <b-form-group :label="insertTitle.Description1" :class="{ 'form-group--error': $v.form.Description1.$error }">
-                <b-form-textarea v-model="form.Description1" placeholder="" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.SortOrder != null ? insertVisible.SortOrder : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.SortOrder" :class="{ 'form-group--error': $v.form.SortOrder.$error }">
+             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
                 <b-form-input @input="changeSortOrder" min="0" max="99" type="number" v-model="form.SortOrder" :readonly="insertReadonly.SortOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ApproveStateId != null ? insertVisible.ApproveStateId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.ApproveStateId" :class="{ 'form-group--error': $v.form.ApproveStateId.$error }">
-                <v-select
+             </NextFormGroup>
+            <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
+              <v-select
                   disabled
                   v-model="selectedApproveState"
                   :options="lookup.APPROVE_STATE"
                   @input="selectedType('ApproveStateId', $event)"
                   label="Label"
                 />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.IsNecessary != null ? insertVisible.IsNecessary : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.IsNecessary" :class="{ 'form-group--error': $v.form.IsNecessary.$error }">
-                <b-form-checkbox v-model="form.IsNecessary" name="check-button" switch>
-                  {{(form.IsNecessary) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-col>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
+               <NextCheckBox v-model="form.IsNecessary" type="number" toggle />
+            </NextFormGroup>
           </b-row>
         </b-tab>
-
         <b-tab :title="$t('insert.FieldSurvey.Branches')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-form-group :label="$t('insert.FieldSurvey.surveyBranchId')" :class="detailPanelError">
-                <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onAcBranchSearch" @input="selectAcBranch">
+            <NextFormGroup :title="$t('insert.FieldSurvey.surveyBranchId')" :error="$v.selectedBranch" :required="true">
+              <v-select v-model="selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchs" @search="onBranchSearch">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -104,105 +80,89 @@
                     {{ option.BranchCommercialTitle }}
                   </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
+            </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
-                <b-button @click="addFieldSurveyBranchs" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addFieldSurveyBranchs" />
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="form.fieldSurveyBranchs">
+          <b-row v-if="form.FieldSurveyBranchs">
             <b-table-simple bordered small>
               <b-thead>
-                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameBranch')}}</span></b-th>
+                <b-th><span>{{$t('insert.FieldSurvey.surveyBranchId')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.fieldSurveyBranchs" :key="i">
-                  <b-td>{{r.surveyBranchs}}</b-td>
+                <b-tr v-for="(r, i) in (form.FieldSurveyBranchs != null ? form.FieldSurveyBranchs.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{r.SurveyBranch ? r.SurveyBranch.Label : r.Description1}}</b-td>
                   <b-td class="text-center"><i @click="removeFieldSurveyBranchs(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-
         <b-tab :title="$t('insert.FieldSurvey.employeeType')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-form-group :label="$t('insert.FieldSurvey.employeeType')" :class="detailPanelError">
-                <v-select label="Label" :filterable="false" :options="detailLookup.EMPLOYEE_TYPE" @input="selectEployeeTypeId($event)" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.FieldSurvey.employeeType')" :error="$v.selectedEmployeeType" :required="true">
+              <v-select v-model="selectedEmployeeType" label="Label" :filterable="false" :options="detailLookup.EMPLOYEE_TYPE" />
+            </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
-                <b-button @click="addFieldSurveyEmployeeType" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                 <AddDetailButton @click.native="addFieldSurveyEmployeeType" />
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="form.fieldSurveyBranchs">
+          <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th width="90%"><span>{{$t('insert.FieldSurvey.nameEmployee')}}</span></b-th>
+                <b-th><span>{{$t('insert.FieldSurvey.employeeType')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.fieldSurveyEmployeeTypes" :key="i">
-                  <b-td>{{r.employeeTypes}}</b-td>
+                <b-tr v-for="(r, i) in (form.FieldSurveyEmployeeTypes != null ? form.FieldSurveyEmployeeTypes.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{r.EmployeeType ? r.EmployeeType.Label : r.Label}}</b-td>
                   <b-td class="text-center"><i @click="removeFieldSurveyEmployee(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-
         <b-tab :title="$t('insert.FieldSurvey.questions')">
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.FieldSurvey.questionId')" :class="detailPanelError">
-                <v-select label="Description1" :filterable="false" :options="analysisQuestions" @search="onAcAnalysisQuestions" @input="selectAcAnalysisQuestions">
+            <NextFormGroup :title="$t('insert.FieldSurvey.questionId')" :error="$v.selectedQuestion.question" :required="true">
+              <v-select v-model="selectedQuestion.question" label="Description1" :filterable="false" :options="analysisQuestions" @search="onAnalysisQuestions">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.Description1 }}
-                  </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.FieldSurvey.questionLineId')" :class="detailPanelError">
-                <b-form-input type="text" v-model="fieldSurveyQuestions.lineNumber" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.FieldSurvey.questionIsNecessary')" :class="detailPanelError">
-                <b-form-checkbox v-model="fieldSurveyQuestions.IsNecessary" name="check-button">
-                  {{(fieldSurveyQuestions.IsNecessary) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-col>
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.FieldSurvey.questionLineId')" :error="$v.selectedQuestion.lineNumber" :required="true">
+                <b-form-input type="number" v-model="selectedQuestion.lineNumber" />
+             </NextFormGroup>
+             <NextFormGroup :title="$t('insert.FieldSurvey.questionIsNecessary')" :error="$v.selectedQuestion.isNecessary" :required="true">
+               <NextCheckBox v-model="selectedQuestion.isNecessary" type="number" />
+             </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
-                <b-button @click="addFieldSurveyQuestions" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addFieldSurveyQuestions" />
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="form.fieldSurveyQuestions">
+          <b-row v-if="form.FieldSurveyQuestions">
             <b-col>
               <b-table-simple bordered small>
                 <b-thead>
-                  <b-th width="40%"><span>{{$t('insert.FieldSurvey.question')}}</span></b-th>
+                  <b-th><span>{{$t('insert.FieldSurvey.question')}}</span></b-th>
                   <b-th><span>{{$t('insert.FieldSurvey.questionLine')}}</span></b-th>
                   <b-th><span>{{$t('insert.FieldSurvey.questionIsNecessary')}}</span></b-th>
-                  <b-th width="40px"><span>{{$t('list.operations')}}</span></b-th>
+                  <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(r, i) in form.fieldSurveyQuestions" :key="i">
-                    <b-td>{{r.questions}}</b-td>
-                    <b-td>{{r.lineNumber}}</b-td>
-                    <b-td><i :class="'' + r.IsNecessary == 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></b-td>
+                  <b-tr v-for="(r, i) in (form.FieldSurveyQuestions != null ? form.FieldSurveyQuestions.filter(f => f.RecordState !== 4) : [])" :key="i">
+                    <b-td>{{r.FieldSurvey ? r.FieldSurvey.Label : r.Description1}}</b-td>
+                    <b-td>{{r.LineNumber}}</b-td>
+                    <b-td><i :class="'' + r.IsNecessary == 1 ? 'fas fa-check-square text-success' : 'fas fa-square text-danger'" /></b-td>
                     <b-td class="text-center"><i @click="removeFieldSurveyQuestions(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -212,35 +172,27 @@
         </b-tab>
         <b-tab :title="$t('insert.FieldSurvey.validDates')" v-if="validDatesReq">
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.fieldSurveyValidDates.description1')" :class="detailPanelError">
-                <b-form-input type="text" v-model="fieldSurveyValidDates.description1" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2">
-              <b-form-group :label="$t('insert.fieldSurveyValidDates.startDate')" :class="detailPanelError">
-                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.startDate')" size="sm" v-once v-model="fieldSurveyValidDates.startDate" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2">
-              <b-form-group :label="$t('insert.fieldSurveyValidDates.endDate')" :class="detailPanelError">
-                <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.endDate')" size="sm" v-once v-model="fieldSurveyValidDates.endDate" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2">
-              <b-form-group :label="$t('insert.FieldSurvey.statusId')" :class="detailPanelError">
-                <b-form-checkbox v-model="fieldSurveyValidDates.statusId" name="check-button" switch>
-                  {{(fieldSurveyValidDates.statusId) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.fieldSurveyValidDates.description1')" :error="$v.selectedValidDates.description1" :required="true">
+              <b-form-input type="text" v-model="selectedValidDates.description1" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fieldSurveyValidDates.startDate')" :error="$v.selectedValidDates.startDate" :required="true">
+              <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.startDate')" size="sm" v-model="selectedValidDates.startDate" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fieldSurveyValidDates.endDate')" :error="$v.selectedValidDates.endDate" :required="true">
+              <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.endDate')" size="sm" v-model="selectedValidDates.endDate" />
+            </NextFormGroup>
+          </b-row>
+          <b-row>
+            <NextFormGroup :title="$t('insert.FieldSurvey.statusId')" :error="$v.selectedValidDates.statusId" :required="true">
+              <NextCheckBox v-model="selectedValidDates.statusId" type="number" toggle />
+            </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
-                <b-button @click="addFieldSurveyValidDates" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addFieldSurveyValidDates" />
               </b-form-group>
             </b-col>
           </b-row>
-          <b-row v-if="form.fieldSurveyValidDates">
+          <b-row v-if="form.FieldSurveyValidDates">
             <b-col>
               <b-table-simple bordered small>
                 <b-thead>
@@ -251,11 +203,11 @@
                   <b-th width="40px"><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(r, i) in form.fieldSurveyValidDates" :key="i">
-                    <b-td>{{r.description1}}</b-td>
-                    <b-td>{{r.startDate}}</b-td>
-                    <b-td>{{r.endDate}}</b-td>
-                    <b-td><i :class="'' + r.statusId == 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></b-td>
+                  <b-tr v-for="(r, i) in (form.FieldSurveyValidDates != null ? form.FieldSurveyValidDates.filter(f => f.RecordState !== 4) : [])" :key="i">
+                    <b-td>{{r.FieldSurvey ? r.FieldSurvey.Label : r.Description1}}</b-td>
+                    <b-td>{{r.StartDate}}</b-td>
+                    <b-td>{{r.EndDate}}</b-td>
+                    <b-td><i :class="'' + r.StatusId == 1 ? 'fas fa-check-square text-success' : 'fas fa-square text-danger'" /></b-td>
                     <b-td class="text-center"><i @click="removeFieldSurveyValidDates(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -269,80 +221,62 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins'
+import mixin from '../../mixins/update'
+import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
     return {
       validDatesReq: false,
+      routeName1: 'FieldAnalysis',
       form: {
-        fieldSurveyBranchs: [],
-        fieldSurveyEmployeeTypes: [],
-        fieldSurveyQuestions: [],
-        fieldSurveyValidDates: [],
+        FieldSurveyBranchs: [],
+        FieldSurveyEmployeeTypes: [],
+        FieldSurveyQuestions: [],
+        FieldSurveyValidDates: [],
         Code: null,
         StatusId: null,
         AnalysisTypeId: null,
         ValidityTypeId: null,
         SortOrder: null,
-        Description1: null,
-        RecordId: null,
-        Deleted: 0
+        IsNecessary: 0
       },
-      detailPanelError: '',
-      fieldSurveyEmployeeTypes: {
-        code: null,
-        description1: null,
-        recordState: 2,
-        employeeTypeId: null,
-        statusId: null
+      selectedBranch: null,
+      selectedEmployeeType: null,
+      selectedQuestion: {
+        question: null,
+        questionLine: null,
+        questionNecessary: null
       },
-      fieldSurveyBranchs: {
-        description1: null,
-        recordState: 2,
-        surveyBranchId: null,
-        statusId: null
-      },
-      fieldSurveyQuestions: {
-        code: null,
-        description1: null,
-        recordState: 2,
-        questionId: null,
-        lineNumber: null,
-        statusId: null,
-        IsNecessary: null
-      },
-      fieldSurveyValidDates: {
-        code: null,
+      selectedValidDates: {
         description1: null,
         recordState: 2,
         startDate: null,
         endDate: null,
         statusId: null
       },
-      routeName: this.$route.meta.baseLink,
       selectedApproveState: null,
-      AnalysisType: null,
-      ValidityType: null
+      analysisType: {},
+      validityType: {}
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertDefaultValue', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'detailLookup', 'rowData', 'branchList', 'analysisQuestions'])
-    // filteredCustomerPaymentType () {
-    //   return this.CustomerPaymentTypesArr.filter(item => {
-    //     return item.RecordState !== 4
-    //   })
-    // }
+    ...mapState(['detailLookup', 'branchs', 'analysisQuestions'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFieldAnalysis/api/${e}/GetCode`})
+      this.getData().then(() => {
+        this.setData()
+      })
       this.$store.dispatch('getDetailPanelLookups', {...this.query, type: 'EMPLOYEE_TYPE'})
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/FieldSurvey', record: this.$route.params.url})
+      if (this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.length > 0) {
+        var item = this.lookup.APPROVE_STATE.find(a => a.DecimalValue === 2100)
+        this.form.ApproveStateId = item.DecimalValue
+        this.selectedApproveState = item
+      }
     },
     selectedType (label, model) {
       if (model) {
@@ -357,254 +291,253 @@ export default {
       }
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
-        this.$store.commit('showAlert', { type: 'error', msg: 'Zorunlu alanları doldurun' })
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        this.form.IsNecessary = this.checkConvertToNumber(this.form.IsNecessary)
-        console.log(this.form)
+        this.updateData()
+      }
+    },
+    onBranchSearch (search, loading) {
+      if (search.length >= 3) {
         let model = {
-          'model': this.form
+          BranchCommercialTitle: search
         }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFieldAnalysis/api/FieldSurvey`, formdata: model, return: this.routeName})
+        this.searchItemsByModel('VisionNextBranch/api/Branch/Search', 'branchs', model).then(res => {
+          loading(false)
+        })
       }
     },
-    onAcBranchSearch (search, loading) {
+    onAnalysisQuestions (search, loading) {
       if (search.length >= 3) {
-        this.searchAcBranch(loading, search, this)
+        let model = {
+          Description1: search
+        }
+        this.searchItemsByModel('VisionNextFieldAnalysis/api/AnalysisQuestions/Search', 'analysisQuestions', model).then(res => {
+          loading(false)
+        })
       }
-    },
-    searchAcBranch (loading, search, vm) {
-      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    selectAcBranch (e) {
-      this.fieldSurveyBranchs.surveyBranchs = e.BranchCommercialTitle
-      this.fieldSurveyBranchs.surveyBranchId = e.RecordId
-    },
-    onAcAnalysisQuestions (search, loading) {
-      if (search.length >= 3) {
-        this.searchAcAnalysisQuestions(loading, search, this)
-      }
-    },
-    searchAcAnalysisQuestions (loading, search, vm) {
-      this.$store.dispatch('acAnalysisQuestions', {...this.query, searchField: 'Description1', searchText: search})
-    },
-    selectAcAnalysisQuestions (e) {
-      this.fieldSurveyQuestions.questions = e.Description1
-      this.fieldSurveyQuestions.questionId = e.RecordId
-    },
-    selectEployeeTypeId (e) {
-      this.fieldSurveyEmployeeTypes.employeeTypes = e.Label
-      this.fieldSurveyEmployeeTypes.employeeTypeId = e.DecimalValue
     },
     addFieldSurveyBranchs () {
-      if (this.fieldSurveyBranchs.surveyBranchId != null) {
-        this.detailPanelError = ''
-        this.form.fieldSurveyBranchs.push({
-          description1: this.fieldSurveyBranchs.description1,
-          recordState: 2,
-          surveyBranchs: this.fieldSurveyBranchs.surveyBranchs,
-          surveyBranchId: this.fieldSurveyBranchs.surveyBranchId,
-          statusId: this.fieldSurveyBranchs.statusId
+      this.$v.selectedBranch.$touch()
+      if (this.$v.selectedBranch.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
-        this.fieldSurveyBranchs.description1 = null
-        this.fieldSurveyBranchs.recordState = 2
-        this.fieldSurveyBranchs.surveyBranchs = null
-        this.fieldSurveyBranchs.surveyBranchId = null
-        this.fieldSurveyBranchs.statusId = null
-      } else {
-        this.detailPanelError = 'form-group--error'
+        return false
       }
+      let filteredArr = this.form.FieldSurveyBranchs.filter(i => i.SurveyBranchId === this.selectedBranch.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      let filteredItem = this.form.FieldSurveyBranchs.find(i => i.SurveyBranchId === this.selectedBranch.RecordId && i.RecordState === 4)
+      if (filteredItem) {
+        this.form.FieldSurveyBranchs[this.form.FieldSurveyBranchs.indexOf(filteredItem)].RecordState = 3
+        return
+      }
+      this.form.FieldSurveyBranchs.push({
+        Description1: this.selectedBranch.BranchCommercialTitle,
+        RecordState: 2,
+        SurveyBranchId: this.selectedBranch.RecordId,
+        StatusId: this.selectedBranch.StatusId
+      })
+      this.selectedBranch = null
+      this.$v.selectedBranch.$reset()
     },
     addFieldSurveyEmployeeType () {
-      if (this.fieldSurveyEmployeeTypes.employeeTypeId != null) {
-        this.detailPanelError = ''
-        this.form.fieldSurveyEmployeeTypes.push({
-          code: this.fieldSurveyEmployeeTypes.code,
-          description1: this.fieldSurveyEmployeeTypes.description1,
-          recordState: 2,
-          employeeTypeId: this.fieldSurveyEmployeeTypes.employeeTypeId,
-          employeeTypes: this.fieldSurveyEmployeeTypes.employeeTypes,
-          statusId: this.fieldSurveyEmployeeTypes.statusId
+      this.$v.selectedEmployeeType.$touch()
+      if (this.$v.selectedEmployeeType.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
-        this.fieldSurveyEmployeeTypes.code = null
-        this.fieldSurveyEmployeeTypes.description1 = null
-        this.fieldSurveyEmployeeTypes.recordState = 2
-        this.fieldSurveyEmployeeTypes.employeeTypeId = null
-        this.fieldSurveyEmployeeTypes.employeeTypes = null
-        this.fieldSurveyEmployeeTypes.statusId = null
-      } else {
-        this.detailPanelError = 'form-group--error'
+        return false
       }
+      let filteredArr = this.form.FieldSurveyEmployeeTypes.filter(i => i.EmployeeTypeId === this.selectedEmployeeType.DecimalValue && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      let filteredItem = this.form.FieldSurveyEmployeeTypes.find(i => i.EmployeeTypeId === this.selectedEmployeeType.DecimalValue && i.RecordState === 4)
+      if (filteredItem) {
+        this.form.FieldSurveyEmployeeTypes[this.form.FieldSurveyEmployeeTypes.indexOf(filteredItem)].RecordState = 3
+        return
+      }
+      this.form.FieldSurveyEmployeeTypes.push({
+        Code: this.selectedEmployeeType.Code,
+        Label: this.selectedEmployeeType.Label,
+        RecordState: 2,
+        EmployeeTypeId: this.selectedEmployeeType.DecimalValue,
+        StatusId: this.selectedEmployeeType.StatusId
+      })
+      this.selectedEmployeeType = null
+      this.$v.selectedEmployeeType.$reset()
     },
     addFieldSurveyQuestions () {
-      if (this.fieldSurveyQuestions.questionId != null) {
-        this.detailPanelError = ''
-        this.form.fieldSurveyQuestions.push({
-          code: this.fieldSurveyQuestions.code,
-          description1: this.fieldSurveyQuestions.description1,
-          recordState: 2,
-          questions: this.fieldSurveyQuestions.questions,
-          questionId: this.fieldSurveyQuestions.questionId,
-          lineNumber: this.fieldSurveyQuestions.lineNumber,
-          statusId: this.fieldSurveyQuestions.statusId,
-          IsNecessary: this.fieldSurveyQuestions.IsNecessary === true ? 1 : 0
+      this.$v.selectedQuestion.$touch()
+      if (this.$v.selectedQuestion.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
-        this.fieldSurveyQuestions.code = null
-        this.fieldSurveyQuestions.description1 = null
-        this.fieldSurveyQuestions.recordState = 2
-        this.fieldSurveyQuestions.questions = null
-        this.fieldSurveyQuestions.questionId = null
-        this.fieldSurveyQuestions.lineNumber = null
-        this.fieldSurveyQuestions.statusId = null
-        this.fieldSurveyQuestions.IsNecessary = null
-      } else {
-        this.detailPanelError = 'form-group--error'
+        return false
       }
+      let filteredArr = this.form.FieldSurveyQuestions.filter(i => i.QuestionId === this.selectedQuestion.question.RecordId &&
+       i.LineNumber === this.selectedQuestion.lineNumber && i.IsNecessary === this.selectedQuestion.isNecessary && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.FieldSurveyQuestions.push({
+        Code: this.selectedQuestion.question.Code,
+        Description1: this.selectedQuestion.question.Description1,
+        RecordState: 2,
+        QuestionId: this.selectedQuestion.question.RecordId,
+        LineNumber: this.selectedQuestion.lineNumber,
+        IsNecessary: this.selectedQuestion.isNecessary
+      })
+      this.selectedQuestion = {
+        isNecessary: 0
+      }
+      this.$v.selectedQuestion.$reset()
     },
     addFieldSurveyValidDates () {
-      if (this.fieldSurveyValidDates.description1 != null) {
-        this.detailPanelError = ''
-        this.form.fieldSurveyValidDates.push({
-          code: this.fieldSurveyValidDates.code,
-          description1: this.fieldSurveyValidDates.description1,
-          recordState: 2,
-          startDate: this.fieldSurveyValidDates.startDate,
-          endDate: this.fieldSurveyValidDates.endDate,
-          statusId: this.fieldSurveyValidDates.statusId === true ? 1 : 0
+      this.$v.selectedValidDates.$touch()
+      if (this.$v.selectedValidDates.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
-        this.fieldSurveyValidDates.code = null
-        this.fieldSurveyValidDates.description1 = null
-        this.fieldSurveyValidDates.recordState = 2
-        this.fieldSurveyValidDates.startDate = null
-        this.fieldSurveyValidDates.endDate = null
-        this.fieldSurveyValidDates.statusId = null
-      } else {
-        this.detailPanelError = 'form-group--error'
+        return false
       }
+      this.form.FieldSurveyValidDates.push({
+        Description1: this.selectedValidDates.description1,
+        RecordState: 2,
+        StartDate: this.selectedValidDates.startDate,
+        EndDate: this.selectedValidDates.endDate,
+        StatusId: this.selectedValidDates.statusId
+      })
+      this.selectedValidDates = {
+        statusId: 0
+      }
+      this.$v.selectedValidDates.$reset()
     },
     removeFieldSurveyBranchs (item) {
-      this.form.fieldSurveyBranchs[this.form.fieldSurveyBranchs.indexOf(item)].recordState = 4
+      this.form.FieldSurveyBranchs[this.form.FieldSurveyBranchs.indexOf(item)].RecordState = 4
     },
     removeFieldSurveyEmployee (item) {
-      this.form.fieldSurveyEmployeeTypes[this.form.fieldSurveyEmployeeTypes.indexOf(item)].recordState = 4
+      this.form.FieldSurveyEmployeeTypes[this.form.FieldSurveyEmployeeTypes.indexOf(item)].RecordState = 4
     },
     removeFieldSurveyQuestions (item) {
-      this.form.fieldSurveyQuestions[this.form.fieldSurveyQuestions.indexOf(item)].recordState = 4
+      this.form.FieldSurveyQuestions[this.form.FieldSurveyQuestions.indexOf(item)].RecordState = 4
     },
     removeFieldSurveyValidDates (item) {
-      this.form.fieldSurveyValidDates[this.form.fieldSurveyValidDates.indexOf(item)].recordState = 4
+      this.form.FieldSurveyValidDates[this.form.FieldSurveyValidDates.indexOf(item)].RecordState = 4
     },
     changeSortOrder (e) {
       if (e > 99 || e < 0) {
         this.form.SortOrder = 0
         this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.FieldSurvey.minMaxSort') })
       }
+    },
+    setData () {
+      var rowData = this.rowData
+      this.form = rowData
+      this.analysisType = rowData.AnalysisType
+      if (this.lookup.ANALYSIS_VALIDITY_TYPE && this.lookup.ANALYSIS_VALIDITY_TYPE.length > 0 && this.form.ValidityTypeId > 0) {
+        this.validityType = this.lookup.ANALYSIS_VALIDITY_TYPE.find(a => a.DecimalValue === this.form.ValidityTypeId)
+      }
+      if (rowData.ValidityTypeId === 463633) {
+        this.validDatesReq = true
+      } else {
+        this.validDatesReq = false
+      }
+      if (this.form.FieldSurveyBranchs) {
+        this.form.FieldSurveyBranchs.map(item => {
+          item.RecordState = 3
+          return item
+        })
+      }
+      if (this.form.FieldSurveyEmployeeTypes) {
+        this.form.FieldSurveyEmployeeTypes.map(item => {
+          item.RecordState = 3
+          return item
+        })
+      }
+      if (this.form.FieldSurveyQuestions) {
+        this.form.FieldSurveyQuestions.map(item => {
+          item.RecordState = 3
+          return item
+        })
+      }
+      if (this.form.FieldSurveyValidDates) {
+        this.form.FieldSurveyValidDates.map(item => {
+          item.RecordState = 3
+          return item
+        })
+      }
     }
   },
   validations () {
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      selectedBranch: {
+        required
+      },
+      selectedEmployeeType: {
+        required
+      },
+      selectedQuestion: {
+        question: {
+          required
+        },
+        lineNumber: {
+          required
+        },
+        isNecessary: {
+          required
+        }
+      },
+      selectedValidDates: {
+        description1: {
+          required
+        },
+        startDate: {
+          required
+        },
+        endDate: {
+          required
+        },
+        statusId: {
+          required
+        }
+      }
     }
   },
   watch: {
-    rowData (e) {
-      if (e) {
-        this.form = {
-          fieldSurveyBranchs: [],
-          fieldSurveyEmployeeTypes: [],
-          fieldSurveyQuestions: [],
-          fieldSurveyValidDates: [],
-          Code: e.Code,
-          StatusId: this.numberConvertToString(e.StatusId),
-          AnalysisTypeId: e.AnalysisTypeId,
-          ValidityTypeId: e.ValidityTypeId,
-          SortOrder: e.SortOrder,
-          Description1: e.Description1,
-          IsNecessary: this.numberConvertToString(e.IsNecessary),
-          RecordId: e.RecordId,
-          Deleted: e.Deleted
+    lookup: {
+      handler (val) {
+        if (val.APPROVE_STATE && val.APPROVE_STATE.length > 0) {
+          var item = val.APPROVE_STATE.find(a => a.DecimalValue === 2100)
+          this.form.ApproveStateId = item.DecimalValue
+          this.selectedApproveState = item
         }
-        if (e.AnalysisType) {
-          this.AnalysisType = e.AnalysisType.Label
+        if (val.ANALYSIS_VALIDITY_TYPE && val.ANALYSIS_VALIDITY_TYPE.length > 0 && this.form.ValidityTypeId > 0) {
+          this.validityType = val.ANALYSIS_VALIDITY_TYPE.find(a => a.DecimalValue === this.form.ValidityTypeId)
         }
-        if (e.ValidityType) {
-          this.ValidityType = e.ValidityType.Label
-        }
-        if (e.ValidityTypeId === 463633) {
-          this.validDatesReq = true
-        } else {
-          this.validDatesReq = false
-        }
-        if (e.FieldSurveyBranchs) {
-          e.FieldSurveyBranchs.map(item => {
-            this.form.fieldSurveyBranchs.push({
-              description1: item.Description1,
-              recordState: 3,
-              surveyBranchId: item.SurveyBranchId,
-              statusId: item.StatusId,
-              code: item.Code,
-              updatedProperties: [],
-              fieldSurveyId: e.RecordId,
-              deleted: 0
-            })
-          })
-        }
-
-        if (e.FieldSurveyEmployeeTypes) {
-          e.FieldSurveyEmployeeTypes.map(item => {
-            this.form.fieldSurveyEmployeeTypes.push({
-              code: item.Code,
-              description1: item.Description1,
-              recordState: 3,
-              employeeTypeId: item.EmployeeTypeId,
-              statusId: item.StatusId
-            })
-          })
-        }
-        if (e.FieldSurveyQuestions) {
-          e.FieldSurveyQuestions.map(item => {
-            this.form.fieldSurveyQuestions.push({
-              code: item.Code,
-              description1: item.Description1,
-              recordState: 3,
-              questionId: item.QuestionId,
-              lineNumber: item.LineNumber,
-              statusId: item.StatusId,
-              isNecessary: this.checkConvertToNumber(item.IsNecessary)
-            })
-          })
-        }
-        if (e.FieldSurveyValidDates) {
-          e.FieldSurveyValidDates.map(item => {
-            this.form.fieldSurveyValidDates.push({
-              code: item.Code,
-              description1: item.Description1,
-              recordState: 3,
-              startDate: this.dateConvertFromTimezone(item.StartDate),
-              endDate: this.dateConvertFromTimezone(item.endDate),
-              statusId: this.numberConvertToString(item.StatusId)
-            })
-          })
-        }
-      }
-    },
-    lookup (e) {
-      e['APPROVE_STATE'].map(item => {
-        if (item.DecimalValue === 2100) {
-          this.selectedType('ApproveStateId', item)
-          this.selectedApproveState = item.Label
-        }
-      })
-    },
-    validDatesReq (e) {
-      if (e) {
-        this.validDatesReq = e
-      }
+      },
+      deep: true
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
