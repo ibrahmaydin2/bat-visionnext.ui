@@ -343,7 +343,11 @@
     "CsCardGet": "Çek İşlemi Görüntüle",
     "RouteBalance": "Rota Dengeleme",
     "AccountTransaction": "Cari Hesap Hareketleri",
-    "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle"
+    "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle",
+    "Rma": "İade Ürün Yönetimi",
+    "RmaGet": "İade Ürün Yönetimi Görüntüle",
+    "RmaInsert": "Yeni İade Ürün",
+    "RmaUpdate": "İade Ürün Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1353,6 +1357,23 @@
       "Remainder": "Bakiye",
       "CreditAccountRemainder": "Bakiye Durumu",
       "Genexp1": "Açıklama"
+    },
+    "RMA": {
+      "RMA": "İade Ürün Yönetimi",
+      "Customer": "Müşteri",
+      "Warehouse": "Depo",
+      "Representative": "Personel",
+      "RmaStatus": "İade Durumu",
+      "ApproveEmployee": "Onaylayan",
+      "ApproveNumber": "Onay Numarası",
+      "RmaType": "İade Tipi",
+      "ApproveDate": "Onay Tarihi",
+      "PriceDate": "Fiyatlandırma Tarihi",
+      "Genexp1": "Açıklama",
+      "RmaDate": "İade Tarihi",
+      "GrvNumber": "Müşteri İade No",
+      "Route": "Rota",
+      "RmaReason": "İade Nedeni"
     }
   },
   

@@ -135,9 +135,11 @@ export default {
       }
     },
     convertLookupValueToSearchValue (lookupValue) {
-      return {
-        RecordId: lookupValue.DecimalValue,
-        Description1: lookupValue.Label
+      if (lookupValue) {
+        return {
+          RecordId: lookupValue.DecimalValue,
+          Description1: lookupValue.Label
+        }
       }
     }
   }

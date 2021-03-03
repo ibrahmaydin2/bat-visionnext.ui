@@ -135,7 +135,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData']),
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
     // sortTableRowsAll () {
     //   // this.tableRowsAll.slice(0).sort((a, b) => a.name.localeCompare(b.name))
     //   return this.tableRowsAll.slice(0).sort((a, b) => {
@@ -190,9 +190,7 @@ export default {
         if (res.data.IsCompleted === true) {
           this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
             if (r.IsCompleted) {
-              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
-                
-              })
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {})
             }
           })
         }
