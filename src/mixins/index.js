@@ -1,3 +1,4 @@
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -6,6 +7,9 @@ export default {
       routeName1: '',
       routeName2: ''
     }
+  },
+  computed: {
+    ...mapState(['insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly'])
   },
   validations () {
     return {
