@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'CSCard' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -38,7 +38,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.CsCard.CsCard')" :active="!developmentMode">
           <b-row>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
@@ -145,32 +145,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
-          </b-row>
-        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -197,7 +171,7 @@ export default {
         DueDate: null,
         SerialNumber: null,
         Owner: null,
-        PayCity: null,
+        PayCityId: null,
         BankId: null,
         CorrespondentBranchId: null,
         CurrencyId: null,
