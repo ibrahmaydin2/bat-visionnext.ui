@@ -337,10 +337,10 @@
     "CreditCardGet": "Kredi Kartı İşlemi Görüntüle",
     "PriceListUpdate ": "Fiyat Listesi Güncelle",
     "PriceListGet ": "Fiyat Listesi",
-    "CsCard": "Çek İşlemleri",
-    "CsCardInsert": "Yeni Çek İşlemi",
-    "CsCardUpdate": "Çek İşlemi Güncelle",
-    "CsCardGet": "Çek İşlemi Görüntüle",
+    "CSCard": "Çek İşlemleri",
+    "CSCardInsert": "Yeni Çek İşlemi",
+    "CSCardUpdate": "Çek İşlemi Güncelle",
+    "CSCardGet": "Çek İşlemi Görüntüle",
     "RouteBalance": "Rota Dengeleme",
     "AccountTransaction": "Cari Hesap Hareketleri",
     "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle",
@@ -831,7 +831,8 @@
       "CsCard": "Çek İşlem Ana Kayıtları",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "reminder": "Müşteri Bakiyesi"
+      "reminder": "Müşteri Bakiyesi",
+      "description": "Açıklama"
     },
     "item": {
       "Detail": "Detaylar",
@@ -1328,7 +1329,8 @@
       "CurrencyId": "Para Birimi",
       "CsTotal": "Çek Tutarı",
       "RepresentativeId": "Saha Personeli",
-      "RouteId": "Rota"
+      "RouteId": "Rota",
+      "CsCard": "Genel"
     },
     "BankTransaction": {
       "Customer": "Müşteri",
