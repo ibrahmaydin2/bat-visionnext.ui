@@ -111,7 +111,7 @@ export default {
     filteredUserBranches () {
       if (this.searchBranch.length > 0) {
         return this.UserBranches.filter((branch) => {
-          return branch.Desciption.toLocaleLowerCase('tr').includes(this.searchBranch)
+          return branch.Desciption.toLocaleLowerCase('tr').includes(this.searchBranch.toLocaleLowerCase('tr'))
         })
       } else {
         return this.UserBranches
