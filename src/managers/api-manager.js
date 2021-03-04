@@ -36,11 +36,13 @@ export class ApiManager {
       if (response.data.IsCompleted === true) {
         return response.data
       } else {
-        let errs = response.data.Validations.Errors
-        for (let i = 0; i < errs.length; i++) {
-          let errmsg = errs[i].States
-          for (let x = 0; x < errmsg.length; x++) {
-            store.commit('showAlert', { type: 'validation', msg: errmsg })
+        if (response.data.Validations) {
+          let errs = response.data.Validations.Errors
+          for (let i = 0; i < errs.length; i++) {
+            let errmsg = errs[i].States
+            for (let x = 0; x < errmsg.length; x++) {
+              store.commit('showAlert', { type: 'validation', msg: errmsg })
+            }
           }
         }
       }

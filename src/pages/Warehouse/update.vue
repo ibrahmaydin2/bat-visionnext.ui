@@ -18,21 +18,15 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.Model_Code') + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-                <b-form-input type="text" v-model="form.Code" />
-              </b-form-group>
-            </b-col>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-                <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-              </b-form-group>
-            </b-col>
-            <b-col lg="3">
-              <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-                <NextCheckBox v-model="form.StatusId" type="number" toggle />
-              </b-form-group>
-            </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -40,79 +34,59 @@
       <b-tabs>
         <b-tab :title="$t('insert.warehouse.Warehouse')" :active="true" @click.prevent="tabValidation()">
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.NonSapWarehouse + (insertRequired.NonSapWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.NonSapWarehouse.$error }">
-                <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="NonSapWarehouse" :error="$v.form.NonSapWarehouse">
+              <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle />
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select v-model="vehicleName" :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.VehiclePlateNumber }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.IsVehicle + (insertRequired.IsVehicle === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVehicle.$error }">
-                <NextCheckBox v-model="form.IsVehicle" type="number" toggle />
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group :label="insertTitle.IsVirtualWarehouse + (insertRequired.IsVirtualWarehouse === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsVirtualWarehouse.$error }">
-                <NextCheckBox :disabled="form.IsVehicle ? true : false" v-model="form.IsVirtualWarehouse" type="number" toggle />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
+              <v-select v-model="vehicleName" :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+                <template slot="option" slot-scope="option">
+                  {{ option.VehiclePlateNumber }}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsVehicle" :error="$v.form.IsVehicle">
+              <NextCheckBox v-model="form.IsVehicle" type="number" toggle />
+            </NextFormGroup>
+            <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse">
+              <NextCheckBox :disabled="form.IsVehicle ? true : false" v-model="form.IsVirtualWarehouse" type="number" toggle />
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.LicenseNumber + (insertRequired.LicenseNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LicenseNumber.$error }">
-                <b-form-input type="text" v-model="form.LicenseNumber" :readonly="insertReadonly.LicenseNumber" />
-              </b-form-group>
-            </b-col>
-            <b-col md="4" lg="3">
-              <b-form-group :label="insertTitle.FinanceCode + (insertRequired.FinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode.$error }">
-                <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="4" lg="3">
-              <b-form-group  :label="insertTitle.FinanceCode2 + (insertRequired.FinanceCode2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode2.$error }">
-                <b-form-input type="text" v-model="form.FinanceCode2" :readonly="insertReadonly.FinanceCode2" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
+              <b-form-input type="text" v-model="form.LicenseNumber" :readonly="insertReadonly.LicenseNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
+              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" required/>
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2">
+              <b-form-input type="text" v-model="form.FinanceCode2" :readonly="insertReadonly.FinanceCode2" />
+            </NextFormGroup>
           </b-row>
           <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.warehouse.SupplierBranchId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.supplierBranch.$error }">
-                  <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-            </b-col>
-             <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.purchaseWarehouse.$error }">
-                  <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
-                </b-form-group>
-              </b-col>
-              <b-col md="4" lg="3">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId') + '*'" :class="{ 'form-group--error': $v.warehouseSupplier.returnWarehouse.$error }">
-                  <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
-                </b-form-group>
-              </b-col>
+            <NextFormGroup :title="$t('insert.warehouse.SupplierBranchId')" :error="$v.warehouseSupplier.supplierBranch" :required="true">
+              <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+                <template slot="option" slot-scope="option">
+                  {{ option.BranchCommercialTitle }}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.warehouse.PurchaseWarehouseId')" :error="$v.warehouseSupplier.purchaseWarehouse" :required="true">
+              <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.warehouse.ReturnWarehouseId')" :error="$v.warehouseSupplier.returnWarehouse" :required="true">
+              <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
+            </NextFormGroup>
           </b-row>
           <b-row>
             <b-col md="2" class="ml-auto">

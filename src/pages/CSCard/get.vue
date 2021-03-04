@@ -29,14 +29,15 @@
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.DocumentNumber')}}</span> <p>{{rowData.DocumentNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.DocumentDate')}}</span> <p>{{rowData.DocumentDate}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.Bank')}}</span> <p>{{rowData.Bank && rowData.Bank.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CsTotal')}}</span> <p>{{rowData.CsTotal}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.CsCard.CorrespondentBranch')}}</span> <p>{{rowData.BankBranch && rowData.BankBranch.Label}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.CsCard.CsTotal')}}</span> <p>{{rowData.CurrencyCsTotal}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.CurrencyId')}}</span> <p>{{rowData.Currency && rowData.Currency.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.DueDate')}}</span> <p>{{rowData.DueDate}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.SerialNumber')}}</span> <p>{{rowData.SerialNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.PayCity')}}</span> <p>{{rowData.PayCity}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.CsCard.PayCity')}}</span> <p>{{payCity}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.cscard.reminder')}}</span> <p>{{customerReminder}}</p>
             </b-card>
           </b-row>
@@ -51,7 +52,8 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      customerReminder: null
+      customerReminder: null,
+      payCity: null
     }
   },
   mounted () {
@@ -59,7 +61,7 @@ export default {
     this.$store.commit('bigLoaded', false)
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData', 'style', 'cities'])
   },
   methods: {
     closeQuick () {
@@ -67,6 +69,7 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CsCard', record: this.$route.params.url})
+      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
     }
   },
   watch: {
@@ -74,6 +77,12 @@ export default {
       this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
         this.customerReminder = res.Model.Remainder
       })
+    },
+    cities: function (e) {
+      if (this.rowData.PayCity && e) {
+        let tmpArr = e.filter(i => i.Value === this.rowData.PayCity)
+        this.payCity = tmpArr[0].Label
+      }
     }
   }
 }
