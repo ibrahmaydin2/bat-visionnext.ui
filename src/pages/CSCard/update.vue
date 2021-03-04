@@ -321,6 +321,7 @@ export default {
       this.csType = this.convertLookupValueToSearchValue(e.CsType)
       this.branch = this.convertLookupValueToSearchValue(e.BankBranch)
       this.form = e
+      this.form.CsTotal = this.form.CurrencyCsTotal
       if (e.PayCity && this.lookup.CITY) {
         let tmpArr = this.lookup.CITY.filter(i => i.Value === e.PayCity)
         this.payCity = tmpArr[0].Label

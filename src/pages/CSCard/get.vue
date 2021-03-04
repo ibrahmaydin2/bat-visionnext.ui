@@ -30,7 +30,7 @@
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.DocumentDate')}}</span> <p>{{rowData.DocumentDate}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.Bank')}}</span> <p>{{rowData.Bank && rowData.Bank.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.CorrespondentBranch')}}</span> <p>{{rowData.BankBranch && rowData.BankBranch.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CsTotal')}}</span> <p>{{rowData.CsTotal}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.CsCard.CsTotal')}}</span> <p>{{rowData.CurrencyCsTotal}}</p>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
                 <span><i class="far fa-circle" /> {{$t('get.CsCard.CurrencyId')}}</span> <p>{{rowData.Currency && rowData.Currency.Label}}</p>
