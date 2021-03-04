@@ -178,6 +178,7 @@ export default {
         GrvNumber: null,
         RouteId: null,
         RmaReasonId: null,
+        RecordId: null,
         RmaLines: []
       },
       rmaLine: {
@@ -195,11 +196,13 @@ export default {
         Quantity: null,
         RmaQuantity1: null,
         RmaUnit1Id: null,
+        RecordId: null,
         Price: null,
         Item: {
           Description1: null,
           Code: null,
-          RecordId: null
+          RecordId: null,
+          ItemId: null
         }
       },
       rmaLines: [],
@@ -324,8 +327,10 @@ export default {
     initRmaLine (value) {
       this.rmaLine.UnitSetId = value.UnitSetId
       this.rmaLine.UnitId = value.UnitId
+      this.rmaLine.ItemId = value.RecordId
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity
       this.rmaLine.RmaUnit1Id = this.rmaLine.UnitId
+      this.rmaLine.RmaReasonId = this.form.RmaReasonId
     },
     initNullRmaLine () {
       this.rmaLine = {
@@ -404,28 +409,34 @@ export default {
     setModel () {
       let e = this.rowData
       e.RmaLines.map(item => {
-        this.rmaLines.push({
-          Item: {
-            Description1: item.Item.Label,
-            Code: item.Item.Code,
-            RecordId: item.Item.DecimalValue
-          },
-          Deleted: item.Deleted,
-          System: item.System,
-          RecordState: 3,
-          StatusId: item.StatusId,
-          LineNumber: item.LineNumber,
-          ItemId: item.ItemId,
-          RmaReasonId: item.RmaReasonId,
-          ConvFact1: item.ConvFact1,
-          ConvFact2: item.ConvFact2,
-          Quantity: item.Quantity,
-          Price: item.Price,
-          UnitSetId: item.UnitSetId,
-          UnitId: item.UnitId,
-          RmaQuantity1: item.Quantity,
-          RmaUnit1Id: item.UnitId
-        })
+        if (item.Item) {
+          this.rmaLines.push({
+            Item: {
+              Description1: item.Item.Label,
+              Code: item.Item.Code,
+              RecordId: item.Item.DecimalValue
+            },
+            Deleted: item.Deleted,
+            System: item.System,
+            RecordState: 3,
+            StatusId: item.StatusId,
+            LineNumber: item.LineNumber,
+            ItemId: item.ItemId,
+            RmaReasonId: item.RmaReasonId,
+            ConvFact1: item.ConvFact1,
+            ConvFact2: item.ConvFact2,
+            Quantity: item.Quantity,
+            Price: item.Price,
+            UnitSetId: item.UnitSetId,
+            UnitId: item.UnitId,
+            RmaQuantity1: item.Quantity,
+            RmaUnit1Id: item.UnitId,
+            RecordId: item.RecordId
+          })
+        }
+      })
+      this.rmaLines.sort(function (a, b) {
+        return a.LineNumber - b.LineNumber
       })
       this.form = e
       this.customer = this.convertLookupValueToSearchValue(e.Customer)

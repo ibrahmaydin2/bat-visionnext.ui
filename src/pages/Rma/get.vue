@@ -93,6 +93,9 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRma/api/Rma', record: this.$route.params.url}).then(() => {
+        this.rowData.RmaLines.sort(function (a, b) {
+          return a.LineNumber - b.LineNumber
+        })
         if (this.lookup.RMA_STATUS && this.lookup.RMA_STATUS.length > 0 && this.rowData.RmaStatusId > 0) {
           this.RmaStatus = this.lookup.RMA_STATUS.find(a => a.DecimalValue === this.rowData.RmaStatusId)
         }
