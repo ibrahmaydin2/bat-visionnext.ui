@@ -26,7 +26,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.RMA.RMA')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
@@ -310,6 +310,7 @@ export default {
       this.rmaLines.splice(this.rmaLines.indexOf(item), 1)
     },
     initRmaLine (value) {
+      this.rmaLine.ItemId = value.RecordId
       this.rmaLine.UnitSetId = value.UnitSetId
       this.rmaLine.UnitId = value.UnitId
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity
@@ -361,7 +362,6 @@ export default {
         this.tabValidation()
       } else {
         this.form.RmaLines = this.rmaLines
-        console.log(this.form)
         this.createData()
         // update işlemiyse
         // this.updateData()

@@ -484,6 +484,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res
         })
         .catch(err => {
           console.log(err)
@@ -568,9 +569,9 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getInsertRules ({ commit }, query) {
+    getInsertRules ({ state, commit }, query) {
       commit('bigLoaded', true)
-      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
         .then(res => {
           commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
@@ -1285,6 +1286,12 @@ export const store = new Vuex.Store({
     },
     setTableRowsAll (state, payload) {
       state.tableRowsAll = []
+      payload.sort((a, b) => {
+        if (a.visible === b.visible) {
+          return a.label.localeCompare(b.label)
+        }
+        return b.visible - a.visible
+      })
       state.tableRowsAll = payload
     },
     setLookUp (state, payload) {

@@ -5,14 +5,15 @@
     "changePassword": "Şifremi Değiştir",
     "stockChangePassword": "Stok Sayım Şifresi Oluştur",
     "workOrder": "Work Order",
-    "other": "Diğer",
+    "other": "Menü",
     "Route": "Rota Kayıtları",
     "Employee": "Personel Yönetimi",
     "Vehicle": "Araç Ana Kayıtları",
     "Item": "Ürün Kayıtları",
     "Branch": "Şube Kayıtları",
     "Warehouse": "Depo Kayıtları",
-    "Customer": "Müşteri Kayıtları"
+    "Customer": "Müşteri Kayıtları",
+    "search": "Ara"
   },
   "router": {
     "Service": "Servis",
@@ -336,13 +337,17 @@
     "CreditCardGet": "Kredi Kartı İşlemi Görüntüle",
     "PriceListUpdate ": "Fiyat Listesi Güncelle",
     "PriceListGet ": "Fiyat Listesi",
-    "CsCard": "Çek İşlemleri",
-    "CsCardInsert": "Yeni Çek İşlemi",
-    "CsCardUpdate": "Çek İşlemi Güncelle",
-    "CsCardGet": "Çek İşlemi Görüntüle",
+    "CSCard": "Çek İşlemleri",
+    "CSCardInsert": "Yeni Çek İşlemi",
+    "CSCardUpdate": "Çek İşlemi Güncelle",
+    "CSCardGet": "Çek İşlemi Görüntüle",
     "RouteBalance": "Rota Dengeleme",
     "AccountTransaction": "Cari Hesap Hareketleri",
-    "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle"
+    "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle",
+    "Rma": "İade Ürün Yönetimi",
+    "RmaGet": "İade Ürün Yönetimi Görüntüle",
+    "RmaInsert": "Yeni İade Ürün",
+    "RmaUpdate": "İade Ürün Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -826,7 +831,8 @@
       "CsCard": "Çek İşlem Ana Kayıtları",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "reminder": "Müşteri Bakiyesi"
+      "reminder": "Müşteri Bakiyesi",
+      "description": "Açıklama"
     },
     "item": {
       "Detail": "Detaylar",
@@ -1341,7 +1347,8 @@
       "CurrencyId": "Para Birimi",
       "CsTotal": "Çek Tutarı",
       "RepresentativeId": "Saha Personeli",
-      "RouteId": "Rota"
+      "RouteId": "Rota",
+      "CsCard": "Genel"
     },
     "BankTransaction": {
       "Customer": "Müşteri",
@@ -1370,6 +1377,23 @@
       "Remainder": "Bakiye",
       "CreditAccountRemainder": "Bakiye Durumu",
       "Genexp1": "Açıklama"
+    },
+    "RMA": {
+      "RMA": "İade Ürün Yönetimi",
+      "Customer": "Müşteri",
+      "Warehouse": "Depo",
+      "Representative": "Personel",
+      "RmaStatus": "İade Durumu",
+      "ApproveEmployee": "Onaylayan",
+      "ApproveNumber": "Onay Numarası",
+      "RmaType": "İade Tipi",
+      "ApproveDate": "Onay Tarihi",
+      "PriceDate": "Fiyatlandırma Tarihi",
+      "Genexp1": "Açıklama",
+      "RmaDate": "İade Tarihi",
+      "GrvNumber": "Müşteri İade No",
+      "Route": "Rota",
+      "RmaReason": "İade Nedeni"
     }
   },
   
