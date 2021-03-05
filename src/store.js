@@ -569,9 +569,9 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getInsertRules ({ commit }, query) {
+    getInsertRules ({ state, commit }, query) {
       commit('bigLoaded', true)
-      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
         .then(res => {
           commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
