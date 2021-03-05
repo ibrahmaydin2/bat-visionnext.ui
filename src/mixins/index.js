@@ -65,12 +65,13 @@ export default {
         }
       })
     },
-    searchItemsByModel (api, name, model) {
+    searchItemsByModel (api, name, model, recordCount) {
       return this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: api,
         name: name,
-        andConditionModel: model
+        andConditionModel: model,
+        pagerecordCount: recordCount
       })
     },
     getFormatDataByType (data, type, lang) {
