@@ -28,7 +28,7 @@
       <section>
         <b-row>
           <b-col cols="8">
-            <b-row>{{insertRequired}}
+            <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
                 <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
               </NextFormGroup>
@@ -65,15 +65,15 @@
             <b-card  class="summary-card">
               <div class="summary-area">
                 <span class="summary-title">{{$t('insert.order.netTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.NetTotal.toFixed(2)}}</span>
+                <span class="summary-value text-muted">: {{form.NetTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.vatTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalVat.toFixed(2)}}</span>
+                <span class="summary-value text-muted">: {{form.TotalVat}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.GrossTotal.toFixed(2)}}</span>
+                <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
               </div>
@@ -144,7 +144,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity" />
+              <b-form-input type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity" min=1 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedOrderLine.price" disabled />
@@ -190,11 +190,11 @@
                   <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
-                  <b-td>{{o.Price.toFixed(2)}}</b-td>
-                  <b-td>{{o.VatRate.toFixed(2)}}</b-td>
-                  <b-td>{{o.NetTotal.toFixed(2)}}</b-td>
-                  <b-td>{{o.TotalVat.toFixed(2)}}</b-td>
-                  <b-td>{{o.GrossTotal.toFixed(2)}}</b-td>
+                  <b-td>{{o.Price}}</b-td>
+                  <b-td>{{o.VatRate}}</b-td>
+                  <b-td>{{o.NetTotal}}</b-td>
+                  <b-td>{{o.TotalVat}}</b-td>
+                  <b-td>{{o.GrossTotal}}</b-td>
                   <b-td class="text-center"><i @click="removeOrderLine(0)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -207,7 +207,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { required, minValue } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -356,7 +356,7 @@ export default {
       me.searchItemsByModel('VisionNextFinance/api/PriceListItem/Search', 'priceListItems', model, 1).then(() => {
         if (me.priceListItems && me.priceListItems.length > 0) {
           me.priceListItem = me.priceListItems[0]
-          me.selectedOrderLine.price = me.priceListItem.SalesPrice
+          me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
         } else {
           me.priceListItem = null
           me.selectedOrderLine.price = null
@@ -384,9 +384,9 @@ export default {
       }
       let vatRate = this.selectedOrderLine.selectedItem.Vat
       this.selectedOrderLine.vatRate = vatRate
-      this.selectedOrderLine.grossTotal = this.selectedOrderLine.price * this.selectedOrderLine.quantity
-      this.selectedOrderLine.vatTotal = this.selectedOrderLine.grossTotal * vatRate / 100
-      this.selectedOrderLine.netTotal = this.selectedOrderLine.grossTotal - this.selectedOrderLine.vatTotal
+      this.selectedOrderLine.grossTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
+      this.selectedOrderLine.vatTotal = this.roundNumber(this.selectedOrderLine.grossTotal * vatRate / 100)
+      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.grossTotal - this.selectedOrderLine.vatTotal)
     },
     setStock () {
       if (!this.selectedOrderLine.selectedItem || !this.selectedOrderLine.selectedItem.RecordId) {
@@ -419,10 +419,14 @@ export default {
       this.form.TotalDiscount = 0
       for (let index = 0; index < this.form.OrderLines.length; index++) {
         this.form.OrderLines[index].LineNumber = index
-        this.Form.NetTotal += this.form.OrderLines[index].NetTotal
-        this.Form.TotalVat += this.form.OrderLines[index].TotalVat
-        this.Form.GrossTotal += this.form.OrderLines[index].GrossTotal
+        this.form.NetTotal += this.form.OrderLines[index].NetTotal
+        this.form.TotalVat += this.form.OrderLines[index].TotalVat
+        this.form.GrossTotal += this.form.OrderLines[index].GrossTotal
       }
+
+      this.form.NetTotal = this.roundNumber(this.form.NetTotal)
+      this.form.TotalVat = this.roundNumber(this.form.TotalVat)
+      this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
     addOrderLine () {
       this.$v.selectedOrderLine.$touch()
@@ -502,7 +506,8 @@ export default {
           required
         },
         quantity: {
-          required
+          required,
+          minValue: minValue(1)
         },
         price: {
           required
@@ -563,16 +568,8 @@ export default {
 }
 </script>
 <style scoped>
-.second-area {
-  padding: 0px 15px;
-}
-.card-title {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-}
 .summary-card {
-  width: 200px;
+  width: 240px;
   float: right;
   height: 90px;
 }
@@ -584,7 +581,7 @@ export default {
   width: 100px !important;
 }
 .summary-value {
-   width: 30px !important;
+   width: 75px !important;
    float:right
 }
 .summary-area {

@@ -142,6 +142,9 @@ export default {
           Description1: lookupValue.Label
         }
       }
+    },
+    roundNumber (value, decimalCount = 2) {
+      return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
     }
   }
 }
