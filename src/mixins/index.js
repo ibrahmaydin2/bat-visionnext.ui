@@ -65,12 +65,13 @@ export default {
         }
       })
     },
-    searchItemsByModel (api, name, model) {
+    searchItemsByModel (api, name, model, recordCount) {
       return this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: api,
         name: name,
-        andConditionModel: model
+        andConditionModel: model,
+        pagerecordCount: recordCount
       })
     },
     getFormatDataByType (data, type, lang) {
@@ -141,6 +142,9 @@ export default {
           Description1: lookupValue.Label
         }
       }
+    },
+    roundNumber (value, decimalCount = 2) {
+      return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
     }
   }
 }

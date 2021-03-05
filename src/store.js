@@ -1052,7 +1052,7 @@ export const store = new Vuex.Store({
         ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': 1000,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 1000,
         'page': 1
       }
       return axios.post(query.api, dataQuery, authHeader)
@@ -1407,6 +1407,19 @@ export const store = new Vuex.Store({
           case 'Text':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <b-form-textarea v-model="form.${fieldName}" placeholder="" />
+            </NextFormGroup>`
+            dflvl[fieldName] = fieldDefaultValue
+            break
+
+          case 'Time':
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <b-form-timepicker
+              :placeholder="$t('insert.chooseTime')"
+              :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
+              :label-no-time-selected="$t('insert.chooseTime')"
+              :label-close-button="$t('insert.close')"
+              close-button-variant="outline-danger"
+              v-model="form.${fieldName}"/>
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break

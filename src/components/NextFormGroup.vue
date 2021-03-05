@@ -1,5 +1,5 @@
 <template>
-  <b-col v-if="insertVisible != null && insertVisible[itemKey] != null ? insertVisible[itemKey] : true" cols="12" md="4" lg="3">
+  <b-col v-if="insertVisible != null && insertVisible[itemKey] != null ? insertVisible[itemKey] : true" cols="12" :md="md" :lg="lg">
     <b-form-group :label="itemTitle + (itemRequired ? ' *' : '')" :class="{ 'form-group--error': itemError }">
         <slot />
     </b-form-group>
@@ -22,6 +22,14 @@ export default {
     },
     required: {
       type: Boolean
+    },
+    md: {
+      type: String,
+      default: '4'
+    },
+    lg: {
+      type: String,
+      default: '3'
     }
   },
   data () {
