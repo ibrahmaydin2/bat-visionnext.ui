@@ -347,7 +347,11 @@
     "Rma": "İade Ürün Yönetimi",
     "RmaGet": "İade Ürün Yönetimi Görüntüle",
     "RmaInsert": "Yeni İade Ürün",
-    "RmaUpdate": "İade Ürün Güncelle"
+    "RmaUpdate": "İade Ürün Güncelle",
+    "DiscountReason": "İndirim Nedenleri",
+    "DiscountReasonInsert": "Yeni İndirim Nedeni",
+    "DiscountReasonUpdate": "İndirim Nedeni Güncelle",
+    "DiscountReasonGet": "İndirim Nedeni Görüntüle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1394,9 +1398,17 @@
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
       "RmaReason": "İade Nedeni"
+    },
+    "DiscountReason": {
+      "DiscountReason": "İndirim Nedenleri",
+      "DiscountClass": "İndirim Sınıfı",
+      "Status": "Durum",
+      "Code": "Kod",
+      "Description": "Açıklama",
+      "General": "Genel"
     }
   },
-  
+
   "general": {
     "pleaseWait": "Lütfen Bekleyin...",
     "loggined": "Oturum Açılıyor",
