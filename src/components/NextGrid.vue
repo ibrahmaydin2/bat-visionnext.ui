@@ -53,71 +53,6 @@
                   </v-select>
                 </div>
               </div>
-
-              <!-- <v-select
-                v-if="header.columnType === 'CodeValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'UpperValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'ValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'DecimalValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'OtherPropertiesValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-              >
-              </v-select> -->
-
-              <!--<v-select
-                v-if="header.columnType === 'LabelValue'"
-                v-once
-                disabled
-                v-model="VehicleName"
-                label="VehiclePlateNumber"
-                :filterable="false"
-                :options="vehicleList"
-                @search="onVehicleSearch"
-                @input="selectedVehicle"
-              >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.VehiclePlateNumber }}
-                </template>
-              </v-select>-->
-
               <v-select
                 v-if="header.columnType === 'Boolean'"
                 v-once
@@ -127,13 +62,6 @@
                 label="title"
               />
 
-              <!-- <b-form-datepicker
-                v-if="header.columnType === 'Date'"
-                v-once
-                v-model="searchText"
-                placeholder=""
-                @input="filterDate(header.dataField, searchText)"
-              /> -->
               <date-picker
                 v-if="header.columnType === 'Date'"
                 range
@@ -141,6 +69,7 @@
                 v-model="rangeDate"
                 @change="filterRangeDate(header.dataField, searchText)"
               ></date-picker>
+
               <date-picker
                 v-if="header.columnType === 'DateTime'"
                 range
@@ -148,13 +77,7 @@
                 v-model="rangeDate"
                 @change="filterRangeDate(header.dataField, searchText)"
               ></date-picker>
-              <!-- <b-form-datepicker
-                v-if="header.columnType === 'DateTime'"
-                v-once
-                v-model="searchText"
-                placeholder=""
-                @input="filterDate(header.dataField, searchText)"
-              /> -->
+
               <b-form-input
                 v-if="header.columnType === 'Time'"
                 v-once
@@ -182,12 +105,12 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i">
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :style="item.Selected ? 'background-color: darkgray' : ''">
           <b-td v-for="h in head" :key="h.dataField">
-            <!-- eğer value gönderirlerse bu fonksiyonu çalıştırıcaz.
-            <template v-if="h.value">
-              {{ item[h.dataField][h.value] }}
-            </template>-->
+            <span v-if="h.columnType === 'selection'" class="d-block w-100">
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
+              <i v-if="selectionMode === 'single'" class="fa fa-dot-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
+            </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
                 <template #button-content>
@@ -247,9 +170,6 @@
       <b-col cols="6">
         <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
       </b-col>
-      <!-- <b-col cols="6">
-        aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
-      </b-col> -->
     </b-row>
     <b-modal id="approve-reject-modal" ref="RejectModal" hide-footer hide-header>
       <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
@@ -276,6 +196,15 @@ export default {
       default: function () {
         return {}
       }
+    },
+    selectionMode: {
+      type: String,
+      validator: (prop) => [
+        'none',
+        'single',
+        'multi'
+      ].includes(prop),
+      default: 'none'
     }
   },
   mixins: [mixin],
@@ -305,8 +234,8 @@ export default {
       ],
       rangeDate: [],
       selectedHeader: null,
-      workFlowList: []
-      // autoGridField: []
+      workFlowList: [],
+      selectedItems: []
     }
   },
   mounted () {
@@ -516,6 +445,28 @@ export default {
     },
     onClickAutoComplete (header) {
       this.selectedHeader = header
+    },
+    isSelectable () {
+      return this.selectionMode === 'single' || this.selectionMode === 'multi'
+    },
+    selectRow (item) {
+      if (this.selectionMode === 'multi') {
+        item.Selected = !item.Selected
+        let includedItems = this.selectedItems.filter(s => s.RecordId === item.RecordId)
+        if (includedItems && includedItems.length > 0) {
+          this.selectedItems.splice(this.selectedItems.indexOf(includedItems[0]), 1)
+        } else {
+          this.selectedItems.push(item)
+        }
+      } else if (this.selectionMode === 'single') {
+        this.items.map(i => {
+          i.Selected = false
+          return i
+        })
+        item.Selected = true
+        this.selectedItems = [item]
+      }
+      this.$forceUpdate()
     }
   },
   watch: {
@@ -548,7 +499,11 @@ export default {
       this.head = []
       let lookups = ''
       const visibleRows = e.filter(item => item.visible === true)
+      const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      if (this.isSelectable()) {
+        this.head.push(selection)
+      }
       this.head.push(opt)
       for (let t = 0; t < visibleRows.length; t++) {
         this.head.push(visibleRows[t])
