@@ -779,7 +779,7 @@ const listUpdate = [
   { path: '/Update/StockTransfer/:url', name: 'StockTransferUpdate', component: StockTransferUpdate, meta: { title: i18n.t('router.StockTransferUpdate'), baseLink: 'StockTransfer' } },
   { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
   { path: '/Update/WarehouseStock/:url', name: 'WarehouseStockUpdate', component: WarehouseStockUpdate, meta: { title: i18n.t('router.WarehouseStockUpdate'), baseLink: 'WarehouseStock' } },
-  { path: '/Update/Order/:url', name: 'OrderUpdate', component: OrderUpdate, meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'OrderUpdate' } },
+  { path: '/Update/Order/:url', name: 'OrderUpdate', component: OrderUpdate, meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
   { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldAnalysisResult/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResult' } },
   { path: '/Update/ItemAnalysisResult/:url', name: 'ItemAnalysisResultUpdate', component: ItemAnalysisResultUpdate, meta: { title: i18n.t('router.ItemAnalysisResultUpdate'), baseLink: 'ItemAnalysisResul' } },

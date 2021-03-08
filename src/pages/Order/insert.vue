@@ -6,7 +6,7 @@
           <b-col cols="12" md="4">
             <Breadcrumb />
           </b-col>
-          <b-col md="4">
+          <b-col cols="12" md="2">
             <div class="text-right">
               <span><b>{{insertTitle.CurrencyId}}</b></span>
               <span>
@@ -14,6 +14,9 @@
                 <i v-if="selectedCurrency.RecordId === 2" class="fas fa-usd-sign"></i>
               </span>
             </div>
+          </b-col>
+          <b-col cols="12" md="2">
+            <b-button id="show-btn" size="sm" variant="success" @click="getCampaigns">{{$t('insert.order.suitableCampaigns')}}</b-button>
           </b-col>
           <b-col cols="12" md="4" class="text-right">
             <router-link :to="{name: 'Order' }">
@@ -195,7 +198,10 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td class="text-center"><i @click="removeOrderLine(0)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editOrderLine(o)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeOrderLine(o)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -203,6 +209,36 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    <b-modal id="campaign-modal" hide-footer>
+      <template #modal-title>
+        {{$t('insert.order.campaignSelection')}}
+      </template>
+      <b-table
+          :items="campaigns"
+          :fields="campaignFields"
+          select-mode="multi"
+          responsive
+          id="campaign-list"
+          :selectable="campaignSelectable"
+          bordered
+          tbody-tr-class="bg-white"
+          @row-selected="onCampaignSelected"
+        >
+        <template #cell(selection)="row" v-if="campaignSelectable">
+          <span>
+            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+          </span>
+        </template>
+      </b-table>
+      <b-pagination
+        :total-rows="campaigns ? campaigns.length : 0"
+        v-model="currentPage"
+        :per-page="10"
+        aria-controls="campaign-list"
+      ></b-pagination>
+      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
+      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
+  </b-modal>
   </b-row>
 </template>
 <script>
@@ -242,8 +278,15 @@ export default {
         OrderNumber: null,
         TerminalOrPc: 'P',
         RecvLocationId: null,
-        OrderLines: []
+        OrderLines: [],
+        OrderTypeId: 1
       },
+      campaignFields: [
+        {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
+        {key: 'DiscountCategory.Description1', label: this.$t('insert.order.campaignName'), sortable: false},
+        {key: 'DiscountCategory.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
+      ],
+      SelectedDiscounts: [],
       selectedCustomer: null,
       documentDate: null,
       selectedPrice: {},
@@ -257,8 +300,16 @@ export default {
         netTotal: null,
         stock: null,
         vatRate: null,
-        vatTotal: null
-      }
+        vatTotal: null,
+        isUpdated: false
+      },
+      campaigns: [],
+      selectedIndex: null,
+      customerFirstSet: true,
+      documentDateFirstSet: true,
+      selectedCampaigns: [],
+      currentPage: 1,
+      campaignSelectable: false
     }
   },
   computed: {
@@ -343,6 +394,19 @@ export default {
           loading(false)
         })
       }
+    },
+    getItem (recordId) {
+      let request = {
+        andConditionModel: {
+          RecordIds: [recordId]
+        }
+      }
+      var me = this
+      this.$api.post(request, 'Item', 'Item/Search').then((res) => {
+        if (res.ListModel && res.ListModel.BaseModels) {
+          me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+        }
+      })
     },
     searchPriceListItem () {
       if (!this.selectedPrice || !this.selectedPrice.RecordId || !this.selectedOrderLine.selectedItem) {
@@ -439,14 +503,14 @@ export default {
         return false
       }
       let filteredArr = this.form.OrderLines.filter(i => i.ItemId === this.selectedOrderLine.selectedItem.RecordId)
-      if (filteredArr.length > 0) {
+      if (filteredArr.length > 0 && !this.selectedOrderLine.isUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
       let length = this.form.OrderLines.length
       let selectedItem = this.selectedOrderLine.selectedItem
       let quantity = this.selectedOrderLine.quantity
-      this.form.OrderLines.push({
+      let order = {
         Description1: selectedItem.Description1,
         Deleted: 0,
         System: 0,
@@ -461,6 +525,7 @@ export default {
         ConvFact2: 1,
         Quantity: quantity,
         ShippedQuantity: quantity,
+        Stock: this.selectedOrderLine.stock,
         VatRate: this.selectedOrderLine.vatRate,
         TotalVat: this.selectedOrderLine.vatTotal,
         TotalItemDiscount: 0,
@@ -475,14 +540,87 @@ export default {
         SalesUnit1Id: selectedItem.UnitId,
         TempDiscountQuantity: this.selectedOrderLine.quantity,
         TempDiscountNetTotal: this.selectedOrderLine.netTotal
-      })
+      }
+      if (this.selectedOrderLine.isUpdated) {
+        this.form.OrderLines[this.selectedIndex] = order
+        this.selectedOrderLine.isUpdated = false
+      } else {
+        this.form.OrderLines.push(order)
+      }
       this.calculateTotalPrices()
+      this.selectedIndex = null
       this.selectedOrderLine = {}
       this.$v.selectedOrderLine.$reset()
     },
     removeOrderLine (item) {
       this.form.OrderLines.splice(this.form.OrderLines.indexOf(item), 1)
       this.calculateTotalPrices()
+      this.selectedIndex = null
+      this.selectedOrderLine = {}
+      this.$v.selectedOrderLine.$reset()
+    },
+    editOrderLine (item) {
+      this.selectedIndex = this.form.OrderLines.indexOf(item)
+      this.selectedOrderLine = {
+        quantity: item.Quantity,
+        price: item.Price,
+        vatRate: item.VatRate,
+        netTotal: item.NetTotal,
+        vatTotal: item.TotalVat,
+        grossTotal: item.GrossTotal,
+        stock: item.Stock,
+        isUpdated: true
+      }
+      this.getItem(item.ItemId)
+    },
+    getCampaigns () {
+      this.campaignSelectable = false
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      if (!this.form.OrderLines || this.form.OrderLines.length === 0) {
+        this.$toasted.show(this.$t('insert.order.noOrderLines'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
+        this.campaigns = res.Models
+        if (this.campaigns && this.campaigns.length > 0) {
+          this.$bvModal.show('campaign-modal')
+        } else {
+          this.campaigns = []
+          this.$toasted.show(this.$t('insert.order.noCampaigns'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
+    },
+    addCampaign () {
+      let model = {
+        SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
+        Order: this.form
+      }
+      this.$api.post(model, 'Order', 'Order/ApplyInsertDiscounts').then((res) => {
+        this.$bvModal.hide('campaign-modal')
+        if (res && res.Order) {
+          this.form = res.Order
+        }
+        this.createData()
+      })
+    },
+    onCampaignSelected (items) {
+      this.selectedCampaigns = items
     },
     save () {
       this.$v.form.$touch()
@@ -494,7 +632,16 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.createData()
+        this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
+          this.campaigns = res.Models
+          if (this.campaigns && this.campaigns.length > 0) {
+            this.campaignSelectable = true
+            this.$bvModal.show('campaign-modal')
+          } else {
+            this.campaigns = []
+            this.createData()
+          }
+        })
       }
     }
   },
@@ -534,12 +681,17 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.searchPriceList()
-        this.form.OrderLines = []
-        this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
+        if (this.customerFirstSet) {
+          this.customerFirstSet = false
+          return
+        } else {
+          this.form.OrderLines = []
+          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
         this.form.RecvLocationId = e.DefaultLocationId
         let currentDate = new Date()
         currentDate.setDate(currentDate.getDate() + e.DeliveryDayParam)
@@ -550,12 +702,17 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-        this.form.OrderLines = []
-        this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
+        if (this.documentDateFirstSet) {
+          this.documentDateFirstSet = false
+          return false
+        } else {
+          this.form.OrderLines = []
+          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
       }
     },
     currencies (e) {
@@ -589,5 +746,13 @@ export default {
 }
 .summary-hr {
   margin: 3px;
+}
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: gray;
+  font-size: medium;
 }
 </style>
