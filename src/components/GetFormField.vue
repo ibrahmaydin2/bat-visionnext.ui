@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex">
-    <b-button-toolbar v-if="formFields">
+    <b-button-toolbar v-if="formFields && !this.routeName">
       <b-button-group class="header-btn-group">
         <router-link v-if="formFields.Actions && formFields.Actions.length === 1" :to="{name: `${baseLink}Insert`}">
           <b-button class="bg-orange text-white font-weight-bold rounded-0 mr-1" size="sm">
@@ -12,24 +12,13 @@
             <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="pencil" aria-hidden="false" size="sm"></b-icon>
           </b-button>
         </router-link>
-          <!-- <b-button class="bg-orange text-white font-weight-bold rounded-0" size="sm">
-            <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="pencil" aria-hidden="false" size="sm"></b-icon>
-          </b-button> -->
       </b-button-group>
     </b-button-toolbar>
     <b-dropdown v-if="formFields" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
       <template #button-content>
         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
       </template>
-      <!-- <b-dropdown-group id="dropdown-group-1" header="Group 1">
-        <b-dropdown-item v-for="(opt, x) in filteredRouteActions" :key="'opt' + x">
-          <router-link :to="{name: opt.Action, params: {url: $route.params.url}}">
-            <i class="far fa-arrow-alt-circle-right" /> {{ opt.Title }}
-          </router-link>
-        </b-dropdown-item>
-      </b-dropdown-group> -->
       <Workflow v-model="value"/>
-      <!-- <b-dropdown-text class="text-center"><b>Header</b></b-dropdown-text> -->
     </b-dropdown>
   </div>
 </template>
@@ -38,7 +27,8 @@ import { mapState } from 'vuex'
 import Workflow from './Workflow'
 export default {
   props: {
-    value: {}
+    value: {},
+    routeName: String
   },
   model: {
     prop: 'value',
@@ -46,7 +36,7 @@ export default {
   },
   data () {
     return {
-      baseLink: this.$route.meta.baseLink
+      baseLink: this.routeName || this.$route.meta.baseLink
     }
   },
   components: {
@@ -70,7 +60,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('getFormFields', { ...this.query, api: this.$route.meta.baseLink })
+    this.$store.dispatch('getFormFields', { ...this.query, api: this.baseLink })
   }
 }
 </script>

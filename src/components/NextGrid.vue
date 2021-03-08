@@ -193,20 +193,8 @@
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>
-                <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                  <router-link v-if="opt.ViewType === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </router-link>
-                  <span v-else-if="opt.ViewType === 'Modal'" @click="showModal(opt.Action, opt.ActionUrl, item.RecordId, item, opt.Query, opt.QueryMessage)">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </span>
-                  <a v-else-if="opt.ViewType === 'Link'" :href="opt.Action" target="_blank">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </a>
-                  <router-link v-else :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </router-link>
-                </b-dropdown-item>
+                <Actions :actions="tableOperations.RowActions" :row="item" />
+                <Workflow :items="workFlowList" />
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100">
@@ -274,9 +262,12 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../mixins/index'
+import Workflow from './Workflow'
 let searchQ = {}
 export default {
-  // props: ['apiurl', 'apiparams']
+  components: {
+    Workflow
+  },
   props: {
     apiurl: String,
     apiparams: String,
@@ -313,7 +304,8 @@ export default {
         { value: 0, title: 'Pasif' }
       ],
       rangeDate: [],
-      selectedHeader: null
+      selectedHeader: null,
+      workFlowList: []
       // autoGridField: []
     }
   },
@@ -343,11 +335,29 @@ export default {
       sortOpt = null
     }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
+    this.getWorkflowData()
   },
   computed: {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup'])
   },
   methods: {
+    getWorkflowData () {
+      let request = {
+        ControllerName: 'Customer',
+        ClassName: 'Customer',
+        PageName: 'pg_Customer'
+      }
+      // let request = {
+      //   'ControllerName': this.baseLink, // T_UI_FROM ActionUrl
+      //   'ClassName': this.baseLink, // T_SYS_TABLE ObjectName
+      //   'PageName': `pg_${this.baseLink}` // T_SYS_FORM
+      // }
+      this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
+        console.log(res)
+        this.workFlowList = res.ListModel.BaseModels
+        console.log(this.workFlowList)
+      })
+    },
     showModal (action, url, id, data, query, message) {
       this.modalRecordId = id
       this.modalRecord = data
