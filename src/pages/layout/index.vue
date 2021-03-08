@@ -103,6 +103,9 @@
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
+                  <div style="display: inline-grid">
+                    <GetFormField :routeName="thisRout" />
+                  </div>
                 </b-col>
               </b-row>
               <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
