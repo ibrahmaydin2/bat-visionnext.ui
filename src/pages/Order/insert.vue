@@ -466,11 +466,12 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedOrderLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
+          me.selectedOrderLine.stock = 0
+          /*  this.$toasted.show(this.$t('insert.order.noStocksException'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
-          })
+          })  */
         }
       })
     },
@@ -663,9 +664,6 @@ export default {
           required
         },
         netTotal: {
-          required
-        },
-        stock: {
           required
         },
         vatRate: {
