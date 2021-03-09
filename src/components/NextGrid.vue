@@ -105,11 +105,11 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :style="item.Selected ? 'background-color: darkgray' : ''">
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : ''">
           <b-td v-for="h in head" :key="h.dataField">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
-              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
-              <i v-if="selectionMode === 'single'" class="fa fa-dot-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : ''"></i>
+              <i v-if="selectionMode === 'single'" class="fa fa-dot-circle" :class="item.Selected ? 'selected-color' : ''"></i>
             </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
@@ -647,4 +647,10 @@ export default {
         background: #ffffff
         color: #000
         border-color: #dee2e6
+    .row-selected
+      background-color: rgb(222, 226, 230)
+      border: solid 2px
+      border-color: darkgray;
+    .selected-color
+      color: #28a745
 </style>
