@@ -104,7 +104,7 @@
                     </b-dropdown-item>
                   </b-dropdown>
                   <div style="display: inline-grid">
-                    <GetFormField :routeName="thisRout" />
+                    <!-- <GetFormField :routeName="thisRout" /> -->
                   </div>
                 </b-col>
               </b-row>
