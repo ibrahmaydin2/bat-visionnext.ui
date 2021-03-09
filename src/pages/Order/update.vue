@@ -207,6 +207,26 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
+                  <b-td>{{o.DiscountClass.Label}}</b-td>
+                  <b-td>{{o.DiscountClass.Code}}</b-td>
+                  <b-td>% {{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="campaign-modal" hide-footer>
@@ -472,11 +492,12 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedOrderLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
+          me.selectedOrderLine.stock = 0
+          /*  this.$toasted.show(this.$t('insert.order.noStocksException'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
-          })
+          })  */
         }
       })
     },
@@ -631,6 +652,12 @@ export default {
     },
     setData () {
       let rowData = this.rowData
+      if (rowData.StatusId !== 1) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.orderStatusException') })
+        setTimeout(() => {
+          this.$router.push({ name: 'Order' })
+        }, 2000)
+      }
       if (rowData) {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
@@ -691,9 +718,6 @@ export default {
           required
         },
         netTotal: {
-          required
-        },
-        stock: {
           required
         },
         vatRate: {
