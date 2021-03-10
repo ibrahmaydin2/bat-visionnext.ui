@@ -175,6 +175,11 @@ export default {
     }
   },
   watch: {
+    createCode (e) {
+      if (e) {
+        this.form.FinanceCode = e
+      }
+    }
   }
 }
 </script>
