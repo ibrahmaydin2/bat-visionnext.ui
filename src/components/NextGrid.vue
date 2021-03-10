@@ -13,7 +13,7 @@
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
-            <span class="asc__nextgrid-table-header-title">{{header.label}}</span>
+            <span class="asc__nextgrid-table-header-title">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
             <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
               <b-button
                 @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
@@ -25,7 +25,6 @@
               </b-button>
             </div>
             <div class="asc__nextgrid-table-header-filter">
-
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
                   <autocomplete
@@ -42,6 +41,7 @@
                     label="Label"
                     :options="lookup[header.modelControlUtil.code]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'lookup')"
+                    v-model="header.defaultValue"
                   >
                   </v-select>
                   <v-select
@@ -49,6 +49,7 @@
                     label="Description1"
                     :options="gridField[header.modelControlUtil.modelProperty]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
+                    v-model="header.defaultValue"
                   >
                   </v-select>
                 </div>
@@ -56,9 +57,9 @@
               <v-select
                 v-if="header.columnType === 'Boolean'"
                 v-once
-                v-model="searchText"
+                v-model="header.defaultValue"
                 :options="searchBoolean"
-                @input="filterBoolean(header.dataField)"
+                @input="filterBoolean(header)"
                 label="title"
               />
 
@@ -90,15 +91,15 @@
               <b-form-input
                 v-if="header.columnType === 'String'"
                 v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
 
               <b-form-input
                 v-if="header.columnType === 'Id'"
                 v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
             </div>
           </b-th>
@@ -356,7 +357,7 @@ export default {
       this.searchOnTable(e, this.searchText.id)
     },
     filterBoolean (e) {
-      this.searchOnTable(e, this.searchText.value)
+      this.searchOnTable(e.dataField, e.defaultValue.value)
     },
     filterDate (e, date) {
       this.searchOnTable(e, this.dateConvertToISo(date))
@@ -376,6 +377,7 @@ export default {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
     selectedValue (label, model, type) {
+      debugger
       if (model) {
         if (!this.andConditionalModel) {
           this.andConditionalModel = {}
@@ -466,6 +468,7 @@ export default {
         item.Selected = true
         this.selectedItems = [item]
       }
+      console.log(this.selectedItems)
       this.$forceUpdate()
     }
   },
@@ -506,7 +509,9 @@ export default {
       }
       this.head.push(opt)
       for (let t = 0; t < visibleRows.length; t++) {
-        this.head.push(visibleRows[t])
+        let row = visibleRows[t]
+        // row.defaultValue = 123
+        this.head.push(row)
       }
       e.forEach(c => {
         let control = c.modelControlUtil
