@@ -888,16 +888,24 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
+                <b-th><span>{{$t('insert.customer.Model_CurrencyId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditDescriptionId')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditStartDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditEndDate')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.CustomerCreditHistories" :key="i">
+                  <b-td>{{r.Currency ? r.Currency.Label : r.CurrencyName}}</b-td>
+                  <b-td>{{r.CreditDescription ? r.CreditDescription.Label : r.CreditDescriptionName}}</b-td>
                   <b-td>{{r.CreditAmount}}</b-td>
                   <b-td>{{r.CreditLimit}}</b-td>
                   <b-td>{{r.RiskLimit}}</b-td>
+                  <b-td>{{r.CreditStartDate ? dateConvertFromTimezone(r.CreditStartDate) : ''}}</b-td>
+                  <b-td>{{r.CreditEndDate ? dateConvertFromTimezone(r.CreditEndDate) : ''}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -1404,17 +1412,21 @@ export default {
     selectedCurrency (e) {
       if (e) {
         this.customerCreditHistories.currencyId = e.RecordId
+        this.customerCreditHistories.currencyName = e.Description1
       } else {
         this.customerCreditHistories.currencyId = null
+        this.customerCreditHistories.currencyName = null
       }
     },
     selectedCreditDescription (e) {
       if (e) {
         this.customerCreditHistories.creditDescriptionId = e.DecimalValue
         this.customerCreditHistories.creditDescriptionCode = e.Code
+        this.customerCreditHistories.creditDescriptionName = e.Label
       } else {
         this.customerCreditHistories.creditDescriptionId = null
         this.customerCreditHistories.creditDescriptionCode = null
+        this.customerCreditHistories.creditDescriptionName = null
       }
     },
     selectedPaymentTypeArr (e) {
@@ -1709,9 +1721,11 @@ export default {
         RecordState: 2,
         CreditAmount: this.customerCreditHistories.creditAmount,
         CreditDescriptionId: this.customerCreditHistories.creditDescriptionId,
+        CreditDescriptionName: this.customerCreditHistories.creditDescriptionName,
         CreditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
         BankId: this.customerCreditHistories.bankId,
         CurrencyId: this.customerCreditHistories.currencyId,
+        CurrencyName: this.customerCreditHistories.currencyName,
         CreditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
         Debtor: this.customerCreditHistories.debtor,
         Bail: this.customerCreditHistories.bail,
