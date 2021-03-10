@@ -18,33 +18,21 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.LoadingDate != null ? insertVisible.LoadingDate : developmentMode" :start-weekday="1" cols="12" md="2">
-            <b-form-group :label="insertTitle.LoadingDate + (insertRequired.LoadingDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LoadingDate.$error }">
-              <b-form-datepicker v-model="form.LoadingDate" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
-              <v-select v-model="routeLabel" :options="routes" @input="selectedRoute" label="Description1"></v-select>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
+            <b-form-datepicker v-model="form.LoadingDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
+            <v-select v-model="routeLabel" :options="routes" @input="selectedRoute" label="Description1"></v-select>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -54,7 +42,11 @@
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.loadingplan.items')">
-                <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
+                <v-select :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
@@ -129,7 +121,6 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
-      this.$store.dispatch('getItems')
 
       this.$store.dispatch('getSearchItems', {...this.query,
         api: 'VisionNextRoute/api/Route/Search',
@@ -154,6 +145,24 @@ export default {
       } else {
         this.form.RouteId = null
       }
+    },
+    onItemSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.searchItem(loading, search, this)
+      }
+    },
+    searchItem (loading, search, vm) {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        andConditionModel: {
+          Description1: search
+        }
+      }).then(res => {
+        loading(false)
+      })
     },
     addItems () {
       if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
