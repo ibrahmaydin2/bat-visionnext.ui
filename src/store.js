@@ -323,7 +323,7 @@ export const store = new Vuex.Store({
             commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
 
             // başarılı -> tabloyu doldur.
-            if (query.code) {
+            /* if (query.code) {
               let filterdata = {
                 'BranchId': state.BranchId,
                 'CompanyId': state.CompanyId,
@@ -361,7 +361,7 @@ export const store = new Vuex.Store({
                 search: query.search,
                 andConditionalModel: query.andConditionalModel
               })
-            }
+            } */
             commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {

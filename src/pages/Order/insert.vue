@@ -612,11 +612,13 @@ export default {
         SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
         Order: this.form
       }
+      this.$bvModal.hide('campaign-modal')
+      this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Order', 'Order/ApplyInsertDiscounts').then((res) => {
-        this.$bvModal.hide('campaign-modal')
         if (res && res.Order) {
           this.form = res.Order
         }
+        this.$store.commit('bigLoaded', false)
         this.createData()
       })
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="asc__nextgrid">
-    <b-table-simple hover bordered small responsive sticky-header class="asc__nextgrid-table">
+    <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
         <draggable tag="tr" :list="head">
           <b-th
@@ -13,7 +13,7 @@
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
-            <span class="asc__nextgrid-table-header-title">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
+            <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
             <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
               <b-button
                 @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
@@ -85,6 +85,7 @@
                 v-mask="'##:##:##'"
                 placeholder="00:00:00"
                 v-model="searchText"
+                @input="filterTime(header.dataField, searchText)"
                 @keydown.enter="filterTime(header.dataField, searchText)"
               />
 
@@ -92,6 +93,7 @@
                 v-if="header.columnType === 'String'"
                 v-once
                 v-model="header.defaultValue"
+                @input="filterTime(header.dataField, header.defaultValue)"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
 
@@ -100,6 +102,7 @@
                 v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @input="filterTime(header.dataField, header.defaultValue)"
               />
             </div>
           </b-th>
@@ -109,8 +112,7 @@
         <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : ''">
           <b-td v-for="h in head" :key="h.dataField">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
-              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : ''"></i>
-              <i v-if="selectionMode === 'single'" class="fa fa-dot-circle" :class="item.Selected ? 'selected-color' : ''"></i>
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
             </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
@@ -121,41 +123,41 @@
                 <Workflow :items="workFlowList" />
               </b-dropdown>
             </span>
-            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Label') }}
             </span>
-            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Code') }}
             </span>
-            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'UpperValue')}}
             </span>
-            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Value')}}
             </span>
-            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'DecimalValue')}}
             </span>
-            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'OtherProperties')}}
             </span>
 
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
-            <span v-else-if="h.columnType === 'Date'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Date'" class="d-block w-100 grid-wrap-text">
               {{ dateFormat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text">
               {{ dateTimeformat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'String'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text">
               {{ item[h.dataField] }}
             </span>
-            <span v-else-if="h.columnType === 'Id'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text">
               <i>{{ item[h.dataField] }}</i>
             </span>
-            <span v-else class="d-block w-100">
+            <span v-else class="d-block w-100 grid-wrap-text">
               {{ item[h.dataField] }}
             </span>
           </b-td>
@@ -236,7 +238,8 @@ export default {
       rangeDate: [],
       selectedHeader: null,
       workFlowList: [],
-      selectedItems: []
+      selectedItems: [],
+      requiredFields: []
     }
   },
   mounted () {
@@ -470,6 +473,17 @@ export default {
       }
       console.log(this.selectedItems)
       this.$forceUpdate()
+    },
+    setDefaultValues (visibleRows) {
+      // for (int i ==)
+      visibleRows.forEach(v => {
+        switch (v.columnType) {
+          case 'boolean':
+            if (v.defaultValue) {
+              v.filterBoolean(v)
+            }
+        }
+      })
     }
   },
   watch: {
@@ -504,15 +518,17 @@ export default {
       const visibleRows = e.filter(item => item.visible === true)
       const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      if (this.isSelectable()) {
+      if (this.selectionMode === 'multi') {
         this.head.push(selection)
       }
       this.head.push(opt)
       for (let t = 0; t < visibleRows.length; t++) {
         let row = visibleRows[t]
-        // row.defaultValue = 123
+        row.defaultValue = 123
         this.head.push(row)
       }
+      this.requiredFields = visibleRows.filter(v => v.required === true).map(x => x.dataField)
+      this.setDefaultValues(visibleRows)
       e.forEach(c => {
         let control = c.modelControlUtil
         if (control != null) {
@@ -653,4 +669,12 @@ export default {
       border-color: darkgray;
     .selected-color
       color: #28a745
+    .unselected-color
+      color: lightgray
+    .grid-wrap-text
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      max-width: 200px
+      min-width: 50px
 </style>
