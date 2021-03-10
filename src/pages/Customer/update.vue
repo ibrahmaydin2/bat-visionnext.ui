@@ -1706,6 +1706,7 @@ export default {
         return false
       }
       this.form.CustomerCreditHistories.push({
+        RecordState: 2,
         CreditAmount: this.customerCreditHistories.creditAmount,
         CreditDescriptionId: this.customerCreditHistories.creditDescriptionId,
         CreditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
@@ -1728,7 +1729,7 @@ export default {
         AllowOverLimit: this.customerCreditHistories.allowOverLimit,
         Plate: this.customerCreditHistoriesplate
       })
-      this.customerCreditHistories = null
+      this.customerCreditHistories = {}
       this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
@@ -2070,7 +2071,10 @@ export default {
         if (e.MarketingRegion5) {
           this.MarketingRegion5 = e.MarketingRegion5.Label
         }
-        this.TaxCustomerType = e.TaxCustomerType
+        if (e.TaxCustomerType) {
+          this.TaxCustomerType = e.TaxCustomerType
+          this.selectedType('TaxCustomerTypeId', e.TaxCustomerType)
+        }
         if (e.InvoiceCombineRuleId && this.lookup.INVOICE_COMBINE_RULE) {
           let tmpArr = this.lookup.INVOICE_COMBINE_RULE.filter(i => i.DecimalValue === e.InvoiceCombineRuleId)
           this.InvoiceCombineRule = tmpArr[0].Label
