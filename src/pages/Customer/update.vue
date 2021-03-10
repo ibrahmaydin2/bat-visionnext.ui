@@ -1455,8 +1455,10 @@ export default {
     selectedItem (e) {
       if (e) {
         this.customerItemDiscounts.code = e.RecordId
+        this.customerItemDiscounts.description1 = e.Description1
       } else {
         this.customerItemDiscounts.code = null
+        this.customerItemDiscounts.description1 = e.Description1
       }
     },
     selectedLabelId (e) {
