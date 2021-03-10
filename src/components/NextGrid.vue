@@ -1,5 +1,6 @@
 <template>
   <div class="asc__nextgrid">
+    <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.join()} ${$t('list.requiredFieldsMessage')}`}}</span>
     <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
         <draggable tag="tr" :list="head">
@@ -85,7 +86,6 @@
                 v-mask="'##:##:##'"
                 placeholder="00:00:00"
                 v-model="searchText"
-                @input="filterTime(header.dataField, searchText)"
                 @keydown.enter="filterTime(header.dataField, searchText)"
               />
 
@@ -93,7 +93,6 @@
                 v-if="header.columnType === 'String'"
                 v-once
                 v-model="header.defaultValue"
-                @input="filterTime(header.dataField, header.defaultValue)"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
 
@@ -102,7 +101,6 @@
                 v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
-                @input="filterTime(header.dataField, header.defaultValue)"
               />
             </div>
           </b-th>
@@ -239,7 +237,8 @@ export default {
       selectedHeader: null,
       workFlowList: [],
       selectedItems: [],
-      requiredFields: []
+      requiredFields: [],
+      showRequiredInfo: true
     }
   },
   mounted () {
@@ -380,7 +379,6 @@ export default {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
     selectedValue (label, model, type) {
-      debugger
       if (model) {
         if (!this.andConditionalModel) {
           this.andConditionalModel = {}
@@ -421,6 +419,16 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r] !== null || this.andConditionalModel[r] !== null) {
+          validCount++
+        }
+      })
+      if (validCount < this.requiredFields.length) {
+        return
+      }
+      this.showRequiredInfo = false
       searchQ[tableField] = search
       this.$store.dispatch('getTableData', {
         ...this.query,
@@ -463,6 +471,7 @@ export default {
         } else {
           this.selectedItems.push(item)
         }
+        this.$forceUpdate()
       } else if (this.selectionMode === 'single') {
         this.items.map(i => {
           i.Selected = false
@@ -470,20 +479,61 @@ export default {
         })
         item.Selected = true
         this.selectedItems = [item]
+        this.$forceUpdate()
       }
-      console.log(this.selectedItems)
-      this.$forceUpdate()
     },
     setDefaultValues (visibleRows) {
-      // for (int i ==)
-      visibleRows.forEach(v => {
-        switch (v.columnType) {
-          case 'boolean':
-            if (v.defaultValue) {
-              v.filterBoolean(v)
-            }
+      if (!this.andConditionalModel) {
+        this.andConditionalModel = {}
+      }
+      for (let i = 0; i < visibleRows.length; i++) {
+        let row = visibleRows[i]
+        if (!row.defaultValue) {
+          continue
         }
-      })
+        if (row.modelControlUtil !== null) {
+          this.andConditionalModel[row.modelControlUtil.modelProperty] = [row.defaultValue]
+        } else {
+          switch (row.columnType) {
+            case 'Boolean':
+              if (row.defaultValue) {
+                row.defaultValue = JSON.parse(row.defaultValue)
+                visibleRows[i] = row
+                searchQ[row.dataField] = row.defaultValue.value
+              }
+              break
+            case 'Date':
+            case 'DateTime':
+              if (row.defaultValue) {
+                let model = {}
+                let today = new Date()
+                switch (row.defaultValue) {
+                  case 'first':
+                    model.BeginValue = `01.${today.getMonth()}.${today.getFullYear()}`
+                    model.EndValue = `01.${today.getMonth()}.${today.getFullYear()}`
+                    break
+                  case 'last':
+                    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+                    model.BeginValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
+                    model.EndValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
+                    break
+                  case 'today':
+                    model.BeginValue = this.dateConvertToISo(today)
+                    model.EndValue = this.dateConvertToISo(today)
+                    break
+                }
+                this.andConditionalModel[row.dataField] = model
+              }
+              break
+            case 'String':
+            case 'Id':
+              searchQ[row.dataField] = row.defaultValue
+              break
+          }
+        }
+      }
+
+      return visibleRows
     }
   },
   watch: {
@@ -515,7 +565,7 @@ export default {
     tableRows: function (e) {
       this.head = []
       let lookups = ''
-      const visibleRows = e.filter(item => item.visible === true)
+      let visibleRows = e.filter(item => item.visible === true)
       const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       if (this.selectionMode === 'multi') {
@@ -524,11 +574,11 @@ export default {
       this.head.push(opt)
       for (let t = 0; t < visibleRows.length; t++) {
         let row = visibleRows[t]
-        row.defaultValue = 123
         this.head.push(row)
       }
+      visibleRows = this.setDefaultValues(visibleRows)
       this.requiredFields = visibleRows.filter(v => v.required === true).map(x => x.dataField)
-      this.setDefaultValues(visibleRows)
+      this.searchOnTable()
       e.forEach(c => {
         let control = c.modelControlUtil
         if (control != null) {

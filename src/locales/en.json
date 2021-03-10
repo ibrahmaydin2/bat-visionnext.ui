@@ -1271,7 +1271,8 @@
     "downloadExcel": "Excel Aktar",
     "downloadXml": "Xml Aktar",
     "quick": "Hızlı Bakış",
-    "downloads": "Dışarı Aktar"
+    "downloads": "Dışarı Aktar",
+    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir."
   },
   "dashboard": {
     "search": "Ara",
