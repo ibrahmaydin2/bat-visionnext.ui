@@ -104,7 +104,7 @@
                     </b-dropdown-item>
                   </b-dropdown>
                   <div style="display: inline-grid">
-                    <GetFormField :routeName="thisRout" />
+                    <!-- <GetFormField :routeName="thisRout" /> -->
                   </div>
                 </b-col>
               </b-row>
@@ -203,7 +203,7 @@ export default {
       // this.hideTableRow(hr)
     },
     downloadBtn (r, f) {
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: `VisionNext${r}/api/${r}/Export`})
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
     },
     filterOnFilters (e) {
       this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})
