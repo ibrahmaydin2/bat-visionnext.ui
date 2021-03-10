@@ -1182,6 +1182,27 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
           commit('bigLoaded', false)
         })
+    },
+    confirmModal ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGetItems', {data: res.data.Model, name: query.name})
+            commit('bigLoaded', false)
+          } else {
+            commit('setGetItems', {data: [], name: query.name})
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+          commit('bigLoaded', false)
+        })
     }
   },
   mutations: {

@@ -116,7 +116,7 @@
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>
-                <Actions :actions="tableOperations.RowActions" :row="item" />
+                <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
                 <Workflow :items="workFlowList" />
               </b-dropdown>
             </span>
@@ -177,16 +177,19 @@
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
     </b-modal>
+    <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
+import ConfirmModal from './ConfirmModal'
 let searchQ = {}
 export default {
   components: {
-    Workflow
+    Workflow,
+    ConfirmModal
   },
   props: {
     apiurl: String,
@@ -235,7 +238,9 @@ export default {
       rangeDate: [],
       selectedHeader: null,
       workFlowList: [],
-      selectedItems: []
+      selectedItems: [],
+      modalAction: null,
+      modalItem: null
     }
   },
   mounted () {
@@ -282,18 +287,19 @@ export default {
       //   'PageName': `pg_${this.baseLink}` // T_SYS_FORM
       // }
       this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
-        console.log(res)
         this.workFlowList = res.ListModel.BaseModels
-        console.log(this.workFlowList)
       })
     },
-    showModal (action, url, id, data, query, message) {
-      this.modalRecordId = id
-      this.modalRecord = data
-      this.modalQuery = query
-      this.modalQueryMessage = message
-      this.$refs[`${action}Modal`].show()
-      this.modalActionUrl = url
+    showModal (action, row) {
+      // this.modalRecordId = row.RecordId
+      // this.modalRecord = row
+      // this.modalQuery = query
+      // this.modalQueryMessage = message
+      // this.$refs[`${action.Action}Modal`].show()
+      // this.modalActionUrl = action.ActionUrl
+      this.$root.$emit('bv::show::modal', 'confirmModal')
+      this.modalAction = action
+      this.modalItem = row
     },
     dateTimeformat (e) {
       let calendar, date
