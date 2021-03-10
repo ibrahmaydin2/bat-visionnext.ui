@@ -297,6 +297,7 @@ export default {
       // this.modalQueryMessage = message
       // this.$refs[`${action.Action}Modal`].show()
       // this.modalActionUrl = action.ActionUrl
+      this.$root.$emit('bv::show::modal', 'confirmModal')
       this.modalAction = action
       this.modalItem = row
     },

@@ -1,6 +1,17 @@
 <template>
   <b-modal id="confirmModal" title="BootstrapVue">
-    <p class="my-4">Hello</p>
+    <p class="my-4">{{modalItem.Description1}}</p>
+    <template #modal-footer="">
+      <b-button size="sm" variant="success" @click="submit()">
+        ONAYLA
+      </b-button>
+      <b-button size="sm" variant="danger" @click="reject()">
+        Reddet
+      </b-button>
+      <b-button size="sm" variant="warning" @click="hide()">
+        İptal
+      </b-button>
+    </template>
   </b-modal>
 </template>
 <script>
@@ -20,9 +31,19 @@ export default {
     return {
     }
   },
-  mounted () {
-    console.log(this.modalAction)
-    console.log(this.modalItem)
+  methods: {
+    submit () {
+      this.$store.dispatch('confirmModal', {...this.query, api: this.modalAction.ActionUrl})
+    },
+    hide () {
+      this.close()
+    },
+    closeModal () {
+      this.close()
+    },
+    close () {
+      this.$root.$emit('bv::hide::modal', 'confirmModal')
+    }
   }
 }
 </script>
