@@ -6,7 +6,7 @@
           <b-col cols="12" md="4">
             <Breadcrumb />
           </b-col>
-          <b-col cols="12" md="2">
+          <b-col cols="12" md="4">
             <div class="text-right">
               <span><b>{{insertTitle.CurrencyId}}</b></span>
               <span>
@@ -14,9 +14,6 @@
                 <i v-if="selectedCurrency.RecordId === 2" class="fas fa-usd-sign"></i>
               </span>
             </div>
-          </b-col>
-          <b-col cols="12" md="2">
-            <b-button id="show-btn" size="sm" variant="success" @click="getCampaigns">{{$t('insert.order.suitableCampaigns')}}</b-button>
           </b-col>
           <b-col cols="12" md="4" class="text-right">
             <router-link :to="{name: 'Order' }">
