@@ -351,7 +351,11 @@
     "DiscountReason": "İndirim Nedenleri",
     "DiscountReasonInsert": "Yeni İndirim Nedeni",
     "DiscountReasonUpdate": "İndirim Nedeni Güncelle",
-    "DiscountReasonGet": "İndirim Nedeni Görüntüle"
+    "DiscountReasonGet": "İndirim Nedeni Görüntüle",
+    "FixedTermCampaign": "Vade Kampanyası Tanımları",
+    "FixedTermCampaignInsert": "Vade Kampanyası Ekleme",
+    "FixedTermCampaignUpdate": "Vade Kampanyası Güncelle",
+    "FixedTermCampaignGet": "Vade Kampanyası Görüntüle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1200,6 +1204,25 @@
       "campaigns": "Kampanyalar",
       "freeItems": "Ücretsizler",
       "loyaltyApplications": "Sadakat Uygulamaları"
+    },
+    "fixedTermCampaign": {
+      "title": "Tanımlar",
+      "discountedItems": "İndirimli Ürünler",
+      "areaDescription": "Alan Açıklaması",
+      "value": "Değer",
+      "routes": "Rotalar",
+      "customerCriterias": "Müşteri Kriterleri",
+      "branchs": "Şubeler",
+      "route": "Rota",
+      "customer": "Müşteri",
+      "branch": "Şube",
+      "maturityPeriods": "Vade Süreleri",
+      "startQuantity": "Başlangıç Miktarı",
+      "endQuantity": "Bitiş Miktarı",
+      "paymentPeriod": "Vade Süresi",
+      "customers": "Müşteriler",
+      "commercialTitle": "Müşteri Ticari Ünvanı",
+      "locationId" :"Lokasyon"
     }
   },
   "get": {
@@ -1443,6 +1466,23 @@
       "Code": "Kod",
       "Description": "Açıklama",
       "General": "Genel"
+    },
+    "fixedTermCampaign": {
+      "statusId": "Durum",
+      "code": "Kod",
+      "description1": "İndirim Tanımı",
+      "campaignBeginDate": "Başlangıç",
+      "campaignEndDate": "Bitiş",
+      "useBudget": "Bütçe Kullan",
+      "budgetAmount": "Bütçe Tutarı",
+      "usedAmount": "Kullanılan Bütçe",
+      "routeCriteria": "Rota Kriteri",
+      "customerCriteria": "Müşteri Kriteri",
+      "itemCriteria": "Ürün Kriteri",
+      "branchCriteria": "Şube Kriteri",
+      "campaignType": "Kampanya Tipi",
+      "campaignRate": "Uygulama Oranı",
+      "currency": "Para Birimi"
     }
   },
 
