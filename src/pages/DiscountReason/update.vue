@@ -24,6 +24,9 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
+          <NextFormGroup item-key="Description2" :error="$v.form.Description2">
+            <b-form-input type="text" v-model="form.Description2" :readonly="insertReadonly.Description2" />
+          </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
@@ -61,6 +64,7 @@ export default {
         StatusId: 1,
         Code: null,
         Description1: null,
+        Description2: null,
         DiscountClassId: null,
         IsCustomerDiscount: null
       },
