@@ -38,11 +38,9 @@
               <v-select :options="routes" @input="selectedRoute" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
+          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
             </b-form-group>
           </b-col>
         </b-row>
@@ -52,11 +50,13 @@
       <b-tabs>
         <b-tab :title="$t('insert.loadingplan.items')" active>
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.loadingplan.items')">
-                <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.loadingplan.items')">
+              <v-select :options="items" @search="searchItem" @input="selectedItem" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.loadingplan.PlanQuantity')">
                 <b-form-input type="text" v-model="planQuantity" />
@@ -102,7 +102,7 @@ export default {
         Code: null,
         Description1: null,
         LoadingDate: null,
-        StatusId: null,
+        StatusId: 1,
         RouteId: null,
         LoadingPlanItems: []
       },
@@ -125,8 +125,6 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
-      this.$store.dispatch('getItems')
-
       this.$store.dispatch('getSearchItems', {...this.query,
         api: 'VisionNextRoute/api/Route/Search',
         name: 'routes',
@@ -149,6 +147,18 @@ export default {
       } else {
         this.form.RouteId = null
       }
+    },
+    searchItem (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
+        loading(false)
+      })
     },
     addItems () {
       if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
@@ -203,16 +213,16 @@ export default {
       if (e) {
         this.form.Code = e
       }
-    },
+    }
     // bu fonksiyonda güncelleme yapılmayacak!
     // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
+    // insertDefaultValue (value) {
+    //   Object.keys(value).forEach(el => {
+    //     if (el !== 'Code') {
+    //       this.form[el] = value[el]
+    //     }
+    //   })
+    // }
   }
 }
 </script>

@@ -35,7 +35,7 @@
           </b-col>
           <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
-              <v-select v-model="routeLabel" :options="routes" @input="selectedRoute" label="Description1"></v-select>
+              <v-select v-model="route" :options="routes" @input="selectedRoute" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
@@ -111,7 +111,7 @@ export default {
       tmpSelectedItem: [],
       planQuantity: null,
       detailPanelRecordId: 0,
-      routeLabel: ''
+      route: null
     }
   },
   computed: {
@@ -230,11 +230,7 @@ export default {
           LoadingPlanItems: e.LoadingPlanItems,
           RecordId: e.RecordId
         }
-
-        if (this.routes && e.RouteId) {
-          let tmpArr = this.routes.filter(i => i.RecordId === e.RouteId)
-          this.routeLabel = tmpArr[0].Description1
-        }
+        this.route = this.convertLookupValueToSearchValue(e.Route)
       }
     }
   }
