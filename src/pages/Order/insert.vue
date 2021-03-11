@@ -208,30 +208,30 @@
           <b-table-simple bordered small responsive>
             <b-thead>
               <b-tr>
-                <b-th>İndirim Türü</b-th>
-                <b-th>Adı</b-th>
-                <b-th>Başlangıç Tarihi</b-th>
-                <b-th>Bitiş Tarihi</b-th>
-                <b-th>Adedi</b-th>
+                <b-th>{{$t('insert.order.discountType')}}</b-th>
+                <b-th>{{$t('insert.order.discountName')}}</b-th>
+                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
               </b-tr>
             </b-thead>
             <b-tbody>
               <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">Kampanyalar</b-td>
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
                 <b-td>{{c.Description}}</b-td>
                 <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
                 <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
                 <b-td></b-td>
               </b-tr>
               <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">Ücretsizler</b-td>
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
                 <b-td>{{f.Value}}</b-td>
                 <b-td></b-td>
                 <b-td></b-td>
                 <b-td>{{f.FreeItemQuantity}}</b-td>
               </b-tr>
               <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">Sadakat Uygulamaları</b-td>
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
                 <b-td>{{l.Description}}</b-td>
                 <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
                 <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>

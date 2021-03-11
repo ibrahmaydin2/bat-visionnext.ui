@@ -1192,7 +1192,14 @@
       "discountRate": "İndirim Oranı",
       "discountAmount": "İndirim Tutarı",
       "discountName": "İndirim Adı",
-      "discountCode": "İndirim Kodu"
+      "discountCode": "İndirim Kodu",
+      "discountType": "İndirim Türü",
+      "discountBeginDate": "İndirim Başlangıç Tarihi",
+      "discountEndDate": "İndirim Bitiş Tarihi",
+      "discountQuantity": "İndirim Adedi",
+      "campaigns": "Kampanyalar",
+      "freeItems": "Ücretsizler",
+      "loyaltyApplications": "Sadakat Uygulamaları"
     }
   },
   "get": {
