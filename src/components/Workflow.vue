@@ -55,7 +55,6 @@ export default {
       this.getAllData()
     } else {
       this.workFlowList = this.items
-      console.log(this.workFlowList)
     }
   },
   methods: {
@@ -84,7 +83,6 @@ export default {
         'RecordId': this.recordId // Get ID (İlgili Kaydın ID'si)
       }
       this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowProcessModel').then((res) => {
-        console.log(res)
         if (!res.ProcessModel || res.ProcessModel.OperationProcessModel.length < 1) {
           this.$toasted.show(this.$t('insert.errorProcess'), {
             type: 'error',

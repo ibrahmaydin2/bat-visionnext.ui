@@ -1201,7 +1201,20 @@
       "priceList": "Fiyat Listesi",
       "campaignName": "Kampanya Adı",
       "campaignCode": "Kampanya Kodu",
-      "noOrderLines": "Ürün giriniz!"
+      "noOrderLines": "Ürün giriniz!",
+      "orderStatusException": "Öneri statüsünde olmayan siparişler güncellenemez!",
+      "discounts": "İndirimler",
+      "discountRate": "İndirim Oranı",
+      "discountAmount": "İndirim Tutarı",
+      "discountName": "İndirim Adı",
+      "discountCode": "İndirim Kodu",
+      "discountType": "İndirim Türü",
+      "discountBeginDate": "İndirim Başlangıç Tarihi",
+      "discountEndDate": "İndirim Bitiş Tarihi",
+      "discountQuantity": "İndirim Adedi",
+      "campaigns": "Kampanyalar",
+      "freeItems": "Ücretsizler",
+      "loyaltyApplications": "Sadakat Uygulamaları"
     }
   },
   "get": {
@@ -1543,7 +1556,8 @@
     "downloadExcel": "Excel Aktar",
     "downloadXml": "Xml Aktar",
     "quick": "Hızlı Bakış",
-    "downloads": "Dışarı Aktar"
+    "downloads": "Dışarı Aktar",
+    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir."
   },
   "dashboard": {
     "search": "Ara",

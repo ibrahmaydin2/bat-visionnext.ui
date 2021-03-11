@@ -5,15 +5,16 @@
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </router-link>
-      <!-- <span v-else-if="action.ViewType === 'Modal'" @click="showModal(action.Action, action.ActionUrl, item.RecordId, item, action.Query, action.QueryMessage)">
+      <!-- <span v-else-if="action.ViewType === 'Modal'" @click="showModal(action.Action, action.ActionUrl, row.RecordId, row, action.Query, action.QueryMessage)"> -->
+      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click="showModal (action, row)">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
-      <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
+      <!-- <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </a>
-      <router-link v-else :to="{name: $route.name + action.Action, params: {url: item.RecordId}}">
+      <router-link v-else :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </router-link> -->
@@ -33,6 +34,11 @@ export default {
       type: Array
     },
     row: {}
+  },
+  methods: {
+    showModal (action, row) {
+      this.$emit('showModal', action, row)
+    }
   },
   mounted () {
   }

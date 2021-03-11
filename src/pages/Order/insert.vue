@@ -6,7 +6,7 @@
           <b-col cols="12" md="4">
             <Breadcrumb />
           </b-col>
-          <b-col cols="12" md="2">
+          <b-col cols="12" md="4">
             <div class="text-right">
               <span><b>{{insertTitle.CurrencyId}}</b></span>
               <span>
@@ -14,9 +14,6 @@
                 <i v-if="selectedCurrency.RecordId === 2" class="fas fa-usd-sign"></i>
               </span>
             </div>
-          </b-col>
-          <b-col cols="12" md="2">
-            <b-button id="show-btn" size="sm" variant="success" @click="getCampaigns">{{$t('insert.order.suitableCampaigns')}}</b-button>
           </b-col>
           <b-col cols="12" md="4" class="text-right">
             <router-link :to="{name: 'Order' }">
@@ -207,6 +204,42 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
+          <b-table-simple bordered small responsive>
+            <b-thead>
+              <b-tr>
+                <b-th>{{$t('insert.order.discountType')}}</b-th>
+                <b-th>{{$t('insert.order.discountName')}}</b-th>
+                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
+              </b-tr>
+            </b-thead>
+            <b-tbody>
+              <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
+                <b-td>{{c.Description}}</b-td>
+                <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
+                <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
+                <b-td></b-td>
+              </b-tr>
+              <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
+                <b-td>{{f.Value}}</b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td>{{f.FreeItemQuantity}}</b-td>
+              </b-tr>
+              <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
+                <b-td>{{l.Description}}</b-td>
+                <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
+                <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>
+                <b-td>{{l.CurrentScore}}</b-td>
+              </b-tr>
+            </b-tbody>
+          </b-table-simple>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="campaign-modal" hide-footer>
@@ -309,7 +342,9 @@ export default {
       documentDateFirstSet: true,
       selectedCampaigns: [],
       currentPage: 1,
-      campaignSelectable: false
+      campaignSelectable: false,
+      showDiscounts: false,
+      customerCampaigns: {}
     }
   },
   computed: {
@@ -466,11 +501,12 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedOrderLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
+          me.selectedOrderLine.stock = 0
+          /*  this.$toasted.show(this.$t('insert.order.noStocksException'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
-          })
+          })  */
         }
       })
     },
@@ -611,16 +647,29 @@ export default {
         SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
         Order: this.form
       }
+      this.$bvModal.hide('campaign-modal')
+      this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Order', 'Order/ApplyInsertDiscounts').then((res) => {
-        this.$bvModal.hide('campaign-modal')
         if (res && res.Order) {
           this.form = res.Order
         }
+        this.$store.commit('bigLoaded', false)
         this.createData()
       })
     },
     onCampaignSelected (items) {
       this.selectedCampaigns = items
+    },
+    getCustomerCampaigns (customerId) {
+      let model = {
+        customerId: customerId
+      }
+      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
+        if (res) {
+          this.customerCampaigns = res
+          this.showDiscounts = true
+        }
+      })
     },
     save () {
       this.$v.form.$touch()
@@ -665,9 +714,6 @@ export default {
         netTotal: {
           required
         },
-        stock: {
-          required
-        },
         vatRate: {
           required
         },
@@ -681,6 +727,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.searchPriceList()
+        this.getCustomerCampaigns(e.RecordId)
         if (this.customerFirstSet) {
           this.customerFirstSet = false
           return

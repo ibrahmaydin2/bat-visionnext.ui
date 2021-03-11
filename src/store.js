@@ -323,7 +323,7 @@ export const store = new Vuex.Store({
             commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
 
             // başarılı -> tabloyu doldur.
-            if (query.code) {
+            /* if (query.code) {
               let filterdata = {
                 'BranchId': state.BranchId,
                 'CompanyId': state.CompanyId,
@@ -361,7 +361,7 @@ export const store = new Vuex.Store({
                 search: query.search,
                 andConditionalModel: query.andConditionalModel
               })
-            }
+            } */
             commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {
@@ -607,10 +607,12 @@ export const store = new Vuex.Store({
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      commit('bigLoaded', true)
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
+          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
@@ -685,10 +687,12 @@ export const store = new Vuex.Store({
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      commit('bigLoaded', true)
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
+          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
@@ -1045,6 +1049,7 @@ export const store = new Vuex.Store({
 
     // Search isteklerinin ortak fonksiyonu
     getSearchItems ({state, commit}, query) {
+      commit('bigLoaded', true)
       let dataQuery = {
         'AndConditionModel': {
           ...query.andConditionModel
@@ -1057,9 +1062,9 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
+          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
-            commit('bigLoaded', false)
           } else {
             commit('setSearchItems', {data: [], name: query.name})
             commit('showAlert', { type: 'danger', msg: res.data.Message })
@@ -1067,7 +1072,6 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
-          commit('bigLoaded', false)
         })
     },
     getPasswordCreator ({state, commit}, query) {
@@ -1167,6 +1171,27 @@ export const store = new Vuex.Store({
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
         'RecordId': query.record
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGetItems', {data: res.data.Model, name: query.name})
+            commit('bigLoaded', false)
+          } else {
+            commit('setGetItems', {data: [], name: query.name})
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+          commit('bigLoaded', false)
+        })
+    },
+    confirmModal ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {

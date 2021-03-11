@@ -1,6 +1,7 @@
 <template>
   <div class="asc__nextgrid">
-    <b-table-simple hover bordered small responsive sticky-header class="asc__nextgrid-table">
+    <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.join()} ${$t('list.requiredFieldsMessage')}`}}</span>
+    <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
         <draggable tag="tr" :list="head">
           <b-th
@@ -13,7 +14,7 @@
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
-            <span class="asc__nextgrid-table-header-title">{{header.label}}</span>
+            <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
             <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
               <b-button
                 @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
@@ -25,7 +26,6 @@
               </b-button>
             </div>
             <div class="asc__nextgrid-table-header-filter">
-
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
                   <autocomplete
@@ -42,6 +42,7 @@
                     label="Label"
                     :options="lookup[header.modelControlUtil.code]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'lookup')"
+                    v-model="header.defaultValue"
                   >
                   </v-select>
                   <v-select
@@ -49,6 +50,7 @@
                     label="Description1"
                     :options="gridField[header.modelControlUtil.modelProperty]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
+                    v-model="header.defaultValue"
                   >
                   </v-select>
                 </div>
@@ -56,9 +58,9 @@
               <v-select
                 v-if="header.columnType === 'Boolean'"
                 v-once
-                v-model="searchText"
+                v-model="header.defaultValue"
                 :options="searchBoolean"
-                @input="filterBoolean(header.dataField)"
+                @input="filterBoolean(header)"
                 label="title"
               />
 
@@ -90,71 +92,70 @@
               <b-form-input
                 v-if="header.columnType === 'String'"
                 v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
 
               <b-form-input
                 v-if="header.columnType === 'Id'"
                 v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
             </div>
           </b-th>
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :style="item.Selected ? 'background-color: darkgray' : ''">
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : ''">
           <b-td v-for="h in head" :key="h.dataField">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
-              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
-              <i v-if="selectionMode === 'single'" class="fa fa-dot-circle" :style="item.Selected ? 'color: #28a745' : ''"></i>
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
             </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>
-                <Actions :actions="tableOperations.RowActions" :row="item" />
+                <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
                 <Workflow :items="workFlowList" />
               </b-dropdown>
             </span>
-            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Label') }}
             </span>
-            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Code') }}
             </span>
-            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'UpperValue')}}
             </span>
-            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'Value')}}
             </span>
-            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'DecimalValue')}}
             </span>
-            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100 grid-wrap-text">
               {{ labelFormat(item[h.dataField], 'OtherProperties')}}
             </span>
 
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
-            <span v-else-if="h.columnType === 'Date'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Date'" class="d-block w-100 grid-wrap-text">
               {{ dateFormat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text">
               {{ dateTimeformat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'String'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text">
               {{ item[h.dataField] }}
             </span>
-            <span v-else-if="h.columnType === 'Id'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text">
               <i>{{ item[h.dataField] }}</i>
             </span>
-            <span v-else class="d-block w-100">
+            <span v-else class="d-block w-100 grid-wrap-text">
               {{ item[h.dataField] }}
             </span>
           </b-td>
@@ -177,16 +178,19 @@
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
     </b-modal>
+    <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
+import ConfirmModal from './ConfirmModal'
 let searchQ = {}
 export default {
   components: {
-    Workflow
+    Workflow,
+    ConfirmModal
   },
   props: {
     apiurl: String,
@@ -235,7 +239,11 @@ export default {
       rangeDate: [],
       selectedHeader: null,
       workFlowList: [],
-      selectedItems: []
+      selectedItems: [],
+      requiredFields: [],
+      showRequiredInfo: true,
+      modalAction: null,
+      modalItem: null
     }
   },
   mounted () {
@@ -282,18 +290,19 @@ export default {
       //   'PageName': `pg_${this.baseLink}` // T_SYS_FORM
       // }
       this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
-        console.log(res)
         this.workFlowList = res.ListModel.BaseModels
-        console.log(this.workFlowList)
       })
     },
-    showModal (action, url, id, data, query, message) {
-      this.modalRecordId = id
-      this.modalRecord = data
-      this.modalQuery = query
-      this.modalQueryMessage = message
-      this.$refs[`${action}Modal`].show()
-      this.modalActionUrl = url
+    showModal (action, row) {
+      // this.modalRecordId = row.RecordId
+      // this.modalRecord = row
+      // this.modalQuery = query
+      // this.modalQueryMessage = message
+      // this.$refs[`${action.Action}Modal`].show()
+      // this.modalActionUrl = action.ActionUrl
+      this.$root.$emit('bv::show::modal', 'confirmModal')
+      this.modalAction = action
+      this.modalItem = row
     },
     dateTimeformat (e) {
       let calendar, date
@@ -356,7 +365,7 @@ export default {
       this.searchOnTable(e, this.searchText.id)
     },
     filterBoolean (e) {
-      this.searchOnTable(e, this.searchText.value)
+      this.searchOnTable(e.dataField, e.defaultValue.value)
     },
     filterDate (e, date) {
       this.searchOnTable(e, this.dateConvertToISo(date))
@@ -416,6 +425,16 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r] !== null || this.andConditionalModel[r] !== null) {
+          validCount++
+        }
+      })
+      if (validCount < this.requiredFields.length) {
+        return
+      }
+      this.showRequiredInfo = false
       searchQ[tableField] = search
       this.$store.dispatch('getTableData', {
         ...this.query,
@@ -458,6 +477,7 @@ export default {
         } else {
           this.selectedItems.push(item)
         }
+        this.$forceUpdate()
       } else if (this.selectionMode === 'single') {
         this.items.map(i => {
           i.Selected = false
@@ -465,8 +485,61 @@ export default {
         })
         item.Selected = true
         this.selectedItems = [item]
+        this.$forceUpdate()
       }
-      this.$forceUpdate()
+    },
+    setDefaultValues (visibleRows) {
+      if (!this.andConditionalModel) {
+        this.andConditionalModel = {}
+      }
+      for (let i = 0; i < visibleRows.length; i++) {
+        let row = visibleRows[i]
+        if (!row.defaultValue) {
+          continue
+        }
+        if (row.modelControlUtil !== null) {
+          this.andConditionalModel[row.modelControlUtil.modelProperty] = [row.defaultValue]
+        } else {
+          switch (row.columnType) {
+            case 'Boolean':
+              if (row.defaultValue) {
+                row.defaultValue = JSON.parse(row.defaultValue)
+                visibleRows[i] = row
+                searchQ[row.dataField] = row.defaultValue.value
+              }
+              break
+            case 'Date':
+            case 'DateTime':
+              if (row.defaultValue) {
+                let model = {}
+                let today = new Date()
+                switch (row.defaultValue) {
+                  case 'first':
+                    model.BeginValue = `01.${today.getMonth()}.${today.getFullYear()}`
+                    model.EndValue = `01.${today.getMonth()}.${today.getFullYear()}`
+                    break
+                  case 'last':
+                    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+                    model.BeginValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
+                    model.EndValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
+                    break
+                  case 'today':
+                    model.BeginValue = this.dateConvertToISo(today)
+                    model.EndValue = this.dateConvertToISo(today)
+                    break
+                }
+                this.andConditionalModel[row.dataField] = model
+              }
+              break
+            case 'String':
+            case 'Id':
+              searchQ[row.dataField] = row.defaultValue
+              break
+          }
+        }
+      }
+
+      return visibleRows
     }
   },
   watch: {
@@ -498,16 +571,20 @@ export default {
     tableRows: function (e) {
       this.head = []
       let lookups = ''
-      const visibleRows = e.filter(item => item.visible === true)
+      let visibleRows = e.filter(item => item.visible === true)
       const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
       const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      if (this.isSelectable()) {
+      if (this.selectionMode === 'multi') {
         this.head.push(selection)
       }
       this.head.push(opt)
       for (let t = 0; t < visibleRows.length; t++) {
-        this.head.push(visibleRows[t])
+        let row = visibleRows[t]
+        this.head.push(row)
       }
+      visibleRows = this.setDefaultValues(visibleRows)
+      this.requiredFields = visibleRows.filter(v => v.required === true).map(x => x.dataField)
+      this.searchOnTable()
       e.forEach(c => {
         let control = c.modelControlUtil
         if (control != null) {
@@ -642,4 +719,18 @@ export default {
         background: #ffffff
         color: #000
         border-color: #dee2e6
+    .row-selected
+      background-color: rgb(222, 226, 230)
+      border: solid 2px
+      border-color: darkgray;
+    .selected-color
+      color: #28a745
+    .unselected-color
+      color: lightgray
+    .grid-wrap-text
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      max-width: 200px
+      min-width: 50px
 </style>

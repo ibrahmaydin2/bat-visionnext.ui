@@ -51,6 +51,7 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    console.log(this.insertReadonly)
   },
   methods: {
     save () {
