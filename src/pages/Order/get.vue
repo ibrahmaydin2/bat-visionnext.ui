@@ -5,6 +5,13 @@
     </div>
     <div class="asc__showPage-container">
       <b-row>
+        <b-col cols="12">
+          <header>
+            <Breadcrumb :title="rowData.Description1" />
+          </header>
+        </b-col>
+      </b-row>
+      <b-row>
         <b-col cols="6">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.Code}}</span>

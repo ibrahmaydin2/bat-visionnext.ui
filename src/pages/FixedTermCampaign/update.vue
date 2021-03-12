@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -8,9 +8,9 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">Vazgeç</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">Kaydet</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,375 +18,611 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Code')"
-            >
-              <b-form-input type="text" v-model="form.Model.Code" readonly />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_Description1')"
-            >
-              <b-form-input type="text" v-model="form.Model.Description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.warehouse.Model_StatusId')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+          </NextFormGroup>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+          </NextFormGroup>
+           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" active>
+        <b-tab :title="$t('insert.fixedTermCampaign.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_WarehouseTypeId')">
-                <v-select
-                  v-model="form.Model.WarehouseType"
-                  :options="lookupWarehouse_type"
-                  @input="selectedWarehouseType"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="showVehicle" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_VehicleId')">
-                <v-select v-model="VehicleName" label="VehiclePlateNumber" :filterable="false" :options="vehicleList" @search="onVehicleSearch" @input="selectedVehicle">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.VehiclePlateNumber }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="showCustomer" cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.warehouse.Model_Customer')">
-                <v-select v-model="form.Model.Customer" label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_IsCenterWarehouse')"
-              >
-              <b-form-radio-group v-model="form.Model.IsCustomerWarehouse">
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(1)" value="1">{{$t('insert.yes')}}</b-form-radio>
-                  <b-form-radio :disabled="form.Model.IsVehicle ? true : false" @change="selectedIsCustomer(0)" value="0">{{$t('insert.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_WarehouseCapacity')"
-              >
-                <b-form-input type="text" v-model="form.Model.WarehouseCapacity"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_LicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.Model.LicenseNumber"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.warehouse.Model_FinanceCode')"
-              >
-                <b-form-input type="text" v-model="form.Model.FinanceCode"/>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="CampaignBeginDate" :error="$v.form.CampaignBeginDate">
+              <b-form-datepicker v-model="form.CampaignBeginDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CampaignEndDate" :error="$v.form.CampaignEndDate">
+              <b-form-datepicker v-model="form.CampaignEndDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
+              <NextCheckBox v-model="form.UseBudget" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input type="number" v-model="form.BudgetAmount" :disabled="!form.UseBudget" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
+              <b-form-input type="number" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount" :disabled="true" />
+            </NextFormGroup>
+            <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
+              <v-select v-model="selectedRouteCriteria" :options="lookup.ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
+              <v-select v-model="selectedCustomerCriteria" :options="lookup.CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <v-select v-model="selectedItemCriteria" :options="lookup.ITEM_CRITERIA" @input="selectedType('ItemCriteriaId', $event)" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
+              <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CampaignTypeId" :error="$v.form.CampaignTypeId">
+              <v-select v-model="discountType" :options="discountTypes" @input="selectedSearchType('CampaignTypeId', $event)" label="Description1"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CampaignRate" :error="$v.form.CampaignRate">
+              <b-form-input type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" />
+            </NextFormGroup>
+             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+              <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1" :disabled="!form.UseBudget"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.WarehouseSuppliers')">
-          <b-table-simple bordered small>
-            <b-thead>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.SupplierBranchId')">
-                  <v-select label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.BranchCommercialTitle }}
-                    </template>
-                  </v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.PurchaseWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedPurchaseWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.warehouse.ReturnWarehouseId')">
-                  <v-select :options="warehouseList" label="Description1" @input="selectedReturnWarehouseId"></v-select>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
-                <b-form-group>
-                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i> Ekle</b-button>
-                </b-form-group>
-              </b-th>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(r, i) in detailListData" :key="'dl' + i">
-                <b-td>{{r.selectedBranch}}</b-td>
-                <b-td>{{r.selectedPurchaseWarehouseId}}</b-td>
-                <b-td>{{r.selectedReturnWarehouseId}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-          {{detailListData}}
+        <b-tab :title="$t('insert.fixedTermCampaign.maturityPeriods')">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.startQuantity')" :error="$v.fixedTermCampaignTaken.startQuantity" :required="true">
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.startQuantity" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.endQuantity')" :error="$v.fixedTermCampaignTaken.endQuantity" :required="true">
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.endQuantity" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.paymentPeriod')" :error="$v.fixedTermCampaignTaken.paymentPeriod" :required="true">
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.paymentPeriod" />
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignTaken" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.startQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.endQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.paymentPeriod')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignTakens" :key="i">
+                  <b-td>{{f.StartQuantity}}</b-td>
+                  <b-td>{{f.EndQuantity}}</b-td>
+                  <b-td>{{f.PaymentPeriod}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignTaken(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.fixedTermCampaignItem.columnName" :required="true" md="5" lg="5">
+              <v-select v-model="fixedTermCampaignItem.columnName"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.fixedTermCampaignItem.columnValue" :required="true" md="5" lg="5">
+              <v-select v-model="fixedTermCampaignItem.columnValue"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignItem" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
+                  <b-td>{{f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnValue}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.routes')" v-if="selectedRouteCriteria && selectedRouteCriteria.Code === 'RL'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.route')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
+              <v-select v-model="selectedRoute" :options="routes" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')" label="Description1"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.route')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID')" :key="i">
+                  <b-td>{{f.Text}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
+              <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'RECORD_ID')" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID')" :key="i">
+                  <b-td>{{f.Text}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
+              <v-select v-model="customer" :options="customers" @search="searchCustomer" :filterable="false" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.commercialTitle')" :error="$v.fixedTermCampaignCustomer.commercialTitle" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.commercialTitle" :disabled="true"/>
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignCustomer" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.commercialTitle')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
+                  <b-td>{{f.CustomerName}}</b-td>
+                  <b-td>{{f.CommercialTitle}}</b-td>
+                  <b-td>{{f.LocationName}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.branch')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
+              <v-select v-model="selectedBranch" :options="branchs" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')" label="Description1" />
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.branch')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')" :key="i">
+                  <b-td>{{f.Text}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
+import { required } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
+import updateMixin from '../../mixins/update'
 export default {
+  mixins: [updateMixin],
   data () {
     return {
       form: {
-        companyId: this.CompanyId,
-        branchId: this.BranchId,
-        Model: {
-          LocationId: null,
-          IsVehicle: null,
-          IsCustomerWarehouse: null,
-          StatusId: 1,
-          LicenseNumber: null,
-          FinanceCode: null,
-          WarehouseSuppliers: [],
-          VehicleId: null,
-          WarehouseCapacity: null,
-          WarehouseTypeId: null,
-          WarehouseType: null,
-          IsCenterWarehouse: null,
-          Code: null,
-          Description1: null,
-          CustomerId: null,
-          Vehicle: null,
-          Customer: null,
-          RecordId: null,
-          Deleted: 0
-        }
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        Code: null,
+        Description1: null,
+        CampaignBeginDate: null,
+        CampaignEndDate: null,
+        UseBudget: 0,
+        BudgetAmount: null,
+        UsedAmount: 0,
+        RouteCriteriaId: null,
+        CustomerCriteriaId: null,
+        ItemCriteriaId: null,
+        BranchCriteriaId: null,
+        CampaignTypeId: null,
+        CampaignRate: null,
+        CurrencyId: null,
+        FixedTermCampaignItems: [],
+        FixedTermCampaignDetails: [],
+        FixedTermCampaignTakens: [],
+        FixedTermCampaignCustomers: []
       },
-      VehicleName: '',
-      detailListData: [],
-      detailListBranch: '',
-      detailListPurchaseWarehouseId: '',
-      detailListReturnWarehouseId: '',
-      WarehouseSuppliers: {
-        selectedBranch: '',
-        selectedPurchaseWarehouseId: '',
-        selectedReturnWarehouseId: ''
+      routeName1: 'Discount',
+      selectedRouteCriteria: null,
+      selectedCustomerCriteria: null,
+      selectedBranchCriteria: null,
+      selectedItemCriteria: null,
+      selectedRoute: null,
+      selectedCustomer: null,
+      selectedBranch: null,
+      customer: null,
+      discountType: null,
+      fixedTermCampaignItem: {
+        columnName: null,
+        columnValue: null
       },
-      dataStatus: true,
-      showCustomer: false,
-      showVehicle: false
+      fixedTermCampaignDetail: {
+        tableName: null,
+        columnName: null,
+        columnValue: null,
+        text: null
+      },
+      fixedTermCampaignTaken: {
+        startQuantity: null,
+        endQuantity: null,
+        paymentPeriod: null
+      },
+      fixedTermCampaignCustomer: {
+        customerId: null,
+        customerName: null,
+        commercialTitle: null,
+        locationId: null,
+        locationName: null,
+        budgetId: null
+      }
     }
   },
   computed: {
-    ...mapState(['rowData', 'lookupWarehouse_type', 'vehicleList', 'branchList', 'customerList', 'warehouseList', 'BranchId', 'CompanyId'])
+    ...mapState(['discountTypes', 'currencies', 'routes', 'branchs', 'customers'])
   },
-  watch: {
-    rowData: function (e) {
-      e.WarehouseSuppliers.map(item => {
-        this.form.Model.WarehouseSuppliers.push({
-          StatusId: item.StatusId,
-          SupplierBranchId: item.SupplierBranchId,
-          SupplierCustomerId: item.SupplierCustomerId,
-          CompanyId: item.CompanyId,
-          BranchId: item.BranchId,
-          CreatedUser: item.CreatedUser,
-          ModifiedUser: item.ModifiedUser,
-          ModifiedDateTime: item.ModifiedDateTime,
-          Deleted: item.Deleted,
-          System: item.System,
-          PurchaseWarehouseId: item.PurchaseWarehouseId,
-          ReturnWarehouseId: item.ReturnWarehouseId
-        })
+  mounted () {
+    this.getData().then(() => {
+      this.setData()
+    })
+    this.getInsertPage(this.routeName)
+  },
+  methods: {
+    getInsertPage (e) {
+      let today = new Date().toISOString().slice(0, 10)
+      this.form.CampaignBeginDate = today
+      this.form.CampaignEndDate = today
 
-        this.detailListData.push({
-          selectedBranch: item.SupplierBranch.Label,
-          selectedPurchaseWarehouseId: item.PurchaseWarehouse.Label,
-          selectedReturnWarehouseId: item.ReturnWarehouse.Label
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountType/Search', name: 'discountTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
+    },
+    addFixedTermCampaignItem () {
+      this.$v.fixedTermCampaignItem.$touch()
+      if (this.$v.fixedTermCampaignItem.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
+        return false
+      }
+      this.form.FixedTermCampaignItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_ITEM',
+        ColumnName: this.fixedTermCampaignItem.columnName,
+        ColumnValue: this.fixedTermCampaignItem.columnValue
       })
-
-      this.selectedWarehouseType(e.WarehouseType)
-      if (e.WarehouseTypeId === 76506193) {
-        this.form.Model.Vehicle = e.RecordId
-        this.VehicleName = e.Vehicle.Label
-        this.form.Model.VehicleId = e.VehicleId
-      }
-      // if'e koyulacak
-      if (e.Customer) {
-        this.form.Model.Customer = e.Customer.Label
-        this.form.Model.CustomerId = e.CustomerId
-      }
-
-      this.form.Model.Code = e.Code
-      this.form.Model.RecordId = e.RecordId
-      this.form.Model.Description1 = e.Description1
-      this.form.Model.WarehouseCapacity = e.WarehouseCapacity
-      this.form.Model.LicenseNumber = e.LicenseNumber
-      this.form.Model.FinanceCode = e.FinanceCode
-      if (e.StatusId === 1) {
-        this.dataStatus = true
+    },
+    removeFixedTermCampaignItem (item) {
+      this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
+    },
+    selectFixedTermCampaignDetail (data, tableName, columnName) {
+      if (data) {
+        this.fixedTermCampaignDetail.tableName = tableName
+        this.fixedTermCampaignDetail.columnName = columnName
+        this.fixedTermCampaignDetail.text = data.Description1
+        this.fixedTermCampaignDetail.columnValue = data.RecordId
       } else {
-        this.dataStatus = true
+        this.fixedTermCampaignDetail = {}
       }
     },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.Model.StatusId = 1
+    addFixedTermCampaignDetail () {
+      this.$v.fixedTermCampaignDetail.$touch()
+      if (this.$v.fixedTermCampaignDetail.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.FixedTermCampaignDetails.filter(f => f.TableName === this.fixedTermCampaignDetail.tableName &&
+      f.ColumnName === this.fixedTermCampaignDetail.columnName &&
+      f.ColumnValue === this.fixedTermCampaignDetail.columnValue)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.FixedTermCampaignDetails.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: this.fixedTermCampaignDetail.tableName,
+        ColumnName: this.fixedTermCampaignDetail.columnName,
+        ColumnValue: this.fixedTermCampaignDetail.columnValue,
+        Text: this.fixedTermCampaignDetail.text
+      })
+      this.fixedTermCampaignDetail = {}
+      this.selectedRoute = {}
+      this.selectedCustomer = {}
+      this.selectedBranch = {}
+      this.$v.fixedTermCampaignDetail.$reset()
+    },
+    removeFixedTermCampaignDetail (item) {
+      this.form.FixedTermCampaignDetails.splice(this.form.FixedTermCampaignDetails.indexOf(item), 1)
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+        loading(false)
+      })
+    },
+    addFixedTermCampaignTaken () {
+      this.$v.fixedTermCampaignTaken.$touch()
+      if (this.$v.fixedTermCampaignTaken.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.FixedTermCampaignTakens.filter(f => f.StartQuantity === this.fixedTermCampaignTaken.startQuantity &&
+      f.EndQuantity === this.fixedTermCampaignTaken.endQuantity &&
+      f.PaymentPeriod === this.fixedTermCampaignTaken.paymentPeriod)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.FixedTermCampaignTakens.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        StartQuantity: parseFloat(this.fixedTermCampaignTaken.startQuantity),
+        EndQuantity: parseFloat(this.fixedTermCampaignTaken.endQuantity),
+        PaymentPeriod: parseFloat(this.fixedTermCampaignTaken.paymentPeriod)
+      })
+      this.fixedTermCampaignTaken = {}
+      this.$v.fixedTermCampaignTaken.$reset()
+    },
+    removeFixedTermCampaignTaken (item) {
+      this.form.FixedTermCampaignTakens.splice(this.form.FixedTermCampaignTakens.indexOf(item), 1)
+    },
+    addFixedTermCampaignCustomer () {
+      this.$v.fixedTermCampaignCustomer.$touch()
+      if (this.$v.fixedTermCampaignCustomer.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.FixedTermCampaignCustomers.filter(f => f.CustomerId === this.fixedTermCampaignCustomer.customerId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.FixedTermCampaignCustomers.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        UsedAmount: null,
+        BudgetAmount: null,
+        CustomerId: this.fixedTermCampaignCustomer.customerId,
+        CustomerName: this.fixedTermCampaignCustomer.customerName,
+        CommercialTitle: this.fixedTermCampaignCustomer.commercialTitle,
+        LocationId: this.fixedTermCampaignCustomer.locationId,
+        LocationName: this.fixedTermCampaignCustomer.locationName
+      })
+      this.fixedTermCampaignCustomer = {}
+      this.customer = null
+      this.$v.fixedTermCampaignCustomer.$reset()
+    },
+    removeFixedTermCampaignCustomer (item) {
+      this.form.FixedTermCampaignCustomers.splice(this.form.FixedTermCampaignCustomers.indexOf(item), 1)
+    },
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      this.selectedRouteCriteria = rowData.RouteCriteria
+      this.selectedCustomerCriteria = rowData.CustomerCriteria
+      this.selectedItemCriteria = rowData.ItemCriteria
+      this.selectedBranchCriteria = rowData.BranchCriteria
+      this.discountType = this.convertLookupValueToSearchValue(rowData.CampaignType)
+      this.form.UsedAmount = this.form.UsedAmount ? this.form.UsedAmount : 0
+    },
+    save () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
       } else {
-        this.form.Model.StatusId = 0
+        this.updateData()
       }
     }
   },
-  mounted () {
-    this.$store.commit('bigLoaded', false)
-    this.getLookup()
-    this.getRowData()
+  watch: {
+    customer (value) {
+      if (value) {
+        var me = this
+        me.fixedTermCampaignCustomer.customerId = value.RecordId
+        me.fixedTermCampaignCustomer.customerName = value.Description1
+        me.fixedTermCampaignCustomer.commercialTitle = value.CommercialTitle
+        me.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+          if (res && res.Model) {
+            let locations = res.Model.CustomerLocations ? res.Model.CustomerLocations.filter(l => l.IsDefaultLocation) : null
+            if (locations && locations.length > 0) {
+              me.fixedTermCampaignCustomer.locationId = locations[0].RecordId
+              me.fixedTermCampaignCustomer.locationName = locations[0].Description1
+              me.$forceUpdate()
+            }
+          }
+        })
+      } else {
+        this.fixedTermCampaignCustomer = {}
+      }
+    }
   },
-  methods: {
-    getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
-    },
-    save () {
-      this.form.companyId = this.CompanyId
-      this.form.branchId = this.BranchId
-      this.form.Model.WarehouseType = null
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', formdata: this.form, return: this.$route.meta.baseLink})
-    },
-    selectedIsCustomer (e) {
-      if (e === 0) {
-        this.showCustomer = false
-      } else {
-        this.showCustomer = true
+  validations () {
+    if (!this.form.UseBudget) {
+      this.insertRules.BudgetAmount = {}
+      this.insertRules.CurrencyId = {}
+      this.insertRequired.BudgetAmount = false
+      this.insertRequired.CurrencyId = false
+    } else {
+      this.insertRules.BudgetAmount = {
+        required
       }
-    },
-    selectedVehicle (e) {
-      this.form.Model.VehicleId = e.RecordId
-    },
-    selectedCustomer (e) {
-      this.form.Model.CustomerId = e.RecordId
-    },
-    selectedBranch (e) {
-      this.WarehouseSuppliers.selectedBranch = e.RecordId
-      this.detailListBranch = e.BranchCommercialTitle
-      this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
-    },
-    selectedPurchaseWarehouseId (e) {
-      this.WarehouseSuppliers.selectedPurchaseWarehouseId = e.RecordId
-      this.detailListPurchaseWarehouseId = e.Description1
-    },
-    selectedReturnWarehouseId (e) {
-      this.WarehouseSuppliers.selectedReturnWarehouseId = e.RecordId
-      this.detailListReturnWarehouseId = e.Description1
-    },
-    addDetailList () {
-      let a = {
-        selectedBranch: this.detailListBranch,
-        selectedPurchaseWarehouseId: this.detailListPurchaseWarehouseId,
-        selectedReturnWarehouseId: this.detailListReturnWarehouseId
+      this.insertRules.CurrencyId = {
+        required
       }
-      let b = {
-        StatusId: null,
-        SupplierBranchId: this.WarehouseSuppliers.selectedBranch,
-        SupplierCustomerId: 46733004.0,
-        CompanyId: this.CompanyId,
-        BranchId: this.BranchId,
-        CreatedUser: 1.0,
-        ModifiedUser: null,
-        ModifiedDateTime: null,
-        Deleted: 0,
-        System: 0,
-        PurchaseWarehouseId: this.WarehouseSuppliers.selectedPurchaseWarehouseId,
-        ReturnWarehouseId: this.WarehouseSuppliers.selectedReturnWarehouseId
+      this.insertRequired.BudgetAmount = true
+      this.insertRequired.CurrencyId = true
+    }
+    return {
+      form: this.insertRules,
+      fixedTermCampaignItem: {
+        columnName: {
+          required
+        },
+        columnValue: {
+          required
+        }
+      },
+      fixedTermCampaignDetail: {
+        tableName: {
+          required
+        },
+        columnName: {
+          required
+        },
+        columnValue: {
+          required
+        }
+      },
+      fixedTermCampaignTaken: {
+        startQuantity: {
+          required
+        },
+        endQuantity: {
+          required
+        },
+        paymentPeriod: {
+          required
+        }
+      },
+      fixedTermCampaignCustomer: {
+        customerId: {
+          required
+        },
+        commercialTitle: {
+          required
+        },
+        locationId: {
+          required
+        }
       }
-      this.detailListData.push(a)
-      this.detailListBranch = null
-      this.detailListPurchaseWarehouseId = null
-      this.detailListReturnWarehouseId = null
-      this.form.Model.WarehouseSuppliers.push(b)
-    },
-    selectedWarehouseType (e) {
-      this.form.Model.WarehouseTypeId = e.DecimalValue
-      this.form.Model.WarehouseType = e
-      // araç mı ?
-      if (e.DecimalValue === 76506193) {
-        this.showVehicle = true
-        this.form.Model.IsVehicle = 1
-        this.$store.commit('setVehicleList', [])
-      } else {
-        this.form.Model.IsVehicle = 0
-        this.showVehicle = false
-      }
-      // merkez depo mu ?
-      if (e.DecimalValue === 76506191) {
-        this.form.Model.IsCustomerWarehouse = 1
-        this.showCustomer = true
-      } else {
-        this.form.Model.IsCustomerWarehouse = 0
-        this.showCustomer = false
-      }
-    },
-    onVehicleSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchVehicle(loading, search, this)
-      }
-    },
-    onCustomerSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchCustomer(loading, search, this)
-      }
-    },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchBranch(loading, search, this)
-      }
-    },
-    searchVehicle (loading, search, vm) {
-      this.$store.dispatch('acVehicle', {...this.query, searchField: 'VehiclePlateNumber', searchText: search})
-    },
-    searchCustomer (loading, search, vm) {
-      this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-    },
-    searchBranch (loading, search, vm) {
-      this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
-    },
-    getLookup () {
-      this.$store.dispatch('lookupWareouseType')
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
