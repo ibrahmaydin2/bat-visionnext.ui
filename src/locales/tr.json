@@ -355,7 +355,15 @@
     "FixedTermCampaign": "Vade Kampanyası Tanımları",
     "FixedTermCampaignInsert": "Vade Kampanyası Ekleme",
     "FixedTermCampaignUpdate": "Vade Kampanyası Güncelle",
-    "FixedTermCampaignGet": "Vade Kampanyası Görüntüle"
+    "FixedTermCampaignGet": "Vade Kampanyası Görüntüle",
+    "PriceDiscountTransaction": "Dip Toplam İndirimi",
+    "PriceDiscountTransactionGet": "Dip Toplam İndirimi Görüntüle",
+    "PriceDiscountTransactionInsert": "Yeni Dip Toplam İndirimi",
+    "PriceDiscountTransactionUpdate": "Dip Toplam İndirimi Güncelle",
+    "RmaOrder": "İade Talebi",
+    "RmaOrderGet": "İade Talebi Görüntüle",
+    "RmaOrderInsert": "Yeni İade Talebi",
+    "RmaOrderUpdate": "İade Talebi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1049,7 +1057,9 @@
     },
     "loadingplan": {
       "items": "Ürün",
-      "PlanQuantity": "Yükleme Miktarı"
+      "PlanQuantity": "Yükleme Miktarı",
+      "LoadingDate": "Yükleme Tarihi",
+      "Route": "Rota"
     },
     "vanLoading": {
       "items": "Ürün",
@@ -1149,6 +1159,11 @@
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
       "Price": "Liste Miktarı"
+    },
+    "RmaOrder": {
+      "Item": "Ürün Kodu",
+      "ItemName": "Ürün Adı",
+      "Quantity": "İade Miktarı"
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1443,6 +1458,7 @@
       "Genexp1": "Açıklama"
     },
     "RMA": {
+      "General": "Genel",
       "RMA": "İade Ürün Yönetimi",
       "Customer": "Müşteri",
       "Warehouse": "Depo",
@@ -1458,6 +1474,19 @@
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
       "RmaReason": "İade Nedeni"
+    },
+    "RmaOrder": {
+      "General": "Genel",
+      "RmaOrder": "İade Talebi",
+      "Customer": "Müşteri",
+      "Warehouse": "Depo",
+      "Representative": "Personel",
+      "RmaStatus": "İade Durumu",
+      "RmaType": "İade Tipi",
+      "PriceDate": "Fiyatlandırma Tarihi",
+      "Genexp1": "Açıklama",
+      "RmaReason": "İade Nedeni",
+      "RmaOrderDate": "İade Tarihi"
     },
     "DiscountReason": {
       "DiscountReason": "İndirim Nedenleri",
