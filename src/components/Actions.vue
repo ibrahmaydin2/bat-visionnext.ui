@@ -10,6 +10,14 @@
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
+      <span class="d-inline-block w-100" v-else-if="action.Action === 'Print'" @click="print (action, row)">
+        <img width="10" height="10" :src="icon" />
+        <span class="ml-1">{{action.Title}}</span>
+      </span>
+      <span class="d-inline-block w-100" v-else>
+        <img width="10" height="10" :src="icon" />
+        <span class="ml-1">{{action.Title}}</span>
+      </span>
       <!-- <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
@@ -38,6 +46,18 @@ export default {
   methods: {
     showModal (action, row) {
       this.$emit('showModal', action, row)
+    },
+    print (action, row) {
+      console.log(action)
+      console.log(row)
+      this.$api.post({recordId: 33504721807}, 'Print', 'Print/InvoicePrint').then((res) => {
+        console.log(res)
+        let w = window.open()
+        w.document.write(res.Html)
+        w.document.close()
+        w.focus()
+        w.print()
+      })
     }
   },
   mounted () {
