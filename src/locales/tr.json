@@ -1218,7 +1218,10 @@
       "discountQuantity": "İndirim Adedi",
       "campaigns": "Kampanyalar",
       "freeItems": "Ücretsizler",
-      "loyaltyApplications": "Sadakat Uygulamaları"
+      "loyaltyApplications": "Sadakat Uygulamaları",
+      "totalDiscount": "Toplam İndirim",
+      "discountPercent": "İndirim Oranı",
+      "doYouConfirm": "Onaylıyor musunuz?"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
