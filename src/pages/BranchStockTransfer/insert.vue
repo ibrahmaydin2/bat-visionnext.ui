@@ -39,7 +39,7 @@
             </b-col>
             <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
               <b-form-group :label="insertTitle.MovementTime + (insertRequired.MovementTime === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTime.$error }">
-                <b-form-datepicker v-model="form.MovementTime" />
+                <b-form-timepicker v-model="form.MovementTime"></b-form-timepicker>
               </b-form-group>
             </b-col>
           <b-col v-if="insertVisible.GenExp1 != null ? insertVisible.GenExp1 : developmentMode" cols="12" md="2">

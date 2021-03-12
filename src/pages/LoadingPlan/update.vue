@@ -103,7 +103,7 @@ export default {
       tmpSelectedItem: [],
       planQuantity: null,
       detailPanelRecordId: 0,
-      routeLabel: ''
+      route: null
     }
   },
   computed: {
@@ -239,11 +239,7 @@ export default {
           LoadingPlanItems: e.LoadingPlanItems,
           RecordId: e.RecordId
         }
-
-        if (this.routes && e.RouteId) {
-          let tmpArr = this.routes.filter(i => i.RecordId === e.RouteId)
-          this.routeLabel = tmpArr[0].Description1
-        }
+        this.route = this.convertLookupValueToSearchValue(e.Route)
       }
     }
   }

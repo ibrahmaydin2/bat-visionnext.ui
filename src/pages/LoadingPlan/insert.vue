@@ -40,15 +40,13 @@
       <b-tabs>
         <b-tab :title="$t('insert.loadingplan.items')" active>
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.loadingplan.items')">
-                <v-select :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.loadingplan.items')">
+              <v-select :options="items" @search="searchItem" @input="selectedItem" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.loadingplan.PlanQuantity')">
                 <b-form-input type="text" v-model="planQuantity" />
@@ -94,7 +92,7 @@ export default {
         Code: null,
         Description1: null,
         LoadingDate: null,
-        StatusId: null,
+        StatusId: 1,
         RouteId: null,
         LoadingPlanItems: []
       },
@@ -123,8 +121,6 @@ export default {
         })
       }
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
-      // this.$store.dispatch('getItems')
-
       this.$store.dispatch('getSearchItems', {...this.query,
         api: 'VisionNextRoute/api/Route/Search',
         name: 'routes',
@@ -148,21 +144,15 @@ export default {
         this.form.RouteId = null
       }
     },
-    onItemSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchItem(loading, search, this)
+    searchItem (search, loading) {
+      if (search.length < 3) {
+        return false
       }
-    },
-    searchItem (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
-        name: 'items',
-        andConditionModel: {
-          Description1: search
-        }
-      }).then(res => {
+      loading(true)
+      let model = {
+        Description1: search
+      }
+      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
         loading(false)
       })
     },
