@@ -1,7 +1,8 @@
 <template>
   <b-modal id="confirmModal" title="BootstrapVue">
     <p class="my-4">{{modalItem.Description1}}</p>
-    <template #modal-footer="">
+    <ModalElements />
+    <!-- <template #modal-footer="">
       <b-button size="sm" variant="success" @click="submit()">
         ONAYLA
       </b-button>
@@ -11,12 +12,16 @@
       <b-button size="sm" variant="warning" @click="hide()">
         İptal
       </b-button>
-    </template>
+    </template> -->
   </b-modal>
 </template>
 <script>
+import ModalElements from './ModalElements'
 export default {
   name: 'ConfirmModal',
+  components: {
+    ModalElements
+  },
   props: {
     modalAction: {
       type: Object,
