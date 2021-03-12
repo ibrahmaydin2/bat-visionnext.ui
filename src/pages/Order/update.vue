@@ -3,17 +3,8 @@
     <b-col cols="12">
       <header>
         <b-row>
-          <b-col cols="12" md="4">
+          <b-col cols="12" md="8">
             <Breadcrumb />
-          </b-col>
-          <b-col cols="12" md="4">
-            <div class="text-right">
-              <span><b>{{insertTitle.CurrencyId}}</b></span>
-              <span>
-                <i v-if="selectedCurrency.RecordId === 1" class="fas fa-lira-sign"></i>
-                <i v-if="selectedCurrency.RecordId === 2" class="fas fa-usd-sign"></i>
-              </span>
-            </div>
           </b-col>
           <b-col cols="12" md="4" class="text-right">
             <router-link :to="{name: 'Order' }">
@@ -39,7 +30,8 @@
                   :label-no-time-selected="$t('insert.chooseTime')"
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
-                   v-model="form.DocumentTime"/>
+                  v-model="form.DocumentTime"
+                  :disabled="true"/>
               </NextFormGroup>
               <NextFormGroup item-key="DueDate" :error="$v.form.DueDate" md="4" lg="4">
                 <b-form-datepicker v-model="form.DueDate" :placeholder="$t('insert.chooseDate')"/>
@@ -50,7 +42,7 @@
                 <v-select label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
-                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                 </template>
@@ -87,7 +79,7 @@
         <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="OrderNumber" :error="$v.form.OrderNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.OrderNumber" :readonly="insertReadonly.OrderNumber" />
+              <b-form-input type="text" v-model="form.OrderNumber" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
@@ -103,6 +95,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
+              <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -179,6 +174,8 @@
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.price')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
@@ -191,6 +188,8 @@
                   <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
+                  <b-td>{{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
@@ -203,6 +202,42 @@
               </b-tbody>
             </b-table-simple>
           </b-row>
+        </b-tab>
+        <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
+          <b-table-simple bordered small responsive>
+            <b-thead>
+              <b-tr>
+                <b-th>{{$t('insert.order.discountType')}}</b-th>
+                <b-th>{{$t('insert.order.discountName')}}</b-th>
+                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
+                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
+              </b-tr>
+            </b-thead>
+            <b-tbody>
+              <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
+                <b-td>{{c.Description}}</b-td>
+                <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
+                <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
+                <b-td></b-td>
+              </b-tr>
+              <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
+                <b-td>{{f.Value}}</b-td>
+                <b-td></b-td>
+                <b-td></b-td>
+                <b-td>{{f.FreeItemQuantity}}</b-td>
+              </b-tr>
+              <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
+                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
+                <b-td>{{l.Description}}</b-td>
+                <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
+                <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>
+                <b-td>{{l.CurrentScore}}</b-td>
+              </b-tr>
+            </b-tbody>
+          </b-table-simple>
         </b-tab>
         <b-tab :title="$t('insert.order.discounts')">
           <b-row>
@@ -300,8 +335,8 @@ export default {
       },
       campaignFields: [
         {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
-        {key: 'DiscountCategory.Description1', label: this.$t('insert.order.campaignName'), sortable: false},
-        {key: 'DiscountCategory.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
+        {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
+        {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
       ],
       SelectedDiscounts: [],
       selectedCustomer: null,
@@ -318,7 +353,9 @@ export default {
         stock: null,
         vatRate: null,
         vatTotal: null,
-        isUpdated: false
+        isUpdated: false,
+        totalDiscount: null,
+        discountPercent: null
       },
       campaigns: [],
       isCampaignQuestioned: false,
@@ -333,7 +370,9 @@ export default {
       documentDateFirstSet: true,
       selectedCampaigns: [],
       currentPage: 1,
-      campaignSelectable: false
+      campaignSelectable: false,
+      showDiscounts: false,
+      customerCampaigns: {}
     }
   },
   computed: {
@@ -569,7 +608,9 @@ export default {
         SalesUnit1Id: selectedItem.UnitId,
         TempDiscountQuantity: this.selectedOrderLine.quantity,
         TempDiscountNetTotal: this.selectedOrderLine.netTotal,
-        RecordId: this.selectedOrderLine.recordId ? this.selectedOrderLine.recordId : null
+        RecordId: this.selectedOrderLine.recordId ? this.selectedOrderLine.recordId : null,
+        DiscountPercent: this.selectedOrderLine.discountPercent,
+        TotalDiscount: this.selectedOrderLine.totalDiscount
       }
       if (this.selectedOrderLine.isUpdated) {
         this.form.OrderLines[this.selectedIndex] = order
@@ -675,6 +716,17 @@ export default {
         }
       }
     },
+    getCustomerCampaigns (customerId) {
+      let model = {
+        customerId: customerId
+      }
+      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
+        if (res) {
+          this.customerCampaigns = res
+          this.showDiscounts = true
+        }
+      })
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -731,6 +783,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.searchPriceList()
+        this.getCustomerCampaigns(e.RecordId)
         if (this.customerFirstSet) {
           this.customerFirstSet = false
           return

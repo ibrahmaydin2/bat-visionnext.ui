@@ -3,17 +3,8 @@
     <b-col cols="12">
       <header>
         <b-row>
-          <b-col cols="12" md="4">
+          <b-col cols="12" md="8">
             <Breadcrumb />
-          </b-col>
-          <b-col cols="12" md="4">
-            <div class="text-right">
-              <span><b>{{insertTitle.CurrencyId}}</b></span>
-              <span>
-                <i v-if="selectedCurrency.RecordId === 1" class="fas fa-lira-sign"></i>
-                <i v-if="selectedCurrency.RecordId === 2" class="fas fa-usd-sign"></i>
-              </span>
-            </div>
           </b-col>
           <b-col cols="12" md="4" class="text-right">
             <router-link :to="{name: 'Order' }">
@@ -103,6 +94,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
+              <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -271,6 +265,16 @@
       ></b-pagination>
       <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
       <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
+    </b-modal>
+    <b-modal id="confirm-modal">
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.order.orderLinesRemoved')}}
+      <template #modal-footer>
+        <CancelButton v-if="!campaignSelectable" class="float-right ml-2" @click.native="cancelSelectedCustomer" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedCustomer">Tamam</b-button>
+      </template>
   </b-modal>
   </b-row>
 </template>
@@ -316,8 +320,8 @@ export default {
       },
       campaignFields: [
         {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
-        {key: 'DiscountCategory.Description1', label: this.$t('insert.order.campaignName'), sortable: false},
-        {key: 'DiscountCategory.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
+        {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
+        {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
       ],
       SelectedDiscounts: [],
       selectedCustomer: null,
@@ -344,7 +348,9 @@ export default {
       currentPage: 1,
       campaignSelectable: false,
       showDiscounts: false,
-      customerCampaigns: {}
+      customerCampaigns: {},
+      currentCustomer: {},
+      customerSelectCancelled: false
     }
   },
   computed: {
@@ -455,7 +461,11 @@ export default {
       me.searchItemsByModel('VisionNextFinance/api/PriceListItem/Search', 'priceListItems', model, 1).then(() => {
         if (me.priceListItems && me.priceListItems.length > 0) {
           me.priceListItem = me.priceListItems[0]
-          me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
+          if (me.priceListItem.UseConsumerPrice === 1) {
+            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
+          } else {
+            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
+          }
         } else {
           me.priceListItem = null
           me.selectedOrderLine.price = null
@@ -478,14 +488,14 @@ export default {
       this.setTotalPrice()
     },
     setTotalPrice () {
-      if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price) {
+      if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price || !this.priceListItem) {
         return false
       }
       let vatRate = this.selectedOrderLine.selectedItem.Vat
-      this.selectedOrderLine.vatRate = vatRate
-      this.selectedOrderLine.grossTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
-      this.selectedOrderLine.vatTotal = this.roundNumber(this.selectedOrderLine.grossTotal * vatRate / 100)
-      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.grossTotal - this.selectedOrderLine.vatTotal)
+      this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? vatRate : 0
+      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
+      this.selectedOrderLine.vatTotal = this.priceListItem.IsVatIncluded === 1 ? 0 : this.roundNumber(this.selectedOrderLine.netTotal * vatRate / 100)
+      this.selectedOrderLine.grossTotal = this.roundNumber(parseFloat(this.selectedOrderLine.netTotal) + parseFloat(this.selectedOrderLine.vatTotal))
     },
     setStock () {
       if (!this.selectedOrderLine.selectedItem || !this.selectedOrderLine.selectedItem.RecordId) {
@@ -519,9 +529,9 @@ export default {
       this.form.TotalDiscount = 0
       for (let index = 0; index < this.form.OrderLines.length; index++) {
         this.form.OrderLines[index].LineNumber = index
-        this.form.NetTotal += this.form.OrderLines[index].NetTotal
-        this.form.TotalVat += this.form.OrderLines[index].TotalVat
-        this.form.GrossTotal += this.form.OrderLines[index].GrossTotal
+        this.form.NetTotal += parseFloat(this.form.OrderLines[index].NetTotal)
+        this.form.TotalVat += parseFloat(this.form.OrderLines[index].TotalVat)
+        this.form.GrossTotal += parseFloat(this.form.OrderLines[index].GrossTotal)
       }
 
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)
@@ -671,6 +681,22 @@ export default {
         }
       })
     },
+    confirmSelectedCustomer () {
+      this.$bvModal.hide('confirm-modal')
+      this.customerFirstSet = false
+      this.searchPriceList()
+      this.getCustomerCampaigns(this.selectedCustomer.RecordId)
+      this.form.OrderLines = []
+      this.form.RecvLocationId = this.selectedCustomer.DefaultLocationId
+      let currentDate = new Date()
+      currentDate.setDate(currentDate.getDate() + this.selectedCustomer.DeliveryDayParam)
+      this.form.DueDate = currentDate.toISOString().slice(0, 10)
+    },
+    cancelSelectedCustomer () {
+      this.$bvModal.hide('confirm-modal')
+      this.customerSelectCancelled = true
+      this.selectedCustomer = this.currentCustomer
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -724,26 +750,16 @@ export default {
     }
   },
   watch: {
-    selectedCustomer (e) {
-      if (e) {
-        this.searchPriceList()
-        this.getCustomerCampaigns(e.RecordId)
-        if (this.customerFirstSet) {
-          this.customerFirstSet = false
-          return
-        } else {
-          this.form.OrderLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
-        this.form.RecvLocationId = e.DefaultLocationId
-        let currentDate = new Date()
-        currentDate.setDate(currentDate.getDate() + e.DeliveryDayParam)
-        this.form.DueDate = currentDate.toISOString().slice(0, 10)
+    selectedCustomer (newValue, oldValue) {
+      if (this.customerFirstSet) {
+        this.confirmSelectedCustomer()
+        return
       }
+      if (newValue !== oldValue && !this.customerSelectCancelled) {
+        this.currentCustomer = oldValue
+        this.$bvModal.show('confirm-modal')
+      }
+      this.customerSelectCancelled = false
     },
     documentDate (e) {
       if (e) {
@@ -799,7 +815,7 @@ export default {
   font-size: medium;
 }
 .gray-color {
-  color: gray;
+  color: lightgray;
   font-size: medium;
 }
 </style>
