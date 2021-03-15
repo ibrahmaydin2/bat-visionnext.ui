@@ -28,8 +28,8 @@ import VueGoogleCharts from 'vue-google-charts'
 import {VueMasonryPlugin} from 'vue-masonry'
 
 // multiple date datepicker
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 
 import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'
@@ -95,7 +95,7 @@ Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('Actions', Actions)
 
-Vue.prototype.$api = new ApiManager();
+Vue.prototype.$api = new ApiManager()
 
 Vue.config.productionTip = false
 global.jQuery = jQuery
