@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import { ToastPlugin } from 'bootstrap-vue'
-import { systemName, ideaName, copyright, verno, apiLink } from '../static/system'
+import { ideaName, copyright } from '../static/system'
 import router from './router'
 import i18n from './i18n'
 import { required, not } from 'vuelidate/lib/validators'
@@ -10,7 +10,7 @@ import { required, not } from 'vuelidate/lib/validators'
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
 export default axios
-axios.defaults.baseURL = apiLink
+axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
@@ -41,11 +41,11 @@ export const store = new Vuex.Store({
       navigation: 'asc__navigation asc__navigation-none asc__transition-right'
     },
     system: {
-      version: verno,
+      version: process.env.VUE_APP_VESION_NO,
       copyright: copyright
     },
     title: {
-      siteName: systemName,
+      siteName: process.env.VUE_APP_SYSTEM_NAME,
       idea: ideaName
     },
     logo: {
