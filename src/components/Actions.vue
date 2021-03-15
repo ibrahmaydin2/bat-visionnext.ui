@@ -10,7 +10,7 @@
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
-      <span class="d-inline-block w-100" v-else-if="action.Action === 'Print'" @click="print (action, row)">
+      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click="print (action, row)">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
@@ -48,8 +48,6 @@ export default {
       this.$emit('showModal', action, row)
     },
     print (action, row) {
-      console.log(action)
-      console.log(row)
       this.$api.post({recordId: 33504721807}, 'Print', 'Print/InvoicePrint').then((res) => {
         console.log(res)
         let w = window.open()

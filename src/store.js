@@ -1134,6 +1134,17 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getDashboard ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get('VisionNextDashboard/api/BatDashboardApi/GetUserDashboards/2304240431', authHeader)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     approvePotentialCustomer ({ state, commit }, query) {
       let dataQuery = {
         'BranchId': state.BranchId,
