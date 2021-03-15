@@ -12,4 +12,4 @@ npm run dev
 
 # projeyi derlemek için
 npm run build
-```
+````
