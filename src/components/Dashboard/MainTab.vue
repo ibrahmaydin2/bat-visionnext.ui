@@ -7,7 +7,14 @@
 </template>
 <script>
 export default {
-  name: 'MainTab'
+  name: 'MainTab',
+  mounted () {
+    const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
+    this.$api.get('Dashboard', `BatDashboardApi/ListDashboard`).then((res) => {
+      console.log(res)
+    })
+    this.$store.dispatch('getDashboard')
+  }
 }
 
 </script>
