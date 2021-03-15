@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "BAT",
-  "author": "Ahmet Selim ÇİL <hi@ahmetsc.com>",
+  "author": "Idea Teknoloji",
   "scripts": {
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
+    "test": "webpack-dev-server --inline --progress --config build/webpack.test.conf.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "start": "npm run dev"
   },

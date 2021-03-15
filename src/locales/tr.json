@@ -363,7 +363,11 @@
     "RmaOrder": "İade Talebi",
     "RmaOrderGet": "İade Talebi Görüntüle",
     "RmaOrderInsert": "Yeni İade Talebi",
-    "RmaOrderUpdate": "İade Talebi Güncelle"
+    "RmaOrderUpdate": "İade Talebi Güncelle",
+    "SalesWaybill": "Teslimat İrsaliyesi",
+    "SalesWaybillGet": "Teslimat İrsaliyesi Görüntüle",
+    "SalesWaybillInsert": "Yeni Teslimat İrsaliyesi",
+    "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
