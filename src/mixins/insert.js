@@ -6,11 +6,11 @@ export default {
     ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
   },
   methods: {
-    createManualCode () {
+    createManualCode (parameter = 'Code') {
       this.setRouteNames()
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
+      return this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
         if (this.createCode) {
-          this.form.Code = this.createCode
+          this.form[parameter] = this.createCode
         }
       })
     },

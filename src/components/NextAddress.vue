@@ -1,16 +1,16 @@
 <template>
    <b-row>
-      <b-col cols="12" md="4" lg="3">
+      <b-col cols="12" :md="md" :lg="lg" v-if="!hideAddress">
         <b-form-group :label="$t('insert.warehouse.Address') + (required ? ' *' : '')" :class="{'form-group--error': addressError }">
            <b-form-textarea v-model="selectedAddress" placeholder=""/>
          </b-form-group>
       </b-col>
-      <b-col cols="12" md="4" lg="3">
+      <b-col cols="12" :md="md" :lg="lg">
         <b-form-group :label="$t('insert.warehouse.CityId') + (required ? ' *' : '')" :class="{'form-group--error': cityError }">
           <v-select  v-model="selectedCity" :options="cities" label="Label" @input="selectCity"></v-select>
         </b-form-group>
       </b-col>
-      <b-col cols="12" md="4" lg="3">
+      <b-col cols="12" :md="md" :lg="lg">
         <b-form-group :label="$t('insert.warehouse.DistrictId') + (required ? ' *' : '')" :class="{'form-group--error': districtError }">
           <v-select v-model="selectedDistrict" :options="distiricts" label="Label" @input="selectDistrict" :disabled="!selectedCity || !selectedCity.DecimalValue"></v-select>
         </b-form-group>
@@ -28,7 +28,16 @@ export default {
     addressError: false,
     cityError: false,
     districtError: false,
-    required: null
+    required: null,
+    hideAddress: false,
+    md: {
+      type: String,
+      default: '4'
+    },
+    lg: {
+      type: String,
+      default: '3'
+    }
   },
   model: {
     prop: 'value',

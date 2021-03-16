@@ -14,7 +14,7 @@
       <b-row>
         <b-col cols="6">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.order.invoiceNumber')}}:</b> {{rowData.InvoiceNumber}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.order.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
@@ -41,9 +41,11 @@
         <b-tab :title="$t('insert.order.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
-              <div v-html="getFormatDataByType(rowData.DueDate, 'date', 'insert.order.dueDate')"></div>
+              <div v-html="getFormatDataByType(rowData.ActualDeliveryDate, 'date', 'insert.order.actualDeliveryDate')"></div>
+              <div v-html="getFormatDataByType(rowData.ActualDeliveryTime, 'text', 'insert.order.actualDeliveryTime')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
@@ -51,8 +53,11 @@
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.EDocumentStatus, 'object', 'insert.order.eDocumentStatus')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
+              <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
@@ -77,15 +82,39 @@
                     <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.OrderLines" :key="i">
+                    <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
                       <b-td>{{o.Item.Label}}</b-td>
                       <b-td>{{o.Item.Code}}</b-td>
-                      <b-td>{{o.Quantity}}</b-td>
+                      <b-td>{{o.InvoiceQuantity}}</b-td>
                       <b-td>{{o.Price}}</b-td>
                       <b-td>{{o.VatRate}}</b-td>
                       <b-td>{{o.NetTotal}}</b-td>
                       <b-td>{{o.TotalVat}}</b-td>
                       <b-td>{{o.GrossTotal}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.logisticCompanies')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.companyName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.taxNumber')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.city')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.district')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in rowData.InvoiceLogisticCompanies" :key="i">
+                      <b-td>{{l.CompanyName}}</b-td>
+                      <b-td>{{l.TaxNumber}}</b-td>
+                      <b-td>{{l.City ? l.City.Label : '-'}}</b-td>
+                      <b-td>{{l.District ? l.District.Label : '-'}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
