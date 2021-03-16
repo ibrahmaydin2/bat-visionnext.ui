@@ -98,30 +98,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.order.companyName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.taxNumber')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.city')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.district')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.InvoiceLogisticCompanies" :key="i">
-                      <b-td>{{l.CompanyName}}</b-td>
-                      <b-td>{{l.TaxNumber}}</b-td>
-                      <b-td>{{l.City ? l.City.Label : '-'}}</b-td>
-                      <b-td>{{l.District ? l.District.Label : '-'}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
       </b-tabs>
     </div>
   </div>

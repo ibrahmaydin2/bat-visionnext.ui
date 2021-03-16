@@ -295,7 +295,7 @@ export default {
       form: {
         StateId: 1,
         InvoiceNumber: null,
-        InvoiceKindId: 2,
+        InvoiceKindId: 3,
         DocumentClassId: 3,
         EDocumentStatusId: null,
         GrossTotal: 0,
