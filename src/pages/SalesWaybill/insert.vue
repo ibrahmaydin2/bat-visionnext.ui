@@ -450,9 +450,7 @@ export default {
     ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
   },
   mounted () {
-    this.createManualCode().then(() => {
-      this.form.InvoiceNumber = this.form.Code
-    })
+    this.createManualCode('InvoiceNumber')
     this.getInsertPage(this.routeName)
   },
   methods: {

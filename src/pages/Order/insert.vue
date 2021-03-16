@@ -357,9 +357,7 @@ export default {
     ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
-    this.createManualCode().then(() => {
-      this.form.OrderNumber = this.form.Code
-    })
+    this.createManualCode('OrderNumber')
     this.getInsertPage(this.routeName)
   },
   methods: {
