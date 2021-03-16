@@ -1136,9 +1136,32 @@ export const store = new Vuex.Store({
     },
     getDashboard ({ state, commit }, query) {
       commit('bigLoaded', true)
-      return axios.get('VisionNextDashboard/api/BatDashboardApi/GetUserDashboards/2304240431', authHeader)
+      const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
+      return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetUserDashboards/${userId}`, authHeader)
         .then(res => {
-          console.log(res)
+          return res
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReports ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetUserGadgets/${query.id}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReportDetail ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetGadgetDetails/${query.id}`, authHeader)
+        .then(res => {
+          return res
         })
         .catch(err => {
           commit('bigLoaded', false)

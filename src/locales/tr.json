@@ -1622,9 +1622,7 @@
   "dashboard": {
     "search": "Ara",
     "create": "Oluştur",
-    "chartTitle": "Test Statülerine Göre Dağılım",
-    "title": "Gen Panelleri & Tek Gen Kitleri",
-    "secondTestSelect": "İkincil test talebi oluşturmak istediğiniz hastayı seçiniz."
+    "isError": "Gösterilecek veri bulunamadı."
   },
   "sidebar": {
     "createShortcut": "Kısayol Oluştur",
