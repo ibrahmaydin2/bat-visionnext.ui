@@ -100,7 +100,7 @@
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
                   v-model="form.ActualDeliveryTime"/>
-            </NextFormGroup>
+            </NextFormGroup> {{selectedCustomer}}
             <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2">
               <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
@@ -450,9 +450,7 @@ export default {
     ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
   },
   mounted () {
-    this.createManualCode().then(() => {
-      this.form.InvoiceNumber = this.form.Code
-    })
+    this.createManualCode('InvoiceNumber')
     this.getInsertPage(this.routeName)
   },
   methods: {
