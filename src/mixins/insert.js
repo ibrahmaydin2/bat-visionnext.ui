@@ -8,7 +8,7 @@ export default {
   methods: {
     createManualCode () {
       this.setRouteNames()
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
+      return this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
         if (this.createCode) {
           this.form.Code = this.createCode
         }

@@ -273,7 +273,7 @@
       {{$t('insert.order.orderLinesRemoved')}}
       <template #modal-footer>
         <CancelButton v-if="!campaignSelectable" class="float-right ml-2" @click.native="cancelSelectedCustomer" />
-        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedCustomer">Tamam</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedCustomer">{{$t('insert.okay')}}</b-button>
       </template>
   </b-modal>
   </b-row>
@@ -357,7 +357,9 @@ export default {
     ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
-    this.createManualCode()
+    this.createManualCode().then(() => {
+      this.form.OrderNumber = this.form.Code
+    })
     this.getInsertPage(this.routeName)
   },
   methods: {

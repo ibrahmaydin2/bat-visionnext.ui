@@ -404,6 +404,7 @@
     "success": "Başarılı",
     "pleaseChooseField": "Lütfen Seçim Yapınız",
     "errorProcess": "Kayıt Bulunamadı",
+    "okay": "Tamam",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1206,7 +1207,19 @@
       "loyaltyApplications": "Sadakat Uygulamaları",
       "totalDiscount": "Toplam İndirim",
       "discountPercent": "İndirim Oranı",
-      "doYouConfirm": "Onaylıyor musunuz?"
+      "doYouConfirm": "Onaylıyor musunuz?",
+      "logisticCompanies": "Lojistik Şirketleri",
+      "companyName": "Firma Adı",
+      "taxNumber": "Vergi Numarası",
+      "city": "İl",
+      "district": "İlçe",
+      "invoiceNumber": "İrsaliye No",
+      "invoiceKind": "Belge Çeşidi",
+      "printedDispatchNumber": "Matbu İrsaliye No",
+      "eDocumentStatus": "E-Belge Durumu",
+      "deliveryRepresentative": "Teslimat Personeli",
+      "actualDeliveryDate": "Fiili Sevk Tarihi",
+      "actualDeliveryTime": "Fiili Sevk Saati"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
