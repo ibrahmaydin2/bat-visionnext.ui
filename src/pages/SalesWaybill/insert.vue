@@ -100,7 +100,7 @@
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
                   v-model="form.ActualDeliveryTime"/>
-            </NextFormGroup> {{selectedCustomer}}
+            </NextFormGroup>
             <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2">
               <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
