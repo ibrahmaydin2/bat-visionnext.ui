@@ -1,6 +1,6 @@
 <template>
   <div class="asc__nextgrid">
-    <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.join()} ${$t('list.requiredFieldsMessage')}`}}</span>
+    <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.map(x => x.label).join()} ${$t('list.requiredFieldsMessage')}`}}</span>
     <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
         <draggable tag="tr" :list="head">
@@ -63,21 +63,22 @@
                 @input="filterBoolean(header)"
                 label="title"
               />
-
               <date-picker
                 v-if="header.columnType === 'Date'"
                 range
                 type="date"
-                v-model="rangeDate"
-                @change="filterRangeDate(header.dataField, searchText)"
+                :placeholder="getFormattedDate(header.defaultValue)"
+                v-model="header.defaultValue"
+                @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
               <date-picker
                 v-if="header.columnType === 'DateTime'"
                 range
                 type="date"
-                v-model="rangeDate"
-                @change="filterRangeDate(header.dataField, searchText)"
+                :placeholder="getFormattedDate(header.defaultValue)"
+                v-model="header.defaultValue"
+                @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
               <b-form-input
@@ -243,7 +244,9 @@ export default {
       requiredFields: [],
       showRequiredInfo: true,
       modalAction: null,
-      modalItem: null
+      modalItem: null,
+      isGridFieldsReady: false,
+      isLookupReady: false
     }
   },
   mounted () {
@@ -365,15 +368,16 @@ export default {
       this.searchOnTable(e, this.searchText.id)
     },
     filterBoolean (e) {
-      this.searchOnTable(e.dataField, e.defaultValue.value)
+      let search = e.defaultValue ? e.defaultValue.value : ''
+      this.searchOnTable(e.dataField, search)
     },
     filterDate (e, date) {
       this.searchOnTable(e, this.dateConvertToISo(date))
     },
     filterRangeDate (e, date) {
       let model = {
-        BeginValue: this.dateConvertToISo(this.rangeDate[0]),
-        EndValue: this.dateConvertToISo(this.rangeDate[1])
+        BeginValue: this.dateConvertToISo(date[0]),
+        EndValue: this.dateConvertToISo(date[1])
       }
       this.andConditionalModel[e] = model
       this.searchOnTable()
@@ -427,11 +431,12 @@ export default {
     searchOnTable (tableField, search) {
       let validCount = 0
       this.requiredFields.forEach(r => {
-        if (searchQ[r] !== null || this.andConditionalModel[r] !== null) {
+        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
           validCount++
         }
       })
       if (validCount < this.requiredFields.length) {
+        this.$store.commit('bigLoaded', false)
         return
       }
       this.showRequiredInfo = false
@@ -492,20 +497,32 @@ export default {
       if (!this.andConditionalModel) {
         this.andConditionalModel = {}
       }
+      var me = this
       for (let i = 0; i < visibleRows.length; i++) {
         let row = visibleRows[i]
         if (!row.defaultValue) {
           continue
         }
         if (row.modelControlUtil !== null) {
-          this.andConditionalModel[row.modelControlUtil.modelProperty] = [row.defaultValue]
+          let value = parseInt(row.defaultValue)
+          if (row.modelControlUtil.inputType === 'AutoComplete') {
+            me.andConditionalModel[row.modelControlUtil.modelProperty] = [value]
+          } else {
+            this.andConditionalModel[row.modelControlUtil.modelProperty] = [value]
+            if (row.modelControlUtil.inputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.modelProperty]) {
+              row.defaultValue = me.gridField[row.modelControlUtil.modelProperty].find(l => l.RecordId === value)
+            }
+            if (row.modelControlUtil.isLookupTable && me.lookup && me.lookup[row.modelControlUtil.code]) {
+              row.defaultValue = me.lookup[row.modelControlUtil.code].find(l => l.DecimalValue === value)
+            }
+          }
         } else {
           switch (row.columnType) {
             case 'Boolean':
               if (row.defaultValue) {
-                row.defaultValue = JSON.parse(row.defaultValue)
-                visibleRows[i] = row
-                searchQ[row.dataField] = row.defaultValue.value
+                let value = parseInt(row.defaultValue)
+                row.defaultValue = me.searchBoolean.find(b => b.value === value)
+                searchQ[row.dataField] = value
               }
               break
             case 'Date':
@@ -515,20 +532,23 @@ export default {
                 let today = new Date()
                 switch (row.defaultValue) {
                   case 'first':
-                    model.BeginValue = `01.${today.getMonth()}.${today.getFullYear()}`
-                    model.EndValue = `01.${today.getMonth()}.${today.getFullYear()}`
+                    let firstDate = me.dateConvertToISo(today.setDate(1))
+                    model.BeginValue = firstDate
+                    model.EndValue = firstDate
                     break
                   case 'last':
-                    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-                    model.BeginValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
-                    model.EndValue = `${lastDayOfMonth}.${today.getMonth()}.${today.getFullYear()}`
+                    let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+                    let lastDate = me.dateConvertToISo(today.setDate(lastDayOfMonth))
+                    model.BeginValue = lastDate
+                    model.EndValue = lastDate
                     break
                   case 'today':
-                    model.BeginValue = this.dateConvertToISo(today)
-                    model.EndValue = this.dateConvertToISo(today)
+                    model.BeginValue = me.dateConvertToISo(today)
+                    model.EndValue = me.dateConvertToISo(today)
                     break
                 }
-                this.andConditionalModel[row.dataField] = model
+                row.defaultValue = [model.BeginValue, model.EndValue]
+                me.andConditionalModel[row.dataField] = model
               }
               break
             case 'String':
@@ -537,9 +557,69 @@ export default {
               break
           }
         }
+        visibleRows[i] = row
       }
-
       return visibleRows
+    },
+    setRows () {
+      let lookups = ''
+      this.tableRows.forEach(c => {
+        let control = c.modelControlUtil
+        if (control != null) {
+          switch (control.inputType) {
+            case 'DropDown':
+              if (control.isLookupTable) {
+                lookups += control.code + ','
+              } else {
+                if (!this.gridField || this.gridField.length === 0) {
+                  this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty}).then(() => {
+                    this.isGridFieldsReady = true
+                  })
+                } else {
+                  this.isGridFieldsReady = true
+                }
+              }
+              break
+          }
+        }
+      })
+      if (lookups.length > 0 && (!this.lookup || this.lookup.length === 0)) {
+        lookups = lookups.slice(0, -1)
+        this.$store.dispatch('getAllLookups', {...this.query, type: lookups}).then(() => {
+          this.isLookupReady = true
+        })
+      } else {
+        this.isLookupReady = true
+      }
+    },
+    setRowsAfter () {
+      if (!this.isGridFieldsReady || !this.isLookupReady) {
+        return
+      }
+      this.head = []
+      let visibleRows = this.tableRows.filter(item => item.visible === true)
+      visibleRows = this.setDefaultValues(visibleRows)
+      this.requiredFields = visibleRows.filter(v => v.required === true).map(x => {
+        let requiredField = {
+          field: x.dataField,
+          label: x.label
+        }
+        return requiredField
+      })
+      const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      if (this.selectionMode === 'multi') {
+        this.head.push(selection)
+      }
+      this.head.push(opt)
+      for (let t = 0; t < visibleRows.length; t++) {
+        let row = visibleRows[t]
+        this.head.push(row)
+      }
+      this.searchOnTable()
+    },
+    getFormattedDate (defaultValue) {
+      return defaultValue && defaultValue.length === 2 && defaultValue[0].slice && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
     }
   },
   watch: {
@@ -569,48 +649,7 @@ export default {
       this.getData(to.name, this.currentPage, this.perPage, sortOpt)
     },
     tableRows: function (e) {
-      this.head = []
-      let lookups = ''
-      let visibleRows = e.filter(item => item.visible === true)
-      const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      if (this.selectionMode === 'multi') {
-        this.head.push(selection)
-      }
-      this.head.push(opt)
-      for (let t = 0; t < visibleRows.length; t++) {
-        let row = visibleRows[t]
-        this.head.push(row)
-      }
-      visibleRows = this.setDefaultValues(visibleRows)
-      this.requiredFields = visibleRows.filter(v => v.required === true).map(x => x.dataField)
-      this.searchOnTable()
-      e.forEach(c => {
-        let control = c.modelControlUtil
-        if (control != null) {
-          switch (control.inputType) {
-            case 'DropDown':
-              if (control.isLookupTable) {
-                lookups += control.code + ','
-                // this.$store.dispatch('getAllLookups', {...this.query, type: control.code})
-              } else {
-                this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
-              }
-              break
-            case 'AutoComplete':
-              // control.code: null
-              // control.isLookupTable: 0
-              // control.modelProperty: "CardTypeIds"
-              // control.serviceUrl: "/VisionNextCustomer/api/CustomerCardType/Search"
-              // control.upperObject: null
-              break
-          }
-        }
-      })
-      if (lookups.length > 0) {
-        lookups = lookups.slice(0, -1)
-        this.$store.dispatch('getAllLookups', {...this.query, type: lookups})
-      }
+      this.setRows()
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.
@@ -621,6 +660,12 @@ export default {
         this.totalPageCount = this.tableData.TotalPageCount
         this.perPage = this.tableData.PageRecordCount
       }
+    },
+    isGridFieldsReady: function (e) {
+      this.setRowsAfter()
+    },
+    isLookupReady: function (e) {
+      this.setRowsAfter()
     }
   }
 }
