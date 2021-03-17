@@ -69,6 +69,4 @@ export default {
       text-overflow: ellipsis
       max-width: 200px
       min-width: 50px
-
-
 </style>

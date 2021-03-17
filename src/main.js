@@ -23,7 +23,6 @@ import Sortable from 'vue-sortable'
 import { ApiManager } from './managers/api-manager'
 
 import draggable from 'vuedraggable'
-import VueGoogleCharts from 'vue-google-charts'
 
 import {VueMasonryPlugin} from 'vue-masonry'
 
@@ -65,7 +64,6 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 Vue.use(Autocomplete)
 Vue.use(VueTheMask)
-Vue.use(VueGoogleCharts)
 Vue.use(VueMasonryPlugin)
 Vue.use(DatePicker)
 
