@@ -1,4 +1,3 @@
-/* eslint-disable */
 import BabelPolyFill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
@@ -24,13 +23,12 @@ import Sortable from 'vue-sortable'
 import { ApiManager } from './managers/api-manager'
 
 import draggable from 'vuedraggable'
-import VueGoogleCharts from 'vue-google-charts'
 
 import {VueMasonryPlugin} from 'vue-masonry'
 
 // multiple date datepicker
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 
 import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'
@@ -66,7 +64,6 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 Vue.use(Autocomplete)
 Vue.use(VueTheMask)
-Vue.use(VueGoogleCharts)
 Vue.use(VueMasonryPlugin)
 Vue.use(DatePicker)
 
@@ -96,11 +93,12 @@ Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('Actions', Actions)
 
-Vue.prototype.$api = new ApiManager();
+Vue.prototype.$api = new ApiManager()
 
 Vue.config.productionTip = false
 global.jQuery = jQuery
 global.$ = jQuery
+// eslint-disable-next-line no-new
 new Vue({
   el: '#app',
   router,

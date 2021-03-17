@@ -512,6 +512,11 @@ import Register from '@/views/Auth/register'
 import ForgotPassword from '@/views/Auth/forgot-password'
 import ResetPassword from '@/views/Auth/reset-password'
 
+import SalesWaybillIndex from '@/pages/SalesWaybill/'
+import SalesWaybillGet from '@/pages/SalesWaybill/get'
+import SalesWaybillInsert from '@/pages/SalesWaybill/insert'
+import SalesWaybillUpdate from '@/pages/SalesWaybill/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -609,7 +614,8 @@ const listIndex = [
   {path: '/Asset', name: 'Asset', component: AssetIndex, meta: { title: i18n.t('router.Asset'), createLink: 'AssetInsert' }},
   {path: '/AssetLocation', name: 'AssetLocation', component: AssetLocationIndex, meta: { title: i18n.t('router.AssetLocation'), createLink: 'AssetLocationInsert' }},
   {path: '/AssetMovementCard', name: 'AssetMovementCard', component: AssetMovementCardIndex, meta: { title: i18n.t('router.AssetMovementCard'), createLink: 'AssetMovementCardInsert' }},
-  {path: '/OverDueDebitSearch', name: 'OverDueDebitSearch', component: OverDueDebitSearchIndex, meta: { title: i18n.t('router.OverDueDebitSearch'), createLink: 'OverDueDebitSearchInsert' }}
+  {path: '/OverDueDebitSearch', name: 'OverDueDebitSearch', component: OverDueDebitSearchIndex, meta: { title: i18n.t('router.OverDueDebitSearch'), createLink: 'OverDueDebitSearchInsert' }},
+  {path: '/SalesWaybill', name: 'SalesWaybill', component: SalesWaybillIndex, meta: { title: i18n.t('router.SalesWaybill'), createLink: 'SalesWaybillInsert' }}
 ]
 
 const listGet = [
@@ -707,7 +713,8 @@ const listGet = [
   { path: '/Asset/:url', name: 'AssetGet', component: AssetGet, meta: { title: i18n.t('router.AssetGet'), baseLink: 'Asset' } },
   { path: '/AssetLocation/:url', name: 'AssetLocationGet', component: AssetLocationGet, meta: { title: i18n.t('router.AssetLocationGet'), baseLink: 'AssetLocation' } },
   { path: '/AssetMovementCard/:url', name: 'AssetMovementCardGet', component: AssetMovementCardGet, meta: { title: i18n.t('router.AssetMovementCardGet'), baseLink: 'AssetMovementCard' } },
-  { path: '/OverDueDebitSearch/:url', name: 'OverDueDebitSearchGet', component: OverDueDebitSearchGet, meta: { title: i18n.t('router.OverDueDebitSearchGet'), baseLink: 'OverDueDebitSearch' } }
+  { path: '/OverDueDebitSearch/:url', name: 'OverDueDebitSearchGet', component: OverDueDebitSearchGet, meta: { title: i18n.t('router.OverDueDebitSearchGet'), baseLink: 'OverDueDebitSearch' } },
+  { path: '/SalesWaybill/:url', name: 'SalesWaybillGet', component: SalesWaybillGet, meta: { title: i18n.t('router.SalesWaybillGet'), baseLink: 'SalesWaybill' } }
 
 ]
 
@@ -804,7 +811,8 @@ const listUpdate = [
   { path: '/Update/Asset/:url', name: 'AssetUpdate', component: AssetUpdate, meta: { title: i18n.t('router.AssetUpdate'), baseLink: 'Asset' } },
   { path: '/Update/AssetLocation/:url', name: 'AssetLocationUpdate', component: AssetLocationUpdate, meta: { title: i18n.t('router.AssetLocationUpdate'), baseLink: 'AssetLocation' } },
   { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
-  { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } }
+  { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } },
+  { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: SalesWaybillUpdate, meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } }
 ]
 
 const listInsert = [
@@ -903,7 +911,8 @@ const listInsert = [
   { path: '/Insert/Asset', name: 'AssetInsert', component: AssetInsert, meta: { title: i18n.t('router.AssetInsert'), baseLink: 'Asset' } },
   { path: '/Insert/AssetLocation', name: 'AssetLocationInsert', component: AssetLocationInsert, meta: { title: i18n.t('router.AssetLocationInsert'), baseLink: 'AssetLocation' } },
   { path: '/Insert/AssetMovementCard', name: 'AssetMovementCardInsert', component: AssetMovementCardInsert, meta: { title: i18n.t('router.AssetMovementCardInsert'), baseLink: 'AssetMovementCard' } },
-  { path: '/Insert/OverDueDebitSearch', name: 'OverDueDebitSearchInsert', component: OverDueDebitSearchInsert, meta: { title: i18n.t('router.OverDueDebitSearchInsert'), baseLink: 'OverDueDebitSearch' } }
+  { path: '/Insert/OverDueDebitSearch', name: 'OverDueDebitSearchInsert', component: OverDueDebitSearchInsert, meta: { title: i18n.t('router.OverDueDebitSearchInsert'), baseLink: 'OverDueDebitSearch' } },
+  { path: '/Insert/SalesWaybill', name: 'SalesWaybillInsert', component: SalesWaybillInsert, meta: { title: i18n.t('router.SalesWaybillInsert'), baseLink: 'SalesWaybill' } }
 ]
 
 const routes = [

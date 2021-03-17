@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "description": "BAT",
-  "author": "Ahmet Selim ÇİL <hi@ahmetsc.com>",
+  "author": "Idea Teknoloji",
   "scripts": {
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
+    "local": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
+    "test": "webpack-dev-server --inline --progress --config build/webpack.test.conf.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "start": "npm run dev"
+    "start": "npm run local"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -19,6 +22,8 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.18.1",
+    "devextreme": "20.2.5",
+    "devextreme-vue": "20.2.5",
     "hooper": "^0.3.4",
     "jquery": "^3.5.1",
     "jszip": "^3.5.0",
@@ -27,7 +32,6 @@
     "smart-webcomponents-community": "^8.0.0",
     "vue": "^2.6.12",
     "vue-axios": "^2.1.5",
-    "vue-google-charts": "^0.3.3",
     "vue-i18n": "^8.22.1",
     "vue-masonry": "^0.12.0",
     "vue-router": "^3.4.8",

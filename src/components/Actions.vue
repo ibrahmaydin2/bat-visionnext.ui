@@ -1,4 +1,16 @@
 <template>
+  <!-- ViewType
+  Potansiyel Müşteri Onayla-> PotentialCustomerApprove
+  Potansiyel Müşteri Reddet-> PotentialCustomerReject
+  Genel Onaylama -> Modal
+  Güncelle -> Route
+  Detaylar -> Route
+  Farklı Kaydet -> SaveAs
+  Doküman Dönüştür -> Convert
+  Import -> Uploads adında bir ayraç olmalı.
+  İptal -> Cancel
+  Alan Güncelleme -> QuickUpdate
+  Uyarı -> ControlModel -->
   <b-dropdown-group header="Actions">
     <b-dropdown-item v-for="(action, i) in actions" :key="i">
       <router-link v-if="action.ViewType === 'Route'" :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
@@ -10,7 +22,7 @@
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
-      <span class="d-inline-block w-100" v-else-if="action.Action === 'Print'" @click="print (action, row)">
+      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click="print (action, row)">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
@@ -48,8 +60,6 @@ export default {
       this.$emit('showModal', action, row)
     },
     print (action, row) {
-      console.log(action)
-      console.log(row)
       this.$api.post({recordId: 33504721807}, 'Print', 'Print/InvoicePrint').then((res) => {
         console.log(res)
         let w = window.open()

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import { ToastPlugin } from 'bootstrap-vue'
-import { systemName, ideaName, copyright, verno, apiLink } from '../static/system'
+import { ideaName, copyright } from '../static/system'
 import router from './router'
 import i18n from './i18n'
 import { required, not } from 'vuelidate/lib/validators'
@@ -10,7 +10,7 @@ import { required, not } from 'vuelidate/lib/validators'
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
 export default axios
-axios.defaults.baseURL = apiLink
+axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
@@ -41,11 +41,11 @@ export const store = new Vuex.Store({
       navigation: 'asc__navigation asc__navigation-none asc__transition-right'
     },
     system: {
-      version: verno,
+      version: process.env.VUE_APP_VESION_NO,
       copyright: copyright
     },
     title: {
-      siteName: systemName,
+      siteName: process.env.VUE_APP_SYSTEM_NAME,
       idea: ideaName
     },
     logo: {
@@ -1128,6 +1128,40 @@ export const store = new Vuex.Store({
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboard ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
+      return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetUserDashboards/${userId}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReports ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetUserGadgets/${query.id}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReportDetail ({ state, commit }, query) {
+      commit('bigLoaded', true)
+      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetGadgetDetails/${query.id}`, authHeader)
+        .then(res => {
+          return res
         })
         .catch(err => {
           commit('bigLoaded', false)

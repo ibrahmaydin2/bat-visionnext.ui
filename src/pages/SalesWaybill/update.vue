@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'SalesInvoice' }">
+            <router-link :to="{name: 'SalesWaybill' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -84,8 +84,26 @@
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
               <v-select/>
             </NextFormGroup>
+            <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
+              <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
+            </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+            </NextFormGroup>
+             <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+                <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+                <b-form-timepicker
+                  :placeholder="$t('insert.chooseTime')"
+                  :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
+                  :label-no-time-selected="$t('insert.chooseTime')"
+                  :label-close-button="$t('insert.close')"
+                  close-button-variant="outline-danger"
+                  v-model="form.ActualDeliveryTime"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2">
+              <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
@@ -95,6 +113,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
+              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
@@ -117,6 +138,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
+              <v-select  v-model="selectedPaymentPeriod" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -184,6 +208,52 @@
                   <b-td class="text-center">
                     <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
                     <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0" :disabled="form.VehicleId > 0">
+          <b-row>
+            <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
+              <b-form-input type="text" v-model="selectedInvoiceLogisticCompany.companyName"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.taxNumber')" :error="$v.selectedInvoiceLogisticCompany.taxNumber" :required="true" md="4" lg="3">
+              <b-form-input type="number" v-model="selectedInvoiceLogisticCompany.taxNumber" :maxLength="10" :oninput="maxLengthControl"/>
+            </NextFormGroup>
+          </b-row>
+          <NextAddress
+            v-model="address"
+            :required="true"
+            :city-error="$v.selectedInvoiceLogisticCompany.cityId.$error"
+            :district-error="$v.selectedInvoiceLogisticCompany.districtId.$error"
+            :hide-address="true"
+            md="4"
+            lg="3"
+          />
+          <b-col cols="12" md="8" lg="6" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addInvoiceLogisticCompany" />
+              </b-form-group>
+            </b-col>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.companyName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.taxNumber')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.city')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.district')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(l, i) in form.InvoiceLogisticCompanies" :key="i">
+                  <b-td>{{l.CompanyName}}</b-td>
+                  <b-td>{{l.TaxNumber}}</b-td>
+                  <b-td>{{l.City ? l.City.Label : l.CityName}}</b-td>
+                  <b-td>{{l.District ? l.District.Label : l.DistrictName}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeInvoiceLogisticCompany(l)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -262,7 +332,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { required, minValue } from 'vuelidate/lib/validators'
+import { required, minValue, minLength, maxLength } from 'vuelidate/lib/validators'
 import updateMixin from '../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -271,13 +341,16 @@ export default {
       form: {
         StateId: 1,
         InvoiceNumber: null,
-        InvoiceKindId: 3,
-        DocumentClassId: 2,
+        InvoiceKindId: 2,
+        DocumentClassId: 3,
+        EDocumentStatusId: null,
         GrossTotal: 0,
+        Genexp2: null,
         DocumentNumber: null,
         ActualDeliveryDate: null,
         ActualDeliveryTime: null,
         RepresentativeId: null,
+        DeliveryRepresentativeId: null,
         Description1: null,
         RouteId: null,
         WarehouseId: null,
@@ -287,17 +360,33 @@ export default {
         DocumentTime: null,
         StatusId: 1,
         VehicleId: null,
-        IsPrinted: 0,
-        IsCanceled: 0,
+        Printed: 0,
         PrintCount: 0,
         PaymentTypeId: null,
+        Canceled: 0,
+        PaymentPeriodId: null,
         CurrencyId: null,
         NetTotal: 0,
         TotalVat: 0,
         TotalItemDiscount: 0,
         TotalOtherDiscount: 0,
         TotalDiscount: 0,
+        TerminalOrPc: 'P',
+        RecvLocationId: null,
         InvoiceLines: [],
+        ConversionCounter: 0,
+        IsManuelClosure: 0,
+        IsDbs: 0,
+        IsProforma: 0,
+        IsContractFocInvoice: 0,
+        IsEndorsementReturn: 0,
+        IsValid: 0,
+        EDocumentUrl: null,
+        IsPreprintedDocument: null,
+        IsPrintedDispatch: 0,
+        IsManuelTransaction: 0,
+        IsMatched: 0,
+        InvoiceLogisticCompanies: [],
         PrintedDispatchNumber: null
       },
       routeName1: 'Invoice',
@@ -331,6 +420,7 @@ export default {
       selectedWarehouse: null,
       selectedVehicle: null,
       selectedPaymentType: null,
+      selectedPaymentPeriod: null,
       customerFirstSet: true,
       documentDateFirstSet: true,
       selectedCampaigns: [],
@@ -338,11 +428,22 @@ export default {
       campaignSelectable: false,
       showDiscounts: false,
       customerCampaigns: {},
-      selectedBranch: {}
+      selectedEDocumentStatus: null,
+      selectedInvoiceLogisticCompany: {
+        companyName: null,
+        cityId: null,
+        cityName: null,
+        districtId: null,
+        districtName: null,
+        taxNumber: null
+      },
+      selectedBranch: {},
+      address: {},
+      selectedDeliveryRepresentative: null
     }
   },
   computed: {
-    ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -352,6 +453,7 @@ export default {
       this.getData().then(() => {
         this.setData()
       })
+      var me = this
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderState/Search', name: 'orderStates'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
@@ -359,6 +461,10 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'}).then(() => {
+        me.selectedEDocumentStatus = me.eDocumentStatus.find(e => e.Code === 'ReadyForSendToEFU')
+        me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
+      })
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response.Model
       })
@@ -384,8 +490,7 @@ export default {
       }
       loading(true)
       let model = {
-        Description1: search,
-        SalesDocumentTypeIds: [45, 46]
+        Description1: search
       }
       this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
         loading(false)
@@ -586,9 +691,7 @@ export default {
         TempDiscountNetTotal: 0,
         DiscountNetTotal: 0,
         DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
-        TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
+        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null
       }
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
@@ -679,8 +782,16 @@ export default {
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
+        this.selectedPaymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
+        this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
+            item.RecordState = 3
+            return item
+          })
+        }
+        if (this.form.InvoiceLogisticCompanies) {
+          this.form.InvoiceLogisticCompanies.map(item => {
             item.RecordState = 3
             return item
           })
@@ -697,6 +808,50 @@ export default {
           this.showDiscounts = true
         }
       })
+    },
+    addInvoiceLogisticCompany () {
+      this.$v.selectedInvoiceLogisticCompany.$touch()
+      if (this.$v.selectedInvoiceLogisticCompany.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.InvoiceLogisticCompanies.filter(i => i.CompanyName === this.selectedInvoiceLogisticCompany.companyName &&
+      i.TaxNumber === this.selectedInvoiceLogisticCompany.taxNumber && i.CityId === this.selectedInvoiceLogisticCompany.cityId &&
+      i.DistrictId === this.selectedInvoiceLogisticCompany.districtId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      let filteredItems = this.form.InvoiceLogisticCompanies.filter(i => i.CompanyName === this.selectedInvoiceLogisticCompany.companyName &&
+      i.TaxNumber === this.selectedInvoiceLogisticCompany.taxNumber && i.CityId === this.selectedInvoiceLogisticCompany.cityId &&
+      i.DistrictId === this.selectedInvoiceLogisticCompany.districtId && i.RecordState === 4)
+      if (filteredItems && filteredItems.length > 0) {
+        this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(filteredItems[0])].RecordState = 3
+        return
+      }
+      let logisticCompany = {
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: this.selectedInvoiceLogisticCompany.RecordState ? this.selectedInvoiceLogisticCompany.RecordState : 2,
+        RecordId: this.selectedInvoiceLogisticCompany.RecordId,
+        CompanyName: this.selectedInvoiceLogisticCompany.companyName,
+        TaxNumber: this.selectedInvoiceLogisticCompany.taxNumber,
+        CityId: this.selectedInvoiceLogisticCompany.cityId,
+        DistrictId: this.selectedInvoiceLogisticCompany.districtId,
+        CityName: this.selectedInvoiceLogisticCompany.cityName,
+        DistrictName: this.selectedInvoiceLogisticCompany.districtName
+      }
+      this.form.InvoiceLogisticCompanies.push(logisticCompany)
+      this.selectedInvoiceLogisticCompany = {}
+      this.$v.selectedInvoiceLogisticCompany.$reset()
+    },
+    removeInvoiceLogisticCompany (item) {
+      this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(item)].RecordState = 4
     },
     save () {
       this.$v.form.$touch()
@@ -750,6 +905,22 @@ export default {
         stock: {
           required
         }
+      },
+      selectedInvoiceLogisticCompany: {
+        companyName: {
+          required
+        },
+        cityId: {
+          required
+        },
+        districtId: {
+          required
+        },
+        taxNumber: {
+          required,
+          minLength: minLength(10),
+          maxLength: maxLength(10)
+        }
       }
     }
   },
@@ -800,6 +971,14 @@ export default {
       if (e && e.length > 0) {
         this.selectedCurrency = e[0]
         this.form.CurrencyId = e[0].RecordId
+      }
+    },
+    address (e) {
+      if (e) {
+        this.selectedInvoiceLogisticCompany.cityId = e.CityId
+        this.selectedInvoiceLogisticCompany.cityName = e.CityName
+        this.selectedInvoiceLogisticCompany.districtId = e.DistrictId
+        this.selectedInvoiceLogisticCompany.districtName = e.DistrictName
       }
     }
   }
