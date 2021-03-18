@@ -1148,7 +1148,7 @@ export const store = new Vuex.Store({
     },
     getDashboardReports ({ state, commit }, query) {
       commit('bigLoaded', true)
-      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetUserGadgets/${query.id}`, authHeader)
+      return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetUserGadgets/${query.id}`, authHeader)
         .then(res => {
           return res
         })
@@ -1159,7 +1159,7 @@ export const store = new Vuex.Store({
     },
     getDashboardReportDetail ({ state, commit }, query) {
       commit('bigLoaded', true)
-      return axios.get(`http://batdev.visionplus.com.tr/VisionNextDashboard/api/BatDashboardApi/GetGadgetDetails/${query.id}`, authHeader)
+      return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetGadgetDetails/${query.id}`, authHeader)
         .then(res => {
           return res
         })

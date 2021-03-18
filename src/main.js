@@ -50,7 +50,7 @@ import GetFormField from './components/GetFormField'
 import NextCheckBox from './components/NextCheckBox'
 import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
-import Actions from './components/Actions'
+import Actions from './components/Actions/Actions'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)

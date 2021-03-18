@@ -10,6 +10,10 @@ export class ApiManager {
     return this.call('post', request, basePath, secondPath)
   }
 
+  async postByUrl (request, url) {
+    return this.call('post', request, null, null, url)
+  }
+
   async put (request, basePath, secondPath) {
     return this.call('put', request, basePath, secondPath)
   }
@@ -18,9 +22,12 @@ export class ApiManager {
     return this.call('delete', request, basePath, secondPath)
   }
 
-  async call (methodType, request, basePath, secondPath) {
-    if (!secondPath) {
-      secondPath = basePath
+  async call (methodType, request, basePath, secondPath, url) {
+    if (!url) {
+      if (!secondPath) {
+        secondPath = basePath
+      }
+      url = `VisionNext${basePath}/api/${secondPath}`
     }
     if (!request) {
       request = {}
@@ -29,7 +36,7 @@ export class ApiManager {
     request.companyId = store.state.CompanyId
     return axios({
       method: methodType,
-      url: `VisionNext${basePath}/api/${secondPath}`,
+      url: url,
       data: request,
       headers: {'key': localStorage.getItem('Key')}
     }).then(function (response) {
