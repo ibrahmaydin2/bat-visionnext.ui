@@ -287,22 +287,11 @@ export default {
         ClassName: 'Customer',
         PageName: 'pg_Customer'
       }
-      // let request = {
-      //   'ControllerName': this.baseLink, // T_UI_FROM ActionUrl
-      //   'ClassName': this.baseLink, // T_SYS_TABLE ObjectName
-      //   'PageName': `pg_${this.baseLink}` // T_SYS_FORM
-      // }
       this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
         this.workFlowList = res.ListModel.BaseModels
       })
     },
     showModal (action, row) {
-      // this.modalRecordId = row.RecordId
-      // this.modalRecord = row
-      // this.modalQuery = query
-      // this.modalQueryMessage = message
-      // this.$refs[`${action.Action}Modal`].show()
-      // this.modalActionUrl = action.ActionUrl
       this.$root.$emit('bv::show::modal', 'confirmModal')
       this.modalAction = action
       this.modalItem = row
@@ -504,6 +493,9 @@ export default {
           continue
         }
         if (row.modelControlUtil !== null) {
+          if (typeof row.defaultValue === 'object') {
+            continue
+          }
           let value = parseInt(row.defaultValue)
           if (row.modelControlUtil.inputType === 'AutoComplete') {
             me.andConditionalModel[row.modelControlUtil.modelProperty] = [value]
@@ -519,7 +511,7 @@ export default {
         } else {
           switch (row.columnType) {
             case 'Boolean':
-              if (row.defaultValue) {
+              if (row.defaultValue && typeof row.defaultValue !== 'object') {
                 let value = parseInt(row.defaultValue)
                 row.defaultValue = me.searchBoolean.find(b => b.value === value)
                 searchQ[row.dataField] = value
@@ -527,20 +519,18 @@ export default {
               break
             case 'Date':
             case 'DateTime':
-              if (row.defaultValue) {
+              if (row.defaultValue && typeof row.defaultValue !== 'object') {
                 let model = {}
                 let today = new Date()
+                let lastDayOfMonth = me.dateConvertToISo(new Date(today.getFullYear(), today.getMonth() + 1, 0))
                 switch (row.defaultValue) {
                   case 'first':
-                    let firstDate = me.dateConvertToISo(today.setDate(1))
-                    model.BeginValue = firstDate
-                    model.EndValue = firstDate
+                    model.BeginValue = me.dateConvertToISo(today.setDate(1))
+                    model.EndValue = lastDayOfMonth
                     break
                   case 'last':
-                    let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-                    let lastDate = me.dateConvertToISo(today.setDate(lastDayOfMonth))
-                    model.BeginValue = lastDate
-                    model.EndValue = lastDate
+                    model.BeginValue = lastDayOfMonth
+                    model.EndValue = lastDayOfMonth
                     break
                   case 'today':
                     model.BeginValue = me.dateConvertToISo(today)
@@ -563,26 +553,23 @@ export default {
     },
     setRows () {
       let lookups = ''
+      let hasAnyDropdown = false
       this.tableRows.forEach(c => {
         let control = c.modelControlUtil
-        if (control != null) {
-          switch (control.inputType) {
-            case 'DropDown':
-              if (control.isLookupTable) {
-                lookups += control.code + ','
-              } else {
-                if (!this.gridField || this.gridField.length === 0) {
-                  this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty}).then(() => {
-                    this.isGridFieldsReady = true
-                  })
-                } else {
-                  this.isGridFieldsReady = true
-                }
-              }
-              break
+        if (control != null && control.inputType === 'DropDown') {
+          if (control.isLookupTable) {
+            lookups += control.code + ','
+          } else {
+            hasAnyDropdown = true
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty}).then(() => {
+              this.isGridFieldsReady = true
+            })
           }
         }
       })
+      if (!hasAnyDropdown) {
+        this.isGridFieldsReady = true
+      }
       if (lookups.length > 0 && (!this.lookup || this.lookup.length === 0)) {
         lookups = lookups.slice(0, -1)
         this.$store.dispatch('getAllLookups', {...this.query, type: lookups}).then(() => {
@@ -619,7 +606,7 @@ export default {
       this.searchOnTable()
     },
     getFormattedDate (defaultValue) {
-      return defaultValue && defaultValue.length === 2 && defaultValue[0].slice && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
+      return defaultValue && defaultValue.length === 2 && defaultValue[0] && defaultValue[0].slice && defaultValue[1] && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
     }
   },
   watch: {

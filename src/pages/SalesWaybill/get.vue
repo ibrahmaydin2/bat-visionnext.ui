@@ -48,14 +48,12 @@
               <div v-html="getFormatDataByType(rowData.ActualDeliveryTime, 'text', 'insert.order.actualDeliveryTime')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
-              <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
               <div v-html="getFormatDataByType(rowData.EDocumentStatus, 'object', 'insert.order.eDocumentStatus')"></div>
-              <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
@@ -85,7 +83,7 @@
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
                       <b-td>{{o.Item.Label}}</b-td>
                       <b-td>{{o.Item.Code}}</b-td>
-                      <b-td>{{o.InvoiceQuantity}}</b-td>
+                      <b-td>{{o.Quantity}}</b-td>
                       <b-td>{{o.Price}}</b-td>
                       <b-td>{{o.VatRate}}</b-td>
                       <b-td>{{o.NetTotal}}</b-td>
@@ -110,7 +108,7 @@
                     <b-th><span>{{$t('insert.order.district')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.InvoiceLogisticCompanies" :key="i">
+                    <b-tr v-for="(l, i) in rowData.InvoiceLogisticCompanies" :key="i">
                       <b-td>{{l.CompanyName}}</b-td>
                       <b-td>{{l.TaxNumber}}</b-td>
                       <b-td>{{l.City ? l.City.Label : '-'}}</b-td>
