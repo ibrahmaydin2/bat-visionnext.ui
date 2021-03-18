@@ -51,7 +51,6 @@
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
@@ -79,7 +78,7 @@
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
                       <b-td>{{o.Item.Label}}</b-td>
                       <b-td>{{o.Item.Code}}</b-td>
-                      <b-td>{{o.InvoiceQuantity}}</b-td>
+                      <b-td>{{o.Quantity}}</b-td>
                       <b-td>{{o.Price}}</b-td>
                       <b-td>{{o.VatRate}}</b-td>
                       <b-td>{{o.NetTotal}}</b-td>
