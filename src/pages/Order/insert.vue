@@ -118,7 +118,7 @@
               <v-select :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <v-select />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup v-if="false" item-key="Canceled" :error="$v.form.Canceled" md="2" lg="2">
               <NextCheckBox v-model="form.Canceled" type="number" toggle/>
@@ -761,6 +761,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

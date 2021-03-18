@@ -119,7 +119,7 @@
               <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <v-select  v-model="selectedPaymentPeriod" />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup v-if="false" item-key="Canceled" :error="$v.form.Canceled" md="2" lg="2">
               <NextCheckBox v-model="form.Canceled" type="number" toggle/>
@@ -365,7 +365,6 @@ export default {
       selectedWarehouse: null,
       selectedVehicle: null,
       selectedPaymentType: null,
-      selectedPaymentPeriod: null,
       customerFirstSet: true,
       documentDateFirstSet: true,
       selectedCampaigns: [],
@@ -707,7 +706,6 @@ export default {
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
-        this.selectedPaymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
         if (this.form.OrderLines) {
           this.form.OrderLines.map(item => {
             item.RecordState = 3
@@ -746,7 +744,7 @@ export default {
           return
         }
         this.$store.commit('bigLoaded', true)
-        this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
+        this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderUpdateDiscounts').then((res) => {
           this.campaigns = res.Models
           this.$store.commit('bigLoaded', false)
           if (this.campaigns && this.campaigns.length > 0) {
@@ -792,6 +790,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
+        this.form.PaymentPeriodId = e.PaymentPeriod
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
         if (this.customerFirstSet) {
