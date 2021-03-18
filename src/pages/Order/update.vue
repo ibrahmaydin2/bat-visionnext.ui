@@ -737,8 +737,18 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (!this.form.OrderLines || this.form.OrderLines.length === 0) {
+          this.$toasted.show(this.$t('insert.order.noOrderLines'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.$store.commit('bigLoaded', true)
         this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
           this.campaigns = res.Models
+          this.$store.commit('bigLoaded', false)
           if (this.campaigns && this.campaigns.length > 0) {
             this.campaignSelectable = true
             this.$bvModal.show('campaign-modal')
