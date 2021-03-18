@@ -61,7 +61,7 @@ export default {
       font-size: 2rem
       width: 100%
       text-align: center
-    .b-overlay
+    .b-overlay-wrap
       height: 300px
     .table-span
       white-space: nowrap

@@ -14,7 +14,7 @@
         <b-form-group v-if="element.ColumnType === 'Select' && element.DefaultValue" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
           <v-select
             label="Label"
-            :readonly="element.Enabled"
+            :readonly="!element.Enabled"
             :options="lookup[element.DefaultValue]"
             @input="selectedValue(element.EntityProperty, $event, 'lookup')"
           >
@@ -24,7 +24,7 @@
           <b-form-input
             type="text"
             v-model="form[fieldName]"
-            :readonly="element.Enabled" />
+            :readonly="!element.Enabled" />
         </b-form-group>
         <b-form-group v-else-if="element.ColumnType === 'Radio'" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
           <NextCheckBox v-model="form[fieldName]" type="number" toggle />
@@ -51,7 +51,7 @@
         <b-form-group v-else :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
           <v-select
             label="Description1"
-            :readonly="element.Enabled"
+            :readonly="!element.Enabled"
             :options="searchItems[element.EntityProperty]"
             @input="selectedValue(element, $event, 'search')"
           >
@@ -95,10 +95,10 @@ export default {
     ...mapState(['lookup'])
   },
   created () {
-    this.$api.get('UIOperations', 'UIOperationGroupUser/GetFormInits?name=Employee&branchId=6').then((res) => {
+    this.$api.get('UIOperations', `UIOperationGroupUser/GetPopupFormInits?name=${this.$route.name}`).then((res) => {
       let autoLookups = ''
-      this.formElements = res.RowColumns
-
+      this.formElements = res.FormColumns
+      console.log(this.$route)
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
         this.$set(this.form, fieldName, null)
@@ -134,7 +134,6 @@ export default {
     },
     save () {
       this.$v.form.$touch()
-      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',

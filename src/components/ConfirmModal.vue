@@ -1,6 +1,6 @@
 <template>
   <b-modal id="confirmModal" title="BootstrapVue">
-    <p class="my-4">{{modalItem.Description1}}</p>
+    <p class="my-4">{{modalItem && modalItem.Description1}}</p>
     <ModalElements />
     <!-- <template #modal-footer="">
       <b-button size="sm" variant="success" @click="submit()">

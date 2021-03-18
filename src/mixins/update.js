@@ -20,7 +20,16 @@ export default {
       let model = {
         'model': this.form
       }
-      this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
+      if (typeof this.$route.query.saveAs !== 'undefined' && this.$route.query.saveAs) {
+        model.model.RecordId = null
+        model.model.RecordState = 2
+        this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then(res => {
+          model.model.Code = res.Model.Code
+          this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
+        })
+      } else {
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
+      }
     }
   },
   mounted () {

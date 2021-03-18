@@ -1396,10 +1396,20 @@ export default {
         this.form.IsBlackListed = this.checkConvertToNumber(this.form.IsBlackListed)
         this.form.Statement = this.checkConvertToNumber(this.form.Statement)
         this.form.IsOpportunitySpot = this.checkConvertToNumber(this.form.IsOpportunitySpot)
+
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+        if (typeof this.$route.query.saveAs !== 'undefined' && this.$route.query.saveAs) {
+          model.model.RecordId = null
+          model.model.RecordState = 2
+          this.$api.postByUrl({}, 'VisionNextCustomer/api/Customer/GetCode').then(res => {
+            model.model.Code = res.Model.Code
+            this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+          })
+        } else {
+          this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+        }
       }
     },
     selectedBank (e) {
