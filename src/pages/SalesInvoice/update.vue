@@ -796,7 +796,7 @@ export default {
   },
   watch: {
     selectedCustomer (e) {
-      if (e) {debugger
+      if (e) {
         this.form.PaymentPeriodId = e.PaymentPeriod
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
