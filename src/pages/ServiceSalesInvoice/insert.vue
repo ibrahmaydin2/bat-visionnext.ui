@@ -249,7 +249,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items'])
+    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'orderStatusList', 'items'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -309,6 +309,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
+          this.selectItem()
+          this.$forceUpdate()
         }
       })
     },
@@ -354,6 +356,11 @@ export default {
       if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
+      }
+      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
+      if (filteredItem) {
+        this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
+        return
       }
       let length = this.form.InvoiceLines.length
       let selectedItem = this.selectedInvoiceLine.selectedItem
