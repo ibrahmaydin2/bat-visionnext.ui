@@ -367,7 +367,11 @@
     "SalesWaybill": "Teslimat İrsaliyesi",
     "SalesWaybillGet": "Teslimat İrsaliyesi Görüntüle",
     "SalesWaybillInsert": "Yeni Teslimat İrsaliyesi",
-    "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle"
+    "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle",
+    "PurchaseWaybill": "Mal Kabul İrsaliyesi",
+    "PurchaseWaybillGet": "Mal Kabul İrsaliyesi Görüntüle",
+    "PurchaseWaybillInsert": "Yeni Mal Kabul İrsaliyesi",
+    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
