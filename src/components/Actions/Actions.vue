@@ -22,11 +22,11 @@
         <span class="ml-1">{{action.Title}}</span>
       </router-link>
       <!-- <span v-else-if="action.ViewType === 'Modal'" @click="showModal(action.Action, action.ActionUrl, row.RecordId, row, action.Query, action.QueryMessage)"> -->
-      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click="showModal (action, row)">
+      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click.prevent.stop="showModal (action, row, $event)">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
-      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click="print (action, row)">
+      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="print (action, row)">
         <img width="10" height="10" :src="icon" />
         <span class="ml-1">{{action.Title}}</span>
       </span>
@@ -73,8 +73,7 @@ export default {
     }
   },
   methods: {
-    showModal (action, row) {
-      console.log(action, row)
+    showModal (action, row, e) {
       this.$emit('showModal', action, row)
     },
     print (action, row) {

@@ -1,18 +1,7 @@
 <template>
-  <b-modal id="confirmModal" title="BootstrapVue">
+  <b-modal v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer>
     <p class="my-4">{{modalItem && modalItem.Description1}}</p>
-    <ModalElements />
-    <!-- <template #modal-footer="">
-      <b-button size="sm" variant="success" @click="submit()">
-        ONAYLA
-      </b-button>
-      <b-button size="sm" variant="danger" @click="reject()">
-        Reddet
-      </b-button>
-      <b-button size="sm" variant="warning" @click="hide()">
-        İptal
-      </b-button>
-    </template> -->
+    <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="modalItem.RecordId" />
   </b-modal>
 </template>
 <script>

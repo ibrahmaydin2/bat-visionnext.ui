@@ -186,7 +186,7 @@
 import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
-import ConfirmModal from './ConfirmModal'
+import ConfirmModal from './Actions/ConfirmModal'
 let searchQ = {}
 export default {
   components: {
