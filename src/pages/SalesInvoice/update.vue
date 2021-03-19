@@ -35,9 +35,6 @@
               </NextFormGroup>
             </b-row>
             <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select v-model="selectedStatus" label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
@@ -132,7 +129,7 @@
               <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <v-select  v-model="selectedPaymentPeriod" />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -241,6 +238,26 @@
               </b-tr>
             </b-tbody>
           </b-table-simple>
+        </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
+                  <b-td>{{o.DiscountClass.Label}}</b-td>
+                  <b-td>{{o.DiscountClass.Code}}</b-td>
+                  <b-td>% {{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -365,7 +382,6 @@ export default {
       selectedWarehouse: null,
       selectedVehicle: null,
       selectedPaymentType: null,
-      selectedPaymentPeriod: null,
       customerFirstSet: true,
       documentDateFirstSet: true,
       selectedCampaigns: [],
@@ -374,12 +390,11 @@ export default {
       showDiscounts: false,
       customerCampaigns: {},
       selectedBranch: {},
-      selectedDeliveryRepresentative: null,
-      selectedStatus: null
+      selectedDeliveryRepresentative: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -391,7 +406,6 @@ export default {
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
@@ -473,6 +487,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
+          this.selectItem()
+          this.$forceUpdate()
         }
       })
     },
@@ -667,7 +683,7 @@ export default {
       }
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
-      this.$api.post(model, 'Invoice', 'SalesInvoice/ApplyInsertDiscounts').then((res) => {
+      this.$api.post(model, 'Invoice', 'SalesInvoice/ApplyUpdateDiscounts').then((res) => {
         if (res && res.Order) {
           this.form = res.Order
         }
@@ -684,17 +700,16 @@ export default {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.selectedCustomer = response.Model
+        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
-        this.selectedPaymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
-        if (this.orderStatusList && this.orderStatusList.length > 0) {
-          this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
-        }
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
             item.RecordState = 3
@@ -733,7 +748,7 @@ export default {
           return
         }
         this.$store.commit('bigLoaded', true)
-        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceInsertDiscounts').then((res) => {
+        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceUpdateDiscounts').then((res) => {
           this.campaigns = res.Models
           this.$store.commit('bigLoaded', false)
           if (this.campaigns && this.campaigns.length > 0) {
@@ -781,27 +796,12 @@ export default {
   },
   watch: {
     selectedCustomer (e) {
-      if (e) {
+      if (e) {debugger
+        this.form.PaymentPeriodId = e.PaymentPeriod
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
-        if (this.customerFirstSet) {
-          this.customerFirstSet = false
-          return
-        } else {
-          this.form.InvocieLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
-        }
-        if (e.DeliveryDayParam) {
-          let currentDate = new Date()
-          currentDate.setDate(currentDate.getDate() + e.DeliveryDayParam)
-          this.form.DueDate = currentDate.toISOString().slice(0, 10)
         }
       }
     },
@@ -809,17 +809,6 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-        if (this.documentDateFirstSet) {
-          this.documentDateFirstSet = false
-          return false
-        } else {
-          this.form.InvocieLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
       }
     },
     currencies (e) {

@@ -60,7 +60,7 @@
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.order.paymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentPeriodId, 'object', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
