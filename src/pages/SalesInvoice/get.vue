@@ -108,10 +108,10 @@
                     <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
+                    <b-tr v-for="(o, i) in (rowData.InvoiceDiscounts)" :key="i">
                       <b-td>{{o.DiscountClass.Label}}</b-td>
                       <b-td>{{o.DiscountClass.Code}}</b-td>
-                      <b-td>% {{o.DiscountPercent}}</b-td>
+                      <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
                       <b-td>{{o.TotalDiscount}}</b-td>
                     </b-tr>
                   </b-tbody>
