@@ -44,13 +44,12 @@
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
-              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriodId, 'object', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>

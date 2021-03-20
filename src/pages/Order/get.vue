@@ -48,16 +48,15 @@
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriodId, 'object', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>

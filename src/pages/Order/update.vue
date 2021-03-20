@@ -769,7 +769,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
-        this.form.PaymentPeriodId = e.PaymentPeriod
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
         if (e.DefaultLocationId) {

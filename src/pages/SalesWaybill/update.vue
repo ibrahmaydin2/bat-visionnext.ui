@@ -20,10 +20,10 @@
         <b-row>
           <b-col cols="8">
             <b-row>
-              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
+              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
                 <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
               </NextFormGroup>
-              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
+              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
@@ -33,19 +33,14 @@
                   v-model="form.DocumentTime"
                   :disabled="true"/>
               </NextFormGroup>
-            </b-row>
-            <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select v-model="selectedStatus" label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
-              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                 </template>
                 </v-select>
               </NextFormGroup>
-              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
+              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
               </NextFormGroup>
             </b-row>
@@ -132,7 +127,7 @@
               <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <v-select  v-model="selectedPaymentPeriod" />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -288,6 +283,26 @@
             </b-tbody>
           </b-table-simple>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
+                  <b-td>{{o.DiscountClass.Label}}</b-td>
+                  <b-td>{{o.DiscountClass.Code}}</b-td>
+                  <b-td>% {{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="campaign-modal" hide-footer>
@@ -411,9 +426,6 @@ export default {
       selectedWarehouse: null,
       selectedVehicle: null,
       selectedPaymentType: null,
-      selectedPaymentPeriod: null,
-      customerFirstSet: true,
-      documentDateFirstSet: true,
       selectedCampaigns: [],
       currentPage: 1,
       campaignSelectable: false,
@@ -533,6 +545,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
+          this.selectItem()
+          this.$forceUpdate()
         }
       })
     },
@@ -643,7 +657,7 @@ export default {
         })
         return false
       }
-      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.InvoiceLines.selectedItem.RecordId && i.RecordState === 4)
+      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
       if (filteredItem) {
         this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
         return
@@ -725,7 +739,7 @@ export default {
       }
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
-      this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyInsertDiscounts').then((res) => {
+      this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyUpdateDiscounts').then((res) => {
         if (res && res.Order) {
           this.form = res.Order
         }
@@ -741,13 +755,15 @@ export default {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.selectedCustomer = response.Model
+        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
-        this.selectedPaymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
@@ -831,8 +847,18 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceInsertDiscounts').then((res) => {
+        if (!this.form.InvoiceLines || this.form.InvoiceLines.length === 0) {
+          this.$toasted.show(this.$t('insert.order.noOrderLines'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.$store.commit('bigLoaded', true)
+        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceUpdateDiscounts').then((res) => {
           this.campaigns = res.Models
+          this.$store.commit('bigLoaded', false)
           if (this.campaigns && this.campaigns.length > 0) {
             this.campaignSelectable = true
             this.$bvModal.show('campaign-modal')
@@ -895,26 +921,11 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
-        if (this.customerFirstSet) {
-          this.customerFirstSet = false
-          return
-        } else {
-          this.form.InvocieLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
-        }
-        if (e.DeliveryDayParam) {
-          let currentDate = new Date()
-          currentDate.setDate(currentDate.getDate() + e.DeliveryDayParam)
-          this.form.DueDate = currentDate.toISOString().slice(0, 10)
         }
       }
     },
@@ -922,17 +933,6 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-        if (this.documentDateFirstSet) {
-          this.documentDateFirstSet = false
-          return false
-        } else {
-          this.form.InvocieLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
       }
     },
     currencies (e) {

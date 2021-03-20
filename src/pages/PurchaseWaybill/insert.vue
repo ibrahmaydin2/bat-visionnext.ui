@@ -605,6 +605,8 @@ export default {
       if (newValue) {
         this.form.PaymentPeriodId = newValue.PaymentPeriod
         this.form.PaymentTypeId = newValue.DefaultPaymentTypeId
+      } else {
+        this.form.PaymentPeriodId = 0
       }
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()

@@ -599,7 +599,7 @@ export default {
         })
         return false
       }
-      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.InvoiceLines.selectedItem.RecordId && i.RecordState === 4)
+      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
       if (filteredItem) {
         this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
         return
@@ -797,7 +797,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
-        this.form.PaymentPeriodId = e.PaymentPeriod
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
         if (e.DefaultLocationId) {
