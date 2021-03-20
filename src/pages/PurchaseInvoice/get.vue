@@ -15,7 +15,6 @@
         <b-col cols="6">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.order.invoiceNumber')}}:</b> {{rowData.InvoiceNumber}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.order.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
         <b-col cols="6">

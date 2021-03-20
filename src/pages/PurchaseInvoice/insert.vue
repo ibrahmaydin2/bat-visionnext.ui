@@ -20,10 +20,10 @@
         <b-row>
           <b-col cols="8">
             <b-row>
-              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
+              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
                 <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
               </NextFormGroup>
-              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
+              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
@@ -32,19 +32,14 @@
                   close-button-variant="outline-danger"
                    v-model="form.DocumentTime"/>
               </NextFormGroup>
-            </b-row>
-            <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
-              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                 </template>
                 </v-select>
               </NextFormGroup>
-              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
+              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
               </NextFormGroup>
             </b-row>
@@ -266,7 +261,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -276,7 +271,6 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
