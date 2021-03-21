@@ -203,7 +203,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML' && form.FixedTermCampaignDetails.length > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
               <v-select v-model="customer" :options="customers" @search="searchCustomer" :filterable="false" label="Description1">
@@ -341,7 +341,8 @@ export default {
         locationId: null,
         locationName: null,
         budgetId: null
-      }
+      },
+      companyId: null
     }
   },
   computed: {
@@ -350,6 +351,7 @@ export default {
   mounted () {
     this.createManualCode()
     this.getInsertPage(this.routeName)
+    this.companyId = this.$store.state.CompanyId
   },
   methods: {
     getInsertPage (e) {
@@ -410,7 +412,11 @@ export default {
       f.ColumnName === this.fixedTermCampaignDetail.columnName &&
       f.ColumnValue === this.fixedTermCampaignDetail.columnValue)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        if (this.fixedTermCampaignDetail.tableName === 'T_ROUTE') {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.fixedTermCampaign.sameRouteError') })
+        } else {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        }
         return false
       }
       this.form.FixedTermCampaignDetails.push({
@@ -467,7 +473,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        CompanyId: null,
+        CompanyId: parseFloat(this.companyId),
         StartQuantity: parseFloat(this.fixedTermCampaignTaken.startQuantity),
         EndQuantity: parseFloat(this.fixedTermCampaignTaken.endQuantity),
         PaymentPeriod: parseFloat(this.fixedTermCampaignTaken.paymentPeriod)
