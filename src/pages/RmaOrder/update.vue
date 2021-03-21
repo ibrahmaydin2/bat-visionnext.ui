@@ -140,7 +140,7 @@ export default {
         Deleted: 0,
         System: 0,
         RecordState: 2,
-        StatusId: 1,
+        StatusId: null,
         CustomerId: null,
         WarehouseId: null,
         RepresentativeId: null,

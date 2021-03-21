@@ -421,6 +421,8 @@
     "pleaseChooseField": "Lütfen Seçim Yapınız",
     "errorProcess": "Kayıt Bulunamadı",
     "okay": "Tamam",
+    "find": "Bul",
+    "clean": "Temizle",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1295,6 +1297,13 @@
       "routeName": "Rota Adı",
       "paymentType":"Ödeme Tipi",
       "customerSql": "Müşteri Sorgusu"
+    },
+    "approveAssuranceModal": {
+      "customerName":"Müşteri Adı",
+      "customerCode":"Müşteri Kodu",
+      "customerArea": "Müşteri Bölgesi 5",
+      "route":"Rota",
+      "approveStateId": "Onay Durumu"
     }
   },
   "get": {
@@ -1569,6 +1578,27 @@
       "campaignType": "Kampanya Tipi",
       "campaignRate": "Uygulama Oranı",
       "currency": "Para Birimi"
+    },
+    "PriceDiscountTransaction": {
+      "general": "Genel",
+      "TciBreak1": "TCI",
+      "TransactionDate": "Tanım Tarihi",
+      "TransactionTime": "Tanım Saati",
+      "DiscountReason": "Dip Toplam İndirim Nedeni",
+      "PriceDiscountAmount": "Dip Toplam İndirimi",
+      "Currency": "Para Birimi",
+      "BudgetAmount": "Bütçe Miktarı",
+      "BudgetConsumption": "Harcanan Bütçe Miktarı",
+      "Budget": "Bütçe",
+      "ApproveState": "Onay Durumu",
+      "ErpCode": "ERP Kodu",
+      "ExpirationDate": "Son Geçerlilik Tarihi",
+      "BeginDate": "Kullanımı Başlangıç Tarihi",
+      "Genexp1": "Açıklama 2",
+      "GainType": "Kazanç Türü",
+      "Code": "Kod",
+      "Description":"Açıklama",
+      "Status":"Durum"
     }
   },
 
