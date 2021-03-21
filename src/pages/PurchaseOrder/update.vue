@@ -87,9 +87,6 @@
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
             </NextFormGroup>
@@ -165,8 +162,6 @@
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
@@ -179,8 +174,6 @@
                   <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
-                  <b-td>{{o.DiscountPercent}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
@@ -241,12 +234,6 @@ export default {
         OrderLines: []
       },
       routeName1: 'Order',
-      campaignFields: [
-        {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
-        {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
-        {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
-      ],
-      SelectedDiscounts: [],
       selectedCustomer: null,
       documentDate: null,
       selectedPrice: {},
@@ -261,26 +248,19 @@ export default {
         stock: null,
         vatRate: null,
         vatTotal: null,
-        isUpdated: false,
-        totalDiscount: null,
-        discountPercent: null
+        isUpdated: false
       },
-      isCampaignQuestioned: false,
       selectedIndex: null,
       selectedRepresentative: null,
       selectedRoute: null,
       selectedWarehouse: null,
       selectedVehicle: null,
-      customerFirstSet: true,
-      documentDateFirstSet: true,
       currentPage: 1,
-      campaignSelectable: false,
-      showDiscounts: false,
       selectedStatus: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -369,6 +349,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+          this.selectItem()
+          this.$forceUpdate()
         }
       })
     },
@@ -554,7 +536,9 @@ export default {
       if (rowData) {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
-        this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.selectedCustomer = response.Model
+        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
@@ -628,17 +612,6 @@ export default {
       if (e) {
         this.form.PaymentPeriodId = e ? e.PaymentPeriod : 0
         this.searchPriceList()
-        if (this.customerFirstSet) {
-          this.customerFirstSet = false
-          return
-        } else {
-          this.form.OrderLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
@@ -653,17 +626,6 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-        if (this.documentDateFirstSet) {
-          this.documentDateFirstSet = false
-          return false
-        } else {
-          this.form.OrderLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
       }
     },
     currencies (e) {

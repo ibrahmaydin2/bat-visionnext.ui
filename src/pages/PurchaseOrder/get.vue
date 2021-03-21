@@ -116,7 +116,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextOrder/api/Order', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextOrder/api/PurchaseOrder', record: this.$route.params.url})
     }
   }
 }

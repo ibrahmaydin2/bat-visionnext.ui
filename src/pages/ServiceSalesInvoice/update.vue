@@ -494,7 +494,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
-        this.form.PaymentPeriodId = e.PaymentPeriod
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
