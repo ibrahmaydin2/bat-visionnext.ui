@@ -219,7 +219,8 @@ export const store = new Vuex.Store({
     branches: [],
     stockStatus: [],
     SelectedCustomer: {},
-    autoGridField: []
+    autoGridField: [],
+    selectedTableRows: []
   },
   actions: {
     // sistem gereksinimleri
@@ -1176,7 +1177,7 @@ export const store = new Vuex.Store({
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post(query.api + '/ApprovePotentialCustomer', dataQuery, authHeader)
+      return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('submitButton').disabled = false
@@ -1661,6 +1662,9 @@ export const store = new Vuex.Store({
     },
     setFormFields (state, payload) {
       state.formFields = payload
+    },
+    setSelectedTableRows (state, payload) {
+      state.selectedTableRows = payload
     }
   }
 })

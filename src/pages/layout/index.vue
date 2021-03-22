@@ -104,7 +104,12 @@
                     </b-dropdown-item>
                   </b-dropdown>
                   <div style="display: inline-grid">
-                    <!-- <GetFormField :routeName="thisRout" /> -->
+                    <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
+                      <template #button-content>
+                        <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
+                      </template>
+                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" />
+                    </b-dropdown>
                   </div>
                 </b-col>
               </b-row>
@@ -124,21 +129,28 @@
           </div>
         </b-col>
       </b-row>
+      <MultipleConfirmModal :modalAction="modalAction" :recordIds="modalItem" />
   </b-container>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
+import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
 export default {
+  components: {
+    MultipleConfirmModal
+  },
   data () {
     return {
       thisRout: this.$route.name,
       pageTitle: this.$route.meta.title,
       createLink: this.$route.meta.createLink,
-      filterTitle: ''
+      filterTitle: '',
+      modalAction: null,
+      modalItem: null
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows'])
     // sortTableRowsAll () {
     //   // this.tableRowsAll.slice(0).sort((a, b) => a.name.localeCompare(b.name))
     //   return this.tableRowsAll.slice(0).sort((a, b) => {
@@ -220,6 +232,18 @@ export default {
         model
       }
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
+    },
+    showMultipleModal (action) {
+      if (this.selectedTableRows.length < 1) {
+        this.$toasted.show(this.$t('index.selectRowError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.modalAction = action
+      this.$root.$emit('bv::show::modal', 'MultipleConfirmModal')
     }
   }
 }

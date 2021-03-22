@@ -174,10 +174,10 @@
       </b-col>
     </b-row>
     <b-modal id="approve-reject-modal" ref="RejectModal" hide-footer hide-header>
-      <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+      <PotentialCustomerRejectModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
-      <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+      <PotentialCustomerApproveModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
@@ -292,9 +292,18 @@ export default {
       })
     },
     showModal (action, row) {
-      this.$root.$emit('bv::show::modal', 'confirmModal')
       this.modalAction = action
       this.modalItem = row
+      if (action.ViewType === 'PotentialCustomerApprove') {
+        console.log()
+        this.$root.$emit('bv::show::modal', 'approve-modal')
+        return
+      }
+      if (action.ViewType === 'PotentialCustomerReject') {
+        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+        return
+      }
+      this.$root.$emit('bv::show::modal', 'confirmModal')
     },
     dateTimeformat (e) {
       let calendar, date
@@ -454,7 +463,8 @@ export default {
       })
     },
     closeApproveModal () {
-      this.$bvModal.hide('approve-modal')
+      this.$root.$emit('bv::hide::modal', 'approve-modal')
+      this.$root.$emit('bv::hide::modal', 'approve-reject-modal')
     },
     onClickAutoComplete (header) {
       this.selectedHeader = header
@@ -481,6 +491,7 @@ export default {
         this.selectedItems = [item]
         this.$forceUpdate()
       }
+      this.$store.commit('setSelectedTableRows', this.selectedItems)
     },
     setDefaultValues (visibleRows) {
       if (!this.andConditionalModel) {

@@ -1614,7 +1614,8 @@
     "WorkOrderStatus": "WorkOrderStatus",
     "WorkOrderStatusId": "WorkOrderStatusId",
     "WorkOrderType": "WorkOrderType",
-    "saveRows": "Düzenlemeyi Onayla"
+    "saveRows": "Düzenlemeyi Onayla",
+    "selectRowError": "Satır Seçiniz."
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",

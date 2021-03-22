@@ -115,8 +115,8 @@ export default {
       this.$set(this.form, 'RecordId', this.recordId)
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
-        this.$set(this.form, fieldName, null)
         if (item.Visible) {
+          this.$set(this.form, fieldName, null)
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
 
