@@ -371,7 +371,11 @@
     "PurchaseWaybill": "Mal Kabul İrsaliyesi",
     "PurchaseWaybillGet": "Mal Kabul İrsaliyesi Görüntüle",
     "PurchaseWaybillInsert": "Yeni Mal Kabul İrsaliyesi",
-    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle"
+    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle",
+    "ServicePurchaseInvoice": "Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
+    "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1245,7 +1249,9 @@
       "deliveryRepresentative": "Teslimat Personeli",
       "actualDeliveryDate": "Fiili Sevk Tarihi",
       "actualDeliveryTime": "Fiili Sevk Saati",
-      "currencyId": "Para Birimi"
+      "currencyId": "Para Birimi",
+      "invoiceType": "Fatra Tipi",
+      "discountReason": "İndirim Nedeni"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

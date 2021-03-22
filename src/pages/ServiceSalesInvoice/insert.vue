@@ -161,6 +161,44 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')" v-if="form.InvoiceLines && form.InvoiceLines.length > 0">
+          <b-row>
+            <NextFormGroup :title="$t('insert.order.discountReason')" :error="$v.selectedInvoiceDiscount.discountReason" :required="true" md="3" lg="3">
+              <v-select v-model="selectedInvoiceDiscount.discountReason" :options="discountReasons" :filterable="false" label="Description1" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.discountPercent')" :error="$v.selectedInvoiceDiscount.discountPercent" :required="true" md="3" lg="3">
+              <b-form-input type="number" v-model="selectedInvoiceDiscount.discountPercent" @input="setTotalDiscount"  />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.totalDiscount')" :error="$v.selectedInvoiceDiscount.totalDiscount" :required="true" md="3" lg="3">
+              <b-form-input type="number" v-model="selectedInvoiceDiscount.totalDiscount" :disabled="true" />
+            </NextFormGroup>
+            <b-col cols="12" md="3" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addInvoiceDiscount" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in form.InvoiceDiscounts" :key="i">
+                  <b-td>{{o.DiscountReasonName}}</b-td>
+                  <b-td>{{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeInvoiceDiscount(o)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="confirm-modal">
@@ -222,10 +260,15 @@ export default {
         IsValid: 0,
         IsPrinted: 0,
         IsCanceled: 0,
-        InvoiceLines: []
+        InvoiceLines: [],
+        InvoiceDiscounts: []
       },
       routeName1: 'Invoice',
-      SelectedDiscounts: [],
+      selectedInvoiceDiscount: {
+        discountReason: null,
+        totalDiscount: null,
+        discountPercent: null
+      },
       selectedCustomer: null,
       documentDate: null,
       selectedCurrency: {},
@@ -249,7 +292,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'orderStatusList', 'items'])
+    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'items', 'discountReasons'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -259,10 +302,10 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
-        this.selectedBranch = response.Model
+        this.selectedBranch = response ? response.Model : {}
       })
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10)
@@ -309,8 +352,7 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
-          this.selectItem()
-          this.$forceUpdate()
+          me.$forceUpdate()
         }
       })
     },
@@ -435,6 +477,33 @@ export default {
       this.customerSelectCancelled = true
       this.selectedCustomer = this.currentCustomer
     },
+    setTotalDiscount () {
+      this.selectedInvoiceDiscount.totalDiscount = parseFloat(this.form.GrossTotal) * parseFloat(this.selectedInvoiceDiscount.discountPercent) / 100
+    },
+    addInvoiceDiscount () {
+      this.$v.selectedInvoiceDiscount.$touch()
+      if (this.$v.selectedInvoiceDiscount.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.form.InvoiceDiscounts.push({
+        DiscountClassId: 1,
+        RecordState: 2,
+        DiscountReasonId: this.selectedInvoiceDiscount.discountReason.RecordId,
+        DiscountReasonName: this.selectedInvoiceDiscount.discountReason.Description1,
+        TotalDiscount: this.selectedInvoiceDiscount.totalDiscount,
+        DiscountPercent: this.selectedInvoiceDiscount.discountPercent
+      })
+      this.selectedInvoiceDiscount = {}
+      this.$v.selectedInvoiceDiscount.$reset()
+    },
+    removeInvoiceDiscount (item) {
+      this.form.InvoiceDiscounts.splice(this.form.InvoiceDiscounts.indexOf(item), 1)
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -481,6 +550,17 @@ export default {
           required
         },
         totalVat: {
+          required
+        }
+      },
+      selectedInvoiceDiscount: {
+        discountReason: {
+          required
+        },
+        totalDiscount: {
+          required
+        },
+        discountPercent: {
           required
         }
       }
