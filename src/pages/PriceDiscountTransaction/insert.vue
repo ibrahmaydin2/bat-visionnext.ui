@@ -17,119 +17,101 @@
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
-        <!-- <b-row>
-          <NextFormGroup item-key="Durum" :error="$v.form.Durum">
-            <NextCheckBox v-model="form.Durum" type="number" toggle />
+        <b-row>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
           </NextFormGroup>
-          <NextFormGroup item-key="Onay Durumu" :error="$v.form.Onay Durumu">
-            <v-select
-              :options="lookup.APPROVE_STATE"
-              @input="selectedType('Onay Durumu', $event)"
-              label="Label"
-            />
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
-          <NextFormGroup item-key="Açıklama" :error="$v.form.Açıklama">
-            <b-form-input type="text" v-model="form.Açıklama" :readonly="insertReadonly.Açıklama" />
+          <NextFormGroup item-key="Status" :error="$v.form.Status">
+            <NextCheckBox v-model="form.Status" type="number" toggle />
           </NextFormGroup>
-        </b-row> -->
+        </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <!-- <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('firsttab')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+            <NextFormGroup item-key="TciBreak1" :error="$v.form.TciBreak1">
+              <v-select
+                :options="lookup.TCI_BREAKDOWN"
+                @input="selectedType('TciBreak1', $event)"
+                label="Label"
+              />
+            </NextFormGroup>
+            <NextFormGroup item-key="Customer" :error="$v.form.Customer">
               <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="Tanım tarihi" :error="$v.form.Tanım tarihi">
-              <b-form-datepicker v-model="form.Tanım tarihi" :placeholder="$t('insert.chooseDate')"/>
+            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
+              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Tanım Saati" :error="$v.form.Tanım Saati">
+            <NextFormGroup item-key="TransactionTime" :error="$v.form.TransactionTime">
               <b-form-timepicker
               :placeholder="$t('insert.chooseTime')"
               :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
               :label-no-time-selected="$t('insert.chooseTime')"
               :label-close-button="$t('insert.close')"
               close-button-variant="outline-danger"
-              v-model="form.Tanım Saati"/>
+              v-model="form.TransactionTime"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Dip Toplam İndirimi Nedeni" :error="$v.form.Dip Toplam İndirimi Nedeni">
+            <NextFormGroup item-key="DiscountReason" :error="$v.form.DiscountReason">
+              <v-select :options="discountReasons" @input="selectedSearchType('DiscountReasonId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="PriceDiscountAmount" :error="$v.form.PriceDiscountAmount">
+              <b-form-input type="text" v-model="form.PriceDiscountAmount" :readonly="insertReadonly.PriceDiscountAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Currency" :error="$v.form.Currency">
+              <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
+              <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Budget" :error="$v.form.Budget">
               <v-select />
             </NextFormGroup>
-            <NextFormGroup item-key="Dip Toplam İndirimi" :error="$v.form.Dip Toplam İndirimi">
-              <b-form-input type="text" v-model="form.Dip Toplam İndirimi" :readonly="insertReadonly.Dip Toplam İndirimi" />
+            <NextFormGroup item-key="ApproveState" :error="$v.form.ApproveState">
+              <v-select
+                :options="lookup.APPROVE_STATE"
+                @input="selectedType('ApproveState', $event)"
+                label="Label"
+              />
             </NextFormGroup>
-            <NextFormGroup item-key="Para Birimi" :error="$v.form.Para Birimi">
-              <v-select />
+            <NextFormGroup item-key="ErpCode" :error="$v.form.ErpCode">
+              <b-form-input type="text" v-model="form.ErpCode" :readonly="insertReadonly.ErpCode" />
             </NextFormGroup>
-            <NextFormGroup item-key="Bütçe Miktarı" :error="$v.form.Bütçe Miktarı">
-              <b-form-input type="text" v-model="form.Bütçe Miktarı" :readonly="insertReadonly.Bütçe Miktarı" />
+            <NextFormGroup item-key="ExpirationDate" :error="$v.form.ExpirationDate">
+              <b-form-datepicker v-model="form.ExpirationDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Harcanan Bütçe Miktarı" :error="$v.form.Harcanan Bütçe Miktarı">
-              <b-form-input type="text" v-model="form.Harcanan Bütçe Miktarı" :readonly="insertReadonly.Harcanan Bütçe Miktarı" />
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Bütçe" :error="$v.form.Bütçe">
-              <v-select />
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
+              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
             </NextFormGroup>
-            <NextFormGroup item-key="ERP Kodu" :error="$v.form.ERP Kodu">
-              <b-form-input type="text" v-model="form.ERP Kodu" :readonly="insertReadonly.ERP Kodu" />
-            </NextFormGroup>
-            <NextFormGroup item-key="Son Geçerlilik tarihi" :error="$v.form.Son Geçerlilik tarihi">
-              <b-form-datepicker v-model="form.Son Geçerlilik tarihi" :placeholder="$t('insert.chooseDate')"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Kullanıma Başlangıç Tarihi" :error="$v.form.Kullanıma Başlangıç Tarihi">
-              <b-form-datepicker v-model="form.Kullanıma Başlangıç Tarihi" :placeholder="$t('insert.chooseDate')"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Açıklama2" :error="$v.form.Açıklama2">
-              <b-form-input type="text" v-model="form.Açıklama2" :readonly="insertReadonly.Açıklama2" />
-            </NextFormGroup>
-            <NextFormGroup item-key="Kazanç Türü" :error="$v.form.Kazanç Türü">
+            <NextFormGroup item-key="GainType" :error="$v.form.GainType">
               <v-select
                 :options="lookup.GAIN_TYPE"
-                @input="selectedType('Kazanç Türü', $event)"
+                @input="selectedType('GainType', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="TCI" :error="$v.form.TCI">
-              <v-select
-                :options="lookup.TCI_BREAKDOWN"
-                @input="selectedType('TCI', $event)"
-                label="Label"
-              />
-            </NextFormGroup>
-            <NextFormGroup item-key="Kod" :error="$v.form.Kod">
-              <b-form-input type="text" v-model="form.Kod" :readonly="insertReadonly.Kod" />
-            </NextFormGroup>
-          </b-row>
-        </b-tab> -->
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -174,7 +156,7 @@ export default {
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['customers'])
+    ...mapState(['customers', 'discountReasons', 'currencies', 'gainTypes'])
   },
   mounted () {
     this.createManualCode()
@@ -184,6 +166,8 @@ export default {
   },
   methods: {
     getInsertPage (e) {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
       // this.form.TransactionTime = this.form.TransactionTime.getTime()
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir

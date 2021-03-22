@@ -34,9 +34,6 @@
               </NextFormGroup>
             </b-row>
             <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
@@ -131,7 +128,7 @@
               <v-select :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup v-if="selectedCustomer" item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-             <b-form-input type="text" v-model="selectedCustomer.PaymentPeriod" disabled />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -300,7 +297,7 @@ export default {
         StateId: 1,
         InvoiceNumber: null,
         InvoiceKindId: 3,
-        DocumentClassId: null,
+        DocumentClassId: 1,
         GrossTotal: 0,
         Genexp2: null,
         DocumentNumber: null,
@@ -384,7 +381,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -394,12 +391,11 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
-        this.selectedBranch = response.Model
+        this.selectedBranch = response ? response.Model : {}
       })
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10)
@@ -483,6 +479,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -775,6 +773,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

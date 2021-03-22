@@ -44,13 +44,12 @@
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
-              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -86,6 +85,28 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in rowData.InvoiceDiscounts" :key="i">
+                      <b-td>{{o.DiscountReasonName}}</b-td>
+                      <b-td>{{o.DiscountPercent}}</b-td>
+                      <b-td>{{o.TotalDiscount}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -111,7 +132,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesInvoice', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url})
     }
   }
 }

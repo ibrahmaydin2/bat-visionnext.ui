@@ -367,7 +367,15 @@
     "SalesWaybill": "Teslimat İrsaliyesi",
     "SalesWaybillGet": "Teslimat İrsaliyesi Görüntüle",
     "SalesWaybillInsert": "Yeni Teslimat İrsaliyesi",
-    "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle"
+    "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle",
+    "PurchaseWaybill": "Mal Kabul İrsaliyesi",
+    "PurchaseWaybillGet": "Mal Kabul İrsaliyesi Görüntüle",
+    "PurchaseWaybillInsert": "Yeni Mal Kabul İrsaliyesi",
+    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle",
+    "ServicePurchaseInvoice": "Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
+    "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -417,6 +425,8 @@
     "pleaseChooseField": "Lütfen Seçim Yapınız",
     "errorProcess": "Kayıt Bulunamadı",
     "okay": "Tamam",
+    "find": "Bul",
+    "clean": "Temizle",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1239,7 +1249,9 @@
       "deliveryRepresentative": "Teslimat Personeli",
       "actualDeliveryDate": "Fiili Sevk Tarihi",
       "actualDeliveryTime": "Fiili Sevk Saati",
-      "currencyId": "Para Birimi"
+      "currencyId": "Para Birimi",
+      "invoiceType": "Fatra Tipi",
+      "discountReason": "İndirim Nedeni"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1258,7 +1270,8 @@
       "paymentPeriod": "Vade Süresi",
       "customers": "Müşteriler",
       "commercialTitle": "Müşteri Ticari Ünvanı",
-      "locationId" :"Lokasyon"
+      "locationId" :"Lokasyon",
+      "sameRouteError": "Aynı Rota iki defa eklenemez!"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -1291,6 +1304,13 @@
       "routeName": "Rota Adı",
       "paymentType":"Ödeme Tipi",
       "customerSql": "Müşteri Sorgusu"
+    },
+    "approveAssuranceModal": {
+      "customerName":"Müşteri Adı",
+      "customerCode":"Müşteri Kodu",
+      "customerArea": "Müşteri Bölgesi 5",
+      "route":"Rota",
+      "approveStateId": "Onay Durumu"
     }
   },
   "get": {
@@ -1565,6 +1585,27 @@
       "campaignType": "Kampanya Tipi",
       "campaignRate": "Uygulama Oranı",
       "currency": "Para Birimi"
+    },
+    "PriceDiscountTransaction": {
+      "general": "Genel",
+      "TciBreak1": "TCI",
+      "TransactionDate": "Tanım Tarihi",
+      "TransactionTime": "Tanım Saati",
+      "DiscountReason": "Dip Toplam İndirim Nedeni",
+      "PriceDiscountAmount": "Dip Toplam İndirimi",
+      "Currency": "Para Birimi",
+      "BudgetAmount": "Bütçe Miktarı",
+      "BudgetConsumption": "Harcanan Bütçe Miktarı",
+      "Budget": "Bütçe",
+      "ApproveState": "Onay Durumu",
+      "ErpCode": "ERP Kodu",
+      "ExpirationDate": "Son Geçerlilik Tarihi",
+      "BeginDate": "Kullanımı Başlangıç Tarihi",
+      "Genexp1": "Açıklama 2",
+      "GainType": "Kazanç Türü",
+      "Code": "Kod",
+      "Description":"Açıklama",
+      "Status":"Durum"
     }
   },
 

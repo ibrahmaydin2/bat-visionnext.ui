@@ -86,9 +86,6 @@
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
             </NextFormGroup>
@@ -246,7 +243,6 @@ export default {
         OrderLines: []
       },
       routeName1: 'Order',
-      SelectedDiscounts: [],
       selectedCustomer: null,
       documentDate: null,
       selectedPrice: {},
@@ -267,7 +263,6 @@ export default {
       customerFirstSet: true,
       documentDateFirstSet: true,
       currentPage: 1,
-      showDiscounts: false,
       currentCustomer: {},
       customerSelectCancelled: false
     }
@@ -363,6 +358,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },

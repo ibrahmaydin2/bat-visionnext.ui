@@ -446,6 +446,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -618,39 +620,6 @@ export default {
         isUpdated: true
       }
       this.getItem(item.ItemId)
-    },
-    getCampaigns () {
-      this.campaignSelectable = false
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      if (!this.form.OrderLines || this.form.OrderLines.length === 0) {
-        this.$toasted.show(this.$t('insert.order.noOrderLines'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
-        this.campaigns = res.Models
-        if (this.campaigns && this.campaigns.length > 0) {
-          this.$bvModal.show('campaign-modal')
-        } else {
-          this.campaigns = []
-          this.$toasted.show(this.$t('insert.order.noCampaigns'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
-      })
     },
     addCampaign () {
       let model = {

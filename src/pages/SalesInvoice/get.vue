@@ -50,9 +50,9 @@
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
@@ -61,7 +61,6 @@
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -90,6 +89,30 @@
                       <b-td>{{o.NetTotal}}</b-td>
                       <b-td>{{o.TotalVat}}</b-td>
                       <b-td>{{o.GrossTotal}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in (rowData.InvoiceDiscounts)" :key="i">
+                      <b-td>{{o.DiscountClass.Label}}</b-td>
+                      <b-td>{{o.DiscountClass.Code}}</b-td>
+                      <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                      <b-td>{{o.TotalDiscount}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

@@ -203,7 +203,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML' && form.FixedTermCampaignDetails.length > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
               <v-select v-model="customer" :options="customers" @search="searchCustomer" :filterable="false" label="Description1">
@@ -470,7 +470,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        CompanyId: null,
+        CompanyId: parseFloat(this.companyId),
         StartQuantity: parseFloat(this.fixedTermCampaignTaken.startQuantity),
         EndQuantity: parseFloat(this.fixedTermCampaignTaken.endQuantity),
         PaymentPeriod: parseFloat(this.fixedTermCampaignTaken.paymentPeriod)

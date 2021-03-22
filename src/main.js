@@ -35,6 +35,7 @@ import Nextform from './components/NextForm'
 import Carousel from './components/Carousel'
 import Navigation from './components/Navigation'
 import ApproveModal from './components/ApproveModal'
+import ApproveAssuranceModal from './components/ApproveAssuranceModal'
 import PotentialCustomerApproveModal from './components/PotentialCustomerApproveModal'
 import PotentialCustomerRejectModal from './components/PotentialCustomerRejectModal'
 import NavigationList from './components/NavigationList'
@@ -77,6 +78,7 @@ Vue.component('Header', Header)
 Vue.component('ProgressTimeline', ProgressTimeline)
 Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('ApproveModal', ApproveModal)
+Vue.component('ApproveAssuranceModal', ApproveAssuranceModal)
 Vue.component('PotentialCustomerApproveModal', PotentialCustomerApproveModal)
 Vue.component('PotentialCustomerRejectModal', PotentialCustomerRejectModal)
 Vue.component('b-form-datepicker', BFormDatepicker)

@@ -384,7 +384,7 @@
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addCustomerSqls()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -403,6 +403,9 @@
               </b-table-simple>
             </b-col>
           </b-row>
+          <!-- <b-modal id="approve-assurance-modal" size="xl" hide-footer>
+            <ApproveAssuranceModal />
+          </b-modal> -->
         </b-tab>
       </b-tabs>
     </b-col>
@@ -608,10 +611,47 @@ export default {
       }
     },
     addDiscountGiven () {
-
+      this.discountGivens.push(this.discountGiven)
+      this.initNull('DiscountGiven')
     },
     removeDiscountGiven (e) {
-
+      this.discountGivens.splice(this.discountGivens.indexOf(e), 1)
+    },
+    addDiscountTaken () {
+      this.discountTakens.push(this.discountTaken)
+      this.initNull('DiscountTaken')
+    },
+    removeDiscountTaken (e) {
+      this.discountTakens.splice(this.discountTakens.indexOf(e), 1)
+    },
+    addDiscountCustomer () {
+      this.discountCustomers.push(this.discountCustomer)
+      this.initNull('DiscountCustomer')
+    },
+    removeDiscountCustomer (e) {
+      this.discountCustomers.splice(this.discountCustomers.indexOf(e), 1)
+    },
+    addDiscountExcludedCustomer () {
+      this.discountExcludedCustomers.push(this.discountExcludedCustomer)
+      this.initNull('DiscountExcludedCustomer')
+    },
+    removeExcludedCustomern (e) {
+      this.discountExcludedCustomers.splice(this.discountExcludedCustomers.indexOf(e), 1)
+    },
+    addDiscountDetail () {
+      this.discountDetails.push(this.discountDetail)
+      this.initNull('DiscountDetail')
+    },
+    removeDiscountDetail (e) {
+      this.discountDetails.splice(this.discountDetails.indexOf(e), 1)
+    },
+    addDiscountCustomerSqls () {
+      // this.$bvModal.show('approve-assurance-modal')
+      this.discountCustomerSqls.push(this.discountCustomerSql)
+      this.initNull('DiscountCustomerSql')
+    },
+    removeDiscountCustomerSqls (e) {
+      this.discountCustomerSqls.splice(this.discountCustomerSqls.indexOf(e), 1)
     },
     searchDicountType (search, loading) {
       if (search.length < 3) {
@@ -625,7 +665,7 @@ export default {
         loading(false)
       })
     },
-    searchhDiscountKind (search, loading) {
+    searchDiscountKind (search, loading) {
       if (search.length < 3) {
         return false
       }
@@ -734,6 +774,82 @@ export default {
         this.createData()
         // update işlemiyse
         // this.updateData()
+      }
+    },
+    initNull (type) {
+      if (type === 'DiscountGiven') {
+        this.discountGiven = {
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          TableName: null,
+          ColumnName: null,
+          ColumnValue: null,
+          GivenQuantity: null,
+          DiscountRate: null,
+          DiscountTotal: null,
+          StartValue: null,
+          FinishValue: null
+        }
+      } else if (type === 'DiscountTaken') {
+        this.discountTaken = {
+          Deleted: 0,
+          System: 0,
+          StatusId: 1,
+          RecordState: 2,
+          TableName: null,
+          ColumnName: null,
+          ColumnValue: null,
+          TakenQuantity: null,
+          MinTakenAmount: null,
+          EndTakenQuantity: null,
+          MaxTakenAmount: null,
+          MinTakenQuantity: null
+        }
+      } else if (type === 'DiscountCustomer') {
+        this.discountCustomer = {
+          Deleted: 0,
+          System: 0,
+          StatusId: 1,
+          RecordState: 2,
+          CustomerId: null,
+          CommercialTitle: null,
+          LocationId: null,
+          CompanyId: null
+        }
+      } else if (type === 'DiscountExcludedCustomer') {
+        this.discountExcludedCustomer = {
+          Deleted: 0,
+          System: 0,
+          StatusId: 1,
+          RecordState: 2,
+          CustomerId: null,
+          CommercialTitle: null,
+          LocationId: null
+        }
+      } else if (type === 'DiscountDetail') {
+        this.discountDetail = {
+          Deleted: 0,
+          System: 0,
+          StatusId: 1,
+          RecordState: 2,
+          TableName: null,
+          ColumnName: null,
+          ColumnValue: null,
+          BranchId: null,
+          RouteId: null,
+          PaymentTypeId: null
+        }
+      } else {
+        this.discountCustomerSql = {
+          Deleted: 0,
+          System: 0,
+          StatusId: 1,
+          RecordState: 2,
+          DiscountId: null,
+          CustomerSqlId: null
+        }
       }
     }
   },

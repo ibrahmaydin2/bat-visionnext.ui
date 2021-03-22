@@ -252,7 +252,7 @@
                 <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
                   <b-td>{{o.DiscountClass.Label}}</b-td>
                   <b-td>{{o.DiscountClass.Code}}</b-td>
-                  <b-td>% {{o.DiscountPercent}}</b-td>
+                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
               </b-tbody>
@@ -466,6 +466,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -645,32 +647,6 @@ export default {
       }
       this.getItem(item.ItemId)
     },
-    getCampaigns () {
-      this.campaignSelectable = false
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.isCampaignQuestioned = true
-      this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
-        this.campaigns = res.Models
-        if (this.campaigns && this.campaigns.length > 0) {
-          this.$bvModal.show('campaign-modal')
-        } else {
-          this.campaigns = []
-          this.$toasted.show(this.$t('insert.order.noCampaigns'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
-      })
-    },
     addCampaign () {
       let model = {
         SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
@@ -678,7 +654,7 @@ export default {
       }
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
-      this.$api.post(model, 'Order', 'Order/ApplyInsertDiscounts').then((res) => {
+      this.$api.post(model, 'Order', 'Order/ApplyUpdateDiscounts').then((res) => {
         if (res && res.Order) {
           this.form = res.Order
         }
@@ -700,6 +676,9 @@ export default {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.selectedCustomer = response.Model
+        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
@@ -790,20 +769,9 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
-        this.form.PaymentPeriodId = e.PaymentPeriod
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
         this.getCustomerCampaigns(e.RecordId)
-        if (this.customerFirstSet) {
-          this.customerFirstSet = false
-          return
-        } else {
-          this.form.OrderLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
@@ -818,17 +786,6 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-        if (this.documentDateFirstSet) {
-          this.documentDateFirstSet = false
-          return false
-        } else {
-          this.form.OrderLines = []
-          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
       }
     },
     currencies (e) {
