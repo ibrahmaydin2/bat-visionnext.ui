@@ -1622,41 +1622,13 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
-    "BloodTransfusion": "BloodTransfusion",
-    "Code": "Code",
-    "ContactEmail": "ContactEmail",
-    "ContactGsm": "ContactGsm",
-    "ContactName": "ContactName",
-    "ContactPhone": "ContactPhone",
-    "ContactSurname": "ContactSurname",
-    "CreatedDateTime": "CreatedDateTime",
-    "Description1": "Description1",
-    "ExSibling": "ExSibling",
-    "KitType": "KitType",
-    "Lab": "Lab",
-    "PathogenicVariant": "PathogenicVariant",
-    "PatientBirthDate": "PatientBirthDate",
-    "PatientCity": "PatientCity",
-    "PatientCountry": "PatientCountry",
-    "PatientGender": "PatientGender",
-    "PatientGsm": "PatientGsm",
-    "PatientName": "PatientName",
-    "PatientPhone": "PatientPhone",
-    "PatientSurname": "PatientSurname",
-    "Project": "Project",
-    "ProvisionNumber": "ProvisionNumber",
-    "SampleDate": "SampleDate",
-    "SampleType": "SampleType",
-    "SerialNumber": "SerialNumber",
-    "System": "System",
-    "TransportationAddress": "TransportationAddress",
-    "TransportationDate": "TransportationDate",
-    "TransportationTime": "TransportationTime",
-    "WorkOrderStatus": "WorkOrderStatus",
-    "WorkOrderStatusId": "WorkOrderStatusId",
-    "WorkOrderType": "WorkOrderType",
     "saveRows": "Düzenlemeyi Onayla",
-    "selectRowError": "Satır Seçiniz."
+    "selectRowError": "Satır Seçiniz.",
+    "documentNotFound": "Tasarım bulunamadı.",
+    "chooseDocument": "Tasarım seçiniz.",
+    "print": "Yazdır",
+    "close": "Kapat",
+    "approve": "Onayla"
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",
@@ -1709,7 +1681,8 @@
   "header": {
     "save": "Kaydet",
     "cancel": "Vazgeç",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "workFlow": "WorkFlow"
   },
   "form": {
     "createOk": "Başarılı",

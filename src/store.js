@@ -220,7 +220,8 @@ export const store = new Vuex.Store({
     stockStatus: [],
     SelectedCustomer: {},
     autoGridField: [],
-    selectedTableRows: []
+    selectedTableRows: [],
+    printDocuments: []
   },
   actions: {
     // sistem gereksinimleri
@@ -1665,6 +1666,9 @@ export const store = new Vuex.Store({
     },
     setSelectedTableRows (state, payload) {
       state.selectedTableRows = payload
+    },
+    setPrintDocuments (state, payload) {
+      state.printDocuments = payload
     }
   }
 })

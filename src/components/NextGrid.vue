@@ -108,7 +108,7 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : ''">
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''">
           <b-td v-for="h in head" :key="h.dataField">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
               <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
@@ -119,7 +119,7 @@
                   <i class="fas fa-th" />
                 </template>
                 <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <Workflow :items="workFlowList" />
+                <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" />
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
@@ -197,6 +197,12 @@ export default {
     apiurl: String,
     apiparams: String,
     andConditionalModel: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    workFlowModel: {
       type: Object,
       default: function () {
         return {}
@@ -296,7 +302,6 @@ export default {
       this.modalAction = action
       this.modalItem = row
       if (action.ViewType === 'PotentialCustomerApprove') {
-        console.log()
         this.$root.$emit('bv::show::modal', 'approve-modal')
         return
       }
@@ -678,6 +683,9 @@ export default {
       height: 81vh
       max-height: inherit
       margin-bottom: 0px
+      .multi-hover-class
+        &:hover
+          cursor: pointer !important
       .autocomplete-search
         .autocomplete
           text-align: center
@@ -766,7 +774,9 @@ export default {
     .row-selected
       background-color: rgb(222, 226, 230)
       border: solid 2px
-      border-color: darkgray;
+      border-color: darkgray
+      &:hover
+        cursor: pointer
     .selected-color
       color: #28a745
     .unselected-color
