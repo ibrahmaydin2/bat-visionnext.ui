@@ -12,37 +12,62 @@
   Alan Güncelleme -> QuickUpdate
   Uyarı -> ControlModel -->
   <b-dropdown-group header="Actions">
-    <b-dropdown-item v-for="(action, i) in filteredActions" :key="i">
-      <router-link v-if="action.ViewType === 'Route'" :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </router-link>
-      <router-link v-if="action.ViewType === 'SaveAs'" :to="{name: $route.name + 'Update', params: {url: row.RecordId}, query: {saveAs: 1}}">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </router-link>
-      <!-- <span v-else-if="action.ViewType === 'Modal'" @click="showModal(action.Action, action.ActionUrl, row.RecordId, row, action.Query, action.QueryMessage)"> -->
-      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click.prevent.stop="showModal (action, row, $event)">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </span>
-      <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="print (action, row)">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </span>
-      <!-- <span class="d-inline-block w-100" v-else>
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </span> -->
-      <!-- <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </a>
-      <router-link v-else :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
-        <img width="10" height="10" :src="icon" />
-        <span class="ml-1">{{action.Title}}</span>
-      </router-link> -->
-    </b-dropdown-item>
+    <div v-if="isMultiple">
+      <b-dropdown-item v-for="(action, i) in filteredActions" :key="i">
+        <span class="d-inline-block w-100" v-if="action.ViewType === 'Modal'" @click.prevent.stop="showMultipleModal (action)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="print (action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
+        <!-- <span class="d-inline-block w-100" v-else>
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span> -->
+        <!-- <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </a>
+        <router-link v-else :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </router-link> -->
+      </b-dropdown-item>
+    </div>
+    <div v-else>
+      <b-dropdown-item v-for="(action, i) in filteredActions" :key="i">
+        <router-link v-if="action.ViewType === 'Route'" :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </router-link>
+        <router-link v-if="action.ViewType === 'SaveAs'" :to="{name: $route.name + 'Update', params: {url: row.RecordId}, query: {saveAs: 1}}">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </router-link>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal' || action.ViewType === 'PotentialCustomerApprove' || action.ViewType === 'PotentialCustomerReject'" @click.prevent.stop="showModal (action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="print (action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
+        <!-- <span class="d-inline-block w-100" v-else>
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span> -->
+        <!-- <a v-else-if="action.ViewType === 'Link'" :href="action.Action" target="_blank">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </a>
+        <router-link v-else :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </router-link> -->
+      </b-dropdown-item>
+    </div>
   </b-dropdown-group>
 </template>
 <script>
@@ -73,12 +98,14 @@ export default {
     }
   },
   methods: {
-    showModal (action, row, e) {
+    showModal (action, row) {
       this.$emit('showModal', action, row)
+    },
+    showMultipleModal (action) {
+      this.$emit('showMultipleModal', action)
     },
     print (action, row) {
       this.$api.postByUrl({recordId: 33504721807}, action.ActionUrl).then((res) => {
-        console.log(res)
         let w = window.open()
         w.document.write(res.Html)
         w.document.close()

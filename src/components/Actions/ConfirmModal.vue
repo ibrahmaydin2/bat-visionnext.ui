@@ -1,7 +1,7 @@
 <template>
   <b-modal v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer>
     <p class="my-4">{{modalItem && modalItem.Description1}}</p>
-    <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="modalItem.RecordId" />
+    <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" />
   </b-modal>
 </template>
 <script>

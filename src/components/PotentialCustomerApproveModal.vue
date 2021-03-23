@@ -4,16 +4,16 @@
       <b-col cols="12">
         <h5>{{$t('insert.approveModal')}}</h5>
       </b-col>
-      <b-col cols="12" class="asc__modal-approveModal-body">
-        <p style="font-weight: bold">{{title}}</p>
-        <p>{{message}}</p>
+      <b-col cols="12" class="asc__modal-approveModal-body" v-if="modalItem">
+        <p style="font-weight: bold">{{modalItem.CommercialTitle}}</p>
+        <p>{{modalItem.Description1}}</p>
       </b-col>
       <b-col cols="12" class="asc__modal-approveModal-footer">
         <div class="w-100 text-right">
-          <b-button type="button" @click="closeModal()" variant="danger" size="md" >
+          <b-button type="button" @click="closeModal()" variant="warning" size="md" >
             {{$t('insert.cancel')}}
           </b-button>
-          <b-button @click="goUpdate" type="button" variant="warning" size="md" >
+          <b-button @click="goUpdate" type="button" variant="primary" size="md" >
             {{$t('insert.edit')}}
           </b-button>
           <b-button id="submitButton" type="button" size="md" @click="submit()" variant="success" >
@@ -33,22 +33,17 @@ export default {
       title: ''
     }
   },
-  props: ['action', 'recordId', 'data', 'query', 'message'],
+  props: ['modalAction', 'modalItem'],
   computed: {
     ...mapState(['BranchId', 'CompanyId'])
   },
   methods: {
     submit () {
-      // this.$toasted.show(this.$t('insert.approveStateError'), {
-      //   type: 'error',
-      //   keepOnHover: true,
-      //   duration: '3000'
-      // })
       this.status = true
       let model = {
         'model': {
-          'recordId': this.recordId,
-          'code': this.data.Code,
+          'recordId': this.modalItem.RecordId,
+          'code': this.modalItem.Code,
           'updatedProperties': [
             'Description1',
             'TaxOffice',
@@ -67,70 +62,47 @@ export default {
             'CardTypeId',
             'TypeId'
           ],
-          'Description1': this.data.Description1,
-          'TaxOffice': this.data.TaxOffice,
-          'TaxNumber': this.data.TaxNumber,
-          'Barcode': this.data.Barcode,
-          'DefaultPaymentTypeId': this.data.DefaultPaymentTypeId,
-          'PriceListCategoryId': this.data.PriceListCategoryId,
-          'LicenseNumber': this.data.LicenseNumber,
-          'InvoiceCombineRuleId': this.data.InvoiceCombineRuleId,
-          'DeliveryDayParam': this.data.DeliveryDayParam,
-          'SalesDocumentTypeId': this.data.SalesDocumentTypeId,
-          'IsOrderChangeUnitary': this.data.IsOrderChangeUnitary,
-          'IsWarehouseSale': this.data.IsWarehouseSale,
-          'RecordTypeId': this.data.RecordTypeId,
-          'CurrentRisk': this.data.CurrentRisk,
-          'CardTypeId': this.data.CardTypeId,
-          'TypeId': this.data.TypeId,
+          'Description1': this.modalItem.Description1,
+          'TaxOffice': this.modalItem.TaxOffice,
+          'TaxNumber': this.modalItem.TaxNumber,
+          'Barcode': this.modalItem.Barcode,
+          'DefaultPaymentTypeId': this.modalItem.DefaultPaymentTypeId,
+          'PriceListCategoryId': this.modalItem.PriceListCategoryId,
+          'LicenseNumber': this.modalItem.LicenseNumber,
+          'InvoiceCombineRuleId': this.modalItem.InvoiceCombineRuleId,
+          'DeliveryDayParam': this.modalItem.DeliveryDayParam,
+          'SalesDocumentTypeId': this.modalItem.SalesDocumentTypeId,
+          'IsOrderChangeUnitary': this.modalItem.IsOrderChangeUnitary,
+          'IsWarehouseSale': this.modalItem.IsWarehouseSale,
+          'RecordTypeId': this.modalItem.RecordTypeId,
+          'CurrentRisk': this.modalItem.CurrentRisk,
+          'CardTypeId': this.modalItem.CardTypeId,
+          'TypeId': this.modalItem.TypeId,
 
           'deleted': 0,
           'system': 0
         }
       }
-      this.$store.dispatch('approvePotentialCustomer', {...this.query, api: `VisionNextCustomer/api/Customer`, formdata: model, return: null}).then(res => {
+      this.$store.dispatch('approvePotentialCustomer', {...this.query, api: this.modalAction.ActionUrl, formdata: model, return: null}).then(res => {
         this.status = false
         this.closeModal()
       })
-
-      // return axios.post(this.action, update, {
-      //   headers: {
-      //     'key': localStorage.getItem('Key')
-      //   }
-      // })
-      //   .then(res => {
-      //     this.status = false
-      //     this.$toasted.show(this.$t('insert.approveRejectSuccess'), {
-      //       type: 'success',
-      //       keepOnHover: true,
-      //       duration: '3000'
-      //     })
-      //   })
-      //   .catch(err => {
-      //     this.status = false
-      //     this.$toasted.show(this.$t('insert.approveRejectError'), {
-      //       type: 'error',
-      //       keepOnHover: true,
-      //       duration: '3000'
-      //     })
-      //     console.log(err)
-      //   })
     },
     goUpdate () {
-      this.$router.push({name: 'PotentialCustomerUpdate', params: { url: this.recordId }})
+      this.$router.push({name: 'PotentialCustomerUpdate', params: { url: this.modalItem.RecordId }})
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'approve-modal')
     }
   },
   mounted () {
-    let q = this.query
-    let val = q.split(',')
-    let msg = ''
-    val.forEach(el => {
-      msg += `${this.data[el.trim()]} `
-    })
-    this.title = msg
+    // let q = this.query
+    // let val = q.split(',')
+    // let msg = ''
+    // val.forEach(el => {
+    //   msg += `${this.data[el.trim()]} `
+    // })
+    // this.title = msg
   },
   watch: {
   }
