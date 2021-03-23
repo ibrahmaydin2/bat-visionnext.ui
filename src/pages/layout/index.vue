@@ -103,7 +103,7 @@
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
-                  <div style="display: inline-grid">
+                  <div v-if="showActions" style="display: inline-grid">
                     <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
                       <template #button-content>
                         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
@@ -130,14 +130,18 @@
         </b-col>
       </b-row>
       <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
+      <PrintModal />
   </b-container>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
 import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
+import PrintModal from '../../components/Actions/PrintModal'
+
 export default {
   components: {
-    MultipleConfirmModal
+    MultipleConfirmModal,
+    PrintModal
   },
   data () {
     return {
@@ -146,7 +150,9 @@ export default {
       createLink: this.$route.meta.createLink,
       filterTitle: '',
       modalAction: null,
-      recordIds: []
+      recordIds: [],
+      showActions: false
+
     }
   },
   computed: {
@@ -167,6 +173,13 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
+    },
+    selectedTableRows (e) {
+      if (e && e.length > 0) {
+        this.showActions = true
+      } else {
+        this.showActions = false
+      }
     }
     // tableRowsAll: {
     //   handler (e) {

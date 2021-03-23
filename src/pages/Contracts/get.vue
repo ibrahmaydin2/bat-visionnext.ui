@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <GetFormField />
+            <GetFormField v-model="workFlowModel" />
           </header>
         </b-col>
       </b-row>
@@ -128,6 +128,11 @@ export default {
   mixins: [mixin],
   data () {
     return {
+      workFlowModel: {
+        ControllerName: '',
+        ClassName: 'Contract',
+        PageName: 'pg_Contract'
+      }
     }
   },
   mounted () {
