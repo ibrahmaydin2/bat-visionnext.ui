@@ -318,11 +318,15 @@ export const store = new Vuex.Store({
 
             if ((res.data.UIPageModels[0].SelectedColumns) && (res.data.UIPageModels[0].SelectedColumns.length >= 1)) {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns.map(item => {
+                let selectedColumns = res.data.UIPageModels[0].SelectedColumns.filter(s => s.dataField === item.dataField)
+                item.visible = selectedColumns && selectedColumns.length > 0 ? selectedColumns[0].visible : false
+                return item
+              }))
             } else {
               commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
             }
-            commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
-
             // başarılı -> tabloyu doldur.
             /* if (query.code) {
               let filterdata = {

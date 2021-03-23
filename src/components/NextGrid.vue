@@ -646,6 +646,7 @@ export default {
         sortOpt = null
       }
       this.getData(to.name, this.currentPage, this.perPage, sortOpt)
+      this.searchOnTable()
     },
     tableRows: function (e) {
       this.setRows()

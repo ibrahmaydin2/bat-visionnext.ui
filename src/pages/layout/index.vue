@@ -205,7 +205,9 @@ export default {
         if (res.data.IsCompleted === true) {
           this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
             if (r.IsCompleted) {
-              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {})
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
+                this.$router.go(0)
+              })
             }
           })
         }
