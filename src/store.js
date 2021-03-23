@@ -328,7 +328,7 @@ export const store = new Vuex.Store({
               commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
             }
             // başarılı -> tabloyu doldur.
-            /* if (query.code) {
+            if (query.code) {
               let filterdata = {
                 'BranchId': state.BranchId,
                 'CompanyId': state.CompanyId,
@@ -356,6 +356,9 @@ export const store = new Vuex.Store({
                   commit('setError', {view: true, info: 'Server Error'})
                 })
             } else {
+              if (query.requiredFieldsError) {
+                return
+              }
               this.dispatch('getTableData', {
                 ...this.query,
                 apiUrl: query.apiUrl,
@@ -366,7 +369,7 @@ export const store = new Vuex.Store({
                 search: query.search,
                 andConditionalModel: query.andConditionalModel
               })
-            } */
+            }
             commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {
@@ -419,16 +422,15 @@ export const store = new Vuex.Store({
       } else {
         OrderByColumns = []
       }
-
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
       if (query.search) {
         state.isFiltered = true
-        state.filterData = query.search
         AndConditionModel = {
           ...query.search,
           ...query.andConditionalModel
         }
+        state.filterData = AndConditionModel
       } else {
         state.isFiltered = false
         state.filterData = []
@@ -1346,17 +1348,21 @@ export const store = new Vuex.Store({
     },
     setTableRows (state, payload) {
       state.tableRows = []
-      state.tableRows = payload
+      let index = 0
+      state.tableRows = payload.map(item => {
+        item.id = index
+        index++
+        return item
+      })
     },
     setTableRowsAll (state, payload) {
       state.tableRowsAll = []
-      payload.sort((a, b) => {
-        if (a.visible === b.visible) {
-          return a.label.localeCompare(b.label)
-        }
-        return b.visible - a.visible
+      let index = 0
+      state.tableRowsAll = payload.map(item => {
+        item.id = index
+        index++
+        return item
       })
-      state.tableRowsAll = payload
     },
     setLookUp (state, payload) {
       state.lookup = payload
