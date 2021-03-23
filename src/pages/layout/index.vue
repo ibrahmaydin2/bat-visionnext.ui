@@ -129,7 +129,7 @@
           </div>
         </b-col>
       </b-row>
-      <MultipleConfirmModal :modalAction="modalAction" :recordIds="modalItem" />
+      <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
   </b-container>
 </template>
 <script>
@@ -146,7 +146,7 @@ export default {
       createLink: this.$route.meta.createLink,
       filterTitle: '',
       modalAction: null,
-      modalItem: null
+      recordIds: []
     }
   },
   computed: {
@@ -243,7 +243,10 @@ export default {
         return
       }
       this.modalAction = action
-      this.$root.$emit('bv::show::modal', 'MultipleConfirmModal')
+      this.selectedTableRows.map(item => {
+        this.recordIds.push(item.RecordId)
+      })
+      this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
     }
   }
 }

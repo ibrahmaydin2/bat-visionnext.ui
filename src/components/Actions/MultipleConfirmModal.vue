@@ -6,10 +6,14 @@
 </template>
 <script>
 import ModalElements from './ModalElements'
+import { mapState } from 'vuex'
 export default {
   name: 'MultipleConfirmModal',
   components: {
     ModalElements
+  },
+  computed: {
+    ...mapState(['selectedTableRows'])
   },
   props: {
     modalAction: {
@@ -26,18 +30,22 @@ export default {
     }
   },
   methods: {
-    submit () {
-      this.$store.dispatch('multipleConfirmModal', {...this.query, api: this.modalAction.ActionUrl})
-    },
-    hide () {
-      this.close()
-    },
     closeModal () {
       this.close()
     },
     close () {
       this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
     }
+  },
+  watch: {
+    // selectedTableRows (e) {
+    //   if (e) {
+    //     console.log(e)
+    //     e.map(item => {
+    //       console.log(item)
+    //     })
+    //   }
+    // }
   }
 }
 </script>

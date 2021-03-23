@@ -106,7 +106,6 @@ export default {
     },
     print (action, row) {
       this.$api.postByUrl({recordId: 33504721807}, action.ActionUrl).then((res) => {
-        console.log(res)
         let w = window.open()
         w.document.write(res.Html)
         w.document.close()

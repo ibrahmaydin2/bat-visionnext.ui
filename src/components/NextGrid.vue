@@ -276,6 +276,7 @@ export default {
     }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
     this.getWorkflowData()
+    this.$store.commit('setSelectedTableRows', [])
   },
   computed: {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup'])
