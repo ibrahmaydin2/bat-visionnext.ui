@@ -1,5 +1,5 @@
 <template>
-  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" />
+  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" :workFlowModel="workFlowModel" />
 </template>
 <script>
 export default {
@@ -7,6 +7,11 @@ export default {
     return {
       model: {
         recordTypeIds: [3, 4]
+      },
+      workFlowModel: {
+        ControllerName: 'Customer',
+        ClassName: 'Customer',
+        PageName: 'pg_KeyAccount'
       }
     }
   }
