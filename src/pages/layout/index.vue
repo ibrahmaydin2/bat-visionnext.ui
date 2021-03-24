@@ -157,15 +157,6 @@ export default {
   },
   computed: {
     ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows'])
-    // sortTableRowsAll () {
-    //   // this.tableRowsAll.slice(0).sort((a, b) => a.name.localeCompare(b.name))
-    //   return this.tableRowsAll.slice(0).sort((a, b) => {
-    //     if (a.visible === b.visible) {
-    //       return a.label.localeCompare(b.label)
-    //     }
-    //     return b.visible - a.visible
-    //   })
-    // }
   },
   watch: {
     $route (to, from) {
@@ -181,17 +172,6 @@ export default {
         this.showActions = false
       }
     }
-    // tableRowsAll: {
-    //   handler (e) {
-    //     e.sort((a, b) => {
-    //       if (a.visible === b.visible) {
-    //         return a.label.localeCompare(b.label)
-    //       }
-    //       return b.visible - a.visible
-    //     })
-    //   },
-    //   deep: true
-    // }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
@@ -218,14 +198,13 @@ export default {
         if (res.data.IsCompleted === true) {
           this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
             if (r.IsCompleted) {
-              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {})
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
+                this.$router.go(0)
+              })
             }
           })
         }
       })
-    },
-    hideRow (t) {
-      // this.hideTableRow(hr)
     },
     downloadBtn (r, f) {
       this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})

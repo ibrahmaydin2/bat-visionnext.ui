@@ -173,30 +173,31 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'">
           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
-              <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'RECORD_ID')" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.fixedTermCustomerItem.columnName" :required="true" md="5" lg="5">
+              <v-select v-model="fixedTermCustomerItem.columnName"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.fixedTermCustomerItem.columnValue" :required="true" md="5" lg="5">
+              <v-select v-model="fixedTermCustomerItem.columnValue"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
+                <AddDetailButton @click.native="addFixedTermCustomerItem" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID')" :key="i">
-                  <b-td>{{f.Text}}</b-td>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
+                  <b-td>{{f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnValue}}</b-td>
                   <b-td class="text-center">
-                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
+                    <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -323,6 +324,10 @@ export default {
         columnName: null,
         columnValue: null
       },
+      fixedTermCustomerItem: {
+        columnName: null,
+        columnValue: null
+      },
       fixedTermCampaignDetail: {
         tableName: null,
         columnName: null,
@@ -386,6 +391,30 @@ export default {
       })
     },
     removeFixedTermCampaignItem (item) {
+      this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
+    },
+    addFixedTermCustomerItem () {
+      this.$v.fixedTermCustomerItem.$touch()
+      if (this.$v.fixedTermCustomerItem.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.form.FixedTermCampaignDetails.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_CUSTOMER',
+        ColumnName: this.fixedTermCustomerItem.columnName,
+        ColumnValue: this.fixedTermCustomerItem.columnValue
+      })
+    },
+    removeFixedTermCustomerItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
     },
     selectFixedTermCampaignDetail (data, tableName, columnName) {
@@ -575,6 +604,14 @@ export default {
     return {
       form: this.insertRules,
       fixedTermCampaignItem: {
+        columnName: {
+          required
+        },
+        columnValue: {
+          required
+        }
+      },
+      fixedTermCustomerItem: {
         columnName: {
           required
         },

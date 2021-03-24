@@ -280,7 +280,7 @@ export default {
     } else {
       sortOpt = null
     }
-    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
+    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
   },
@@ -455,7 +455,7 @@ export default {
         andConditionalModel: this.andConditionalModel
       })
     },
-    getData (e, p, c, s) {
+    getData (e, p, c, s, requiredFieldsError) {
       this.$store.dispatch('getTableOperations', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -465,7 +465,8 @@ export default {
         count: parseInt(c),
         sort: s,
         code: this.$route.query.code,
-        andConditionalModel: this.andConditionalModel
+        andConditionalModel: this.andConditionalModel,
+        requiredFieldsError: requiredFieldsError
       })
     },
     closeApproveModal () {
@@ -650,7 +651,14 @@ export default {
       } else {
         sortOpt = null
       }
-      this.getData(to.name, this.currentPage, this.perPage, sortOpt)
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
+          validCount++
+        }
+      })
+      let requiredFieldsError = validCount < this.requiredFields.length
+      this.getData(to.name, this.currentPage, this.perPage, sortOpt, requiredFieldsError)
     },
     tableRows: function (e) {
       this.setRows()
