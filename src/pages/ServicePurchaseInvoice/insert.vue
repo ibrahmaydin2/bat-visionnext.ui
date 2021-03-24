@@ -64,10 +64,10 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" />
+              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
               <v-select/>
@@ -79,7 +79,7 @@
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceTypeId" :error="$v.form.InvoiceTypeId" md="2" lg="2">
-              <v-select label="InvoiceTypeId" :options="invoiceTypes" :filterable="false" @input="selectedSearchType('InvoiceTypeId', $event)" ></v-select>
+              <v-select label="Description1" :options="invoiceTypes" :filterable="false" @input="selectedSearchType('InvoiceTypeId', $event)" ></v-select>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -90,7 +90,7 @@
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
@@ -298,11 +298,13 @@ export default {
       currentPage: 1,
       currentCustomer: {},
       customerSelectCancelled: false,
-      selectedBranch: {}
+      selectedBranch: {},
+      selectedPaymentType: {},
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'orderStatusList', 'items', 'invoiceTypes', 'discountReasons'])
+    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'items', 'invoiceTypes', 'discountReasons'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -310,7 +312,6 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
@@ -539,6 +540,14 @@ export default {
         }
         this.createData()
       }
+    },
+    getPaymentTypes () {
+      let me = this
+      this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+        me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        me.selectedPaymentType = res.Model.DefaultPaymentType
+        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
+      })
     }
   },
   validations () {
@@ -586,6 +595,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.getPaymentTypes()
       this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()

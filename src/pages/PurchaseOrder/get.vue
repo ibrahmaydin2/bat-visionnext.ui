@@ -14,7 +14,7 @@
       <b-row>
         <b-col cols="6">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.OrderNumber}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.order.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>

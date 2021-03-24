@@ -64,7 +64,7 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" />
@@ -78,6 +78,13 @@
             <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
+              <v-select label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
           </b-row>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
@@ -87,14 +94,14 @@
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length === 0"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="setTotalPrice">
@@ -108,6 +115,9 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedInvoiceLine.price" @input="setTotalPrice"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.description1')" :error="$v.selectedInvoiceLine.description1" :required="true" md="2" lg="2">
+              <b-form-input type="text" v-model="selectedInvoiceLine.description1" />
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -134,6 +144,7 @@
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.description1')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.price')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
@@ -144,8 +155,9 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in form.InvoiceLines" :key="i">
-                  <b-td>{{o.Description1}}</b-td>
+                  <b-td>{{o.ItemName}}</b-td>
                   <b-td>{{o.ItemCode}}</b-td>
+                   <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
@@ -261,7 +273,8 @@ export default {
         IsPrinted: 0,
         IsCanceled: 0,
         InvoiceLines: [],
-        InvoiceDiscounts: []
+        InvoiceDiscounts: [],
+        RouteId: null
       },
       routeName1: 'Invoice',
       selectedInvoiceDiscount: {
@@ -280,7 +293,8 @@ export default {
         netTotal: null,
         vatRate: null,
         totalVat: null,
-        isUpdated: false
+        isUpdated: false,
+        description1: null
       },
       selectedIndex: null,
       customerFirstSet: true,
@@ -288,11 +302,13 @@ export default {
       currentPage: 1,
       currentCustomer: {},
       customerSelectCancelled: false,
-      selectedBranch: {}
+      selectedBranch: {},
+      selectedPaymentType: {},
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'items', 'discountReasons'])
+    ...mapState(['representatives', 'customers', 'currencies', 'items', 'discountReasons', 'routes'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -300,7 +316,6 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
@@ -403,7 +418,8 @@ export default {
       let selectedItem = this.selectedInvoiceLine.selectedItem
       let quantity = this.selectedInvoiceLine.quantity
       let order = {
-        Description1: selectedItem.Description1,
+        Description1: this.selectedInvoiceLine.description1,
+        ItemName: selectedItem.Description1,
         Deleted: 0,
         System: 0,
         RecordState: 2,
@@ -462,7 +478,8 @@ export default {
         netTotal: item.NetTotal,
         totalVat: item.TotalVat,
         grossTotal: item.GrossTotal,
-        isUpdated: true
+        isUpdated: true,
+        description1: item.Description1
       }
       this.getItem(item.ItemId)
     },
@@ -504,6 +521,21 @@ export default {
     removeInvoiceDiscount (item) {
       this.form.InvoiceDiscounts.splice(this.form.InvoiceDiscounts.indexOf(item), 1)
     },
+    searchRoute (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextRoute/api/Route/Search',
+          name: 'routes',
+          andConditionModel: {
+            Description1: search
+          }
+        }).then(res => {
+          loading(false)
+        })
+      }
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -524,6 +556,14 @@ export default {
         }
         this.createData()
       }
+    },
+    getPaymentTypes () {
+      let me = this
+      this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+        me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        me.selectedPaymentType = res.Model.DefaultPaymentType
+        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
+      })
     }
   },
   validations () {
@@ -551,6 +591,9 @@ export default {
         },
         totalVat: {
           required
+        },
+        description1: {
+          required
         }
       },
       selectedInvoiceDiscount: {
@@ -568,6 +611,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.getPaymentTypes()
       this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
