@@ -1525,6 +1525,7 @@
     },
     "RMA": {
       "General": "Genel",
+      "Items": "Ürünler",
       "RMA": "İade Ürün Yönetimi",
       "Customer": "Müşteri",
       "Warehouse": "Depo",

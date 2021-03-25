@@ -66,7 +66,7 @@
               <b-form-datepicker v-model="form.PriceDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select :options="rmaReasons" @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+              <v-select :options="rmaReasons" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -74,6 +74,8 @@
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <v-select
+                disabled
+                v-model="rmaStatusLabel"
                 :options="lookup.RMA_STATUS"
                 @input="selectedType('RmaStatusId', $event)"
                 label="Label"
@@ -82,15 +84,15 @@
           </b-row>
                     <hr />
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
-              <v-select :options="items" v-model="rmaOrderLine.Item.Description1" @search="searchItem" @input="selectedItem" label="Description1">
+            <NextFormGroup :title="$t('insert.RMA.Item')">
+              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <b-form-input type="text" v-model="rmaOrderLine.Item.Code" readonly/>
+            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+              <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
               <b-form-input type="text" v-model="rmaOrderLine.Quantity"/>
@@ -105,15 +107,15 @@
             <b-col cols="12">
               <b-table-simple responsive bordered small>
                 <b-thead>
-                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaOrderLines" :key="i">
-                    <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Item.Code}}</b-td>
+                    <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -171,6 +173,7 @@ export default {
         }
       },
       rmaOrderLines: [],
+      rmaStatusLabel: null,
       routeName1: 'Rma'
     }
   },
@@ -186,6 +189,7 @@ export default {
   },
   methods: {
     getInsertPage (e) {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
     },
@@ -243,7 +247,7 @@ export default {
       }
       loading(true)
       let model = {
-        Description1: search
+        Code: search
       }
       this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
         loading(false)
@@ -270,6 +274,7 @@ export default {
       this.initRmaOrderLine(this.rmaOrderLine.Item)
       this.rmaOrderLines.push(this.rmaOrderLine)
       this.initNullRmaOrderLine()
+      this.items = []
       this.$v.rmaOrderLine.$reset()
     },
     removeItems (item) {
@@ -342,6 +347,13 @@ export default {
         Quantity: {
           required
         }
+      }
+    }
+  },
+  watch: {
+    lookup (e) {
+      if (e.RMA_STATUS) {
+        this.rmaStatusLabel = e.RMA_STATUS[0].Label
       }
     }
   }
