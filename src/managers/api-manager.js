@@ -52,6 +52,7 @@ export class ApiManager {
             }
           }
         }
+        return response.data
       }
     }).catch(this.handleError)
   }

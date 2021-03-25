@@ -96,7 +96,6 @@
     "PremiumCheckList": "PremiumCheckList",
     "PremiumResult": "PremiumResult",
     "VoucherOperations": "VoucherOperations",
-    "Discount": "Discount",
     "PremiumOrder": "PremiumOrder",
     "CurrentAccountTransactions": "CurrentAccountTransactions",
     "DebtArrangement": "DebtArrangement",
@@ -157,7 +156,6 @@
     "PremiumCheckListGet": "PremiumCheckListGet",
     "PremiumResultGet": "PremiumResultGet",
     "VoucherOperationsGet": "VoucherOperationsGet",
-    "DiscountGet": "DiscountGet",
     "PremiumOrderGet": "PremiumOrderGet",
     "CurrentAccountTransactionsGet": "CurrentAccountTransactionsGet",
     "DebtArrangementGet": "DebtArrangementGet",
@@ -218,7 +216,6 @@
     "PremiumCheckListUpdate": "PremiumCheckListUpdate",
     "PremiumResultUpdate": "PremiumResultUpdate",
     "VoucherOperationsUpdate": "VoucherOperationsUpdate",
-    "DiscountUpdate": "DiscountUpdate",
     "PremiumOrderUpdate": "PremiumOrderUpdate",
     "CurrentAccountTransactionsUpdate": "CurrentAccountTransactionsUpdate",
     "DebtArrangementUpdate": "DebtArrangementUpdate",
@@ -275,7 +272,6 @@
     "PremiumCheckListInsert": "PremiumCheckListInsert",
     "PremiumResultInsert": "PremiumResultInsert",
     "VoucherOperationsInsert": "VoucherOperationsInsert",
-    "DiscountInsert": "DiscountInsert",
     "PremiumOrderInsert": "PremiumOrderInsert",
     "CurrentAccountTransactionsInsert": "CurrentAccountTransactionsInsert",
     "DebtArrangementInsert": "DebtArrangementInsert",
@@ -352,10 +348,30 @@
     "DiscountReasonInsert": "Yeni İndirim Nedeni",
     "DiscountReasonUpdate": "İndirim Nedeni Güncelle",
     "DiscountReasonGet": "İndirim Nedeni Görüntüle",
+    "FixedTermCampaign": "Vade Kampanyası Tanımları",
+    "FixedTermCampaignInsert": "Vade Kampanyası Ekleme",
+    "FixedTermCampaignUpdate": "Vade Kampanyası Güncelle",
+    "FixedTermCampaignGet": "Vade Kampanyası Görüntüle",
+    "PriceDiscountTransaction": "Dip Toplam İndirimi",
+    "PriceDiscountTransactionGet": "Dip Toplam İndirimi Görüntüle",
+    "PriceDiscountTransactionInsert": "Yeni Dip Toplam İndirimi",
+    "PriceDiscountTransactionUpdate": "Dip Toplam İndirimi Güncelle",
+    "RmaOrder": "İade Talebi",
+    "RmaOrderGet": "İade Talebi Görüntüle",
+    "RmaOrderInsert": "Yeni İade Talebi",
+    "RmaOrderUpdate": "İade Talebi Güncelle",
+    "Discount": "İndirim/Kampanya Tanımları",
+    "DiscountGet": "İndirim/Kampanya Görüntüle",
+    "DiscountInsert": "Yeni İndirim/Kampanya Tanımı",
+    "DiscountUpdate": "İndirim/Kampanya Tanımı Güncelle",
     "SalesWaybill": "Teslimat İrsaliyesi",
     "SalesWaybillGet": "Teslimat İrsaliyesi Görüntüle",
     "SalesWaybillInsert": "Yeni Teslimat İrsaliyesi",
     "SalesWaybillUpdate": "Teslimat İrsaliyesi Güncelle",
+    "PurchaseWaybill": "Mal Kabul İrsaliyesi",
+    "PurchaseWaybillGet": "Mal Kabul İrsaliyesi Görüntüle",
+    "PurchaseWaybillInsert": "Yeni Mal Kabul İrsaliyesi",
+    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle",
     "ServicePurchaseInvoice": "Hizmet Satın Alma Faturası",
     "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
     "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
@@ -409,6 +425,8 @@
     "pleaseChooseField": "Lütfen Seçim Yapınız",
     "errorProcess": "Kayıt Bulunamadı",
     "okay": "Tamam",
+    "find": "Bul",
+    "clean": "Temizle",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1054,7 +1072,9 @@
     },
     "loadingplan": {
       "items": "Ürün",
-      "PlanQuantity": "Yükleme Miktarı"
+      "PlanQuantity": "Yükleme Miktarı",
+      "LoadingDate": "Yükleme Tarihi",
+      "Route": "Rota"
     },
     "vanLoading": {
       "items": "Ürün",
@@ -1154,6 +1174,11 @@
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
       "Price": "Liste Miktarı"
+    },
+    "RmaOrder": {
+      "Item": "Ürün Kodu",
+      "ItemName": "Ürün Adı",
+      "Quantity": "İade Miktarı"
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1260,6 +1285,45 @@
       "commercialTitle": "Müşteri Ticari Ünvanı",
       "locationId" :"Lokasyon",
       "sameRouteError": "Aynı Rota iki defa eklenemez!"
+    },
+    "discount": {
+      "discountGivens": "İndirim Sonucu",
+      "discountTakens": "İndirimli Ürünler",
+      "discountCustomers": "Müşteriler",
+      "discountExcludedCustomers": "İndirime Dahil Olmayan Müşteriler",
+      "discountDetails": "Detay",
+      "discountCustomerSqls": "Müşteri Sorgusu",
+      "general": "Genel",
+      "requiredFields": "İndirim Tipi ve çeşidi zorunlu alanlardır",
+      "columnName": "Alan Açıklaması",
+      "columnValue": "Değer",
+      "givenQuantity": "Miktar",
+      "discountRate": "İndirim Oranı",
+      "discountTotal": "İndirim Tutarı",
+      "startValue": "Başlangıç Değeri",
+      "finishValue": "Bitiş Değeri",
+      "takenQuantity": "Miktar",
+      "minTakenAmount": "Minimum Alış Tutarı",
+      "endTakenQuantity": "Üst Miktar",
+      "maxTakenAmount": "Maximum Alış Tutarı",
+      "minTakenQuantity": "Minimum Alış Miktarı",
+      "customerCode": "Müşteri Kodu",
+      "customerName": "Müşteri Adı",
+      "commercialTitle":"Müşteri Ticari Ünvanı",
+      "location": "Lokasyon",
+      "branchCode": "Şube Kodu",
+      "branchName": "Şube Adı",
+      "routeCode": "Rota Kodu",
+      "routeName": "Rota Adı",
+      "paymentType":"Ödeme Tipi",
+      "customerSql": "Müşteri Sorgusu"
+    },
+    "approveAssuranceModal": {
+      "customerName":"Müşteri Adı",
+      "customerCode":"Müşteri Kodu",
+      "customerArea": "Müşteri Bölgesi 5",
+      "route":"Rota",
+      "approveStateId": "Onay Durumu"
     }
   },
   "get": {
@@ -1480,6 +1544,7 @@
       "Genexp1": "Açıklama"
     },
     "RMA": {
+      "General": "Genel",
       "RMA": "İade Ürün Yönetimi",
       "Customer": "Müşteri",
       "Warehouse": "Depo",
@@ -1495,6 +1560,19 @@
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
       "RmaReason": "İade Nedeni"
+    },
+    "RmaOrder": {
+      "General": "Genel",
+      "RmaOrder": "İade Talebi",
+      "Customer": "Müşteri",
+      "Warehouse": "Depo",
+      "Representative": "Personel",
+      "RmaStatus": "İade Durumu",
+      "RmaType": "İade Tipi",
+      "PriceDate": "Fiyatlandırma Tarihi",
+      "Genexp1": "Açıklama",
+      "RmaReason": "İade Nedeni",
+      "RmaOrderDate": "İade Tarihi"
     },
     "DiscountReason": {
       "DiscountReason": "İndirim Nedenleri",
@@ -1520,6 +1598,27 @@
       "campaignType": "Kampanya Tipi",
       "campaignRate": "Uygulama Oranı",
       "currency": "Para Birimi"
+    },
+    "PriceDiscountTransaction": {
+      "general": "Genel",
+      "TciBreak1": "TCI",
+      "TransactionDate": "Tanım Tarihi",
+      "TransactionTime": "Tanım Saati",
+      "DiscountReason": "Dip Toplam İndirim Nedeni",
+      "PriceDiscountAmount": "Dip Toplam İndirimi",
+      "Currency": "Para Birimi",
+      "BudgetAmount": "Bütçe Miktarı",
+      "BudgetConsumption": "Harcanan Bütçe Miktarı",
+      "Budget": "Bütçe",
+      "ApproveState": "Onay Durumu",
+      "ErpCode": "ERP Kodu",
+      "ExpirationDate": "Son Geçerlilik Tarihi",
+      "BeginDate": "Kullanımı Başlangıç Tarihi",
+      "Genexp1": "Açıklama 2",
+      "GainType": "Kazanç Türü",
+      "Code": "Kod",
+      "Description":"Açıklama",
+      "Status":"Durum"
     }
   },
 
@@ -1536,40 +1635,26 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
-    "BloodTransfusion": "BloodTransfusion",
-    "Code": "Code",
-    "ContactEmail": "ContactEmail",
-    "ContactGsm": "ContactGsm",
-    "ContactName": "ContactName",
-    "ContactPhone": "ContactPhone",
-    "ContactSurname": "ContactSurname",
-    "CreatedDateTime": "CreatedDateTime",
-    "Description1": "Description1",
-    "ExSibling": "ExSibling",
-    "KitType": "KitType",
-    "Lab": "Lab",
-    "PathogenicVariant": "PathogenicVariant",
-    "PatientBirthDate": "PatientBirthDate",
-    "PatientCity": "PatientCity",
-    "PatientCountry": "PatientCountry",
-    "PatientGender": "PatientGender",
-    "PatientGsm": "PatientGsm",
-    "PatientName": "PatientName",
-    "PatientPhone": "PatientPhone",
-    "PatientSurname": "PatientSurname",
-    "Project": "Project",
-    "ProvisionNumber": "ProvisionNumber",
-    "SampleDate": "SampleDate",
-    "SampleType": "SampleType",
-    "SerialNumber": "SerialNumber",
-    "System": "System",
-    "TransportationAddress": "TransportationAddress",
-    "TransportationDate": "TransportationDate",
-    "TransportationTime": "TransportationTime",
-    "WorkOrderStatus": "WorkOrderStatus",
-    "WorkOrderStatusId": "WorkOrderStatusId",
-    "WorkOrderType": "WorkOrderType",
-    "saveRows": "Düzenlemeyi Onayla"
+    "saveRows": "Düzenlemeyi Onayla",
+    "selectRowError": "Satır Seçiniz.",
+    "documentNotFound": "Belge bulunamadı.",
+    "chooseDocument": "Belge seçiniz.",
+    "print": "Yazdır",
+    "close": "Kapat",
+    "approve": "Onayla",
+    "search": "Ara",
+    "CustomConvert": {
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi"
+    }
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",
@@ -1610,9 +1695,7 @@
   "dashboard": {
     "search": "Ara",
     "create": "Oluştur",
-    "chartTitle": "Test Statülerine Göre Dağılım",
-    "title": "Gen Panelleri & Tek Gen Kitleri",
-    "secondTestSelect": "İkincil test talebi oluşturmak istediğiniz hastayı seçiniz."
+    "isError": "Gösterilecek veri bulunamadı."
   },
   "sidebar": {
     "createShortcut": "Kısayol Oluştur",
@@ -1624,7 +1707,8 @@
   "header": {
     "save": "Kaydet",
     "cancel": "Vazgeç",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "workFlow": "WorkFlow"
   },
   "form": {
     "createOk": "Başarılı",
