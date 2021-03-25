@@ -1624,11 +1624,26 @@
   "index": {
     "saveRows": "Düzenlemeyi Onayla",
     "selectRowError": "Satır Seçiniz.",
-    "documentNotFound": "Tasarım bulunamadı.",
-    "chooseDocument": "Tasarım seçiniz.",
+    "documentNotFound": "Belge bulunamadı.",
+    "chooseDocument": "Belge seçiniz.",
     "print": "Yazdır",
     "close": "Kapat",
-    "approve": "Onayla"
+    "approve": "Onayla",
+    "search": "Ara",
+    "success": "Başarılı",
+    "CustomConvert": {
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi",
+      "status": "Durum"
+    }
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",

@@ -180,6 +180,7 @@
       <PotentialCustomerApproveModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
+    <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -187,11 +188,13 @@ import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
+import CustomConvertModal from './Actions/CustomConvertModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
-    ConfirmModal
+    ConfirmModal,
+    CustomConvertModal
   },
   props: {
     apiurl: String,
@@ -309,6 +312,15 @@ export default {
         this.$root.$emit('bv::show::modal', 'approve-reject-modal')
         return
       }
+      if (action.ViewType === 'PotentialCustomerReject') {
+        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+        return
+      }
+      if (action.ViewType === 'CustomConvert') {
+        this.$root.$emit('bv::show::modal', 'customConvertModal')
+        return
+      }
+
       this.$root.$emit('bv::show::modal', 'confirmModal')
     },
     dateTimeformat (e) {
