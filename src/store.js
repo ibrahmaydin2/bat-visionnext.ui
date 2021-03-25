@@ -1249,7 +1249,24 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
           commit('bigLoaded', false)
         })
+    },
+    importExcel ({ state, commit }, formData) {
+      console.log(formData)
+      axios.post('/single-file',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      ).then(function () {
+        console.log('SUCCESS!!')
+      })
+        .catch(function () {
+          console.log('FAILURE!!')
+        })
     }
+
   },
   mutations: {
     setError (state, payload) {

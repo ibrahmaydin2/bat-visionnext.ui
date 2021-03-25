@@ -46,7 +46,7 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </router-link>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal' || action.ViewType === 'PotentialCustomerApprove' || action.ViewType === 'PotentialCustomerReject' || action.ViewType === 'CustomConvert'" @click.prevent.stop="showModal (action, row)">
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click.prevent.stop="showModal (action, row)">
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>

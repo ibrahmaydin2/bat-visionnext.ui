@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="lg">
+  <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl">
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.CustomConvert.branchId')" md="4" lg="4">
