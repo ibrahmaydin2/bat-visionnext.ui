@@ -27,12 +27,17 @@
           <NextFormGroup item-key="Status" :error="$v.form.Status">
             <NextCheckBox v-model="form.Status" type="number" toggle />
           </NextFormGroup>
+          <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
+            <b-form-checkbox v-model="form.UseBudget" name="check-button" @input="useBudgetEvent($event)" switch>
+              {{(form.UseBudget) ? $t('insert.active'): $t('insert.passive')}}
+            </b-form-checkbox>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.PriceDiscountTransaction.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="TciBreak1" :error="$v.form.TciBreak1">
               <v-select
@@ -71,20 +76,24 @@
               <b-form-input type="text" v-model="form.PriceDiscountAmount" :readonly="insertReadonly.PriceDiscountAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="Currency" :error="$v.form.Currency">
-              <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
+              <v-select :options="currencies" v-model="currencyLabel" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
+            <!-- <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input disabled type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
-              <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
-            </NextFormGroup>
+              <b-form-input disabled type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
+            </NextFormGroup> -->
             <NextFormGroup item-key="Budget" :error="$v.form.Budget">
-              <v-select />
+              <v-select :options="budgets" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveState" :error="$v.form.ApproveState">
               <v-select
@@ -134,29 +143,30 @@ export default {
         Code: null,
         Description1: null,
         CustomerId: null,
-        TransactionDate: new Date(),
-        TransactionTime: new Date(),
+        TransactionDate: null,
+        TransactionTime: null,
         DiscountReasonId: null,
         PriceDiscountAmount: null,
-        CurrencyId: null,
+        CurrencyId: 1,
         UseBudget: 0,
         BudgetAmount: 0,
         BudgetConsumption: 0,
         BudgetId: null,
         ApproveStateId: 2102,
         ErpCode: null,
-        ExpirationDate: new Date(),
-        BeginDate: new Date(),
+        ExpirationDate: null,
+        BeginDate: null,
         Genexp1: null,
         GainTypeId: null,
         TciBreak1Id: null
       },
+      currencyLabel: null,
       routeName1: 'Discount'
     }
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['customers', 'discountReasons', 'currencies', 'gainTypes'])
+    ...mapState(['customers', 'discountReasons', 'currencies', 'budgets', 'gainTypes'])
   },
   mounted () {
     this.createManualCode()
@@ -168,9 +178,22 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
-      // this.form.TransactionTime = this.form.TransactionTime.getTime()
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/Budget/GetCustomerBudget', name: 'budgets'})
+      let currentDate = new Date()
+      this.form.TransactionDate = currentDate.toISOString().slice(0, 10)
+      this.form.ExpirationDate = currentDate.toISOString().slice(0, 10)
+      this.form.BeginDate = currentDate.toISOString().slice(0, 10)
+      this.form.TransactionTime = currentDate.toLocaleTimeString()
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        if (label === 'CustomerId') {
+          console.log(model)
+        }
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -184,6 +207,15 @@ export default {
         loading(false)
       })
     },
+    useBudgetEvent (e) {
+      if (e === true) {
+        this.form.UseBudget = 1
+        this.form.ApproveStateId = 2100
+      } else {
+        this.form.UseBudget = 0
+        this.form.ApproveStateId = 2102
+      }
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -194,6 +226,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.BudgetAmount = this.form.PriceDiscountAmount
         this.createData()
         // update işlemiyse
         // this.updateData()
@@ -204,6 +237,13 @@ export default {
     // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    currencies (e) {
+      if (e) {
+        this.currencyLabel = e[0].Description1
+      }
     }
   }
 }

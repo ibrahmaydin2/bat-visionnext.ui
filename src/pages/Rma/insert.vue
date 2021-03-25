@@ -43,7 +43,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select disabled v-model="representativeName" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -51,13 +51,15 @@
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <v-select
+                disabled
+                v-model="rmaStatusLabel"
                 :options="lookup.RMA_STATUS"
                 @input="selectedType('RmaStatusId', $event)"
                 label="Label"
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1">
+              <v-select disabled v-model="approveEmployeeName" :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -74,7 +76,7 @@
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveDate" :error="$v.form.ApproveDate">
-              <b-form-datepicker v-model="form.ApproveDate" />
+              <b-form-datepicker disabled v-model="form.ApproveDate" />
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
               <b-form-datepicker v-model="form.PriceDate" />
@@ -96,24 +98,25 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select :options="rmaReasons"  @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+              <v-select :options="rmaReasons" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
           </b-row>
-          <hr />
+        </b-tab>
+        <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
-              <v-select :options="items" v-model="rmaLine.Item.Description1" @search="searchItem" @input="selectedItem" label="Description1">
+            <NextFormGroup :title="$t('insert.RMA.Item')">
+              <v-select :options="items" v-model="rmaLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <b-form-input type="text" v-model="rmaLine.Item.Code" readonly/>
+            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+              <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
               <b-form-input type="text" v-model="rmaLine.Quantity"/>
@@ -128,15 +131,15 @@
             <b-col cols="12">
               <b-table-simple responsive bordered small>
                 <b-thead>
-                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaLines" :key="i">
-                    <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Item.Code}}</b-td>
+                    <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -170,9 +173,9 @@ export default {
         ApproveNumber: null,
         RmaTypeId: null,
         ApproveDate: null,
-        PriceDate: null,
+        PriceDate: new Date(),
         Genexp1: null,
-        RmaDate: null,
+        RmaDate: new Date(),
         GrvNumber: null,
         RouteId: null,
         RmaReasonId: null,
@@ -201,16 +204,25 @@ export default {
         }
       },
       rmaLines: [],
+      rmaStatusLabel: null,
+      approveEmployeeName: null,
+      representativeName: null,
       routeName1: 'Rma'
     }
   },
   computed: {
-    ...mapState(['customers', 'employees', 'warehouses', 'routes', 'rmaReasons', 'items'])
+    ...mapState(['customers', 'employees', 'warehouses', 'routes', 'rmaReasons', 'items', 'loginUser', 'UserId'])
   },
   mounted () {
     // this.createManualCode()
+    this.getInsertPage()
   },
   methods: {
+    getInsertPage () {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
+      // lookup harici dataya ihtiyaç yoksa silinebilir
+    },
     searchEmployee (search, loading) {
       if (search.length < 3) {
         return false
@@ -259,25 +271,13 @@ export default {
         loading(false)
       })
     },
-    searchRmaReason (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
-        loading(false)
-      })
-    },
     searchItem (search, loading) {
       if (search.length < 3) {
         return false
       }
       loading(true)
       let model = {
-        Description1: search
+        Code: search
       }
       this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
         loading(false)
@@ -376,6 +376,17 @@ export default {
         Quantity: {
           required
         }
+      }
+    }
+  },
+  watch: {
+    lookup (e) {
+      if (e.RMA_STATUS) {
+        this.rmaStatusLabel = e.RMA_STATUS[0].Label
+        this.approveEmployeeName = this.loginUser.name
+        this.form.ApproveEmployeeId = this.UserId
+        this.representativeName = this.loginUser.name
+        this.form.RepresentativeId = this.UserId
       }
     }
   }
