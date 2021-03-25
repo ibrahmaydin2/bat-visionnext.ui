@@ -124,7 +124,7 @@
               <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
               <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
@@ -443,11 +443,12 @@ export default {
       selectedBranch: {},
       address: {},
       selectedDeliveryRepresentative: null,
-      selectedStatus: null
+      selectedStatus: null,
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -458,7 +459,6 @@ export default {
         this.setData()
       })
       var me = this
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
@@ -469,7 +469,7 @@ export default {
         me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
       })
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
-        this.selectedBranch = response.Model
+        this.selectedBranch = response ? response.Model : {}
       })
     },
     searchRoute (search, loading) {
@@ -545,8 +545,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
-          this.selectItem()
-          this.$forceUpdate()
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -757,13 +757,14 @@ export default {
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
           this.selectedCustomer = response.Model
+          this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
         })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
-        this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
+        this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)

@@ -21,7 +21,7 @@
           <b-col cols="8">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
-                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
+                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" :readonly="form.CustomerId > 0" :disabled="form.CustomerId > 0"/>
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
                 <b-form-timepicker
@@ -115,7 +115,7 @@
               <v-select :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label" @input="selectedSearchType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
               <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
@@ -350,11 +350,13 @@ export default {
       showDiscounts: false,
       customerCampaigns: {},
       currentCustomer: {},
-      customerSelectCancelled: false
+      customerSelectCancelled: false,
+      selectedPaymentType: {},
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['orderStates', 'representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.createManualCode('OrderNumber')
@@ -363,7 +365,6 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderState/Search', name: 'orderStates'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
@@ -446,8 +447,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
-          this.selectItem()
-          this.$forceUpdate()
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -684,6 +685,14 @@ export default {
           })
           return
         }
+        if (this.form.DueDate < this.form.DocumentDate) {
+          this.$toasted.show(this.$t('insert.order.dueDatelessDocumentDate'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.$store.commit('bigLoaded', true)
         this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderInsertDiscounts').then((res) => {
           this.campaigns = res.Models
@@ -697,6 +706,14 @@ export default {
           }
         })
       }
+    },
+    getPaymentTypes () {
+      let me = this
+      this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+        me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        me.selectedPaymentType = res.Model.DefaultPaymentType
+        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
+      })
     }
   },
   validations () {
@@ -730,6 +747,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.getPaymentTypes()
       this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()

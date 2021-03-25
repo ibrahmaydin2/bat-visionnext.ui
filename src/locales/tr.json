@@ -371,7 +371,11 @@
     "PurchaseWaybill": "Mal Kabul İrsaliyesi",
     "PurchaseWaybillGet": "Mal Kabul İrsaliyesi Görüntüle",
     "PurchaseWaybillInsert": "Yeni Mal Kabul İrsaliyesi",
-    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle"
+    "PurchaseWaybillUpdate": "Mal Kabul İrsaliyesi Güncelle",
+    "ServicePurchaseInvoice": "Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
+    "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
+    "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1245,7 +1249,22 @@
       "deliveryRepresentative": "Teslimat Personeli",
       "actualDeliveryDate": "Fiili Sevk Tarihi",
       "actualDeliveryTime": "Fiili Sevk Saati",
-      "currencyId": "Para Birimi"
+      "currencyId": "Para Birimi",
+      "invoiceType": "Fatra Tipi",
+      "discountReason": "İndirim Nedeni",
+      "itemDiscount": "Ürün İndirimi",
+      "otherDiscount": "Diğer İndirim",
+      "dueDatelessDocumentDate": "Teslimat Tarihi Belge Tarihinden önce olamaz!",
+      "paymentPlan": "Ödeme Planı",
+      "paymentDate": "Ödeme Tarihi",
+      "PeriodDay": "Vade Günü",
+      "willPayAmount": "Ödenecek Tutar",
+      "paidAmount": "Ödenen Tutar",
+      "enterInvoice": "Fatura Girişi",
+      "sapDocumentNo": "Sap Belge No",
+      "belgeNo": "Belge No",
+      "enterWaybill": "İrsaliye Girişi",
+      "invoiceNo": "Fatura No"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1264,7 +1283,8 @@
       "paymentPeriod": "Vade Süresi",
       "customers": "Müşteriler",
       "commercialTitle": "Müşteri Ticari Ünvanı",
-      "locationId" :"Lokasyon"
+      "locationId" :"Lokasyon",
+      "sameRouteError": "Aynı Rota iki defa eklenemez!"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -1616,40 +1636,28 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
-    "BloodTransfusion": "BloodTransfusion",
-    "Code": "Code",
-    "ContactEmail": "ContactEmail",
-    "ContactGsm": "ContactGsm",
-    "ContactName": "ContactName",
-    "ContactPhone": "ContactPhone",
-    "ContactSurname": "ContactSurname",
-    "CreatedDateTime": "CreatedDateTime",
-    "Description1": "Description1",
-    "ExSibling": "ExSibling",
-    "KitType": "KitType",
-    "Lab": "Lab",
-    "PathogenicVariant": "PathogenicVariant",
-    "PatientBirthDate": "PatientBirthDate",
-    "PatientCity": "PatientCity",
-    "PatientCountry": "PatientCountry",
-    "PatientGender": "PatientGender",
-    "PatientGsm": "PatientGsm",
-    "PatientName": "PatientName",
-    "PatientPhone": "PatientPhone",
-    "PatientSurname": "PatientSurname",
-    "Project": "Project",
-    "ProvisionNumber": "ProvisionNumber",
-    "SampleDate": "SampleDate",
-    "SampleType": "SampleType",
-    "SerialNumber": "SerialNumber",
-    "System": "System",
-    "TransportationAddress": "TransportationAddress",
-    "TransportationDate": "TransportationDate",
-    "TransportationTime": "TransportationTime",
-    "WorkOrderStatus": "WorkOrderStatus",
-    "WorkOrderStatusId": "WorkOrderStatusId",
-    "WorkOrderType": "WorkOrderType",
-    "saveRows": "Düzenlemeyi Onayla"
+    "saveRows": "Düzenlemeyi Onayla",
+    "selectRowError": "Satır Seçiniz.",
+    "documentNotFound": "Belge bulunamadı.",
+    "chooseDocument": "Belge seçiniz.",
+    "print": "Yazdır",
+    "close": "Kapat",
+    "approve": "Onayla",
+    "search": "Ara",
+    "success": "Başarılı",
+    "CustomConvert": {
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi",
+      "status": "Durum"
+    }
   },
   "auth": {
     "information": "Kişisel verileriniz, <b>Aydınlatma Metni</b> kapsamında işlenmektedir. Oturum Aç butonuna basarak metni okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.",
@@ -1702,7 +1710,8 @@
   "header": {
     "save": "Kaydet",
     "cancel": "Vazgeç",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "workFlow": "WorkFlow"
   },
   "form": {
     "createOk": "Başarılı",

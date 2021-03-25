@@ -13,11 +13,27 @@
         </div> -->
         <b-col cols="4" v-for="(element, i) in formElements" :key="i" :set="fieldName = element.EntityProperty">
           <b-form-group v-if="element.ColumnType === 'Select' && element.DefaultValue && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <v-select
+            <!-- <v-select
               label="Label"
               :readonly="!element.Enabled"
               :options="lookup[element.DefaultValue]"
               @input="selectedValue(element.EntityProperty, $event, 'lookup')"
+            >
+            </v-select> -->
+            <v-select
+              v-if="element.modelControlUtil.isLookupTable"
+              label="Label"
+              :options="lookup[element.modelControlUtil.code]"
+              @input="selectedValue(element.modelControlUtil.modelProperty, $event, 'lookup')"
+              v-model="element.defaultValue"
+            >
+            </v-select>
+            <v-select
+              v-else
+              label="Description1"
+              :options="gridField[element.EntityProperty]"
+              @input="selectedValue(element.EntityProperty, $event, 'search')"
+              v-model="element.defaultValue"
             >
             </v-select>
           </b-form-group>
@@ -97,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['lookup'])
+    ...mapState(['lookup', 'gridField'])
   },
   created () {
     this.$api.get('UIOperations', `UIOperationGroupUser/GetPopupFormInits?name=${this.actionUrl}`).then((res) => {
@@ -112,17 +128,17 @@ export default {
       let autoLookups = ''
       this.formElements = res.FormColumns
       this.formActions = res.RowActions
-      this.$set(this.form, 'RecordId', this.recordId)
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
-        this.$set(this.form, fieldName, null)
         if (item.Visible) {
+          this.$set(this.form, fieldName, null)
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
-
         if (item.DefaultValue) {
           autoLookups += item.DefaultValue + ','
         }
+        this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName}).then(() => {
+        })
       })
 
       if (autoLookups.length > 0) {
@@ -133,7 +149,7 @@ export default {
   },
   props: {
     actionUrl: String,
-    recordId: Number
+    recordId: Array
   },
   methods: {
     selectedValue (label, model, type) {
@@ -156,7 +172,11 @@ export default {
           duration: '3000'
         })
       } else {
-        this.$api.postByUrl(this.form, action.ActionUrl).then(res => {
+        let model = {
+          model: this.form,
+          RecordIds: this.recordId
+        }
+        this.$api.postByUrl(model, action.ActionUrl).then(res => {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
             keepOnHover: true,

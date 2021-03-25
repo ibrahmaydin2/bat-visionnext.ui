@@ -8,121 +8,154 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
           </header>
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="12">
+        <b-col cols="6">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.warehouse.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.warehouse.code')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.order.invoiceNumber')}}:</b> {{rowData.InvoiceNumber}}</span>
           </section>
+        </b-col>
+        <b-col cols="6">
+          <b-card  class="summary-card">
+            <div class="summary-area">
+              <span class="summary-title">{{$t('insert.order.netTotal')}}</span>
+              <span class="summary-value text-muted">: {{rowData.NetTotal}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.vatTotal')}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalVat}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
+              <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+            </div>
+          </b-card>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Model_WarehouseTypeId')" active>
+        <b-tab :title="$t('insert.order.enterInvoice')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
+              <div v-html="getFormatDataByType(rowData.InvoiceType, 'object', 'insert.order.invoiceType')"></div>
+            </b-card>
+             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
+              <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.enterProducts')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.Model_WarehouseTypeId')}}</span> <p>{{rowData.WarehouseType ? rowData.WarehouseType.Label : ''}}</p>
-                <div v-if="rowData.WarehouseTypeId === 76506193">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.VehicleId')}}</span> <p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
-                </div>
-                <div v-if="rowData.WarehouseTypeId === 76506191">
-                  <span><i class="far fa-circle" /> {{$t('insert.warehouse.Customer')}}</span> <p>{{rowData.Customer ? rowData.Customer.Label : ''}}</p>
-                </div>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.IsCenterWarehouse')}}</span> <p><i :class="rowData.IsCenterWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.WarehouseCapacity')}}</span> <p>{{rowData.WarehouseCapacity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.warehouse.locations')}}</h6>
-                <b-table responsive :items="rowData.WarehouseSuppliers" :fields="fields">
-                  <template #cell(SupplierBranchId)="data">
-                    {{data.item.SupplierBranch.Label}}
-                  </template>
-                  <template #cell(PurchaseWarehouseId)="data">
-                    {{data.item.PurchaseWarehouse.Label}}
-                  </template>
-                  <template #cell(ReturnWarehouseId)="data">
-                    {{data.item.ReturnWarehouse.Label}}
-                  </template>
-                </b-table>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.product')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.price')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
+                      <b-td>{{o.Item.Label}}</b-td>
+                      <b-td>{{o.Item.Code}}</b-td>
+                      <b-td>{{o.Quantity}}</b-td>
+                      <b-td>{{o.Price}}</b-td>
+                      <b-td>{{o.VatRate}}</b-td>
+                      <b-td>{{o.NetTotal}}</b-td>
+                      <b-td>{{o.TotalVat}}</b-td>
+                      <b-td>{{o.GrossTotal}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab v-if="false" :title="$t('insert.other')">
+        <b-tab :title="$t('insert.order.discounts')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.other')}}</h6>
-                <span><i class="far fa-circle" /> BranchId </span>
-                <p>{{ rowData.BranchId }}</p>
-                <span><i class="far fa-circle" /> CompanyId </span>
-                <p>{{ rowData.CompanyId }}</p>
-                <span><i class="far fa-circle" /> CreatedDateTime </span>
-                <p>{{ rowData.CreatedDateTime }}</p>
-                <span><i class="far fa-circle" /> CreatedUser </span>
-                <p>{{ rowData.CreatedUser }}</p>
-                <span><i class="far fa-circle" /> CustomerId </span>
-                <p>{{ rowData.CustomerId }}</p>
-                <span><i class="far fa-circle" /> EncryptedKey </span>
-                <p>{{ rowData.EncryptedKey }}</p>
-                <span><i class="far fa-circle" /> IsCustomerWarehouse </span>
-                <p>{{ rowData.IsCustomerWarehouse }}</p>
-                <span><i class="far fa-circle" /> IsVehicle </span>
-                <p>{{ rowData.IsVehicle }}</p>
-                <span><i class="far fa-circle" /> LocationId </span>
-                <p>{{ rowData.LocationId }}</p>
-                <span><i class="far fa-circle" /> ModifiedDateTime </span>
-                <p>{{ rowData.ModifiedDateTime }}</p>
-                <span><i class="far fa-circle" /> ModifiedUser </span>
-                <p>{{ rowData.ModifiedUser }}</p>
-                <span><i class="far fa-circle" /> RecordId </span>
-                <p>{{ rowData.RecordId }}</p>
-                <span><i class="far fa-circle" /> RecordState </span>
-                <p>{{ rowData.RecordState }}</p>
-                <span><i class="far fa-circle" /> RecordStatus </span>
-                <p>{{ rowData.RecordStatus }}</p>
-                <span><i class="far fa-circle" /> System </span>
-                <p>{{ rowData.System }}</p>
-                <span><i class="far fa-circle" /> WarehouseStocks </span>
-                <p>{{ rowData.WarehouseStocks }}</p>
-                <span><i class="far fa-circle" /> WarehouseSuppliers </span>
-                <p>{{ rowData.WarehouseSuppliers }}</p>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in rowData.InvoiceDiscounts" :key="i">
+                      <b-td>{{o.DiscountReasonName}}</b-td>
+                      <b-td>{{o.DiscountPercent}}</b-td>
+                      <b-td>{{o.TotalDiscount}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
-           </b-row>
-         </b-tab>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.paymentDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.PeriodDay')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.willPayAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.paidAmount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(p, i) in rowData.InvoicePaymentPlans" :key="i">
+                      <b-td>{{dateConvertFromTimezone(p.PaymentDate)}}</b-td>
+                      <b-td>{{p.PaymentPeriod}}</b-td>
+                      <b-td>{{p.Amount}}</b-td>
+                       <b-td>{{p.Paid}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
-      fields: [
-        {key: 'SupplierBranchId', label: 'Şube', sortable: true},
-        {key: 'PurchaseWarehouseId', label: 'Satın Alma Deposu', sortable: true},
-        {key: 'ReturnWarehouseId', label: 'İade Deposu', sortable: true}
-      ],
-      tempItems: [
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''},
-        {SupplierBranchId: '', PurchaseWarehouseId: '', ReturnWarehouseId: ''}
-      ]
-    }
+    return {}
   },
   mounted () {
     this.getData()
@@ -136,10 +169,31 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url})
     }
   }
 }
 </script>
-<style lang="sass">
+<style scoped>
+.summary-card {
+  width: 240px;
+  float: right;
+  border: none;
+}
+.card-body  {
+  padding: none !important;
+}
+.summary-title {
+  width: 100px !important;
+}
+.summary-value {
+   width: 75px !important;
+   float:right
+}
+.summary-area {
+  font-size: 10px !important;
+}
+.summary-hr {
+  margin: 3px;
+}
 </style>

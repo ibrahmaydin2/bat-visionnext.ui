@@ -14,7 +14,7 @@
       <b-row>
         <b-col cols="6">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.order.orderNumber')}}:</b> {{rowData.OrderNumber}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.order.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
@@ -33,6 +33,18 @@
               <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
             </div>
           </b-card>
         </b-col>
@@ -48,6 +60,7 @@
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
+              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
@@ -127,7 +140,9 @@ export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      paymentPeriod: 0
+    }
   },
   mounted () {
     this.getData()
@@ -141,7 +156,11 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextOrder/api/Order', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextOrder/api/Order', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.paymentPeriod = response.Model.PaymentPeriod
+        })
+      })
     }
   }
 }
@@ -150,7 +169,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
   border: none;
 }
 .card-body  {

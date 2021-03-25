@@ -108,7 +108,7 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : ''">
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''">
           <b-td v-for="h in head" :key="h.dataField">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
               <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
@@ -119,7 +119,7 @@
                   <i class="fas fa-th" />
                 </template>
                 <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <Workflow :items="workFlowList" />
+                <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" />
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
@@ -174,12 +174,14 @@
       </b-col>
     </b-row>
     <b-modal id="approve-reject-modal" ref="RejectModal" hide-footer hide-header>
-      <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+      <PotentialCustomerRejectModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
-      <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+      <PotentialCustomerApproveModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
+    <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
+    <ImportExcelModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -187,16 +189,26 @@ import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
+import CustomConvertModal from './Actions/CustomConvertModal'
+import ImportExcelModal from './Actions/ImportExcelModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
-    ConfirmModal
+    ConfirmModal,
+    CustomConvertModal,
+    ImportExcelModal
   },
   props: {
     apiurl: String,
     apiparams: String,
     andConditionalModel: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    workFlowModel: {
       type: Object,
       default: function () {
         return {}
@@ -274,8 +286,9 @@ export default {
     } else {
       sortOpt = null
     }
-    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
+    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
+    this.$store.commit('setSelectedTableRows', [])
   },
   computed: {
     ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup'])
@@ -292,9 +305,26 @@ export default {
       })
     },
     showModal (action, row) {
-      this.$root.$emit('bv::show::modal', 'confirmModal')
       this.modalAction = action
       this.modalItem = row
+      if (action.Action === 'PotentialCustomerApprove') {
+        this.$root.$emit('bv::show::modal', 'approve-modal')
+        return
+      }
+      if (action.Action === 'PotentialCustomerReject') {
+        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+        return
+      }
+      if (action.Action === 'CustomConvert') {
+        this.$root.$emit('bv::show::modal', 'customConvertModal')
+        return
+      }
+      if (action.Action === 'ImportInvoice') {
+        this.$root.$emit('bv::show::modal', 'importExcelModal')
+        return
+      }
+
+      this.$root.$emit('bv::show::modal', 'confirmModal')
     },
     dateTimeformat (e) {
       let calendar, date
@@ -440,7 +470,7 @@ export default {
         andConditionalModel: this.andConditionalModel
       })
     },
-    getData (e, p, c, s) {
+    getData (e, p, c, s, requiredFieldsError) {
       this.$store.dispatch('getTableOperations', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -450,11 +480,13 @@ export default {
         count: parseInt(c),
         sort: s,
         code: this.$route.query.code,
-        andConditionalModel: this.andConditionalModel
+        andConditionalModel: this.andConditionalModel,
+        requiredFieldsError: requiredFieldsError
       })
     },
     closeApproveModal () {
-      this.$bvModal.hide('approve-modal')
+      this.$root.$emit('bv::hide::modal', 'approve-modal')
+      this.$root.$emit('bv::hide::modal', 'approve-reject-modal')
     },
     onClickAutoComplete (header) {
       this.selectedHeader = header
@@ -481,6 +513,7 @@ export default {
         this.selectedItems = [item]
         this.$forceUpdate()
       }
+      this.$store.commit('setSelectedTableRows', this.selectedItems)
     },
     setDefaultValues (visibleRows) {
       if (!this.andConditionalModel) {
@@ -633,7 +666,14 @@ export default {
       } else {
         sortOpt = null
       }
-      this.getData(to.name, this.currentPage, this.perPage, sortOpt)
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
+          validCount++
+        }
+      })
+      let requiredFieldsError = validCount < this.requiredFields.length
+      this.getData(to.name, this.currentPage, this.perPage, sortOpt, requiredFieldsError)
     },
     tableRows: function (e) {
       this.setRows()
@@ -666,6 +706,9 @@ export default {
       height: 81vh
       max-height: inherit
       margin-bottom: 0px
+      .multi-hover-class
+        &:hover
+          cursor: pointer !important
       .autocomplete-search
         .autocomplete
           text-align: center
@@ -754,7 +797,9 @@ export default {
     .row-selected
       background-color: rgb(222, 226, 230)
       border: solid 2px
-      border-color: darkgray;
+      border-color: darkgray
+      &:hover
+        cursor: pointer
     .selected-color
       color: #28a745
     .unselected-color

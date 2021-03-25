@@ -32,21 +32,35 @@
               <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
             </div>
           </b-card>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active>
+        <b-tab :title="$t('insert.order.enterInvoice')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
+              <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
+              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
@@ -85,6 +99,52 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in rowData.InvoiceDiscounts" :key="i">
+                      <b-td>{{o.DiscountReasonName}}</b-td>
+                      <b-td>{{o.DiscountPercent}}</b-td>
+                      <b-td>{{o.TotalDiscount}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.paymentDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.PeriodDay')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.willPayAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.paidAmount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(p, i) in rowData.InvoicePaymentPlans" :key="i">
+                      <b-td>{{dateConvertFromTimezone(p.PaymentDate)}}</b-td>
+                      <b-td>{{p.PaymentPeriod}}</b-td>
+                      <b-td>{{p.Amount}}</b-td>
+                       <b-td>{{p.Paid}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -96,7 +156,9 @@ export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      paymentPeriod: 0
+    }
   },
   mounted () {
     this.getData()
@@ -110,7 +172,11 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.paymentPeriod = response.Model.PaymentPeriod
+        })
+      })
     }
   }
 }
@@ -119,7 +185,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
   border: none;
 }
 .card-body  {

@@ -219,7 +219,9 @@ export const store = new Vuex.Store({
     branches: [],
     stockStatus: [],
     SelectedCustomer: {},
-    autoGridField: []
+    autoGridField: [],
+    selectedTableRows: [],
+    printDocuments: []
   },
   actions: {
     // sistem gereksinimleri
@@ -317,13 +319,17 @@ export const store = new Vuex.Store({
 
             if ((res.data.UIPageModels[0].SelectedColumns) && (res.data.UIPageModels[0].SelectedColumns.length >= 1)) {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns.map(item => {
+                let selectedColumns = res.data.UIPageModels[0].SelectedColumns.filter(s => s.dataField === item.dataField)
+                item.visible = selectedColumns && selectedColumns.length > 0 ? selectedColumns[0].visible : false
+                return item
+              }))
             } else {
               commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
             }
-            commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
-
             // başarılı -> tabloyu doldur.
-            /* if (query.code) {
+            if (query.code) {
               let filterdata = {
                 'BranchId': state.BranchId,
                 'CompanyId': state.CompanyId,
@@ -351,6 +357,9 @@ export const store = new Vuex.Store({
                   commit('setError', {view: true, info: 'Server Error'})
                 })
             } else {
+              if (query.requiredFieldsError) {
+                return
+              }
               this.dispatch('getTableData', {
                 ...this.query,
                 apiUrl: query.apiUrl,
@@ -361,7 +370,7 @@ export const store = new Vuex.Store({
                 search: query.search,
                 andConditionalModel: query.andConditionalModel
               })
-            } */
+            }
             commit('hideAlert')
             commit('setError', {view: false, info: null})
           } else {
@@ -414,16 +423,15 @@ export const store = new Vuex.Store({
       } else {
         OrderByColumns = []
       }
-
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
       if (query.search) {
         state.isFiltered = true
-        state.filterData = query.search
         AndConditionModel = {
           ...query.search,
           ...query.andConditionalModel
         }
+        state.filterData = AndConditionModel
       } else {
         state.isFiltered = false
         state.filterData = []
@@ -1176,7 +1184,7 @@ export const store = new Vuex.Store({
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
-      return axios.post(query.api + '/ApprovePotentialCustomer', dataQuery, authHeader)
+      return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('submitButton').disabled = false
@@ -1241,7 +1249,24 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
           commit('bigLoaded', false)
         })
+    },
+    importExcel ({ state, commit }, formData) {
+      console.log(formData)
+      axios.post('/single-file',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      ).then(function () {
+        console.log('SUCCESS!!')
+      })
+        .catch(function () {
+          console.log('FAILURE!!')
+        })
     }
+
   },
   mutations: {
     setError (state, payload) {
@@ -1341,17 +1366,21 @@ export const store = new Vuex.Store({
     },
     setTableRows (state, payload) {
       state.tableRows = []
-      state.tableRows = payload
+      let index = 0
+      state.tableRows = payload.map(item => {
+        item.id = index
+        index++
+        return item
+      })
     },
     setTableRowsAll (state, payload) {
       state.tableRowsAll = []
-      payload.sort((a, b) => {
-        if (a.visible === b.visible) {
-          return a.label.localeCompare(b.label)
-        }
-        return b.visible - a.visible
+      let index = 0
+      state.tableRowsAll = payload.map(item => {
+        item.id = index
+        index++
+        return item
       })
-      state.tableRowsAll = payload
     },
     setLookUp (state, payload) {
       state.lookup = payload
@@ -1661,6 +1690,12 @@ export const store = new Vuex.Store({
     },
     setFormFields (state, payload) {
       state.formFields = payload
+    },
+    setSelectedTableRows (state, payload) {
+      state.selectedTableRows = payload
+    },
+    setPrintDocuments (state, payload) {
+      state.printDocuments = payload
     }
   }
 })

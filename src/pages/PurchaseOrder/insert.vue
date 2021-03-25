@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'Order' }">
+            <router-link :to="{name: 'PurchaseOrder' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -37,9 +37,6 @@
               </NextFormGroup>
             </b-row>
             <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="form.WarehouseId == null">
                   <template slot="no-options">
@@ -78,7 +75,7 @@
         <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="OrderNumber" :error="$v.form.OrderNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.OrderNumber" :readonly="insertReadonly.OrderNumber" />
+              <b-form-input type="text" v-model="form.OrderNumber" :readonly="insertReadonly.OrderNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
@@ -268,7 +265,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.createManualCode('OrderNumber')
@@ -277,13 +274,13 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       let currentDate = new Date()
       this.documentDate = currentDate.toISOString().slice(0, 10)
       this.form.DocumentTime = currentDate.toLocaleTimeString()
+      this.form.DueDate = currentDate.toISOString().slice(0, 10)
     },
     searchRoute (search, loading) {
       if (search.length >= 3) {
@@ -358,8 +355,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
-          this.selectItem()
-          this.$forceUpdate()
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -540,9 +537,6 @@ export default {
       this.searchPriceList()
       this.form.OrderLines = []
       this.form.RecvLocationId = this.selectedCustomer.DefaultLocationId
-      let currentDate = new Date()
-      currentDate.setDate(currentDate.getDate() + this.selectedCustomer.DeliveryDayParam)
-      this.form.DueDate = currentDate.toISOString().slice(0, 10)
     },
     cancelSelectedCustomer () {
       this.$bvModal.hide('confirm-modal')

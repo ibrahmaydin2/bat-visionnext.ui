@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'Order' }">
+            <router-link :to="{name: 'PurchaseOrder' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -38,9 +38,6 @@
               </NextFormGroup>
             </b-row>
             <b-row>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <v-select v-model="selectedStatus" label="Description1" :filterable="false" :options="orderStatusList" @input="selectedSearchType('StatusId', $event)"/>
-              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
@@ -255,12 +252,11 @@ export default {
       selectedRoute: null,
       selectedWarehouse: null,
       selectedVehicle: null,
-      currentPage: 1,
-      selectedStatus: null
+      currentPage: 1
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -271,7 +267,6 @@ export default {
         this.setData()
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
@@ -349,8 +344,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
-          this.selectItem()
-          this.$forceUpdate()
+          me.selectItem()
+          me.$forceUpdate()
         }
       })
     },
@@ -530,7 +525,7 @@ export default {
       if (rowData.StatusId !== 1) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.orderStatusException') })
         setTimeout(() => {
-          this.$router.push({ name: 'Order' })
+          this.$router.push({ name: 'PurchaseOrder' })
         }, 2000)
       }
       if (rowData) {
@@ -545,9 +540,6 @@ export default {
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
-        if (this.orderStatusList && this.orderStatusList.length > 0) {
-          this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
-        }
         if (this.form.OrderLines) {
           this.form.OrderLines.map(item => {
             item.RecordState = 3

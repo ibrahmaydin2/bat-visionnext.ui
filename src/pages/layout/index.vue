@@ -103,8 +103,13 @@
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
-                  <div style="display: inline-grid">
-                    <!-- <GetFormField :routeName="thisRout" /> -->
+                  <div v-if="showActions" style="display: inline-grid">
+                    <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
+                      <template #button-content>
+                        <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
+                      </template>
+                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" />
+                    </b-dropdown>
                   </div>
                 </b-col>
               </b-row>
@@ -124,30 +129,34 @@
           </div>
         </b-col>
       </b-row>
+      <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
+      <PrintModal />
   </b-container>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
+import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
+import PrintModal from '../../components/Actions/PrintModal'
+
 export default {
+  components: {
+    MultipleConfirmModal,
+    PrintModal
+  },
   data () {
     return {
       thisRout: this.$route.name,
       pageTitle: this.$route.meta.title,
       createLink: this.$route.meta.createLink,
-      filterTitle: ''
+      filterTitle: '',
+      modalAction: null,
+      recordIds: [],
+      showActions: false
+
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
-    // sortTableRowsAll () {
-    //   // this.tableRowsAll.slice(0).sort((a, b) => a.name.localeCompare(b.name))
-    //   return this.tableRowsAll.slice(0).sort((a, b) => {
-    //     if (a.visible === b.visible) {
-    //       return a.label.localeCompare(b.label)
-    //     }
-    //     return b.visible - a.visible
-    //   })
-    // }
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows'])
   },
   watch: {
     $route (to, from) {
@@ -155,18 +164,14 @@ export default {
       this.thisRout = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
+    },
+    selectedTableRows (e) {
+      if (e && e.length > 0) {
+        this.showActions = true
+      } else {
+        this.showActions = false
+      }
     }
-    // tableRowsAll: {
-    //   handler (e) {
-    //     e.sort((a, b) => {
-    //       if (a.visible === b.visible) {
-    //         return a.label.localeCompare(b.label)
-    //       }
-    //       return b.visible - a.visible
-    //     })
-    //   },
-    //   deep: true
-    // }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
@@ -193,14 +198,13 @@ export default {
         if (res.data.IsCompleted === true) {
           this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
             if (r.IsCompleted) {
-              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {})
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
+                this.$router.go(0)
+              })
             }
           })
         }
       })
-    },
-    hideRow (t) {
-      // this.hideTableRow(hr)
     },
     downloadBtn (r, f) {
       this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
@@ -220,6 +224,21 @@ export default {
         model
       }
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
+    },
+    showMultipleModal (action) {
+      if (this.selectedTableRows.length < 1) {
+        this.$toasted.show(this.$t('index.selectRowError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.modalAction = action
+      this.selectedTableRows.map(item => {
+        this.recordIds.push(item.RecordId)
+      })
+      this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
     }
   }
 }
