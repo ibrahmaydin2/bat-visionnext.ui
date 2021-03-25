@@ -32,12 +32,24 @@
               <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+              <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
             </div>
           </b-card>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active>
+        <b-tab :title="$t('insert.order.enterInvoice')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
@@ -108,6 +120,30 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.paymentDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.PeriodDay')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.willPayAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.paidAmount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(p, i) in rowData.InvoicePaymentPlans" :key="i">
+                      <b-td>{{dateConvertFromTimezone(p.PaymentDate)}}</b-td>
+                      <b-td>{{p.PaymentPeriod}}</b-td>
+                      <b-td>{{p.Amount}}</b-td>
+                       <b-td>{{p.Paid}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -142,7 +178,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
   border: none;
 }
 .card-body  {

@@ -21,7 +21,7 @@
           <b-col cols="8">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-                <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')"/>
+                <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
@@ -57,6 +57,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -65,38 +77,45 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" />
+              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select/>
+              <v-select :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber"/>
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
+              <v-select v-model="selectedRoute" label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" :disabled="true">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
           </b-row>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Description1"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-               <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
+               <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
-          <b-row>
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
+          <!--<b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="setTotalPrice">
                 <template slot="no-options">
@@ -109,6 +128,9 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedInvoiceLine.price"  @input="setTotalPrice"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.description1')" :error="$v.selectedInvoiceLine.description1" :required="true" md="2" lg="2">
+              <b-form-input type="text" v-model="selectedInvoiceLine.description1" />
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -129,41 +151,43 @@
                 <AddDetailButton @click.native="addInvoiceLine" />
               </b-form-group>
             </b-col>
-          </b-row>
+          </b-row>-->
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.description1')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.price')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
+                <!--<b-th><span>{{$t('list.operations')}}</span></b-th>-->
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
-                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : o.ItemName}}</b-td>
                   <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
+                  <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td class="text-center">
+                  <!--<b-td class="text-center">
                     <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
                     <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                  </b-td>-->
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.discounts')" v-if="form.InvoiceLines && form.InvoiceLines.length > 0">
-          <b-row>
+          <!--<b-row>
             <NextFormGroup :title="$t('insert.order.discountReason')" :error="$v.selectedInvoiceDiscount.discountReason" :required="true" md="3" lg="3">
               <v-select v-model="selectedInvoiceDiscount.discountReason" :options="discountReasons" :filterable="false" label="Description1" />
             </NextFormGroup>
@@ -178,23 +202,23 @@
                 <AddDetailButton @click.native="addInvoiceDiscount" />
               </b-form-group>
             </b-col>
-          </b-row>
+          </b-row>-->
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
+                <!--<b-th><span>{{$t('list.operations')}}</span></b-th>-->
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceDiscounts ? form.InvoiceDiscounts.filter(i => i.RecordState != 4) : [])" :key="i">
                   <b-td>{{o.DiscountReason ? o.DiscountReason.Label : DiscountReasonName}}</b-td>
                   <b-td>{{o.DiscountPercent}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
-                  <b-td class="text-center">
+                  <!--<b-td class="text-center">
                     <i @click="removeInvoiceDiscount(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                  </b-td>-->
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -252,7 +276,8 @@ export default {
         IsPrinted: null,
         IsCanceled: null,
         InvoiceLines: [],
-        InvoiceDiscounts: []
+        InvoiceDiscounts: [],
+        RouteId: null
       },
       routeName1: 'Invoice',
       selectedInvoiceDiscount: {
@@ -270,18 +295,21 @@ export default {
         netTotal: null,
         vatRate: null,
         totalVat: null,
-        isUpdated: false
+        isUpdated: false,
+        description1: null
       },
       selectedIndex: null,
       selectedRepresentative: null,
       selectedPaymentType: null,
       currentPage: 1,
       selectedBranch: {},
-      selectedStatus: null
+      selectedStatus: null,
+      paymentTypes: [],
+      selectedRoute: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'paymentTypes', 'currencies', 'items', 'discountReasons'])
+    ...mapState(['representatives', 'customers', 'currencies', 'items', 'discountReasons', 'routes'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -291,7 +319,6 @@ export default {
       this.getData().then(() => {
         this.setData()
       })
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
@@ -397,7 +424,8 @@ export default {
       let selectedItem = this.selectedInvoiceLine.selectedItem
       let quantity = this.selectedInvoiceLine.quantity
       let order = {
-        Description1: selectedItem.Description1,
+        Description1: this.selectedInvoiceLine.description1,
+        ItemName: selectedItem.Description1,
         Deleted: 0,
         System: 0,
         RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
@@ -459,6 +487,7 @@ export default {
         grossTotal: item.GrossTotal,
         recordState: item.RecordState,
         recordId: item.RecordId,
+        description1: item.Description1,
         isUpdated: true
       }
       this.getItem(item.ItemId)
@@ -471,9 +500,11 @@ export default {
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
           this.selectedCustomer = response.Model
+          this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
         })
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
-        this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
+        this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
+        this.selectedPaymentType = rowData.PaymentType
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
             item.RecordState = 3
@@ -515,6 +546,21 @@ export default {
     },
     removeInvoiceDiscount (item) {
       this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
+    },
+    searchRoute (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextRoute/api/Route/Search',
+          name: 'routes',
+          andConditionModel: {
+            Description1: search
+          }
+        }).then(res => {
+          loading(false)
+        })
+      }
     },
     save () {
       this.$v.form.$touch()
@@ -574,6 +620,9 @@ export default {
         },
         discountPercent: {
           required
+        },
+        description1: {
+          required
         }
       }
     }
@@ -600,7 +649,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;
