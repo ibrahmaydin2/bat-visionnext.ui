@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'SalesInvoice' }">
+            <router-link :to="{name: 'PurchaseInvoice' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
