@@ -103,6 +103,21 @@
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
+                  <b-dropdown right variant="white" class="asc__listPage-Header-Download">
+                    <template v-slot:button-content>
+                      <i class="fas fa-upload" />
+                    </template>
+                    <b-dropdown-header id="dropdown-header-label">
+                      {{ $t('list.uploads') }}
+                    </b-dropdown-header>
+                    <b-dropdown-item
+                      v-for="(dwn, i) in tableOperations.Uploads"
+                      :key="'upload' + i"
+                      @click="uploadBtn(thisRout,dwn)"
+                    >
+                      <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                    </b-dropdown-item>
+                  </b-dropdown>
                   <div v-if="showActions" style="display: inline-grid">
                     <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
                       <template #button-content>
@@ -131,17 +146,20 @@
       </b-row>
       <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
       <PrintModal />
+      <ImportExcelModal :modalAction="modalAction" />
   </b-container>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
 import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
 import PrintModal from '../../components/Actions/PrintModal'
+import ImportExcelModal from '../../components/Actions/ImportExcelModal'
 
 export default {
   components: {
     MultipleConfirmModal,
-    PrintModal
+    PrintModal,
+    ImportExcelModal
   },
   data () {
     return {
@@ -208,6 +226,12 @@ export default {
     },
     downloadBtn (r, f) {
       this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
+    },
+    uploadBtn (route, action) {
+      console.log(route)
+      console.log(action)
+      this.modalAction = action
+      this.$root.$emit('bv::show::modal', 'importExcelModal')
     },
     filterOnFilters (e) {
       this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})
