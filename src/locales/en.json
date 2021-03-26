@@ -375,7 +375,10 @@
     "ServicePurchaseInvoice": "Hizmet Satın Alma Faturası",
     "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
     "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
-    "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle"
+    "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle",
+    "SalesReturnWaybill": "Satış İade İrsaliyesi",
+    "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
+    "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
