@@ -34,15 +34,15 @@
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
               <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-              <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalItemDiscount}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
               <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-              <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalOtherDiscount}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
               <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-              <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalDiscount}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
             </div>

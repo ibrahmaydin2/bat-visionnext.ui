@@ -24,9 +24,9 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
-          <NextFormGroup item-key="Description2" :error="$v.form.Description2">
+          <!-- <NextFormGroup item-key="Description2" :error="$v.form.Description2">
             <b-form-input type="text" v-model="form.Description2" :readonly="insertReadonly.Description2" />
-          </NextFormGroup>
+          </NextFormGroup> -->
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
@@ -38,7 +38,7 @@
         <b-tab :title="$t('get.DiscountReason.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="DiscountClassId" :error="$v.form.DiscountClassId">
-              <v-select v-model="discountClass" :options="discountClasses"  @search="searchDiscountClass" @input="selectedSearchType('DiscountClassId', $event)" label="Description1">
+              <v-select v-model="discountClass" :options="discountClasses" @input="selectedSearchType('DiscountClassId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -83,24 +83,13 @@ export default {
   },
   methods: {
     getInsertPage (e) {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountClass/Search', name: 'discountClasses'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
     },
     setModel () {
       this.form = this.rowData
       this.discountClass = this.convertLookupValueToSearchValue(this.form.DiscountClass)
-    },
-    searchDiscountClass (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextDiscount/api/DiscountClass/Search', 'discountClasses', model).then(res => {
-        loading(false)
-      })
     },
     save () {
       this.$v.form.$touch()

@@ -98,24 +98,25 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select :options="rmaReasons" v-model="rmaReason" @search="searchRmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+              <v-select :options="rmaReasons" v-model="rmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
           </b-row>
-          <hr />
+        </b-tab>
+        <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
-              <v-select :options="items" v-model="rmaLine.Item.Description1" @search="searchItem" @input="selectedItem" label="Description1">
+            <NextFormGroup :title="$t('insert.RMA.Item')">
+              <v-select :options="items" v-model="rmaLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <b-form-input type="text" v-model="rmaLine.Item.Code" readonly/>
+            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+              <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
               <b-form-input type="text" v-model="rmaLine.Quantity"/>
@@ -130,15 +131,15 @@
             <b-col cols="12">
               <b-table-simple responsive bordered small>
                 <b-thead>
-                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in (rmaLines != null ? rmaLines.filter(f => f.RecordState !== 4) : [])" :key="i">
-                    <b-td>{{w.Item.Description1}}</b-td>
+                  <b-tr v-for="(w, i) in rmaLines" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
+                    <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -223,9 +224,13 @@ export default {
   mounted () {
     this.getData().then(() => {
       this.setModel()
+      this.getInsertPage()
     })
   },
   methods: {
+    getInsertPage () {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+    },
     searchEmployee (search, loading) {
       if (search.length < 3) {
         return false
@@ -271,18 +276,6 @@ export default {
         Description1: search
       }
       this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
-        loading(false)
-      })
-    },
-    searchRmaReason (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
         loading(false)
       })
     },
@@ -357,6 +350,7 @@ export default {
       }
     },
     selectedItem (e) {
+      console.log(e)
       if (e) {
         this.rmaLine.Item = e
       } else {
