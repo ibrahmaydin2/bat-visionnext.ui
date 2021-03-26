@@ -1649,6 +1649,8 @@
     "row": "Satır",
     "column": "Sütun",
     "message": "Mesaj",
+    "chooseFile": "Dosya seç",
+    "dropFile": "Dosya sürükle",
     "CustomConvert": {
       "branchId": "Şube",
       "salesWaybill": "Satış İrsaliyesi",
