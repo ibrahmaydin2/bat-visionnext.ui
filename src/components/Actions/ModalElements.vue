@@ -11,21 +11,13 @@
             @submit="handleSubmit(element, $event)"
           />
         </div> -->
-        <b-col cols="4" v-for="(element, i) in formElements" :key="i" :set="fieldName = element.EntityProperty">
-          <b-form-group v-if="element.ColumnType === 'Select' && element.DefaultValue && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <!-- <v-select
-              label="Label"
-              :readonly="!element.Enabled"
-              :options="lookup[element.DefaultValue]"
-              @input="selectedValue(element.EntityProperty, $event, 'lookup')"
-            >
-            </v-select> -->
+        <b-col cols="6" v-for="(element, i) in formElements" :key="i">
+          <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
             <v-select
               v-if="element.modelControlUtil.isLookupTable"
               label="Label"
               :options="lookup[element.modelControlUtil.code]"
-              @input="selectedValue(element.modelControlUtil.modelProperty, $event, 'lookup')"
-              v-model="element.defaultValue"
+              @input="selectedValue(element.EntityProperty, $event, 'lookup')"
             >
             </v-select>
             <v-select
@@ -33,57 +25,42 @@
               label="Description1"
               :options="gridField[element.EntityProperty]"
               @input="selectedValue(element.EntityProperty, $event, 'search')"
-              v-model="element.defaultValue"
             >
             </v-select>
           </b-form-group>
-          <b-form-group v-else-if="(element.ColumnType === 'Id' || element.ColumnType === 'String' || element.ColumnType === 'LabelValue') && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
+          <b-form-group v-else-if="(element.ColumnType === 'Id' || element.ColumnType === 'String' || element.ColumnType === 'LabelValue') && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
             <b-form-input
               type="text"
-              v-model="form[fieldName]"
+              v-model="form[element.EntityProperty]"
               :readonly="!element.Enabled" />
           </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Radio' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <NextCheckBox v-model="form[fieldName]" type="number" toggle />
+          <b-form-group v-else-if="element.ColumnType === 'Radio' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+            <NextCheckBox v-model="form[element.EntityProperty]" type="number" toggle />
           </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Check' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <NextCheckBox v-model="form[fieldName]" type="number" />
+          <b-form-group v-else-if="element.ColumnType === 'Check' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+            <NextCheckBox v-model="form[element.EntityProperty]" type="number" />
           </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'DateTime' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <b-form-datepicker v-model="form[fieldName]" :placeholder="$t('insert.chooseDate')"/>
+          <b-form-group v-else-if="element.ColumnType === 'DateTime' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+            <b-form-datepicker
+            v-model="form[element.EntityProperty]"
+            :placeholder="$t('insert.chooseDate')"
+            @input="filterDate(element.EntityProperty, $event)"
+          />
           </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Text' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <b-form-textarea v-model="form[fieldName]" placeholder="" />
+          <b-form-group v-else-if="element.ColumnType === 'Text' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+            <b-form-textarea v-model="form[element.EntityProperty]" placeholder="" />
           </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Time' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
+          <b-form-group v-else-if="element.ColumnType === 'Time' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
             <b-form-timepicker
               :placeholder="$t('insert.chooseTime')"
               :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
               :label-no-time-selected="$t('insert.chooseTime')"
               :label-close-button="$t('insert.close')"
               close-button-variant="outline-danger"
-              v-model="form[fieldName]"
+              v-model="form[element.EntityProperty]"
             />
           </b-form-group>
-          <!-- <b-form-group v-if="" v-else :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[fieldName].$error }" >
-            <v-select
-              label="Description1"
-              :readonly="!element.Enabled"
-              :options="searchItems[element.EntityProperty]"
-              @input="selectedValue(element, $event, 'search')"
-            >
-            </v-select>
-          </b-form-group> -->
         </b-col>
-          <!-- URL gelmiyor -->
-          <!-- <v-select
-            v-else
-            label="Description1"
-            :options="searchItems[element.EntityProperty]"
-            @input="selectedValue(element, $event, 'search')"
-          >
-          </v-select> -->
-      <!-- </b-col> -->
     </b-row>
     <div class="element-modal-footer text-right" v-if="formActions">
       <b-button v-for="(action, i) in formActions" :key="i" size="md" :variant="action.Action === 'Approve' ? 'success': 'danger'" @click="save(action)">
@@ -115,7 +92,8 @@ export default {
   computed: {
     ...mapState(['lookup', 'gridField'])
   },
-  created () {
+  mounted () {
+    let vm = this
     this.$api.get('UIOperations', `UIOperationGroupUser/GetPopupFormInits?name=${this.actionUrl}`).then((res) => {
       if (!res.FormColumns && !res.RowActions) {
         this.$toasted.show(res.Message, {
@@ -137,8 +115,11 @@ export default {
         if (item.DefaultValue) {
           autoLookups += item.DefaultValue + ','
         }
-        this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName}).then(() => {
-        })
+        if (item.modelControlUtil) {
+          this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName}).then(() => {
+            vm.$forceUpdate()
+          })
+        }
       })
 
       if (autoLookups.length > 0) {
@@ -162,6 +143,15 @@ export default {
       } else {
         this.form[label] = null
       }
+    },
+    filterDate (label, date) {
+      this.form[label] = this.dateConvertToISo(date)
+    },
+    dateConvertToISo: function (date) {
+      if (!date || typeof date === 'undefined') {
+        return ''
+      }
+      return new Date(date).toISOString()
     },
     save (action) {
       this.$v.form.$touch()

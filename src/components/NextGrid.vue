@@ -181,7 +181,6 @@
     </b-modal>
     <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
-    <ImportExcelModal :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -190,14 +189,12 @@ import mixin from '../mixins/index'
 import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
 import CustomConvertModal from './Actions/CustomConvertModal'
-import ImportExcelModal from './Actions/ImportExcelModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
     ConfirmModal,
-    CustomConvertModal,
-    ImportExcelModal
+    CustomConvertModal
   },
   props: {
     apiurl: String,
@@ -317,10 +314,6 @@ export default {
       }
       if (action.Action === 'CustomConvert') {
         this.$root.$emit('bv::show::modal', 'customConvertModal')
-        return
-      }
-      if (action.Action === 'ImportInvoice') {
-        this.$root.$emit('bv::show::modal', 'importExcelModal')
         return
       }
 

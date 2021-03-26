@@ -1645,6 +1645,10 @@
     "approve": "Onayla",
     "search": "Ara",
     "success": "Başarılı",
+    "upload": "Yükle",
+    "row": "Satır",
+    "column": "Sütun",
+    "message": "Mesaj",
     "CustomConvert": {
       "branchId": "Şube",
       "salesWaybill": "Satış İrsaliyesi",
@@ -1693,7 +1697,8 @@
     "downloadXml": "Xml Aktar",
     "quick": "Hızlı Bakış",
     "downloads": "Dışarı Aktar",
-    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir."
+    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
+    "uploads": "İçeri Aktar"
   },
   "dashboard": {
     "search": "Ara",
