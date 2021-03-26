@@ -1,5 +1,5 @@
 <template>
-  <b-modal size="lg" v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer>
+  <b-modal size="lg" v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer no-close-on-backdrop>
     <b-container>
       <b-row>
         <b-col>

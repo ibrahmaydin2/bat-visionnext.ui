@@ -1,12 +1,12 @@
 <template>
-  <b-modal id="importExcelModal" :title="modalAction && modalAction.Title" size="lg" hide-footer>
+  <b-modal id="importExcelModal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
           <b-form-file
             v-model="files"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
+            :placeholder="$t('index.chooseFile')"
+            :drop-placeholder="$t('index.dropFile')"
           >
             <template slot="file-name" slot-scope="{ names }">
               <b-badge variant="dark">{{ names[0] }}</b-badge>

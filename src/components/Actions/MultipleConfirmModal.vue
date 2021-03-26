@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="multipleConfirmModal" :title="modalAction.Title" hide-footer>
+  <b-modal v-if="modalAction" id="multipleConfirmModal" :title="modalAction.Title" hide-footer no-close-on-backdrop>
     <p class="my-4"></p>
     <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="recordIds" />
   </b-modal>
