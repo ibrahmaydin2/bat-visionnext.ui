@@ -21,11 +21,6 @@
     "ContractsGet": "Kontrat Yönetimi",
     "ContractsInsert": "Yeni Kontrat Yönetimi",
     "ContractsUpdate": "Kontrat Güncelle",
-    "WorkOrder": "Work Order",
-    "WorkOrderInsert": "Work Order Oluştur",
-    "WorkOrderShow": "Work Order Görüntüle",
-    "WorkOrderUpdate": "Work Order Düzenle",
-    "WorkOrderGet": "Work Order Görüntüle",
     "Search": "Arama Sonuçları",
     "Report": "Rapor",
     "Route": "Rota Kayıtları",
@@ -1663,6 +1658,19 @@
       "invoiceClass": "Belge Sınıfı",
       "invoiceKind": "Belge Çeşidi",
       "status": "Durum"
+    },
+    "OrderConvert": {
+      "ItemCode":"Ürün Kodu",
+      "Item":"Ürün",
+      "Quantity":"Sipariş Miktarı",
+      "Stock":"Stok Miktarı",
+      "Count":"Miktar",
+      "Code": "Fatura / Irsaliye Numarası",
+      "Warehouse": "Depo",
+      "InvoiceKindId": "Dönüştürülecek Döküman",
+      "Employee": "Teslimat Personeli",
+      "DocumentNumber": "Döküman Numarası",
+      "TransactionDate": "İşlem Tarihi"
     }
   },
   "auth": {

@@ -170,7 +170,6 @@ export const store = new Vuex.Store({
     customerCategory3: [],
     customerGroups: [],
     customerClass: [],
-    salesDocumentTypes: [],
     ownerTypes: [],
     classProposals: [],
     classProposalReasons: [],
@@ -1278,8 +1277,7 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
           commit('bigLoaded', false)
         })
-    },
-
+    }
   },
   mutations: {
     setError (state, payload) {
