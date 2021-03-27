@@ -40,6 +40,9 @@ export class ApiManager {
       data: request,
       headers: {'key': localStorage.getItem('Key')}
     }).then(function (response) {
+      if (typeof response.data.IsCompleted === 'undefined') {
+        return response.data
+      }
       if (response.data.IsCompleted === true) {
         return response.data
       } else {
