@@ -2,7 +2,7 @@
   "name": "bat-ui",
   "version": "1.0.0",
   "private": true,
-  "description": "BAT",
+  "description": "BAT ",
   "author": "Idea Teknoloji",
   "scripts": {
     "build": "node build/build.js",
