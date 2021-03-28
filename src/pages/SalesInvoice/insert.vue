@@ -20,10 +20,10 @@
         <b-row>
           <b-col cols="8">
             <b-row>
-              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
+              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
                 <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
               </NextFormGroup>
-              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
+              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
@@ -32,16 +32,14 @@
                   close-button-variant="outline-danger"
                    v-model="form.DocumentTime"/>
               </NextFormGroup>
-            </b-row>
-            <b-row>
-              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                 </template>
                 </v-select>
               </NextFormGroup>
-              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
+              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
               </NextFormGroup>
             </b-row>
@@ -132,7 +130,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" :disabled="!form.WarehouseId || form.WarehouseId === 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">

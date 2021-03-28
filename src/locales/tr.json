@@ -1265,7 +1265,8 @@
       "belgeNo": "Belge No",
       "enterWaybill": "İrsaliye Girişi",
       "invoiceNo": "Fatura No",
-      "returnSalesWaybill": "Satış İade İrsaliyesi"
+      "returnSalesWaybill": "Satış İade İrsaliyesi",
+      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
