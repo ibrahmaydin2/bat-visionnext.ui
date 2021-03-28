@@ -109,11 +109,7 @@
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <v-select label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select label="Description1" :options="routes" :filterable="false" @input="selectedSearchType('RouteId', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <v-select :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
@@ -452,6 +448,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'}).then(() => {
         me.selectedEDocumentStatus = me.eDocumentStatus.find(e => e.Code === 'ReadyForSendToEFU')
         me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
@@ -466,24 +463,9 @@ export default {
       let date = currentDate.toISOString().slice(0, 10)
       this.form.ActualDeliveryDate = date
       this.documentDate = date
-      let time = currentDate.toLocaleTimeString()
-      this.form.DocumentTime = time
-      this.form.ActualDeliveryTime = time
-    },
-    searchRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/Search',
-          name: 'routes',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
+      this.form.DocumentTime = currentDate.toLocaleTimeString()
+      currentDate.setMinutes(currentDate.getMinutes() + 15)
+      this.form.ActualDeliveryTime = currentDate.toLocaleTimeString()
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -799,6 +781,7 @@ export default {
       }
       this.form.InvoiceLogisticCompanies.push(logisticCompany)
       this.selectedInvoiceLogisticCompany = {}
+      this.address = {}
       this.$v.selectedInvoiceLogisticCompany.$reset()
     },
     removeInvoiceLogisticCompany (item) {
@@ -824,6 +807,14 @@ export default {
       } else {
         if (!this.form.InvoiceLines || this.form.InvoiceLines.length === 0) {
           this.$toasted.show(this.$t('insert.order.noOrderLines'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        if (this.form.ActualDeliveryDate < this.form.DocumentDate) {
+          this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
