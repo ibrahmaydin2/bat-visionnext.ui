@@ -15,7 +15,6 @@
         <b-col cols="6">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.order.invoiceNumber')}}:</b> {{rowData.InvoiceNumber}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.order.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
         </b-col>
         <b-col cols="6">
@@ -31,6 +30,18 @@
               <hr class="summary-hr"/>
               <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
               <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalItemDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalOtherDiscount}}</span>
+              <div class="clearfix"></div>
+              <hr class="summary-hr"/>
+              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+              <span class="summary-value text-muted">: {{rowData.TotalDiscount}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
             </div>
@@ -131,7 +142,7 @@
                     <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
+                    <b-tr v-for="(o, i) in (rowData.InvoiceDiscounts)" :key="i">
                       <b-td>{{o.DiscountClass.Label}}</b-td>
                       <b-td>{{o.DiscountClass.Code}}</b-td>
                       <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
@@ -201,7 +212,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
   border: none;
 }
 .card-body  {

@@ -170,7 +170,6 @@ export const store = new Vuex.Store({
     customerCategory3: [],
     customerGroups: [],
     customerClass: [],
-    salesDocumentTypes: [],
     ownerTypes: [],
     classProposals: [],
     classProposalReasons: [],
@@ -1251,22 +1250,34 @@ export const store = new Vuex.Store({
         })
     },
     importExcel ({ state, commit }, formData) {
-      console.log(formData)
-      axios.post('/single-file',
+      return axios.post('/VisionNextExcelIntegrator/api/Upload/UploadFile',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
-      ).then(function () {
-        console.log('SUCCESS!!')
+      ).then(function (res) {
+        return res
+      }).catch(function () {
+        console.log('FAILURE!!')
       })
-        .catch(function () {
-          console.log('FAILURE!!')
+    },
+    transferExcel ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          commit('showAlert', { type: 'danger', msg: res.data.Message })
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+          commit('bigLoaded', false)
         })
     }
-
   },
   mutations: {
     setError (state, payload) {

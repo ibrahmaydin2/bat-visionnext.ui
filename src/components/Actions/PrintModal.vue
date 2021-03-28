@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="printModal" :title="$t('index.print')">
+  <b-modal id="printModal" :title="$t('index.print')" no-close-on-backdrop>
     <b-form-group v-slot="{ ariaDescribedby }">
       <b-form-radio v-for="(document, i) in printDocuments.documents" :key="i" v-model="selected" :aria-describedby="ariaDescribedby" :value="document.RecordId">{{document.Description1}}</b-form-radio>
     </b-form-group>

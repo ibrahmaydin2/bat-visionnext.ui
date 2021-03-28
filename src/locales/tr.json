@@ -21,11 +21,6 @@
     "ContractsGet": "Kontrat Yönetimi",
     "ContractsInsert": "Yeni Kontrat Yönetimi",
     "ContractsUpdate": "Kontrat Güncelle",
-    "WorkOrder": "Work Order",
-    "WorkOrderInsert": "Work Order Oluştur",
-    "WorkOrderShow": "Work Order Görüntüle",
-    "WorkOrderUpdate": "Work Order Düzenle",
-    "WorkOrderGet": "Work Order Görüntüle",
     "Search": "Arama Sonuçları",
     "Report": "Rapor",
     "Route": "Rota Kayıtları",
@@ -79,9 +74,9 @@
     "Return": "Return",
     "PurchaseReturnOrder": "PurchaseReturnOrder",
     "WeighingInformation": "WeighingInformation",
-    "PurchaseReturnInvoice": "PurchaseReturnInvoice",
+    "PurchaseReturnInvoice": "Alım İade Faturası",
     "PurchaseReturnDispatch": "PurchaseReturnDispatch",
-    "SalesReturnInvoice": "SalesReturnInvoice",
+    "SalesReturnInvoice": "Satış İade Faturası",
     "SalesReturnDispatch": "SalesReturnDispatch",
     "SalesReturnOrder": "SalesReturnOrder",
     "Sales": "Sales",
@@ -139,9 +134,9 @@
     "ReturnGet": "ReturnGet",
     "PurchaseReturnOrderGet": "PurchaseReturnOrderGet",
     "WeighingInformationGet": "WeighingInformationGet",
-    "PurchaseReturnInvoiceGet": "PurchaseReturnInvoiceGet",
+    "PurchaseReturnInvoiceGet": "Alım İade Faturası Görüntüle",
     "PurchaseReturnDispatchGet": "PurchaseReturnDispatchGet",
-    "SalesReturnInvoiceGet": "SalesReturnInvoiceGet",
+    "SalesReturnInvoiceGet": "Satış İade Faturası Görüntüle",
     "SalesReturnDispatchGet": "SalesReturnDispatchGet",
     "SalesReturnOrderGet": "SalesReturnOrderGet",
     "SalesGet": "SalesGet",
@@ -199,9 +194,9 @@
     "ReturnUpdate": "ReturnUpdate",
     "PurchaseReturnOrderUpdate": "PurchaseReturnOrderUpdate",
     "WeighingInformationUpdate": "WeighingInformationUpdate",
-    "PurchaseReturnInvoiceUpdate": "PurchaseReturnInvoiceUpdate",
+    "PurchaseReturnInvoiceUpdate": "Alım İade Faturası Güncelle",
     "PurchaseReturnDispatchUpdate": "PurchaseReturnDispatchUpdate",
-    "SalesReturnInvoiceUpdate": "SalesReturnInvoiceUpdate",
+    "SalesReturnInvoiceUpdate": "Satış İade Faturası Güncelle",
     "SalesReturnDispatchUpdate": "SalesReturnDispatchUpdate",
     "SalesReturnOrderUpdate": "SalesReturnOrderUpdate",
     "SalesUpdate": "SalesUpdate",
@@ -255,9 +250,8 @@
     "ReturnInsert": "ReturnInsert",
     "PurchaseReturnOrderInsert": "PurchaseReturnOrderInsert",
     "WeighingInformationInsert": "WeighingInformationInsert",
-    "PurchaseReturnInvoiceInsert": "PurchaseReturnInvoiceInsert",
     "PurchaseReturnDispatchInsert": "PurchaseReturnDispatchInsert",
-    "SalesReturnInvoiceInsert": "SalesReturnInvoiceInsert",
+    "SalesReturnInvoiceInsert": "Yeni Satış İade Faturası",
     "SalesReturnDispatchInsert": "SalesReturnDispatchInsert",
     "SalesReturnOrderInsert": "SalesReturnOrderInsert",
     "SalesInsert": "SalesInsert",
@@ -387,7 +381,13 @@
     "AssetMovementCard": "Varlık Hareketleri",
     "AssetMovementCardGet": "Varlık Hareketleri Görüntüle",
     "AssetMovementCardInsert": "Yeni Varlık Hareketleri",
-    "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle"
+    "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle",
+    "SalesReturnWaybill": "Satış İade İrsaliyesi",
+    "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
+    "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
+    "PurchaseReturnWaybill": "Alım İade İrsaliyesi",
+    "PurchaseReturnWaybillGet": "Alım İade İrsaliyesi Görüntüle",
+    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1276,7 +1276,9 @@
       "sapDocumentNo": "Sap Belge No",
       "belgeNo": "Belge No",
       "enterWaybill": "İrsaliye Girişi",
-      "invoiceNo": "Fatura No"
+      "invoiceNo": "Fatura No",
+      "returnSalesWaybill": "Satış İade İrsaliyesi",
+      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1657,6 +1659,12 @@
     "approve": "Onayla",
     "search": "Ara",
     "success": "Başarılı",
+    "upload": "Yükle",
+    "row": "Satır",
+    "column": "Sütun",
+    "message": "Mesaj",
+    "chooseFile": "Dosya seç",
+    "dropFile": "Dosya sürükle",
     "CustomConvert": {
       "branchId": "Şube",
       "salesWaybill": "Satış İrsaliyesi",
@@ -1669,6 +1677,19 @@
       "invoiceClass": "Belge Sınıfı",
       "invoiceKind": "Belge Çeşidi",
       "status": "Durum"
+    },
+    "OrderConvert": {
+      "ItemCode":"Ürün Kodu",
+      "Item":"Ürün",
+      "Quantity":"Sipariş Miktarı",
+      "Stock":"Stok Miktarı",
+      "Count":"Miktar",
+      "Code": "Fatura / Irsaliye Numarası",
+      "Warehouse": "Depo",
+      "InvoiceKindId": "Dönüştürülecek Döküman",
+      "Employee": "Teslimat Personeli",
+      "DocumentNumber": "Döküman Numarası",
+      "TransactionDate": "İşlem Tarihi"
     }
   },
   "auth": {
@@ -1705,7 +1726,8 @@
     "downloadXml": "Xml Aktar",
     "quick": "Hızlı Bakış",
     "downloads": "Dışarı Aktar",
-    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir."
+    "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
+    "uploads": "İçeri Aktar"
   },
   "dashboard": {
     "search": "Ara",

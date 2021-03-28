@@ -60,6 +60,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -77,7 +89,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
@@ -106,15 +118,11 @@
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
               <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" ></v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <v-select v-model="selectedRoute" label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select v-model="selectedRoute" label="Description1" :options="routes" :filterable="false" @input="selectedSearchType('RouteId', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
@@ -444,11 +452,12 @@ export default {
       address: {},
       selectedDeliveryRepresentative: null,
       selectedStatus: null,
-      paymentTypes: []
+      paymentTypes: [],
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -458,34 +467,17 @@ export default {
       this.getData().then(() => {
         this.setData()
       })
-      var me = this
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'}).then(() => {
-        me.selectedEDocumentStatus = me.eDocumentStatus.find(e => e.Code === 'ReadyForSendToEFU')
-        me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
-      })
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
-        this.selectedBranch = response ? response.Model : {}
+        this.selectedBranch = response && response.Model ? response.Model : {}
       })
-    },
-    searchRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/Search',
-          name: 'routes',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -766,6 +758,7 @@ export default {
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
         }
@@ -833,6 +826,7 @@ export default {
       }
       this.form.InvoiceLogisticCompanies.push(logisticCompany)
       this.selectedInvoiceLogisticCompany = {}
+      this.address = {}
       this.$v.selectedInvoiceLogisticCompany.$reset()
     },
     removeInvoiceLogisticCompany (item) {
@@ -850,6 +844,14 @@ export default {
       } else {
         if (!this.form.InvoiceLines || this.form.InvoiceLines.length === 0) {
           this.$toasted.show(this.$t('insert.order.noOrderLines'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        if (this.form.ActualDeliveryDate < this.form.DocumentDate) {
+          this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
@@ -957,7 +959,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;

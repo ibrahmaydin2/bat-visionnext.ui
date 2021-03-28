@@ -1,12 +1,12 @@
 <template>
-  <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl">
+  <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.CustomConvert.branchId')" md="4" lg="4">
           <v-select :options="branchList" label="Desciption" @input="selectedBranch('BranchIds', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.CustomConvert.documentType')" :error="$v.form.documentType" :required="false" md="4" lg="4">
-          <v-select v-model="form.documentType" :options="documentTypes" label="Description" @input="selectedType('documentType', $event)"></v-select>
+        <NextFormGroup :title="$t('index.CustomConvert.documentType')" :error="$v.form.documentTypeId" :required="false" md="4" lg="4">
+          <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeId', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.CustomConvert.documentDate')" md="4" lg="4">
           <date-picker
@@ -17,7 +17,7 @@
           ></date-picker>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.CustomConvert.employee')" md="4" lg="4">
-          <v-select :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeIds', $event)" label="Description1">
+          <v-select :value="employee" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeIds', $event)" label="Description1">
             <template slot="no-options">
               {{$t('insert.min3')}}
             </template>
@@ -102,7 +102,7 @@ export default {
   components: {
   },
   computed: {
-    ...mapState(['employees'])
+    ...mapState(['employees', 'loginUser'])
   },
   props: {
     modalAction: {
@@ -118,12 +118,15 @@ export default {
     return {
       form: {
         BranchIds: null,
-        documentType: null,
+        documentTypeId: null,
         documentDate: null,
-        RecordIds: null
+        RecordIds: null,
+        RepresentativeIds: null
       },
+      employee: null,
       CreatedDateTime: null,
       branchList: JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches,
+      documentType: null,
       documentTypes: [
         {
           'Description': this.$t('index.CustomConvert.salesWaybill'),
@@ -210,7 +213,7 @@ export default {
   validations () {
     return {
       form: {
-        documentType: {
+        documentTypeId: {
           required
         }
       }
@@ -223,12 +226,26 @@ export default {
       this.selected = []
       this.form = {
         BranchIds: null,
-        documentType: null,
+        documentTypeId: null,
         documentDate: null,
         RecordIds: null
       }
+      this.documentType = null
+      this.employee = null
       this.clearProgress()
     })
+    let userModel = JSON.parse(localStorage.getItem('UserModel'))
+    this.employee = userModel.Name + ' ' + userModel.Surname
+    this.form.RepresentativeIds = [userModel.UserId]
+    // this.$store.dispatch('getSearchItems', {
+    //   ...this.query,
+    //   api: 'VisionNextEmployee/api/Employee/Search',
+    //   name: 'employees',
+    //   andConditionModel: {
+    //     RecordIds: [userModel.UserId]
+    //   }
+    // }).then(res => {
+    // })
   },
   methods: {
     selectedBranch (label, model) {
@@ -240,7 +257,8 @@ export default {
     },
     selectedType (label, model) {
       if (model) {
-        this.form[label] = model.Description
+        this.documentType = model.Description
+        this.form[label] = model.RecordId
         if (model.RecordId === 3) {
           this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/Search'
         } else {
@@ -248,13 +266,16 @@ export default {
         }
       } else {
         this.form[label] = null
+        this.documentType = null
       }
     },
     selectedSearchType (label, model) {
       if (model) {
-        this.form[label] = model.RecordId
+        this.employee = model.Description1
+        this.form[label] = [model.RecordId]
       } else {
         this.form[label] = null
+        this.employee = null
       }
     },
     closeModal () {
@@ -273,7 +294,12 @@ export default {
           duration: '3000'
         })
       } else {
-        // this.form.RecordIds = this.modalItem ? [this.modalItem.RecordId] : null
+        this.form.RecordIds = this.modalItem ? [this.modalItem.RecordId] : null
+        if (this.form.DocumentDate) {
+          this.form.DocumentDate = {
+            Value: this.dateConvertToISo(this.form.DocumentDate)
+          }
+        }
         let request = {
           'AndConditionModel': {
             ...this.form
@@ -355,6 +381,13 @@ export default {
       this.successfullCount = 0
       this.unSuccessfullCount = 0
       this.totalCount = 0
+    }
+  },
+  watch: {
+    loginUser (e) {
+      if (e) {
+        console.log(e)
+      }
     }
   }
 }

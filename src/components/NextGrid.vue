@@ -181,7 +181,7 @@
     </b-modal>
     <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
-    <ImportExcelModal :modalAction="modalAction" :modalItem="modalItem" />
+    <OrderConvertModal v-if="showOrderConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -190,14 +190,14 @@ import mixin from '../mixins/index'
 import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
 import CustomConvertModal from './Actions/CustomConvertModal'
-import ImportExcelModal from './Actions/ImportExcelModal'
+import OrderConvertModal from './Actions/OrderConvertModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
     ConfirmModal,
     CustomConvertModal,
-    ImportExcelModal
+    OrderConvertModal
   },
   props: {
     apiurl: String,
@@ -258,7 +258,8 @@ export default {
       modalAction: null,
       modalItem: null,
       isGridFieldsReady: false,
-      isLookupReady: false
+      isLookupReady: false,
+      showOrderConvertModal: false
     }
   },
   mounted () {
@@ -307,24 +308,30 @@ export default {
     showModal (action, row) {
       this.modalAction = action
       this.modalItem = row
+      let vm = this
       if (action.Action === 'PotentialCustomerApprove') {
         this.$root.$emit('bv::show::modal', 'approve-modal')
+        vm.$forceUpdate()
         return
       }
       if (action.Action === 'PotentialCustomerReject') {
         this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+        vm.$forceUpdate()
         return
       }
       if (action.Action === 'CustomConvert') {
         this.$root.$emit('bv::show::modal', 'customConvertModal')
+        vm.$forceUpdate()
         return
       }
-      if (action.Action === 'ImportInvoice') {
-        this.$root.$emit('bv::show::modal', 'importExcelModal')
+      if (action.Action === 'OrderConvert') {
+        this.showOrderConvertModal = true
+        this.$root.$emit('bv::show::modal', 'orderConvertModal')
+        vm.$forceUpdate()
         return
       }
-
       this.$root.$emit('bv::show::modal', 'confirmModal')
+      vm.$forceUpdate()
     },
     dateTimeformat (e) {
       let calendar, date

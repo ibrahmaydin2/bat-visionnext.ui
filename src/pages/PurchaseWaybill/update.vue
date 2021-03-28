@@ -74,7 +74,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select :disabled="true"/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
@@ -264,11 +264,12 @@ export default {
       currentPage: 1,
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
-      selectedStatus: null
+      selectedStatus: null,
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes'])
+    ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -283,6 +284,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', {IsVehicle: 1})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
@@ -547,6 +549,7 @@ export default {
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
             item.RecordState = 3

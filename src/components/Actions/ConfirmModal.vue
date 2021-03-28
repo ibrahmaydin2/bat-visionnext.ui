@@ -1,6 +1,12 @@
 <template>
-  <b-modal v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer>
-    <p class="my-4">{{modalItem && modalItem.Description1}}</p>
+  <b-modal size="lg" v-if="modalAction" id="confirmModal" :title="modalAction.Title" hide-footer no-close-on-backdrop>
+    <b-container>
+      <b-row>
+        <b-col>
+          <h6 class="my-4">{{filteredQueryMessage}}</h6>
+        </b-col>
+      </b-row>
+    </b-container>
     <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" />
   </b-modal>
 </template>
@@ -19,6 +25,24 @@ export default {
     modalItem: {
       type: Object,
       default: () => {}
+    }
+  },
+  computed: {
+    filteredQueryMessage () {
+      let queryMessage = ''
+      if (this.modalAction.Query) {
+        let query = this.modalAction.Query
+        let queryArr = query.split(',')
+        if (queryArr.length > 0) {
+          queryMessage = this.modalAction.QueryMessage
+          for (let i = 1; i <= queryArr.length; i++) {
+            if (this.modalItem[queryArr[i - 1]]) {
+              queryMessage = queryMessage.replace(`{${i}}`, this.modalItem[queryArr[i - 1]])
+            }
+          }
+        }
+      }
+      return queryMessage
     }
   },
   data () {
