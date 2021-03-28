@@ -10,7 +10,8 @@
     "local": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
-    "test": "webpack-dev-server --inline --progress --config build/webpack.test.conf.js",
+    "uat": "webpack-dev-server --inline --progress --config build/webpack.uat.conf.js",
+    "qa": "webpack-dev-server --inline --progress --config build/webpack.qa.conf.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "start": "npm run local"
   },

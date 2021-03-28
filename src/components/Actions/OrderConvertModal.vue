@@ -131,8 +131,8 @@ export default {
           key: 'Stock',
           label: this.$t('index.OrderConvert.Stock'),
           sortable: true,
-          formatter: (value, key, item) => {
-            return value ? value : 0
+          formatter: (value = 0, key, item) => {
+            return value
           }
         },
         {
@@ -154,7 +154,6 @@ export default {
   },
   mounted () {
     this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-
       this.orderLines = []
       this.form = {
         InvoiceKindId: null,
@@ -238,7 +237,7 @@ export default {
           duration: '3000'
         })
         return
-      } 
+      }
       this.getConvertData.InvoiceKindId = this.form.InvoiceKindId
       if (this.getConvertData.OrderLines) {
         this.getConvertData.OrderLines = this.orderLines

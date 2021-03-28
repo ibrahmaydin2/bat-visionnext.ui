@@ -332,7 +332,6 @@ export default {
       }
       this.$root.$emit('bv::show::modal', 'confirmModal')
       vm.$forceUpdate()
-
     },
     dateTimeformat (e) {
       let calendar, date
