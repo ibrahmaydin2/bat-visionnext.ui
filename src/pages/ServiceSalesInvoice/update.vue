@@ -83,7 +83,7 @@
               <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select :disabled="true"/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber"/>
@@ -305,11 +305,12 @@ export default {
       selectedBranch: {},
       selectedStatus: null,
       paymentTypes: [],
-      selectedRoute: null
+      selectedRoute: null,
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'currencies', 'items', 'discountReasons', 'routes'])
+    ...mapState(['representatives', 'customers', 'currencies', 'items', 'discountReasons', 'routes', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -322,6 +323,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
@@ -504,6 +506,7 @@ export default {
         })
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         this.selectedPaymentType = rowData.PaymentType
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {

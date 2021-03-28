@@ -89,7 +89,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select :disabled="true"/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
@@ -215,11 +215,12 @@ export default {
       selectedIndex: null,
       selectedWarehouse: null,
       currentPage: 1,
-      selectedStatus: null
+      selectedStatus: null,
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['warehouses', 'customers', 'priceList', 'currencies', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['warehouses', 'customers', 'priceList', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -231,6 +232,7 @@ export default {
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -493,6 +495,7 @@ export default {
         })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
         }
