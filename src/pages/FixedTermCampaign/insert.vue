@@ -213,11 +213,14 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.commercialTitle')" :error="$v.fixedTermCampaignCustomer.commercialTitle" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.commercialTitle" :disabled="true"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.customerCode')" :error="$v.fixedTermCampaignCustomer.customerCode" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
               <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetId" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -229,15 +232,17 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
-                <b-th><span>{{$t('insert.fixedTermCampaign.commercialTitle')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
                   <b-td>{{f.CustomerName}}</b-td>
-                  <b-td>{{f.CommercialTitle}}</b-td>
+                  <b-td>{{f.CustomerCode}}</b-td>
                   <b-td>{{f.LocationName}}</b-td>
+                  <b-td>{{f.BudgetName}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -342,10 +347,11 @@ export default {
       fixedTermCampaignCustomer: {
         customerId: null,
         customerName: null,
-        commercialTitle: null,
+        customerCode: null,
         locationId: null,
         locationName: null,
-        budgetId: null
+        budgetId: null,
+        budgetName: null
       },
       companyId: null
     }
@@ -538,9 +544,11 @@ export default {
         BudgetAmount: null,
         CustomerId: this.fixedTermCampaignCustomer.customerId,
         CustomerName: this.fixedTermCampaignCustomer.customerName,
-        CommercialTitle: this.fixedTermCampaignCustomer.commercialTitle,
+        CustomerCode: this.fixedTermCampaignCustomer.customerCode,
         LocationId: this.fixedTermCampaignCustomer.locationId,
-        LocationName: this.fixedTermCampaignCustomer.locationName
+        LocationName: this.fixedTermCampaignCustomer.locationName,
+        BudgetId: this.fixedTermCampaignCustomer.budgetId,
+        BudgetName: this.fixedTermCampaignCustomer.budgetName
       })
       this.fixedTermCampaignCustomer = {}
       this.customer = null
@@ -559,6 +567,14 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.CampaignEndDate < this.form.CampaignBeginDate) {
+          this.$toasted.show(this.$t('insert.fixedTermCampaign.startDateLessEndDate'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.createData()
       }
     }
@@ -569,13 +585,21 @@ export default {
         var me = this
         me.fixedTermCampaignCustomer.customerId = value.RecordId
         me.fixedTermCampaignCustomer.customerName = value.Description1
-        me.fixedTermCampaignCustomer.commercialTitle = value.CommercialTitle
+        me.fixedTermCampaignCustomer.customerCode = value.Code
+        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            let customerBudget = res.ListModel.BaseModels[0]
+            me.fixedTermCampaignCustomer.budgetId = customerBudget.BudgetId
+            me.fixedTermCampaignCustomer.budgetName = customerBudget.CustomerDesc
+            me.$forceUpdate()
+          }
+        })
         me.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
           if (res && res.Model) {
-            let locations = res.Model.CustomerLocations ? res.Model.CustomerLocations.filter(l => l.IsDefaultLocation) : null
-            if (locations && locations.length > 0) {
-              me.fixedTermCampaignCustomer.locationId = locations[0].RecordId
-              me.fixedTermCampaignCustomer.locationName = locations[0].Description1
+            let defaultLocation = res.Model.DefaultLocation
+            if (defaultLocation) {
+              me.fixedTermCampaignCustomer.locationId = defaultLocation.DecimalValue
+              me.fixedTermCampaignCustomer.locationName = defaultLocation.Label
               me.$forceUpdate()
             }
           }
@@ -645,7 +669,7 @@ export default {
         customerId: {
           required
         },
-        commercialTitle: {
+        customerCode: {
           required
         },
         locationId: {

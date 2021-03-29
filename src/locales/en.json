@@ -435,6 +435,7 @@
     "okay": "Tamam",
     "find": "Bul",
     "clean": "Temizle",
+    "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1294,7 +1295,12 @@
       "customers": "Müşteriler",
       "commercialTitle": "Müşteri Ticari Ünvanı",
       "locationId" :"Lokasyon",
-      "sameRouteError": "Aynı Rota iki defa eklenemez!"
+      "sameRouteError": "Aynı Rota iki defa eklenemez!",
+      "budget": "Bütçe",
+      "customerCode": "Müşteri Kodu",
+      "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+      "routeId": "Rota Id",
+      "branchId": "Şube Id"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
