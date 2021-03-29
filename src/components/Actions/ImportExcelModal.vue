@@ -103,7 +103,7 @@ export default {
     sendFile (file) {
       let formData = {
         files: file,
-        ExcelIntegrationType: 2
+        ExcelIntegrationType: this.modalAction.Query
       }
       this.$store.dispatch('importExcel', formData).then(res => {
         if (res.data.IsCompleted === true) {
@@ -123,7 +123,7 @@ export default {
           if (!this.isError) {
             let model = {
               'documentCacheKey': res.data.DocumentCacheKey,
-              ExcelIntegrationType: 2
+              ExcelIntegrationType: this.modalAction.Query
             }
             let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile`
             this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model})
