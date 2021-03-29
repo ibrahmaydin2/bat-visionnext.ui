@@ -3,7 +3,7 @@
     <div class="container">
       <b-row>
         <template>
-          <b-form-file
+          <!-- <b-form-file
             v-model="files"
             :placeholder="$t('index.chooseFile')"
             :drop-placeholder="$t('index.dropFile')"
@@ -13,7 +13,8 @@
               <b-badge v-if="names.length > 1" variant="dark" class="ml-1">
               </b-badge>
             </template>
-          </b-form-file>
+          </b-form-file> -->
+          <input type="file">
         </template>
       </b-row>
       <b-row class="mt-3">
@@ -76,7 +77,8 @@ export default {
   data () {
     return {
       files: null,
-      datas: []
+      datas: [],
+      isError: false
     }
   },
   validations () {
@@ -95,18 +97,20 @@ export default {
     //   this.file = this.$refs.file.files[0]
     // },
     submitFile () {
-      let formData = new FormData()
-      formData.append('files', this.files)
+      var file = document.querySelector('input[type="file"]').files[0]
+      this.getBase64(file)
+    },
+    sendFile (file) {
+      let formData = {
+        files: file,
+        ExcelIntegrationType: 2
+      }
       this.$store.dispatch('importExcel', formData).then(res => {
         if (res.data.IsCompleted === true) {
-          let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile/${res.data.DocumentCacheKey}`
-          this.$store.dispatch('transferExcel', {...this.query, api: apiUrl}).then(response => {
-            console.log(response)
-          })
-
           for (const property in res.data.Data) {
             let item = res.data.Data[property]
             if (item.ValidationMessage.length > 0) {
+              this.isError = true
               item.ValidationMessage.map(msg => {
                 this.datas.push({
                   key: property,
@@ -116,10 +120,30 @@ export default {
               })
             }
           }
+          if (!this.isError) {
+            let model = {
+              'documentCacheKey': res.data.DocumentCacheKey,
+              ExcelIntegrationType: 2
+            }
+            let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile`
+            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model})
+          }
         } else {
           // şimdilik statik. IsCompleted false döndüüğnde this.datas buraya alınacak.
         }
       })
+    },
+    getBase64 (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        vm.sendFile(splitedFile)
+      }
+      reader.onerror = function (error) {
+        console.log('Error: ', error)
+      }
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'importExcelModal')

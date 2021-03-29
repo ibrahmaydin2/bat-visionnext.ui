@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="orderConvertModal" ref="order-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="salesWaybillConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
@@ -21,9 +21,6 @@
             </template>
           </v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.TransactionDate')" md="4" lg="4">
-          <b-form-datepicker v-model="form.documentDate" locale="tr" />
-        </NextFormGroup>
       </b-row>
       <b-row>
         <b-col>
@@ -38,9 +35,6 @@
               <div class="text-center text-danger my-2">
                 <b-spinner type="grow" class="align-middle"></b-spinner>
               </div>
-            </template>
-            <template #cell(Count)="data">
-              <b-form-input type="number" v-model="data.item.SalesQuantity2" />
             </template>
           </b-table>
         </b-col>
@@ -71,7 +65,7 @@ import { required } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 import mixin from '../../mixins/helper'
 export default {
-  name: 'OrderConvertModal',
+  name: 'SalesWaybillConvertModal',
   mixins: [mixin],
   components: {
   },
@@ -86,16 +80,11 @@ export default {
     modalItem: {
       type: Object,
       default: () => {}
-    },
-    openModal: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
       form: {
-        documentDate: null,
         RepresentativeId: null,
         Code: null,
         DocumentNumber: null,
@@ -109,6 +98,7 @@ export default {
       orderLines: [],
       tableBusy: true,
       getConvertData: null,
+      routeName: this.$route.name,
       fields: [
         {
           key: 'ItemCode',
@@ -130,19 +120,6 @@ export default {
           key: 'Quantity',
           label: this.$t('index.Convert.Quantity'),
           sortable: true
-        },
-        {
-          key: 'Stock',
-          label: this.$t('index.Convert.Stock'),
-          sortable: true,
-          formatter: (value = 0, key, item) => {
-            return value
-          }
-        },
-        {
-          key: 'Count',
-          label: this.$t('index.Convert.Count'),
-          sortable: true
         }
       ]
     }
@@ -161,7 +138,6 @@ export default {
       this.orderLines = []
       this.form = {
         InvoiceKindId: null,
-        documentDate: null,
         RepresentativeId: null,
         Code: null,
         DocumentNumber: null
@@ -186,19 +162,18 @@ export default {
     getCustomer () {
       this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
         if (res.Model) {
-          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Order')
+          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Waybill')
         }
       })
     },
     getCode () {
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextOrder/api/Order/GetCode`})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextInvoice/api/InvoiceBase/GetCode`})
     },
     getConvert () {
-      this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, id: this.modalItem.RecordId}, 'VisionNextOrder/api/Order/GetConvert').then((response) => {
+      this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, RecordId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, `VisionNextInvoice/api/${this.routeName}/GetConvertToInvoice`).then((response) => {
         if (response.IsCompleted === true) {
-          this.orderLines = response.OrderLines
-          this.form.documentDate = response.DocumentDate
-          this.getConvertData = response
+          this.orderLines = response.invoiceConvertModel.InvoiceLines
+          this.getConvertData = response.invoiceConvertModel
         } else {
           this.$toasted.show(this.$t(response.Message), {
             type: 'error',
@@ -232,7 +207,7 @@ export default {
       this.close()
     },
     close () {
-      this.$root.$emit('bv::hide::modal', 'orderConvertModal')
+      this.$root.$emit('bv::hide::modal', 'salesWaybillConvertModal')
     },
     onEmployeeSearch (search, loading) {
       if (search.length >= 3) {
@@ -266,14 +241,11 @@ export default {
       if (this.getConvertData.OrderLines) {
         this.getConvertData.OrderLines = this.orderLines
       }
-      if (this.form.documentDate) {
-        this.getConvertData.DocumentDate = this.dateConvertToISo(this.form.documentDate)
-      }
       let request = {
         'recordId': this.modalItem.RecordId,
-        'orderConvertModel': this.getConvertData
+        'invoiceConvertModel': this.getConvertData
       }
-      this.$api.postByUrl(request, 'VisionNextOrder/api/Order/ConvertOrder').then((res) => {
+      this.$api.postByUrl(request, `VisionNextInvoice/api/${this.routeName}/ConvertToInvoice`).then((res) => {
         console.log(res)
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {

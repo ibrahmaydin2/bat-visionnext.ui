@@ -1668,20 +1668,10 @@
     "message": "Mesaj",
     "chooseFile": "Dosya seç",
     "dropFile": "Dosya sürükle",
-    "CustomConvert": {
-      "branchId": "Şube",
-      "salesWaybill": "Satış İrsaliyesi",
-      "salesReturnWaybill": "Satış İade İrsaliyesi",
-      "documentType": "Belge Tipi",
-      "documentDate": "Belge Tarihi",
-      "employee": "Dönüştüren Personel",
-      "transactionDate": "İşlem Tarihi",
-      "customer": "Müşteri",
-      "invoiceClass": "Belge Sınıfı",
-      "invoiceKind": "Belge Çeşidi",
-      "status": "Durum"
-    },
-    "OrderConvert": {
+    "Find": "Bul",
+    "Clear": "Temizle",
+    "Ok": "Tamam",
+    "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
       "Quantity":"Sipariş Miktarı",
@@ -1692,7 +1682,20 @@
       "InvoiceKindId": "Dönüştürülecek Döküman",
       "Employee": "Teslimat Personeli",
       "DocumentNumber": "Döküman Numarası",
-      "TransactionDate": "İşlem Tarihi"
+      "TransactionDate": "İşlem Tarihi",
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi",
+      "status": "Durum",
+      "SupplierId": "Tedarikçi",
+      "InvoiceNumber": "Fatura Numarası"
     }
   },
   "auth": {

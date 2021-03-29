@@ -60,13 +60,16 @@ export default {
         'printDocumentId': this.selected,
         'documentType': this.printDocuments.documentType
       }
-      // Şimdilik statik basıldı sonra düzeltilecek.
-      // let request = {
-      //   'recordId': 33624910025,
-      //   'printDocumentId': 33405425118,
-      //   'documentType': 'Dispatch'
-      // }
       this.$api.postByUrl(request, 'VisionNextPrint/api/PrintDocument/Print ').then((res) => {
+        console.log(res)
+        if (res && res.IsCompleted === false) {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.htmlPrint(res.Html)
       })
       this.close()
