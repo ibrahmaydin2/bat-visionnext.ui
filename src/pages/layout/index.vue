@@ -25,7 +25,7 @@
                       <b-button @click="saveFilter" variant="warning" size="sm" class="w-100 mt-1"><i class="fas fa-check" /> {{$t('list.save')}}</b-button>
                     </b-popover>
                   </template>
-                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
+                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1 && createLink" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
                   </b-button>
                   <b-dropdown v-else-if="tableOperations.Actions && tableOperations.Actions.length > 1" split :split-to="{name: createLink}" variant="success" right size="sm">

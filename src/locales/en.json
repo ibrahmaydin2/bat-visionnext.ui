@@ -380,7 +380,10 @@
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
     "PurchaseReturnWaybill": "Alım İade İrsaliyesi",
     "PurchaseReturnWaybillGet": "Alım İade İrsaliyesi Görüntüle",
-    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle"
+    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle",
+    "DispatchRefDocument": "Diğer İrsaliyeler",
+    "DispatchRefDocumentGet": "Diğer İrsaliyeler Görüntüle",
+    "DispatchRefDocumentUpdate": "Diğer İrsaliyeler Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
