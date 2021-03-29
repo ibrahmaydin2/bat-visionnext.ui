@@ -238,7 +238,6 @@ export default {
         'invoiceConvertModel': this.getConvertData
       }
       this.$api.postByUrl(request, `VisionNextInvoice/api/${this.routeName}/ConvertToInvoice`).then((res) => {
-        console.log(res)
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',

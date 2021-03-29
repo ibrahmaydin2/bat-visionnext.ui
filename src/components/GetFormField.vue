@@ -14,7 +14,7 @@
         </router-link>
       </b-button-group>
     </b-button-toolbar>
-    <b-dropdown v-if="formFields" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
+    <b-dropdown v-if="value" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
       <template #button-content>
         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
       </template>

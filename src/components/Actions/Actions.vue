@@ -168,8 +168,6 @@ export default {
       w.print()
     },
     multiPrint (action, row) {
-      console.log(action)
-      console.log(row)
     },
     customConvert (action, row) {
 

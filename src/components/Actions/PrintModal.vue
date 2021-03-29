@@ -61,7 +61,6 @@ export default {
         'documentType': this.printDocuments.documentType
       }
       this.$api.postByUrl(request, 'VisionNextPrint/api/PrintDocument/Print ').then((res) => {
-        console.log(res)
         if (res && res.IsCompleted === false) {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',

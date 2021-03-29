@@ -35,9 +35,6 @@ export default {
   },
   computed: {
     ...mapState(['style', 'bigLoading'])
-  },
-  mounted () {
-    console.log(this.$route)
   }
 }
 </script>

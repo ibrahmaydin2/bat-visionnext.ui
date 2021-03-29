@@ -195,17 +195,19 @@ export default {
     },
     getConvert () {
       this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, id: this.modalItem.RecordId}, 'VisionNextOrder/api/Order/GetConvert').then((response) => {
-        if (response.IsCompleted === true) {
+        if (Object.keys(response).length > 0) {
           this.orderLines = response.OrderLines
           this.form.documentDate = response.DocumentDate
           this.getConvertData = response
         } else {
-          this.$toasted.show(this.$t(response.Message), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          this.close()
+          if (response.Message) {
+            this.$toasted.show(this.$t(response.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            this.close()
+          }
         }
         this.tableBusy = false
       })
@@ -274,7 +276,6 @@ export default {
         'orderConvertModel': this.getConvertData
       }
       this.$api.postByUrl(request, 'VisionNextOrder/api/Order/ConvertOrder').then((res) => {
-        console.log(res)
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
