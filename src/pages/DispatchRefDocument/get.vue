@@ -32,24 +32,12 @@
               <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
               <div class="clearfix"></div>
               <hr class="summary-hr"/>
-              <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-              <span class="summary-value text-muted">: {{rowData.TotalItemDiscount}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
-              <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-              <span class="summary-value text-muted">: {{rowData.TotalOtherDiscount}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
-              <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-              <span class="summary-value text-muted">: {{rowData.TotalDiscount}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
             </div>
           </b-card>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active>
+        <b-tab :title="$t('insert.order.enterWaybill')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
@@ -63,14 +51,12 @@
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
               <div v-html="getFormatDataByType(rowData.EDocumentStatus, 'object', 'insert.order.eDocumentStatus')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -130,54 +116,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(o, i) in (rowData.InvoiceDiscounts)" :key="i">
-                      <b-td>{{o.DiscountClass.Label}}</b-td>
-                      <b-td>{{o.DiscountClass.Code}}</b-td>
-                      <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                      <b-td>{{o.TotalDiscount}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.paymentPlan')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.order.paymentDate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.PeriodDay')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.willPayAmount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.paidAmount')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(p, i) in rowData.InvoicePaymentPlans" :key="i">
-                      <b-td>{{dateConvertFromTimezone(p.PaymentDate)}}</b-td>
-                      <b-td>{{p.PaymentPeriod}}</b-td>
-                      <b-td>{{p.Amount}}</b-td>
-                       <b-td>{{p.Paid}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -203,7 +141,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesWaybill', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/DispatchRefDocument', record: this.$route.params.url})
     }
   }
 }
@@ -213,6 +151,7 @@ export default {
   width: 240px;
   float: right;
   border: none;
+  height: 90px;
 }
 .card-body  {
   padding: none !important;

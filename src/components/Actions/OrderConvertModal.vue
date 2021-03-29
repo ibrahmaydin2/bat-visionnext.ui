@@ -135,8 +135,8 @@ export default {
           key: 'Stock',
           label: this.$t('index.Convert.Stock'),
           sortable: true,
-          formatter: (value, key, item) => {
-            return value || 0
+          formatter: (value = 0, key, item) => {
+            return value
           }
         },
         {

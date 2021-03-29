@@ -370,12 +370,27 @@
     "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
     "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
     "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle",
+    "Asset": "Varlık Ana Kayıtları",
+    "AssetGet": "Varlık Ana Kayıtları Görüntüle",
+    "AssetInsert": "Yeni Varlık Ana Kayıtları",
+    "AssetUpdate": "Varlık Ana Kayıtları Güncelle",
+    "AssetLocation": "Varlık Listesi (Noktaları)",
+    "AssetLocationGet": "Varlık Listesi (Noktaları) Görüntüle",
+    "AssetLocationInsert": "Yeni Varlık Listesi (Noktaları)",
+    "AssetLocationUpdate": "Varlık Listesi (Noktaları) Güncelle",
+    "AssetMovementCard": "Varlık Hareketleri",
+    "AssetMovementCardGet": "Varlık Hareketleri Görüntüle",
+    "AssetMovementCardInsert": "Yeni Varlık Hareketleri",
+    "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
     "PurchaseReturnWaybill": "Alım İade İrsaliyesi",
     "PurchaseReturnWaybillGet": "Alım İade İrsaliyesi Görüntüle",
-    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle"
+    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle",
+    "DispatchRefDocument": "Diğer İrsaliyeler",
+    "DispatchRefDocumentGet": "Diğer İrsaliyeler Görüntüle",
+    "DispatchRefDocumentUpdate": "Diğer İrsaliyeler Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1265,7 +1280,8 @@
       "belgeNo": "Belge No",
       "enterWaybill": "İrsaliye Girişi",
       "invoiceNo": "Fatura No",
-      "returnSalesWaybill": "Satış İade İrsaliyesi"
+      "returnSalesWaybill": "Satış İade İrsaliyesi",
+      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
