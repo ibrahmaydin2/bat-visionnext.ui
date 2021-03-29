@@ -92,10 +92,6 @@ export default {
     })
   },
   methods: {
-    // handleFileUpload () {
-    //   console.log(this.$refs.file)
-    //   this.file = this.$refs.file.files[0]
-    // },
     submitFile () {
       var file = document.querySelector('input[type="file"]').files[0]
       this.getBase64(file)
@@ -142,7 +138,6 @@ export default {
         vm.sendFile(splitedFile)
       }
       reader.onerror = function (error) {
-        console.log('Error: ', error)
       }
     },
     closeModal () {

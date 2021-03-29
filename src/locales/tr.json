@@ -1671,6 +1671,8 @@
     "Find": "Bul",
     "Clear": "Temizle",
     "Ok": "Tamam",
+    "notContentFound": "Görüntülenecek içerik bulunamadı.",
+    "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",

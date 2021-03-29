@@ -56,6 +56,8 @@
             sticky-header
             ref="selectableTable"
             @row-selected="onRowSelected"
+            :busy="tableBusy"
+            show-empty
           >
             <template #cell(selected)="{ rowSelected }">
               <template v-if="rowSelected">
@@ -66,6 +68,17 @@
                 <span aria-hidden="true">&nbsp;</span>
                 <span class="sr-only">Not selected</span>
               </template>
+            </template>
+            <template #empty="">
+              <div class="text-center text-danger my-2">
+                <h6>{{$t('index.notContentFound')}}</h6>
+              </div>
+            </template>
+            <template #table-busy>
+              <div class="text-center text-danger my-2">
+                <b-spinner type="grow" class="align-middle"></b-spinner>
+                <!-- <strong>{{$t('index.pleaseSearchForTable')}}</strong> -->
+              </div>
             </template>
           </b-table>
         </b-col>
@@ -122,6 +135,7 @@ export default {
         CustomerIds: null,
         RepresentativeIds: null
       },
+      tableBusy: false,
       employee: null,
       CreatedDateTime: null,
       branchList: JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches,
@@ -230,6 +244,7 @@ export default {
       }
       this.documentType = null
       this.employee = null
+      this.$v.form.$reset()
       this.clearProgress()
     })
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
@@ -296,7 +311,9 @@ export default {
             ...this.form
           }
         }
+        this.tableBusy = true
         this.$api.postByUrl(request, this.actionUrl).then((res) => {
+          this.tableBusy = false
           this.documents = res.ListModel.BaseModels
         })
       }

@@ -82,7 +82,6 @@ export default {
       this.formActions = res.RowActions
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
-        // console.log(item)
         if (item.modelControlUtil && item.modelControlUtil.inputType === 'AutoComplete') {
           this.$set(this.form, fieldName, null)
         } else {

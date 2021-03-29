@@ -152,7 +152,6 @@ export default {
   },
   watch: {
     tempDispatchLength: function (e) {
-      console.log(this.tempDispatchLength)
       this.$bvModal.hide(this.close)
     }
   }
