@@ -228,8 +228,6 @@ export default {
       this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
     },
     uploadBtn (route, action) {
-      console.log(route)
-      console.log(action)
       this.modalAction = action
       this.$root.$emit('bv::show::modal', 'importExcelModal')
     },
