@@ -177,11 +177,15 @@
       <PotentialCustomerRejectModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
-      <PotentialCustomerApproveModal :modalAction="modalAction" :modalItem="modalItem" />
+      <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
-    <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
-    <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
-    <OrderConvertModal v-if="showOrderConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <SalesWaybillConvertModal v-if="showWaybillConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaConvertModal v-if="showRmaConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -191,13 +195,21 @@ import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
 import CustomConvertModal from './Actions/CustomConvertModal'
 import OrderConvertModal from './Actions/OrderConvertModal'
+import SalesWaybillConvertModal from './Actions/SalesWaybillConvertModal'
+import RmaConvertModal from './Actions/RmaConvertModal'
+import RmaInvoiceModal from './Actions/RmaInvoiceModal'
+import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
     ConfirmModal,
     CustomConvertModal,
-    OrderConvertModal
+    OrderConvertModal,
+    SalesWaybillConvertModal,
+    RmaConvertModal,
+    RmaInvoiceModal,
+    InvoiceConvertModal
   },
   props: {
     apiurl: String,
@@ -259,7 +271,14 @@ export default {
       modalItem: null,
       isGridFieldsReady: false,
       isLookupReady: false,
-      showOrderConvertModal: false
+      showConvertModal: false,
+      showWaybillConvertModal: false,
+      showRmaConvertModal: false,
+      showRmaInvoiceModal: false,
+      showInvoiceConvertModal: false,
+      showPotentialCustomerApproveModal: false,
+      showCustomConvertModal: false,
+      showConfirmModal: false
     }
   },
   mounted () {
@@ -308,31 +327,64 @@ export default {
     showModal (action, row) {
       this.modalAction = action
       this.modalItem = row
-      let vm = this
-      if (action.Action === 'PotentialCustomerApprove') {
-        this.$root.$emit('bv::show::modal', 'approve-modal')
-        vm.$forceUpdate()
-        return
-      }
-      if (action.Action === 'PotentialCustomerReject') {
-        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
-        vm.$forceUpdate()
-        return
-      }
-      if (action.Action === 'CustomConvert') {
-        this.$root.$emit('bv::show::modal', 'customConvertModal')
-        vm.$forceUpdate()
-        return
-      }
-      if (action.Action === 'OrderConvert') {
-        this.showOrderConvertModal = true
-        this.$root.$emit('bv::show::modal', 'orderConvertModal')
-        vm.$forceUpdate()
-        return
-      }
-      this.$root.$emit('bv::show::modal', 'confirmModal')
-      vm.$forceUpdate()
+      this.showConvertModal = false
+      this.showCustomConvertModal = false
+      this.showWaybillConvertModal = false
+      this.showRmaConvertModal = false
+      this.showRmaInvoiceModal = false
+      this.showPotentialCustomerApproveModal = false
+      this.showPotentialCustomerRejectModal = false
+      this.showConfirmModal = false
 
+      if (action.Action === 'ApprovePotentialCustomer') {
+        this.showPotentialCustomerApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'approve-modal')
+        })
+      } else if (action.Action === 'RejectPotentialCustomer') {
+        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+      } else if (action.Action === 'CustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
+      } else if (action.Action === 'OrderConvert') {
+        this.showConvertModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('orderConvertModal')
+        })
+      } else if (action.Action === 'WaybillConvert') {
+        this.showWaybillConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesWaybillConvertModal')
+        })
+      } else {
+        this.showConfirmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'confirmModal')
+        })
+      }
+      // if (action.Action === 'RmaConvert') {
+      //   this.showRmaConvertModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'rmaConvertModal')
+      //   })
+      //   return
+      // }
+      // if (action.Action === 'RmaInvoice') {
+      //   this.showRmaInvoiceModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'rmaInvoiceModal')
+      //   })
+      //   return
+      // }
+      // if (action.Action === 'PurchaseInvoiceConvert') {
+      //   this.showInvoiceConvertModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'invoiceConvertModal')
+      //   })
+      //   return
+      // }
     },
     dateTimeformat (e) {
       let calendar, date

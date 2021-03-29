@@ -2,13 +2,13 @@
   <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
-        <NextFormGroup :title="$t('index.CustomConvert.branchId')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.branchId')" md="4" lg="4">
           <v-select :options="branchList" label="Desciption" @input="selectedBranch('BranchIds', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.CustomConvert.documentType')" :error="$v.form.documentTypeId" :required="false" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.documentTypeId" :required="false" md="4" lg="4">
           <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeId', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.CustomConvert.documentDate')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.documentDate')" md="4" lg="4">
           <date-picker
             range
             type="date"
@@ -16,14 +16,14 @@
             @change="filterRangeDate(CreatedDateTime)"
           ></date-picker>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.CustomConvert.employee')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.employee')" md="4" lg="4">
           <v-select :value="employee" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeIds', $event)" label="Description1">
             <template slot="no-options">
               {{$t('insert.min3')}}
             </template>
           </v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.CustomConvert.transactionDate')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.transactionDate')" md="4" lg="4">
           <b-form-datepicker v-model="form.DocumentDate" />
         </NextFormGroup>
         <b-col md="4" lg="4" class="d-flex align-items-center">
@@ -57,7 +57,6 @@
             ref="selectableTable"
             @row-selected="onRowSelected"
           >
-            <!-- Example scoped slot for select state illustrative purposes -->
             <template #cell(selected)="{ rowSelected }">
               <template v-if="rowSelected">
                 <span aria-hidden="true">&check;</span>
@@ -102,7 +101,7 @@ export default {
   components: {
   },
   computed: {
-    ...mapState(['employees', 'loginUser'])
+    ...mapState(['employees'])
   },
   props: {
     modalAction: {
@@ -120,7 +119,7 @@ export default {
         BranchIds: null,
         documentTypeId: null,
         documentDate: null,
-        RecordIds: null,
+        CustomerIds: null,
         RepresentativeIds: null
       },
       employee: null,
@@ -129,16 +128,15 @@ export default {
       documentType: null,
       documentTypes: [
         {
-          'Description': this.$t('index.CustomConvert.salesWaybill'),
+          'Description': this.$t('index.Convert.salesWaybill'),
           'RecordId': 3
         },
         {
-          'Description': this.$t('index.CustomConvert.salesReturnWaybill'),
+          'Description': this.$t('index.Convert.salesReturnWaybill'),
           'RecordId': 7
         }
       ],
       actionUrl: null,
-      // fields: ['selected', 'CreatedDateTime', 'Customer', 'DocumentDate', ],
       fields: [
         {
           key: 'selected',
@@ -147,7 +145,7 @@ export default {
         },
         {
           key: 'DocumentDate',
-          label: this.$t('index.CustomConvert.documentDate'),
+          label: this.$t('index.Convert.documentDate'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? this.dateConvertFromTimezone(value) : ''
@@ -155,7 +153,7 @@ export default {
         },
         {
           key: 'Customer',
-          label: this.$t('index.CustomConvert.customer'),
+          label: this.$t('index.Convert.customer'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
@@ -163,7 +161,7 @@ export default {
         },
         {
           key: 'InvoiceClass',
-          label: this.$t('index.CustomConvert.invoiceClass'),
+          label: this.$t('index.Convert.invoiceClass'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
@@ -171,7 +169,7 @@ export default {
         },
         {
           key: 'InvoiceKind',
-          label: this.$t('index.CustomConvert.invoiceKind'),
+          label: this.$t('index.Convert.invoiceKind'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
@@ -179,7 +177,7 @@ export default {
         },
         {
           key: 'Branch',
-          label: this.$t('index.CustomConvert.branchId'),
+          label: this.$t('index.Convert.branchId'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
@@ -187,7 +185,7 @@ export default {
         },
         {
           key: 'Representative',
-          label: this.$t('index.CustomConvert.employee'),
+          label: this.$t('index.Convert.employee'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
@@ -195,7 +193,7 @@ export default {
         },
         {
           key: 'Status',
-          label: this.$t('index.CustomConvert.status'),
+          label: this.$t('index.Convert.status'),
           sortable: true,
           formatter: (value, key, item) => {
             return value && value
@@ -228,24 +226,17 @@ export default {
         BranchIds: null,
         documentTypeId: null,
         documentDate: null,
-        RecordIds: null
+        CustomerIds: null
       }
       this.documentType = null
       this.employee = null
       this.clearProgress()
     })
-    let userModel = JSON.parse(localStorage.getItem('UserModel'))
-    this.employee = userModel.Name + ' ' + userModel.Surname
-    this.form.RepresentativeIds = [userModel.UserId]
-    // this.$store.dispatch('getSearchItems', {
-    //   ...this.query,
-    //   api: 'VisionNextEmployee/api/Employee/Search',
-    //   name: 'employees',
-    //   andConditionModel: {
-    //     RecordIds: [userModel.UserId]
-    //   }
-    // }).then(res => {
-    // })
+    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      this.employee = userModel.Name + ' ' + userModel.Surname
+      this.form.RepresentativeIds = [userModel.UserId]
+    })
   },
   methods: {
     selectedBranch (label, model) {
@@ -294,7 +285,7 @@ export default {
           duration: '3000'
         })
       } else {
-        this.form.RecordIds = this.modalItem ? [this.modalItem.RecordId] : null
+        this.form.CustomerIds = this.modalItem ? [this.modalItem.RecordId] : null
         if (this.form.DocumentDate) {
           this.form.DocumentDate = {
             Value: this.dateConvertToISo(this.form.DocumentDate)
@@ -381,13 +372,6 @@ export default {
       this.successfullCount = 0
       this.unSuccessfullCount = 0
       this.totalCount = 0
-    }
-  },
-  watch: {
-    loginUser (e) {
-      if (e) {
-        console.log(e)
-      }
     }
   }
 }

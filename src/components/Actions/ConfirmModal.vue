@@ -8,14 +8,17 @@
       </b-row>
     </b-container>
     <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" />
+    <!-- <UpdateModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" /> -->
   </b-modal>
 </template>
 <script>
 import ModalElements from './ModalElements'
+import UpdateModalElements from './UpdateModalElements'
 export default {
   name: 'ConfirmModal',
   components: {
-    ModalElements
+    ModalElements,
+    UpdateModalElements
   },
   props: {
     modalAction: {

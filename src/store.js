@@ -1250,13 +1250,14 @@ export const store = new Vuex.Store({
         })
     },
     importExcel ({ state, commit }, formData) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'model': { ...formData }
+      }
       return axios.post('/VisionNextExcelIntegrator/api/Upload/UploadFile',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        dataQuery,
+        authHeader
       ).then(function (res) {
         return res
       }).catch(function () {
@@ -1267,7 +1268,8 @@ export const store = new Vuex.Store({
       let dataQuery = {}
       dataQuery = {
         'BranchId': state.BranchId,
-        'CompanyId': state.CompanyId
+        'CompanyId': state.CompanyId,
+        'model': { ...query.model }
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
