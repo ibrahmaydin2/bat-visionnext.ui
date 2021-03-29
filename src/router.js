@@ -527,6 +527,10 @@ import ServicePurchaseInvoiceGet from '@/pages/ServicePurchaseInvoice/get'
 import ServicePurchaseInvoiceInsert from '@/pages/ServicePurchaseInvoice/insert'
 import ServicePurchaseInvoiceUpdate from '@/pages/ServicePurchaseInvoice/update'
 
+import DispatchRefDocumentIndex from '@/pages/DispatchRefDocument/'
+import DispatchRefDocumentGet from '@/pages/DispatchRefDocument/get'
+import DispatchRefDocumentUpdate from '@/pages/DispatchRefDocument/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -627,7 +631,8 @@ const listIndex = [
   {path: '/AssetMovementCard', name: 'AssetMovementCard', component: AssetMovementCardIndex, meta: { title: i18n.t('router.AssetMovementCard'), createLink: 'AssetMovementCardInsert' }},
   {path: '/OverDueDebitSearch', name: 'OverDueDebitSearch', component: OverDueDebitSearchIndex, meta: { title: i18n.t('router.OverDueDebitSearch'), createLink: 'OverDueDebitSearchInsert' }},
   {path: '/SalesWaybill', name: 'SalesWaybill', component: SalesWaybillIndex, meta: { title: i18n.t('router.SalesWaybill'), createLink: 'SalesWaybillInsert' }},
-  {path: '/ServicePurchaseInvoice', name: 'ServicePurchaseInvoice', component: ServicePurchaseInvoiceIndex, meta: { title: i18n.t('router.ServicePurchaseInvoice'), createLink: 'ServicePurchaseInvoiceInsert' }}
+  {path: '/ServicePurchaseInvoice', name: 'ServicePurchaseInvoice', component: ServicePurchaseInvoiceIndex, meta: { title: i18n.t('router.ServicePurchaseInvoice'), createLink: 'ServicePurchaseInvoiceInsert' }},
+  {path: '/DispatchRefDocument', name: 'DispatchRefDocument', component: DispatchRefDocumentIndex, meta: { title: i18n.t('router.DispatchRefDocument') }}
 ]
 
 const listGet = [
@@ -728,7 +733,8 @@ const listGet = [
   { path: '/AssetMovementCard/:url', name: 'AssetMovementCardGet', component: AssetMovementCardGet, meta: { title: i18n.t('router.AssetMovementCardGet'), baseLink: 'AssetMovementCard' } },
   { path: '/OverDueDebitSearch/:url', name: 'OverDueDebitSearchGet', component: OverDueDebitSearchGet, meta: { title: i18n.t('router.OverDueDebitSearchGet'), baseLink: 'OverDueDebitSearch' } },
   { path: '/SalesWaybill/:url', name: 'SalesWaybillGet', component: SalesWaybillGet, meta: { title: i18n.t('router.SalesWaybillGet'), baseLink: 'SalesWaybill' } },
-  { path: '/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceGet', component: ServicePurchaseInvoiceGet, meta: { title: i18n.t('router.ServicePurchaseInvoiceGet'), baseLink: 'ServicePurchaseInvoice' } }
+  { path: '/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceGet', component: ServicePurchaseInvoiceGet, meta: { title: i18n.t('router.ServicePurchaseInvoiceGet'), baseLink: 'ServicePurchaseInvoice' } },
+  { path: '/DispatchRefDocument/:url', name: 'DispatchRefDocumentGet', component: DispatchRefDocumentGet, meta: { title: i18n.t('router.DispatchRefDocumentGet'), baseLink: 'DispatchRefDocument' } }
 ]
 
 const listUpdate = [
@@ -827,7 +833,8 @@ const listUpdate = [
   { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
   { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } },
   { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: SalesWaybillUpdate, meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } },
-  { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } }
+  { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } },
+  { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } }
 ]
 
 const listInsert = [
