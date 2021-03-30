@@ -1337,7 +1337,8 @@
       "customerSql": "Müşteri Sorgusu",
       "branchs":"Şubeler",
       "routes":"Rotalar",
-      "payments":"Ödeme Tipleri"
+      "payments":"Ödeme Tipleri",
+      "customerCriterias":"Müşteri Kriterleri"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",

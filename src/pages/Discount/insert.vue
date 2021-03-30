@@ -157,14 +157,14 @@
         <b-tab :title="$t('insert.discount.discountGivens')" @click="DiscountGivensValid()">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.columnName')">
-              <v-select :options="columnNames" @input="selectedSearchType('ColumnName', $event)" label="Description1" :disabled="!columnNameValid">
+              <v-select :options="discountGivensColumnNames" @input="selectedDiscountGivensColumnName" :disabled="!columnNameValid" label="Label">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.columnValue')">
-              <v-select :options="columnValues" @input="selectedSearchType('ColumnValue', $event)" label="Description1" :disabled="!columnValueValid">
+              <v-select :options="discountGivensColumnValues" @input="selectedDiscountGivensColumnValue" label="Label" :disabled="!discountGivensColumnValueValid">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -206,8 +206,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in discountGivens" :key="i">
-                    <b-td>{{w.ColumnName}}</b-td>
-                    <b-td>{{w.ColumnValue}}</b-td>
+                    <b-td>{{w.ColumnNameStr}}</b-td>
+                    <b-td>{{w.ColumnValueStr}}</b-td>
                     <b-td>{{w.GivenQuantity}}</b-td>
                     <b-td>{{w.DiscountRate}}</b-td>
                     <b-td>{{w.DiscountTotal}}</b-td>
@@ -223,10 +223,18 @@
         <b-tab :title="$t('insert.discount.discountTakens')">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.columnName')">
-              <b-form-input type="text" v-model="discountTaken.ColumnName" :readonly="insertReadonly.ColumnName" />
+              <v-select :options="discountTakensColumnNames" @input="selectedDiscountTakensColumnName" label="Label">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.columnValue')">
-              <b-form-input type="text" v-model="discountTaken.ColumnValue" :readonly="insertReadonly.ColumnName" />
+              <v-select :options="discountTakensColumnValues" @input="selectedDiscountTakensColumnValue" label="Label" :disabled="!discountTakensColumnValueValid">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.takenQuantity')">
               <b-form-input type="text" v-model="discountTaken.TakenQuantity" :disabled="!takenQuantityValid" />
@@ -264,8 +272,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in discountTakens" :key="i">
-                    <b-td>{{w.ColumnName}}</b-td>
-                    <b-td>{{w.ColumnValue}}</b-td>
+                    <b-td>{{w.ColumnNameStr}}</b-td>
+                    <b-td>{{w.ColumnValueStr}}</b-td>
                     <b-td>{{w.TakenQuantity}}</b-td>
                     <b-td>{{w.MinTakenAmount}}</b-td>
                     <b-td>{{w.EndTakenQuantity}}</b-td>
@@ -366,6 +374,47 @@
                     <b-td>{{w.CommercialTitle}}</b-td>
                     <b-td>{{w.Location.Description1}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountExcludedCustomer(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.discount.customerCriterias')" v-if="customerCriterTabValid">
+          <b-row>
+            <NextFormGroup :title="$t('insert.discount.columnName')">
+              <v-select :options="customerCriteriaColumnNames" @input="selectedCustomerCriteriaColumnName" label="Label">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.columnValue')">
+              <v-select :options="customerCriteriaColumnValues" @input="selectedCustomerCriteriaColumnValue" label="Label" :disabled="!customerCriteriaColumnValueValid">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <b-col md="1" class="ml-auto">
+              <b-form-group>
+                <b-button :disabled='!addCustomerCriteriaButtonValid' @click="addCustomerCriteria()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-table-simple responsive bordered small>
+                <b-thead>
+                  <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
+                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(w, i) in discountDetailsCustomerCriterias" :key="i">
+                    <b-td>{{w.ColumnNameStr}}</b-td>
+                    <b-td>{{w.ColumnValueStr}}</b-td>
+                    <b-td class="text-center"><i @click="removeCustomerCriteria(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -569,7 +618,9 @@ export default {
         StatusId: 1,
         TableName: null,
         ColumnName: null,
+        ColumnNameStr: null,
         ColumnValue: null,
+        ColumnValueStr: null,
         GivenQuantity: null,
         DiscountRate: null,
         DiscountTotal: null,
@@ -583,7 +634,9 @@ export default {
         RecordState: 2,
         TableName: null,
         ColumnName: null,
+        ColumnNameStr: null,
         ColumnValue: null,
+        ColumnValueStr: null,
         TakenQuantity: null,
         MinTakenAmount: null,
         EndTakenQuantity: null,
@@ -635,7 +688,9 @@ export default {
         RecordState: 2,
         TableName: null,
         ColumnName: null,
+        ColumnNameStr: null,
         ColumnValue: null,
+        ColumnValueStr: null,
         BranchId: null,
         Branch: {
           Description1: null,
@@ -663,6 +718,7 @@ export default {
       discountTakens: [],
       discountCustomers: [],
       discountExcludedCustomers: [],
+      discountDetailsCustomerCriterias: [],
       discountDetailsBranchs: [],
       discountDetailsRoutes: [],
       discountDetailsPaymentTypes: [],
@@ -694,7 +750,17 @@ export default {
       customerCriterTabValid: false,
       addBranchButtonValid: false,
       addRouteButtonValid: false,
-      addPaymentTypeButtonValid: false
+      addPaymentTypeButtonValid: false,
+      discountGivensColumnNames: [],
+      discountGivensColumnValues: [],
+      discountGivensColumnValueValid: false,
+      discountTakensColumnNames: [],
+      discountTakensColumnValues: [],
+      discountTakensColumnValueValid: false,
+      customerCriteriaColumnValueValid: false,
+      customerCriteriaColumnNames: [],
+      customerCriteriaColumnValues: [],
+      addCustomerCriteriaButtonValid: false
     }
   },
   computed: {
@@ -716,6 +782,13 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       let allLookups = 'BRANCH_CRITERIA,CUSTOMER_CRITERIA,APPROVE_STATE,TCI_BREAKDOWN,ROUTE_CRITERIA,PAYMENT_CRITERIA'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+      this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+        this.customerCriteriaColumnNames = res.Values
+      })
+      this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+        this.discountGivensColumnNames = res.Values
+        this.discountTakensColumnNames = res.Values
+      })
     },
     ColumnControl () {
       this.initFalseValid()
@@ -803,6 +876,15 @@ export default {
     },
     removeDiscountExcludedCustomer (e) {
       this.discountExcludedCustomers.splice(this.discountExcludedCustomers.indexOf(e), 1)
+    },
+    addCustomerCriteria () {
+      this.discountDetail.TableName = 'T_CUSTOMER'
+      this.addCustomerCriteriaButtonValid = false
+      this.discountDetailsCustomerCriterias.push(this.discountDetail)
+      this.initNull('DiscountDetail')
+    },
+    removeCustomerCriteria (e) {
+      this.discountDetailsCustomerCriterias.splice(this.discountDetailsCustomerCriterias.indexOf(e), 1)
     },
     addDiscountDetailBranchs () {
       this.addBranchButtonValid = false
@@ -1164,6 +1246,67 @@ export default {
         this.discountDetail.PaymentTypeName = null
         this.discountDetail.PaymentTypeId = null
         this.addPaymentTypeButtonValid = false
+      }
+    },
+    selectedDiscountGivensColumnName (e) {
+      if (e != null) {
+        this.discountGiven.ColumnName = e.Code
+        this.discountGiven.ColumnNameStr = e.Label
+        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.discountGivensColumnValues = res.Values
+          this.discountGivensColumnValueValid = true
+          this.$forceUpdate()
+        })
+      } else {
+        this.discountGivensColumnValueValid = false
+        this.discountGivensColumnValues = []
+      }
+    },
+    selectedDiscountGivensColumnValue (e) {
+      if (e) {
+        this.discountGiven.ColumnValue = e.DecimalValue
+        this.discountGiven.ColumnValueStr = e.Label
+      }
+    },
+    selectedDiscountTakensColumnName (e) {
+      if (e != null) {
+        this.discountTaken.ColumnName = e.Code
+        this.discountTaken.ColumnNameStr = e.Label
+        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.discountTakensColumnValues = res.Values
+          this.discountTakensColumnValueValid = true
+          this.$forceUpdate()
+        })
+      } else {
+        this.discountTakensColumnValueValid = false
+        this.discountTakensColumnValues = []
+      }
+    },
+    selectedDiscountTakensColumnValue (e) {
+      if (e) {
+        this.discountTaken.ColumnValue = e.DecimalValue
+        this.discountTaken.ColumnValueStr = e.Label
+      }
+    },
+    selectedCustomerCriteriaColumnName (e) {
+      if (e != null) {
+        this.discountDetail.ColumnName = e.Code
+        this.discountDetail.ColumnNameStr = e.Label
+        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.customerCriteriaColumnValues = res.Values
+          this.customerCriteriaColumnValueValid = true
+          this.$forceUpdate()
+        })
+      } else {
+        this.customerCriteriaColumnValueValid = false
+        this.customerCriteriaColumnValues = []
+      }
+    },
+    selectedCustomerCriteriaColumnValue (e) {
+      if (e) {
+        this.discountDetail.ColumnValue = e.DecimalValue
+        this.discountDetail.ColumnValueStr = e.Label
+        this.addCustomerCriteriaButtonValid = true
       }
     }
   },
