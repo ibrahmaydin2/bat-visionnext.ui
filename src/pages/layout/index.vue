@@ -123,7 +123,7 @@
                       <template #button-content>
                         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
                       </template>
-                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" />
+                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" :RecordIds="recordIds" />
                     </b-dropdown>
                   </div>
                 </b-col>
@@ -184,10 +184,15 @@ export default {
       this.createLink = to.meta.createLink
     },
     selectedTableRows (e) {
+      this.recordIds = []
       if (e && e.length > 0) {
         this.showActions = true
+        e.map(item => {
+          this.recordIds.push(item.RecordId)
+        })
       } else {
         this.showActions = false
+        this.recordIds = []
       }
     }
   },
@@ -257,9 +262,9 @@ export default {
         return
       }
       this.modalAction = action
-      this.selectedTableRows.map(item => {
-        this.recordIds.push(item.RecordId)
-      })
+      // this.selectedTableRows.map(item => {
+      //   this.recordIds.push(item.RecordId)
+      // })
       this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
     }
   }

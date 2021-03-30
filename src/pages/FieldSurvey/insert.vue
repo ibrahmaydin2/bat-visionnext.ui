@@ -136,7 +136,7 @@
                 </v-select>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionLineId')" :error="$v.selectedQuestion.lineNumber" :required="true">
-                <b-form-input type="number" v-model="selectedQuestion.lineNumber" />
+                <b-form-input type="number" v-model="selectedQuestion.lineNumber" :min="1" :max="9999" />
              </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionIsNecessary')" :error="$v.selectedQuestion.isNecessary" :required="true">
                <NextCheckBox v-model="selectedQuestion.isNecessary" type="number" />
@@ -220,7 +220,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
-import { required } from 'vuelidate/lib/validators'
+import { required, between } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -449,7 +449,9 @@ export default {
           required
         },
         lineNumber: {
-          required
+          required,
+          between: between(1, 10000)
+
         },
         isNecessary: {
           required

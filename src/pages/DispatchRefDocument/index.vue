@@ -1,3 +1,3 @@
 <template>
-  <Nextgrid apiurl="VisionNextCommonApi/api/DispatchRefDocument/Search"/>
+  <Nextgrid apiurl="VisionNextCommonApi/api/DispatchRefDocument/Search" selectionMode="multi" />
 </template>

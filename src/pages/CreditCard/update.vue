@@ -319,7 +319,7 @@ export default {
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('update', {...this.query, api: `VisionNextFinance/api/CreditCard`, formdata: model, return: this.$route.meta.baseLink})
+        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFinance/api/CreditCard`, formdata: model, return: this.$route.meta.baseLink})
       }
     }
   },
