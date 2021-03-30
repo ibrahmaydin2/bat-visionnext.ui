@@ -1,18 +1,18 @@
 <template>
   <b-container>
     <b-row v-if="formElements">
-      <!-- <b-col cols="6" v-for="(element, i) in formElements" :key="i" :set="fieldName = element.EntityProperty"> -->
-        <!-- <div v-if="element.ColumnType === 'SelectSearch'">
-          <autocomplete
-            @click="onClickAutoComplete(element)"
-            :search="onAutoCompleteSearch"
-            class="autocomplete-search"
-            :get-result-value="getResultValue"
-            @submit="handleSubmit(element, $event)"
-          />
-        </div> -->
-        <b-col cols="6" v-for="(element, i) in formElements" :key="i">
-          <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+      <b-col cols="6" v-for="(element, i) in formElements" :key="i">
+        <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <div v-if="element.modelControlUtil.inputType === 'AutoComplete'">
+            <autocomplete
+              @click="onClickAutoComplete(element.modelControlUtil)"
+              :search="onAutoCompleteSearch"
+              class="autocomplete-search"
+              :get-result-value="getResultValue"
+              @submit="handleSubmit(element.modelControlUtil.modelProperty, $event)"
+            />
+          </div>
+          <div v-else>
             <v-select
               v-if="element.modelControlUtil.isLookupTable"
               label="Label"
@@ -27,40 +27,41 @@
               @input="selectedValue(element.EntityProperty, $event, 'search')"
             >
             </v-select>
-          </b-form-group>
-          <b-form-group v-else-if="(element.ColumnType === 'Id' || element.ColumnType === 'String' || element.ColumnType === 'LabelValue') && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <b-form-input
-              type="text"
-              v-model="form[element.EntityProperty]"
-              :readonly="!element.Enabled" />
-          </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Radio' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <NextCheckBox v-model="form[element.EntityProperty]" type="number" toggle />
-          </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Check' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <NextCheckBox v-model="form[element.EntityProperty]" type="number" />
-          </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'DateTime' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <b-form-datepicker
+          </div>
+        </b-form-group>
+        <b-form-group v-else-if="(element.ColumnType === 'Id' || element.ColumnType === 'String' || element.ColumnType === 'LabelValue') && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <b-form-input
+            type="text"
             v-model="form[element.EntityProperty]"
-            :placeholder="$t('insert.chooseDate')"
-            @input="filterDate(element.EntityProperty, $event)"
+            :readonly="!element.Enabled" />
+        </b-form-group>
+        <b-form-group v-else-if="element.ColumnType === 'Radio' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <NextCheckBox v-model="form[element.EntityProperty]" type="number" toggle />
+        </b-form-group>
+        <b-form-group v-else-if="element.ColumnType === 'Check' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <NextCheckBox v-model="form[element.EntityProperty]" type="number" />
+        </b-form-group>
+        <b-form-group v-else-if="element.ColumnType === 'DateTime' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <b-form-datepicker
+          v-model="form[element.EntityProperty]"
+          :placeholder="$t('insert.chooseDate')"
+          @input="filterDate(element.EntityProperty, $event)"
+        />
+        </b-form-group>
+        <b-form-group v-else-if="element.ColumnType === 'Text' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <b-form-textarea v-model="form[element.EntityProperty]" placeholder="" />
+        </b-form-group>
+        <b-form-group v-else-if="element.ColumnType === 'Time' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
+          <b-form-timepicker
+            :placeholder="$t('insert.chooseTime')"
+            :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
+            :label-no-time-selected="$t('insert.chooseTime')"
+            :label-close-button="$t('insert.close')"
+            close-button-variant="outline-danger"
+            v-model="form[element.EntityProperty]"
           />
-          </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Text' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <b-form-textarea v-model="form[element.EntityProperty]" placeholder="" />
-          </b-form-group>
-          <b-form-group v-else-if="element.ColumnType === 'Time' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-            <b-form-timepicker
-              :placeholder="$t('insert.chooseTime')"
-              :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
-              :label-no-time-selected="$t('insert.chooseTime')"
-              :label-close-button="$t('insert.close')"
-              close-button-variant="outline-danger"
-              v-model="form[element.EntityProperty]"
-            />
-          </b-form-group>
-        </b-col>
+        </b-form-group>
+      </b-col>
     </b-row>
     <div class="element-modal-footer text-right" v-if="formActions">
       <b-button v-for="(action, i) in formActions" :key="i" size="md" :variant="action.Action === 'Approve' ? 'success': 'danger'" @click="save(action)">
@@ -81,7 +82,8 @@ export default {
       searchItems: [],
       autoLookups: '',
       insertRules: [],
-      formActions: []
+      formActions: [],
+      selectedElement: null
     }
   },
   validations () {
@@ -112,7 +114,7 @@ export default {
           this.$set(this.form, fieldName, null)
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
-        if (item.DefaultValue) {
+        if (item.DefaultValue && item.DefaultValue !== '1') {
           autoLookups += item.DefaultValue + ','
         }
         if (item.modelControlUtil) {
@@ -153,6 +155,28 @@ export default {
       }
       return new Date(date).toISOString()
     },
+    onClickAutoComplete (element) {
+      this.selectedElement = element
+    },
+    onAutoCompleteSearch (input) {
+      if (input.length < 3) { return [] }
+      const andConditionModel = {
+        Description1: input
+      }
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedElement.serviceUrl, val: this.selectedElement.modelProperty, model: andConditionModel}).then((res) => {
+        return res
+      })
+    },
+    getResultValue (result) {
+      return result.Description1
+    },
+    handleSubmit (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
     save (action) {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -167,17 +191,45 @@ export default {
           RecordIds: this.recordId
         }
         this.$api.postByUrl(model, action.ActionUrl).then(res => {
-          this.$toasted.show(this.$t('insert.success'), {
-            type: 'success',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          this.$root.$emit('bv::hide::modal', 'confirmModal')
+          if (res && res.IsCompleted === true) {
+            this.$toasted.show(this.$t('insert.success'), {
+              type: 'success',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            this.$root.$emit('bv::hide::modal', 'confirmModal')
+          }
         })
       }
     }
   }
 }
 </script>
-<style scoped>
+<style lang="sass">
+  .autocomplete-search
+    .autocomplete
+      text-align: center
+    .autocomplete-input
+      outline: none
+      padding-left: 10px
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Ik0yMSAyMWwtNC00Ii8+PC9zdmc+)
+      background-repeat: no-repeat
+      background-position: center right 10px
+      background-size: 16px
+      background-color: white
+      border-radius: 5px
+      border: solid 1px lightgray
+    input::-webkit-input-placeholder
+      color: #656665
+      text-transform: initial !important
+    .autocomplete-result-list
+      line-height: 1.15
+      padding: 0
+      margin-top: 5px
+    .autocomplete-result
+      cursor: pointer
+      padding: 10px
+      text-align: left
+      border-bottom: 0.5px solid rgba(0,0,0,.16)
+      background: none
 </style>

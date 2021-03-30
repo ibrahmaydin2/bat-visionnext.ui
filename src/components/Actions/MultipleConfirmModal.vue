@@ -36,16 +36,6 @@ export default {
     close () {
       this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
     }
-  },
-  watch: {
-    // selectedTableRows (e) {
-    //   if (e) {
-    //     console.log(e)
-    //     e.map(item => {
-    //       console.log(item)
-    //     })
-    //   }
-    // }
   }
 }
 </script>

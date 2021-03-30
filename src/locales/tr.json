@@ -442,6 +442,7 @@
     "okay": "Tamam",
     "find": "Bul",
     "clean": "Temizle",
+    "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1301,7 +1302,12 @@
       "customers": "Müşteriler",
       "commercialTitle": "Müşteri Ticari Ünvanı",
       "locationId" :"Lokasyon",
-      "sameRouteError": "Aynı Rota iki defa eklenemez!"
+      "sameRouteError": "Aynı Rota iki defa eklenemez!",
+      "budget": "Bütçe",
+      "customerCode": "Müşteri Kodu",
+      "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+      "routeId": "Rota Id",
+      "branchId": "Şube Id"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -1673,20 +1679,14 @@
     "message": "Mesaj",
     "chooseFile": "Dosya seç",
     "dropFile": "Dosya sürükle",
-    "CustomConvert": {
-      "branchId": "Şube",
-      "salesWaybill": "Satış İrsaliyesi",
-      "salesReturnWaybill": "Satış İade İrsaliyesi",
-      "documentType": "Belge Tipi",
-      "documentDate": "Belge Tarihi",
-      "employee": "Dönüştüren Personel",
-      "transactionDate": "İşlem Tarihi",
-      "customer": "Müşteri",
-      "invoiceClass": "Belge Sınıfı",
-      "invoiceKind": "Belge Çeşidi",
-      "status": "Durum"
-    },
-    "OrderConvert": {
+    "Find": "Bul",
+    "Clear": "Temizle",
+    "Ok": "Tamam",
+    "notContentFound": "Görüntülenecek içerik bulunamadı.",
+    "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
+    "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
+    "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
       "Quantity":"Sipariş Miktarı",
@@ -1697,7 +1697,20 @@
       "InvoiceKindId": "Dönüştürülecek Döküman",
       "Employee": "Teslimat Personeli",
       "DocumentNumber": "Döküman Numarası",
-      "TransactionDate": "İşlem Tarihi"
+      "TransactionDate": "İşlem Tarihi",
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi",
+      "status": "Durum",
+      "SupplierId": "Tedarikçi",
+      "InvoiceNumber": "Fatura Numarası"
     }
   },
   "auth": {

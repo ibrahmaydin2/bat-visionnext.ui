@@ -162,7 +162,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID')" :key="i">
-                  <b-td>{{f.Text}}</b-td>
+                  <b-td>{{f.ColumnValue ? f.ColumnValue : f.Text}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -173,11 +173,11 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'">
            <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.fixedTermCustomerItem.columnName" :required="true" md="5" lg="5">
-              <v-select v-model="fixedTermCustomerItem.columnName"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.customerItemArea" :required="true" md="5" lg="5">
+               <v-select v-model="customerItemArea" :options="customerItemAreaList" :filterable="false" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.fixedTermCustomerItem.columnValue" :required="true" md="5" lg="5">
-              <v-select v-model="fixedTermCustomerItem.columnValue"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.customerItemValue" :required="true" md="5" lg="5">
+              <v-select v-model="customerItemValue" :options="customerItemValueList" :filterable="false" label="Label" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -194,8 +194,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnName}}</b-td>
-                  <b-td>{{f.ColumnValue}}</b-td>
+                  <b-td>{{f.ColumnNamStr ? f.ColumnNamStr : f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -213,11 +213,14 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.commercialTitle')" :error="$v.fixedTermCampaignCustomer.commercialTitle" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.commercialTitle" :disabled="true"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.customerCode')" :error="$v.fixedTermCampaignCustomer.customerCode" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
               <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetId" :required="true">
+              <b-form-input type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -229,15 +232,17 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
-                <b-th><span>{{$t('insert.fixedTermCampaign.commercialTitle')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
-                  <b-td>{{f.CustomerName}}</b-td>
-                  <b-td>{{f.CommercialTitle}}</b-td>
+                  <b-td>{{f.Customer ? f.Customer.Label : f.CustomerName}}</b-td>
+                  <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
                   <b-td>{{f.LocationName}}</b-td>
+                  <b-td>{{f.Budget ? f.Budget.Label : f.BudgetName}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -265,7 +270,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.Text}}</b-td>
+                  <b-td>{{f.ColumnValue ? f.ColumnValue : f.Text}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -325,10 +330,10 @@ export default {
         columnName: null,
         columnValue: null
       },
-      fixedTermCustomerItem: {
-        columnName: null,
-        columnValue: null
-      },
+      customerItemArea: {},
+      customerItemValue: {},
+      customerItemAreaList: [],
+      customerItemValueList: [],
       fixedTermCampaignDetail: {
         tableName: null,
         columnName: null,
@@ -343,10 +348,11 @@ export default {
       fixedTermCampaignCustomer: {
         customerId: null,
         customerName: null,
-        commercialTitle: null,
+        customerCode: null,
         locationId: null,
         locationName: null,
-        budgetId: null
+        budgetId: null,
+        budgetName: null
       }
     }
   },
@@ -364,11 +370,14 @@ export default {
       let today = new Date().toISOString().slice(0, 10)
       this.form.CampaignBeginDate = today
       this.form.CampaignEndDate = today
-
+      let me = this
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountType/Search', name: 'discountTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
+      me.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+        me.customerItemAreaList = res.Values
+      })
     },
     addFixedTermCampaignItem () {
       this.$v.fixedTermCampaignItem.$touch()
@@ -418,7 +427,7 @@ export default {
       f.ColumnName === this.fixedTermCampaignDetail.columnName &&
       f.ColumnValue === this.fixedTermCampaignDetail.columnValue)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.FixedTermCampaignDetails.push({
@@ -439,8 +448,9 @@ export default {
       this.$v.fixedTermCampaignDetail.$reset()
     },
     addFixedTermCustomerItem () {
-      this.$v.fixedTermCustomerItem.$touch()
-      if (this.$v.fixedTermCustomerItem.$error) {
+      this.$v.customerItemArea.$touch()
+      this.$v.customerItemValue.$touch()
+      if (this.$v.customerItemArea.$error || this.$v.customerItemValue.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -455,9 +465,14 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.fixedTermCustomerItem.columnName,
-        ColumnValue: this.fixedTermCustomerItem.columnValue
+        ColumnName: this.customerItemArea.Code,
+        ColumnValue: this.customerItemValue.DecimalValue,
+        ColumnNameStr: this.customerItemArea.Label,
+        ColumnValueStr: this.customerItemValue.Label
       })
+      this.customerItemArea = null
+      this.$v.customerItemArea.$reset()
+      this.$v.customerItemValue.$reset()
     },
     removeFixedTermCustomerItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
@@ -491,7 +506,7 @@ export default {
       f.EndQuantity === this.fixedTermCampaignTaken.endQuantity &&
       f.PaymentPeriod === this.fixedTermCampaignTaken.paymentPeriod)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.FixedTermCampaignTakens.push({
@@ -522,7 +537,7 @@ export default {
       }
       let filteredArr = this.form.FixedTermCampaignCustomers.filter(f => f.CustomerId === this.fixedTermCampaignCustomer.customerId)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.FixedTermCampaignCustomers.push({
@@ -535,9 +550,11 @@ export default {
         BudgetAmount: null,
         CustomerId: this.fixedTermCampaignCustomer.customerId,
         CustomerName: this.fixedTermCampaignCustomer.customerName,
-        CommercialTitle: this.fixedTermCampaignCustomer.commercialTitle,
+        CustomerCode: this.fixedTermCampaignCustomer.customerCode,
         LocationId: this.fixedTermCampaignCustomer.locationId,
-        LocationName: this.fixedTermCampaignCustomer.locationName
+        LocationName: this.fixedTermCampaignCustomer.locationName,
+        BudgetId: this.fixedTermCampaignCustomer.budgetId,
+        BudgetName: this.fixedTermCampaignCustomer.budgetName
       })
       this.fixedTermCampaignCustomer = {}
       this.customer = null
@@ -555,6 +572,41 @@ export default {
       this.selectedBranchCriteria = rowData.BranchCriteria
       this.discountType = this.convertLookupValueToSearchValue(rowData.CampaignType)
       this.form.UsedAmount = this.form.UsedAmount ? this.form.UsedAmount : 0
+      this.getCampaignCustomersDetail()
+    },
+    getCampaignCustomersDetail () {
+      if (this.form.FixedTermCampaignCustomers && this.form.FixedTermCampaignCustomers.length > 0) {
+        let customerIds = this.form.FixedTermCampaignCustomers.map(c => c.CustomerId)
+        let me = this
+        customerIds.forEach((id) => {
+          me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${id}`).then((res) => {
+            if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+              let customerBudget = res.ListModel.BaseModels[0]
+              let selectedCampaignCustomer = me.form.FixedTermCampaignCustomers.find(f => f.CustomerId === id)
+              let index = this.form.FixedTermCampaignCustomers.indexOf(selectedCampaignCustomer)
+              selectedCampaignCustomer.BudgetId = customerBudget.BudgetId
+              selectedCampaignCustomer.BudgetName = customerBudget.CustomerDesc
+              me.form.FixedTermCampaignCustomers[index] = selectedCampaignCustomer
+              me.$forceUpdate()
+            }
+          })
+        })
+        let model = {RecordIds: customerIds}
+        me.$api.post({andConditionModel: model}, 'Customer', 'Customer/Search').then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            res.ListModel.BaseModels.forEach(customer => {
+              if (customer.DefaultLocation) {
+                let selectedCampaignCustomer = me.form.FixedTermCampaignCustomers.find(f => f.CustomerId === customer.RecordId)
+                let index = this.form.FixedTermCampaignCustomers.indexOf(selectedCampaignCustomer)
+                selectedCampaignCustomer.LocationId = customer.DefaultLocation.DecimalValue
+                selectedCampaignCustomer.LocationName = customer.DefaultLocation.Label
+                me.form.FixedTermCampaignCustomers[index] = selectedCampaignCustomer
+                me.$forceUpdate()
+              }
+            })
+          }
+        })
+      }
     },
     save () {
       this.$v.form.$touch()
@@ -566,6 +618,14 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.CampaignEndDate < this.form.CampaignBeginDate) {
+          this.$toasted.show(this.$t('insert.fixedTermCampaign.startDateLessEndDate'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.updateData()
       }
     }
@@ -576,19 +636,38 @@ export default {
         var me = this
         me.fixedTermCampaignCustomer.customerId = value.RecordId
         me.fixedTermCampaignCustomer.customerName = value.Description1
-        me.fixedTermCampaignCustomer.commercialTitle = value.CommercialTitle
+        me.fixedTermCampaignCustomer.customerCode = value.Code
+        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            let customerBudget = res.ListModel.BaseModels[0]
+            me.fixedTermCampaignCustomer.budgetId = customerBudget.BudgetId
+            me.fixedTermCampaignCustomer.budgetName = customerBudget.CustomerDesc
+            me.$forceUpdate()
+          }
+        })
         me.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
           if (res && res.Model) {
-            let locations = res.Model.CustomerLocations ? res.Model.CustomerLocations.filter(l => l.IsDefaultLocation) : null
-            if (locations && locations.length > 0) {
-              me.fixedTermCampaignCustomer.locationId = locations[0].RecordId
-              me.fixedTermCampaignCustomer.locationName = locations[0].Description1
+            let defaultLocation = res.Model.DefaultLocation
+            if (defaultLocation) {
+              me.fixedTermCampaignCustomer.locationId = defaultLocation.DecimalValue
+              me.fixedTermCampaignCustomer.locationName = defaultLocation.Label
               me.$forceUpdate()
             }
           }
         })
       } else {
         this.fixedTermCampaignCustomer = {}
+      }
+    },
+    customerItemArea (value) {
+      this.customerItemValueList = []
+      this.customerItemValue = null
+      if (value) {
+        let me = this
+        me.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          me.customerItemValueList = res.Values
+          me.$forceUpdate()
+        })
       }
     }
   },
@@ -618,13 +697,11 @@ export default {
           required
         }
       },
-      fixedTermCustomerItem: {
-        columnName: {
-          required
-        },
-        columnValue: {
-          required
-        }
+      customerItemArea: {
+        required
+      },
+      customerItemValue: {
+        required
       },
       fixedTermCampaignDetail: {
         tableName: {
@@ -652,7 +729,7 @@ export default {
         customerId: {
           required
         },
-        commercialTitle: {
+        customerCode: {
           required
         },
         locationId: {

@@ -24,13 +24,6 @@ export default {
     }
   },
   props: ['status', 'allStatus'],
-  // computed: {
-  //   className (item) {
-  //     console.log(item)
-  //     console.log(this.status)
-  //     return ''
-  //   }
-  // }
   methods: {
     getStatus (code) {
       let className = ''
