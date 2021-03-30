@@ -197,7 +197,6 @@ import WeighingInformationUpdate from '@/pages/WeighingInformation/update'
 
 import PurchaseReturnInvoiceIndex from '@/pages/PurchaseReturnInvoice/'
 import PurchaseReturnInvoiceGet from '@/pages/PurchaseReturnInvoice/get'
-import PurchaseReturnInvoiceInsert from '@/pages/PurchaseReturnInvoice/insert'
 import PurchaseReturnInvoiceUpdate from '@/pages/PurchaseReturnInvoice/update'
 
 import PurchaseReturnDispatchIndex from '@/pages/PurchaseReturnDispatch/'
@@ -478,12 +477,10 @@ import PriceDiscountTransactionUpdate from '@/pages/PriceDiscountTransaction/upd
 
 import SalesReturnWaybillIndex from '@/pages/SalesReturnWaybill/'
 import SalesReturnWaybillGet from '@/pages/SalesReturnWaybill/get'
-import SalesReturnWaybillInsert from '@/pages/SalesReturnWaybill/insert'
 import SalesReturnWaybillUpdate from '@/pages/SalesReturnWaybill/update'
 
 import PurchaseReturnWaybillIndex from '@/pages/PurchaseReturnWaybill/'
 import PurchaseReturnWaybillGet from '@/pages/PurchaseReturnWaybill/get'
-import PurchaseReturnWaybillInsert from '@/pages/PurchaseReturnWaybill/insert'
 import PurchaseReturnWaybillUpdate from '@/pages/PurchaseReturnWaybill/update'
 
 import PurchaseWaybillIndex from '@/pages/PurchaseWaybill/'
@@ -560,7 +557,7 @@ const listIndex = [
   {path: '/Return', name: 'Return', component: ReturnIndex, meta: { title: i18n.t('router.Return'), createLink: 'ReturnInsert' }},
   {path: '/PurchaseReturnOrder', name: 'PurchaseReturnOrder', component: PurchaseReturnOrderIndex, meta: { title: i18n.t('router.PurchaseReturnOrder'), createLink: 'PurchaseReturnOrderInsert' }},
   {path: '/WeighingInformation', name: 'WeighingInformation', component: WeighingInformationIndex, meta: { title: i18n.t('router.WeighingInformation'), createLink: 'WeighingInformationInsert' }},
-  {path: '/PurchaseReturnInvoice', name: 'PurchaseReturnInvoice', component: PurchaseReturnInvoiceIndex, meta: { title: i18n.t('router.PurchaseReturnInvoice'), createLink: 'PurchaseReturnInvoiceInsert' }},
+  {path: '/PurchaseReturnInvoice', name: 'PurchaseReturnInvoice', component: PurchaseReturnInvoiceIndex, meta: { title: i18n.t('router.PurchaseReturnInvoice') }},
   {path: '/PurchaseReturnDispatch', name: 'PurchaseReturnDispatch', component: PurchaseReturnDispatchIndex, meta: { title: i18n.t('router.PurchaseReturnDispatch'), createLink: 'PurchaseReturnDispatchInsert' }},
   {path: '/SalesReturnInvoice', name: 'SalesReturnInvoice', component: SalesReturnInvoiceIndex, meta: { title: i18n.t('router.SalesReturnInvoice'), createLink: 'SalesReturnInvoiceInsert' }},
   {path: '/SalesReturnDispatch', name: 'SalesReturnDispatch', component: SalesReturnDispatchIndex, meta: { title: i18n.t('router.SalesReturnDispatch'), createLink: 'SalesReturnDispatchInsert' }},
@@ -623,8 +620,8 @@ const listIndex = [
   {path: '/FixedTermCampaign', name: 'FixedTermCampaign', component: FixedTermCampaignIndex, meta: { title: i18n.t('router.FixedTermCampaign'), createLink: 'FixedTermCampaignInsert' }},
   {path: '/DiscountReason', name: 'DiscountReason', component: DiscountReasonIndex, meta: { title: i18n.t('router.DiscountReason'), createLink: 'DiscountReasonInsert' }},
   {path: '/PriceDiscountTransaction', name: 'PriceDiscountTransaction', component: PriceDiscountTransactionIndex, meta: { title: i18n.t('router.PriceDiscountTransaction'), createLink: 'PriceDiscountTransactionInsert' }},
-  {path: '/SalesReturnWaybill', name: 'SalesReturnWaybill', component: SalesReturnWaybillIndex, meta: { title: i18n.t('router.SalesReturnWaybill'), createLink: 'SalesReturnWaybillInsert' }},
-  {path: '/PurchaseReturnWaybill', name: 'PurchaseReturnWaybill', component: PurchaseReturnWaybillIndex, meta: { title: i18n.t('router.PurchaseReturnWaybill'), createLink: 'PurchaseReturnWaybillInsert' }},
+  {path: '/SalesReturnWaybill', name: 'SalesReturnWaybill', component: SalesReturnWaybillIndex, meta: { title: i18n.t('router.SalesReturnWaybill') }},
+  {path: '/PurchaseReturnWaybill', name: 'PurchaseReturnWaybill', component: PurchaseReturnWaybillIndex, meta: { title: i18n.t('router.PurchaseReturnWaybill') }},
   {path: '/PurchaseWaybill', name: 'PurchaseWaybill', component: PurchaseWaybillIndex, meta: { title: i18n.t('router.PurchaseWaybill'), createLink: 'PurchaseWaybillInsert' }},
   {path: '/Asset', name: 'Asset', component: AssetIndex, meta: { title: i18n.t('router.Asset'), createLink: 'AssetInsert' }},
   {path: '/AssetLocation', name: 'AssetLocation', component: AssetLocationIndex, meta: { title: i18n.t('router.AssetLocation'), createLink: 'AssetLocationInsert' }},
@@ -864,7 +861,6 @@ const listInsert = [
   { path: '/Insert/Return', name: 'ReturnInsert', component: ReturnInsert, meta: { title: i18n.t('router.ReturnInsert'), baseLink: 'Return' } },
   { path: '/Insert/PurchaseReturnOrder', name: 'PurchaseReturnOrderInsert', component: PurchaseReturnOrderInsert, meta: { title: i18n.t('router.PurchaseReturnOrderInsert'), baseLink: 'PurchaseReturnOrder' } },
   { path: '/Insert/WeighingInformation', name: 'WeighingInformationInsert', component: WeighingInformationInsert, meta: { title: i18n.t('router.WeighingInformationInsert'), baseLink: 'WeighingInformation' } },
-  { path: '/Insert/PurchaseReturnInvoice', name: 'PurchaseReturnInvoiceInsert', component: PurchaseReturnInvoiceInsert, meta: { title: i18n.t('router.PurchaseReturnInvoiceInsert'), baseLink: 'PurchaseReturnInvoice' } },
   { path: '/Insert/PurchaseReturnDispatch', name: 'PurchaseReturnDispatchInsert', component: PurchaseReturnDispatchInsert, meta: { title: i18n.t('router.PurchaseReturnDispatchInsert'), baseLink: 'PurchaseReturnDispatch' } },
   { path: '/Insert/SalesReturnInvoice', name: 'SalesReturnInvoiceInsert', component: SalesReturnInvoiceInsert, meta: { title: i18n.t('router.SalesReturnInvoiceInsert'), baseLink: 'SalesReturnInvoice' } },
   { path: '/Insert/SalesReturnDispatch', name: 'SalesReturnDispatchInsert', component: SalesReturnDispatchInsert, meta: { title: i18n.t('router.SalesReturnDispatchInsert'), baseLink: 'SalesReturnDispatch' } },
@@ -928,8 +924,6 @@ const listInsert = [
   { path: '/Insert/FixedTermCampaign', name: 'FixedTermCampaignInsert', component: FixedTermCampaignInsert, meta: { title: i18n.t('router.FixedTermCampaignInsert'), baseLink: 'FixedTermCampaign' } },
   { path: '/Insert/DiscountReason', name: 'DiscountReasonInsert', component: DiscountReasonInsert, meta: { title: i18n.t('router.DiscountReasonInsert'), baseLink: 'DiscountReason' } },
   { path: '/Insert/PriceDiscountTransaction', name: 'PriceDiscountTransactionInsert', component: PriceDiscountTransactionInsert, meta: { title: i18n.t('router.PriceDiscountTransactionInsert'), baseLink: 'PriceDiscountTransaction' } },
-  { path: '/Insert/SalesReturnWaybill', name: 'SalesReturnWaybillInsert', component: SalesReturnWaybillInsert, meta: { title: i18n.t('router.SalesReturnWaybillInsert'), baseLink: 'SalesReturnWaybill' } },
-  { path: '/Insert/PurchaseReturnWaybill', name: 'PurchaseReturnWaybillInsert', component: PurchaseReturnWaybillInsert, meta: { title: i18n.t('router.PurchaseReturnWaybillInsert'), baseLink: 'PurchaseReturnWaybill' } },
   { path: '/Insert/PurchaseWaybill', name: 'PurchaseWaybillInsert', component: PurchaseWaybillInsert, meta: { title: i18n.t('router.PurchaseWaybillInsert'), baseLink: 'PurchaseWaybill' } },
   { path: '/Insert/Asset', name: 'AssetInsert', component: AssetInsert, meta: { title: i18n.t('router.AssetInsert'), baseLink: 'Asset' } },
   { path: '/Insert/AssetLocation', name: 'AssetLocationInsert', component: AssetLocationInsert, meta: { title: i18n.t('router.AssetLocationInsert'), baseLink: 'AssetLocation' } },

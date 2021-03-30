@@ -64,6 +64,100 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in rowData.FixedTermCampaignItems" :key="i">
+                     <b-td>{{f.ColumnName}}</b-td>
+                     <b-td>{{f.ColumnValue}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.routes')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.routeId')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID') : [])" :key="i">
+                    <b-td>{{f.ColumnValue}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID') : [])" :key="i">
+                      <b-td>{{f.ColumnName}}</b-td>
+                      <b-td>{{f.ColumnValue}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.customers')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in rowData.FixedTermCampaignCustomers" :key="i">
+                      <b-td>{{f.Customer ? f.Customer.Label : ''}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.fixedTermCampaign.branch')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.branchId')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID') : [])" :key="i">
+                      <b-td>{{f.ColumnValue}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
