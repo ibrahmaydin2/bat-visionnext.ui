@@ -137,8 +137,6 @@ export default {
         let splitedFile = reader.result.split(',')[1]
         vm.sendFile(splitedFile)
       }
-      reader.onerror = function (error) {
-      }
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'importExcelModal')

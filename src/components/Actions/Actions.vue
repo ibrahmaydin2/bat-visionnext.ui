@@ -92,6 +92,14 @@ export default {
   },
   methods: {
     showModal (action, row) {
+      if (row && typeof row.Canceled !== 'undefined' && row.Canceled) {
+        this.$toasted.show(this.$t('index.errorCanceled'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       this.$emit('showModal', action, row)
     },
     showMultipleModal (action) {
