@@ -173,11 +173,11 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'">
            <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.fixedTermCustomerItem.columnName" :required="true" md="5" lg="5">
-              <v-select v-model="fixedTermCustomerItem.columnName"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.customerItemArea" :required="true" md="5" lg="5">
+               <v-select v-model="customerItemArea" :options="customerItemAreaList" :filterable="false" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.fixedTermCustomerItem.columnValue" :required="true" md="5" lg="5">
-              <v-select v-model="fixedTermCustomerItem.columnValue"/>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.customerItemValue" :required="true" md="5" lg="5">
+              <v-select v-model="customerItemValue" :options="customerItemValueList" :filterable="false" label="Label" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -194,8 +194,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnName}}</b-td>
-                  <b-td>{{f.ColumnValue}}</b-td>
+                  <b-td>{{f.ColumnNamStr ? f.ColumnNamStr : f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -330,10 +330,10 @@ export default {
         columnName: null,
         columnValue: null
       },
-      fixedTermCustomerItem: {
-        columnName: null,
-        columnValue: null
-      },
+      customerItemArea: {},
+      customerItemValue: {},
+      customerItemAreaList: [],
+      customerItemValueList: [],
       fixedTermCampaignDetail: {
         tableName: null,
         columnName: null,
@@ -370,11 +370,14 @@ export default {
       let today = new Date().toISOString().slice(0, 10)
       this.form.CampaignBeginDate = today
       this.form.CampaignEndDate = today
-
+      let me = this
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountType/Search', name: 'discountTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
+      me.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+        me.customerItemAreaList = res.Values
+      })
     },
     addFixedTermCampaignItem () {
       this.$v.fixedTermCampaignItem.$touch()
@@ -445,8 +448,9 @@ export default {
       this.$v.fixedTermCampaignDetail.$reset()
     },
     addFixedTermCustomerItem () {
-      this.$v.fixedTermCustomerItem.$touch()
-      if (this.$v.fixedTermCustomerItem.$error) {
+      this.$v.customerItemArea.$touch()
+      this.$v.customerItemValue.$touch()
+      if (this.$v.customerItemArea.$error || this.$v.customerItemValue.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -461,9 +465,14 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.fixedTermCustomerItem.columnName,
-        ColumnValue: this.fixedTermCustomerItem.columnValue
+        ColumnName: this.customerItemArea.Code,
+        ColumnValue: this.customerItemValue.DecimalValue,
+        ColumnNameStr: this.customerItemArea.Label,
+        ColumnValueStr: this.customerItemValue.Label
       })
+      this.customerItemArea = null
+      this.$v.customerItemArea.$reset()
+      this.$v.customerItemValue.$reset()
     },
     removeFixedTermCustomerItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
@@ -649,6 +658,17 @@ export default {
       } else {
         this.fixedTermCampaignCustomer = {}
       }
+    },
+    customerItemArea (value) {
+      this.customerItemValueList = []
+      this.customerItemValue = null
+      if (value) {
+        let me = this
+        me.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          me.customerItemValueList = res.Values
+          me.$forceUpdate()
+        })
+      }
     }
   },
   validations () {
@@ -677,13 +697,11 @@ export default {
           required
         }
       },
-      fixedTermCustomerItem: {
-        columnName: {
-          required
-        },
-        columnValue: {
-          required
-        }
+      customerItemArea: {
+        required
+      },
+      customerItemValue: {
+        required
       },
       fixedTermCampaignDetail: {
         tableName: {
