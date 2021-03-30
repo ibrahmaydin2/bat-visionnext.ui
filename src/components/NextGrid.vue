@@ -163,7 +163,7 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
-    <b-row class="asc__nextgrid-table-footer">
+    <b-row class="asc__nextgrid-table-footer" v-if="items && items.length > 0">
       <b-col cols="6">
         <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
           <b-dropdown-item v-for="p in perPageOpt" :key="'perpage' + p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>

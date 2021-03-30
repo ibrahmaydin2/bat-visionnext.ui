@@ -9,8 +9,27 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
-export default axios
+
+var numberOfAjaxCAllPending = 0
+var me = this
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
+axios.interceptors.request.use(function (config) {
+  numberOfAjaxCAllPending++
+  me.bigloading = true
+  return config
+})
+axios.interceptors.response.use(function (response) {
+  numberOfAjaxCAllPending--
+  if (numberOfAjaxCAllPending === 0) {
+    me.bigloading = false
+  }
+  return response
+}, function (error) {
+  me.bigloading = false
+  numberOfAjaxCAllPending--
+  return Promise.reject(error)
+})
+export default axios
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
