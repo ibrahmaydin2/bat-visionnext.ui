@@ -18,7 +18,7 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="multiPrint (action, row)">
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="multiPrint (action)">
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
@@ -88,6 +88,12 @@ export default {
     row: {},
     isMultiple: {
       default: 0
+    },
+    RecordIds: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   methods: {
@@ -175,10 +181,10 @@ export default {
       w.focus()
       w.print()
     },
-    multiPrint (action, row) {
-    },
-    customConvert (action, row) {
-
+    multiPrint (action) {
+      this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
+        this.htmlPrint(res.Html)
+      })
     }
   },
   mounted () {
