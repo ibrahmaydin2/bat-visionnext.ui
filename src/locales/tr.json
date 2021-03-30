@@ -1312,6 +1312,7 @@
       "discountCustomerSqls": "Müşteri Sorgusu",
       "general": "Genel",
       "requiredFields": "İndirim Tipi ve çeşidi zorunlu alanlardır",
+      "requiredBranchCriteria": "Şube Listesi boş olamaz",
       "columnName": "Alan Açıklaması",
       "columnValue": "Değer",
       "givenQuantity": "Miktar",
@@ -1333,7 +1334,10 @@
       "routeCode": "Rota Kodu",
       "routeName": "Rota Adı",
       "paymentType":"Ödeme Tipi",
-      "customerSql": "Müşteri Sorgusu"
+      "customerSql": "Müşteri Sorgusu",
+      "branchs":"Şubeler",
+      "routes":"Rotalar",
+      "payments":"Ödeme Tipleri"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",
