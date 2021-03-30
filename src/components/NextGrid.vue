@@ -349,6 +349,14 @@ export default {
           this.$root.$emit('bv::show::modal', 'customConvertModal')
         })
       } else if (action.Action === 'OrderConvert') {
+        if (row && typeof row.StatusId !== 'undefined' && row.StatusId !== 2) {
+          this.$toasted.show(this.$t('index.errorSevk'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.showConvertModal = true
         this.$nextTick(() => {
           this.$bvModal.show('orderConvertModal')
