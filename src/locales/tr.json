@@ -443,6 +443,7 @@
     "find": "Bul",
     "clean": "Temizle",
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
+    "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1687,6 +1688,7 @@
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
     "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
+    "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
