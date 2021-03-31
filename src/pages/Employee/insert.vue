@@ -347,10 +347,10 @@ export default {
         Code: null,
         Name: null,
         Surname: null,
-        TypeId: 0,
-        GroupId: 0,
+        TypeId: null,
+        GroupId: null,
         StatusId: 1,
-        Category1Id: 0,
+        Category1Id: null,
         FinanceCode1: null,
         FinanceCode2: null,
         SapHrCode: null,
@@ -370,13 +370,13 @@ export default {
         OvercoatSize: null,
         ShoeSize: null,
         IsTeam: 0,
-        PriceListCategoryId: 0,
+        PriceListCategoryId: null,
         CreateCustomerRecord: 0,
-        UserGroupId: 0,
-        EducationId: 0,
+        UserGroupId: null,
+        EducationId: null,
         DenimSize: null,
         CorduroySize: null,
-        BloodTypeId: 0,
+        BloodTypeId: null,
         ScoreCardClassId: null,
         IsRepresentative: 0,
         EmployeeTeams: [],
@@ -455,6 +455,30 @@ export default {
         })
         let model = {
           'model': this.form
+        }
+        if (!this.form.GroupId || this.form.GroupId === '') {
+          delete this.form.GroupId
+        }
+        if (!this.form.BloodTypeId || this.form.BloodTypeId === '') {
+          delete this.form.BloodTypeId
+        }
+        if (!this.form.ScoreCardClassId || this.form.ScoreCardClassId === '') {
+          delete this.form.ScoreCardClassId
+        }
+        if (!this.form.TypeId || this.form.TypeId === '') {
+          delete this.form.TypeId
+        }
+        if (!this.form.PriceListCategoryId || this.form.PriceListCategoryId === '') {
+          delete this.form.PriceListCategoryId
+        }
+        if (!this.form.UserGroupId || this.form.UserGroupId === '') {
+          delete this.form.UserGroupId
+        }
+        if (!this.form.EducationId || this.form.EducationId === '') {
+          delete this.form.EducationId
+        }
+        if (!this.form.EmployeeId || this.form.EmployeeId === '') {
+          delete this.form.EmployeeId
         }
 
         this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})

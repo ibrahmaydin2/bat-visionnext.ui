@@ -7,10 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+            <router-link :to="{name: 'Contracts' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -203,7 +203,6 @@
             </b-col>
           </b-row>
           <b-row>
-            {{form.ContractValidDates}}
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
@@ -603,7 +602,7 @@ export default {
             this.form.ContractRelatedCustomers.push({
               Deleted: item.Deleted,
               System: item.System,
-              RecordState: item.RecordState,
+              RecordState: 3,
               StatusId: item.StatusId,
               CustomerId: item.CustomerId
             })
@@ -618,7 +617,7 @@ export default {
             this.form.ContractValidDates.push({
               Deleted: item.Deleted,
               System: item.System,
-              RecordState: item.RecordState,
+              RecordState: 3,
               StatusId: item.StatusId,
               StartDate: item.StartDate,
               EndDate: item.EndDate,
@@ -637,7 +636,7 @@ export default {
             this.form.ContractBenefits.push({
               Deleted: item.Deleted,
               System: item.System,
-              RecordState: item.RecordState,
+              RecordState: 3,
               StatusId: item.StatusId,
               BenefitTypeId: item.BenefitTypeId,
               BenefitBudget: item.BenefitBudget,
@@ -662,7 +661,7 @@ export default {
             this.form.ContractAssets.push({
               Deleted: item.Deleted,
               System: item.System,
-              RecordState: item.RecordState,
+              RecordState: 3,
               StatusId: item.StatusId,
               AssetId: item.AssetId,
               PlannedServiceDate: item.PlannedServiceDate,

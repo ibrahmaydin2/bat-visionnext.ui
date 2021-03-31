@@ -527,7 +527,11 @@ export default {
         return
       }
       this.showRequiredInfo = false
-      searchQ[tableField] = search
+      if (!search || search === '') {
+        delete searchQ[tableField]
+      } else {
+        searchQ[tableField] = search
+      }
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,

@@ -1083,7 +1083,7 @@ export default {
           marketingRegion5Id: null,
           customerLabels: [],
           customerTouchpoints: [],
-          salesTypeId: 0
+          salesTypeId: null
         }
       },
       customerLocations: {

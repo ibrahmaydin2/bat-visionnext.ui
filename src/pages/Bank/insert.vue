@@ -137,7 +137,7 @@ export default {
   data () {
     return {
       form: {
-        DeleteId: 0,
+        Delete: 0,
         System: 0,
         RecordState: 2,
         bankBranches: [],

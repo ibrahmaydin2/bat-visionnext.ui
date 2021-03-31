@@ -1710,7 +1710,8 @@
       "invoiceKind": "Belge Çeşidi",
       "status": "Durum",
       "SupplierId": "Tedarikçi",
-      "InvoiceNumber": "Fatura Numarası"
+      "InvoiceNumber": "Fatura Numarası",
+      "ShippedQuantity": "Teslim Edilen Miktar"
     }
   },
   "auth": {
