@@ -1977,7 +1977,7 @@ export default {
           CustomerItemDiscounts: e.CustomerItemDiscounts,
           CustomerTouchpoints: e.CustomerTouchpoints,
           RecordId: e.RecordId,
-          SalesTypeId: 0,
+          SalesTypeId: null,
           RecordTypeId: e.RecordTypeId,
           Deleted: 0
         }
