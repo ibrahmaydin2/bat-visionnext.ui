@@ -1135,7 +1135,7 @@ export default {
         customerItemDiscounts: [],
         customerLabels: [],
         customerTouchpoints: [],
-        SalesTypeId: 0,
+        SalesTypeId: null,
         RecordTypeId: 1,
         DebitAccountRemainder: null,
         CreditAccountRemainder: null,

@@ -428,7 +428,7 @@ export default {
         StatusId: this.selectedValidDates.statusId
       })
       this.selectedValidDates = {
-        statusId: 0
+        statusId: null
       }
       this.$v.selectedValidDates.$reset()
     },
