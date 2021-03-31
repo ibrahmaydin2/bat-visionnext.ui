@@ -40,7 +40,7 @@
               </div>
             </template>
             <template #cell(Count)="data">
-              <b-form-input type="number" v-model="data.item.SalesQuantity2" />
+              <b-form-input type="number" v-model="data.item.ConversionQuantity" />
             </template>
           </b-table>
         </b-col>
@@ -132,11 +132,16 @@ export default {
           sortable: true
         },
         {
+          key: 'ShippedQuantity',
+          label: this.$t('index.Convert.ShippedQuantity'),
+          sortable: true
+        },
+        {
           key: 'Stock',
           label: this.$t('index.Convert.Stock'),
           sortable: true,
           formatter: (value = 0, key, item) => {
-            return value
+            return value || 0
           }
         },
         {
@@ -168,6 +173,7 @@ export default {
       }
       this.documentType = null
       this.employee = null
+      this.invoiceType = null
     })
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       this.tableBusy = true
@@ -265,6 +271,8 @@ export default {
         return
       }
       this.getConvertData.InvoiceKindId = this.form.InvoiceKindId
+      this.getConvertData.DocumentNumber = this.form.DocumentNumber
+      this.getConvertData.InvoiceNumber = this.form.Code
       if (this.getConvertData.OrderLines) {
         this.getConvertData.OrderLines = this.orderLines
       }
