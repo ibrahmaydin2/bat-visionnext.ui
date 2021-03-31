@@ -69,6 +69,8 @@
                 type="date"
                 :placeholder="getFormattedDate(header.defaultValue)"
                 v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
@@ -78,6 +80,8 @@
                 type="date"
                 :placeholder="getFormattedDate(header.defaultValue)"
                 v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
@@ -119,7 +123,7 @@
                   <i class="fas fa-th" />
                 </template>
                 <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" />
+                <!-- <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" /> -->
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
@@ -163,7 +167,7 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
-    <b-row class="asc__nextgrid-table-footer">
+    <b-row class="asc__nextgrid-table-footer" v-if="items && items.length > 0">
       <b-col cols="6">
         <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
           <b-dropdown-item v-for="p in perPageOpt" :key="'perpage' + p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
@@ -177,11 +181,15 @@
       <PotentialCustomerRejectModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
-      <PotentialCustomerApproveModal :modalAction="modalAction" :modalItem="modalItem" />
+      <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
-    <ConfirmModal :modalAction="modalAction" :modalItem="modalItem" />
-    <CustomConvertModal :modalAction="modalAction" :modalItem="modalItem" />
-    <OrderConvertModal v-if="showOrderConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <SalesWaybillConvertModal v-if="showWaybillConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaConvertModal v-if="showRmaConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -191,13 +199,21 @@ import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
 import CustomConvertModal from './Actions/CustomConvertModal'
 import OrderConvertModal from './Actions/OrderConvertModal'
+import SalesWaybillConvertModal from './Actions/SalesWaybillConvertModal'
+import RmaConvertModal from './Actions/RmaConvertModal'
+import RmaInvoiceModal from './Actions/RmaInvoiceModal'
+import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 let searchQ = {}
 export default {
   components: {
     Workflow,
     ConfirmModal,
     CustomConvertModal,
-    OrderConvertModal
+    OrderConvertModal,
+    SalesWaybillConvertModal,
+    RmaConvertModal,
+    RmaInvoiceModal,
+    InvoiceConvertModal
   },
   props: {
     apiurl: String,
@@ -259,7 +275,14 @@ export default {
       modalItem: null,
       isGridFieldsReady: false,
       isLookupReady: false,
-      showOrderConvertModal: false
+      showConvertModal: false,
+      showWaybillConvertModal: false,
+      showRmaConvertModal: false,
+      showRmaInvoiceModal: false,
+      showInvoiceConvertModal: false,
+      showPotentialCustomerApproveModal: false,
+      showCustomConvertModal: false,
+      showConfirmModal: false
     }
   },
   mounted () {
@@ -308,30 +331,83 @@ export default {
     showModal (action, row) {
       this.modalAction = action
       this.modalItem = row
-      let vm = this
-      if (action.Action === 'PotentialCustomerApprove') {
-        this.$root.$emit('bv::show::modal', 'approve-modal')
-        vm.$forceUpdate()
-        return
+      this.showConvertModal = false
+      this.showCustomConvertModal = false
+      this.showWaybillConvertModal = false
+      this.showRmaConvertModal = false
+      this.showRmaInvoiceModal = false
+      this.showPotentialCustomerApproveModal = false
+      this.showPotentialCustomerRejectModal = false
+      this.showConfirmModal = false
+
+      if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
+        if (row.ApproveStateId !== 51) {
+          this.$toasted.show(this.$t('index.errorApproveStateModal'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
       }
-      if (action.Action === 'PotentialCustomerReject') {
+
+      if (action.Action === 'ApprovePotentialCustomer') {
+        this.showPotentialCustomerApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'approve-modal')
+        })
+      } else if (action.Action === 'RejectPotentialCustomer') {
         this.$root.$emit('bv::show::modal', 'approve-reject-modal')
-        vm.$forceUpdate()
-        return
+      } else if (action.Action === 'CustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
+      } else if (action.Action === 'OrderConvert') {
+        if (row && typeof row.StatusId !== 'undefined' && row.StatusId !== 2) {
+          this.$toasted.show(this.$t('index.errorSevk'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.showConvertModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('orderConvertModal')
+        })
+      } else if (action.Action === 'WaybillConvert') {
+        this.showWaybillConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesWaybillConvertModal')
+        })
+      } else {
+        this.showConfirmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'confirmModal')
+        })
       }
-      if (action.Action === 'CustomConvert') {
-        this.$root.$emit('bv::show::modal', 'customConvertModal')
-        vm.$forceUpdate()
-        return
-      }
-      if (action.Action === 'OrderConvert') {
-        this.showOrderConvertModal = true
-        this.$root.$emit('bv::show::modal', 'orderConvertModal')
-        vm.$forceUpdate()
-        return
-      }
-      this.$root.$emit('bv::show::modal', 'confirmModal')
-      vm.$forceUpdate()
+      // if (action.Action === 'RmaConvert') {
+      //   this.showRmaConvertModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'rmaConvertModal')
+      //   })
+      //   return
+      // }
+      // if (action.Action === 'RmaInvoice') {
+      //   this.showRmaInvoiceModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'rmaInvoiceModal')
+      //   })
+      //   return
+      // }
+      // if (action.Action === 'PurchaseInvoiceConvert') {
+      //   this.showInvoiceConvertModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'invoiceConvertModal')
+      //   })
+      //   return
+      // }
     },
     dateTimeformat (e) {
       let calendar, date
@@ -466,7 +542,11 @@ export default {
         return
       }
       this.showRequiredInfo = false
-      searchQ[tableField] = search
+      if (!search || search === '') {
+        delete searchQ[tableField]
+      } else {
+        searchQ[tableField] = search
+      }
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,

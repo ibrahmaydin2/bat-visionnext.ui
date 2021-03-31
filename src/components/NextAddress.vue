@@ -30,6 +30,7 @@ export default {
     districtError: false,
     required: null,
     hideAddress: false,
+    init: {},
     md: {
       type: String,
       default: '4'
@@ -85,6 +86,17 @@ export default {
           this.selectedValue.Address = newValue.Address
           this.selectedAddress = newValue.Address
         }
+      }
+    },
+    init (newValue) {
+      if (newValue) {
+        this.selectedValue.CityId = newValue.CityId
+        this.selectedCity = this.cities.find(c => c.DecimalValue === newValue.CityId)
+        this.selectCity(this.selectedCity)
+        this.selectedValue.DistrictId = newValue.DistrictId
+        this.selectedDistrict = this.distiricts.find(c => c.DecimalValue === newValue.DistrictId)
+        this.selectedValue.Address = newValue.Address
+        this.selectedAddress = newValue.Address
       }
     },
     selectedAddress (newValue) {

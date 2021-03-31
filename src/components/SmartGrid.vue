@@ -61,7 +61,6 @@ export default {
         const detail = event.detail
         const columns = detail.columns
         const data = detail.data
-        console.log(detail, columns, data)
       })
       const xlsxBtn = document.querySelector('#xlsxBtn')
       const pdfBtn = document.querySelector('#pdfBtn')

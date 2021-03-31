@@ -8,7 +8,7 @@ export default {
   methods: {
     createManualCode (parameter = 'Code') {
       this.setRouteNames()
-      return this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
         if (this.createCode) {
           this.form[parameter] = this.createCode
         }
@@ -24,14 +24,12 @@ export default {
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    if (!this.insertRules || this.insertRules.length === 0) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
+    this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
+      Object.keys(this.insertDefaultValue).forEach(el => {
+        if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
+          this.form[el] = this.insertDefaultValue[el]
+        }
       })
-    }
+    })
   }
 }

@@ -20,10 +20,10 @@
         <b-row>
           <b-col cols="8">
             <b-row>
-              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
-                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
+                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
               </NextFormGroup>
-              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
+              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
@@ -33,16 +33,17 @@
                   v-model="form.DocumentTime"
                   :disabled="true"/>
               </NextFormGroup>
-            </b-row>
-            <b-row>
-              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                </template>
+                  </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </NextFormGroup>
-              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
+              <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
               </NextFormGroup>
             </b-row>
@@ -62,6 +63,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -73,22 +86,22 @@
         <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
           <b-row>
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" />
+              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" />
+              <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select/>
+             <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
+              <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
              <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
-                <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
+                <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
                 <b-form-timepicker
@@ -97,80 +110,44 @@
                   :label-no-time-selected="$t('insert.chooseTime')"
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
-                  v-model="form.ActualDeliveryTime"/>
+                  v-model="form.ActualDeliveryTime"
+                  :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" ></v-select>
+              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
+              <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <v-select v-model="selectedRoute" label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
+              <v-select v-model="selectedRoute" label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" :disabled="true">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true">
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
+              <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
+              <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
-          <b-row>
-            <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" min=1 />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.price" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.stock')" :error="$v.selectedInvoiceLine.stock" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.stock" disabled />
-            </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.vatRate" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.netTotal')" :error="$v.selectedInvoiceLine.netTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.netTotal" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.vatTotal')" :error="$v.selectedInvoiceLine.totalVat" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.totalVat" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedInvoiceLine.grossTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.grossTotal" disabled />
-            </NextFormGroup>
-            <b-col cols="12" md="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addInvoiceLine" />
-              </b-form-group>
-            </b-col>
-          </b-row>
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -182,7 +159,6 @@
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
@@ -194,10 +170,6 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -391,11 +363,12 @@ export default {
       customerCampaigns: {},
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
-      paymentTypes: []
+      paymentTypes: [],
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -409,8 +382,9 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
-        this.selectedBranch = response ? response.Model : {}
+        this.selectedBranch = response && response.Model ? response.Model : {}
       })
     },
     searchRoute (search, loading) {
@@ -433,11 +407,21 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search,
-        SalesDocumentTypeIds: [45, 46]
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        andConditionModel: {
+          SalesDocumentTypeIds: [45, 46]
+        },
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -463,6 +447,14 @@ export default {
       })
     },
     searchItems (search, loading) {
+      if (!this.form.WarehouseId) {
+        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -542,7 +534,7 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [1],
+        WarehouseIds: [this.form.WarehouseId],
         ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
       }
       var me = this
@@ -598,11 +590,6 @@ export default {
           duration: '3000'
         })
         return false
-      }
-      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
-      if (filteredItem) {
-        this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
-        return
       }
       let length = this.form.InvoiceLines.length
       let selectedItem = this.selectedInvoiceLine.selectedItem
@@ -709,6 +696,7 @@ export default {
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         if (this.form.InvoiceLines) {
@@ -825,7 +813,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;

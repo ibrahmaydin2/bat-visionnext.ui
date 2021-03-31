@@ -46,6 +46,9 @@
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </b-form-group>
             </b-col>
@@ -149,7 +152,7 @@ export default {
       loadingQuantity: null,
       item: [],
       itemLabel: null,
-      RecordId: 0,
+      RecordId: null,
       VanLoadingItems: [],
       vanLoadingItem: {
         Deleted: 0,
@@ -170,7 +173,7 @@ export default {
         ConvFact2: 1,
         RecordId: null
       },
-      detailPanelRecordId: 0
+      detailPanelRecordId: null
     }
   },
   computed: {
@@ -212,10 +215,17 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },

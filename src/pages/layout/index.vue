@@ -25,7 +25,7 @@
                       <b-button @click="saveFilter" variant="warning" size="sm" class="w-100 mt-1"><i class="fas fa-check" /> {{$t('list.save')}}</b-button>
                     </b-popover>
                   </template>
-                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
+                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1 && createLink" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
                   </b-button>
                   <b-dropdown v-else-if="tableOperations.Actions && tableOperations.Actions.length > 1" split :split-to="{name: createLink}" variant="success" right size="sm">
@@ -123,7 +123,7 @@
                       <template #button-content>
                         <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
                       </template>
-                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" />
+                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" :RecordIds="recordIds" />
                     </b-dropdown>
                   </div>
                 </b-col>
@@ -184,10 +184,15 @@ export default {
       this.createLink = to.meta.createLink
     },
     selectedTableRows (e) {
+      this.recordIds = []
       if (e && e.length > 0) {
         this.showActions = true
+        e.map(item => {
+          this.recordIds.push(item.RecordId)
+        })
       } else {
         this.showActions = false
+        this.recordIds = []
       }
     }
   },
@@ -228,8 +233,6 @@ export default {
       this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
     },
     uploadBtn (route, action) {
-      console.log(route)
-      console.log(action)
       this.modalAction = action
       this.$root.$emit('bv::show::modal', 'importExcelModal')
     },
@@ -259,9 +262,9 @@ export default {
         return
       }
       this.modalAction = action
-      this.selectedTableRows.map(item => {
-        this.recordIds.push(item.RecordId)
-      })
+      // this.selectedTableRows.map(item => {
+      //   this.recordIds.push(item.RecordId)
+      // })
       this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
     }
   }

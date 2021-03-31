@@ -18,7 +18,7 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="multiPrint (action, row)">
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="multiPrint (action)">
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
@@ -88,10 +88,24 @@ export default {
     row: {},
     isMultiple: {
       default: 0
+    },
+    RecordIds: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   methods: {
     showModal (action, row) {
+      if (row && typeof row.Canceled !== 'undefined' && row.Canceled) {
+        this.$toasted.show(this.$t('index.errorCanceled'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       this.$emit('showModal', action, row)
     },
     showMultipleModal (action) {
@@ -100,6 +114,14 @@ export default {
     print (action, row) {
       if (action.Query === 'Invoice') {
         this.$api.postByUrl({recordId: row.RecordId}, action.ActionUrl).then((res) => {
+          if (res && res.IsCompleted === false) {
+            this.$toasted.show(this.$t(res.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
           if (res && !res.IsEInvoice && !res.UseEArchiveInformation && !res.UseEWaybillInformation) {
             this.getListForDocument(res.RecordId, action.QueryMessage, row.CustomerId)
           } else {
@@ -126,6 +148,14 @@ export default {
         'customerId': customerId
       }
       this.$api.postByUrl(request, 'VisionNextPrint/api/PrintDocument/ListForDocument').then((res) => {
+        if (res && res.IsCompleted === false) {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         if (res.PrintDocuments.length > 0) {
           let payload = {
             documents: res.PrintDocuments,
@@ -151,12 +181,10 @@ export default {
       w.focus()
       w.print()
     },
-    multiPrint (action, row) {
-      console.log(action)
-      console.log(row)
-    },
-    customConvert (action, row) {
-
+    multiPrint (action) {
+      this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
+        this.htmlPrint(res.Html)
+      })
     }
   },
   mounted () {

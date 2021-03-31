@@ -63,7 +63,7 @@ export class ApiManager {
   handleError (error) {
     let message = 'Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.'
     if (error && error.response && error.response.data) {
-      message = error.response.data.message
+      message = error.response.data.Message
     }
     store.commit('showAlert', { type: 'danger', msg: message })
     return Promise.reject(error)

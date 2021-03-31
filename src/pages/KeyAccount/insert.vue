@@ -853,8 +853,8 @@
                     <template slot="no-options">
                       {{$t('insert.min3')}}
                     </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.Description1 }}
+                    <template v-slot:option="option">
+                      {{option.Code + ' - ' + option.Description1}}
                     </template>
                 </v-select>
               </b-form-group>
@@ -965,7 +965,7 @@ export default {
         customerItemDiscounts: [],
         customerLabels: [],
         customerTouchpoints: [],
-        SalesTypeId: 0,
+        SalesTypeId: null,
         RecordTypeId: null,
         CurrentCredit: null,
         CurrentRisk: null,
@@ -1509,9 +1509,12 @@ export default {
         ...this.query,
         api: 'VisionNextItem/api/Item/Search',
         name: 'items',
-        andConditionModel: {
-          Description1: search
-        }
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
       }).then(res => {
         loading(false)
       })

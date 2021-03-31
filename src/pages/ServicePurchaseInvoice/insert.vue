@@ -36,7 +36,10 @@
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                </template>
+                  </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </NextFormGroup>
             </b-row>
@@ -70,7 +73,7 @@
               <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select/>
+             <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
@@ -103,6 +106,9 @@
               <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="setTotalPrice">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
+                </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -300,11 +306,12 @@ export default {
       customerSelectCancelled: false,
       selectedBranch: {},
       selectedPaymentType: {},
-      paymentTypes: []
+      paymentTypes: [],
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'items', 'invoiceTypes', 'discountReasons'])
+    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'items', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -317,6 +324,9 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceType/Search', name: 'invoiceTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'}).then(() => {
+        this.selectedInvoiceKind = this.invoiceKinds.find(i => i.RecordId === 1)
+      })
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
@@ -331,11 +341,21 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search,
-        SalesDocumentTypeIds: [45, 46]
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        andConditionModel: {
+          SalesDocumentTypeIds: [45, 46]
+        },
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -347,9 +367,14 @@ export default {
           api: 'VisionNextItem/api/Item/Search',
           name: 'items',
           andConditionModel: {
-            Description1: search,
             CardTypeIds: [9]
-          }
+          },
+          orConditionModels: [
+            {
+              Description1: search,
+              Code: search
+            }
+          ]
         }).then(res => {
           loading(false)
         })

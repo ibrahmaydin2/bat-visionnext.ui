@@ -370,12 +370,27 @@
     "ServicePurchaseInvoiceGet": "Hizmet Satın Alma Faturası Görüntüle",
     "ServicePurchaseInvoiceInsert": "Yeni Hizmet Satın Alma Faturası",
     "ServicePurchaseInvoiceUpdate": "Hizmet Satın Alma Faturası Güncelle",
+    "Asset": "Varlık Ana Kayıtları",
+    "AssetGet": "Varlık Ana Kayıtları Görüntüle",
+    "AssetInsert": "Yeni Varlık Ana Kayıtları",
+    "AssetUpdate": "Varlık Ana Kayıtları Güncelle",
+    "AssetLocation": "Varlık Listesi (Noktaları)",
+    "AssetLocationGet": "Varlık Listesi (Noktaları) Görüntüle",
+    "AssetLocationInsert": "Yeni Varlık Listesi (Noktaları)",
+    "AssetLocationUpdate": "Varlık Listesi (Noktaları) Güncelle",
+    "AssetMovementCard": "Varlık Hareketleri",
+    "AssetMovementCardGet": "Varlık Hareketleri Görüntüle",
+    "AssetMovementCardInsert": "Yeni Varlık Hareketleri",
+    "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
     "PurchaseReturnWaybill": "Alım İade İrsaliyesi",
     "PurchaseReturnWaybillGet": "Alım İade İrsaliyesi Görüntüle",
-    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle"
+    "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle",
+    "DispatchRefDocument": "Diğer İrsaliyeler",
+    "DispatchRefDocumentGet": "Diğer İrsaliyeler Görüntüle",
+    "DispatchRefDocumentUpdate": "Diğer İrsaliyeler Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -427,6 +442,8 @@
     "okay": "Tamam",
     "find": "Bul",
     "clean": "Temizle",
+    "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
+    "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1265,7 +1282,9 @@
       "belgeNo": "Belge No",
       "enterWaybill": "İrsaliye Girişi",
       "invoiceNo": "Fatura No",
-      "returnSalesWaybill": "Satış İade İrsaliyesi"
+      "returnSalesWaybill": "Satış İade İrsaliyesi",
+      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!",
+      "chooseWarehouse": "Lüften depo seçimi yapınız."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1285,7 +1304,12 @@
       "customers": "Müşteriler",
       "commercialTitle": "Müşteri Ticari Ünvanı",
       "locationId" :"Lokasyon",
-      "sameRouteError": "Aynı Rota iki defa eklenemez!"
+      "sameRouteError": "Aynı Rota iki defa eklenemez!",
+      "budget": "Bütçe",
+      "customerCode": "Müşteri Kodu",
+      "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+      "routeId": "Rota Id",
+      "branchId": "Şube Id"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -1296,6 +1320,7 @@
       "discountCustomerSqls": "Müşteri Sorgusu",
       "general": "Genel",
       "requiredFields": "İndirim Tipi ve çeşidi zorunlu alanlardır",
+      "requiredBranchCriteria": "Şube Listesi boş olamaz",
       "columnName": "Alan Açıklaması",
       "columnValue": "Değer",
       "givenQuantity": "Miktar",
@@ -1317,7 +1342,14 @@
       "routeCode": "Rota Kodu",
       "routeName": "Rota Adı",
       "paymentType":"Ödeme Tipi",
-      "customerSql": "Müşteri Sorgusu"
+      "customerSql": "Müşteri Sorgusu",
+      "branchs":"Şubeler",
+      "routes":"Rotalar",
+      "payments":"Ödeme Tipleri",
+      "customerCriterias":"Müşteri Kriterleri",
+      "routeId":"Rota Id",
+      "branchId":"Şube Id",
+      "paymentTypeId": "Ödeme Tipi Id"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",
@@ -1621,6 +1653,35 @@
       "Code": "Kod",
       "Description":"Açıklama",
       "Status":"Durum"
+    },
+    "discount": {
+      "code": "İndirim Kodu",
+      "description1": "İndirim Tanımı",
+      "discountBeginDate": "Başlangıç",
+      "discountEndDate": "Bitiş",
+      "discountType": "İndirim Tipi",
+      "discountKind": "İndirim Çeşidi",
+      "maxValue": "Üst Değer",
+      "branchCriteria": "Şube Kriteri",
+      "customerCriteria": "Müşteri Kriteri",
+      "routeCriteria": "Rota Kriteri",
+      "paymentCriteria": "Ödeme Kriteri",
+      "genexp1": "Açıklama",
+      "financeCode": "Finans Kodu",
+      "budget":"Bütçe",
+      "budgetAmount": "Bütçe Miktarı",
+      "budgetConsumption":"Harcanan Bütçe Miktarı",
+      "approveState": "Onay Durumu",
+      "discountCategory": "İndirim Kategorisi",
+      "discountPayback": "Şube Geri Ödemesi",
+      "maxUsage": "Toplam Uygulama Sayısı",
+      "tciBreak1": "TCI",
+      "useBudget": "Bütçe Kullan",
+      "isCascade": "Kademeli Tutarsal İndirim",
+      "useMultiGiven": "Tüm Aralıklara Uygula",
+      "isMandatory": "Zorunlu",
+      "isDoubleScore": "İki Kat Puan Kazan",
+      "applyToTimes": "Katlarına Uygula"
     }
   },
 
@@ -1652,20 +1713,15 @@
     "message": "Mesaj",
     "chooseFile": "Dosya seç",
     "dropFile": "Dosya sürükle",
-    "CustomConvert": {
-      "branchId": "Şube",
-      "salesWaybill": "Satış İrsaliyesi",
-      "salesReturnWaybill": "Satış İade İrsaliyesi",
-      "documentType": "Belge Tipi",
-      "documentDate": "Belge Tarihi",
-      "employee": "Dönüştüren Personel",
-      "transactionDate": "İşlem Tarihi",
-      "customer": "Müşteri",
-      "invoiceClass": "Belge Sınıfı",
-      "invoiceKind": "Belge Çeşidi",
-      "status": "Durum"
-    },
-    "OrderConvert": {
+    "Find": "Bul",
+    "Clear": "Temizle",
+    "Ok": "Tamam",
+    "notContentFound": "Görüntülenecek içerik bulunamadı.",
+    "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
+    "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
+    "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
+    "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
       "Quantity":"Sipariş Miktarı",
@@ -1676,7 +1732,21 @@
       "InvoiceKindId": "Dönüştürülecek Döküman",
       "Employee": "Teslimat Personeli",
       "DocumentNumber": "Döküman Numarası",
-      "TransactionDate": "İşlem Tarihi"
+      "TransactionDate": "İşlem Tarihi",
+      "branchId": "Şube",
+      "salesWaybill": "Satış İrsaliyesi",
+      "salesReturnWaybill": "Satış İade İrsaliyesi",
+      "documentType": "Belge Tipi",
+      "documentDate": "Belge Tarihi",
+      "employee": "Dönüştüren Personel",
+      "transactionDate": "İşlem Tarihi",
+      "customer": "Müşteri",
+      "invoiceClass": "Belge Sınıfı",
+      "invoiceKind": "Belge Çeşidi",
+      "status": "Durum",
+      "SupplierId": "Tedarikçi",
+      "InvoiceNumber": "Fatura Numarası",
+      "ShippedQuantity": "Teslim Edilen Miktar"
     }
   },
   "auth": {

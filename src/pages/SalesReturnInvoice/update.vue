@@ -37,7 +37,10 @@
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                </template>
+                  </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
@@ -89,7 +92,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select :disabled="true"/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
@@ -103,7 +106,7 @@
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
               <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
@@ -341,11 +344,12 @@ export default {
       customerCampaigns: {},
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
-      paymentTypes: []
+      paymentTypes: [],
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -359,6 +363,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
@@ -383,11 +388,21 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search,
-        SalesDocumentTypeIds: [45, 46]
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        andConditionModel: {
+          SalesDocumentTypeIds: [45, 46]
+        },
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -413,6 +428,14 @@ export default {
       })
     },
     searchItems (search, loading) {
+      if (!this.form.WarehouseId) {
+        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -492,7 +515,7 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [1],
+        WarehouseIds: [this.form.WarehouseId],
         ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
       }
       var me = this
@@ -548,11 +571,6 @@ export default {
           duration: '3000'
         })
         return false
-      }
-      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
-      if (filteredItem) {
-        this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
-        return
       }
       let length = this.form.InvoiceLines.length
       let selectedItem = this.selectedInvoiceLine.selectedItem
@@ -659,6 +677,7 @@ export default {
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         if (this.form.InvoiceLines) {

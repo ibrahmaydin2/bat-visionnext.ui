@@ -37,7 +37,10 @@
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                </template>
+                  </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </NextFormGroup>
             </b-row>
@@ -74,7 +77,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select :disabled="true"/>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
@@ -264,11 +267,12 @@ export default {
       currentPage: 1,
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
-      selectedStatus: null
+      selectedStatus: null,
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes'])
+    ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -283,6 +287,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', {IsVehicle: 1})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
@@ -292,10 +297,18 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -321,6 +334,14 @@ export default {
       })
     },
     searchItems (search, loading) {
+      if (!this.form.WarehouseId) {
+        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -400,7 +421,7 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [1],
+        WarehouseIds: [this.form.WarehouseId],
         ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
       }
       var me = this
@@ -456,11 +477,6 @@ export default {
           duration: '3000'
         })
         return false
-      }
-      let filteredItem = this.form.InvoiceLines.find(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState === 4)
-      if (filteredItem) {
-        this.form.InvoiceLines[this.form.InvoiceLines.indexOf(filteredItem)].RecordState = 3
-        return
       }
       let length = this.form.InvoiceLines.length
       let selectedItem = this.selectedInvoiceLine.selectedItem
@@ -547,6 +563,7 @@ export default {
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
+        this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
             item.RecordState = 3
