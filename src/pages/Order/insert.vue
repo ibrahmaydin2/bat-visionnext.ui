@@ -573,7 +573,7 @@ export default {
         ConvFact1: 1,
         ConvFact2: 1,
         Quantity: quantity,
-        ShippedQuantity: quantity,
+        ShippedQuantity: 0,
         Stock: this.selectedOrderLine.stock,
         VatRate: this.selectedOrderLine.vatRate,
         TotalVat: this.selectedOrderLine.vatTotal,

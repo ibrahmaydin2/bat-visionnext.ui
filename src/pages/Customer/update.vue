@@ -94,7 +94,7 @@
             </b-col>
             <b-col v-if="insertVisible.SalesVisitFrequency != null ? insertVisible.SalesVisitFrequency : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.SalesVisitFrequency + (insertRequired.SalesVisitFrequency === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesVisitFrequency.$error }">
-                <b-form-input type="text" v-model="form.SalesVisitFrequency" :readonly="insertReadonly.SalesVisitFrequency" />
+                <b-form-input type="text" v-model="form.SalesVisitFrequency" :readonly="insertReadonly.SalesVisitFrequency" disabled/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -122,7 +122,7 @@
             </b-col>
             <b-col v-if="insertVisible.ServiceVisitFrequency != null ? insertVisible.ServiceVisitFrequency : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ServiceVisitFrequency + (insertRequired.ServiceVisitFrequency === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ServiceVisitFrequency.$error }">
-                <b-form-input type="text" v-model="form.ServiceVisitFrequency" :readonly="insertReadonly.ServiceVisitFrequency" />
+                <b-form-input type="text" v-model="form.ServiceVisitFrequency" :readonly="insertReadonly.ServiceVisitFrequency" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CustomerInvoiceTypeId != null ? insertVisible.CustomerInvoiceTypeId : developmentMode" cols="12" md="2">
@@ -176,7 +176,7 @@
             </b-col>
             <b-col v-if="insertVisible.ManualSItem != null ? insertVisible.ManualSItem : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ManualSItem + (insertRequired.ManualSItem === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ManualSItem.$error }">
-                <NextCheckBox v-model="form.ManualSItem" type="number" toggle></NextCheckBox>
+                <NextCheckBox v-model="form.ManualSItem" type="number" toggle disabled></NextCheckBox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsRouteRegion != null ? insertVisible.IsRouteRegion : developmentMode" cols="12" md="2">
@@ -193,12 +193,12 @@
           <b-row>
             <b-col v-if="insertVisible.UseEInvoice != null ? insertVisible.UseEInvoice : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.UseEInvoice + (insertRequired.UseEInvoice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UseEInvoice.$error }">
-                <NextCheckBox v-model="form.UseEInvoice" type="number" toggle></NextCheckBox>
+                <NextCheckBox v-model="form.UseEInvoice" type="number" toggle disabled></NextCheckBox>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.IsWarehouseSale != null ? insertVisible.IsWarehouseSale : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsWarehouseSale + (insertRequired.IsWarehouseSale === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsWarehouseSale.$error }">
-                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle></NextCheckBox>
+                <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle disabled></NextCheckBox>
               </b-form-group>
             </b-col>
           </b-row>
@@ -222,6 +222,7 @@
             :address-error="$v.customerLocations.addressDetail.$error"
             :city-error="$v.customerLocations.cityId.$error"
             :district-error="$v.customerLocations.districtId.$error"
+            :init="addressInit"
           />
           <b-row>
             <b-col cols="12" md="3" lg="2">
@@ -253,12 +254,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_PhoneNumber1') + ' *'" :class="{ 'form-group--error': $v.customerLocations.phoneNumber1.$error }">
-                <b-form-input type="text" v-model="customerLocations.phoneNumber1" />
+                <b-form-input type="text" v-model="customerLocations.phoneNumber1" maxLength="10" :oninput="maxLengthControl"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_FaxNumber')">
-                <b-form-input type="text" v-model="customerLocations.faxNumber" />
+                <b-form-input type="text" v-model="customerLocations.faxNumber" maxLength="10" :oninput="maxLengthControl"/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -338,6 +339,7 @@
                   <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td class="text-center">
+                    <i @click="editCustomerLocation(r)" class="fa fa-pencil-alt text-warning"></i>
                     <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -347,12 +349,12 @@
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')">
           <b-row>
-            <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Category1Id + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
+            <b-col v-if="insertVisible.Category3Id != null ? insertVisible.Category3Id : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.Category3Id + (insertRequired.Category3Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category3Id.$error }">
                 <v-select
-                  v-model="Category1"
-                  :options="lookup.CUSTOMER_CATEGORY_1"
-                  @input="selectedType('Category1Id', $event); Category2 = null; Category3 = null"
+                  v-model="Category3"
+                  :options="lookup.CUSTOMER_CATEGORY_3"
+                  @input="selectedType('Category3Id', $event)"
                   label="Label"
                 />
               </b-form-group>
@@ -361,21 +363,21 @@
               <b-form-group :label="insertTitle.Category2Id + (insertRequired.Category2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category2Id.$error }">
                 <v-select
                   v-model="Category2"
-                  :options="lookup.CUSTOMER_CATEGORY_2 ? lookup.CUSTOMER_CATEGORY_2.filter(x => (Category1 && x.UpperValue == Category1.Label) || !Category1) : []"
-                  @input="selectedType('Category2Id', $event); Category3 = null"
+                  :options="lookup.CUSTOMER_CATEGORY_2"
+                  @input="selectedType('Category2Id', $event)"
                   label="Label"
-                  :disabled="!Category1"
+                  :disabled="true"
                 />
               </b-form-group>
             </b-col>
-            <b-col v-if="insertVisible.Category3Id != null ? insertVisible.Category3Id : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Category3Id + (insertRequired.Category3Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category3Id.$error }">
+            <b-col v-if="insertVisible.Category1Id != null ? insertVisible.Category1Id : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.Category1Id + (insertRequired.Category1Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1Id.$error }">
                 <v-select
-                  v-model="Category3"
-                  :options="lookup.CUSTOMER_CATEGORY_3 ? lookup.CUSTOMER_CATEGORY_3.filter(x => (Category2 && x.UpperValue == Category2.Label) || !Category2) : []"
-                  @input="selectedType('Category3Id', $event)"
+                  v-model="Category1"
+                  :options="lookup.CUSTOMER_CATEGORY_1"
+                  @input="selectedType('Category1Id', $event)"
                   label="Label"
-                  :disabled="!Category2"
+                  :disabled="true"
                 />
               </b-form-group>
             </b-col>
@@ -386,6 +388,7 @@
                   :options="lookup.CUSTOMER_GROUP"
                   @input="selectedType('GroupId', $event)"
                   label="Label"
+                  disabled
                 />
               </b-form-group>
             </b-col>
@@ -398,6 +401,7 @@
                   :options="lookup.CUSTOMER_CLASS"
                   @input="selectedType('ClassId', $event)"
                   label="Label"
+                  disabled
                 />
               </b-form-group>
             </b-col>
@@ -1310,7 +1314,9 @@ export default {
         tagDefinition: null,
         tagValue: null
       },
-      CustomerLabels: []
+      CustomerLabels: [],
+      locationEditableIndex: null,
+      addressInit: null
     }
   },
   computed: {
@@ -1633,40 +1639,47 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.CustomerLocations.filter(i => i.Code === this.customerLocations.Code)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.CustomerLocations.push({
+      let location = {
         Code: this.customerLocations.Code,
         Description1: this.customerLocations.Description1,
-        addressDetail: this.address.Address,
-        phoneNumber1: this.customerLocations.phoneNumber1,
-        faxNumber: this.customerLocations.faxNumber,
-        addressDescription: this.customerLocations.addressDescription,
-        genexp1: this.customerLocations.genexp1,
-        contactName: this.customerLocations.contactName,
-        cityId: this.customerLocations.cityId,
-        xPosition: this.customerLocations.xPosition,
-        yPosition: this.customerLocations.yPosition,
-        districtId: this.customerLocations.districtId,
-        genexp2: this.customerLocations.genexp2,
-        postCode: this.customerLocations.postCode,
-        alias: this.customerLocations.alias,
-        isDefaultLocation: this.customerLocations.isDefaultLocation,
-        isInvoiceAddress: this.customerLocations.isInvoiceAddress,
-        isDeliveryAddress: this.customerLocations.isDeliveryAddress,
-        isRouteNode: this.customerLocations.isRouteNode,
-        cityLabel: this.locationCityLabel,
-        districtLabel: this.locationDistirictLabel,
+        AddressDetail: this.address.Address,
+        PhoneNumber1: this.customerLocations.phoneNumber1,
+        FaxNumber: this.customerLocations.faxNumber,
+        AddressDescription: this.customerLocations.addressDescription,
+        Genexp1: this.customerLocations.genexp1,
+        ContactName: this.customerLocations.contactName,
+        CityId: this.customerLocations.cityId,
+        XPosition: this.customerLocations.xPosition,
+        YPosition: this.customerLocations.yPosition,
+        DistrictId: this.customerLocations.districtId,
+        Genexp2: this.customerLocations.genexp2,
+        PostCode: this.customerLocations.postCode,
+        Alias: this.customerLocations.alias,
+        IsDefaultLocation: this.customerLocations.isDefaultLocation,
+        IsInvoiceAddress: this.customerLocations.isInvoiceAddress,
+        IsDeliveryAddress: this.customerLocations.isDeliveryAddress,
+        IsRouteNode: this.customerLocations.isRouteNode,
+        CityLabel: this.locationCityLabel,
+        DistrictLabel: this.locationDistirictLabel,
         RecordState: 2
-      })
+      }
+      if (this.isLocationEditable) {
+        this.form.CustomerLocations[this.locationEditableIndex] = location
+      } else {
+        let filteredArr = this.form.CustomerLocations.filter(i => i.Code === this.customerLocations.Code)
+        if (filteredArr.length > 0) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+          return false
+        }
+        this.form.CustomerLocations.push(location)
+      }
       this.removeEditableInputs()
     },
     editCustomerLocation (item) {
+      debugger
       this.isLocationEditable = true
-      let filteredArr = this.form.CustomerLocations[this.form.CustomerLocations.indexOf(item)]
+      this.locationEditableIndex = this.form.CustomerLocations.indexOf(item)
+      let filteredArr = this.form.CustomerLocations[this.locationEditableIndex]
       if (filteredArr.RecordId) {
         this.customerLocations = {
           Code: filteredArr.Code,
@@ -1692,7 +1705,7 @@ export default {
           districtLabel: filteredArr.District ? filteredArr.District.Label : '',
           RecordId: filteredArr.RecordId
         }
-        this.address = {
+        this.addressInit = {
           CityId: filteredArr.CityId,
           DistrictId: filteredArr.DistrictId,
           Address: filteredArr.AddressDetail
@@ -1719,6 +1732,8 @@ export default {
       tmpCode += 1
       this.customerLocations.Code = `${this.form.Code} - ${tmpCode}`
       this.address = {}
+      this.addressInit = null
+      this.locationEditableIndex = null
       this.$v.customerLocations.$reset()
     },
     addCreditHistories () {
@@ -1999,15 +2014,9 @@ export default {
         if (e.Class) {
           this.Class = e.Class.Label
         }
-        if (e.Category1) {
-          this.Category1 = e.Category1.Label
-        }
-        if (e.Category2) {
-          this.Category2 = e.Category2.Label
-        }
-        if (e.Category3) {
-          this.Category3 = e.Category3.Label
-        }
+        this.Category1 = e.Category1.Label
+        this.Category2 = e.Category2
+        this.Category3 = e.Category3
         if (e.PriceListCategory) {
           this.PriceListCategory = e.PriceListCategory.Label
         }
@@ -2142,6 +2151,23 @@ export default {
         this.customerLocations.addressDetail = value.Address
         this.locationDistirictLabel = value.CityName
         this.locationCityLabel = value.DistrictName
+      }
+    },
+    Category3 (value) {
+      if (value) {
+        if (!value.UpperValue) {
+          return
+        }
+        this.Category2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Label === value.UpperValue)
+        this.form.Category2Id = this.Category2.DecimalValue
+        this.Category1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Label === this.Category2.UpperValue)
+        this.form.Category1Id = this.Category1.DecimalValue
+      } else {
+        this.Category1 = null
+        this.Category2 = null
+        this.form.Category1Id = null
+        this.form.Category2Id = null
+        this.form.Category3Id = null
       }
     }
   }

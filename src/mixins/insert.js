@@ -8,10 +8,17 @@ export default {
   methods: {
     createManualCode (parameter = 'Code') {
       this.setRouteNames()
-      return this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`}).then(() => {
         if (this.createCode) {
           this.form[parameter] = this.createCode
         }
+      })
+      this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
+        Object.keys(this.insertDefaultValue).forEach(el => {
+          if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
+            this.form[el] = this.insertDefaultValue[el]
+          }
+        })
       })
     },
     createData () {
