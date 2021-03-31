@@ -13,13 +13,6 @@ export default {
           this.form[parameter] = this.createCode
         }
       })
-      this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
-      })
     },
     createData () {
       this.setRouteNames()
@@ -31,14 +24,12 @@ export default {
   },
   mounted () {
     this.$store.commit('bigLoaded', false)
-    if (!this.insertRules || this.insertRules.length === 0) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
-        Object.keys(this.insertDefaultValue).forEach(el => {
-          if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
-            this.form[el] = this.insertDefaultValue[el]
-          }
-        })
+    this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName}).then(() => {
+      Object.keys(this.insertDefaultValue).forEach(el => {
+        if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
+          this.form[el] = this.insertDefaultValue[el]
+        }
       })
-    }
+    })
   }
 }
