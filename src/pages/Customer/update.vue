@@ -631,29 +631,29 @@
             </b-col>
             <b-col v-if="insertVisible.CreditLimit != null ? insertVisible.CreditLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CreditLimit + (insertRequired.CreditLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CreditLimit.$error }">
-                <b-form-input type="text" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" />
+                <b-form-input type="text" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.RiskLimit != null ? insertVisible.RiskLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.RiskLimit + (insertRequired.RiskLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RiskLimit.$error }">
-                <b-form-input type="text" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" />
+                <b-form-input type="text" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CurrentCredit != null ? insertVisible.CurrentCredit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentCredit + (insertRequired.CurrentCredit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentCredit.$error }">
-                <b-form-input type="text" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" />
+                <b-form-input type="text" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" disabled/>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.CurrentRisk != null ? insertVisible.CurrentRisk : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentRisk + (insertRequired.CurrentRisk === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentRisk.$error }">
-                <b-form-input type="text" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" />
+                <b-form-input type="text" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ReservedLimit != null ? insertVisible.ReservedLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ReservedLimit + (insertRequired.ReservedLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ReservedLimit.$error }">
-                <b-form-input type="text" v-model="form.ReservedLimit" :readonly="insertReadonly.ReservedLimit" />
+                <b-form-input type="text" v-model="form.ReservedLimit" :readonly="insertReadonly.ReservedLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="2">
@@ -772,7 +772,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
-                <v-select v-model="customerCreditHistories.currency" :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
+                <v-select v-model="customerCreditHistories.currency" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -799,12 +799,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditLimit" />
+                <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.riskLimit" />
+                <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -826,12 +826,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1044,9 +1044,9 @@
                     <template slot="no-options">
                       {{$t('insert.min3')}}
                     </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.Description1 }}
-                    </template>
+                   <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.Description1}}
+                   </template>
                 </v-select>
               </b-form-group>
             </b-col>
@@ -1316,11 +1316,12 @@ export default {
       },
       CustomerLabels: [],
       locationEditableIndex: null,
-      addressInit: null
+      addressInit: null,
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'cities', 'credits', 'touchpoints', 'touchpoint_types']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'allPaymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'cities', 'credits', 'touchpoints', 'touchpoint_types']),
     filteredCustomerPaymentType () {
       return this.CustomerPaymentTypesArr.filter(item => {
         return item.RecordState !== 4
@@ -1343,7 +1344,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currency'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm/Search', name: 'paymentPeriods'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'allPaymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/Label/Search', name: 'customerLabels'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
@@ -1792,9 +1793,12 @@ export default {
         ...this.query,
         api: 'VisionNextItem/api/Item/Search',
         name: 'items',
-        andConditionModel: {
-          Description1: search
-        }
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
       }).then(res => {
         loading(false)
       })
@@ -2169,6 +2173,16 @@ export default {
         this.form.Category2Id = null
         this.form.Category3Id = null
       }
+    },
+    customerType (value) {
+      if (value && value.DecimalValue === 5006) {
+        this.paymentTypes = this.allPaymentTypes.filter(p => p.RecordId !== 2)
+      } else {
+        this.paymentTypes = this.allPaymentTypes
+      }
+    },
+    allPaymentTypes (value) {
+      this.paymentTypes = value
     }
   }
 }

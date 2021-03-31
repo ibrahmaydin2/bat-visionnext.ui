@@ -29,6 +29,7 @@ import {VueMasonryPlugin} from 'vue-masonry'
 // multiple date datepicker
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import 'vue2-datepicker/locale/tr'
 
 import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'

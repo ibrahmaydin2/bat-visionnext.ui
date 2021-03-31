@@ -36,7 +36,10 @@
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="!form.WarehouseId || form.WarehouseId == 0">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
-                </template>
+                  </template>
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  </template>
                 </v-select>
               </NextFormGroup>
             </b-row>
@@ -115,6 +118,9 @@
               <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
+                </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -308,10 +314,18 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -351,9 +365,12 @@ export default {
           ...this.query,
           api: 'VisionNextItem/api/Item/Search',
           name: 'items',
-          andConditionModel: {
-            Description1: search
-          }
+          orConditionModels: [
+            {
+              Description1: search,
+              Code: search
+            }
+          ]
         }).then(res => {
           loading(false)
         })

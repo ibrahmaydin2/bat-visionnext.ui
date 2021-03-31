@@ -45,6 +45,9 @@
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
+                </template>
               </v-select>
             </NextFormGroup>
             <b-col cols="12" md="3">
@@ -148,11 +151,17 @@ export default {
       if (search.length < 3) {
         return false
       }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },

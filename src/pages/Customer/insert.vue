@@ -115,6 +115,7 @@
                   :options="lookup.CUSTOMER_TYPE"
                   @input="selectedType('TypeId', $event)"
                   label="Label"
+                  v-model="customerType"
                 />
               </b-form-group>
             </b-col>
@@ -415,6 +416,7 @@
                     :options="lookup.OWNER_TYPE"
                     @input="selectedType('OwnerTypeId', $event)"
                     label="Label"
+                    v-model="selectedOwnerType"
                   />
                 </b-form-group>
               </b-col>
@@ -435,6 +437,7 @@
                   :options="lookup.CUSTOMER_SALES_METHOD"
                   @input="selectedType('SalesMethodId', $event)"
                   label="Label"
+                  v-model="selectedSalesMethod"
                 />
               </b-form-group>
             </b-col>
@@ -444,6 +447,7 @@
                   :options="lookup.CUSTOMER_GEOGRAPHIC_ENVIRONMENT"
                   @input="selectedType('GeographicEnvironmentId', $event)"
                   label="Label"
+                  v-model="selectedGeographicEnvironment"
                 />
               </b-form-group>
             </b-col>
@@ -453,6 +457,7 @@
                   :options="lookup.CUSTOMER_TRADE_FOCUS"
                   @input="selectedType('TradeFocusId', $event)"
                   label="Label"
+                  v-model="selectedTradeFocus"
                 />
               </b-form-group>
             </b-col>
@@ -596,29 +601,29 @@
             </b-col>
             <b-col v-if="insertVisible.CreditLimit != null ? insertVisible.CreditLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CreditLimit + (insertRequired.CreditLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CreditLimit.$error }">
-                <b-form-input type="text" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" />
+                <b-form-input type="text" v-model="form.CreditLimit" :readonly="insertReadonly.CreditLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.RiskLimit != null ? insertVisible.RiskLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.RiskLimit + (insertRequired.RiskLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RiskLimit.$error }">
-                <b-form-input type="text" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" />
+                <b-form-input type="text" v-model="form.RiskLimit" :readonly="insertReadonly.RiskLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CurrentCredit != null ? insertVisible.CurrentCredit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentCredit + (insertRequired.CurrentCredit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentCredit.$error }">
-                <b-form-input type="text" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" />
+                <b-form-input type="text" v-model="form.CurrentCredit" :readonly="insertReadonly.CurrentCredit" disabled/>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.CurrentRisk != null ? insertVisible.CurrentRisk : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CurrentRisk + (insertRequired.CurrentRisk === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrentRisk.$error }">
-                <b-form-input type="text" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" />
+                <b-form-input type="text" v-model="form.CurrentRisk" :readonly="insertReadonly.CurrentRisk" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ReservedLimit != null ? insertVisible.ReservedLimit : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.ReservedLimit + (insertRequired.ReservedLimit === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ReservedLimit.$error }">
-                <b-form-input type="text" v-model="form.ReservedLimit" :readonly="insertReadonly.ReservedLimit" />
+                <b-form-input type="text" v-model="form.ReservedLimit" :readonly="insertReadonly.ReservedLimit" disabled/>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="2">
@@ -734,8 +739,8 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
-                <v-select v-model="customerCreditHistories.currency" :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
+              <b-form-group :label="$t('insert.customer.Model_CurrencyId')+ ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
+                <v-select v-model="customerCreditHistories.currency" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -744,7 +749,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
+              <b-form-group :label="$t('insert.customer.Model_CreditAmount')+ ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
                 <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
@@ -762,12 +767,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditLimit" />
+                <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.riskLimit" />
+              <b-form-group :label="$t('insert.customer.Model_RiskLimit')+ ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
+                <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -788,13 +793,13 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditStartDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.customer.Model_CreditStartDate')+ ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditStartDate.$error }">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditStartDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_CreditEndDate') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
-                <b-form-datepicker :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
+              <b-form-group :label="$t('insert.customer.Model_CreditEndDate')+ ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditEndDate.$error }">
+                <b-form-datepicker :placeholder="$t('insert.customer.chooseDate')" v-model="customerCreditHistories.creditEndDate" locale="tr" class="mb-2"></b-form-datepicker>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -855,16 +860,24 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
+                <b-th><span>{{$t('insert.customer.Model_CurrencyId')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditDescriptionId')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditStartDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_CreditEndDate')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.customerCreditHistories" :key="i">
+                  <b-td>{{r.currencyName}}</b-td>
+                  <b-td>{{r.creditDescriptionName}}</b-td>
                   <b-td>{{r.creditAmount}}</b-td>
                   <b-td>{{r.creditLimit}}</b-td>
                   <b-td>{{r.riskLimit}}</b-td>
+                   <b-td>{{r.creditStartDate ? dateConvertFromTimezone(r.creditStartDate) : ''}}</b-td>
+                  <b-td>{{r.creditEndDate ? dateConvertFromTimezone(r.creditEndDate) : ''}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerCreditHistory(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -993,8 +1006,8 @@
                     <template slot="no-options">
                       {{$t('insert.min3')}}
                     </template>
-                    <template slot="option" slot-scope="option">
-                      {{ option.Description1 }}
+                    <template v-slot:option="option">
+                      {{option.Code + ' - ' + option.Description1}}
                     </template>
                 </v-select>
               </b-form-group>
@@ -1200,12 +1213,12 @@ export default {
         GroupId: 5021,
         ClassId: 5009,
         SalesDocumentTypeId: null,
-        OwnerTypeId: null,
+        OwnerTypeId: 5003,
         ClassProposalId: null,
         ClassProposalReasonId: null,
-        SalesMethodId: null,
-        GeographicEnvironmentId: null,
-        TradeFocusId: null,
+        SalesMethodId: 5036,
+        GeographicEnvironmentId: 5032,
+        TradeFocusId: 5087,
         InvoiceCombineRuleId: null,
         BackMarginGroupId: null,
         DiscountGroup3Id: null,
@@ -1315,11 +1328,17 @@ export default {
       selectedPaymentPeriod: null,
       addressInit: null,
       selectedCustomerGroup: null,
-      selectedCustomerClass: null
+      selectedCustomerClass: null,
+      selectedOwnerType: null,
+      selectedSalesMethod: null,
+      selectedGeographicEnvironment: null,
+      selectedTradeFocus: null,
+      customerType: null,
+      paymentTypes: []
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'paymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits', 'touchpoints', 'touchpoint_types']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'allPaymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'credits', 'touchpoints', 'touchpoint_types']),
     customerBlackReason: function () {
       return this.lookup && this.lookup.CUSTOMER_BLOCK_REASON ? this.lookup.CUSTOMER_BLOCK_REASON[0] : {}
     }
@@ -1341,7 +1360,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/CancelReason/Search', name: 'cancelReasons'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currency'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/FixedTerm/Search', name: 'paymentPeriods'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'allPaymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/Label/Search', name: 'customerLabels'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
@@ -1370,6 +1389,7 @@ export default {
       this.form[label] = model.RecordId
     },
     save () {
+      debugger
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -1406,17 +1426,22 @@ export default {
     selectedCurrency (e) {
       if (e) {
         this.customerCreditHistories.currencyId = e.RecordId
+        this.customerCreditHistories.currencyName = e.Description1
       } else {
         this.customerCreditHistories.currencyId = null
+        this.customerCreditHistories.currencyName = null
       }
     },
     selectedCreditDescription (e) {
+      debugger
       if (e) {
         this.customerCreditHistories.creditDescriptionId = e.DecimalValue
         this.customerCreditHistories.creditDescriptionCode = e.Code
+        this.customerCreditHistories.creditDescriptionName = e.Label
       } else {
         this.customerCreditHistories.creditDescriptionId = null
         this.customerCreditHistories.creditDescriptionCode = null
+        this.customerCreditHistories.creditDescriptionName = null
       }
     },
     selectedPaymentTypeArr (e) {
@@ -1640,6 +1665,7 @@ export default {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
     },
     addCreditHistories () {
+      debugger
       this.$v.customerCreditHistories.$touch()
       if (this.$v.customerCreditHistories.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -1652,9 +1678,11 @@ export default {
       this.form.customerCreditHistories.push({
         creditAmount: this.customerCreditHistories.creditAmount,
         creditDescriptionId: this.customerCreditHistories.creditDescriptionId,
+        creditDescriptionName: this.customerCreditHistories.creditDescriptionName,
         creditStartDate: this.dateConvertToISo(this.customerCreditHistories.creditStartDate),
         bankId: this.customerCreditHistories.bankId,
         currencyId: this.customerCreditHistories.currencyId,
+        currencyName: this.customerCreditHistories.currencyName,
         creditEndDate: this.dateConvertToISo(this.customerCreditHistories.creditEndDate),
         debtor: this.customerCreditHistories.debtor,
         bail: this.customerCreditHistories.bail,
@@ -1672,7 +1700,9 @@ export default {
         allowOverLimit: this.customerCreditHistories.allowOverLimit,
         plate: this.customerCreditHistoriesplate
       })
-      this.customerCreditHistories = null
+      this.customerCreditHistories = {
+        bankId: null
+      }
       this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
@@ -1689,9 +1719,12 @@ export default {
         ...this.query,
         api: 'VisionNextItem/api/Item/Search',
         name: 'items',
-        andConditionModel: {
-          Description1: search
-        }
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
       }).then(res => {
         loading(false)
       })
@@ -1851,15 +1884,38 @@ export default {
     },
     lookup: {
       handler (val) {
-        debugger
-        if (val.CUSTOMER_GROUP) {
-          this.selectedCustomerGroup = val.CUSTOMER_GROUP.find(c => c.DecimalValue === 5021)
-        }
-        if (val.CUSTOMER_GROUP) {
-          this.selectedCustomerClass = val.CUSTOMER_CLASS.find(c => c.DecimalValue === 5009)
+        if (val) {
+          if (val.CUSTOMER_GROUP) {
+            this.selectedCustomerGroup = val.CUSTOMER_GROUP.find(g => g.DecimalValue === 5009)
+          }
+          if (val.CUSTOMER_CLASS) {
+            this.selectedCustomerClass = val.CUSTOMER_CLASS.find(c => c.DecimalValue === 5021)
+          }
+          if (val.OWNER_TYPE) {
+            this.selectedOwnerType = val.OWNER_TYPE.find(o => o.DecimalValue === 5003)
+          }
+          if (val.CUSTOMER_SALES_METHOD) {
+            this.selectedSalesMethod = val.CUSTOMER_SALES_METHOD.find(s => s.DecimalValue === 5036)
+          }
+          if (val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT) {
+            this.selectedGeographicEnvironment = val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT.find(g => g.DecimalValue === 5032)
+          }
+          if (val.CUSTOMER_TRADE_FOCUS) {
+            this.selectedTradeFocus = val.CUSTOMER_TRADE_FOCUS.find(t => t.DecimalValue === 5087)
+          }
         }
       },
       deep: true
+    },
+    customerType (value) {
+      if (value && value.DecimalValue === 5006) {
+        this.paymentTypes = this.allPaymentTypes.filter(p => p.RecordId !== 2)
+      } else {
+        this.paymentTypes = this.allPaymentTypes
+      }
+    },
+    allPaymentTypes (value) {
+      this.paymentTypes = value
     }
   }
 }
