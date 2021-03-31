@@ -1080,6 +1080,7 @@ export const store = new Vuex.Store({
         'AndConditionModel': {
           ...query.andConditionModel
         },
+        'OrConditionModels': query.orConditionModels,
         ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,

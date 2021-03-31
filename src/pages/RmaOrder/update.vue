@@ -33,6 +33,9 @@
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
@@ -88,6 +91,9 @@
               <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
+                </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -203,10 +209,18 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextCustomer/api/Customer/Search', 'customers', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/Search',
+        name: 'customers',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -251,10 +265,17 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Code: search
-      }
-      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },

@@ -54,7 +54,11 @@
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.loadingplan.items')">
-                <v-select :options="items" @input="selectedItem" label="Description1"></v-select>
+                <v-select :options="items" @input="selectedItem" label="Description1">
+                  <template v-slot:option="option">
+                    {{option.Code + ' - ' + option.Description1}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3">
