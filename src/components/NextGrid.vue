@@ -69,6 +69,8 @@
                 type="date"
                 :placeholder="getFormattedDate(header.defaultValue)"
                 v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
@@ -78,6 +80,8 @@
                 type="date"
                 :placeholder="getFormattedDate(header.defaultValue)"
                 v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
@@ -119,7 +123,7 @@
                   <i class="fas fa-th" />
                 </template>
                 <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" />
+                <!-- <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" /> -->
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
@@ -335,6 +339,17 @@ export default {
       this.showPotentialCustomerApproveModal = false
       this.showPotentialCustomerRejectModal = false
       this.showConfirmModal = false
+
+      if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
+        if (row.ApproveStateId !== 51) {
+          this.$toasted.show(this.$t('index.errorApproveStateModal'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+      }
 
       if (action.Action === 'ApprovePotentialCustomer') {
         this.showPotentialCustomerApproveModal = true
