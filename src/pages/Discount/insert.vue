@@ -541,18 +541,6 @@ export default {
   mixins: [insertMixin],
   data () {
     return {
-      discountGivenColumnName: {},
-      discountGivenColumnValue: {},
-      discountTakenColumnName: {},
-      discountTakenColumnValue: {},
-      customerCriteriaColumnName: {},
-      customerCriteriaColumnValue: {},
-      customer: {},
-      excludedCustomer: {},
-      branch: {},
-      route: {},
-      paymentType: {},
-      customerSql: {},
       form: {
         Deleted: 0,
         System: 0,
@@ -718,6 +706,24 @@ export default {
         CustomerSqlId: null,
         CustomerSqlName: null
       },
+      discountGivenColumnName: {},
+      discountGivenColumnValue: {},
+      discountTakenColumnName: {},
+      discountTakenColumnValue: {},
+      customerCriteriaColumnName: {},
+      customerCriteriaColumnValue: {},
+      customer: {},
+      excludedCustomer: {},
+      branch: {},
+      route: {},
+      paymentType: {},
+      customerSql: {},
+      discountGivensColumnNames: [],
+      discountGivensColumnValues: [],
+      discountTakensColumnNames: [],
+      discountTakensColumnValues: [],
+      customerCriteriaColumnNames: [],
+      customerCriteriaColumnValues: [],
       discountDetailsCustomerCriterias: [],
       discountDetailsBranchs: [],
       discountDetailsRoutes: [],
@@ -736,8 +742,6 @@ export default {
       minTakenQuantityValid: false,
       minTakenAmountValid: false,
       ApproveStateLabel: null,
-      addDiscountCustomerValid: false,
-      addDiscountExcludedCustomerValid: false,
       branchCriteria: null,
       customerCriteria: null,
       routeCriteria: null,
@@ -747,20 +751,7 @@ export default {
       routeTabValid: false,
       paymentTabValid: false,
       customerSqlsTabValid: false,
-      customerCriterTabValid: false,
-      addBranchButtonValid: false,
-      addRouteButtonValid: false,
-      addPaymentTypeButtonValid: false,
-      discountGivensColumnNames: [],
-      discountGivensColumnValues: [],
-      discountGivensColumnValueValid: false,
-      discountTakensColumnNames: [],
-      discountTakensColumnValues: [],
-      discountTakensColumnValueValid: false,
-      customerCriteriaColumnValueValid: false,
-      customerCriteriaColumnNames: [],
-      customerCriteriaColumnValues: [],
-      addCustomerCriteriaButtonValid: false
+      customerCriterTabValid: false
     }
   },
   computed: {
@@ -778,8 +769,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCustomerSql/Search', name: 'customerSqls'})
-      let allLookups = 'BRANCH_CRITERIA,CUSTOMER_CRITERIA,APPROVE_STATE,TCI_BREAKDOWN,ROUTE_CRITERIA,PAYMENT_CRITERIA'
-      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
       this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         this.customerCriteriaColumnNames = res.Values
       })

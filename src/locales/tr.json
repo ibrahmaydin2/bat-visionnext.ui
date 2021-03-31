@@ -1345,7 +1345,10 @@
       "branchs":"Şubeler",
       "routes":"Rotalar",
       "payments":"Ödeme Tipleri",
-      "customerCriterias":"Müşteri Kriterleri"
+      "customerCriterias":"Müşteri Kriterleri",
+      "routeId":"Rota Id",
+      "branchId":"Şube Id",
+      "paymentTypeId": "Ödeme Tipi Id"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",
@@ -1649,6 +1652,35 @@
       "Code": "Kod",
       "Description":"Açıklama",
       "Status":"Durum"
+    },
+    "discount": {
+      "code": "İndirim Kodu",
+      "description1": "İndirim Tanımı",
+      "discountBeginDate": "Başlangıç",
+      "discountEndDate": "Bitiş",
+      "discountType": "İndirim Tipi",
+      "discountKind": "İndirim Çeşidi",
+      "maxValue": "Üst Değer",
+      "branchCriteria": "Şube Kriteri",
+      "customerCriteria": "Müşteri Kriteri",
+      "routeCriteria": "Rota Kriteri",
+      "paymentCriteria": "Ödeme Kriteri",
+      "genexp1": "Açıklama",
+      "financeCode": "Finans Kodu",
+      "budget":"Bütçe",
+      "budgetAmount": "Bütçe Miktarı",
+      "budgetConsumption":"Harcanan Bütçe Miktarı",
+      "approveState": "Onay Durumu",
+      "discountCategory": "İndirim Kategorisi",
+      "discountPayback": "Şube Geri Ödemesi",
+      "maxUsage": "Toplam Uygulama Sayısı",
+      "tciBreak1": "TCI",
+      "useBudget": "Bütçe Kullan",
+      "isCascade": "Kademeli Tutarsal İndirim",
+      "useMultiGiven": "Tüm Aralıklara Uygula",
+      "isMandatory": "Zorunlu",
+      "isDoubleScore": "İki Kat Puan Kazan",
+      "applyToTimes": "Katlarına Uygula"
     }
   },
 

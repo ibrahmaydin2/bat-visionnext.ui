@@ -400,9 +400,9 @@ export default {
         CompanyId: null,
         TableName: 'T_ITEM',
         ColumnName: this.campaignItemArea.Code,
-        ColumnValue: this.campaignItemArea.DecimalValue,
+        ColumnValue: this.campaignItemValue.DecimalValue,
         ColumnNameStr: this.campaignItemArea.Label,
-        ColumnValueStr: this.campaignItemArea.Label
+        ColumnValueStr: this.campaignItemValue.Label
       })
     },
     removeFixedTermCampaignItem (item) {
