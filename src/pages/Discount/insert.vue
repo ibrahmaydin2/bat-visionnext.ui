@@ -94,13 +94,7 @@
               <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
             </NextFormGroup> -->
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <v-select
-                disabled
-                v-model="ApproveStateLabel"
-                :options="lookup.APPROVE_STATE"
-                @input="selectedType('ApproveStateId', $event)"
-                label="Label"
-              />
+              <b-form-input type="text" v-model="ApproveStateLabel" readonly />
             </NextFormGroup>
             <NextFormGroup item-key="DiscountCategoryId" :error="$v.form.DiscountCategoryId">
               <v-select :options="discountCategories" @input="selectedSearchType('DiscountCategoryId', $event)" label="Description1">
@@ -147,28 +141,18 @@
                 {{(form.IsDoubleScore) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
-            <NextFormGroup item-key="ApplyToTimes" :error="$v.form.ApplyToTimes">
-              <b-form-checkbox v-model="form.ApplyToTimes" name="check-button" switch>
-                {{(form.ApplyToTimes) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+            <NextFormGroup item-key="ApplyToTimes" :error="$v.form.ApplyToTimes" md="4" lg="3">
+              <NextCheckBox v-model="form.ApplyToTimes" type="number" toggle />
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountGivens')" @click="DiscountGivensValid()">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')">
-              <v-select :options="discountGivensColumnNames" @input="selectedDiscountGivensColumnName" :disabled="!columnNameValid" label="Label">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="columnNameValid">
+              <v-select v-model="discountGivenColumnName" :options="discountGivensColumnNames" :disabled="!columnNameValid" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')">
-              <v-select :options="discountGivensColumnValues" @input="selectedDiscountGivensColumnValue" label="Label" :disabled="!discountGivensColumnValueValid">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="columnNameValid">
+              <v-select v-model="discountGivenColumnValue" :options="discountGivensColumnValues" :disabled="!columnNameValid" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.givenQuantity')">
               <b-form-input type="text" v-model="discountGiven.GivenQuantity" :readonly="insertReadonly.GivenQuantity" />
@@ -187,7 +171,7 @@
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button @click="addDiscountGiven()" :disabled="!discountGivenAddButtonValid" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountGiven()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -205,7 +189,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in discountGivens" :key="i">
+                  <b-tr v-for="(w, i) in form.DiscountGivens" :key="i">
                     <b-td>{{w.ColumnNameStr}}</b-td>
                     <b-td>{{w.ColumnValueStr}}</b-td>
                     <b-td>{{w.GivenQuantity}}</b-td>
@@ -222,19 +206,11 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountTakens')">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')">
-              <v-select :options="discountTakensColumnNames" @input="selectedDiscountTakensColumnName" label="Label">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountTakenColumnName">
+              <v-select v-model="discountTakenColumnName" :options="discountTakensColumnNames" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')">
-              <v-select :options="discountTakensColumnValues" @input="selectedDiscountTakensColumnValue" label="Label" :disabled="!discountTakensColumnValueValid">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountTakenColumnValue">
+              <v-select v-model="discountTakenColumnValue" :options="discountTakensColumnValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.takenQuantity')">
               <b-form-input type="text" v-model="discountTaken.TakenQuantity" :disabled="!takenQuantityValid" />
@@ -271,7 +247,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in discountTakens" :key="i">
+                  <b-tr v-for="(w, i) in form.DiscountTakens" :key="i">
                     <b-td>{{w.ColumnNameStr}}</b-td>
                     <b-td>{{w.ColumnValueStr}}</b-td>
                     <b-td>{{w.TakenQuantity}}</b-td>
@@ -288,25 +264,25 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomers')" v-if="customerTabValid" @click="DiscountCustomersValid()">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerCode')">
-              <v-select :disabled='!form.BranchCriteriaId' :options="customers" @search="searchCustomer" @input="selectedDiscountCustomer" label="Code">
+            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountCustomer.CustomerId" :required="true">
+              <v-select v-model="customer" :options="customers" @search="searchCustomer" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.customerName')">
-              <b-form-input type="text" v-model="discountCustomer.Customer.Description1" readonly/>
+              <b-form-input type="text" v-model="discountCustomer.CustomerName" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.commercialTitle')">
-              <b-form-input type="text" v-model="discountCustomer.CommercialTitle" readonly/>
+              <b-form-input type="text" v-model="discountCustomer.CommercialTitle" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.location')">
-              <b-form-input type="text" v-model="discountCustomer.Location.Description1" disabled/>
+              <b-form-input type="text" v-model="discountCustomer.LocationName" :disabled="true"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addDiscountCustomerValid' @click="addDiscountCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -321,11 +297,11 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in discountCustomers" :key="i">
-                    <b-td>{{w.Customer.Code}}</b-td>
-                    <b-td>{{w.Customer.Description1}}</b-td>
+                  <b-tr v-for="(w, i) in form.DiscountCustomers" :key="i">
+                    <b-td>{{w.CustomerCode}}</b-td>
+                    <b-td>{{w.CustomerName}}</b-td>
                     <b-td>{{w.CommercialTitle}}</b-td>
-                    <b-td>{{w.Location.Description1}}</b-td>
+                    <b-td>{{w.LocationName}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountCustomer(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -335,25 +311,25 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountExcludedCustomers')" @click="DiscountCustomersValid()">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerCode')">
-              <v-select :disabled='!form.BranchCriteriaId' :options="customers" @search="searchCustomer" @input="selectedDiscountExcludedCustomer" label="Code">
+            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountExcludedCustomer.CustomerId" :required="true">
+              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.customerName')">
-              <b-form-input type="text" v-model="discountExcludedCustomer.Customer.Description1" readonly/>
+              <b-form-input type="text" v-model="discountExcludedCustomer.CustomerName" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.commercialTitle')">
-              <b-form-input type="text" v-model="discountExcludedCustomer.CommercialTitle" readonly/>
+              <b-form-input type="text" v-model="discountExcludedCustomer.CommercialTitle" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.location')">
-              <b-form-input type="text" v-model="discountExcludedCustomer.Location.Description1" disabled/>
+              <b-form-input type="text" v-model="discountExcludedCustomer.LocationName" :disabled="true"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addDiscountExcludedCustomerValid' @click="addDiscountExcludedCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountExcludedCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -368,11 +344,11 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in discountExcludedCustomers" :key="i">
-                    <b-td>{{w.Customer.Code}}</b-td>
-                    <b-td>{{w.Customer.Description1}}</b-td>
+                  <b-tr v-for="(w, i) in form.DiscountExcludedCustomers" :key="i">
+                    <b-td>{{w.CustomerCode}}</b-td>
+                    <b-td>{{w.CustomerName}}</b-td>
                     <b-td>{{w.CommercialTitle}}</b-td>
-                    <b-td>{{w.Location.Description1}}</b-td>
+                    <b-td>{{w.LocationName}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountExcludedCustomer(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -382,23 +358,15 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.customerCriterias')" v-if="customerCriterTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')">
-              <v-select :options="customerCriteriaColumnNames" @input="selectedCustomerCriteriaColumnName" label="Label">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="true">
+              <v-select v-model="customerCriteriaColumnName" :options="customerCriteriaColumnNames" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')">
-              <v-select :options="customerCriteriaColumnValues" @input="selectedCustomerCriteriaColumnValue" label="Label" :disabled="!customerCriteriaColumnValueValid">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="true">
+              <v-select v-model="customerCriteriaColumnValue" :options="customerCriteriaColumnValues"  label="Label"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addCustomerCriteriaButtonValid' @click="addCustomerCriteria()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addCustomerCriteria()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -423,19 +391,19 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.branchs')" v-if="branchTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.branchCode')">
-              <v-select :disabled='!form.BranchCriteriaId' :options="branchs" @search="searchBranch" @input="selectedDiscountDetailBranch" label="Code">
+            <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="true">
+              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.branchName')">
-              <b-form-input type="text" v-model="discountDetail.Branch.Description1" readonly/>
+              <b-form-input type="text" v-model="discountDetailsBranch.BranchName" :disabled="true"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addBranchButtonValid' @click="addDiscountDetailBranchs()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountDetailBranchs()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -449,8 +417,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in discountDetailsBranchs" :key="i">
-                    <b-td>{{w.Branch.Code}}</b-td>
-                    <b-td>{{w.Branch.Description1}}</b-td>
+                    <b-td>{{w.BranchCode}}</b-td>
+                    <b-td>{{w.BranchName}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountDetailBranchs(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -460,19 +428,19 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.routes')" v-if="routeTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.routeCode')">
-              <v-select :disabled='!form.RouteCriteriaId' :options="routes" @search="searchRoute" @input="selectedDiscountDetailRoute" label="Code">
+            <NextFormGroup :title="$t('insert.discount.routeCode')" :error="$v.discountDetailsRoute.RouteId" :required="true">
+              <v-select :disabled='!form.RouteCriteriaId' v-model="route" :options="routes" @search="searchRoute" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.routeName')">
-              <b-form-input type="text" v-model="discountDetail.Route.Description1" readonly/>
+              <b-form-input type="text" v-model="discountDetailsRoute.RouteName" :disabled="true"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addRouteButtonValid' @click="addDiscountDetailRoutes()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountDetailRoutes()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -486,8 +454,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in discountDetailsRoutes" :key="i">
-                    <b-td>{{w.Route.Code}}</b-td>
-                    <b-td>{{w.Route.Description1}}</b-td>
+                    <b-td>{{w.RouteCode}}</b-td>
+                    <b-td>{{w.RouteName}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountDetailRoutes(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -497,8 +465,8 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.payments')" v-if="paymentTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.paymentType')">
-              <v-select :disabled='!form.PaymentCriteriaId' :options="paymentTypes" @input="selectedDiscountDetailPayment" label="Description1">
+            <NextFormGroup :title="$t('insert.discount.paymentType')" :error="$v.discountDetailsPayment.PaymentTypeId" :required="true">
+              <v-select :disabled='!form.PaymentCriteriaId' v-model="paymentType" :options="paymentTypes" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -506,7 +474,7 @@
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button :disabled='!addPaymentTypeButtonValid' @click="addDiscountDetailPaymentTypes()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addDiscountDetailPaymentTypes()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -529,8 +497,12 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomerSqls')" v-if="customerSqlsTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerSql')">
-              <b-form-input type="text" v-model="discountCustomerSql.CustomerSqlId" :readonly="insertReadonly.ColumnName" />
+            <NextFormGroup :title="$t('insert.discount.customerSql')" :error="$v.discountCustomerSql.CustomerSqlId" :required="true">
+              <v-select v-model="customerSql" :options="customerSqls" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -546,7 +518,7 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in discountCustomerSqls" :key="i">
-                    <b-td>{{w.CustomerSqlId}}</b-td>
+                    <b-td>{{w.CustomerSqlName}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountCustomerSql(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -564,10 +536,23 @@
 <script>
 import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
+import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [insertMixin],
   data () {
     return {
+      discountGivenColumnName: {},
+      discountGivenColumnValue: {},
+      discountTakenColumnName: {},
+      discountTakenColumnValue: {},
+      customerCriteriaColumnName: {},
+      customerCriteriaColumnValue: {},
+      customer: {},
+      excludedCustomer: {},
+      branch: {},
+      route: {},
+      paymentType: {},
+      customerSql: {},
       form: {
         Deleted: 0,
         System: 0,
@@ -588,10 +573,10 @@ export default {
         Genexp1: null,
         IsContractDiscount: null,
         FinanceCode: null,
-        UseBudget: null,
+        UseBudget: 0,
         BudgetId: null,
         BudgetAmount: null,
-        BudgetConsumption: null,
+        BudgetConsumption: 0,
         ApproveStateId: 2102,
         DiscountCategoryId: null,
         DiscountPayback: 0,
@@ -632,7 +617,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: null,
+        TableName: 'T_DISCOUNT_TAKEN',
         ColumnName: null,
         ColumnNameStr: null,
         ColumnValue: null,
@@ -649,18 +634,11 @@ export default {
         StatusId: 1,
         RecordState: 2,
         CustomerId: null,
-        CommercialTitle: null,
+        CustomerName: null,
+        CustomerCode: null,
         LocationId: null,
-        Customer: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        },
-        Location: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        LocationName: null,
+        CommercialTitle: null
       },
       discountExcludedCustomer: {
         Deleted: 0,
@@ -668,20 +646,13 @@ export default {
         StatusId: 1,
         RecordState: 2,
         CustomerId: null,
-        CommercialTitle: null,
+        CustomerName: null,
+        CustomerCode: null,
         LocationId: null,
-        Customer: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        },
-        Location: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        LocationName: null,
+        CommercialTitle: null
       },
-      discountDetail: {
+      discountDetailsBranch: {
         Deleted: 0,
         System: 0,
         StatusId: 1,
@@ -692,17 +663,49 @@ export default {
         ColumnValue: null,
         ColumnValueStr: null,
         BranchId: null,
-        Branch: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        },
+        BranchCode: null,
+        BranchName: null,
         RouteId: null,
-        Route: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        },
+        RouteCode: null,
+        RouteName: null,
+        PaymentTypeId: null,
+        PaymentTypeName: null
+      },
+      discountDetailsRoute: {
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        TableName: null,
+        ColumnName: null,
+        ColumnNameStr: null,
+        ColumnValue: null,
+        ColumnValueStr: null,
+        BranchId: null,
+        BranchCode: null,
+        BranchName: null,
+        RouteId: null,
+        RouteCode: null,
+        RouteName: null,
+        PaymentTypeId: null,
+        PaymentTypeName: null
+      },
+      discountDetailsPayment: {
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        TableName: null,
+        ColumnName: null,
+        ColumnNameStr: null,
+        ColumnValue: null,
+        ColumnValueStr: null,
+        BranchId: null,
+        BranchCode: null,
+        BranchName: null,
+        RouteId: null,
+        RouteCode: null,
+        RouteName: null,
         PaymentTypeId: null,
         PaymentTypeName: null
       },
@@ -712,12 +715,9 @@ export default {
         StatusId: 1,
         RecordState: 2,
         DiscountId: null,
-        CustomerSqlId: null
+        CustomerSqlId: null,
+        CustomerSqlName: null
       },
-      discountGivens: [],
-      discountTakens: [],
-      discountCustomers: [],
-      discountExcludedCustomers: [],
       discountDetailsCustomerCriterias: [],
       discountDetailsBranchs: [],
       discountDetailsRoutes: [],
@@ -764,13 +764,10 @@ export default {
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['discountTypes', 'discountKinds', 'budgets', 'discountCategories', 'columnNames', 'columnValues', 'customers', 'branchs', 'routes', 'paymentTypes'])
+    ...mapState(['discountTypes', 'discountKinds', 'budgets', 'discountCategories', 'columnNames', 'columnValues', 'customers', 'branchs', 'routes', 'paymentTypes', 'customerSqls'])
   },
   mounted () {
     this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
     this.getInsertPage(this.routeName)
   },
   methods: {
@@ -780,6 +777,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountCategory/Search', name: 'discountCategories'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCustomerSql/Search', name: 'customerSqls'})
       let allLookups = 'BRANCH_CRITERIA,CUSTOMER_CRITERIA,APPROVE_STATE,TCI_BREAKDOWN,ROUTE_CRITERIA,PAYMENT_CRITERIA'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
       this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
@@ -834,86 +832,339 @@ export default {
     selectedSearchType (label, model) {
       if (model) {
         if (label === 'DiscountKindId' && model.RecordId !== 2) {
-          this.form.IsCascade = null
-          this.form.UseMultiGiven = null
+          this.form.IsCascade = 0
+          this.form.UseMultiGiven = 0
         }
         this.form[label] = model.RecordId
       } else {
         if (label === 'DiscountKindId') {
           this.discountGiven.ColumnName = null
           this.discountGiven.ColumnValue = null
-          this.form.IsCascade = null
-          this.form.UseMultiGiven = null
+          this.form.IsCascade = 0
+          this.form.UseMultiGiven = 0
           this.initFalseValid()
         }
         this.form[label] = null
       }
     },
     addDiscountGiven () {
-      this.discountGivens.push(this.discountGiven)
-      this.initNull('DiscountGiven')
+      this.$v.discountGivenColumnName.$touch()
+      this.$v.discountGivenColumnValue.$touch()
+      if (this.$v.discountGivenColumnName.$error || this.$v.discountGivenColumnValue.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.form.DiscountGivens.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_DISCOUNT_GIVEN',
+        ColumnName: this.discountGivenColumnName.Code,
+        ColumnValue: this.discountGivenColumnValue.DecimalValue,
+        ColumnNameStr: this.discountGivenColumnName.Label,
+        ColumnValueStr: this.discountGivenColumnValue.Label,
+        GivenQuantity: this.discountGiven.GivenQuantity,
+        DiscountRate: this.discountGiven.DiscountRate,
+        DiscountTotal: this.discountGiven.DiscountTotal,
+        StartValue: this.discountGiven.StartValue,
+        FinishValue: this.discountGiven.FinishValue
+      })
+      this.discountGivenColumnName = {}
+      this.discountGivenColumnValue = {}
+      this.discountGiven = {}
+      this.$v.discountGivenColumnName.$reset()
+      this.$v.discountGivenColumnValue.$reset()
     },
     removeDiscountGiven (e) {
-      this.discountGivens.splice(this.discountGivens.indexOf(e), 1)
+      this.form.DiscountGivens.splice(this.form.DiscountGivens.indexOf(e), 1)
     },
     addDiscountTaken () {
-      this.discountTakens.push(this.discountTaken)
-      this.initNull('DiscountTaken')
+      this.$v.discountTakenColumnName.$touch()
+      this.$v.discountTakenColumnValue.$touch()
+      if (this.$v.discountTakenColumnName.$error || this.$v.discountTakenColumnValue.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.form.DiscountTakens.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_DISCOUNT_TAKEN',
+        ColumnName: this.discountTakenColumnName.Code,
+        ColumnValue: this.discountTakenColumnValue.DecimalValue,
+        ColumnNameStr: this.discountTakenColumnName.Label,
+        ColumnValueStr: this.discountTakenColumnValue.Label,
+        TakenQuantity: this.discountTaken.TakenQuantity,
+        MinTakenAmount: this.discountTaken.MinTakenAmount,
+        EndTakenQuantity: this.discountTaken.EndTakenQuantity,
+        MaxTakenAmount: this.discountTaken.MaxTakenAmount,
+        MinTakenQuantity: this.discountTaken.MinTakenQuantity
+      })
+      this.discountTakenColumnName = {}
+      this.discountTakenColumnValue = {}
+      this.discountTaken = {}
+      this.$v.discountTakenColumnName.$reset()
+      this.$v.discountTakenColumnValue.$reset()
     },
     removeDiscountTaken (e) {
-      this.discountTakens.splice(this.discountTakens.indexOf(e), 1)
+      this.form.DiscountTakens.splice(this.form.DiscountTakens.indexOf(e), 1)
     },
     addDiscountCustomer () {
-      this.discountCustomers.push(this.discountCustomer)
-      this.initNull('DiscountCustomer')
+      this.$v.discountCustomer.$touch()
+      if (this.$v.discountCustomer.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.DiscountCustomers.filter(f => f.CustomerId === this.discountCustomer.CustomerId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.DiscountCustomers.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        CustomerId: this.discountCustomer.CustomerId,
+        CustomerName: this.discountCustomer.CustomerName,
+        CustomerCode: this.discountCustomer.CustomerCode,
+        LocationId: this.discountCustomer.LocationId,
+        LocationName: this.discountCustomer.LocationName,
+        CommercialTitle: this.discountCustomer.CommercialTitle
+      })
+      this.discountCustomer = {}
+      this.customer = null
+      this.$v.discountCustomer.$reset()
     },
     removeDiscountCustomer (e) {
-      this.discountCustomers.splice(this.discountCustomers.indexOf(e), 1)
+      this.DiscountCustomers.splice(this.DiscountCustomers.indexOf(e), 1)
     },
     addDiscountExcludedCustomer () {
-      this.discountExcludedCustomers.push(this.discountExcludedCustomer)
-      this.initNull('DiscountExcludedCustomer')
+      this.$v.discountExcludedCustomer.$touch()
+      if (this.$v.discountExcludedCustomer.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.DiscountExcludedCustomers.filter(f => f.CustomerId === this.discountExcludedCustomer.CustomerId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.form.DiscountExcludedCustomers.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        CustomerId: this.discountExcludedCustomer.CustomerId,
+        CustomerName: this.discountExcludedCustomer.CustomerName,
+        CustomerCode: this.discountExcludedCustomer.CustomerCode,
+        LocationId: this.discountExcludedCustomer.LocationId,
+        LocationName: this.discountExcludedCustomer.LocationName,
+        CommercialTitle: this.discountExcludedCustomer.CommercialTitle
+      })
+      this.discountExcludedCustomer = {}
+      this.excludedCustomer = null
+      this.$v.discountExcludedCustomer.$reset()
     },
     removeDiscountExcludedCustomer (e) {
-      this.discountExcludedCustomers.splice(this.discountExcludedCustomers.indexOf(e), 1)
+      this.DiscountExcludedCustomers.splice(this.DiscountExcludedCustomers.indexOf(e), 1)
     },
     addCustomerCriteria () {
-      this.discountDetail.TableName = 'T_CUSTOMER'
-      this.addCustomerCriteriaButtonValid = false
-      this.discountDetailsCustomerCriterias.push(this.discountDetail)
-      this.initNull('DiscountDetail')
+      this.$v.customerCriteriaColumnName.$touch()
+      this.$v.customerCriteriaColumnValue.$touch()
+      if (this.$v.customerCriteriaColumnName.$error || this.$v.customerCriteriaColumnValue.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.discountDetailsCustomerCriterias.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_CUSTOMER',
+        ColumnName: this.customerCriteriaColumnName.Code,
+        ColumnValue: this.customerCriteriaColumnValue.DecimalValue,
+        ColumnNameStr: this.customerCriteriaColumnName.Label,
+        ColumnValueStr: this.customerCriteriaColumnValue.Label
+      })
+      this.customerCriteriaColumnName = {}
+      this.customerCriteriaColumnValue = {}
+      this.$v.customerCriteriaColumnName.$reset()
+      this.$v.customerCriteriaColumnValue.$reset()
     },
     removeCustomerCriteria (e) {
       this.discountDetailsCustomerCriterias.splice(this.discountDetailsCustomerCriterias.indexOf(e), 1)
     },
     addDiscountDetailBranchs () {
-      this.addBranchButtonValid = false
-      this.discountDetailsBranchs.push(this.discountDetail)
-      this.initNull('DiscountDetail')
+      this.$v.discountDetailsBranch.$touch()
+      if (this.$v.discountDetailsBranch.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.discountDetailsBranchs.filter(f => f.BranchId === this.discountDetailsBranch.BranchId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.discountDetailsBranchs.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        TableName: 'T_BRANCH',
+        ColumnName: 'BRANCH_ID',
+        ColumnValue: this.discountDetailsBranch.BranchId,
+        BranchId: this.discountDetailsBranch.BranchId,
+        BranchCode: this.discountDetailsBranch.BranchCode,
+        BranchName: this.discountDetailsBranch.BranchName,
+        RouteId: null,
+        RouteCode: null,
+        RouteName: null,
+        PaymentTypeId: null,
+        PaymentTypeName: null
+      })
+      this.discountDetailsBranch = {}
+      this.branch = null
+      this.$v.discountDetailsBranch.$reset()
     },
     removeDiscountDetailBranchs (e) {
       this.discountDetailsBranchs.splice(this.discountDetailsBranchs.indexOf(e), 1)
     },
     addDiscountDetailRoutes () {
-      this.addRouteButtonValid = false
-      this.discountDetailsRoutes.push(this.discountDetail)
-      this.initNull('DiscountDetail')
+      this.$v.discountDetailsRoute.$touch()
+      if (this.$v.discountDetailsRoute.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.discountDetailsRoutes.filter(f => f.RouteId === this.discountDetailsRoute.RouteId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.discountDetailsRoutes.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        TableName: 'T_ROUTE',
+        ColumnName: 'ROUTE_ID',
+        ColumnValue: this.discountDetailsRoute.RouteId,
+        BranchId: null,
+        BranchCode: null,
+        BranchName: null,
+        RouteId: this.discountDetailsRoute.RouteId,
+        RouteCode: this.discountDetailsRoute.RouteCode,
+        RouteName: this.discountDetailsRoute.RouteName,
+        PaymentTypeId: null,
+        PaymentTypeName: null
+      })
+      this.discountDetailsRoute = {}
+      this.route = null
+      this.$v.discountDetailsRoute.$reset()
     },
     removeDiscountDetailRoutes (e) {
       this.discountDetailsRoutes.splice(this.discountDetailsRoutes.indexOf(e), 1)
     },
     addDiscountDetailPaymentTypes () {
-      this.addPaymentTypeButtonValid = false
-      this.discountDetailsPaymentTypes.push(this.discountDetail)
-      this.initNull('DiscountDetail')
+      this.$v.discountDetailsPayment.$touch()
+      if (this.$v.discountDetailsPayment.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.discountDetailsPaymentTypes.filter(f => f.PaymentTypeId === this.discountDetailsPayment.PaymentTypeId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.discountDetailsPaymentTypes.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        TableName: 'T_PAYMENT_TYPE',
+        ColumnName: 'PAYMENTTYPE_ID',
+        ColumnValue: this.discountDetailsPayment.PaymentTypeId,
+        BranchId: null,
+        BranchCode: null,
+        BranchName: null,
+        RouteId: null,
+        RouteCode: null,
+        RouteName: null,
+        PaymentTypeId: this.discountDetailsPayment.PaymentTypeId,
+        PaymentTypeName: this.discountDetailsPayment.PaymentTypeName
+      })
+      this.discountDetailsRoute = {}
+      this.route = null
+      this.$v.discountDetailsRoute.$reset()
     },
     removeDiscountDetailPaymentTypes (e) {
       this.discountDetailsPaymentTypes.splice(this.discountDetailsPaymentTypes.indexOf(e), 1)
     },
     addDiscountCustomerSqls () {
       // this.$bvModal.show('approve-assurance-modal')
-      this.discountCustomerSqls.push(this.discountCustomerSql)
-      this.initNull('DiscountCustomerSql')
+      this.$v.discountCustomerSql.$touch()
+      if (this.$v.discountCustomerSql.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.discountCustomerSqls.filter(f => f.CustomerSqlId === this.discountCustomerSql.CustomerSqlId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      this.discountCustomerSqls.push({
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        DiscountId: null,
+        CustomerSqlId: this.discountCustomerSql.CustomerSqlId,
+        CustomerSqlName: this.discountCustomerSql.CustomerSqlName
+      })
+      this.discountCustomerSql = {}
+      this.customerSql = null
+      this.$v.discountCustomerSql.$reset()
     },
     removeDiscountCustomerSqls (e) {
       this.discountCustomerSqls.splice(this.discountCustomerSqls.indexOf(e), 1)
@@ -987,10 +1238,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.DiscountGivens = this.discountGivens
-        this.form.DiscountTakens = this.discountTakens
-        this.form.DiscountCustomers = this.discountCustomers
-        this.form.DiscountExcludedCustomers = this.discountExcludedCustomers
+        this.discountDetailsCustomerCriterias.forEach((value, index) => {
+          this.form.DiscountDetails.push(value)
+        })
         this.discountDetailsBranchs.forEach((value, index) => {
           this.form.DiscountDetails.push(value)
         })
@@ -1013,113 +1263,6 @@ export default {
       this.startValueValid = false
       this.finishValueValid = false
     },
-    initNull (type) {
-      if (type === 'DiscountGiven') {
-        this.discountGiven = {
-          Deleted: 0,
-          System: 0,
-          RecordState: 2,
-          StatusId: 1,
-          TableName: null,
-          ColumnName: null,
-          ColumnValue: null,
-          GivenQuantity: null,
-          DiscountRate: null,
-          DiscountTotal: null,
-          StartValue: null,
-          FinishValue: null
-        }
-      } else if (type === 'DiscountTaken') {
-        this.discountTaken = {
-          Deleted: 0,
-          System: 0,
-          StatusId: 1,
-          RecordState: 2,
-          TableName: null,
-          ColumnName: null,
-          ColumnValue: null,
-          TakenQuantity: null,
-          MinTakenAmount: null,
-          EndTakenQuantity: null,
-          MaxTakenAmount: null,
-          MinTakenQuantity: null
-        }
-      } else if (type === 'DiscountCustomer') {
-        this.discountCustomer = {
-          Deleted: 0,
-          System: 0,
-          StatusId: 1,
-          RecordState: 2,
-          CustomerId: null,
-          CommercialTitle: null,
-          LocationId: null,
-          CompanyId: null,
-          Customer: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          },
-          Location: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          }
-        }
-      } else if (type === 'DiscountExcludedCustomer') {
-        this.discountExcludedCustomer = {
-          Deleted: 0,
-          System: 0,
-          StatusId: 1,
-          RecordState: 2,
-          CustomerId: null,
-          CommercialTitle: null,
-          LocationId: null,
-          Customer: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          },
-          Location: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          }
-        }
-      } else if (type === 'DiscountDetail') {
-        this.discountDetail = {
-          Deleted: 0,
-          System: 0,
-          StatusId: 1,
-          RecordState: 2,
-          TableName: null,
-          ColumnName: null,
-          ColumnValue: null,
-          BranchId: null,
-          Branch: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          },
-          RouteId: null,
-          Route: {
-            Description1: null,
-            Code: null,
-            RecordId: null
-          },
-          PaymentTypeId: null,
-          PaymentTypeName: null
-        }
-      } else {
-        this.discountCustomerSql = {
-          Deleted: 0,
-          System: 0,
-          StatusId: 1,
-          RecordState: 2,
-          DiscountId: null,
-          CustomerSqlId: null
-        }
-      }
-    },
     useBudgetEvent (e) {
       if (e === true) {
         this.form.ApproveStateId = 2100
@@ -1136,188 +1279,204 @@ export default {
           }
         })
       }
-    },
-    selectedDiscountCustomer (e) {
-      if (e) {
-        this.addDiscountCustomerValid = false
-        this.discountCustomer.Location.Description1 = null
-        this.discountCustomer.Customer = e
-        this.discountCustomer.CustomerId = e.RecordId
-        this.discountCustomer.CommercialTitle = e.CommercialTitle
-        this.$api.post({RecordId: e.RecordId}, 'Customer', 'Customer/Get').then((res) => {
-          if (res && res.Model) {
-            let locations = res.Model.CustomerLocations ? res.Model.CustomerLocations.filter(l => l.IsDefaultLocation) : null
-            if (locations && locations.length > 0) {
-              this.discountCustomer.Location = locations[0]
-              this.discountCustomer.LocationId = locations[0].RecordId
-              this.addDiscountCustomerValid = true
-            }
-          }
-        })
-      } else {
-        this.discountCustomer.Customer = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountCustomer.Location = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountCustomer.CommercialTitle = null
-        this.discountCustomer.LocationId = null
-      }
-    },
-    selectedDiscountExcludedCustomer (e) {
-      if (e) {
-        this.addDiscountExcludedCustomerValid = false
-        this.discountExcludedCustomer.Location.Description1 = null
-        this.discountExcludedCustomer.Customer = e
-        this.discountExcludedCustomer.CustomerId = e.RecordId
-        this.discountExcludedCustomer.CommercialTitle = e.CommercialTitle
-        this.$api.post({RecordId: e.RecordId}, 'Customer', 'Customer/Get').then((res) => {
-          if (res && res.Model) {
-            let locations = res.Model.CustomerLocations ? res.Model.CustomerLocations.filter(l => l.IsDefaultLocation) : null
-            if (locations && locations.length > 0) {
-              this.discountExcludedCustomer.Location = locations[0]
-              this.discountExcludedCustomer.LocationId = locations[0].RecordId
-              this.addDiscountExcludedCustomerValid = true
-            }
-          }
-        })
-      } else {
-        this.discountExcludedCustomer.Customer = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountExcludedCustomer.Location = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountExcludedCustomer.CommercialTitle = null
-        this.discountExcludedCustomer.LocationId = null
-      }
-    },
-    selectedDiscountDetailBranch (e) {
-      if (e) {
-        this.discountDetail.TableName = 'T_BRANCH'
-        this.discountDetail.ColumnName = 'BRANCH_ID'
-        this.discountDetail.Branch = e
-        this.discountDetail.BranchId = e.RecordId
-        this.addBranchButtonValid = true
-      } else {
-        this.discountDetail.Branch = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountDetail.BranchId = null
-        this.addBranchButtonValid = false
-      }
-    },
-    selectedDiscountDetailRoute (e) {
-      if (e) {
-        this.discountDetail.TableName = 'T_ROUTE'
-        this.discountDetail.ColumnName = 'ROUTE_ID'
-        this.discountDetail.Route = e
-        this.discountDetail.RouteId = e.RecordId
-        this.addRouteButtonValid = true
-      } else {
-        this.discountDetail.Route = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-        this.discountDetail.RouteId = null
-        this.addRouteButtonValid = false
-      }
-    },
-    selectedDiscountDetailPayment (e) {
-      if (e) {
-        this.discountDetail.TableName = 'T_PAYMENT_TYPE'
-        this.discountDetail.ColumnName = 'PAYMENTTYPE_ID'
-        this.discountDetail.PaymentTypeName = e.Description1
-        this.discountDetail.PaymentTypeId = e.RecordId
-        this.addPaymentTypeButtonValid = true
-      } else {
-        this.discountDetail.PaymentTypeName = null
-        this.discountDetail.PaymentTypeId = null
-        this.addPaymentTypeButtonValid = false
-      }
-    },
-    selectedDiscountGivensColumnName (e) {
-      if (e != null) {
-        this.discountGiven.ColumnName = e.Code
-        this.discountGiven.ColumnNameStr = e.Label
-        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
-          this.discountGivensColumnValues = res.Values
-          this.discountGivensColumnValueValid = true
-          this.$forceUpdate()
-        })
-      } else {
-        this.discountGivensColumnValueValid = false
-        this.discountGivensColumnValues = []
-      }
-    },
-    selectedDiscountGivensColumnValue (e) {
-      if (e) {
-        this.discountGiven.ColumnValue = e.DecimalValue
-        this.discountGiven.ColumnValueStr = e.Label
-      }
-    },
-    selectedDiscountTakensColumnName (e) {
-      if (e != null) {
-        this.discountTaken.ColumnName = e.Code
-        this.discountTaken.ColumnNameStr = e.Label
-        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
-          this.discountTakensColumnValues = res.Values
-          this.discountTakensColumnValueValid = true
-          this.$forceUpdate()
-        })
-      } else {
-        this.discountTakensColumnValueValid = false
-        this.discountTakensColumnValues = []
-      }
-    },
-    selectedDiscountTakensColumnValue (e) {
-      if (e) {
-        this.discountTaken.ColumnValue = e.DecimalValue
-        this.discountTaken.ColumnValueStr = e.Label
-      }
-    },
-    selectedCustomerCriteriaColumnName (e) {
-      if (e != null) {
-        this.discountDetail.ColumnName = e.Code
-        this.discountDetail.ColumnNameStr = e.Label
-        this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
-          this.customerCriteriaColumnValues = res.Values
-          this.customerCriteriaColumnValueValid = true
-          this.$forceUpdate()
-        })
-      } else {
-        this.customerCriteriaColumnValueValid = false
-        this.customerCriteriaColumnValues = []
-      }
-    },
-    selectedCustomerCriteriaColumnValue (e) {
-      if (e) {
-        this.discountDetail.ColumnValue = e.DecimalValue
-        this.discountDetail.ColumnValueStr = e.Label
-        this.addCustomerCriteriaButtonValid = true
-      }
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
+    if (this.form.ApplyToTimes === 1) {
+      this.insertRequired.MaxValue = true
+      this.insertRules.MaxValue = {
+        required
+      }
+    } else {
+      this.insertRules.MaxValue = {}
+      this.insertRequired.MaxValue = false
+    }
+    if (this.form.UseBudget === true) {
+      this.insertRequired.BudgetId = true
+      this.insertRequired.BudgetAmount = true
+      this.insertRules.BudgetId = {
+        required
+      }
+      this.insertRules.BudgetAmount = {
+        required
+      }
+    } else {
+      this.insertRules.BudgetId = {}
+      this.insertRequired.BudgetId = false
+      this.insertRules.BudgetAmount = {}
+      this.insertRequired.BudgetAmount = false
+    }
+    this.insertRules.ApproveStateId = {}
+    this.insertRequired.ApproveStateId = false
     return {
       form: this.insertRules,
-      discountGiven: this.insertRules
+      discountGivenColumnName: {
+        required
+      },
+      discountGivenColumnValue: {
+        required
+      },
+      discountTakenColumnName: {
+        required
+      },
+      discountTakenColumnValue: {
+        required
+      },
+      customerCriteriaColumnName: {
+        required
+      },
+      customerCriteriaColumnValue: {
+        required
+      },
+      discountCustomer: {
+        CustomerId: {
+          required
+        },
+        CustomerCode: {
+          required
+        }
+      },
+      discountExcludedCustomer: {
+        CustomerId: {
+          required
+        },
+        CustomerCode: {
+          required
+        }
+      },
+      discountDetailsBranch: {
+        BranchId: {
+          required
+        },
+        BranchCode: {
+          required
+        }
+      },
+      discountDetailsRoute: {
+        RouteId: {
+          required
+        },
+        RouteCode: {
+          required
+        }
+      },
+      discountDetailsPayment: {
+        PaymentTypeId: {
+          required
+        }
+      },
+      discountCustomerSql: {
+        CustomerSqlId: {
+          required
+        }
+      }
     }
   },
   watch: {
+    customer (value) {
+      if (value) {
+        this.discountCustomer.CustomerId = value.RecordId
+        this.discountCustomer.CustomerName = value.Description1
+        this.discountCustomer.CustomerCode = value.Code
+        this.discountCustomer.CommercialTitle = value.CommercialTitle
+        this.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+          if (res && res.Model) {
+            let defaultLocation = res.Model.DefaultLocation
+            if (defaultLocation) {
+              this.discountCustomer.LocationId = defaultLocation.DecimalValue
+              this.discountCustomer.LocationName = defaultLocation.Label
+              this.$forceUpdate()
+            }
+          }
+        })
+      } else {
+        this.discountCustomer = {}
+      }
+    },
+    excludedCustomer (value) {
+      if (value) {
+        this.discountExcludedCustomer.CustomerId = value.RecordId
+        this.discountExcludedCustomer.CustomerName = value.Description1
+        this.discountExcludedCustomer.CustomerCode = value.Code
+        this.discountExcludedCustomer.CommercialTitle = value.CommercialTitle
+        this.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+          if (res && res.Model) {
+            let defaultLocation = res.Model.DefaultLocation
+            if (defaultLocation) {
+              this.discountExcludedCustomer.LocationId = defaultLocation.DecimalValue
+              this.discountExcludedCustomer.LocationName = defaultLocation.Label
+              this.$forceUpdate()
+            }
+          }
+        })
+      } else {
+        this.discountExcludedCustomer = {}
+      }
+    },
+    branch (value) {
+      if (value) {
+        this.discountDetailsBranch.BranchId = value.RecordId
+        this.discountDetailsBranch.BranchName = value.Description1
+        this.discountDetailsBranch.BranchCode = value.Code
+      } else {
+        this.discountDetailsBranch = {}
+      }
+    },
+    route (value) {
+      if (value) {
+        this.discountDetailsRoute.RouteId = value.RecordId
+        this.discountDetailsRoute.RouteName = value.Description1
+        this.discountDetailsRoute.RouteCode = value.Code
+      } else {
+        this.discountDetailsRoute = {}
+      }
+    },
+    paymentType (value) {
+      if (value) {
+        this.discountDetailsPayment.PaymentTypeId = value.RecordId
+        this.discountDetailsPayment.PaymentTypeName = value.Description1
+      } else {
+        this.discountDetailsPayment = {}
+      }
+    },
+    customerSql (value) {
+      if (value) {
+        this.discountCustomerSql.CustomerSqlId = value.RecordId
+        this.discountCustomerSql.CustomerSqlName = value.Description1
+      } else {
+        this.discountCustomerSql = {}
+      }
+    },
+    discountGivenColumnName (value) {
+      this.discountGivensColumnValues = []
+      this.discountGivenColumnValue = null
+      if (value) {
+        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.discountGivensColumnValues = res.Values
+          this.$forceUpdate()
+        })
+      }
+    },
+    discountTakenColumnName (value) {
+      this.discountTakensColumnValues = []
+      this.discountTakenColumnValue = null
+      if (value) {
+        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.discountTakensColumnValues = res.Values
+          this.$forceUpdate()
+        })
+      }
+    },
+    customerCriteriaColumnName (value) {
+      this.customerCriteriaColumnValues = []
+      this.customerCriteriaColumnValue = null
+      if (value) {
+        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.customerCriteriaColumnValues = res.Values
+          this.$forceUpdate()
+        })
+      }
+    },
     lookup (e) {
       if (e.APPROVE_STATE) {
         e.APPROVE_STATE.map(item => {
@@ -1336,8 +1495,6 @@ export default {
       }
     },
     customerCriteria (e) {
-      this.discountDetail.TableName = 'T_CUSTOMER'
-      this.discountDetail.ColumnName = 'CUSTOMER_ID'
       this.customerCriterTabValid = false
       this.customerTabValid = false
       this.customerSqlsTabValid = false
