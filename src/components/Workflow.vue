@@ -126,12 +126,14 @@ export default {
 
       }
       this.$api.post(request, 'Workflow', 'Workflow/ProcessWorkflow').then((res) => {
-        this.$toasted.show(this.$t('insert.success'), {
+        this.$toasted.show(this.$t('insert.workflowSuccess'), {
           type: 'success',
           keepOnHover: true,
           duration: '3000'
         })
-        this.closeModal()
+        setTimeout(() => {
+          this.$router.go()
+        }, 1000)
       })
     },
     closeModal () {

@@ -452,11 +452,6 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      let filteredItem = this.form.OrderLines.find(i => i.ItemId === this.selectedOrderLine.selectedItem.RecordId && i.RecordState === 4)
-      if (filteredItem) {
-        this.form.OrderLines[this.form.OrderLines.indexOf(filteredItem)].RecordState = 3
-        return
-      }
       let length = this.form.OrderLines.length
       let selectedItem = this.selectedOrderLine.selectedItem
       let quantity = this.selectedOrderLine.quantity
