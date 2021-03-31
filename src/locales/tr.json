@@ -1282,7 +1282,8 @@
       "enterWaybill": "İrsaliye Girişi",
       "invoiceNo": "Fatura No",
       "returnSalesWaybill": "Satış İade İrsaliyesi",
-      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!"
+      "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!",
+      "chooseWarehouse": "Lüften depo seçimi yapınız."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

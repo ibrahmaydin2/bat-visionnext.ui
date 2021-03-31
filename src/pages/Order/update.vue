@@ -454,6 +454,14 @@ export default {
       })
     },
     searchItems (search, loading) {
+      if (!this.form.WarehouseId) {
+        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -533,7 +541,7 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [1],
+        WarehouseIds: [this.form.WarehouseId],
         ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
       }
       var me = this

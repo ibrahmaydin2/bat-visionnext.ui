@@ -131,7 +131,7 @@
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedOrderLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedOrderLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">
+              <v-select v-model="selectedOrderLine.selectedItem" :options="items" @search="searchItems" label="Description1" @input="selectItem">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -423,6 +423,14 @@ export default {
       })
     },
     searchItems (search, loading) {
+      if (!this.form.WarehouseId) {
+        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -506,7 +514,7 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [1],
+        WarehouseIds: [this.form.WarehouseId],
         ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
       }
       var me = this
