@@ -1689,7 +1689,7 @@ export default {
           CustomerCreditHistories: e.CustomerCreditHistories,
           CustomerItemDiscounts: e.CustomerItemDiscounts,
           RecordId: e.RecordId,
-          SalesTypeId: 0,
+          SalesTypeId: null,
           RecordTypeId: e.RecordTypeId,
           TradeLicenseNumber: e.TradeLicenseNumber,
           Alias: e.Alias,

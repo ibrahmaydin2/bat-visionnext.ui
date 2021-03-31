@@ -149,7 +149,7 @@ export default {
       loadingQuantity: null,
       item: [],
       itemLabel: null,
-      RecordId: 0,
+      RecordId: null,
       VanLoadingItems: [],
       vanLoadingItem: {
         Deleted: 0,
@@ -170,7 +170,7 @@ export default {
         ConvFact2: 1,
         RecordId: null
       },
-      detailPanelRecordId: 0
+      detailPanelRecordId: null
     }
   },
   computed: {

@@ -154,7 +154,7 @@ export default {
       routeName: this.$route.meta.baseLink,
       loadingQuantity: null,
       item: null,
-      RecordId: 0,
+      RecordId: null,
       warehouse: null,
       route: null,
       itemLabel: null,
