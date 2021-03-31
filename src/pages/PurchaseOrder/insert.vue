@@ -120,6 +120,9 @@
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
@@ -345,9 +348,12 @@ export default {
           ...this.query,
           api: 'VisionNextItem/api/Item/Search',
           name: 'items',
-          andConditionModel: {
-            Description1: search
-          }
+          orConditionModels: [
+            {
+              Description1: search,
+              Code: search
+            }
+          ]
         }).then(res => {
           loading(false)
         })

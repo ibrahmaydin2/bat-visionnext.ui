@@ -89,6 +89,9 @@
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
@@ -246,10 +249,17 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Code: search
-      }
-      this.searchItemsByModel('VisionNextItem/api/Item/Search', 'items', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextItem/api/Item/Search',
+        name: 'items',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
