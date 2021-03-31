@@ -656,7 +656,7 @@
             </b-col>
             <b-col v-if="insertVisible.PaymentPeriod != null ? insertVisible.PaymentPeriod : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.PaymentPeriod + (insertRequired.PaymentPeriod === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PaymentPeriod.$error }">
-                <v-select :options="paymentPeriods" @input="selectedSearchType('PaymentPeriod', $event)" label="Description1"></v-select>
+                <v-select v-model="selectedPaymentPeriod" :options="paymentPeriods" @input="selectedSearchType('PaymentPeriod', $event)" label="Description1" :disabled="paymentType && paymentType.Code != 'AH'"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.TciBreak1Id != null ? insertVisible.TciBreak1Id : developmentMode" cols="12" md="2">
@@ -690,7 +690,7 @@
             </b-col>
             <b-col v-if="insertVisible.DefaultPaymentTypeId != null ? insertVisible.DefaultPaymentTypeId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DefaultPaymentTypeId + (insertRequired.DefaultPaymentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultPaymentTypeId.$error }">
-                <v-select v-model="paymentType" :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
+                <v-select v-model="paymentType" :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event); selectedPaymentPeriod = null; form.PaymentPeriod = null" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.AllowOverLimit != null ? insertVisible.AllowOverLimit : developmentMode" cols="12" md="2">
@@ -724,22 +724,22 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
-                <v-select :options="banks" @input="selectedBank" label="Description1"></v-select>
+                <v-select :options="banks" @input="selectedBank" label="Description1" :disabled="!customerCreditHistories.creditDescription || (customerCreditHistories.creditDescription && customerCreditHistories.creditDescription.Code != 'BC')"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CurrencyId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.currencyId.$error }">
-                <v-select :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
+                <v-select v-model="customerCreditHistories.currency" :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" :options="currency" @input="selectedCurrency" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditDescriptionId.$error }">
-                <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
+                <v-select v-model="customerCreditHistories.creditDescription" :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
-                <b-form-input :disabled="customerCreditHistories.bankId === null || customerCreditHistories.bankId === 0" type="text" v-model="customerCreditHistories.creditAmount" />
+                <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1304,7 +1304,8 @@ export default {
       paymentType: {},
       touchpointPriority: null,
       touchpointTypeId: null,
-      customerPaymentType: null
+      customerPaymentType: null,
+      selectedPaymentPeriod: null
     }
   },
   computed: {
@@ -1387,7 +1388,9 @@ export default {
       if (e) {
         this.customerCreditHistories.bankId = e.RecordId
       } else {
-        this.customerCreditHistories.bankId = null
+        this.customerCreditHistories = {
+          bankId: null
+        }
       }
     },
     selectedCurrency (e) {
@@ -1469,7 +1472,7 @@ export default {
       }
       let filteredArr = this.form.customerTouchpoints.filter(i => i.touchpointTypeId === this.customerTouchpoints.touchpointTypeId && i.touchpointPriorityNumber === this.customerTouchpoints.touchpointPriorityNumber)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.customerTouchpoints.push(this.customerTouchpoints)
@@ -1493,7 +1496,7 @@ export default {
       }
       let filteredArr = this.form.customerLabels.filter(i => i.labelId === this.customerTag.tagDefinition.RecordId && i.labelValueId === this.customerTag.tagValue.RecordId)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.customerLabels.push({
@@ -1544,7 +1547,7 @@ export default {
       }
       let filteredArr = this.form.customerPaymentTypes.filter(i => i.paymentType === this.customerPaymentTypes.paymentType)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
       this.form.customerPaymentTypes.push({
@@ -1571,7 +1574,7 @@ export default {
       }
       let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
 
