@@ -70,7 +70,7 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" />
@@ -583,12 +583,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -741,10 +741,18 @@ export default {
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyInsertDiscounts').then((res) => {
+        this.$store.commit('bigLoaded', false)
+        if (!res.IsCompleted) {
+          this.$toasted.show(this.$t('insert.order.campaignListError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         if (res && res.Order) {
           this.form = res.Order
         }
-        this.$store.commit('bigLoaded', false)
         this.createData()
       })
     },

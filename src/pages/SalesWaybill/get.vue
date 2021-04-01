@@ -49,7 +49,7 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.order.title')" active>
+        <b-tab :title="$t('insert.order.enterInvoice')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>

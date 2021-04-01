@@ -114,43 +114,6 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
-          <!-- <b-row>
-            <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" min=1 />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.price" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.stock')" :error="$v.selectedInvoiceLine.stock" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.stock" disabled />
-            </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.vatRate" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.netTotal')" :error="$v.selectedInvoiceLine.netTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.netTotal" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.vatTotal')" :error="$v.selectedInvoiceLine.totalVat" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.totalVat" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedInvoiceLine.grossTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.grossTotal" disabled />
-            </NextFormGroup>
-            <b-col cols="12" md="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addInvoiceLine" />
-              </b-form-group>
-            </b-col>
-          </b-row>-->
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -162,7 +125,6 @@
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <!--<b-th><span>{{$t('list.operations')}}</span></b-th> -->
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
@@ -174,10 +136,6 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <!--<b-td class="text-center">
-                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>-->
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -395,12 +353,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -454,99 +412,6 @@ export default {
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
-    },
-    addInvoiceLine () {
-      this.$v.selectedInvoiceLine.$touch()
-      if (this.$v.selectedInvoiceLine.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
-        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let length = this.form.InvoiceLines.length
-      let selectedItem = this.selectedInvoiceLine.selectedItem
-      let quantity = this.selectedInvoiceLine.quantity
-      let order = {
-        Description1: selectedItem.Description1,
-        Deleted: 0,
-        System: 0,
-        RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
-        StatusId: 1,
-        LineNumber: length,
-        ItemId: selectedItem.RecordId,
-        ItemCode: selectedItem.Code,
-        UnitSetId: selectedItem.UnitSetId,
-        UnitId: selectedItem.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        Quantity: quantity,
-        Stock: this.selectedInvoiceLine.stock,
-        VatRate: this.selectedInvoiceLine.vatRate,
-        TotalVat: this.selectedInvoiceLine.totalVat,
-        TotalItemDiscount: 0,
-        TotalOtherDiscount: 0,
-        Price: this.selectedInvoiceLine.price,
-        GrossTotal: this.selectedInvoiceLine.grossTotal,
-        NetTotal: this.selectedInvoiceLine.netTotal,
-        IsFreeItem: 0,
-        IsCanceled: 0,
-        PriceListPrice: this.selectedInvoiceLine.price,
-        SalesQuantity1: quantity,
-        SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: 0,
-        TempDiscountNetTotal: 0,
-        DiscountNetTotal: 0,
-        DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null
-      }
-      if (this.selectedInvoiceLine.isUpdated) {
-        this.form.InvoiceLines[this.selectedIndex] = order
-        this.selectedInvoiceLine.isUpdated = false
-      } else {
-        this.form.InvoiceLines.push(order)
-      }
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    removeInvoiceLine (item) {
-      this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
-      this.selectedInvoiceLine = {
-        quantity: item.Quantity,
-        price: item.Price,
-        vatRate: item.VatRate,
-        netTotal: item.NetTotal,
-        totalVat: item.TotalVat,
-        grossTotal: item.GrossTotal,
-        stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true
-      }
-      this.getItem(item.ItemId)
     },
     setData () {
       let rowData = this.rowData

@@ -299,7 +299,8 @@ export default {
         vatRate: null,
         totalVat: null,
         isUpdated: false,
-        description1: null
+        description1: null,
+        invoiceId: null
       },
       selectedIndex: null,
       selectedRepresentative: null,
@@ -466,7 +467,8 @@ export default {
         DiscountQuantity: 0,
         RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
         TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
+        CalculatedVat: 0,
+        InvoiceId: this.selectedInvoiceLine.invoiceId
       }
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
@@ -498,7 +500,8 @@ export default {
         recordState: item.RecordState,
         recordId: item.RecordId,
         description1: item.Description1,
-        isUpdated: true
+        isUpdated: true,
+        invoiceId: item.InvoiceId
       }
       this.getItem(item.ItemId)
     },
