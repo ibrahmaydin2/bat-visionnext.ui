@@ -818,6 +818,7 @@ export default {
       this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(item)].RecordState = 4
     },
     save () {
+      this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
