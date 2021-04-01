@@ -2,12 +2,12 @@
   <div class="d-flex">
     <b-button-toolbar v-if="formFields && !this.routeName">
       <b-button-group class="header-btn-group">
-        <router-link v-if="formFields.Actions && formFields.Actions.length === 1" :to="{name: `${baseLink}Insert`}">
+        <router-link v-if="filteredInsertAction && filteredInsertAction.length > 0" :to="{name: `${baseLink}Insert`}">
           <b-button class="bg-orange text-white font-weight-bold rounded-0 mr-1" size="sm">
             <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="plus" aria-hidden="false" size="sm"></b-icon>
           </b-button>
         </router-link>
-        <router-link v-if="formFields && filteredUpdateActions" :to="{name: `${baseLink}Update`, params: {url: $route.params.url}}">
+        <router-link v-if="filteredUpdateAction && filteredUpdateAction.length > 0" :to="{name: `${baseLink}Update`, params: {url: $route.params.url}}">
           <b-button class="bg-orange text-white font-weight-bold rounded-0 mr-1" size="sm">
             <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="pencil" aria-hidden="false" size="sm"></b-icon>
           </b-button>
@@ -51,7 +51,14 @@ export default {
         })
       }
     },
-    filteredUpdateActions () {
+    filteredInsertAction () {
+      if (Object.keys(this.formFields).length) {
+        return this.formFields.Actions.filter(item => {
+          return item.Action === 'Insert'
+        })
+      }
+    },
+    filteredUpdateAction () {
       if (Object.keys(this.formFields).length) {
         return this.formFields.RowActions.filter(item => {
           return item.Action === 'Update'

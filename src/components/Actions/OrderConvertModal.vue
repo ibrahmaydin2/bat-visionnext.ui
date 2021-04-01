@@ -290,6 +290,9 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+          setTimeout(() => {
+            this.$router.go()
+          }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',

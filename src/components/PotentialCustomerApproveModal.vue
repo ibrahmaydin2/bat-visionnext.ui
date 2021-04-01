@@ -84,8 +84,13 @@ export default {
         }
       }
       this.$store.dispatch('approvePotentialCustomer', {...this.query, api: this.modalAction.ActionUrl, formdata: model, return: null}).then(res => {
-        this.status = false
-        this.closeModal()
+        if (res && res.data.IsCompleted === true) {
+          this.status = false
+          this.closeModal()
+          setTimeout(() => {
+            this.$router.go()
+          }, 1000)
+        }
       })
     },
     goUpdate () {
