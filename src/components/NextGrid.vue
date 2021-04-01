@@ -85,6 +85,14 @@
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
               ></date-picker>
 
+              <b-form-datepicker
+                v-if="header.columnType === 'DateTime2'"
+                v-once
+                v-model="searchText"
+                placeholder=""
+                @input="filterDate(header.dataField, searchText)"
+              />
+
               <b-form-input
                 v-if="header.columnType === 'Time'"
                 v-once
@@ -474,7 +482,12 @@ export default {
       this.searchOnTable(e.dataField, search)
     },
     filterDate (e, date) {
-      this.searchOnTable(e, this.dateConvertToISo(date))
+      let model = {
+        Value: this.dateConvertToISo(date)
+      }
+      this.searchOnTable()
+      this.andConditionalModel[e] = model
+      this.searchOnTable()
     },
     filterRangeDate (e, date) {
       let model = {
@@ -482,6 +495,7 @@ export default {
         EndValue: this.dateConvertToISo(date[1])
       }
       this.andConditionalModel[e] = model
+      this.currentPage = 1
       this.searchOnTable()
     },
     filterTime (e, time) {
@@ -492,6 +506,7 @@ export default {
     },
     selectedValue (label, model, type) {
       if (model) {
+        this.currentPage = 1
         if (!this.andConditionalModel) {
           this.andConditionalModel = {}
         }
@@ -520,6 +535,7 @@ export default {
     },
     handleSubmit (label, model) {
       if (model) {
+        this.currentPage = 1
         if (!this.andConditionalModel) {
           this.andConditionalModel = {}
         }
@@ -531,6 +547,9 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
+      if (search) {
+        this.currentPage = 1
+      }
       let validCount = 0
       this.requiredFields.forEach(r => {
         if (searchQ[r.field] || this.andConditionalModel[r.field]) {

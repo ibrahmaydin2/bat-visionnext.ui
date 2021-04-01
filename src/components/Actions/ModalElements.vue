@@ -161,9 +161,14 @@ export default {
     onAutoCompleteSearch (input) {
       if (input.length < 3) { return [] }
       const andConditionModel = {
-        Description1: input
+        'OrConditionModels': [
+          {
+            Description1: input,
+            Code: input
+          }
+        ]
       }
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedElement.serviceUrl, val: this.selectedElement.modelProperty, model: andConditionModel}).then((res) => {
+      return this.$store.dispatch('getAutoGridFieldsWithOrConditionModel', {...this.query, serviceUrl: this.selectedElement.serviceUrl, val: this.selectedElement.modelProperty, model: andConditionModel}).then((res) => {
         return res
       })
     },
@@ -198,6 +203,16 @@ export default {
               duration: '3000'
             })
             this.$root.$emit('bv::hide::modal', 'confirmModal')
+            setTimeout(() => {
+              this.$router.go()
+            }, 1000)
+          }
+          if (res.IsCompleted === false) {
+            this.$toasted.show(this.$t(res.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
           }
         })
       }
