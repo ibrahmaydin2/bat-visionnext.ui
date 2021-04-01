@@ -63,18 +63,6 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -209,26 +197,6 @@
                   <b-td class="text-center">
                     <i @click="removeInvoiceLogisticCompany(l)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass.Label}}</b-td>
-                  <b-td>{{o.DiscountClass.Code}}</b-td>
-                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -792,6 +760,7 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
+  height: 90px;
 }
 .card-body  {
   padding: none !important;
