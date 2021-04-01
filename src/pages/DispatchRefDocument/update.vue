@@ -304,7 +304,8 @@ export default {
         stock: null,
         vatRate: null,
         totalVat: null,
-        isUpdated: false
+        isUpdated: false,
+        invoiceId: null
       },
       campaigns: [],
       isCampaignQuestioned: false,
@@ -575,7 +576,8 @@ export default {
         TempDiscountNetTotal: 0,
         DiscountNetTotal: 0,
         DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null
+        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
+        InvoiceId: this.selectedInvoiceLine.invoiceId
       }
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
@@ -607,7 +609,8 @@ export default {
         stock: item.Stock,
         recordState: item.RecordState,
         recordId: item.RecordId,
-        isUpdated: true
+        isUpdated: true,
+        invoiceId: item.InvoiceId
       }
       this.getItem(item.ItemId)
     },
