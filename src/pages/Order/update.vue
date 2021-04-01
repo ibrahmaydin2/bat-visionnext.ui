@@ -860,4 +860,12 @@ export default {
 .summary-hr {
   margin: 3px;
 }
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
+}
 </style>
