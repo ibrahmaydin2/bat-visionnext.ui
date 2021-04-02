@@ -38,7 +38,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -188,74 +188,8 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
-          <b-table-simple bordered small responsive>
-            <b-thead>
-              <b-tr>
-                <b-th>{{$t('insert.order.discountType')}}</b-th>
-                <b-th>{{$t('insert.order.discountName')}}</b-th>
-                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
-              </b-tr>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
-                <b-td>{{c.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-              <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
-                <b-td>{{f.Value}}</b-td>
-                <b-td></b-td>
-                <b-td></b-td>
-                <b-td>{{f.FreeItemQuantity}}</b-td>
-              </b-tr>
-              <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
-                <b-td>{{l.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>
-                <b-td>{{l.CurrentScore}}</b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-        </b-tab>
       </b-tabs>
     </b-col>
-    <b-modal id="campaign-modal" hide-footer>
-      <template #modal-title>
-        {{$t('insert.order.campaignSelection')}}
-      </template>
-      <b-table
-          :items="campaigns"
-          :fields="campaignFields"
-          select-mode="multi"
-          responsive
-          id="campaign-list"
-          :selectable="campaignSelectable"
-          bordered
-          tbody-tr-class="bg-white"
-          @row-selected="onCampaignSelected"
-        >
-        <template #cell(selection)="row" v-if="campaignSelectable">
-          <span>
-            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-          </span>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="campaigns ? campaigns.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        aria-controls="campaign-list"
-      ></b-pagination>
-      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
-      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
-    </b-modal>
     <b-modal id="confirm-modal">
       <template #modal-title>
         {{$t('insert.order.doYouConfirm')}}
@@ -360,7 +294,6 @@ export default {
       currentPage: 1,
       campaignSelectable: false,
       showDiscounts: false,
-      customerCampaigns: {},
       currentCustomer: {},
       customerSelectCancelled: false,
       selectedBranch: {},
@@ -524,12 +457,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -684,32 +617,28 @@ export default {
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Invoice', 'SalesReturnInvoice/ApplyInsertDiscounts').then((res) => {
-        if (res && res.Order) {
-          this.form = res.Order
-        }
         this.$store.commit('bigLoaded', false)
+        if (!res.IsCompleted) {
+          this.$toasted.show(this.$t('insert.order.campaignListError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        if (res && res.Invoice) {
+          this.form = res.Invoice
+        }
         this.createData()
       })
     },
     onCampaignSelected (items) {
       this.selectedCampaigns = items
     },
-    getCustomerCampaigns (customerId) {
-      let model = {
-        customerId: customerId
-      }
-      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
-        if (res) {
-          this.customerCampaigns = res
-          this.showDiscounts = true
-        }
-      })
-    },
     confirmSelectedCustomer () {
       this.$bvModal.hide('confirm-modal')
       this.customerFirstSet = false
       this.searchPriceList()
-      this.getCustomerCampaigns(this.selectedCustomer.RecordId)
       this.form.InvoiceLines = []
       this.form.RecvLocationId = this.selectedCustomer.DefaultLocationId
     },
@@ -744,18 +673,7 @@ export default {
           })
           return
         }
-        this.$store.commit('bigLoaded', true)
-        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceInsertDiscounts').then((res) => {
-          this.campaigns = res.Models
-          this.$store.commit('bigLoaded', false)
-          if (this.campaigns && this.campaigns.length > 0) {
-            this.campaignSelectable = true
-            this.$bvModal.show('campaign-modal')
-          } else {
-            this.campaigns = []
-            this.createData()
-          }
-        })
+        this.createData()
       }
     }
   },

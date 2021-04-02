@@ -1284,7 +1284,8 @@
       "invoiceNo": "Fatura No",
       "returnSalesWaybill": "Satış İade İrsaliyesi",
       "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!",
-      "chooseWarehouse": "Lüften depo seçimi yapınız."
+      "chooseWarehouse": "Lüften depo seçimi yapınız.",
+      "campaignListError": "Kampanya listesinde oluşan bir hatadan dolayı işleminizi gerçekleştiremiyoruz."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

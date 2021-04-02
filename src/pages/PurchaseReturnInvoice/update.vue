@@ -39,7 +39,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                  </template>
                 </v-select>
               </NextFormGroup>
@@ -61,18 +61,6 @@
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
               </div>
@@ -132,26 +120,6 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass.Label}}</b-td>
-                  <b-td>{{o.DiscountClass.Code}}</b-td>
-                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -343,12 +311,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -403,101 +371,6 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    addInvoiceLine () {
-      this.$v.selectedInvoiceLine.$touch()
-      if (this.$v.selectedInvoiceLine.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
-        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let length = this.form.InvoiceLines.length
-      let selectedItem = this.selectedInvoiceLine.selectedItem
-      let quantity = this.selectedInvoiceLine.quantity
-      let order = {
-        Description1: selectedItem.Description1,
-        Deleted: 0,
-        System: 0,
-        RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
-        StatusId: 1,
-        LineNumber: length,
-        ItemId: selectedItem.RecordId,
-        ItemCode: selectedItem.Code,
-        UnitSetId: selectedItem.UnitSetId,
-        UnitId: selectedItem.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        Quantity: quantity,
-        Stock: this.selectedInvoiceLine.stock,
-        VatRate: this.selectedInvoiceLine.vatRate,
-        TotalVat: this.selectedInvoiceLine.totalVat,
-        TotalItemDiscount: 0,
-        TotalOtherDiscount: 0,
-        Price: this.selectedInvoiceLine.price,
-        GrossTotal: this.selectedInvoiceLine.grossTotal,
-        NetTotal: this.selectedInvoiceLine.netTotal,
-        IsFreeItem: 0,
-        IsCanceled: 0,
-        PriceListPrice: this.selectedInvoiceLine.price,
-        SalesQuantity1: quantity,
-        SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: 0,
-        TempDiscountNetTotal: 0,
-        DiscountNetTotal: 0,
-        DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
-        TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
-      }
-      if (this.selectedInvoiceLine.isUpdated) {
-        this.form.InvoiceLines[this.selectedIndex] = order
-        this.selectedInvoiceLine.isUpdated = false
-      } else {
-        this.form.InvoiceLines.push(order)
-      }
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    removeInvoiceLine (item) {
-      this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
-      this.selectedInvoiceLine = {
-        quantity: item.Quantity,
-        price: item.Price,
-        vatRate: item.VatRate,
-        netTotal: item.NetTotal,
-        totalVat: item.TotalVat,
-        grossTotal: item.GrossTotal,
-        stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true
-      }
-      this.getItem(item.ItemId)
-    },
     setData () {
       let rowData = this.rowData
       if (rowData) {
@@ -524,6 +397,10 @@ export default {
       }
     },
     save () {
+      this.form.PaymentPeriodId = this.selectedCustomer.DefaultPaymentType && this.selectedCustomer.DefaultPaymentType.Code === 'AH'
+        ? this.selectedCustomer.PaymentPeriod
+        : 0
+      this.form.RecordState = 3
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -541,9 +418,6 @@ export default {
           })
           return
         }
-        this.form.PaymentPeriodId = this.selectedCustomer.DefaultPaymentType && this.selectedCustomer.DefaultPaymentType.Code === 'AH'
-          ? this.selectedCustomer.PaymentPeriod
-          : null
         this.updateData()
       }
     }
@@ -608,6 +482,7 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
+  height: 90px;
 }
 .card-body  {
   padding: none !important;

@@ -44,7 +44,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -251,7 +251,8 @@ export default {
         stock: null,
         vatRate: null,
         vatTotal: null,
-        isUpdated: false
+        isUpdated: false,
+        orderId: null
       },
       selectedIndex: null,
       selectedRepresentative: null,
@@ -398,12 +399,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -504,7 +505,8 @@ export default {
         TempDiscountNetTotal: this.selectedOrderLine.netTotal,
         RecordId: this.selectedOrderLine.recordId ? this.selectedOrderLine.recordId : null,
         DiscountPercent: this.selectedOrderLine.discountPercent,
-        TotalDiscount: this.selectedOrderLine.totalDiscount
+        TotalDiscount: this.selectedOrderLine.totalDiscount,
+        OrderId: this.selectedOrderLine.orderId
       }
       if (this.selectedOrderLine.isUpdated) {
         this.form.OrderLines[this.selectedIndex] = order
@@ -536,7 +538,8 @@ export default {
         stock: item.Stock,
         recordState: item.RecordState,
         recordId: item.RecordId,
-        isUpdated: true
+        isUpdated: true,
+        orderId: item.OrderId
       }
       this.getItem(item.ItemId)
     },

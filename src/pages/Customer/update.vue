@@ -33,11 +33,6 @@
               <v-select disabled v-model="StatusReason" :options="cancelReasons" @input="selectedSearchType('statusReasonId', $event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
-          <b-col v-if="insertVisible.SalesTypeId != null ? insertVisible.SalesTypeId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.SalesTypeId + (insertRequired.SalesTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SalesTypeId.$error }">
-              <b-form-input type="text" v-model="form.SalesTypeId" :readonly="insertReadonly.SalesTypeId" />
-            </b-form-group>
-          </b-col>
           <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
               <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="true"></NextCheckBox>
@@ -1677,7 +1672,6 @@ export default {
       this.removeEditableInputs()
     },
     editCustomerLocation (item) {
-      debugger
       this.isLocationEditable = true
       this.locationEditableIndex = this.form.CustomerLocations.indexOf(item)
       let filteredArr = this.form.CustomerLocations[this.locationEditableIndex]
@@ -1996,7 +1990,6 @@ export default {
           CustomerItemDiscounts: e.CustomerItemDiscounts,
           CustomerTouchpoints: e.CustomerTouchpoints,
           RecordId: e.RecordId,
-          SalesTypeId: null,
           RecordTypeId: e.RecordTypeId,
           Deleted: 0
         }

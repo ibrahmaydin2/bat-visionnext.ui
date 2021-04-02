@@ -47,7 +47,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -373,7 +373,8 @@ export default {
         vatTotal: null,
         isUpdated: false,
         totalDiscount: null,
-        discountPercent: null
+        discountPercent: null,
+        orderId: null
       },
       campaigns: [],
       isCampaignQuestioned: false,
@@ -532,12 +533,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -643,7 +644,8 @@ export default {
         TempDiscountNetTotal: this.selectedOrderLine.netTotal,
         RecordId: this.selectedOrderLine.recordId ? this.selectedOrderLine.recordId : null,
         DiscountPercent: this.selectedOrderLine.discountPercent,
-        TotalDiscount: this.selectedOrderLine.totalDiscount
+        TotalDiscount: this.selectedOrderLine.totalDiscount,
+        OrderId: this.selectedOrderLine.orderId
       }
       if (this.selectedOrderLine.isUpdated) {
         this.form.OrderLines[this.selectedIndex] = order
@@ -675,6 +677,7 @@ export default {
         stock: item.Stock,
         recordState: item.RecordState,
         recordId: item.RecordId,
+        orderId: item.OrderId,
         isUpdated: true
       }
       this.getItem(item.ItemId)
@@ -687,6 +690,15 @@ export default {
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Order', 'Order/ApplyUpdateDiscounts').then((res) => {
+        this.$store.commit('bigLoaded', false)
+        if (!res.IsCompleted) {
+          this.$toasted.show(this.$t('insert.order.campaignListError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         if (res && res.Order) {
           this.form = res.Order
         }
@@ -859,5 +871,13 @@ export default {
 }
 .summary-hr {
   margin: 3px;
+}
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
 }
 </style>
