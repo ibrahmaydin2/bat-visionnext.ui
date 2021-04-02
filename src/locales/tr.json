@@ -1682,6 +1682,35 @@
       "isMandatory": "Zorunlu",
       "isDoubleScore": "İki Kat Puan Kazan",
       "applyToTimes": "Katlarına Uygula"
+    },
+    "assetLocation": {
+      "general": "Genel",
+      "type": "Varlık Tipi",
+      "branch": "Bayi",
+      "lastMovementDate": "Son Hareket Tarihi",
+      "asset": "Varlık",
+      "location": "Nokta",
+      "brand": "Varlık Markası",
+      "model": "Model",
+      "lastOperationDate": "Son Servis Tarihi",
+      "condition": "Varlık Aktif/Pasif",
+      "state": "Durum",
+      "serialNumber": "Barkod",
+      "contact": "İlgili Kişi",
+      "assetPosition": "Varlık Konumu",
+      "quantity": "Miktar",
+      "serialNumber2": "Seri No"
+    },
+    "assetMovementCard": {
+      "general": "Genel",
+      "cardNumber": "Stok Fiş No",
+      "movementType": "Hareket Tipi",
+      "employee": "Personel",
+      "toState": "Giriş Statü",
+      "fromState": "Çıkış Statü",
+      "operationDate": "İşlem Tarihi",
+      "toLocation": "Giriş Lokasyon",
+      "fromLocation": "Çıkış Lokasyon"
     }
   },
 
