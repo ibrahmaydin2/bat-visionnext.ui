@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'DiscountReason' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -38,11 +38,7 @@
         <b-tab :title="$t('get.DiscountReason.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="DiscountClassId" :error="$v.form.DiscountClassId">
-              <v-select v-model="discountClass" :options="discountClasses" @input="selectedSearchType('DiscountClassId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select v-model="discountClass" :options="discountClasses" @input="selectedSearchType('DiscountClassId', $event)" label="Description1"></v-select>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -79,10 +75,11 @@ export default {
   mounted () {
     this.getData().then(() => {
       this.setModel()
+      this.getInsertPage()
     })
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountClass/Search', name: 'discountClasses'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
