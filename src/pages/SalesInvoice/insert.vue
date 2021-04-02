@@ -711,8 +711,8 @@ export default {
           })
           return
         }
-        if (res && res.Order) {
-          this.form = res.Order
+        if (res && res.Invoice) {
+          this.form = res.Invoice
         }
         this.createData()
       })

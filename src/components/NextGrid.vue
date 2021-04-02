@@ -306,6 +306,7 @@ export default {
       this.currentPage = parseInt(this.$route.query.page)
     } else {
       this.currentPage = 1
+      this.$route.query.page = 1
     }
     // ön tanımlı olarak sıralama gönderilmez. eğer varsa query alınacak.
     if (this.$route.query.sort) {
