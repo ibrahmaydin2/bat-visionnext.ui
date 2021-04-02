@@ -234,3 +234,8 @@ export default {
         font-size: 14px
         font-style: italic
   </style>
+  <style>
+  .nav-tabs .nav-link.disabled {
+    color: grey !important
+  }
+  </style>
