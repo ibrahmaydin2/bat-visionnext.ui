@@ -155,3 +155,8 @@ export default {
       letter-spacing: -0.7px
       font-weight: bold
 </style>
+  <style>
+  .nav-tabs .nav-link.disabled {
+    color: grey !important
+  }
+  </style>
