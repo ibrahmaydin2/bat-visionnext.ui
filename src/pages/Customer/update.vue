@@ -762,7 +762,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
-                <v-select :options="banks" @input="selectedBank" label="Description1" :disabled="!customerCreditHistories.creditDescription || (customerCreditHistories.creditDescription && customerCreditHistories.creditDescription.Code != 'BC')"></v-select>
+                <v-select :options="banks" @input="selectedBank" label="Description1" :disabled="customerCreditHistories.creditDescriptionCode != 'BC'"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1767,7 +1767,9 @@ export default {
         AllowOverLimit: this.customerCreditHistories.allowOverLimit,
         Plate: this.customerCreditHistoriesplate
       })
-      this.customerCreditHistories = {}
+      this.customerCreditHistories = {
+        bankId: null
+      }
       this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
