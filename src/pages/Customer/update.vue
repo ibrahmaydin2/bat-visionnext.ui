@@ -762,7 +762,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
-                <v-select :options="banks" @input="selectedBank" label="Description1" :disabled="!customerCreditHistories.creditDescription || (customerCreditHistories.creditDescription && customerCreditHistories.creditDescription.Code != 'BC')"></v-select>
+                <v-select v-model="customerCreditHistories.selectedBank" :options="banks" @input="selectedBank" label="Description1" :disabled="customerCreditHistories.creditDescriptionCode != 'BC'"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -772,17 +772,17 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditDescriptionId') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditDescriptionId.$error }">
-                <v-select :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
+                <v-select v-model="customerCreditHistories.creditDescription" :options="credits" @input="selectedCreditDescription" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditAmount') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditAmount.$error }">
-                <b-form-input type="text" v-model="customerCreditHistories.creditAmount" />
+                <b-form-input type="number" v-model="customerCreditHistories.creditAmount" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.debtor')">
-                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'SN'" type="text" v-model="customerCreditHistories.debtor" />
+                <b-form-input :disabled="customerCreditHistories.creditDescriptionCode!== 'SN'" type="number" v-model="customerCreditHistories.debtor" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -794,12 +794,12 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_CreditLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.creditLimit.$error }">
-                <b-form-input type="text" v-model="customerCreditHistories.creditLimit" />
+                <b-form-input type="number" v-model="customerCreditHistories.creditLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.Model_RiskLimit') + ' *'" :class="{ 'form-group--error': $v.customerCreditHistories.riskLimit.$error }">
-                <b-form-input type="text" v-model="customerCreditHistories.riskLimit" />
+                <b-form-input type="number" v-model="customerCreditHistories.riskLimit" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1767,7 +1767,9 @@ export default {
         AllowOverLimit: this.customerCreditHistories.allowOverLimit,
         Plate: this.customerCreditHistoriesplate
       })
-      this.customerCreditHistories = {}
+      this.customerCreditHistories = {
+        bankId: null
+      }
       this.$v.customerCreditHistories.$reset()
     },
     removeCustomerCreditHistory (item) {
@@ -1984,11 +1986,11 @@ export default {
           Activity1Id: e.Activity1Id,
           Activity2Id: e.Activity2Id,
           OutSourceOrderId: e.OutSourceOrderId,
-          CustomerLocations: e.CustomerLocations,
-          CustomerCreditHistories: e.CustomerCreditHistories,
-          CustomerPaymentTypes: e.CustomerPaymentTypes,
-          CustomerItemDiscounts: e.CustomerItemDiscounts,
-          CustomerTouchpoints: e.CustomerTouchpoints,
+          CustomerLocations: e.CustomerLocations ? e.CustomerLocations : [],
+          CustomerCreditHistories: e.CustomerCreditHistories ? e.CustomerCreditHistories : [],
+          CustomerPaymentTypes: e.CustomerPaymentTypes ? e.CustomerPaymentTypes : [],
+          CustomerItemDiscounts: e.CustomerItemDiscounts ? e.CustomerItemDiscounts : [],
+          CustomerTouchpoints: e.CustomerTouchpoints ? e.CustomerTouchpoints : [],
           RecordId: e.RecordId,
           RecordTypeId: e.RecordTypeId,
           Deleted: 0
