@@ -327,6 +327,8 @@ export default {
     } else {
       sortOpt = null
     }
+    this.andConditionalModel = {}
+    searchQ = {}
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
