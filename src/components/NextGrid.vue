@@ -110,6 +110,14 @@
               />
 
               <b-form-input
+                v-if="header.columnType === 'Decimal'"
+                v-once
+                type="number"
+                v-model="header.defaultValue"
+                @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
+              />
+
+              <b-form-input
                 v-if="header.columnType === 'Id'"
                 v-once
                 v-model="header.defaultValue"
@@ -505,6 +513,9 @@ export default {
     filterLabel (e, i) {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
+    filterDecimal (e, i) {
+      this.searchOnTable(e, {value: parseFloat(i)})
+    },
     selectedValue (label, model, type) {
       if (model) {
         this.currentPage = 1
@@ -683,6 +694,7 @@ export default {
               break
             case 'String':
             case 'Id':
+            case 'Decimal':
               searchQ[row.dataField] = row.defaultValue
               break
           }
