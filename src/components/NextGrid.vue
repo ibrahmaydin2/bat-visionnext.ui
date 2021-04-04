@@ -548,7 +548,7 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
-      if (search) {
+      if (search || search === 0) {
         this.currentPage = 1
       }
       let validCount = 0
@@ -562,10 +562,10 @@ export default {
         return
       }
       this.showRequiredInfo = false
-      if (!search || search === '') {
-        delete searchQ[tableField]
-      } else {
+      if ((search && search !== '') || search === 0) {
         searchQ[tableField] = search
+      } else {
+        delete searchQ[tableField]
       }
       this.$store.dispatch('getTableData', {
         ...this.query,

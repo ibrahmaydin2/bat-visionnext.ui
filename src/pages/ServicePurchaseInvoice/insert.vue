@@ -93,7 +93,7 @@
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
@@ -621,7 +621,7 @@ export default {
   watch: {
     selectedCustomer (newValue, oldValue) {
       this.getPaymentTypes()
-      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
+      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

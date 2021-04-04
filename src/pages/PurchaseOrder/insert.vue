@@ -621,7 +621,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
-      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
+      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return
