@@ -537,8 +537,8 @@ export default {
     },
     onAutoCompleteSearch (input) {
       if (input.length < 3) { return [] }
-      const andConditionModel = {
-        Description1: input
+      const andConditionModel = input === '%%%' ? {} : {
+        Description1: input.replaceAll('%', '')
       }
       return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel}).then((res) => {
         return res
