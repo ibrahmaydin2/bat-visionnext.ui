@@ -725,7 +725,7 @@ export default {
       if (!hasAnyDropdown) {
         this.isGridFieldsReady = true
       }
-      if (lookups.length > 0 && (!this.lookup || this.lookup.length === 0)) {
+      if (lookups.length > 0) {
         lookups = lookups.slice(0, -1)
         this.$store.dispatch('getAllLookups', {...this.query, type: lookups}).then(() => {
           this.isLookupReady = true
