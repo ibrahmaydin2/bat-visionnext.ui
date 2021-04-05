@@ -537,10 +537,11 @@ export default {
     },
     onAutoCompleteSearch (input) {
       if (input.length < 3) { return [] }
+      let pagerecordCount = input.includes('%') ? 20 : 100
       const andConditionModel = input === '%%%' ? {} : {
         Description1: input.replaceAll('%', '')
       }
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel}).then((res) => {
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel, pagerecordCount: pagerecordCount}).then((res) => {
         return res
       })
     },
