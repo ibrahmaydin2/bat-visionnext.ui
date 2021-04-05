@@ -567,7 +567,7 @@ export default {
       }
       let validCount = 0
       this.requiredFields.forEach(r => {
-        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
+        if (searchQ[r.field] || this.andConditionalModel[r.field] || this.andConditionalModel[`${r.field}Ids`]) {
           validCount++
         }
       })
