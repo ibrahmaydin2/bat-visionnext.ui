@@ -9,8 +9,10 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
+var pagerecordCount = 1000
 var checkSearchObject = function (obj) {
   if (obj) {
+    let isCustomSearch = false
     let isList = obj && (obj.length > 0)
     if (isList) {
       obj = obj[0]
@@ -20,10 +22,13 @@ var checkSearchObject = function (obj) {
       let value = obj[key]
       if (value === '%%%') {
         delete obj[key]
+        isCustomSearch = true
       } else if ((typeof value === 'string' || value instanceof String) && value.includes('%')) {
         obj[key] = value.replaceAll('%', '')
+        isCustomSearch = true
       }
     })
+    pagerecordCount = isCustomSearch ? 20 : 1000
     return !isList ? obj : obj ? [obj] : []
   } else {
     return undefined
@@ -842,7 +847,7 @@ export const store = new Vuex.Store({
         'AndConditionModel': query.model ? query.model : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': 100,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 100,
         'page': 1,
         'OrderByColumns': []
       }
@@ -1126,7 +1131,7 @@ export const store = new Vuex.Store({
         ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 1000,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : pagerecordCount,
         'page': 1
       }
       return axios.post(query.api, dataQuery, authHeader)
