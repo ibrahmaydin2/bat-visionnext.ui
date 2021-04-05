@@ -9,7 +9,26 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
-
+var checkSearchObject = function (obj) {
+  if (obj) {
+    let isList = obj && (obj.length > 0)
+    if (isList) {
+      obj = obj[0]
+    }
+    let keys = Object.keys(obj)
+    keys.forEach(key => {
+      let value = obj[key]
+      if (value === '%%%') {
+        delete obj[key]
+      } else if ((typeof value === 'string' || value instanceof String) && value.includes('%')) {
+        obj[key] = value.replaceAll('%', '')
+      }
+    })
+    return !isList ? obj : obj ? [obj] : []
+  } else {
+    return undefined
+  }
+}
 var numberOfAjaxCAllPending = 0
 var me = this
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
@@ -1101,9 +1120,9 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       let dataQuery = {
         'AndConditionModel': {
-          ...query.andConditionModel
+          ...checkSearchObject(query.andConditionModel)
         },
-        'OrConditionModels': query.orConditionModels,
+        'OrConditionModels': checkSearchObject(query.orConditionModels),
         ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
