@@ -146,27 +146,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.summary-card {
-  width: 240px;
-  float: right;
-  border: none;
-  height: 90px;
-}
-.card-body  {
-  padding: none !important;
-}
-.summary-title {
-  width: 100px !important;
-}
-.summary-value {
-   width: 75px !important;
-   float:right
-}
-.summary-area {
-  font-size: 10px !important;
-}
-.summary-hr {
-  margin: 3px;
-}
-</style>
