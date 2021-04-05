@@ -17,24 +17,6 @@
             <span><i class="fas fa-code" />  <b>{{$t('insert.order.invoiceNumber')}}:</b> {{rowData.InvoiceNumber}}</span>
           </section>
         </b-col>
-        <b-col cols="6">
-          <b-card  class="summary-card">
-            <div class="summary-area">
-              <span class="summary-title">{{$t('insert.order.netTotal')}}</span>
-              <span class="summary-value text-muted">: {{rowData.NetTotal}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
-              <span class="summary-title">{{$t('insert.order.vatTotal')}}</span>
-              <span class="summary-value text-muted">: {{rowData.TotalVat}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
-              <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
-              <span class="summary-value text-muted">: {{rowData.GrossTotal}}</span>
-              <div class="clearfix"></div>
-              <hr class="summary-hr"/>
-            </div>
-          </b-card>
-        </b-col>
       </b-row>
       <b-tabs>
         <b-tab :title="$t('insert.order.enterWaybill')" active>
@@ -47,6 +29,7 @@
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.RefDocumentType, 'object', 'insert.order.refDocumentType')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
@@ -59,31 +42,49 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')">
+        <b-tab :title="$t('insert.order.products')" v-if="rowData.RefDocumentType && rowData.RefDocumentType.Code !== 'AssetMovement'">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
-                    <b-th><span>{{$t('insert.order.product')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.productName')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
-                      <b-td>{{o.Item.Label}}</b-td>
-                      <b-td>{{o.Item.Code}}</b-td>
+                      <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
+                      <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
                       <b-td>{{o.Quantity}}</b-td>
-                      <b-td>{{o.Price}}</b-td>
-                      <b-td>{{o.VatRate}}</b-td>
-                      <b-td>{{o.NetTotal}}</b-td>
-                      <b-td>{{o.TotalVat}}</b-td>
-                      <b-td>{{o.GrossTotal}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.assetMovement')" v-if="rowData.RefDocumentType && rowData.RefDocumentType.Code === 'AssetMovement'">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.assetCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.assetName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.serialNumber')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.assetQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.barcode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.fixtureNumber')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(a, i) in rowData.AssetMovements" :key="i">
+                      <b-td>{{a.Code}}</b-td>
+                      <b-td>{{a.Description1}}</b-td>
+                      <b-td>{{a.SerialNumber}}</b-td>
+                      <b-td>{{a.Quantity}}</b-td>
+                      <b-td>{{a.Barcode}}</b-td>
+                      <b-td>{{a.FixtureNumber}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
