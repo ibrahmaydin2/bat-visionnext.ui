@@ -1286,7 +1286,17 @@
       "actualDeliveryDateLessDocumentDate": "Fiili Sevk Tarihi Belge Tarihinden önce olamaz!",
       "chooseWarehouse": "Lüften depo seçimi yapınız.",
       "campaignListError": "Kampanya listesinde oluşan bir hatadan dolayı işleminizi gerçekleştiremiyoruz.",
-      "chooseCustomer": "Lüften müşteri seçimi yapınız."
+      "chooseCustomer": "Lüften müşteri seçimi yapınız.",
+      "refDocumentType": "Referans Belge Tipi",
+      "assetMovement": "Varlıklar",
+      "assetCode": "Varlık Kodu",
+      "assetName": "Varlık Adı",
+      "serialNumber": "Seri No",
+      "assetQuantity": "Miktar",
+      "barcode": "Barkod",
+      "fixtureNumber": "Demirbaş No",
+      "productName": "Ürün Adı",
+      "products": "Ürünler"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
