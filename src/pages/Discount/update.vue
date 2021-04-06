@@ -41,14 +41,14 @@
               <b-form-datepicker v-model="form.DiscountEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountTypeId" :error="$v.form.DiscountTypeId">
-              <v-select :options="discountTypes" @input="selectedSearchType('DiscountTypeId', $event)" label="Description1">
+              <v-select v-model='discountType' :options="discountTypes" @input="selectedSearchType('DiscountTypeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountKindId" :error="$v.form.DiscountKindId">
-              <v-select :options="discountKinds" @input="selectedSearchType('DiscountKindId', $event)" label="Description1">
+              <v-select v-model='discountKind' :options="discountKinds" @input="selectedSearchType('DiscountKindId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -81,7 +81,7 @@
               <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
+              <v-select v-model='budget' :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -541,10 +541,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import insertMixin from '../../mixins/insert'
+import updateMixin from '../../mixins/update'
 import { required } from 'vuelidate/lib/validators'
 export default {
-  mixins: [insertMixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
@@ -759,14 +759,19 @@ export default {
       paymentTabValid: false,
       customerSqlsTabValid: false,
       customerCriterTabValid: false,
-      customerValid: false
+      customerValid: false,
+      discountType: null,
+      discountKind: null,
+      budget: null
     }
   },
   computed: {
     ...mapState(['discountTypes', 'discountKinds', 'budgets', 'discountCategories', 'columnNames', 'columnValues', 'customers', 'branchs', 'routes', 'paymentTypes', 'customerSqls'])
   },
   mounted () {
-    this.createManualCode()
+    this.getData().then(() => {
+      this.setData()
+    })
     this.getInsertPage(this.routeName)
   },
   methods: {
@@ -1041,7 +1046,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_BRANCH',
+        TableName: 'T_CUSTOMER',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
@@ -1083,7 +1088,7 @@ export default {
         StatusId: 1,
         RecordState: 2,
         TableName: 'T_ROUTE',
-        ColumnName: 'ROUTE_ID',
+        ColumnName: 'RECORD_ID',
         ColumnValue: this.discountDetailsRoute.RouteId,
         BranchId: null,
         BranchCode: null,
@@ -1122,7 +1127,7 @@ export default {
         StatusId: 1,
         RecordState: 2,
         TableName: 'T_PAYMENT_TYPE',
-        ColumnName: 'PAYMENTTYPE_ID',
+        ColumnName: 'RECORD_ID',
         ColumnValue: this.discountDetailsPayment.PaymentTypeId,
         BranchId: null,
         BranchCode: null,
@@ -1272,6 +1277,99 @@ export default {
         })
         this.form.DiscountCustomerSqls = this.discountCustomerSqls
         this.createData()
+      }
+    },
+    setData () {
+      console.log(this.rowData)
+      let rowData = this.rowData
+      this.form = rowData
+      this.routeCriteria = rowData.RouteCriteria
+      this.customerCriteria = rowData.CustomerCriteria
+      this.paymentCriteria = rowData.PaymentCriteria
+      this.branchCriteria = rowData.BranchCriteria
+      this.discountType = this.convertLookupValueToSearchValue(rowData.DiscountType)
+      this.discountKind = this.convertLookupValueToSearchValue(rowData.DiscountKind)
+      this.budget = this.convertLookupValueToSearchValue(rowData.Budget)
+      this.getDiscountGivens()
+      this.getDiscountTakens()
+      this.getDiscountCustomers()
+      this.getDiscountExcludedCustomers()
+      this.getDiscountDetails()
+    },
+    getDiscountGivens () {
+      if (this.form.DiscountGivens && this.form.DiscountGivens.length > 0) {
+        for (let a = 0; a < this.form.DiscountGivens.length; a++) {
+          this.form.DiscountGivens[a].ColumnNameStr = this.form.DiscountGivens[a].ColumnName
+          this.form.DiscountGivens[a].ColumnValueStr = this.form.DiscountGivens[a].ColumnValue
+        }
+      }
+    },
+    getDiscountTakens () {
+      if (this.form.DiscountTakens && this.form.DiscountTakens.length > 0) {
+        for (let a = 0; a < this.form.DiscountTakens.length; a++) {
+          this.form.DiscountTakens[a].ColumnNameStr = this.form.DiscountTakens[a].ColumnName
+          this.form.DiscountTakens[a].ColumnValueStr = this.form.DiscountTakens[a].ColumnValue
+        }
+      }
+    },
+    getDiscountCustomers () {
+      if (this.form.DiscountCustomers && this.form.DiscountCustomers.length > 0) {
+        let customerIds = this.form.DiscountCustomers.map(c => c.CustomerId)
+        let me = this
+        let model = {RecordIds: customerIds}
+        me.$api.post({andConditionModel: model}, 'Customer', 'Customer/Search').then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            res.ListModel.BaseModels.forEach(customer => {
+              if (customer.DefaultLocation) {
+                let selectedCampaignCustomer = me.form.DiscountCustomers.find(f => f.CustomerId === customer.RecordId)
+                let index = this.form.DiscountCustomers.indexOf(selectedCampaignCustomer)
+                selectedCampaignCustomer.LocationId = customer.DefaultLocation.DecimalValue
+                selectedCampaignCustomer.LocationName = customer.DefaultLocation.Label
+                me.form.DiscountCustomers[index] = selectedCampaignCustomer
+                me.$forceUpdate()
+              }
+            })
+          }
+        })
+      }
+    },
+    getDiscountDetails () {
+      if (this.form.DiscountDetails && this.form.DiscountDetails.length > 0) {
+        for (let a = 0; a < this.form.DiscountDetails.length; a++) {
+          if (this.form.DiscountDetails[a].PaymentTypeId) {
+            this.discountDetailsPayment.push(this.form.DiscountDetails[a])
+          } else if (this.form.DiscountDetails[a].RouteId) {
+            this.discountDetailsRoute.push(this.form.DiscountDetails[a])
+          } else if (this.form.DiscountDetails[a].BranchId) {
+            this.discountDetailsBranch.push(this.form.DiscountDetails[a])
+          } else {
+            this.discountDetailsCustomerCriterias.push(this.form.DiscountDetails[a])
+            let length = this.discountDetailsCustomerCriterias.length - 1
+            this.discountDetailsCustomerCriterias[length].ColumnNameStr = this.form.DiscountDetails[a].ColumnName
+            this.discountDetailsCustomerCriterias[length].ColumnValueStr = this.form.DiscountDetails[a].ColumnValue
+          }
+        }
+      }
+    },
+    getDiscountExcludedCustomers () {
+      if (this.form.DiscountExcludedCustomers && this.form.DiscountExcludedCustomers.length > 0) {
+        let customerIds = this.form.DiscountExcludedCustomers.map(c => c.CustomerId)
+        let me = this
+        let model = {RecordIds: customerIds}
+        me.$api.post({andConditionModel: model}, 'Customer', 'Customer/Search').then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            res.ListModel.BaseModels.forEach(customer => {
+              if (customer.DefaultLocation) {
+                let selectedCampaignCustomer = me.form.DiscountExcludedCustomers.find(f => f.CustomerId === customer.RecordId)
+                let index = this.form.DiscountExcludedCustomers.indexOf(selectedCampaignCustomer)
+                selectedCampaignCustomer.LocationId = customer.DefaultLocation.DecimalValue
+                selectedCampaignCustomer.LocationName = customer.DefaultLocation.Label
+                me.form.DiscountExcludedCustomers[index] = selectedCampaignCustomer
+                me.$forceUpdate()
+              }
+            })
+          }
+        })
       }
     },
     initFalseValid () {
