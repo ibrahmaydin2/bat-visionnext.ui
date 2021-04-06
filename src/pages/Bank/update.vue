@@ -89,15 +89,14 @@
               </b-th>
             </b-thead>
             <b-tbody>
+              <!-- <b-tr v-for="(r, i) in form.model.bankBranches" :key="i" v-if="r.RecordState !== 4"> -->
               <b-tr v-for="(r, i) in form.model.bankBranches" :key="i">
-                <!-- <div  v-if="r.RecordState !== 4"> -->
-                  <b-td>{{r.Code}}</b-td>
-                  <b-td>{{r.Description1}}</b-td>
-                  <b-td>{{r.FinanceCode}}</b-td>
-                  <b-td>{{r.DefaultAccountNumber}}</b-td>
-                  <b-td><p><i :class="r.IsDefaultBranch === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p></b-td>
-                  <b-td class="text-center"><i @click="removeBankBranch(r)" class="far fa-trash-alt text-danger"></i></b-td>
-                <!-- </div> -->
+                <b-td>{{r.Code}}</b-td>
+                <b-td>{{r.Description1}}</b-td>
+                <b-td>{{r.FinanceCode}}</b-td>
+                <b-td>{{r.DefaultAccountNumber}}</b-td>
+                <b-td><p><i :class="r.IsDefaultBranch === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p></b-td>
+                <b-td class="text-center"><i @click="removeBankBranch(r)" class="far fa-trash-alt text-danger"></i></b-td>
               </b-tr>
             </b-tbody>
           </b-table-simple>
