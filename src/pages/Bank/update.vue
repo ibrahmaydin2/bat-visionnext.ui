@@ -89,7 +89,8 @@
               </b-th>
             </b-thead>
             <b-tbody>
-              <b-tr v-for="(r, i) in form.model.bankBranches" :key="i" v-if="r.RecordState !== 4">
+              <!-- <b-tr v-for="(r, i) in form.model.bankBranches" :key="i" v-if="r.RecordState !== 4"> -->
+              <b-tr v-for="(r, i) in form.model.bankBranches" :key="i">
                 <b-td>{{r.Code}}</b-td>
                 <b-td>{{r.Description1}}</b-td>
                 <b-td>{{r.FinanceCode}}</b-td>
@@ -168,7 +169,7 @@ export default {
   watch: {
     rowData: function (e) {
       if (e) {
-        this.branchCode = Number(e.Code) + 1
+        this.branchCode = `${e.Code} - ${(e.BankBranches.length ? e.BankBranches.length : 1) + 1}`
         this.form.model = {
           code: e.Code,
           description1: e.Description1,

@@ -72,20 +72,17 @@
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
           <b-row>
           <NextFormGroup :title="$t('insert.warehouse.SupplierBranchId')" :error="$v.warehouseSupplier.supplierBranch" :required="true">
-            <v-select v-model="warehouseSupplier.selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchList" @search="onBranchSearch" @input="selectedBranch">
+            <v-select v-model="warehouseSupplier.selectedBranch" label="Description1" :filterable="false" :options="branchs" @search="onBranchSearch" @input="selectedBranch">
               <template slot="no-options">
                 {{$t('insert.min3')}}
-              </template>
-              <template slot="option" slot-scope="option">
-                {{ option.BranchCommercialTitle }}
               </template>
             </v-select>
           </NextFormGroup>
            <NextFormGroup :title="$t('insert.warehouse.PurchaseWarehouseId')" :error="$v.warehouseSupplier.purchaseWarehouse" :required="true">
-              <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouseList" label="Description1"></v-select>
+              <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouses" label="Description1"></v-select>
            </NextFormGroup>
            <NextFormGroup :title="$t('insert.warehouse.ReturnWarehouseId')" :error="$v.warehouseSupplier.returnWarehouse" :required="true">
-              <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouseList" label="Description1"></v-select>
+              <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouses" label="Description1"></v-select>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -158,15 +155,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['vehicles', 'branchList', 'warehouseList'])
+    ...mapState(['vehicles', 'branchs', 'warehouses'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
       this.createManualCode()
     },
     save () {
@@ -220,6 +215,7 @@ export default {
     },
     onVehicleSearch (search, loading) {
       if (search.length >= 3) {
+        loading(true)
         this.$store.dispatch('getSearchItems', {
           ...this.query,
           api: 'VisionNextVehicle/api/Vehicle/Search',
@@ -234,12 +230,29 @@ export default {
     },
     onBranchSearch (search, loading) {
       if (search.length >= 3) {
-        this.$store.dispatch('acBranch', {...this.query, searchField: 'BranchCommercialTitle', searchText: search})
+        loading(true)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextBranch/api/Branch/Search',
+          name: 'branchs',
+          andConditionModel: {
+            Description1: search
+          }
+        }).then(res => {
+          loading(false)
+        })
       }
     },
     selectedBranch (e) {
       this.warehouseSupplier.supplierBranch = e
-      this.$store.dispatch('acWarehouse', {...this.query, searchField: 'BranchId', searchText: e.RecordId})
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/Search',
+        name: 'warehouses',
+        andConditionModel: {
+          branchId: e.RecordId
+        }
+      })
     },
     addItems () {
       this.$v.warehouseSupplier.$touch()

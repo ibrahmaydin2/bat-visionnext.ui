@@ -110,6 +110,14 @@
               />
 
               <b-form-input
+                v-if="header.columnType === 'Decimal'"
+                v-once
+                type="number"
+                v-model="header.defaultValue"
+                @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
+              />
+
+              <b-form-input
                 v-if="header.columnType === 'Id'"
                 v-once
                 v-model="header.defaultValue"
@@ -319,6 +327,8 @@ export default {
     } else {
       sortOpt = null
     }
+    this.andConditionalModel = {}
+    searchQ = {}
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
@@ -505,6 +515,9 @@ export default {
     filterLabel (e, i) {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
+    filterDecimal (e, i) {
+      this.searchOnTable(e, {value: parseFloat(i)})
+    },
     selectedValue (label, model, type) {
       if (model) {
         this.currentPage = 1
@@ -524,10 +537,11 @@ export default {
     },
     onAutoCompleteSearch (input) {
       if (input.length < 3) { return [] }
-      const andConditionModel = {
-        Description1: input
+      let pagerecordCount = input.includes('%') ? 20 : 100
+      const andConditionModel = input === '%%%' ? {} : {
+        Description1: input.replaceAll('%', '')
       }
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel}).then((res) => {
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel, pagerecordCount: pagerecordCount}).then((res) => {
         return res
       })
     },
@@ -548,12 +562,12 @@ export default {
       }
     },
     searchOnTable (tableField, search) {
-      if (search) {
+      if (search || search === 0) {
         this.currentPage = 1
       }
       let validCount = 0
       this.requiredFields.forEach(r => {
-        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
+        if (searchQ[r.field] || this.andConditionalModel[r.field] || this.andConditionalModel[`${r.field}Ids`]) {
           validCount++
         }
       })
@@ -562,10 +576,10 @@ export default {
         return
       }
       this.showRequiredInfo = false
-      if (!search || search === '') {
-        delete searchQ[tableField]
-      } else {
+      if ((search && search !== '') || search === 0) {
         searchQ[tableField] = search
+      } else {
+        delete searchQ[tableField]
       }
       this.$store.dispatch('getTableData', {
         ...this.query,
@@ -683,6 +697,7 @@ export default {
               break
             case 'String':
             case 'Id':
+            case 'Decimal':
               searchQ[row.dataField] = row.defaultValue
               break
           }
@@ -710,7 +725,7 @@ export default {
       if (!hasAnyDropdown) {
         this.isGridFieldsReady = true
       }
-      if (lookups.length > 0 && (!this.lookup || this.lookup.length === 0)) {
+      if (lookups.length > 0) {
         lookups = lookups.slice(0, -1)
         this.$store.dispatch('getAllLookups', {...this.query, type: lookups}).then(() => {
           this.isLookupReady = true
