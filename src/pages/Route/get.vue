@@ -17,55 +17,36 @@
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.Description1) ? rowData.Description1 : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.route.active'): $t('insert.route.passive')}}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
         <b-tab :title="$t('insert.route.title')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.RouteGroup, 'object', 'insert.route.routeGroup')"></div>
+              <div v-html="getFormatDataByType(rowData.RouteClass, 'object', 'insert.route.routeClass')"></div>
+              <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.route.vehicle')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.route.personel')"></div>
+              <div v-html="getFormatDataByType(rowData.Supervisor, 'object', 'insert.route.supervisor')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.route.customerArea')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.VisitStartControl, 'object', 'insert.route.control')"></div>
+              <div v-html="getFormatDataByType(rowData.City, 'object', 'insert.route.city')"></div>
+              <div v-html="getFormatDataByType(rowData.District, 'object', 'insert.route.district')"></div>
+              <div v-html="getFormatDataByType(rowData.IsMultidayRoute, 'check', 'insert.route.multiDayRoute')"></div>
+              <div v-html="getFormatDataByType(rowData.IsSuperRoute, 'check', 'insert.route.superRoute')"></div>
+              <div v-html="getFormatDataByType(rowData.MarketingRegion5, 'object', 'insert.route.marketingArea')"></div>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.route.locations')">
           <b-row>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.route.routeGroup')}}</span>
-                <p>{{(rowData.routeGroup) ? rowData.routeGroup.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.routeClass')}}</span>
-                <p>{{(rowData.RouteClass) ? rowData.RouteClass.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.vehicle')}}</span>
-                <p>{{(rowData.Vehicle) ? rowData.Vehicle.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.personel')}}</span>
-                <p>{{(rowData.Representative) ? rowData.Representative.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.supervisor')}}</span>
-                <p>{{(rowData.Supervisor) ? rowData.Supervisor.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.control')}}</span>
-                <p>{{(rowData.VisitStartControl) ? rowData.VisitStartControl.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.city')}}</span>
-                <p>{{rowData.City}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.distirict')}}</span>
-                <p>{{rowData.Description1}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.town')}}</span>
-                <p></p> -->
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.route.type')}}</span>
-                <p></p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.customerArea')}}</span>
-                <p></p> -->
-                <span><i class="far fa-circle" /> {{$t('insert.route.multiDayRoute')}}</span>
-                <p><i :class="rowData.IsMultidayRoute === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-                <span><i class="far fa-circle" /> {{$t('insert.route.superRoute')}}</span>
-                <p><i :class="rowData.IsSuperRoute === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.locations')}}</h6>
-                <!-- <b-table responsive :items="rowData.routeDetails" :fields="fields">
-                  <template #cell(customer)="data">
-                    {{data}}
-                  </template>
-                  <template #cell(visit)="data">
-                    <i :class="data.value === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
-                  </template>
-                </b-table> -->
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
@@ -77,7 +58,6 @@
                     <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
-                    <b-th><span>{{$t('list.operations')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.RouteDetails" :key="i">
@@ -90,7 +70,6 @@
                       <b-td>{{r.Day5VisitOrder}}</b-td>
                       <b-td>{{r.Day6VisitOrder}}</b-td>
                       <b-td>{{r.Day7VisitOrder}}</b-td>
-                      <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -165,7 +144,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
+  mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
