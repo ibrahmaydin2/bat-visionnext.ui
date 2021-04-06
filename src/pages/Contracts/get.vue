@@ -21,94 +21,101 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('get.detail')" active>
+        <b-tab :title="$t('insert.contract.management')" active>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.contract.Description1')"></div>
+              <div v-html="getFormatDataByType(rowData.ContractNumber, 'text', 'insert.contract.ContractNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Class, 'object', 'insert.contract.ClassId')"></div>
+              <div v-html="getFormatDataByType(rowData.Brand, 'object', 'insert.contract.BrandId')"></div>
+              <div v-html="getFormatDataByType(rowData.Genexp1, 'text', 'insert.contract.GenExp')"></div>
+            </b-card>
+             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.FinanceCode, 'text', 'insert.contract.FinanceCode')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerFinanceCode, 'text', 'insert.contract.CustomerFinanceCode')"></div>
+              <div v-html="getFormatDataByType(rowData.ApproveState, 'object', 'insert.contract.ApproveStateId')"></div>
+              <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.contract.TypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.contract.CustomerId')"></div>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.contract.additionalCustomer')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('get.detail')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.ContractNumber')}}</span> <p>{{rowData.ContractNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.Description1')}}</span> <p>{{rowData.Description1}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.CustomerFinanceCode')}}</span> <p>{{rowData.CustomerFinanceCode}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.GroupId')}}</span> <p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.ClassId')}}</span> <p>{{rowData.Class ? rowData.Class.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.BrandId')}}</span> <p>{{rowData.Brand ? rowData.Brand.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.contract.TypeId')}}</span> <p>{{rowData.Type ? rowData.Type.Label : ''}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.contract.Canceled')}}</span> <p><i :class="rowData.Canceled === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p> -->
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.contract.CancelReason')}}</span> <p>{{rowData.CancelReason ? rowData.CancelReason.Label : ''}}</p> -->
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.contract.additionalCustomer')}}</h6>
-                <b-table-simple responsive hover small>
-                  <b-thead head-variant="light">
-                    <b-tr>
-                      <b-th>{{$t('insert.contract.customer')}}</b-th>
-                    </b-tr>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.customer')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <tr v-for="(result, i) in rowData.ContractRelatedCustomers" :key="i">
-                      <b-td>{{result.Customer ? result.Customer.Label : ''}}</b-td>
-                    </tr>
+                    <b-tr v-for="(r, i) in rowData.ContractRelatedCustomers" :key="i">
+                      <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
+                    </b-tr>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.other')">
+        <b-tab :title="$t('insert.contract.validDates')">
           <b-row>
-            <b-col cols="12" md="6">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.contract.validDates')}}</h6>
-                <b-table-simple responsive bordered small>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.endDate')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.ContractValidDates" :key="i">
-                      <b-td>{{dateConvertFromTimezone(r.StartDate)}}</b-td>
-                      <b-td>{{dateConvertFromTimezone(r.EndDate)}}</b-td>
+                    <b-tr v-for="(c, i) in rowData.ContractValidDates" :key="i">
+                      <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
             </b-col>
-            <b-col cols="12" md="6">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.contract.contractBenefits')}}</h6>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.contract.contractBenefits')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.contract.BenefitTypeId')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.BudgetMasterId')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.BenefitBudget')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.TciBreak1Id')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.ContractBenefits" :key="i">
-                      <b-td>{{r.BenefitType ? r.BenefitType.Label : ''}}</b-td>
-                      <b-td>{{r.BudgetMaster ? r.BudgetMaster.Label : ''}}</b-td>
-                      <b-td>{{r.Currency ? r.Currency.Label : ''}}</b-td>
-                      <b-td>{{r.BenefitBudget}}</b-td>
+                    <b-tr v-for="(c, i) in rowData.ContractBenefits" :key="i">
+                      <b-td>{{c.BenefitType ? c.BenefitType.Label : ''}}</b-td>
+                      <b-td>{{c.BudgetMaster ? c.BudgetMaster.Label : ''}}</b-td>
+                      <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>
+                      <b-td>{{c.BenefitBudget}}</b-td>
+                      <b-td>{{c.TciBreak1 ? c.TciBreak1.Label : ''}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
             </b-col>
-            <b-col cols="12" md="6">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.contract.assets')}}</h6>
+          </b-row>
+        </b-tab>
+         <b-tab :title="$t('insert.contract.assets')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
-                    <b-th><span>{{$t('insert.contract.plannedServiceDate')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.assetId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedServiceDate')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.ContractAssets" :key="i">
-                      <b-td>{{r.AssetId}}</b-td>
-                      <b-td>{{dateConvertFromTimezone(r.PlannedServiceDate)}}</b-td>
+                    <b-tr v-for="(c, i) in rowData.ContractAssets" :key="i">
+                      <b-td>{{c.Asset ? c.Asset.Label : ''}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.PlannedServiceDate)}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -152,5 +159,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>

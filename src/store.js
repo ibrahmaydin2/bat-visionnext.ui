@@ -1528,23 +1528,19 @@ export const store = new Vuex.Store({
           case 'Select':
             if (fieldDefaultValue != null) {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <v-select
-                  :options="lookup.${fieldDefaultValue}"
-                  @input="selectedType('${fieldName}', $event)"
-                  label="Label"
-                />
+                <NextDropdown lookup-key="${fieldDefaultValue}" @input="selectedType('${fieldName}', $event)"/>
               </NextFormGroup>`
 
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <v-select />
+                <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)"/>
               </NextFormGroup>`
             }
             break
           case 'SelectSearch':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <v-select />
+              <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
             </NextFormGroup>`
             break
           case 'Radio':

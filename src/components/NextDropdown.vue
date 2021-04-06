@@ -1,5 +1,5 @@
 <template>
-  <v-select :disabled="disabled" v-model="selectedValue" :options="values" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="label">
+  <v-select :disabled="disabled" v-model="selectedValue" :options="lookupKey && !getLookup ? lookup[lookupKey] : values" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey">
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
@@ -12,7 +12,7 @@
 import { mapState } from 'vuex'
 import mixin from '../mixins/index'
 export default {
-  name: 'NextAddress',
+  name: 'NextDropdown',
   mixins: [mixin],
   props: {
     value: {},
@@ -32,6 +32,14 @@ export default {
     url: {
       type: String
     },
+    lookupKey: {
+      type: String,
+      default: undefined
+    },
+    getLookup: {
+      type: Boolean,
+      default: false
+    },
     dynamicAndCondition: {},
     orConditionFields: {}
   },
@@ -42,11 +50,18 @@ export default {
   data () {
     return {
       values: [],
-      selectedValue: undefined
+      selectedValue: undefined,
+      labelKey: ''
     }
   },
   mounted () {
-    if (!this.searchable) {
+    this.labelKey = this.label
+    if (this.lookupKey) {
+      this.labelKey = 'Label'
+      if (this.getLookup) {
+        this.getLookupValues()
+      }
+    } else if (!this.searchable) {
       this.getValues()
     }
   },
@@ -67,7 +82,7 @@ export default {
   },
   methods: {
     searchValue (search, loading) {
-      if (!this.searchable || search.length < 3) {
+      if (!this.searchable || search.length < 3 || !this.url) {
         return false
       }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
@@ -91,6 +106,9 @@ export default {
       })
     },
     getValues () {
+      if (!this.url) {
+        return
+      }
       let andConditionModel = {
         ...this.dynamicAndCondition
       }
@@ -102,6 +120,13 @@ export default {
     },
     selectValue (value) {
       this.$emit('input', value)
+    },
+    getLookupValues () {
+      this.$api.postByUrl({LookupTableCode: this.lookupKey}, 'VisionNextCommonApi/api/LookupValue/GetValues').then((response) => {
+        if (response) {
+          this.values = response.Values
+        }
+      })
     }
   }
 }
