@@ -103,14 +103,14 @@
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="setTotalPrice">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
+              <NextDropdown
+                  v-model="selectedInvoiceLine.selectedItem"
+                  url="VisionNextItem/api/Item/Search"
+                  @input="setTotalPrice"
+                  :searchable="true"
+                  or-condition-fields="Description1,Code"
+                  :dynamic-and-condition="{CardTypeIds: [9]}"
+                  :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="setTotalPrice" min=1 />
@@ -311,7 +311,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'items', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
+    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -358,27 +358,6 @@ export default {
       }).then(res => {
         loading(false)
       })
-    },
-    searchItems (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextItem/api/Item/Search',
-          name: 'items',
-          andConditionModel: {
-            CardTypeIds: [9]
-          },
-          orConditionModels: [
-            {
-              Description1: search,
-              Code: search
-            }
-          ]
-        }).then(res => {
-          loading(false)
-        })
-      }
     },
     getItem (recordId) {
       let request = {

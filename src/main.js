@@ -53,6 +53,7 @@ import NextCheckBox from './components/NextCheckBox'
 import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
+import NextDropdown from './components/NextDropdown'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -94,6 +95,7 @@ Vue.component('NextCheckBox', NextCheckBox)
 Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
+Vue.component('NextDropdown', NextDropdown)
 Vue.component('Actions', Actions)
 
 Vue.prototype.$api = new ApiManager()

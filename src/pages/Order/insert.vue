@@ -101,8 +101,6 @@
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
-          </b-row>
-          <b-row>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <v-select label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
                 <template slot="no-options">

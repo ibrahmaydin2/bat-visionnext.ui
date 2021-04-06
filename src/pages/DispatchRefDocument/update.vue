@@ -18,7 +18,7 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="8">
+          <b-col cols="12">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
                 <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
@@ -48,24 +48,6 @@
               </NextFormGroup>
             </b-row>
           </b-col>
-          <b-col cols="4">
-            <b-card  class="summary-card">
-              <div class="summary-area">
-                <span class="summary-title">{{$t('insert.order.netTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.NetTotal}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.vatTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalVat}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
-                <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-              </div>
-            </b-card>
-          </b-col>
         </b-row>
       </section>
     </b-col>
@@ -78,6 +60,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" :disabled="true"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="RefDocumentTypeId" :error="$v.form.RefDocumentTypeId" md="2" lg="2">
+              <v-select v-model="selectedRefDocumentType" label="Label" :options="lookup.REF_DOCUMENT_TYPE" :disabled="true" ></v-select>
             </NextFormGroup>
              <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
                 <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
@@ -117,29 +102,43 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.products')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && selectedRefDocumentType.Code !== 'AssetMovement'">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.order.product')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.productName')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
-                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
-                  <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
-                  <b-td>{{o.Price}}</b-td>
-                  <b-td>{{o.VatRate}}</b-td>
-                  <b-td>{{o.NetTotal}}</b-td>
-                  <b-td>{{o.TotalVat}}</b-td>
-                  <b-td>{{o.GrossTotal}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.assetMovement')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && selectedRefDocumentType.Code === 'AssetMovement'">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.assetCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.assetName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.serialNumber')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.assetQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.barcode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.fixtureNumber')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(a, i) in form.AssetMovements" :key="i">
+                  <b-td>{{a.Code}}</b-td>
+                  <b-td>{{a.Description1}}</b-td>
+                  <b-td>{{a.SerialNumber}}</b-td>
+                  <b-td>{{a.Quantity}}</b-td>
+                  <b-td>{{a.Barcode}}</b-td>
+                  <b-td>{{a.FixtureNumber}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -178,7 +177,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(l, i) in form.InvoiceLogisticCompanies" :key="i">
+                <b-tr v-for="(l, i) in (form.InvoiceLogisticCompanies ? form.InvoiceLogisticCompanies.filter(x => x.RecordState !== 4) : [])" :key="i">
                   <b-td>{{l.CompanyName}}</b-td>
                   <b-td>{{l.TaxNumber}}</b-td>
                   <b-td>{{l.City ? l.City.Label : l.CityName}}</b-td>
@@ -193,36 +192,6 @@
         </b-tab>
       </b-tabs>
     </b-col>
-    <b-modal id="campaign-modal" hide-footer>
-      <template #modal-title>
-        {{$t('insert.order.campaignSelection')}}
-      </template>
-      <b-table
-          :items="campaigns"
-          :fields="campaignFields"
-          select-mode="multi"
-          responsive
-          id="campaign-list"
-          :selectable="campaignSelectable"
-          bordered
-          tbody-tr-class="bg-white"
-          @row-selected="onCampaignSelected"
-        >
-        <template #cell(selection)="row" v-if="campaignSelectable">
-          <span>
-            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-          </span>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="campaigns ? campaigns.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        aria-controls="campaign-list"
-      ></b-pagination>
-      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
-      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
-  </b-modal>
   </b-row>
 </template>
 <script>
@@ -238,6 +207,7 @@ export default {
         InvoiceNumber: null,
         InvoiceKindId: 2,
         DocumentClassId: 3,
+        RefDocumentTypeId: null,
         EDocumentStatusId: null,
         GrossTotal: 0,
         DocumentNumber: null,
@@ -284,12 +254,6 @@ export default {
         PrintedDispatchNumber: null
       },
       routeName1: 'CommonApi',
-      campaignFields: [
-        {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
-        {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
-        {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
-      ],
-      SelectedDiscounts: [],
       selectedCustomer: null,
       documentDate: null,
       selectedPrice: {},
@@ -307,18 +271,12 @@ export default {
         isUpdated: false,
         invoiceId: null
       },
-      campaigns: [],
-      isCampaignQuestioned: false,
       selectedIndex: null,
       selectedRepresentative: null,
       selectedRoute: null,
       selectedWarehouse: null,
       selectedVehicle: null,
-      selectedCampaigns: [],
       currentPage: 1,
-      campaignSelectable: false,
-      showDiscounts: false,
-      customerCampaigns: {},
       selectedEDocumentStatus: null,
       selectedInvoiceLogisticCompany: {
         companyName: null,
@@ -331,7 +289,8 @@ export default {
       selectedBranch: {},
       address: {},
       selectedDeliveryRepresentative: null,
-      selectedStatus: null
+      selectedStatus: null,
+      selectedRefDocumentType: null
     }
   },
   computed: {
@@ -394,259 +353,7 @@ export default {
           this.selectedPrice = {}
           this.form.PriceListId = null
         }
-        this.searchPriceListItem()
       })
-    },
-    searchItems (search, loading) {
-      if (!this.form.WarehouseId) {
-        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      if (!this.form.CustomerId) {
-        this.$toasted.show(this.$t('insert.order.chooseCustomer'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextItem/api/Item/Search',
-          name: 'items',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
-    },
-    getItem (recordId) {
-      let request = {
-        andConditionModel: {
-          RecordIds: [recordId]
-        }
-      }
-      var me = this
-      this.$api.post(request, 'Item', 'Item/Search').then((res) => {
-        if (res.ListModel && res.ListModel.BaseModels) {
-          me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
-          me.selectItem()
-          me.$forceUpdate()
-        }
-      })
-    },
-    searchPriceListItem () {
-      if (!this.selectedPrice || !this.selectedPrice.RecordId || !this.selectedInvoiceLine.selectedItem) {
-        return false
-      }
-      let model = {
-        PriceListIds: [this.selectedPrice.RecordId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
-      }
-      var me = this
-      me.searchItemsByModel('VisionNextFinance/api/PriceListItem/Search', 'priceListItems', model, 1).then(() => {
-        if (me.priceListItems && me.priceListItems.length > 0) {
-          me.priceListItem = me.priceListItems[0]
-          me.selectedInvoiceLine.price = this.roundNumber(me.priceListItem.SalesPrice)
-        } else {
-          me.priceListItem = null
-          me.selectedInvoiceLine.price = null
-          me.selectedInvoiceLine.grossTotal = null
-          me.selectedInvoiceLine.netTotal = null
-          me.$toasted.show(this.$t('insert.order.noPriceException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
-        this.setTotalPrice()
-      })
-    },
-    selectItem () {
-      this.searchPriceListItem()
-      this.setStock()
-    },
-    selectQuantity () {
-      this.setTotalPrice()
-    },
-    setTotalPrice () {
-      if (!this.selectedInvoiceLine.quantity || !this.selectedInvoiceLine.selectedItem || !this.selectedInvoiceLine.price) {
-        return false
-      }
-      let vatRate = this.selectedInvoiceLine.selectedItem.Vat
-      this.selectedInvoiceLine.vatRate = vatRate
-      this.selectedInvoiceLine.grossTotal = this.roundNumber(this.selectedInvoiceLine.price * this.selectedInvoiceLine.quantity)
-      this.selectedInvoiceLine.totalVat = this.roundNumber(this.selectedInvoiceLine.grossTotal * vatRate / 100)
-      this.selectedInvoiceLine.netTotal = this.roundNumber(this.selectedInvoiceLine.grossTotal - this.selectedInvoiceLine.totalVat)
-    },
-    setStock () {
-      if (!this.selectedInvoiceLine.selectedItem || !this.selectedInvoiceLine.selectedItem.RecordId) {
-        this.selectedInvoiceLine.stock = null
-        return false
-      }
-      let model = {
-        WarehouseIds: [this.form.WarehouseId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
-      }
-      var me = this
-      this.searchItemsByModel('VisionNextWarehouse/api/WarehouseStock/Search', 'stocks', model, 1).then(() => {
-        if (me.stocks && me.stocks.length > 0) {
-          me.selectedInvoiceLine.stock = me.stocks[0].Quantity
-        } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        }
-      })
-    },
-    calculateTotalPrices () {
-      this.form.NetTotal = 0
-      this.form.TotalVat = 0
-      this.form.GrossTotal = 0
-      this.form.TotalItemDiscount = 0
-      this.form.TotalOtherDiscount = 0
-      this.form.TotalDiscount = 0
-      for (let index = 0; index < this.form.InvoiceLines.filter(o => o.RecordState !== 4).length; index++) {
-        this.form.InvoiceLines[index].LineNumber = index
-        this.form.NetTotal += this.form.InvoiceLines[index].NetTotal
-        this.form.TotalVat += this.form.InvoiceLines[index].TotalVat
-        this.form.GrossTotal += this.form.InvoiceLines[index].GrossTotal
-      }
-
-      this.form.NetTotal = this.roundNumber(this.form.NetTotal)
-      this.form.TotalVat = this.roundNumber(this.form.TotalVat)
-      this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
-    },
-    addInvoiceLine () {
-      this.$v.selectedInvoiceLine.$touch()
-      if (this.$v.selectedInvoiceLine.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
-        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let length = this.form.InvoiceLines.length
-      let selectedItem = this.selectedInvoiceLine.selectedItem
-      let quantity = this.selectedInvoiceLine.quantity
-      let order = {
-        Description1: selectedItem.Description1,
-        Deleted: 0,
-        System: 0,
-        RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
-        StatusId: 1,
-        LineNumber: length,
-        ItemId: selectedItem.RecordId,
-        ItemCode: selectedItem.Code,
-        UnitSetId: selectedItem.UnitSetId,
-        UnitId: selectedItem.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        Quantity: quantity,
-        Stock: this.selectedInvoiceLine.stock,
-        VatRate: this.selectedInvoiceLine.vatRate,
-        TotalVat: this.selectedInvoiceLine.totalVat,
-        TotalItemDiscount: 0,
-        TotalOtherDiscount: 0,
-        Price: this.selectedInvoiceLine.price,
-        GrossTotal: this.selectedInvoiceLine.grossTotal,
-        NetTotal: this.selectedInvoiceLine.netTotal,
-        IsFreeItem: 0,
-        IsCanceled: 0,
-        PriceListPrice: this.selectedInvoiceLine.price,
-        SalesQuantity1: quantity,
-        SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: 0,
-        TempDiscountNetTotal: 0,
-        DiscountNetTotal: 0,
-        DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
-        InvoiceId: this.selectedInvoiceLine.invoiceId
-      }
-      if (this.selectedInvoiceLine.isUpdated) {
-        this.form.InvoiceLines[this.selectedIndex] = order
-        this.selectedInvoiceLine.isUpdated = false
-      } else {
-        this.form.InvoiceLines.push(order)
-      }
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    removeInvoiceLine (item) {
-      this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
-      this.selectedInvoiceLine = {
-        quantity: item.Quantity,
-        price: item.Price,
-        vatRate: item.VatRate,
-        netTotal: item.NetTotal,
-        totalVat: item.TotalVat,
-        grossTotal: item.GrossTotal,
-        stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true,
-        invoiceId: item.InvoiceId
-      }
-      this.getItem(item.ItemId)
-    },
-    addCampaign () {
-      let model = {
-        SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
-        Order: this.form
-      }
-      this.$bvModal.hide('campaign-modal')
-      this.$store.commit('bigLoaded', true)
-      this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyUpdateDiscounts').then((res) => {
-        this.$store.commit('bigLoaded', false)
-        if (!res.IsCompleted) {
-          this.$toasted.show(this.$t('insert.order.campaignListError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (res && res.Invoice) {
-          this.form = res.Invoice
-        }
-        this.updateData()
-      })
-    },
-    onCampaignSelected (items) {
-      this.selectedCampaigns = items
     },
     setData () {
       let rowData = this.rowData
@@ -655,7 +362,9 @@ export default {
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
-          this.selectedCustomer = response.Model
+          if (response.Model) {
+            this.selectedCustomer = response.Model
+          }
         })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
@@ -664,6 +373,7 @@ export default {
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
         this.selectedEDocumentStatus = this.convertLookupValueToSearchValue(rowData.EDocumentStatus)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
+        this.selectedRefDocumentType = rowData.RefDocumentType
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
         }
@@ -686,17 +396,6 @@ export default {
           this.form.ActualDeliveryTime = time
         }
       }
-    },
-    getCustomerCampaigns (customerId) {
-      let model = {
-        customerId: customerId
-      }
-      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
-        if (res) {
-          this.customerCampaigns = res
-          this.showDiscounts = true
-        }
-      })
     },
     addInvoiceLogisticCompany () {
       this.$v.selectedInvoiceLogisticCompany.$touch()
@@ -741,7 +440,12 @@ export default {
       this.$v.selectedInvoiceLogisticCompany.$reset()
     },
     removeInvoiceLogisticCompany (item) {
-      this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(item)].RecordState = 4
+      if (item.RecordId) {
+        this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(item)].RecordState = 4
+      } else {
+        this.form.InvoiceLogisticCompanies.splice(this.form.InvoiceLogisticCompanies.indexOf(item), 1)
+      }
+      this.$forceUpdate()
     },
     save () {
       this.$v.form.$touch()
@@ -825,7 +529,6 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.searchPriceList()
-        this.getCustomerCampaigns(e.RecordId)
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
@@ -854,35 +557,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.summary-card {
-  width: 240px;
-  float: right;
-  height: 90px;
-}
-.card-body  {
-  padding: none !important;
-  margin-top:12px;
-}
-.summary-title {
-  width: 100px !important;
-}
-.summary-value {
-   width: 75px !important;
-   float:right
-}
-.summary-area {
-  font-size: 10px !important;
-}
-.summary-hr {
-  margin: 3px;
-}
-.success-color {
-  color: #28a745;
-  font-size: medium;
-}
-.gray-color {
-  color: lightgray;
-  font-size: medium;
-}
-</style>

@@ -97,8 +97,6 @@
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
             <b-col v-if="insertVisible.TaxOffice != null ? insertVisible.TaxOffice : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.TaxOffice + (insertRequired.TaxOffice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxOffice.$error }">
                 <b-form-input type="text" v-model="form.TaxOffice" :readonly="insertReadonly.TaxOffice" />
@@ -119,8 +117,6 @@
                 <b-form-input type="text" v-model="form.TradeLicenseNumber" :readonly="insertReadonly.TradeLicenseNumber" />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
             <b-col v-if="insertVisible.BlockReasonId != null ? insertVisible.BlockReasonId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.BlockReasonId + (insertRequired.BlockReasonId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BlockReasonId.$error }">
                 <v-select
@@ -141,8 +137,6 @@
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
             <b-col v-if="insertVisible.CustomerRegion5Id != null ? insertVisible.CustomerRegion5Id : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.CustomerRegion5Id + (insertRequired.CustomerRegion5Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerRegion5Id.$error }">
                 <v-select
@@ -171,8 +165,6 @@
                 <b-form-datepicker :placeholder="$t('insert.vehicles.chooseDate')" v-model="form.LicenseValidDate" />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
             <b-col v-if="insertVisible.IsBlocked != null ? insertVisible.IsBlocked : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.IsBlocked + (insertRequired.IsBlocked === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsBlocked.$error }">
                  <NextCheckBox v-model="form.IsBlocked" type="number" toggle></NextCheckBox>
@@ -193,8 +185,6 @@
                   <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle></NextCheckBox>
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
             <b-col v-if="insertVisible.UseEInvoice != null ? insertVisible.UseEInvoice : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.UseEInvoice + (insertRequired.UseEInvoice === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UseEInvoice.$error }">
                   <NextCheckBox v-model="form.UseEInvoice" type="number" toggle></NextCheckBox>
