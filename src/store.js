@@ -1233,7 +1233,7 @@ export const store = new Vuex.Store({
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
-            router.push({name: query.return})
+            return res
           } else {
             let errs = res.data.Validations.Errors
             for (let i = 0; i < errs.length; i++) {
