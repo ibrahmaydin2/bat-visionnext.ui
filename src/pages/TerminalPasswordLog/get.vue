@@ -16,6 +16,7 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{rowData.Code }}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('get.description1')}}:</b> {{rowData.Description1 }}</span>
             <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{rowData.StatusId ? $t('insert.active') : $t('insert.passive') }}</span>
           </section>
         </b-col>
