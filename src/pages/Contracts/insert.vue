@@ -1,5 +1,5 @@
 <template>
-  <b-row class="asc__insertPage">
+  <b-row>
     <b-col cols="12">
       <header>
         <b-row>
@@ -7,10 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+            <router-link :to="{name: 'Contracts' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,109 +18,55 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox v-model="form.StatusId" name="check-button" switch>
-                {{(form.StatusId) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.contract.management')" :active="!developmentMode">
+        <b-tab :title="$t('insert.contract.management')" active>
           <b-row>
-            <b-col v-if="insertVisible.ContractNumber != null ? insertVisible.ContractNumber : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.ContractNumber + (insertRequired.ContractNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ContractNumber.$error }">
-                <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.GroupId != null ? insertVisible.GroupId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.GroupId + (insertRequired.GroupId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GroupId.$error }">
-                <v-select
-                  :options="lookup.CONTRACT_GROUP"
-                  @input="selectedType('GroupId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ClassId != null ? insertVisible.ClassId : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.ClassId + (insertRequired.ClassId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ClassId.$error }">
-                  <v-select
-                    :options="lookup.CONTRACT_CLASS"
-                    @input="selectedType('ClassId', $event)"
-                    label="Label"
-                  />
-                </b-form-group>
-              </b-col>
-            <b-col v-if="insertVisible.BrandId != null ? insertVisible.BrandId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.BrandId + (insertRequired.BrandId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BrandId.$error }">
-                <v-select
-                  :options="lookup.ITEM_TYPE"
-                  @input="selectedType('BrandId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.GenExp != null ? insertVisible.GenExp : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.GenExp + (insertRequired.GenExp === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GenExp.$error }">
-                <b-form-input type="text" v-model="form.GenExp" :readonly="insertReadonly.GenExp" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.FinanceCode + (insertRequired.FinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode.$error }">
-                <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerFinanceCode != null ? insertVisible.CustomerFinanceCode : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.CustomerFinanceCode + (insertRequired.CustomerFinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerFinanceCode.$error }">
-                <b-form-input type="text" v-model="form.CustomerFinanceCode" :readonly="insertReadonly.CustomerFinanceCode" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ApproveStateId != null ? insertVisible.ApproveStateId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.ApproveStateId + (insertRequired.ApproveStateId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ApproveStateId.$error }">
-                <v-select
-                  :options="lookup.APPROVE_STATE"
-                  @input="selectedType('ApproveStateId', $event)"
-                  label="Label"
-                  disabled
-                  v-model="ApproveStateLabel"
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.TypeId != null ? insertVisible.TypeId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.TypeId + (insertRequired.TypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TypeId.$error }">
-                <v-select :options="contractTypes" @input="selectedSearchType('TypeId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="ContractNumber" :error="$v.form.ContractNumber" md="2" lg="2">
+              <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
+            </NextFormGroup>
+            <!--<NextFormGroup item-key="GroupId" :error="$v.form.GroupId" md="2" lg="2">
+              <NextDropdown lookup-key="CONTRACT_GROUP"  @input="selectedType('GroupId', $event)"/>
+            </NextFormGroup>-->
+            <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
+              <NextDropdown lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BrandId" :error="$v.form.BrandId" md="2" lg="2">
+              <NextDropdown lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1" md="2" lg="2">
+              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="2" lg="2">
+              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerFinanceCode" :error="$v.form.CustomerFinanceCode" md="2" lg="2">
+              <b-form-input type="text" v-model="form.CustomerFinanceCode" :readonly="insertReadonly.CustomerFinanceCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId" md="2" lg="2">
+              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" disabled/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
+              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2">
+              <NextDropdown
+                url="VisionNextCustomer/api/Customer/Search"
+                @input="selectedCustomer" :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description,CommercialTitle"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.contract.otherContract')" v-if="customerContracts.length > 0">
@@ -149,21 +95,15 @@
         </b-tab>
         <b-tab :title="$t('insert.contract.additionalCustomer')">
           <b-row>
-            <b-col cols="12" md="6">
-              <b-form-group :label="insertTitle.CustomerId">
-                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedAdditionalCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" class="ml-auto">
+            <NextFormGroup :title="insertTitle.CustomerId" :error="$v.selectedAdditionalCustomer" :required="true" md="3" lg="3">
+              <NextDropdown
+                url="VisionNextCustomer/api/Customer/Search"
+                v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description,CommercialTitle"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
               <b-form-group>
-                <b-button @click="addAdditionalCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addAdditionalCustomer" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -174,8 +114,8 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in contractRelatedCustomers" :key="i">
-                  <b-td>{{r.CommercialTitle}}</b-td>
+                <b-tr v-for="(r, i) in form.ContractRelatedCustomers" :key="i">
+                  <b-td>{{r.CustomerName}}</b-td>
                   <b-td class="text-center"><i @click="removeAdditionalCustomer(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -184,19 +124,15 @@
         </b-tab>
         <b-tab :title="$t('insert.contract.validDates')">
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.startDate')">
-                <b-form-datepicker v-model="contractStartDate" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.endDate')">
-                <b-form-datepicker v-model="contractEndDate" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" class="ml-auto">
+            <NextFormGroup :title="$t('insert.contract.startDate')" :error="$v.validDates.contractStartDate" :required="true" md="3" lg="3">
+              <b-form-datepicker v-model="validDates.contractStartDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.endDate')" :error="$v.validDates.contractEndDate" :required="true" md="3" lg="3">
+              <b-form-datepicker v-model="validDates.contractEndDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
               <b-form-group>
-                <b-button @click="addValidDate()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addValidDate" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -208,10 +144,10 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in contractValidDates" :key="i">
-                  <b-td>{{r.startDate}}</b-td>
-                  <b-td>{{r.endDate}}</b-td>
-                  <b-td class="text-center"><i @click="removeValidDate(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                <b-tr v-for="(c, i) in form.ContractValidDates" :key="i">
+                  <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
+                  <b-td class="text-center"><i @click="removeValidDate(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -219,34 +155,29 @@
         </b-tab>
         <b-tab :title="$t('insert.contract.contractBenefits')">
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.BenefitTypeId')">
-                <v-select :options="benefitTypes" @input="selectedSearchTypeDetail('BenefitType', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.BudgetMasterId')">
-                <v-select :disabled="disableBenefit" :options="budgets" @input="selectedSearchTypeDetail('BudgetMaster', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.currency')">
-                <v-select :options="currency" @input="selectedSearchTypeDetail('Currency', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.BenefitBudget')">
-                <b-form-input :readonly="disableBenefit" type="text" v-model="BenefitBudget" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.TciBreak1Id')">
-                <v-select :options="tciBreak1" @input="selectedType('TciBreak1Id', $event)" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" class="ml-auto">
+            <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
+               <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
+              <NextDropdown
+                :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
+                v-model="contractBenefits.budgetMaster"
+                url="VisionNextBudget/api/BudgetMaster/Search"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractBenefits.currency" :required="true" md="4" lg="4">
+              <NextDropdown v-model="contractBenefits.currency" url="VisionNextSystem/api/SysCurrency/Search"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.BenefitBudget')" :error="$v.contractBenefits.benefitBudget" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
+              <b-form-input
+              :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
+              type="text" v-model="contractBenefits.benefitBudget" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.TciBreak1Id')" :error="$v.contractBenefits.tciBreak1" :required="true" md="4" lg="4">
+              <NextDropdown v-model="contractBenefits.tciBreak1" lookup-key="TCI_BREAKDOWN" :get-lookup="true"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
               <b-form-group>
-                <b-button @click="addContractBenefits()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addContractBenefits" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -257,50 +188,48 @@
                 <b-th><span>{{$t('insert.contract.BudgetMasterId')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.BenefitBudget')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.TciBreak1Id')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in contractBenefits" :key="i">
-                  <b-td>{{r.BenefitType}}</b-td>
-                  <b-td>{{r.BudgetMaster}}</b-td>
-                  <b-td>{{r.Currency}}</b-td>
-                  <b-td>{{r.BenefitBudget}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractBenefits(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                <b-tr v-for="(c, i) in form.ContractBenefits" :key="i">
+                  <b-td>{{c.BenefitTypeName}}</b-td>
+                  <b-td>{{c.BudgetMasterName}}</b-td>
+                  <b-td>{{c.CurrencyName}}</b-td>
+                  <b-td>{{c.BenefitBudget}}</b-td>
+                  <b-td>{{c.TciBreak1Name}}</b-td>
+                  <b-td class="text-center"><i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.assets')">
+        <b-tab :title="$t('insert.contract.assets')" v-if="showAssets">
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.assetId')">
-                <v-select :options="assets" @input="selectedSearchTypeDetail('asset', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.contract.plannedServiceDate')">
-                <b-form-datepicker v-model="plannedServiceDate" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" class="ml-auto">
+            <NextFormGroup :title="$t('insert.contract.assetId')" :error="$v.contractAssets.asset" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractAssets.asset" url="VisionNextAsset/api/Asset/Search"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.plannedServiceDate')" :error="$v.contractAssets.plannedServiceDate" :required="true" md="3" lg="3">
+              <b-form-datepicker v-model="contractAssets.plannedServiceDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
               <b-form-group>
-                <b-button @click="addContractAssets()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                 <AddDetailButton @click.native="addContractAssets" />
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.contract.plannedServiceDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.assetId')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.plannedServiceDate')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in contractAssets" :key="i">
-                  <b-td>{{r.Asset}}</b-td>
-                  <b-td>{{r.PlannedServiceDate}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractAssets(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                <b-tr v-for="(c, i) in form.ContractAssets" :key="i">
+                  <b-td>{{c.AssetName}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.PlannedServiceDate)}}</b-td>
+                  <b-td class="text-center"><i @click="removeContractAssets(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -312,7 +241,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import { required } from 'vuelidate/lib/validators'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -327,7 +257,7 @@ export default {
         CustomerId: null,
         BrandId: null,
         StatusId: null,
-        GenExp: null,
+        Genexp1: null,
         FinanceCode: null,
         CustomerFinanceCode: null,
         Code: null,
@@ -336,95 +266,44 @@ export default {
         ContractBenefits: [],
         ContractAssets: []
       },
-      routeName: this.$route.meta.baseLink,
-      contractRelatedCustomers: [],
-      contractValidDates: [],
-      contractBenefits: [],
-      contractAssets: [],
-      tmpContractRelatedCustomers: [],
-      contractStartDate: null,
-      contractEndDate: null,
-      BenefitType: null,
-      BudgetMaster: null,
-      Currency: null,
-      BenefitBudget: null,
-      TciBreak1Id: null,
+      routeName1: 'ContractManagement',
+      routeName2: 'Contract',
+      contractAssets: {
+        asset: null,
+        plannedServiceDate: null
+      },
+      selectedAdditionalCustomer: {},
+      validDates: {
+        contractStartDate: null,
+        contractEndDate: null
+      },
+      contractBenefits: {
+        benefitType: null,
+        budgetMaster: null,
+        currency: null,
+        benefitBudget: null,
+        tciBreak1Id: null
+      },
       plannedServiceDate: null,
       asset: null,
-      ApproveStateLabel: null,
-      detailPanelRecordId: 0,
-      disableBenefit: false
+      selectedApproveState: null,
+      showAssets: false
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'contractTypes', 'customerList', 'customerContracts', 'currency', 'benefitTypes', 'budgets', 'tciBreak1', 'assets'])
+    ...mapState(['customerContracts'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextContractManagement/api/Contract/GetCode`})
-      this.$store.dispatch('getLookups', {...this.query, type: 'TCI_BREAKDOWN', name: 'tciBreak1'})
-
-      // Search
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/ContractType/Search', name: 'contractTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currency'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/ContractBenefitType/Search', name: 'benefitTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/Asset/Search', name: 'assets'})
-    },
-    selectedType (label, model) {
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
-    },
     save () {
-      // this.$store.dispatch('createData', {...this.query, api: `VisionNextContractManagement/api/${this.routeName}`, formdata: this.form, return: this.routeName})
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.requiredFields') })
       } else {
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextContractManagement/api/Contract`, formdata: model, return: this.routeName})
+        this.createData()
       }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchTypeDetail (label, model) {
-      if (model) {
-        if (label === 'BenefitType' && model.RecordId === 4) {
-          this.disableBenefit = true
-        } else {
-          this.disableBenefit = false
-        }
-        this[label] = model
-      } else {
-        this[label] = null
-      }
-    },
-    onCustomerSearch (search, loading) {
-      if (search.length >= 3) {
-        this.searchCustomer(loading, search, this)
-      }
-    },
-    searchCustomer (loading, search, vm) {
-      this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
     },
     selectedCustomer (e) {
       if (e) {
@@ -435,147 +314,175 @@ export default {
         this.$store.commit('setCustomerContracts', [])
       }
     },
-    selectedAdditionalCustomer (e) {
-      if (e) {
-        this.tmpContractRelatedCustomers = e
-      } else {
-        this.tmpContractRelatedCustomers = null
-      }
-    },
     addAdditionalCustomer () {
-      this.detailPanelRecordId++
+      this.$v.selectedAdditionalCustomer.$touch()
+      if (this.$v.selectedAdditionalCustomer.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.ContractRelatedCustomers.filter(i => i.CustomerId === this.selectedAdditionalCustomer.RecordId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
       this.form.ContractRelatedCustomers.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        CustomerId: this.tmpContractRelatedCustomers.RecordId
+        CustomerId: this.selectedAdditionalCustomer.RecordId,
+        CustomerName: this.selectedAdditionalCustomer.Description1
       })
-      this.contractRelatedCustomers.push(this.tmpContractRelatedCustomers)
+      this.selectedAdditionalCustomer = undefined
+      this.$v.selectedAdditionalCustomer.$reset()
     },
     removeAdditionalCustomer (item) {
-      // Model içerisindeki ContractRelatedCustomers dizisinden elemanın çıkarılması
-      let filteredArr = this.form.ContractRelatedCustomers.filter(i => i.CustomerId === item.RecordId)
-      this.form.ContractRelatedCustomers.splice(this.form.ContractRelatedCustomers.indexOf(filteredArr[0]), 1)
-      // Tabloda listenen ContractRelatedCustomers dizisinden elemanın çıkarılması
-      this.contractRelatedCustomers.splice(this.contractRelatedCustomers.indexOf(item), 1)
+      this.form.ContractRelatedCustomers.splice(this.form.ContractRelatedCustomers.indexOf(item), 1)
     },
     addValidDate () {
-      if (!this.contractStartDate || !this.contractEndDate) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.validRequiredDates') })
-        return
+      this.$v.validDates.$touch()
+      if (this.$v.validDates.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
       }
-      this.detailPanelRecordId++
+      let startDate = this.validDates.contractStartDate
+      let endDate = this.validDates.contractEndDate
+      let filteredArr = this.form.ContractValidDates.filter(i => i.StartDate === startDate &&
+      i.EndDate === endDate)
+      if (filteredArr.length > 0) {
+        this.$toasted.show(this.$t('insert.sameRecordError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (startDate > endDate) {
+        this.$toasted.show(this.$t('insert.startDateLessEndDate'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractValidDates.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        StartDate: this.dateConvertToISo(this.contractStartDate),
-        EndDate: this.dateConvertToISo(this.contractEndDate),
-        RecordId: this.detailPanelRecordId
+        StartDate: startDate,
+        EndDate: endDate
       })
-      this.contractValidDates.push({
-        startDate: this.contractStartDate,
-        endDate: this.contractEndDate,
-        RecordId: this.detailPanelRecordId
-      })
+      this.validDates = {}
+      this.$v.validDates.$reset()
     },
     removeValidDate (item) {
-      // Model içerisindeki ContractValidDates dizisinden elemanın çıkarılması
-      let filteredArr = this.form.ContractValidDates.filter(i => i.RecordId === item.RecordId)
-      this.form.ContractValidDates.splice(this.form.ContractValidDates.indexOf(filteredArr[0]), 1)
-      // Tabloda listenen ContractValidDates dizisinden elemanın çıkarılması
-      this.contractValidDates.splice(this.contractValidDates.indexOf(item), 1)
+      this.form.ContractValidDates.splice(this.form.ContractValidDates.indexOf(item), 1)
     },
     addContractBenefits () {
-      this.detailPanelRecordId++
+      this.$v.contractBenefits.$touch()
+      if (this.$v.contractBenefits.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractBenefits.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        BenefitTypeId: this.BenefitType ? this.BenefitType.RecordId : null,
-        BenefitBudget: this.BenefitBudget,
-        BudgetMasterId: this.BudgetMaster ? this.BudgetMaster.RecordId : null,
-        CurrencyId: this.Currency ? this.Currency.RecordId : null,
-        TciBreak1Id: this.form.TciBreak1Id,
-        usedAmount: 0,
-        RecordId: this.detailPanelRecordId
+        BenefitTypeId: this.contractBenefits.benefitType.RecordId,
+        BenefitTypeName: this.contractBenefits.benefitType.Description1,
+        BenefitBudget: this.contractBenefits.benefitBudget,
+        BudgetMasterId: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.RecordId : undefined,
+        BudgetMasterName: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.Description1 : '',
+        CurrencyId: this.contractBenefits.currency.RecordId,
+        CurrencyName: this.contractBenefits.currency.Description1,
+        TciBreak1Id: this.contractBenefits.tciBreak1.DecimalValue,
+        TciBreak1Name: this.contractBenefits.tciBreak1.Label,
+        usedAmount: 0
       })
-      this.contractBenefits.push({
-        BenefitType: this.BenefitType ? this.BenefitType.Description1 : '',
-        BenefitBudget: this.BenefitBudget,
-        BudgetMaster: this.BudgetMaster ? this.BudgetMaster.Description1 : '',
-        Currency: this.Currency ? this.Currency.Description1 : '',
-        TciBreak1Id: this.form.TciBreak1Id,
-        RecordId: this.detailPanelRecordId
-      })
+      this.contractBenefits = {}
+      this.$v.contractBenefits.$reset()
+      this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4).length > 0
+      this.$forceUpdate()
     },
     removeContractBenefits (item) {
-      // Model içerisindeki ContractBenefits dizisinden elemanın çıkarılması
-      let filteredArr = this.form.ContractBenefits.filter(i => i.RecordId === item.RecordId)
-      this.form.ContractBenefits.splice(this.form.ContractBenefits.indexOf(filteredArr[0]), 1)
-      // Tabloda listenen ContractBenefits dizisinden elemanın çıkarılması
-      this.contractBenefits.splice(this.contractBenefits.indexOf(item), 1)
+      this.form.ContractBenefits.splice(this.form.ContractBenefits.indexOf(item), 1)
+      this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4).length > 0
+      this.$forceUpdate()
     },
     addContractAssets () {
-      this.detailPanelRecordId++
+      this.$v.contractAssets.$touch()
+      if (this.$v.contractAssets.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractAssets.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        AssetId: this.asset ? this.asset.RecordId : null,
-        PlannedServiceDate: this.plannedServiceDate,
-        RecordId: this.detailPanelRecordId
+        AssetId: this.contractAssets.asset.RecordId,
+        AssetName: this.contractAssets.asset.Description1,
+        PlannedServiceDate: this.contractAssets.plannedServiceDate
       })
-      this.contractAssets.push({
-        Asset: this.asset ? this.asset.Description1 : '',
-        PlannedServiceDate: this.plannedServiceDate,
-        AssetId: this.asset ? this.asset.RecordId : null,
-        RecordId: this.detailPanelRecordId
-      })
+      this.contractAssets = {}
+      this.$v.contractAssets.$reset()
     },
     removeContractAssets (item) {
-      // Model içerisindeki ContractAssets dizisinden elemanın çıkarılması
-      let filteredArr = this.form.ContractAssets.filter(i => i.RecordId === item.RecordId)
-      this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(filteredArr[0]), 1)
-      // Tabloda listenen ContractAssets dizisinden elemanın çıkarılması
-      this.contractAssets.splice(this.contractAssets.indexOf(item), 1)
+      this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    let contractBenefits = {
+      benefitType: {
+        required
+      },
+      budgetMaster: { },
+      currency: {
+        required
+      },
+      benefitBudget: {},
+      tciBreak1: {
+        required
+      }
+    }
+    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId !== 4) {
+      contractBenefits.budgetMaster = {
+        required
+      }
+      contractBenefits.benefitBudget = {
+        required
+      }
+    }
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      selectedAdditionalCustomer: {
+        required
+      },
+      validDates: {
+        contractStartDate: {
+          required
+        },
+        contractEndDate: {
+          required
+        }
+      },
+      contractBenefits: contractBenefits,
+      contractAssets: {
+        asset: {
+          required
+        },
+        plannedServiceDate: {
+          required
+        }
+      }
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     lookup (e) {
       if (e) {
         if (e.APPROVE_STATE) {
           e.APPROVE_STATE.map(item => {
             if (item.DecimalValue === 2110) {
               this.selectedType('ApproveStateId', item)
-              this.ApproveStateLabel = item.Label
+              this.selectedApproveState = item
             }
           })
         }
@@ -584,5 +491,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>

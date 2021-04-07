@@ -46,7 +46,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -101,8 +101,6 @@
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
-          </b-row>
-          <b-row>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <v-select label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" >
                 <template slot="no-options">
@@ -118,7 +116,7 @@
               <v-select :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label" @input="selectedSearchType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label" @input="selectedType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
               <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
@@ -445,6 +443,14 @@ export default {
         })
         return false
       }
+      if (!this.form.CustomerId) {
+        this.$toasted.show(this.$t('insert.order.chooseCustomer'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -505,12 +511,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -655,10 +661,18 @@ export default {
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Order', 'Order/ApplyInsertDiscounts').then((res) => {
+        this.$store.commit('bigLoaded', false)
+        if (!res.IsCompleted) {
+          this.$toasted.show(this.$t('insert.order.campaignListError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         if (res && res.Order) {
           this.form = res.Order
         }
-        this.$store.commit('bigLoaded', false)
         this.createData()
       })
     },
@@ -773,7 +787,7 @@ export default {
   watch: {
     selectedCustomer (newValue, oldValue) {
       this.getPaymentTypes()
-      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
+      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

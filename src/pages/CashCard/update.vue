@@ -47,7 +47,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </b-form-group>
@@ -91,13 +91,7 @@
             </b-col>
             <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
-                <v-select v-model="routeLabel" label="Description1" :filterable="false" :options="routes" @search="onRouteSearch" @input="selectedSearchType('RouteId', $event)" >
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.Description1 }}
-                  </template>
+                <v-select v-model="routeLabel" label="Description1" :filterable="false" :options="routes" @input="selectedSearchType('RouteId', $event)" >
                 </v-select>
               </b-form-group>
             </b-col>
@@ -191,6 +185,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextFinance/api/CashCardType/Search', name: 'cashCardTypes'})
       this.$store.dispatch('getData', {...this.query, api: `VisionNextFinance/api/${e}`, record: this.$route.params.url})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
@@ -255,24 +250,6 @@ export default {
         ...this.query,
         api: 'VisionNextEmployee/api/Employee/Search',
         name: 'representatives',
-        andConditionModel: {
-          Description1: search
-        }
-      }).then(res => {
-        loading(false)
-      })
-    },
-    onRouteSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchRoute(loading, search, this)
-      }
-    },
-    searchRoute (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextRoute/api/Route/Search',
-        name: 'routes',
         andConditionModel: {
           Description1: search
         }

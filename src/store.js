@@ -9,7 +9,31 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
-
+var pagerecordCount = 1000
+var checkSearchObject = function (obj) {
+  if (obj) {
+    let isCustomSearch = false
+    let isList = obj && (obj.length > 0)
+    if (isList) {
+      obj = obj[0]
+    }
+    let keys = Object.keys(obj)
+    keys.forEach(key => {
+      let value = obj[key]
+      if (value === '%%%') {
+        delete obj[key]
+        isCustomSearch = true
+      } else if ((typeof value === 'string' || value instanceof String) && value.includes('%')) {
+        obj[key] = value.replaceAll('%', '')
+        isCustomSearch = true
+      }
+    })
+    pagerecordCount = isCustomSearch ? 20 : 1000
+    return !isList ? obj : obj ? [obj] : []
+  } else {
+    return undefined
+  }
+}
 var numberOfAjaxCAllPending = 0
 var me = this
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
@@ -823,7 +847,7 @@ export const store = new Vuex.Store({
         'AndConditionModel': query.model ? query.model : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': 100,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 100,
         'page': 1,
         'OrderByColumns': []
       }
@@ -1078,13 +1102,13 @@ export const store = new Vuex.Store({
       commit('bigLoaded', true)
       let dataQuery = {
         'AndConditionModel': {
-          ...query.andConditionModel
+          ...checkSearchObject(query.andConditionModel)
         },
-        'OrConditionModels': query.orConditionModels,
+        'OrConditionModels': checkSearchObject(query.orConditionModels),
         ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 1000,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : pagerecordCount,
         'page': 1
       }
       return axios.post(query.api, dataQuery, authHeader)
@@ -1209,7 +1233,7 @@ export const store = new Vuex.Store({
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
-            router.push({name: query.return})
+            return res
           } else {
             let errs = res.data.Validations.Errors
             for (let i = 0; i < errs.length; i++) {
@@ -1481,23 +1505,19 @@ export const store = new Vuex.Store({
           case 'Select':
             if (fieldDefaultValue != null) {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <v-select
-                  :options="lookup.${fieldDefaultValue}"
-                  @input="selectedType('${fieldName}', $event)"
-                  label="Label"
-                />
+                <NextDropdown lookup-key="${fieldDefaultValue}" @input="selectedType('${fieldName}', $event)"/>
               </NextFormGroup>`
 
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <v-select />
+                <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)"/>
               </NextFormGroup>`
             }
             break
           case 'SelectSearch':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <v-select />
+              <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
             </NextFormGroup>`
             break
           case 'Radio':

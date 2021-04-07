@@ -26,7 +26,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.assetMovementCard.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
               <b-form-input type="text" v-model="form.CardNumber" :readonly="insertReadonly.CardNumber" />

@@ -39,7 +39,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -242,7 +242,8 @@ export default {
         stock: null,
         vatRate: null,
         totalVat: null,
-        isUpdated: false
+        isUpdated: false,
+        invoiceId: null
       },
       selectedIndex: null,
       selectedRepresentative: null,
@@ -344,6 +345,14 @@ export default {
         })
         return false
       }
+      if (!this.form.CustomerId) {
+        this.$toasted.show(this.$t('insert.order.chooseCustomer'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -400,12 +409,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -519,7 +528,8 @@ export default {
         DiscountQuantity: 0,
         RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
         TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
+        CalculatedVat: 0,
+        InvoiceId: this.selectedInvoiceLine.invoiceId
       }
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
@@ -551,7 +561,8 @@ export default {
         stock: item.Stock,
         recordState: item.RecordState,
         recordId: item.RecordId,
-        isUpdated: true
+        isUpdated: true,
+        invoiceId: item.InvoiceId
       }
       this.getItem(item.ItemId)
     },

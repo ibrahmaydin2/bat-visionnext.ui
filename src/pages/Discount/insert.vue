@@ -154,19 +154,19 @@
             <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="columnNameValid">
               <v-select v-model="discountGivenColumnValue" :options="discountGivensColumnValues" :disabled="!columnNameValid" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.givenQuantity')">
-              <b-form-input type="text" v-model="discountGiven.GivenQuantity" :readonly="insertReadonly.GivenQuantity" />
+            <NextFormGroup :title="$t('insert.discount.givenQuantity')" :error="$v.discountGiven.GivenQuantity" required>
+              <b-form-input type="text" v-model="discountGiven.GivenQuantity" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.discountRate')">
+            <NextFormGroup :title="$t('insert.discount.discountRate')" :error="$v.discountGiven.DiscountRate" :required="discountRateValid">
               <b-form-input type="text" v-model="discountGiven.DiscountRate" :disabled="!discountRateValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.discountTotal')">
+            <NextFormGroup :title="$t('insert.discount.discountTotal')" :error="$v.discountGiven.DiscountTotal" :required="discountTotalValid">
               <b-form-input type="text" v-model="discountGiven.DiscountTotal" :disabled="!discountTotalValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.startValue')">
+            <NextFormGroup :title="$t('insert.discount.startValue')" :error="$v.discountGiven.StartValue" :required="startValueValid">
               <b-form-input type="text" v-model="discountGiven.StartValue" :disabled="!startValueValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.finishValue')">
+            <NextFormGroup :title="$t('insert.discount.finishValue')" :error="$v.discountGiven.FinishValue" :required="finishValueValid">
               <b-form-input type="text" v-model="discountGiven.FinishValue" :disabled="!finishValueValid" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
@@ -206,25 +206,25 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountTakens')">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountTakenColumnName">
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountTakenColumnName" required>
               <v-select v-model="discountTakenColumnName" :options="discountTakensColumnNames" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountTakenColumnValue">
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountTakenColumnValue" required>
               <v-select v-model="discountTakenColumnValue" :options="discountTakensColumnValues" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.takenQuantity')">
+            <NextFormGroup :title="$t('insert.discount.takenQuantity')" :error="$v.discountTaken.TakenQuantity" :required="takenQuantityValid">
               <b-form-input type="text" v-model="discountTaken.TakenQuantity" :disabled="!takenQuantityValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.minTakenAmount')">
+            <NextFormGroup :title="$t('insert.discount.minTakenAmount')" :error="$v.discountTaken.MinTakenAmount" :required="minTakenAmountValid">
               <b-form-input type="text" v-model="discountTaken.MinTakenAmount" :disabled="!minTakenAmountValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.endTakenQuantity')">
+            <NextFormGroup :title="$t('insert.discount.endTakenQuantity')" :error="$v.discountTaken.EndTakenQuantity" :required="endTakenQuantityValid">
               <b-form-input type="text" v-model="discountTaken.EndTakenQuantity" :disabled="!endTakenQuantityValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.maxTakenAmount')">
+            <NextFormGroup :title="$t('insert.discount.maxTakenAmount')" :error="$v.discountTaken.MaxTakenAmount" :required="maxTakenAmountValid">
               <b-form-input type="text" v-model="discountTaken.MaxTakenAmount" :disabled="!maxTakenAmountValid" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.minTakenQuantity')">
+            <NextFormGroup :title="$t('insert.discount.minTakenQuantity')" :error="$v.discountTaken.MinTakenQuantity" :required="minTakenQuantityValid">
               <b-form-input type="text" v-model="discountTaken.MinTakenQuantity" :disabled="!minTakenQuantityValid" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
@@ -264,13 +264,13 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomers')" v-if="customerTabValid" @click="DiscountCustomersValid()">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountCustomer.CustomerId" :required="true">
-              <v-select v-model="customer" :options="customers" @search="searchCustomer" label="Code">
+            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountCustomer.CustomerId" :required="!customerValid">
+              <v-select v-model="customer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid'>
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -285,7 +285,7 @@
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button @click="addDiscountCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button :disabled='customerValid' @click="addDiscountCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -314,13 +314,13 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountExcludedCustomers')" @click="DiscountCustomersValid()">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountExcludedCustomer.CustomerId" :required="true">
-              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code">
+            <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountExcludedCustomer.CustomerId" :required="!customerValid">
+              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid'>
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -335,7 +335,7 @@
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button @click="addDiscountExcludedCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button :disabled='customerValid' @click="addDiscountExcludedCustomer()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -364,10 +364,10 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.customerCriterias')" v-if="customerCriterTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="true">
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.customerCriteriaColumnName" :required="customerCriterTabValid">
               <v-select v-model="customerCriteriaColumnName" :options="customerCriteriaColumnNames" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="true">
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.customerCriteriaColumnValue" :required="customerCriterTabValid">
               <v-select v-model="customerCriteriaColumnValue" :options="customerCriteriaColumnValues"  label="Label"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
@@ -397,7 +397,7 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.branchs')" v-if="branchTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="true">
+            <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="branchTabValid">
               <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -434,7 +434,7 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.routes')" v-if="routeTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.routeCode')" :error="$v.discountDetailsRoute.RouteId" :required="true">
+            <NextFormGroup :title="$t('insert.discount.routeCode')" :error="$v.discountDetailsRoute.RouteId" :required="routeTabValid">
               <v-select :disabled='!form.RouteCriteriaId' v-model="route" :options="routes" @search="searchRoute" label="Code">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -471,7 +471,7 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.payments')" v-if="paymentTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.paymentType')" :error="$v.discountDetailsPayment.PaymentTypeId" :required="true">
+            <NextFormGroup :title="$t('insert.discount.paymentType')" :error="$v.discountDetailsPayment.PaymentTypeId" :required="paymentTabValid">
               <v-select :disabled='!form.PaymentCriteriaId' v-model="paymentType" :options="paymentTypes" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -503,7 +503,7 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomerSqls')" v-if="customerSqlsTabValid">
           <b-row>
-            <NextFormGroup :title="$t('insert.discount.customerSql')" :error="$v.discountCustomerSql.CustomerSqlId" :required="true">
+            <NextFormGroup :title="$t('insert.discount.customerSql')" :error="$v.discountCustomerSql.CustomerSqlId" :required="customerSqlsTabValid">
               <v-select v-model="customerSql" :options="customerSqls" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -732,6 +732,7 @@ export default {
       customerCriteriaColumnValues: [],
       discountDetailsCustomerCriterias: [],
       discountDetailsBranchs: [],
+      BranchIds: [],
       discountDetailsRoutes: [],
       discountDetailsPaymentTypes: [],
       discountCustomerSqls: [],
@@ -757,7 +758,8 @@ export default {
       routeTabValid: false,
       paymentTabValid: false,
       customerSqlsTabValid: false,
-      customerCriterTabValid: false
+      customerCriterTabValid: false,
+      customerValid: false
     }
   },
   computed: {
@@ -845,7 +847,8 @@ export default {
     addDiscountGiven () {
       this.$v.discountGivenColumnName.$touch()
       this.$v.discountGivenColumnValue.$touch()
-      if (this.$v.discountGivenColumnName.$error || this.$v.discountGivenColumnValue.$error) {
+      this.$v.discountGiven.$touch()
+      if (this.$v.discountGivenColumnName.$error || this.$v.discountGivenColumnValue.$error || this.$v.discountGiven.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -875,6 +878,7 @@ export default {
       this.discountGiven = {}
       this.$v.discountGivenColumnName.$reset()
       this.$v.discountGivenColumnValue.$reset()
+      this.$v.discountGiven.$reset()
     },
     removeDiscountGiven (e) {
       this.form.DiscountGivens.splice(this.form.DiscountGivens.indexOf(e), 1)
@@ -882,6 +886,7 @@ export default {
     addDiscountTaken () {
       this.$v.discountTakenColumnName.$touch()
       this.$v.discountTakenColumnValue.$touch()
+      this.$v.discountTaken.$touch()
       if (this.$v.discountTakenColumnName.$error || this.$v.discountTakenColumnValue.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -912,6 +917,7 @@ export default {
       this.discountTaken = {}
       this.$v.discountTakenColumnName.$reset()
       this.$v.discountTakenColumnValue.$reset()
+      this.$v.discountTaken.$reset()
     },
     removeDiscountTaken (e) {
       this.form.DiscountTakens.splice(this.form.DiscountTakens.indexOf(e), 1)
@@ -1035,7 +1041,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_BRANCH',
+        TableName: 'T_CUSTOMER',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
@@ -1047,12 +1053,14 @@ export default {
         PaymentTypeId: null,
         PaymentTypeName: null
       })
+      this.BranchIds.push(this.discountDetailsBranch.BranchId)
       this.discountDetailsBranch = {}
       this.branch = null
       this.$v.discountDetailsBranch.$reset()
     },
     removeDiscountDetailBranchs (e) {
       this.discountDetailsBranchs.splice(this.discountDetailsBranchs.indexOf(e), 1)
+      this.BranchIds.splice(this.BranchIds.indexOf(e.RecordId), 1)
     },
     addDiscountDetailRoutes () {
       this.$v.discountDetailsRoute.$touch()
@@ -1075,7 +1083,7 @@ export default {
         StatusId: 1,
         RecordState: 2,
         TableName: 'T_ROUTE',
-        ColumnName: 'ROUTE_ID',
+        ColumnName: 'RECORD_ID',
         ColumnValue: this.discountDetailsRoute.RouteId,
         BranchId: null,
         BranchCode: null,
@@ -1114,7 +1122,7 @@ export default {
         StatusId: 1,
         RecordState: 2,
         TableName: 'T_PAYMENT_TYPE',
-        ColumnName: 'PAYMENTTYPE_ID',
+        ColumnName: 'RECORD_ID',
         ColumnValue: this.discountDetailsPayment.PaymentTypeId,
         BranchId: null,
         BranchCode: null,
@@ -1125,9 +1133,9 @@ export default {
         PaymentTypeId: this.discountDetailsPayment.PaymentTypeId,
         PaymentTypeName: this.discountDetailsPayment.PaymentTypeName
       })
-      this.discountDetailsRoute = {}
-      this.route = null
-      this.$v.discountDetailsRoute.$reset()
+      this.discountDetailsPayment = {}
+      this.paymentType = null
+      this.$v.discountDetailsPayment.$reset()
     },
     removeDiscountDetailPaymentTypes (e) {
       this.discountDetailsPaymentTypes.splice(this.discountDetailsPaymentTypes.indexOf(e), 1)
@@ -1173,6 +1181,9 @@ export default {
         ...this.query,
         api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
+        andConditionModel: {
+          BranchIds: this.BranchIds
+        },
         orConditionModels: [
           {
             Description1: search,
@@ -1222,13 +1233,19 @@ export default {
       }
     },
     DiscountCustomersValid () {
-      if (this.form.BranchCriteriaId == null) {
+      if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
           position: 'top-center',
           duration: '5000'
         })
+        this.form.DiscountCustomers = []
+        this.form.DiscountExcludedCustomers = []
+        this.discountDetailsBranchs = []
+        this.customerValid = true
+      } else {
+        this.customerValid = false
       }
     },
     save () {
@@ -1254,7 +1271,6 @@ export default {
           this.form.DiscountDetails.push(value)
         })
         this.form.DiscountCustomerSqls = this.discountCustomerSqls
-        console.log(this.form)
         this.createData()
       }
     },
@@ -1281,97 +1297,6 @@ export default {
             this.ApproveStateLabel = item.Label
           }
         })
-      }
-    }
-  },
-  validations () {
-    if (this.form.ApplyToTimes === 1) {
-      this.insertRequired.MaxValue = true
-      this.insertRules.MaxValue = {
-        required
-      }
-    } else {
-      this.insertRules.MaxValue = {}
-      this.insertRequired.MaxValue = false
-    }
-    if (this.form.UseBudget === true) {
-      this.insertRequired.BudgetId = true
-      this.insertRequired.BudgetAmount = true
-      this.insertRules.BudgetId = {
-        required
-      }
-      this.insertRules.BudgetAmount = {
-        required
-      }
-    } else {
-      this.insertRules.BudgetId = {}
-      this.insertRequired.BudgetId = false
-      this.insertRules.BudgetAmount = {}
-      this.insertRequired.BudgetAmount = false
-    }
-    this.insertRules.ApproveStateId = {}
-    this.insertRequired.ApproveStateId = false
-    return {
-      form: this.insertRules,
-      discountGivenColumnName: {
-        required
-      },
-      discountGivenColumnValue: {
-        required
-      },
-      discountTakenColumnName: {
-        required
-      },
-      discountTakenColumnValue: {
-        required
-      },
-      customerCriteriaColumnName: {
-        required
-      },
-      customerCriteriaColumnValue: {
-        required
-      },
-      discountCustomer: {
-        CustomerId: {
-          required
-        },
-        CustomerCode: {
-          required
-        }
-      },
-      discountExcludedCustomer: {
-        CustomerId: {
-          required
-        },
-        CustomerCode: {
-          required
-        }
-      },
-      discountDetailsBranch: {
-        BranchId: {
-          required
-        },
-        BranchCode: {
-          required
-        }
-      },
-      discountDetailsRoute: {
-        RouteId: {
-          required
-        },
-        RouteCode: {
-          required
-        }
-      },
-      discountDetailsPayment: {
-        PaymentTypeId: {
-          required
-        }
-      },
-      discountCustomerSql: {
-        CustomerSqlId: {
-          required
-        }
       }
     }
   },
@@ -1521,6 +1446,190 @@ export default {
         this.paymentTabValid = true
       } else {
         this.paymentTabValid = false
+      }
+    }
+  },
+  validations () {
+    let validation = {}
+    validation.discountGiven = {
+      GivenQuantity: null,
+      DiscountRate: null,
+      DiscountTotal: null,
+      StartValue: null,
+      FinishValue: null
+    }
+    validation.discountTaken = {
+      TakenQuantity: null,
+      MinTakenAmount: null,
+      EndTakenQuantity: null,
+      MaxTakenAmount: null,
+      MinTakenQuantity: null
+    }
+    validation.discountCustomer = {
+      CustomerId: null
+    }
+    validation.discountExcludedCustomer = {
+      CustomerId: null
+    }
+    validation.discountDetailsBranch = {
+      BranchId: null
+    }
+    validation.discountDetailsRoute = {
+      RouteId: null
+    }
+    validation.discountDetailsPayment = {
+      PaymentTypeId: null
+    }
+    validation.discountCustomerSql = {
+      CustomerSqlId: null
+    }
+    if (this.form.ApplyToTimes === 1) {
+      this.insertRequired.MaxValue = true
+      this.insertRules.MaxValue = {
+        required
+      }
+    } else {
+      this.insertRules.MaxValue = {}
+      this.insertRequired.MaxValue = false
+    }
+    if (this.form.UseBudget === true) {
+      this.insertRequired.BudgetId = true
+      this.insertRequired.BudgetAmount = true
+      this.insertRules.BudgetId = {
+        required
+      }
+      this.insertRules.BudgetAmount = {
+        required
+      }
+    } else {
+      this.insertRules.BudgetId = {}
+      this.insertRequired.BudgetId = false
+      this.insertRules.BudgetAmount = {}
+      this.insertRequired.BudgetAmount = false
+    }
+    this.insertRules.ApproveStateId = {}
+    this.insertRequired.ApproveStateId = false
+    validation.discountGiven.GivenQuantity = {
+      required
+    }
+    validation.discountGiven.DiscountRate = {}
+    validation.discountGiven.DiscountTotal = {}
+    validation.discountGiven.StartValue = {}
+    validation.discountGiven.FinishValue = {}
+    validation.discountGivenColumnName = {}
+    validation.discountGivenColumnValue = {}
+    validation.discountTaken.TakenQuantity = {}
+    validation.discountTaken.MinTakenAmount = {}
+    validation.discountTaken.EndTakenQuantity = {}
+    validation.discountTaken.MaxTakenAmount = {}
+    validation.discountTaken.MinTakenQuantity = {}
+    validation.discountCustomer.CustomerId = {}
+    validation.discountExcludedCustomer.CustomerId = {}
+    validation.customerCriteriaColumnName = {}
+    validation.customerCriteriaColumnValue = {}
+    validation.discountDetailsBranch.BranchId = {}
+    validation.discountDetailsRoute.RouteId = {}
+    validation.discountDetailsPayment.PaymentTypeId = {}
+    validation.discountCustomerSql.CustomerSqlId = {}
+
+    if (this.columnNameValid === true) {
+      validation.discountGivenColumnName = {
+        required
+      }
+      validation.discountGivenColumnValue = {
+        required
+      }
+    }
+    if (this.discountRateValid === true) {
+      validation.discountGiven.DiscountRate = {
+        required
+      }
+    }
+    if (this.discountTotalValid === true) {
+      validation.discountGiven.DiscountTotal = {
+        required
+      }
+    }
+    if (this.startValueValid === true) {
+      validation.discountGiven.StartValue = {
+        required
+      }
+    }
+    if (this.finishValueValid === true) {
+      validation.discountGiven.FinishValue = {
+        required
+      }
+    }
+    if (this.takenQuantityValid === true) {
+      validation.discountTaken.TakenQuantity = {
+        required
+      }
+    }
+    if (this.minTakenAmountValid === true) {
+      validation.discountTaken.MinTakenAmount = {
+        required
+      }
+    }
+    if (this.endTakenQuantityValid === true) {
+      validation.discountTaken.EndTakenQuantity = {
+        required
+      }
+    }
+    if (this.maxTakenAmountValid === true) {
+      validation.discountTaken.MaxTakenAmount = {
+        required
+      }
+    }
+    if (this.minTakenQuantityValid === true) {
+      validation.discountTaken.MinTakenQuantity = {
+        required
+      }
+    }
+    if (this.customerValid === false) {
+      validation.discountCustomer.CustomerId = {
+        required
+      }
+      validation.discountExcludedCustomer.CustomerId = {
+        required
+      }
+    }
+    if (this.customerCriterTabValid === true) {
+      validation.customerCriteriaColumnName = {
+        required
+      }
+      validation.customerCriteriaColumnValue = {
+        required
+      }
+    }
+    if (this.branchTabValid === true) {
+      validation.discountDetailsBranch.BranchId = {
+        required
+      }
+    }
+    if (this.routeTabValid === true) {
+      validation.discountDetailsRoute.RouteId = {
+        required
+      }
+    }
+    if (this.paymentTabValid === true) {
+      validation.discountDetailsPayment.PaymentTypeId = {
+        required
+      }
+    }
+    if (this.customerSqlsTabValid === true) {
+      validation.discountCustomerSql.CustomerSqlId = {
+        required
+      }
+    }
+
+    validation.form = this.insertRules
+    return {
+      ...validation,
+      discountTakenColumnName: {
+        required
+      },
+      discountTakenColumnValue: {
+        required
       }
     }
   }

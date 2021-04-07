@@ -243,7 +243,15 @@ export default {
         let model = {
           'model': this.form
         }
-        this.$store.dispatch('approvePotentialCustomer', {...this.query, api: `VisionNextCustomer/api/Customer`, formdata: model, return: this.routeName})
+        this.$store.dispatch('approvePotentialCustomer', {...this.query, api: 'VisionNextCustomer/api/Customer/ApprovePotentialCustomer', formdata: model, return: this.routeName}).then(res => {
+          if (res && res.data.IsCompleted === true) {
+            this.$router.push({name: this.routeName})
+          } else {
+            if (res.data.Message) {
+              this.$store.commit('showAlert', { type: 'danger', msg: res.data.Message })
+            }
+          }
+        })
       }
     }
   },

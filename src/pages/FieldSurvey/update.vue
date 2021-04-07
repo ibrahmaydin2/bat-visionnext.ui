@@ -138,7 +138,7 @@
                 </v-select>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionLineId')" :error="$v.selectedQuestion.lineNumber" :required="true">
-                <b-form-input type="number" v-model="selectedQuestion.lineNumber" :min="1" :max="9999" />
+                <b-form-input type="number" v-model="selectedQuestion.lineNumber" :maxLength="4" :oninput="maxLengthControl" />
              </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionIsNecessary')" :error="$v.selectedQuestion.isNecessary" :required="true">
                <NextCheckBox v-model="selectedQuestion.isNecessary" type="number" />

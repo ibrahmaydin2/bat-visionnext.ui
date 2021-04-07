@@ -39,7 +39,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -106,7 +106,7 @@
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)" :disabled="true"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
                <b-form-input type="text" v-model="form.PaymentPeriodId" :disabled="true" />
@@ -114,43 +114,6 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
-          <!--<b-row>
-            <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="setTotalPrice">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="setTotalPrice" min=1 />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.price"  @input="setTotalPrice"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.description1')" :error="$v.selectedInvoiceLine.description1" :required="true" md="2" lg="2">
-              <b-form-input type="text" v-model="selectedInvoiceLine.description1" />
-            </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.vatRate" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.netTotal')" :error="$v.selectedInvoiceLine.netTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.netTotal" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.vatTotal')" :error="$v.selectedInvoiceLine.totalVat" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.totalVat" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedInvoiceLine.grossTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.grossTotal" disabled />
-            </NextFormGroup>
-            <b-col cols="12" md="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addInvoiceLine" />
-              </b-form-group>
-            </b-col>
-          </b-row>-->
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -163,7 +126,6 @@
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <!--<b-th><span>{{$t('list.operations')}}</span></b-th>-->
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
@@ -176,48 +138,24 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <!--<b-td class="text-center">
-                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>-->
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.discounts')" v-if="form.InvoiceLines && form.InvoiceLines.length > 0">
-          <!--<b-row>
-            <NextFormGroup :title="$t('insert.order.discountReason')" :error="$v.selectedInvoiceDiscount.discountReason" :required="true" md="3" lg="3">
-              <v-select v-model="selectedInvoiceDiscount.discountReason" :options="discountReasons" :filterable="false" label="Description1" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.discountPercent')" :error="$v.selectedInvoiceDiscount.discountPercent" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="selectedInvoiceDiscount.discountPercent" @input="setTotalDiscount"  />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.totalDiscount')" :error="$v.selectedInvoiceDiscount.totalDiscount" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="selectedInvoiceDiscount.totalDiscount" :disabled="true" />
-            </NextFormGroup>
-            <b-col cols="12" md="3" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addInvoiceDiscount" />
-              </b-form-group>
-            </b-col>
-          </b-row>-->
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
-                <!--<b-th><span>{{$t('list.operations')}}</span></b-th>-->
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceDiscounts ? form.InvoiceDiscounts.filter(i => i.RecordState != 4) : [])" :key="i">
                   <b-td>{{o.DiscountReason ? o.DiscountReason.Label : DiscountReasonName}}</b-td>
                   <b-td>{{o.DiscountPercent}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
-                  <!--<b-td class="text-center">
-                    <i @click="removeInvoiceDiscount(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>-->
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -295,7 +233,8 @@ export default {
         vatRate: null,
         totalVat: null,
         isUpdated: false,
-        description1: null
+        description1: null,
+        invoiceId: null
       },
       selectedIndex: null,
       selectedRepresentative: null,
@@ -463,7 +402,8 @@ export default {
         DiscountQuantity: 0,
         RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
         TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
+        CalculatedVat: 0,
+        InvoiceId: this.selectedInvoiceLine.invoiceId
       }
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
@@ -495,7 +435,8 @@ export default {
         recordState: item.RecordState,
         recordId: item.RecordId,
         description1: item.Description1,
-        isUpdated: true
+        isUpdated: true,
+        invoiceId: item.InvoiceId
       }
       this.getItem(item.ItemId)
     },

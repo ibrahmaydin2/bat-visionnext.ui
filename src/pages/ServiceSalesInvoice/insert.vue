@@ -38,7 +38,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -637,7 +637,7 @@ export default {
   watch: {
     selectedCustomer (newValue, oldValue) {
       this.getPaymentTypes()
-      this.form.PaymentPeriodId = newValue ? newValue.PaymentPeriod : 0
+      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

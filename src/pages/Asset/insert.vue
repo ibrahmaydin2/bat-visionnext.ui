@@ -45,31 +45,31 @@
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
+            <!-- <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
               <v-select />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <v-select />
-            </NextFormGroup>
-            <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
               <v-select
-                :options="lookup.ASSET_TYPE"
-                @input="selectedType('AssetTypeId', $event)"
+                :options="lookup.ASSET_MODEL"
+                @input="selectedType('BrandId', $event)"
                 label="Label"
               />
+            </NextFormGroup>
+            <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
+              <v-select v-model="assetType" :options="assetTypes" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
               <v-select />
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
-              <v-select />
+              <v-select v-model="assetClass" :options="assetClasses" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
               <v-select />
             </NextFormGroup>
-            <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
+            <!-- <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
               <v-select />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
             </NextFormGroup>
@@ -112,12 +112,14 @@ export default {
   mixins: [insertMixin],
   data () {
     return {
-      form: {}
+      form: {},
+      assetClass: {},
+      assetType: {}
     }
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['producers'])
+    ...mapState(['assetClasses', 'assetTypes'])
   },
   mounted () {
     this.createManualCode()
@@ -127,8 +129,10 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      let allLookups = 'ASSET_PRODUCER ,ASSET_BRAND,ASSET_TYPE,EMPLOYEE_TYPE'
+      let allLookups = 'ASSET_PRODUCER ,ASSET_BRAND,ASSET_TYPE,EMPLOYEE_TYPE,ASSET_MODEL'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetClass/Search', name: 'assetClasses'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'assetTypes'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
     },

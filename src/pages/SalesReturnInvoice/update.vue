@@ -39,7 +39,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -61,18 +61,6 @@
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
               </div>
@@ -124,7 +112,7 @@
               <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedSearchType('PaymentTypeId', $event)" :disabled="true"/>
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="true"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -156,94 +144,8 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
-          <b-table-simple bordered small responsive>
-            <b-thead>
-              <b-tr>
-                <b-th>{{$t('insert.order.discountType')}}</b-th>
-                <b-th>{{$t('insert.order.discountName')}}</b-th>
-                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
-              </b-tr>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
-                <b-td>{{c.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-              <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
-                <b-td>{{f.Value}}</b-td>
-                <b-td></b-td>
-                <b-td></b-td>
-                <b-td>{{f.FreeItemQuantity}}</b-td>
-              </b-tr>
-              <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
-                <b-td>{{l.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>
-                <b-td>{{l.CurrentScore}}</b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-        </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass.Label}}</b-td>
-                  <b-td>{{o.DiscountClass.Code}}</b-td>
-                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
       </b-tabs>
     </b-col>
-    <b-modal id="campaign-modal" hide-footer>
-      <template #modal-title>
-        {{$t('insert.order.campaignSelection')}}
-      </template>
-      <b-table
-          :items="campaigns"
-          :fields="campaignFields"
-          select-mode="multi"
-          responsive
-          id="campaign-list"
-          :selectable="campaignSelectable"
-          bordered
-          tbody-tr-class="bg-white"
-          @row-selected="onCampaignSelected"
-        >
-        <template #cell(selection)="row" v-if="campaignSelectable">
-          <span>
-            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-          </span>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="campaigns ? campaigns.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        aria-controls="campaign-list"
-      ></b-pagination>
-      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
-      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
-  </b-modal>
   </b-row>
 </template>
 <script>
@@ -341,7 +243,6 @@ export default {
       currentPage: 1,
       campaignSelectable: false,
       showDiscounts: false,
-      customerCampaigns: {},
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
       paymentTypes: [],
@@ -436,6 +337,14 @@ export default {
         })
         return false
       }
+      if (!this.form.CustomerId) {
+        this.$toasted.show(this.$t('insert.order.chooseCustomer'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       if (search.length >= 3) {
         loading(true)
         this.$store.dispatch('getSearchItems', {
@@ -489,12 +398,12 @@ export default {
             duration: '3000'
           })
         }
+        this.setTotalPrice()
       })
     },
     selectItem () {
       this.searchPriceListItem()
       this.setStock()
-      this.setTotalPrice()
     },
     selectQuantity () {
       this.setTotalPrice()
@@ -549,101 +458,6 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    addInvoiceLine () {
-      this.$v.selectedInvoiceLine.$touch()
-      if (this.$v.selectedInvoiceLine.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
-        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let length = this.form.InvoiceLines.length
-      let selectedItem = this.selectedInvoiceLine.selectedItem
-      let quantity = this.selectedInvoiceLine.quantity
-      let order = {
-        Description1: selectedItem.Description1,
-        Deleted: 0,
-        System: 0,
-        RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
-        StatusId: 1,
-        LineNumber: length,
-        ItemId: selectedItem.RecordId,
-        ItemCode: selectedItem.Code,
-        UnitSetId: selectedItem.UnitSetId,
-        UnitId: selectedItem.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        Quantity: quantity,
-        Stock: this.selectedInvoiceLine.stock,
-        VatRate: this.selectedInvoiceLine.vatRate,
-        TotalVat: this.selectedInvoiceLine.totalVat,
-        TotalItemDiscount: 0,
-        TotalOtherDiscount: 0,
-        Price: this.selectedInvoiceLine.price,
-        GrossTotal: this.selectedInvoiceLine.grossTotal,
-        NetTotal: this.selectedInvoiceLine.netTotal,
-        IsFreeItem: 0,
-        IsCanceled: 0,
-        PriceListPrice: this.selectedInvoiceLine.price,
-        SalesQuantity1: quantity,
-        SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: 0,
-        TempDiscountNetTotal: 0,
-        DiscountNetTotal: 0,
-        DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
-        TotalSubtotalDiscount: 0,
-        CalculatedVat: 0
-      }
-      if (this.selectedInvoiceLine.isUpdated) {
-        this.form.InvoiceLines[this.selectedIndex] = order
-        this.selectedInvoiceLine.isUpdated = false
-      } else {
-        this.form.InvoiceLines.push(order)
-      }
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    removeInvoiceLine (item) {
-      this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
-      this.selectedInvoiceLine = {
-        quantity: item.Quantity,
-        price: item.Price,
-        vatRate: item.VatRate,
-        netTotal: item.NetTotal,
-        totalVat: item.TotalVat,
-        grossTotal: item.GrossTotal,
-        stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true
-      }
-      this.getItem(item.ItemId)
-    },
     addCampaign () {
       let model = {
         SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
@@ -652,10 +466,18 @@ export default {
       this.$bvModal.hide('campaign-modal')
       this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Invoice', 'SalesReturnInvoice/ApplyUpdateDiscounts').then((res) => {
-        if (res && res.Order) {
-          this.form = res.Order
-        }
         this.$store.commit('bigLoaded', false)
+        if (!res.IsCompleted) {
+          this.$toasted.show(this.$t('insert.order.campaignListError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        if (res && res.Invoice) {
+          this.form = res.Invoice
+        }
         this.updateData()
       })
     },
@@ -688,17 +510,6 @@ export default {
         }
       }
     },
-    getCustomerCampaigns (customerId) {
-      let model = {
-        customerId: customerId
-      }
-      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
-        if (res) {
-          this.customerCampaigns = res
-          this.showDiscounts = true
-        }
-      })
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -717,18 +528,7 @@ export default {
           })
           return
         }
-        this.$store.commit('bigLoaded', true)
-        this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceUpdateDiscounts').then((res) => {
-          this.campaigns = res.Models
-          this.$store.commit('bigLoaded', false)
-          if (this.campaigns && this.campaigns.length > 0) {
-            this.campaignSelectable = true
-            this.$bvModal.show('campaign-modal')
-          } else {
-            this.campaigns = []
-            this.updateData()
-          }
-        })
+        this.updateData()
       }
     }
   },
@@ -769,7 +569,6 @@ export default {
       if (e) {
         this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
-        this.getCustomerCampaigns(e.RecordId)
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
@@ -794,6 +593,7 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
+  height: 90px;
 }
 .card-body  {
   padding: none !important;

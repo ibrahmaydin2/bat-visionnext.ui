@@ -24,8 +24,8 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
-          <NextFormGroup item-key="Status" :error="$v.form.Status">
-            <NextCheckBox v-model="form.Status" type="number" toggle />
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -34,21 +34,21 @@
       <b-tabs>
         <b-tab :title="$t('get.PriceDiscountTransaction.general')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="TciBreak1" :error="$v.form.TciBreak1">
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <v-select
                 v-model="tciBreak1"
                 :options="lookup.TCI_BREAKDOWN"
-                @input="selectedType('TciBreak1', $event)"
+                @input="selectedType('TciBreak1Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="Customer" :error="$v.form.Customer">
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.CommercialTitle + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -64,7 +64,7 @@
               close-button-variant="outline-danger"
               v-model="form.TransactionTime"/>
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountReason" :error="$v.form.DiscountReason">
+            <NextFormGroup item-key="DiscountReasonId" :error="$v.form.DiscountReasonId">
               <v-select v-model="discountReason" :options="discountReasons" @input="selectedSearchType('DiscountReasonId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -74,7 +74,7 @@
             <NextFormGroup item-key="PriceDiscountAmount" :error="$v.form.PriceDiscountAmount">
               <b-form-input type="text" v-model="form.PriceDiscountAmount" :readonly="insertReadonly.PriceDiscountAmount" />
             </NextFormGroup>
-            <NextFormGroup item-key="Currency" :error="$v.form.Currency">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <v-select v-model="currency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -87,14 +87,18 @@
             <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
               <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
             </NextFormGroup>
-            <NextFormGroup item-key="Budget" :error="$v.form.Budget">
-              <v-select v-model="budget" />
+            <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
+              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget'>
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="ApproveState" :error="$v.form.ApproveState">
+            <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
               <v-select
                 v-model="approveState"
                 :options="lookup.APPROVE_STATE"
-                @input="selectedType('ApproveState', $event)"
+                @input="selectedType('ApproveStateId', $event)"
                 label="Label"
               />
             </NextFormGroup>
@@ -110,13 +114,11 @@
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
               <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
             </NextFormGroup>
-            <NextFormGroup item-key="GainType" :error="$v.form.GainType">
-              <v-select
-                v-model="gainType"
-                :options="lookup.GAIN_TYPE"
-                @input="selectedType('GainType', $event)"
-                label="Label"
-              />
+            <NextFormGroup item-key="GainTypeId" :error="$v.form.GainTypeId">
+              <b-form-input type="text" v-model="GainTypeName" readonly />
+            </NextFormGroup>
+            <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
+              <NextCheckBox v-model="useBudget" type="number" toggle />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -127,6 +129,7 @@
 <script>
 import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
+import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [updateMixin],
   data () {
@@ -157,19 +160,21 @@ export default {
         GainTypeId: null,
         TciBreak1Id: null
       },
-      customer: null,
+      customer: {},
+      budget: {},
       tciBreak1: null,
       discountReason: null,
       currency: null,
-      budget: null,
       approveState: null,
-      gainType: null,
+      budgets: [],
+      currencyLabel: null,
+      useBudget: null,
+      GainTypeName: null,
       routeName1: 'Discount'
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['customers', 'discountReasons', 'currencies', 'gainTypes'])
+    ...mapState(['customers', 'discountReasons', 'currencies'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -228,9 +233,77 @@ export default {
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
+    if (this.form.UseBudget === 1) {
+      this.insertRequired.BudgetId = true
+      this.insertRules.BudgetId = {
+        required
+      }
+    } else {
+      this.insertRules.BudgetId = {}
+      this.insertRequired.BudgetId = false
+    }
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    customer (value) {
+      if (value) {
+        var me = this
+        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            this.budgets = res.ListModel.BaseModels
+            me.$forceUpdate()
+          }
+        })
+        let LoyaltyCustomer = {
+          TableName: 'T_CUSTOMER',
+          ColumnName: 'RECORD_ID',
+          ColumnValue: value.RecordId,
+          BranchId: 6,
+          CompanyId: 1,
+          PagerecordCount: 20,
+          Page: 1,
+          OrderByColumns: []
+        }
+        this.$api.post({LoyaltyCustomer}, 'Loyalty', 'LoyaltyCustomer/Search').then((res) => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            this.form.GainTypeId = this.lookup.GAIN_TYPE[1].DecimalValue
+            this.GainTypeName = this.lookup.GAIN_TYPE[1].Label
+          } else {
+            this.form.GainTypeId = this.lookup.GAIN_TYPE[0].DecimalValue
+            this.GainTypeName = this.lookup.GAIN_TYPE[0].Label
+          }
+        })
+      } else {
+        this.form.GainTypeId = null
+        this.GainTypeName = null
+        this.form.BudgetId = 0
+        this.budgets = []
+        this.budget = {}
+      }
+    },
+    currencies (e) {
+      if (e) {
+        this.currencyLabel = e[0].Description1
+      }
+    },
+    useBudget (e) {
+      this.form.ApproveStateId = e === 1 ? 2100 : 2102
+      this.form.UseBudget = e
+      if (e === 0) {
+        this.budget = {}
+      } else {
+        if (this.form.CustomerId) {
+          var me = this
+          me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+            if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+              me.budgets = res.ListModel.BaseModels
+              me.$forceUpdate()
+            }
+          })
+        }
+      }
     }
   }
 }
