@@ -304,6 +304,7 @@
     "Settings": "Sistem Ayarları",
     "TerminalLog": "Terminal Günlüğü",
     "TerminalPasswordLog": "Terminal Operasyon Şifresi",
+    "TerminalPasswordLogGet": "Terminal Operasyon Şifresi Görüntüle",
     "TerminalPasswordLogInsert": "Terminal Operasyon Şifresi Oluştur",
     "TerminalLogGet": "Terminal Günlüğü Görüntüle",
     "WarehouseMovement": "Stok Hareketleri",
