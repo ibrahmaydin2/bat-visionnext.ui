@@ -116,7 +116,7 @@
               <v-select v-model="campaignItemArea" :options="campaignItemAreaList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
-              <v-select v-model="campaignItemValue" :options="campaignItemAreaList" :filterable="false" label="Label"/>
+              <v-select v-model="campaignItemValue" :options="campaignItemValueList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>

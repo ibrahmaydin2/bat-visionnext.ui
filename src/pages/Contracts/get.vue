@@ -103,7 +103,7 @@
             </b-col>
           </b-row>
         </b-tab>
-         <b-tab :title="$t('insert.contract.assets')">
+        <b-tab :title="$t('insert.contract.assets')">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -116,6 +116,36 @@
                     <b-tr v-for="(c, i) in rowData.ContractAssets" :key="i">
                       <b-td>{{c.Asset ? c.Asset.Label : ''}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.PlannedServiceDate)}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.contract.contractItems')" v-if="rowData.TypeId !== 4">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.targetQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.targetType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.targetAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractItems" :key="i">
+                      <b-td>{{c.ColumnName}}</b-td>
+                      <b-td>{{c.ColumnValue}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{c.QuotaType ? c.QuotaType.Label : ''}}</b-td>
+                      <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
+                      <b-td>{{c.QuotaAmount}}</b-td>
+                      <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

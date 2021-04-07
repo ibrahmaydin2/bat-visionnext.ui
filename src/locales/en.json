@@ -1078,7 +1078,8 @@
       "GenExp": "Açıklama",
       "FinanceCode": "ERP Kodu",
       "ApproveStateId": "Onay Durumu",
-      "CustomerFinanceCode": "Müşteri ERP Kodu"
+      "CustomerFinanceCode": "Müşteri ERP Kodu",
+      "contractItems": "Sözleşmeli Ürünler"
     },
     "loadingplan": {
       "items": "Ürün",

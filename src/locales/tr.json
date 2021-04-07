@@ -1089,7 +1089,14 @@
       "GenExp": "Açıklama",
       "FinanceCode": "ERP Kodu",
       "ApproveStateId": "Onay Durumu",
-      "CustomerFinanceCode": "Müşteri ERP Kodu"
+      "CustomerFinanceCode": "Müşteri ERP Kodu",
+      "contractItems": "Sözleşmeli Ürünler",
+      "fieldDescription": "Alan Açıklaması",
+      "fieldValue": "Değer",
+      "targetQuantity": "Hedef Miktarı",
+      "targetType": "Hedef Tipi",
+      "unitDefinitions": "Birim Tanımları",
+      "targetAmount": "Hedef Tutarı"
     },
     "loadingplan": {
       "items": "Ürün",

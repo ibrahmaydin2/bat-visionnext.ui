@@ -235,6 +235,66 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractItems')" v-if="form.TypeId !== 4">
+          <b-row>
+            <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractItems.fieldDescription" :required="true" md="3" lg="3">
+              <NextDropdown
+              v-model="contractItems.fieldDescription"
+              url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+              :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+              @input="getItemValues"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractItems.fieldValue" :required="true" md="3" lg="3">
+              <v-select :disabled="!contractItems.fieldDescription" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.targetQuantity')" :error="$v.contractItems.quotaQuantity" :required="true" md="3" lg="3">
+              <b-form-input type="number" v-model="contractItems.quotaQuantity" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.targetType')" :error="$v.contractItems.targetType" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractItems.unit" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractItems.unit" lookup-key="UNIT" :get-lookup="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.targetAmount')" :error="$v.contractItems.quotaAmount" :required="contractItems.targetType && contractItems.targetType.Code === 'TTR'" md="3" lg="3">
+              <b-form-input type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR'"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractItems.currency" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractItems.currency" url="VisionNextSystem/api/SysCurrency/Search" />
+            </NextFormGroup>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                 <AddDetailButton @click.native="addContractItems" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.targetQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.targetType')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.targetAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(c, i) in form.ContractItems" :key="i">
+                  <b-td>{{c.ColumnNameStr}}</b-td>
+                  <b-td>{{c.ColumnValueStr}}</b-td>
+                  <b-td>{{c.QuotaQuantity}}</b-td>
+                  <b-td>{{c.QuotaTypeName}}</b-td>
+                  <b-td>{{c.UnitName}}</b-td>
+                  <b-td>{{c.QuotaAmount}}</b-td>
+                  <b-td>{{c.CurrencyName}}</b-td>
+                  <b-td class="text-center"><i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -264,7 +324,8 @@ export default {
         ContractRelatedCustomers: [],
         ContractValidDates: [],
         ContractBenefits: [],
-        ContractAssets: []
+        ContractAssets: [],
+        ContractItems: []
       },
       routeName1: 'ContractManagement',
       routeName2: 'Contract',
@@ -287,7 +348,17 @@ export default {
       plannedServiceDate: null,
       asset: null,
       selectedApproveState: null,
-      showAssets: false
+      showAssets: false,
+      contractItems: {
+        fieldDescription: null,
+        fieldValue: null,
+        quotaQuantity: null,
+        targetType: null,
+        unit: null,
+        quotaAmount: null,
+        currency: null
+      },
+      fieldValues: []
     }
   },
   computed: {
@@ -427,6 +498,47 @@ export default {
     },
     removeContractAssets (item) {
       this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
+    },
+    getItemValues (value) {
+      this.fieldValues = []
+      this.contractItems.fieldValue = undefined
+      if (value) {
+        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.fieldValues = res.Values
+          this.$forceUpdate()
+        })
+      }
+    },
+    addContractItems () {
+      this.$v.contractItems.$touch()
+      if (this.$v.contractItems.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      this.form.ContractItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        TableName: 'T-ITEM',
+        ColumnName: this.contractItems.fieldDescription.Code,
+        ColumnValue: this.contractItems.fieldValue.DecimalValue,
+        ColumnNameStr: this.contractItems.fieldDescription.Label,
+        ColumnValueStr: this.contractItems.fieldValue.Label,
+        QuotaQuantity: this.contractItems.quotaQuantity,
+        QuotaTypeId: this.contractItems.targetType.DecimalValue,
+        QuotaTypeName: this.contractItems.targetType.Label,
+        UnitId: this.contractItems.unit.DecimalValue,
+        UnitName: this.contractItems.unit.Label,
+        QuotaAmount: this.contractItems.quotaAmount,
+        CurrencyId: this.contractItems.currency.RecordId,
+        CurrencyName: this.contractItems.currency.Description1
+      })
+      this.contractItems = {}
+      this.$v.contractItems.$reset()
+    },
+    removeContractItems (item) {
+      this.form.ContractItems.splice(this.form.ContractItems.indexOf(item), 1)
     }
   },
   validations () {
@@ -451,6 +563,31 @@ export default {
         required
       }
     }
+    let contractItems = {
+      fieldDescription: {
+        required
+      },
+      fieldValue: {
+        required
+      },
+      quotaQuantity: {
+        required
+      },
+      targetType: {
+        required
+      },
+      unit: {
+        required
+      },
+      currency: {
+        required
+      }
+    }
+    if (this.contractItems.targetType && this.contractItems.targetType.Code === 'TTR') {
+      contractItems.quotaAmount = {
+        required
+      }
+    }
     return {
       form: this.insertRules,
       selectedAdditionalCustomer: {
@@ -472,7 +609,8 @@ export default {
         plannedServiceDate: {
           required
         }
-      }
+      },
+      contractItems: contractItems
     }
   },
   watch: {
