@@ -1096,7 +1096,17 @@
       "targetQuantity": "Hedef Miktarı",
       "targetType": "Hedef Tipi",
       "unitDefinitions": "Birim Tanımları",
-      "targetAmount": "Hedef Tutarı"
+      "targetAmount": "Hedef Tutarı",
+      "contractPriceDiscounts": "Dip Toplam İndirimi",
+      "benefitCondition": "Kazanım Tipi",
+      "quotaAmount": "Kota Miktarı",
+      "budgetAmount": "Bütçe Tutarı",
+      "quotaColumnName": "Kota Kolon Açıklaması",
+      "quotaColumnValue": "Kota Değer",
+      "quotaBeginDate": "Kota Başlangıç Tarihi",
+      "quotaEndDate": "Kota Bitiş Tarihi",
+      "branchSharePercent": "Şube Katılım Oranı",
+      "itemFormula": "Ürün Formülü"
     },
     "loadingplan": {
       "items": "Ürün",

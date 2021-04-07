@@ -407,6 +407,10 @@ export default {
         ColumnNameStr: this.campaignItemArea.Label,
         ColumnValueStr: this.campaignItemValue.Label
       })
+      this.campaignItemArea = null
+      this.campaignItemValue = null
+      this.$v.campaignItemArea.$reset()
+      this.$v.campaignItemValue.$reset()
     },
     removeFixedTermCampaignItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)

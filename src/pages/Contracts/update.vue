@@ -171,7 +171,7 @@
             <NextFormGroup :title="$t('insert.contract.BenefitBudget')" :error="$v.contractBenefits.benefitBudget" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
               <b-form-input
               :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
-              type="text" v-model="contractBenefits.benefitBudget" />
+              type="number" v-model="contractBenefits.benefitBudget" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.TciBreak1Id')" :error="$v.contractBenefits.tciBreak1" :required="true" md="4" lg="4">
               <NextDropdown v-model="contractBenefits.tciBreak1" lookup-key="TCI_BREAKDOWN" :get-lookup="true"/>
@@ -236,14 +236,14 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.contractItems')" v-if="form.TypeId !== 4">
+        <b-tab :title="$t('insert.contract.contractItems')" v-if="form.TypeId && form.TypeId !== 4">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractItems.fieldDescription" :required="true" md="3" lg="3">
               <NextDropdown
               v-model="contractItems.fieldDescription"
               url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
               :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
-              @input="getItemValues"/>
+              @input="getItemValues($event, 'item')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractItems.fieldValue" :required="true" md="3" lg="3">
               <v-select :disabled="!contractItems.fieldDescription" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
@@ -291,6 +291,112 @@
                   <b-td>{{c.QuotaAmount}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
                   <b-td class="text-center"><i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.contract.contractPriceDiscounts')" v-if="showPriceDiscount">
+          <b-row>
+            <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
+              <b-form-input
+                :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
+                type="number" v-model="contractPriceDiscounts.discountAmount" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="true" md="3" lg="3">
+              <b-form-input
+              :disabled="!contractPriceDiscounts.benefitCondition
+                || contractPriceDiscounts.benefitCondition.Code === 'YYM'
+                || contractPriceDiscounts.benefitCondition.Code === 'SOZ'"
+                type="number" v-model="contractPriceDiscounts.quotaAmount" />
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" md="3" lg="3">
+              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition
+                || contractPriceDiscounts.benefitCondition.Code === 'YYM'
+                || contractPriceDiscounts.benefitCondition.Code === 'SOZ'"
+                v-model="contractPriceDiscounts.quotaUnit" lookup-key="UNIT" :get-lookup="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.budgetAmount')" md="3" lg="3">
+              <b-form-input
+              :disabled="!contractPriceDiscounts.benefitCondition
+              || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" type="number" v-model="contractPriceDiscounts.budgetAmount" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnName')" md="3" lg="3">
+              <NextDropdown
+                v-model="contractPriceDiscounts.quotaColumnName"
+                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+                @input="getItemValues($event, 'quota')"
+                :disabled="!contractPriceDiscounts.benefitCondition
+                || contractPriceDiscounts.benefitCondition.Code === 'YYM'
+                || contractPriceDiscounts.benefitCondition.Code === 'SOZ'" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3">
+              <v-select :disabled="!contractPriceDiscounts.quotaColumnName" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
+              <b-form-datepicker
+              :disabled="!contractPriceDiscounts.benefitCondition" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
+              <b-form-datepicker
+              :disabled="!contractPriceDiscounts.benefitCondition
+                || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
+              v-model="contractPriceDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
+              <b-form-input
+              :disabled="!contractPriceDiscounts.benefitCondition" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
+              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.currency')" md="3" lg="3">
+              <NextDropdown
+              :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
+              v-model="contractPriceDiscounts.currency" url="VisionNextSystem/api/SysCurrency/Search" />
+            </NextFormGroup>
+            <b-col cols="12" md="2" class="ml-auto">
+              <b-form-group>
+                 <AddDetailButton @click.native="addContractPriceDiscounts" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.discountAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.budgetAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.itemFormula')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(c, i) in (form.ContractPriceDiscounts ? form.ContractPriceDiscounts.filter(c => c.RecordState !== 4): [])" :key="i">
+                  <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : c.BenefitConditionName}}</b-td>
+                  <b-td>{{c.DiscountAmount}}</b-td>
+                  <b-td>{{c.QuotaAmount}}</b-td>
+                  <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : c.QuotaUnitName}}</b-td>
+                  <b-td>{{c.BudgetAmount}}</b-td>
+                  <b-td>{{c.QuotaColumnNameStr ? c.QuotaColumnNameStr : c.QuotaColumnName}}</b-td>
+                  <b-td>{{c.QuotaColumnValueStr ? c.QuotaColumnValueStr : c.QuotaColumnValue}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                  <b-td>{{c.BranchSharePercent}}</b-td>
+                  <b-td>{{c.ItemFormula ? c.ItemFormula.Label : c.ItemFormulaName}}</b-td>
+                  <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
+                  <b-td class="text-center"><i @click="removeContractPriceDiscounts(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -361,6 +467,22 @@ export default {
         unit: null,
         quotaAmount: null,
         currency: null
+      },
+      showPriceDiscount: false,
+      quotaValues: [],
+      contractPriceDiscounts: {
+        discountAmount: null,
+        benefitCondition: null,
+        quotaAmount: null,
+        quotaUnit: null,
+        budgetAmount: null,
+        quotaColumnName: null,
+        quotaColumnValue: null,
+        quotaBeginDate: null,
+        quotaEndDate: null,
+        branchSharePercent: null,
+        itemFormula: null,
+        currency: null
       }
     }
   },
@@ -382,6 +504,7 @@ export default {
       this.selectedContractType = this.convertLookupValueToSearchValue(rowData.Type)
       this.customer = this.convertLookupValueToSearchValue(rowData.Customer)
       this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4 && c.RecordState !== 4).length > 0
+      this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
     },
     save () {
       this.$v.form.$touch()
@@ -493,7 +616,8 @@ export default {
       })
       this.contractBenefits = {}
       this.$v.contractBenefits.$reset()
-      this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4 && c.RecordState !== 4).length > 0
+      this.showAssets = this.form.ContractBenefits.some(c => c.BenefitTypeId === 4 && c.RecordState !== 4)
+      this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
     },
     removeContractBenefits (item) {
       if (item.RecordId > 0) {
@@ -501,7 +625,8 @@ export default {
       } else {
         this.form.ContractBenefits.splice(this.form.ContractBenefits.indexOf(item), 1)
       }
-      this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4 && c.RecordState !== 4).length > 0
+      this.showAssets = this.form.ContractBenefits.some(c => c.BenefitTypeId === 4 && c.RecordState !== 4)
+      this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
     },
     addContractAssets () {
       this.$v.contractAssets.$touch()
@@ -528,12 +653,23 @@ export default {
         this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
       }
     },
-    getItemValues (value) {
-      this.fieldValues = []
-      this.contractItems.fieldValue = undefined
+    getItemValues (value, property) {
+      if (property === 'item') {
+        this.fieldValues = []
+        this.contractItems.fieldValue = undefined
+      }
+      if (property === 'quota') {
+        this.quotaValues = []
+        this.contractPriceDiscounts.quotaColumnValue = undefined
+      }
       if (value) {
         this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
-          this.fieldValues = res.Values
+          if (property === 'item') {
+            this.fieldValues = res.Values
+          }
+          if (property === 'quota') {
+            this.quotaValues = res.Values
+          }
           this.$forceUpdate()
         })
       }
@@ -549,6 +685,8 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        SalesQuantity: 0,
+        SalesAmount: 0,
         TableName: 'T-ITEM',
         ColumnName: this.contractItems.fieldDescription.Code,
         ColumnValue: this.contractItems.fieldValue.DecimalValue,
@@ -571,6 +709,47 @@ export default {
         this.form.ContractItems[this.form.ContractItems.indexOf(item)].RecordState = 4
       } else {
         this.form.ContractItems.splice(this.form.ContractItems.indexOf(item), 1)
+      }
+    },
+    addContractPriceDiscounts () {
+      this.$v.contractPriceDiscounts.$touch()
+      if (this.$v.contractPriceDiscounts.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      this.form.ContractPriceDiscounts.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        QuotaTableName: 'T-ITEM',
+        DiscountAmount: this.contractPriceDiscounts.discountAmount,
+        BenefitConditionId: this.contractPriceDiscounts.benefitCondition.DecimalValue,
+        BenefitConditionName: this.contractPriceDiscounts.benefitCondition.Label,
+        QuotaAmount: this.contractPriceDiscounts.quotaAmount,
+        QuotaUnitId: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.DecimalValue : null,
+        QuotaUnitName: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.Label : null,
+        BudgetAmount: this.contractPriceDiscounts.budgetAmount,
+        QuotaColumnName: this.contractPriceDiscounts.quotaColumnName ? this.contractPriceDiscounts.quotaColumnName.Code : null,
+        QuotaColumnNameStr: this.contractPriceDiscounts.quotaColumnName ? this.contractPriceDiscounts.quotaColumnName.Label : null,
+        QuotaColumnValue: this.contractPriceDiscounts.quotaColumnValue ? this.contractPriceDiscounts.quotaColumnValue.DecimalValue : null,
+        QuotaColumnValueStr: this.contractPriceDiscounts.quotaColumnValue ? this.contractPriceDiscounts.quotaColumnValue.Label : null,
+        QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
+        QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
+        BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
+        ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
+        ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
+        CurrencyId: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.RecordId : null,
+        CurrencyName: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.Description1 : null
+      })
+      this.contractPriceDiscounts = {}
+      this.$v.contractPriceDiscounts.$reset()
+    },
+    removeContractPriceDiscounts (item) {
+      if (item.RecordId > 0) {
+        this.form.ContractPriceDiscounts[this.form.ContractPriceDiscounts.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ContractPriceDiscounts.splice(this.form.ContractPriceDiscounts.indexOf(item), 1)
       }
     }
   },
@@ -643,7 +822,18 @@ export default {
           required
         }
       },
-      contractItems: contractItems
+      contractItems: contractItems,
+      contractPriceDiscounts: {
+        discountAmount: {
+          required
+        },
+        benefitCondition: {
+          required
+        },
+        quotaAmount: {
+          required
+        }
+      }
     }
   }
 }
