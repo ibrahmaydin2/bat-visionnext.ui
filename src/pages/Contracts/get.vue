@@ -269,6 +269,52 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractFreeItems')" v-if="showFreeItems">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.contractFocType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.freeQuantityLimit')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.allowOverLimit')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaLevelTaken')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaLevel')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractFreeItems" :key="i">
+                     <b-td>{{c.ContractFocType ? c.ContractFocType.Label : ''}}</b-td>
+                     <b-td>{{c.ColumnName}}</b-td>
+                     <b-td>{{c.ColumnValue}}</b-td>
+                     <b-td>{{c.QuotaColumnName}}</b-td>
+                     <b-td>{{c.QuotaColumnValue}}</b-td>
+                     <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                     <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                     <b-td>{{c.BeginDate}}</b-td>
+                     <b-td>{{c.QuotaQuantity}}</b-td>
+                     <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
+                     <b-td>{{c.BranchSharePercent}}</b-td>
+                     <b-td>{{c.FreeQuantityLimit}}</b-td>
+                     <b-td>{{c.AllowOverLimit === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
+                     <b-td>{{c.QuotaLevelTaken}}</b-td>
+                     <b-td>{{c.QuotaLevel}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -289,7 +335,8 @@ export default {
       showAssets: false,
       showPriceDiscount: false,
       showInvestments: false,
-      showDiscounts: false
+      showDiscounts: false,
+      showFreeItems: false
     }
   },
   mounted () {
@@ -310,6 +357,7 @@ export default {
         me.showPriceDiscount = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 6)
         me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)
         me.showDiscounts = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 1)
+        me.showFreeItems = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 2)
       })
     }
   }

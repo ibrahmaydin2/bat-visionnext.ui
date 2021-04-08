@@ -1103,7 +1103,13 @@
       "quotaQuantity": "Kota Miktarı",
       "description1": "Açiklama",
       "contractDiscounts": "İndirimler",
-      "discountRate": "İndirim Oranı"
+      "discountRate": "İndirim Oranı",
+      "contractFreeItems": "Bedelsiz Ürünler",
+      "contractFocType": "Kazanım Tipi",
+      "freeQuantityLimit": "Miktar",
+      "allowOverLimit": "Miktar Aşılabilir",
+      "quotaLevelTaken": "Kademe (*Alanın İlk Kısımı)",
+      "quotaLevel": "Kademe (*Alanın İkinci Kısmı)"
     },
     "loadingplan": {
       "items": "Ürün",

@@ -501,11 +501,11 @@
                 v-model="contractDiscounts.quotaColumnName"
                 url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
-                @input="getItemValues($event, 'discountQuotaitem')"
+                @input="getItemValues($event, 'discountQuotaItem')"
                 :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractDiscounts.quotaColumnValue" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractDiscounts.quotaColumnName || contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaColumnValue" :options="discountQuotaitems" label="Label"/>
+              <v-select :disabled="!contractDiscounts.quotaColumnName || contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaColumnValue" :options="discountQuotaItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetAmount')" :error="$v.contractDiscounts.budgetAmount" :required="true" md="3" lg="3">
               <b-form-input type="number" v-model="contractDiscounts.budgetAmount" />
@@ -568,6 +568,111 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractFreeItems')" v-if="showFreeItems">
+          <b-row>
+            <NextFormGroup :title="$t('insert.contract.contractFocType')" :error="$v.contractFreeItems.contractFocType" :required="true" md="3" lg="3">
+              <NextDropdown v-model="contractFreeItems.contractFocType" lookup-key="CONTRACT_FOC_TYPE" :get-lookup="true" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractFreeItems.columnName" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
+              <NextDropdown
+                v-model="contractFreeItems.columnName"
+                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+                @input="getItemValues($event, 'freeItem')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractFreeItems.columnValue" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
+              <v-select :disabled="!contractFreeItems.columnName" v-model="contractFreeItems.columnValue" :options="freeItems" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractFreeItems.quotaColumnName" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <NextDropdown
+                v-model="contractFreeItems.quotaColumnName"
+                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+                @input="getItemValues($event, 'quotaFreeItem')"
+                :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractFreeItems.quotaColumnValue" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <v-select :disabled="!contractFreeItems.quotaColumnName || (contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB')" v-model="contractFreeItems.quotaColumnValue" :options="quotaFreeItems" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3" :error="$v.contractFreeItems.quotaBeginDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'">
+              <b-form-datepicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3" :error="$v.contractFreeItems.quotaEndDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'">
+              <b-form-datepicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractFreeItems.beginDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'">
+              <b-form-datepicker v-model="contractFreeItems.beginDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractFreeItems.quotaQuantity" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaQuantity" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractFreeItems.unit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <NextDropdown :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.unit" lookup-key="UNIT" :get-lookup="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractFreeItems.branchSharePercent" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
+              <b-form-input type="number" v-model="contractFreeItems.branchSharePercent" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.freeQuantityLimit')" :error="$v.contractFreeItems.freeQuantityLimit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
+              <b-form-input type="number" v-model="contractFreeItems.freeQuantityLimit" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.allowOverLimit')" :error="$v.contractFreeItems.allowOverLimit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <NextCheckBox :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.allowOverLimit" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaLevelTaken')" :error="$v.contractFreeItems.quotaLevelTaken" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevelTaken" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.quotaLevel')" :error="$v.contractFreeItems.quotaLevel" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
+              <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevel" />
+            </NextFormGroup>
+            <b-col cols="12" md="2" class="ml-auto">
+              <b-form-group>
+                 <AddDetailButton @click.native="addContractFreeItems" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.contract.contractFocType')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.freeQuantityLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.allowOverLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaLevelTaken')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.quotaLevel')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(c, i) in (form.ContractFreeItems ? form.ContractFreeItems.filter(c => c.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{c.ContractFocType ? c.ContractFocType.Label : c.ContractFocTypeName}}</b-td>
+                  <b-td>{{c.ColumnName}}</b-td>
+                  <b-td>{{c.ColumnValue}}</b-td>
+                  <b-td>{{c.QuotaColumnName}}</b-td>
+                  <b-td>{{c.QuotaColumnValue}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                  <b-td>{{c.BeginDate}}</b-td>
+                  <b-td>{{c.QuotaQuantity}}</b-td>
+                  <b-td>{{c.Unit ? c.Unit.Label : c.UnitName}}</b-td>
+                  <b-td>{{c.BranchSharePercent}}</b-td>
+                  <b-td>{{c.FreeQuantityLimit}}</b-td>
+                  <b-td>{{c.AllowOverLimit === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
+                  <b-td>{{c.QuotaLevelTaken}}</b-td>
+                  <b-td>{{c.QuotaLevel}}</b-td>
+                  <b-td class="text-center"><i @click="removeContractFreeItems(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -601,7 +706,8 @@ export default {
         ContractItems: [],
         ContractPriceDiscounts: [],
         ContractInvestments: [],
-        ContractDiscounts: []
+        ContractDiscounts: [],
+        ContractFreeItems: []
       },
       routeName1: 'ContractManagement',
       routeName2: 'Contract',
@@ -668,7 +774,7 @@ export default {
         description1: null
       },
       discountItems: [],
-      discountQuotaitems: [],
+      discountQuotaItems: [],
       showDiscounts: false,
       contractDiscounts: {
         columnName: null,
@@ -683,6 +789,26 @@ export default {
         branchSharePercent: null,
         quotaBeginDate: null,
         quotaEndDate: null
+      },
+      showFreeItems: false,
+      freeItems: [],
+      quotaFreeItems: [],
+      contractFreeItems: {
+        contractFocType: null,
+        columnName: null,
+        columnValue: null,
+        quotaColumnName: null,
+        quotaColumnValue: null,
+        quotaBeginDate: null,
+        quotaEndDate: null,
+        beginDate: null,
+        quotaQuantity: null,
+        unit: null,
+        branchSharePercent: null,
+        freeQuantityLimit: null,
+        allowOverLimit: null,
+        quotaLevelTaken: null,
+        quotaLevel: null
       }
     }
   },
@@ -707,6 +833,7 @@ export default {
       this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
       this.showInvestments = this.form.ContractBenefits.some(c => c.BenefitTypeId === 5)
       this.showDiscounts = this.form.ContractBenefits.some(c => c.BenefitTypeId === 1)
+      this.showFreeItems = this.form.ContractBenefits.some(c => c.BenefitTypeId === 2)
     },
     save () {
       this.$v.form.$touch()
@@ -822,6 +949,7 @@ export default {
       this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
       this.showInvestments = this.form.ContractBenefits.some(c => c.BenefitTypeId === 5)
       this.showDiscounts = this.form.ContractBenefits.some(c => c.BenefitTypeId === 1)
+      this.showFreeItems = this.form.ContractBenefits.some(c => c.BenefitTypeId === 2)
     },
     removeContractBenefits (item) {
       if (item.RecordId > 0) {
@@ -833,6 +961,7 @@ export default {
       this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6)
       this.showInvestments = this.form.ContractBenefits.some(c => c.BenefitTypeId === 5)
       this.showDiscounts = this.form.ContractBenefits.some(c => c.BenefitTypeId === 1)
+      this.showFreeItems = this.form.ContractBenefits.some(c => c.BenefitTypeId === 2)
     },
     addContractAssets () {
       this.$v.contractAssets.$touch()
@@ -877,9 +1006,17 @@ export default {
           this.discountItems = []
           this.contractDiscounts.columnValue = undefined
           break
-        case 'discountQuotaitem':
-          this.discountQuotaitems = []
+        case 'discountQuotaItem':
+          this.discountQuotaItems = []
           this.contractDiscounts.quıtaColumnValue = undefined
+          break
+        case 'freeItem':
+          this.freeItems = []
+          this.contractFreeItems.columnValue = undefined
+          break
+        case 'quotaFreeItem':
+          this.quotaFreeItems = []
+          this.contractFreeItems.quotaColumnValue = undefined
           break
       }
       if (value) {
@@ -897,8 +1034,14 @@ export default {
             case 'discountItem':
               this.discountItems = res.Values
               break
-            case 'discountQuotaitem':
-              this.discountQuotaitems = res.Values
+            case 'discountQuotaItem':
+              this.discountQuotaItems = res.Values
+              break
+            case 'freeItem':
+              this.freeItems = res.Values
+              break
+            case 'quotaFreeItem':
+              this.quotaFreeItems = res.Values
               break
           }
           this.$forceUpdate()
@@ -1061,6 +1204,53 @@ export default {
       } else {
         this.form.ContractDiscounts.splice(this.form.ContractDiscounts.indexOf(item), 1)
       }
+    },
+    addContractFreeItems () {
+      this.$v.contractFreeItems.$touch()
+      if (this.$v.contractFreeItems.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      this.form.ContractFreeItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        TableName: 'T-ITEM',
+        QuotaTableName: 'T-ITEM',
+        BenefitKindId: 2271080,
+        FocPaymentTypeId: 71,
+        ContractFocTypeId: this.contractFreeItems.contractFocType.DecimalValue,
+        ContractFocTypeName: this.contractFreeItems.contractFocType.Label,
+        ColumnName: this.contractFreeItems.columnName ? this.contractFreeItems.columnName.Code : null,
+        ColumnNameStr: this.contractFreeItems.columnName ? this.contractFreeItems.columnName.Label : null,
+        ColumnValue: this.contractFreeItems.columnValue ? this.contractFreeItems.columnValue.DecimalValue : null,
+        ColumnValueStr: this.contractFreeItems.columnValue ? this.contractFreeItems.columnValue.Label : null,
+        QuotaColumnName: this.contractFreeItems.quotaColumnName ? this.contractFreeItems.quotaColumnName.Code : null,
+        QuotaColumnNameStr: this.contractFreeItems.quotaColumnName ? this.contractFreeItems.quotaColumnName.Label : null,
+        QuotaColumnValue: this.contractFreeItems.quotaColumnValue ? this.contractFreeItems.quotaColumnValue.DecimalValue : null,
+        QuotaColumnValueStr: this.contractFreeItems.quotaColumnValue ? this.contractFreeItems.quotaColumnValue.Label : null,
+        QuotaBeginDate: this.contractFreeItems.quotaBeginDate,
+        QuotaEndDate: this.contractFreeItems.quotaEndDate,
+        BeginDate: this.contractFreeItems.beginDate,
+        QuotaQuantity: this.contractFreeItems.quotaQuantity,
+        UnitId: this.contractFreeItems.unit ? this.contractFreeItems.unit.DecimalValue : null,
+        UnitName: this.contractFreeItems.unit ? this.contractFreeItems.unit.Label : null,
+        BranchSharePercent: this.contractFreeItems.branchSharePercent,
+        FreeQuantityLimit: this.contractFreeItems.freeQuantityLimit,
+        AllowOverLimit: this.contractFreeItems.allowOverLimit,
+        QuotaLevelTaken: this.contractFreeItems.quotaLevelTaken,
+        QuotaLevel: this.contractFreeItems.quotaLevel
+      })
+      this.contractFreeItems = {}
+      this.$v.contractFreeItems.$reset()
+    },
+    removeContractFreeItems (item) {
+      if (item.RecordId > 0) {
+        this.form.ContractFreeItems[this.form.ContractFreeItems.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ContractFreeItems.splice(this.form.ContractFreeItems.indexOf(item), 1)
+      }
     }
   },
   validations () {
@@ -1187,6 +1377,66 @@ export default {
       contractDiscounts.quotaEndDate = {}
       contractDiscounts.quotaUnit = {}
     }
+    let contractFreeItems = {
+      contractFocType: {
+        required
+      },
+      columnName: {
+        required
+      },
+      columnValue: {
+        required
+      },
+      quotaColumnName: {
+        required
+      },
+      quotaColumnValue: {
+        required
+      },
+      quotaBeginDate: {
+        required
+      },
+      quotaEndDate: {
+        required
+      },
+      beginDate: {
+        required
+      },
+      quotaQuantity: {
+        required
+      },
+      unit: {
+        required
+      },
+      branchSharePercent: {
+        required
+      },
+      freeQuantityLimit: {
+        required
+      },
+      allowOverLimit: {
+        required
+      },
+      quotaLevelTaken: {
+        required
+      },
+      quotaLevel: {
+        required
+      }
+    }
+    if (this.contractFreeItems.contractFocType && this.contractFreeItems.contractFocType.Code === 'HB') {
+      contractFreeItems.quotaColumnName = {}
+      contractFreeItems.quotaColumnValue = {}
+      contractFreeItems.quotaBeginDate = {}
+      contractFreeItems.quotaEndDate = {}
+      contractFreeItems.quotaQuantity = {}
+      contractFreeItems.unit = {}
+      contractFreeItems.allowOverLimit = {}
+      contractFreeItems.quotaLevelTaken = {}
+      contractFreeItems.quotaLevel = {}
+    } else {
+      contractFreeItems.freeQuantityLimit = {}
+    }
     return {
       form: this.insertRules,
       selectedAdditionalCustomer: {
@@ -1222,7 +1472,8 @@ export default {
         }
       },
       contractInvestments: contractInvestments,
-      contractDiscounts: contractDiscounts
+      contractDiscounts: contractDiscounts,
+      contractFreeItems: contractFreeItems
     }
   }
 }
