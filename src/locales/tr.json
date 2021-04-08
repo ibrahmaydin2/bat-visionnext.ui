@@ -1106,7 +1106,12 @@
       "quotaBeginDate": "Kota Başlangıç Tarihi",
       "quotaEndDate": "Kota Bitiş Tarihi",
       "branchSharePercent": "Şube Katılım Oranı",
-      "itemFormula": "Ürün Formülü"
+      "itemFormula": "Ürün Formülü",
+      "contractInvestments": "Diğer Yatırım",
+      "plannedInvestedAmount": "Planlanan Yatırım Tutarı",
+      "plannedInvestmentDate": "Planlanan Yatırım Tarihi",
+      "quotaQuantity": "Kota Miktarı",
+      "description1": "Açiklama"
     },
     "loadingplan": {
       "items": "Ürün",

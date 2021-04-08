@@ -193,6 +193,42 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractInvestments')" v-if="showInvestments">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedInvestedAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedInvestmentDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.description1')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractInvestments" :key="i">
+                      <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
+                      <b-td>{{c.InvestedAmount}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.PlannedInvestmentDate)}}</b-td>
+                      <b-td>{{c.QuotaColumnName}}</b-td>
+                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                      <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
+                      <b-td>{{c.Description1}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -210,7 +246,8 @@ export default {
         ClassName: 'Contract',
         PageName: 'pg_Contract'
       },
-      showPriceDiscount: false
+      showPriceDiscount: false,
+      showInvestments: false
     }
   },
   mounted () {
@@ -228,6 +265,7 @@ export default {
       var me = this
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/Contract', record: this.$route.params.url}).then(() => {
         me.showPriceDiscount = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 6)
+        me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)
       })
     }
   }
