@@ -103,7 +103,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.assets')">
+        <b-tab :title="$t('insert.contract.assets')" v-if="showAssets">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -229,6 +229,46 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractDiscounts')" v-if="showDiscounts">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.budgetAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractDiscounts" :key="i">
+                      <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
+                      <b-td>{{c.ColumnName}}</b-td>
+                      <b-td>{{c.ColumnValue}}</b-td>
+                      <b-td>{{c.DiscountRate}}</b-td>
+                      <b-td>{{c.QuotaColumnName}}</b-td>
+                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.BudgetAmount}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : ''}}</b-td>
+                      <b-td>{{c.BranchSharePercent}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -246,8 +286,10 @@ export default {
         ClassName: 'Contract',
         PageName: 'pg_Contract'
       },
+      showAssets: false,
       showPriceDiscount: false,
-      showInvestments: false
+      showInvestments: false,
+      showDiscounts: false
     }
   },
   mounted () {
@@ -264,8 +306,10 @@ export default {
     getData () {
       var me = this
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/Contract', record: this.$route.params.url}).then(() => {
+        me.showAssets = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 4)
         me.showPriceDiscount = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 6)
         me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)
+        me.showDiscounts = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 1)
       })
     }
   }

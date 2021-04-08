@@ -1101,7 +1101,9 @@
       "plannedInvestedAmount": "Planlanan Yatırım Tutarı",
       "plannedInvestmentDate": "Planlanan Yatırım Tarihi",
       "quotaQuantity": "Kota Miktarı",
-      "description1": "Açiklama"
+      "description1": "Açiklama",
+      "contractDiscounts": "İndirimler",
+      "discountRate": "İndirim Oranı"
     },
     "loadingplan": {
       "items": "Ürün",
