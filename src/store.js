@@ -1442,6 +1442,9 @@ export const store = new Vuex.Store({
     setLookUp (state, payload) {
       state.lookup = payload
     },
+    setSingleLookUp (state, payload) {
+      state.lookup[payload.key] = payload.value
+    },
     setDetailPanelLookups (state, payload) {
       state.detailLookup = payload
     },

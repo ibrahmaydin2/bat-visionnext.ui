@@ -315,6 +315,52 @@
             </b-col>
           </b-row>
         </b-tab>
+         <b-tab :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.paymentAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.budgetBeginDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.budgetEndDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.refInvoiceTaken')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.refInvoiceNumber')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.poNumber')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractPaymentPlans" :key="i">
+                      <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
+                      <b-td>{{c.PaymentAmount}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.PlannedPaymentDate)}}</b-td>
+                      <b-td>{{c.BranchSharePercent}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.BudgetBeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.BudgetEndDate)}}</b-td>
+                      <b-td>{{c.QuotaColumnName}}</b-td>
+                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                      <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
+                      <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
+                      <b-td>{{c.RefInvoiceNumber}}</b-td>
+                      <b-td>{{c.PoNumber}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -336,7 +382,8 @@ export default {
       showPriceDiscount: false,
       showInvestments: false,
       showDiscounts: false,
-      showFreeItems: false
+      showFreeItems: false,
+      showPaymentPlans: false
     }
   },
   mounted () {
@@ -358,6 +405,7 @@ export default {
         me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)
         me.showDiscounts = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 1)
         me.showFreeItems = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 2)
+        me.showPaymentPlans = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 3)
       })
     }
   }
