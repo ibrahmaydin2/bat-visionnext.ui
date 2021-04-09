@@ -1,5 +1,5 @@
 <template>
-  <b-row class="asc__insertPage">
+  <b-row class="asc__updatePage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -15,7 +15,7 @@
         </b-row>
       </header>
     </b-col>
-    <b-col cols="12" class="asc__insertPage-content-head">
+    <b-col cols="12" class="asc__updatePage-content-head">
       <section>
         <b-row>
           <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" md="4" lg="3">
@@ -418,6 +418,7 @@ export default {
       }
     },
     tabValidation () {
+      debugger
       if (this.$v.form.$invalid) {
         this.$nextTick(() => {
           this.tabValidationHelper()

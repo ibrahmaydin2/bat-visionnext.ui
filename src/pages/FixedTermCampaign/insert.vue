@@ -116,7 +116,7 @@
               <v-select v-model="campaignItemArea" :options="campaignItemAreaList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
-              <v-select v-model="campaignItemValue" :options="campaignItemAreaList" :filterable="false" label="Label"/>
+              <v-select v-model="campaignItemValue" :options="campaignItemValueList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -407,6 +407,10 @@ export default {
         ColumnNameStr: this.campaignItemArea.Label,
         ColumnValueStr: this.campaignItemValue.Label
       })
+      this.campaignItemArea = null
+      this.campaignItemValue = null
+      this.$v.campaignItemArea.$reset()
+      this.$v.campaignItemValue.$reset()
     },
     removeFixedTermCampaignItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
