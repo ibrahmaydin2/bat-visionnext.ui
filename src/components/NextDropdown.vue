@@ -41,7 +41,8 @@ export default {
       default: false
     },
     dynamicAndCondition: {},
-    orConditionFields: {}
+    orConditionFields: {},
+    dynamicRequest: {}
   },
   model: {
     prop: 'value',
@@ -109,12 +110,19 @@ export default {
       if (!this.url) {
         return
       }
-      let andConditionModel = {
-        ...this.dynamicAndCondition
+      let request = {
+        ...this.dynamicRequest,
+        andConditionModel: {
+          ...this.dynamicAndCondition
+        }
       }
-      this.$api.postByUrl({andConditionModel: andConditionModel}, this.url).then((response) => {
-        if (response && response.ListModel) {
-          this.values = response.ListModel.BaseModels
+      this.$api.postByUrl(request, this.url).then((response) => {
+        if (response) {
+          if (response.ListModel) {
+            this.values = response.ListModel.BaseModels
+          } else if (response.Values) {
+            this.values = response.Values
+          }
         }
       })
     },

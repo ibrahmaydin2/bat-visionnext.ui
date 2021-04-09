@@ -116,7 +116,7 @@
                <v-select v-model="campaignItemArea" :options="campaignItemAreaList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
-               <v-select v-model="campaignItemValue" :options="campaignItemAreaList" :filterable="false" label="Label"/>
+               <v-select v-model="campaignItemValue" :options="campaignItemValueList" :filterable="false" label="Label"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -133,7 +133,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
-                  <b-td>{{f.ColumnNamStr ? f.ColumnNamStr : f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnNameStr ? f.ColumnNameStr : f.ColumnName}}</b-td>
                   <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
@@ -194,7 +194,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnNamStr ? f.ColumnNamStr : f.ColumnName}}</b-td>
+                  <b-td>{{f.ColumnNameStr ? f.ColumnNameStr : f.ColumnName}}</b-td>
                   <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
@@ -405,10 +405,14 @@ export default {
         CompanyId: null,
         TableName: 'T_ITEM',
         ColumnName: this.campaignItemArea.Code,
-        ColumnValue: this.campaignItemArea.DecimalValue,
+        ColumnValue: this.campaignItemValue.DecimalValue,
         ColumnNameStr: this.campaignItemArea.Label,
-        ColumnValueStr: this.campaignItemArea.Label
+        ColumnValueStr: this.campaignItemValue.Label
       })
+      this.campaignItemArea = null
+      this.campaignItemValue = null
+      this.$v.campaignItemArea.$reset()
+      this.$v.campaignItemValue.$reset()
     },
     removeFixedTermCampaignItem (item) {
       this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)

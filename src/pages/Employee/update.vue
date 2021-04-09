@@ -587,20 +587,8 @@ export default {
       minLength: minLength(11),
       maxLength: maxLength(11)
     }
-    form.Telephone1 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.Telephone2 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
     form.GsmNumber = {
       required,
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.FaxNumber = {
       minLength: minLength(10),
       maxLength: maxLength(10)
     }
@@ -670,7 +658,7 @@ export default {
           Telephone2: e.Telephone2,
           GsmNumber: e.GsmNumber,
           FaxNumber: e.FaxNumber,
-          Email: e.Email,
+          Email: e.Email ? e.Email.toLocaleLowerCase() : '',
           Other1: e.Other1,
           TaxNumber: e.TaxNumber,
           BirthDate: e.BirthDate,
