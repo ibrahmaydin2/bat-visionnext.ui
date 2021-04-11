@@ -409,6 +409,48 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractCustomPrices')" v-if="showCustomPrices">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.item')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.customPrice')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaSalesQuantity')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractCustomPrices" :key="i">
+                      <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
+                      <b-td>{{c.Item ? c.Item.Label : ''}}</b-td>
+                      <b-td>{{c.CustomPrice}}</b-td>
+                      <b-td>{{c.BranchSharePercent}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
+                      <b-td>{{c.QuotaColumnName}}</b-td>
+                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                      <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : ''}}</b-td>
+                      <b-td>{{c.QuotaSalesQuantity}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -432,7 +474,8 @@ export default {
       showDiscounts: false,
       showFreeItems: false,
       showPaymentPlans: false,
-      showEndorsements: false
+      showEndorsements: false,
+      showCustomPrices: false
     }
   },
   mounted () {
@@ -456,6 +499,7 @@ export default {
         me.showFreeItems = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 2)
         me.showPaymentPlans = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 3)
         me.showEndorsements = me.form.ContractBenefits.some(c => c.BenefitTypeId === 9)
+        me.showCustomPrices = me.form.ContractBenefits.some(c => c.BenefitTypeId === 10)
       })
     }
   }

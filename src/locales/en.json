@@ -1136,7 +1136,11 @@
       "endrsPaymentType": "Geri Ödeme Türü",
       "salesPercentage": "Satış Yüzdesi",
       "executionDate": "Hesaplama Tarihi",
-      "calculationType": "Hesaplama Türü"
+      "calculationType": "Hesaplama Türü",
+      "contractCustomPrices": "Özel Fiyat Bilgisi",
+      "item": "Ürün",
+      "customPrice": "Özel Fiyat",
+      "quotaSalesQuantity": "Kota Satış Miktarı"
     },
     "loadingplan": {
       "items": "Ürün",
