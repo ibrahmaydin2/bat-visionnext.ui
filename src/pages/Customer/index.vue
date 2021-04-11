@@ -1,5 +1,5 @@
 <template>
-  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" :workFlowModel="workFlowModel" />
+  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" :workFlowModel="workFlowModel" selection-mode="multi" />
 </template>
 <script>
 export default {

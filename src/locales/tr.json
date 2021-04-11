@@ -632,6 +632,10 @@
       "chooseDate": "Tarih Seçiniz"
     },
     "customer": {
+      "modalCode": "Müşteri Kodu",
+      "modalDescription": "Tabela Adı",
+      "control": "Kontrol Et",
+      "defaultPaymentType": "Varsayılan Ödeme Tipi",
       "Model_StatusReasonId": "Durum Nedeni",
       "Model_CommercialTitle": "Ticari Ünvan",
       "Model_Description1": "Tabela Adı",
@@ -1794,6 +1798,11 @@
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",
+    "customerNotFound": "Müşteri bulunamadı",
+    "pleaseChooseCustomer": "Kayıt edilecek veri bulunamadı.",
+    "pleaseChooseOperationType": "Lütfen işlem tipi seçiniz",
+    "selectAll": "Tümünü Seç",
+    "clean": "Temizle",
     "selectRowError": "Satır Seçiniz.",
     "documentNotFound": "Belge bulunamadı.",
     "chooseDocument": "Belge seçiniz.",
@@ -1811,6 +1820,7 @@
     "Find": "Bul",
     "Clear": "Temizle",
     "Ok": "Tamam",
+    "remove": "Çıkar",
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",

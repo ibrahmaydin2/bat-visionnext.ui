@@ -36,7 +36,7 @@
           >
             <template #table-busy>
               <div class="text-center text-danger my-2">
-                <b-spinner type="grow" class="align-middle"></b-spinner>
+                <b-spinner class="align-middle"></b-spinner>
               </div>
             </template>
             <template #cell(Count)="data">
