@@ -315,7 +315,7 @@
             </b-col>
           </b-row>
         </b-tab>
-         <b-tab :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
+        <b-tab :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -361,6 +361,54 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.contractEndorsements')" v-if="showEndorsements">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endorsementGivenType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.calculationType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldDescription')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.fieldValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.endrsPaymentType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.freeItem')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.salesPercentage')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.executionDate')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.ContractEndorsements" :key="i">
+                      <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
+                      <b-td>{{c.EndorsementGivenType ? c.EndorsementGivenType.Label : ''}}</b-td>
+                      <b-td>{{c.CalculationType ? c.CalculationType.Label : ''}}</b-td>
+                      <b-td>{{c.ColumnName}}</b-td>
+                      <b-td>{{c.ColumnValue}}</b-td>
+                      <b-td>{{c.QuotaColumnName}}</b-td>
+                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
+                      <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
+                      <b-td>{{c.EndrsPaymentType ? c.EndrsPaymentType.Label : ''}}</b-td>
+                      <b-td>{{c.FreeItem ? c.FreeItem.Label : ''}}</b-td>
+                      <b-td>{{c.SalesPercentage}}</b-td>
+                      <b-td>{{c.BranchSharePercent}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.ExecutionDate)}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -383,7 +431,8 @@ export default {
       showInvestments: false,
       showDiscounts: false,
       showFreeItems: false,
-      showPaymentPlans: false
+      showPaymentPlans: false,
+      showEndorsements: false
     }
   },
   mounted () {
@@ -406,6 +455,7 @@ export default {
         me.showDiscounts = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 1)
         me.showFreeItems = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 2)
         me.showPaymentPlans = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 3)
+        me.showEndorsements = me.form.ContractBenefits.some(c => c.BenefitTypeId === 9)
       })
     }
   }

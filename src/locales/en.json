@@ -1129,7 +1129,14 @@
       "budgetEndDate": "Bütçe Bitiş Tarihi",
       "refInvoiceTaken": "Fatura Alındı",
       "refInvoiceNumber": "Fatura Numarası",
-      "poNumber": "Po Numarası"
+      "poNumber": "Po Numarası",
+      "contractEndorsements": "Ciro Primi",
+      "endorsementGivenType": "Kazanım Türü",
+      "freeItem": "Bedelsiz Ürün",
+      "endrsPaymentType": "Geri Ödeme Türü",
+      "salesPercentage": "Satış Yüzdesi",
+      "executionDate": "Hesaplama Tarihi",
+      "calculationType": "Hesaplama Türü"
     },
     "loadingplan": {
       "items": "Ürün",
