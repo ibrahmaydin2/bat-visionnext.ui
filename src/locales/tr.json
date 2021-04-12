@@ -433,7 +433,7 @@
     "town": "Mahalle",
     "remove": "İptal",
     "createPassword": "Şifre Oluştur",
-    "sameItemError": "Aynı üründen 2 defa ekleyemezsiniz.",
+    "sameItemError": "Aynı ürün birden fazla kez girilemez.",
     "chooseTime": "Saat Seçiniz",
     "close": "Kapat",
     "confirm": "Onayla",
@@ -1143,7 +1143,12 @@
       "contractCustomPrices": "Özel Fiyat Bilgisi",
       "item": "Ürün",
       "customPrice": "Özel Fiyat",
-      "quotaSalesQuantity": "Kota Satış Miktarı"
+      "quotaSalesQuantity": "Kota Satış Miktarı",
+      "investedAmuountGreaterThanTotalBudgetError": "Yatırım Tutarı Toplam Bütçeden büyük olamaz!",
+      "freeQuantity": "Hesaplanan Miktar",
+      "givenQuantity": "Verilen Miktar",
+      "paymentAmountNotDifferentBudgetError": "Ödeme Tutarı, Toplam Bütçeden farklı olamaz!",
+      "executionDateError": "Hesaplama tarihi bitiş tarihinden küçük veya sistem tarihinden küçük olamaz"
     },
     "loadingplan": {
       "items": "Ürün",

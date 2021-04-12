@@ -158,9 +158,9 @@
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
                <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
+            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4 && contractBenefits.benefitType.RecordId !== 5)" md="4" lg="4">
               <NextDropdown
-                :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
+                :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4 || contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 5"
                 v-model="contractBenefits.budgetMaster"
                 url="VisionNextBudget/api/BudgetMaster/Search"/>
             </NextFormGroup>
@@ -937,9 +937,6 @@
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractCustomPrices.quotaUnit" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaUnit" lookup-key="UNIT" :get-lookup="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.quotaSalesQuantity')" :error="$v.contractCustomPrices.quotaSalesQuantity" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" type="number" v-model="contractCustomPrices.quotaSalesQuantity" />
-            </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
                  <AddDetailButton @click.native="addContractCustomPrices" />
@@ -961,7 +958,6 @@
                 <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.unitDefinitions')}}</span></b-th>
-                <b-th><span>{{$t('insert.contract.quotaSalesQuantity')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -978,7 +974,6 @@
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                   <b-td>{{c.QuotaUnitName}}</b-td>
-                  <b-td>{{c.QuotaSalesQuantity}}</b-td>
                   <b-td class="text-center"><i @click="removeContractCustomPrices(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -1177,8 +1172,7 @@ export default {
         quotaQuantity: null,
         quotaBeginDate: null,
         quotaEndDate: null,
-        quotaUnit: null,
-        quotaSalesQuantity: null
+        quotaUnit: null
       }
     }
   },
@@ -1503,6 +1497,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let contractBenefit = this.form.ContractBenefits.find(c => c.BenefitTypeId === 5)
+      if (this.contractInvestments.investedAmount > contractBenefit.BenefitBudget) {
+        this.$toasted.show(this.$t('insert.contract.investedAmuountGreaterThanTotalBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractInvestments.push({
         Deleted: 0,
         System: 0,
@@ -1617,6 +1616,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let contractBenefit = this.form.ContractBenefits.find(c => c.BenefitTypeId === 3)
+      if (this.contractPaymentPlans.paymentAmount !== contractBenefit.BenefitBudget) {
+        this.$toasted.show(this.$t('insert.contract.paymentAmountNotDifferentBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractPaymentPlans.push({
         Deleted: 0,
         System: 0,
@@ -1653,6 +1657,14 @@ export default {
       this.$v.contractEndorsements.$touch()
       if (this.$v.contractEndorsements.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let executionDate = new Date(this.contractEndorsements.executionDate).setHours(0, 0, 0, 0)
+      let endDate = new Date(this.contractEndorsements.endDate).setHours(0, 0, 0, 0)
+      let nowDate = new Date()
+      nowDate.setHours(0, 0, 0, 0)
+      if (executionDate < endDate || executionDate < nowDate) {
+        this.$toasted.show(this.$t('insert.contract.executionDateError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
       this.form.ContractEndorsements.push({
@@ -1701,6 +1713,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let filteredArr = this.form.ContractCustomPrices.filter(c => c.ItemId === this.contractCustomPrices.item.RecordId)
+      if (filteredArr && filteredArr.length > 0) {
+        this.$toasted.show(this.$t('insert.sameItemError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.form.ContractCustomPrices.push({
         Deleted: 0,
         System: 0,
@@ -1724,8 +1741,7 @@ export default {
         QuotaBeginDate: this.contractCustomPrices.quotaBeginDate,
         QuotaEndDate: this.contractCustomPrices.quotaEndDate,
         QuotaUnitId: this.contractCustomPrices.quotaUnit ? this.contractCustomPrices.quotaUnit.DecimalValue : null,
-        QuotaUnitName: this.contractCustomPrices.quotaUnit ? this.contractCustomPrices.quotaUnit.Label : null,
-        QuotaSalesQuantity: this.contractCustomPrices.quotaSalesQuantity
+        QuotaUnitName: this.contractCustomPrices.quotaUnit ? this.contractCustomPrices.quotaUnit.Label : null
       })
       this.contractCustomPrices = {}
       this.$v.contractCustomPrices.$reset()
@@ -1739,22 +1755,25 @@ export default {
       benefitType: {
         required
       },
-      budgetMaster: { },
+      budgetMaster: {
+        required
+      },
       currency: {
         required
       },
-      benefitBudget: {},
+      benefitBudget: {
+        required
+      },
       tciBreak1: {
         required
       }
     }
-    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId !== 4) {
-      contractBenefits.budgetMaster = {
-        required
-      }
-      contractBenefits.benefitBudget = {
-        required
-      }
+    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 4) {
+      contractBenefits.budgetMaster = {}
+      contractBenefits.benefitBudget = {}
+    }
+    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 5) {
+      contractBenefits.budgetMaster = {}
     }
     let contractItems = {
       fieldDescription: {
@@ -2062,9 +2081,6 @@ export default {
       },
       quotaUnit: {
         required
-      },
-      quotaSalesQuantity: {
-        required
       }
     }
     if (this.contractCustomPrices.benefitCondition && this.contractCustomPrices.benefitCondition.Code === 'SOZ') {
@@ -2074,7 +2090,6 @@ export default {
       contractCustomPrices.quotaBeginDate = {}
       contractCustomPrices.quotaEndDate = {}
       contractCustomPrices.quotaUnit = {}
-      contractCustomPrices.quotaSalesQuantity = {}
     }
     return {
       form: this.insertRules,
