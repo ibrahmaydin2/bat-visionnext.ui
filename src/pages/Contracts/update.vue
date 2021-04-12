@@ -290,7 +290,10 @@
                   <b-td>{{c.Unit ? c.Unit.Label : c.UnitName}}</b-td>
                   <b-td>{{c.QuotaAmount}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractItems', form.ContractItems, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -396,7 +399,10 @@
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{c.ItemFormula ? c.ItemFormula.Label : c.ItemFormulaName}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractPriceDiscounts(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractPriceDiscounts', form.ContractPriceDiscounts, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractPriceDiscounts(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -472,7 +478,10 @@
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                   <b-td>{{c.Unit ? c.Unit.Label : c.UnitName}}</b-td>
                   <b-td>{{c.Description1}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractInvestments(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractInvestments', form.ContractInvestments, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractInvestments(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -562,7 +571,10 @@
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractDiscounts(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractDiscounts', form.ContractDiscounts, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractDiscounts(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -671,7 +683,10 @@
                   <b-td>{{c.QuotaLevel}}</b-td>
                   <b-td>{{c.FreeQuantity}}</b-td>
                   <b-td>{{c.GivenQuantity}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractFreeItems(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractFreeItems', form.ContractFreeItems, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractFreeItems(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -772,7 +787,10 @@
                   <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
                   <b-td>{{c.RefInvoiceNumber}}</b-td>
                   <b-td>{{c.PoNumber}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractPaymentPlans(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractPaymentPlans', form.ContractPaymentPlans, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractPaymentPlans(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -888,7 +906,10 @@
                   <b-td>{{c.SalesPercentage}}</b-td>
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.ExecutionDate)}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractEndorsements(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractEndorsements', form.ContractEndorsements, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractEndorsements(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -981,7 +1002,10 @@
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                   <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : c.QuotaUnitName}}</b-td>
                   <b-td>{{c.QuotaSalesQuantity}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractCustomPrices(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editRow('contractCustomPrices', form.ContractCustomPrices, c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractCustomPrices(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1182,7 +1206,8 @@ export default {
         quotaBeginDate: null,
         quotaEndDate: null,
         quotaUnit: null
-      }
+      },
+      selectedIndex: -1
     }
   },
   computed: {
@@ -1469,10 +1494,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractItems.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractItems.recordId,
+        RecordState: this.contractItems.recordId > 0 ? 3 : 2,
         StatusId: 1,
         SalesQuantity: 0,
         SalesAmount: 0,
@@ -1489,7 +1515,13 @@ export default {
         QuotaAmount: this.contractItems.quotaAmount,
         CurrencyId: this.contractItems.currency.RecordId,
         CurrencyName: this.contractItems.currency.Description1
-      })
+      }
+      if (this.contractItems.isUpdated) {
+        this.form.ContractItems[this.selectedIndex] = item
+        this.contractItems.isUpdated = false
+      } else {
+        this.form.ContractItems.push(item)
+      }
       this.contractItems = {}
       this.$v.contractItems.$reset()
     },
@@ -1506,10 +1538,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractPriceDiscounts.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractPriceDiscounts.recordId,
+        RecordState: this.contractPriceDiscounts.recordId > 0 ? 3 : 2,
         StatusId: 1,
         QuotaTableName: 'T-ITEM',
         DiscountAmount: this.contractPriceDiscounts.discountAmount,
@@ -1530,7 +1563,13 @@ export default {
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
         CurrencyId: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.RecordId : null,
         CurrencyName: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.Description1 : null
-      })
+      }
+      if (this.contractPriceDiscounts.isUpdated) {
+        this.form.ContractPriceDiscounts[this.selectedIndex] = item
+        this.contractPriceDiscounts.isUpdated = false
+      } else {
+        this.form.ContractPriceDiscounts.push(item)
+      }
       this.contractPriceDiscounts = {}
       this.$v.contractPriceDiscounts.$reset()
     },
@@ -1552,10 +1591,11 @@ export default {
         this.$toasted.show(this.$t('insert.contract.investedAmuountGreaterThanTotalBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractInvestments.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractInvestments.recordId,
+        RecordState: this.contractInvestments.recordId > 0 ? 3 : 2,
         StatusId: 1,
         QuotaTableName: 'T-ITEM',
         InvestedAmount: this.contractInvestments.investedAmount,
@@ -1572,7 +1612,13 @@ export default {
         UnitId: this.contractInvestments.unit ? this.contractInvestments.unit.DecimalValue : null,
         UnitName: this.contractInvestments.unit ? this.contractInvestments.unit.Label : null,
         Description1: this.contractInvestments.description1
-      })
+      }
+      if (this.contractInvestments.isUpdated) {
+        this.form.ContractInvestments[this.selectedIndex] = item
+        this.contractInvestments.isUpdated = false
+      } else {
+        this.form.ContractInvestments.push(item)
+      }
       this.contractInvestments = {}
       this.$v.contractInvestments.$reset()
     },
@@ -1589,10 +1635,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractDiscounts.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractDiscounts.recordId,
+        RecordState: this.contractDiscounts.recordId > 0 ? 3 : 2,
         StatusId: 1,
         TableName: 'T-ITEM',
         QuotaTableName: 'T-ITEM',
@@ -1614,7 +1661,13 @@ export default {
         BranchSharePercent: this.contractDiscounts.branchSharePercent,
         QuotaBeginDate: this.contractDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractDiscounts.quotaEndDate
-      })
+      }
+      if (this.contractDiscounts.isUpdated) {
+        this.form.ContractDiscounts[this.selectedIndex] = item
+        this.contractDiscounts.isUpdated = false
+      } else {
+        this.form.ContractDiscounts.push(item)
+      }
       this.contractDiscounts = {}
       this.$v.contractDiscounts.$reset()
     },
@@ -1631,10 +1684,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractFreeItems.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractFreeItems.recordId,
+        RecordState: this.contractFreeItems.recordId > 0 ? 3 : 2,
         StatusId: 1,
         TableName: 'T-ITEM',
         QuotaTableName: 'T-ITEM',
@@ -1661,7 +1715,13 @@ export default {
         AllowOverLimit: this.contractFreeItems.allowOverLimit,
         QuotaLevelTaken: this.contractFreeItems.quotaLevelTaken,
         QuotaLevel: this.contractFreeItems.quotaLevel
-      })
+      }
+      if (this.contractFreeItems.isUpdated) {
+        this.form.ContractFreeItems[this.selectedIndex] = item
+        this.contractFreeItems.isUpdated = false
+      } else {
+        this.form.ContractFreeItems.push(item)
+      }
       this.contractFreeItems = {}
       this.$v.contractFreeItems.$reset()
     },
@@ -1683,10 +1743,11 @@ export default {
         this.$toasted.show(this.$t('insert.contract.paymentAmountNotDifferentBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractPaymentPlans.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractPaymentPlans.recordId,
+        RecordState: this.contractPaymentPlans.recordId > 0 ? 3 : 2,
         StatusId: 1,
         QuotaTableName: 'T-ITEM',
         BenefitConditionId: this.contractPaymentPlans.benefitCondition.DecimalValue,
@@ -1708,7 +1769,13 @@ export default {
         RefInvoiceTaken: this.contractPaymentPlans.refInvoiceTaken,
         RefInvoiceNumber: this.contractPaymentPlans.refInvoiceNumber,
         PoNumber: this.contractPaymentPlans.poNumber
-      })
+      }
+      if (this.contractPaymentPlans.isUpdated) {
+        this.form.ContractPaymentPlans[this.selectedIndex] = item
+        this.contractPaymentPlans.isUpdated = false
+      } else {
+        this.form.ContractPaymentPlans.push(item)
+      }
       this.contractPaymentPlans = {}
       this.$v.contractPaymentPlans.$reset()
     },
@@ -1733,10 +1800,11 @@ export default {
         this.$toasted.show(this.$t('insert.contract.executionDateError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractEndorsements.push({
+      var item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractEndorsements.recordId,
+        RecordState: this.contractEndorsements.recordId > 0 ? 3 : 2,
         StatusId: 1,
         TableName: 'T-ITEM',
         QuotaTableName: 'T-ITEM',
@@ -1766,7 +1834,13 @@ export default {
         SalesPercentage: this.contractEndorsements.salesPercentage,
         BranchSharePercent: this.contractEndorsements.branchSharePercent,
         ExecutionDate: this.contractEndorsements.executionDate
-      })
+      }
+      if (this.contractEndorsements.isUpdated) {
+        this.form.ContractEndorsements[this.selectedIndex] = item
+        this.contractEndorsements.isUpdated = false
+      } else {
+        this.form.ContractEndorsements.push(item)
+      }
       this.contractEndorsements = {}
       this.$v.contractEndorsements.$reset()
     },
@@ -1783,15 +1857,16 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      let filteredArr = this.form.ContractCustomPrices.filter(c => c.ItemId === this.contractCustomPrices.item.RecordId)
-      if (filteredArr && filteredArr.length > 0) {
+      let filteredArr = this.form.ContractCustomPrices.filter(c => c.ItemId === this.contractCustomPrices.item.RecordId && c.RecordState !== 4)
+      if (filteredArr && filteredArr.length > 0 && !this.contractCustomPrices.isUpdated) {
         this.$toasted.show(this.$t('insert.sameItemError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.ContractCustomPrices.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordId: this.contractCustomPrices.recordId,
+        RecordState: this.contractCustomPrices.recordId > 0 ? 3 : 2,
         StatusId: 1,
         QuotaTableName: 'T-ITEM',
         MaxUsage: 0,
@@ -1812,7 +1887,13 @@ export default {
         QuotaEndDate: this.contractCustomPrices.quotaEndDate,
         QuotaUnitId: this.contractCustomPrices.quotaUnit ? this.contractCustomPrices.quotaUnit.DecimalValue : null,
         QuotaUnitName: this.contractCustomPrices.quotaUnit ? this.contractCustomPrices.quotaUnit.Label : null
-      })
+      }
+      if (this.contractCustomPrices.isUpdated) {
+        this.form.ContractCustomPrices[this.selectedIndex] = item
+        this.contractCustomPrices.isUpdated = false
+      } else {
+        this.form.ContractCustomPrices.push(item)
+      }
       this.contractCustomPrices = {}
       this.$v.contractCustomPrices.$reset()
     },
@@ -1821,6 +1902,112 @@ export default {
         this.form.ContractCustomPrices[this.form.ContractCustomPrices.indexOf(item)].RecordState = 4
       } else {
         this.form.ContractCustomPrices.splice(this.form.ContractCustomPrices.indexOf(item), 1)
+      }
+    },
+    editRow (objectKey, list, item) {
+      this.selectedIndex = list.indexOf(item)
+      this[objectKey] = {
+        benefitCondition: {
+          DecimalValue: item.BenefitConditionId,
+          Label: item.BenefitCondition ? item.BenefitCondition.Label : item.BenefitConditionName
+        },
+        endorsementGivenType: {
+          DecimalValue: item.EndorsementGivenTypeId,
+          Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
+        },
+        calculationType: {
+          DecimalValue: item.CalculationTypeId,
+          Label: item.CalculationType ? item.CalculationType.Label : item.CalculationTypeName
+        },
+        columnName: {
+          Code: item.ColumnName,
+          Label: item.ColumnNameStr
+        },
+        columnValue: {
+          DecimalValue: item.ColumnValue,
+          Label: item.ColumnValueStr
+        },
+        quotaColumnName: {
+          Code: item.QuotaColumnName,
+          Label: item.QuotaColumnNameStr
+        },
+        quotaColumnValue: {
+          DecimalValue: item.QuotaColumnValue,
+          Label: item.QuotaColumnValueStr
+        },
+        quotaQuantity: item.QuotaQuantity,
+        unit: {
+          DecimalValue: item.UnitId,
+          Label: item.Unit ? item.Unit.Label : item.UnitName
+        },
+        quotaUnit: {
+          DecimalValue: item.QuotaUnitId,
+          Label: item.QuotaUnit ? item.QuotaUnit.Label : item.QuotaUnitName
+        },
+        beginDate: item.BeginDate,
+        endDate: item.EndDate,
+        freeItem: {
+          RecordId: item.FreeItemId,
+          Description1: item.FreeItem ? item.FreeItem.Label : item.FreeItemName
+        },
+        item: {
+          RecordId: item.ItemId,
+          Description1: item.Item ? item.Item.Label : item.ItemName
+        },
+        endrsPaymentType: {
+          DecimalValue: item.EndrsPaymentTypeId,
+          Label: item.EndrsPaymentType ? item.EndrsPaymentType.Label : item.EndrsPaymentTypeName
+        },
+        salesPercentage: item.SalesPercentage,
+        branchSharePercent: item.BranchSharePercent,
+        executionDate: item.ExecutionDate,
+        customPrice: item.CustomPrice,
+        quotaBeginDate: item.QuotaBeginDate,
+        quotaEndDate: item.QuotaEndDate,
+        isUpdated: true,
+        recordId: item.RecordId,
+        paymentAmount: item.PaymentAmount,
+        plannedPaymentDate: item.PlannedPaymentDate,
+        budgetBeginDate: item.BudgetBeginDate,
+        budgetEndDate: item.BudgetEndDate,
+        refInvoiceTaken: item.RefInvoiceTaken,
+        refInvoiceNumber: item.RefInvoiceNumber,
+        poNumber: item.PoNumber,
+        contractFocType: {
+          DecimalValue: item.ContractFocTypeId,
+          Label: item.ContractFocType ? item.ContractFocType.Label : item.ContractFocTypeName
+        },
+        freeQuantityLimit: item.FreeQuantityLimit,
+        allowOverLimit: item.AllowOverLimit,
+        quotaLevelTaken: item.QuotaLevelTaken,
+        quotaLevel: item.QuotaLevel,
+        discountRate: item.DiscountRate,
+        budgetAmount: item.BudgetAmount,
+        investedAmount: item.InvestedAmount,
+        plannedInvestmentDate: item.PlannedInvestmentDate,
+        description1: item.Description1,
+        discountAmount: item.DiscountAmount,
+        quotaAmount: item.QuotaAmount,
+        itemFormula: {
+          RecordId: item.ItemFormulaId,
+          Description1: item.ItemFormula ? item.ItemFormula.Label : item.ItemFormulaName
+        },
+        currency: {
+          RecordId: item.CurrencyId,
+          Description1: item.Currency ? item.Currency.Label : item.CurrencyName
+        },
+        fieldDescription: {
+          Code: item.ColumnName,
+          Label: item.ColumnNameStr
+        },
+        fieldValue: {
+          DecimalValue: item.ColumnValue,
+          Label: item.ColumnValueStr
+        },
+        targetType: {
+          DecimalValue: item.QuotaTypeId,
+          Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
+        }
       }
     }
   },
