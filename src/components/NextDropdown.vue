@@ -130,13 +130,18 @@ export default {
       this.$emit('input', value)
     },
     getLookupValues () {
+      let lookupValue = this.lookup[this.lookupKey]
+      if (lookupValue && lookupValue.length > 0) {
+        this.values = lookupValue
+        return
+      }
       this.$api.postByUrl({LookupTableCode: this.lookupKey}, 'VisionNextCommonApi/api/LookupValue/GetValues').then((response) => {
         if (response) {
           this.values = response.Values
+          this.$store.commit('setSingleLookUp', {key: this.lookupKey, value: this.values})
         }
       })
     }
   }
 }
-
 </script>
