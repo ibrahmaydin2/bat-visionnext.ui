@@ -290,6 +290,8 @@
                     <b-th><span>{{$t('insert.contract.allowOverLimit')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.quotaLevelTaken')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.quotaLevel')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.freeQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.givenQuantity')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in rowData.ContractFreeItems" :key="i">
@@ -308,6 +310,8 @@
                      <b-td>{{c.AllowOverLimit === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
                      <b-td>{{c.QuotaLevelTaken}}</b-td>
                      <b-td>{{c.QuotaLevel}}</b-td>
+                     <b-td>{{c.FreeQuantity}}</b-td>
+                     <b-td>{{c.GivenQuantity}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
