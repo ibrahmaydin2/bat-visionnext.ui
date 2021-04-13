@@ -86,22 +86,22 @@ export default {
         }
       }
       this.$api.postByUrl(request, 'VisionNextVehicle/api/VehicleKM/CustomUpdate').then((res) => {
-        // if (res.IsCompleted === true) {
-        //   this.$toasted.show(this.$t('insert.success'), {
-        //     type: 'success',
-        //     keepOnHover: true,
-        //     duration: '3000'
-        //   })
-        //   setTimeout(() => {
-        //     this.$router.go()
-        //   }, 1000)
-        // } else {
-        //   this.$toasted.show(this.$t(res.Message), {
-        //     type: 'error',
-        //     keepOnHover: true,
-        //     duration: '3000'
-        //   })
-        // }
+        if (res.IsCompleted === true) {
+          this.$toasted.show(this.$t('insert.success'), {
+            type: 'success',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          setTimeout(() => {
+            this.$router.go()
+          }, 1000)
+        } else {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
       })
     },
     show () {
