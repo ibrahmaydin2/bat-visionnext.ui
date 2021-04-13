@@ -528,6 +528,11 @@
     },
     "vehicles": {
       "code": "Araç Kodu",
+      "Route": "Rota",
+      "Vehicle": "Araç",
+      "StartKm": "Başlangıç Km",
+      "EndKm": "Bitiş Km",
+      "km": "Araç Kilometreleri",
       "driver": "Sürücü",
       "plaque": "Plaka",
       "state": "Durum",
@@ -564,7 +569,9 @@
       "replacementDrivers": "Yedek Sürücüler",
       "driverName": "İsim",
       "driverCode": "Kod",
-      "replacementDriver": "Yedek Sürücü"
+      "replacementDriver": "Yedek Sürücü",
+      "oldKm": "Önceki KM",
+      "newKm": "Yeni KM"
     },
     "employee": {
       "Model_Code": "Personel Kodu",

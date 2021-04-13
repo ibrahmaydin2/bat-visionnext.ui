@@ -463,7 +463,12 @@ export const store = new Vuex.Store({
           }
         ]
       } else {
-        OrderByColumns = []
+        OrderByColumns = [
+          {
+            'column': 'CreatedDateTime',
+            'orderByType': 1
+          }
+        ]
       }
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
