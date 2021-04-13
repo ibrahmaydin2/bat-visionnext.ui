@@ -134,7 +134,9 @@ export default {
       this.customerList = []
       this.selectedItems = []
       this.tableBusy = false
-      this.$v.$reset()
+      if (this.$v) {
+        this.$v.$reset()
+      }
     })
   },
   validations () {

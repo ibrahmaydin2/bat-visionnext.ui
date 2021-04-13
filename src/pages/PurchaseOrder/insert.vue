@@ -7,6 +7,9 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
+            <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastOrderProducts')">
+              <i class="fa fa-list-alt"></i>
+            </b-button>
             <router-link :to="{name: 'PurchaseOrder' }">
               <CancelButton />
             </router-link>
@@ -200,7 +203,17 @@
         <CancelButton class="float-right ml-2" @click.native="cancelSelectedCustomer" />
         <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedCustomer">{{$t('insert.okay')}}</b-button>
       </template>
-  </b-modal>
+    </b-modal>
+    <b-modal id="confirm-products-modal">
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.order.productsWillDeleted')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-products-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="getLastProducts">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -596,6 +609,61 @@ export default {
         }
         this.createData()
       }
+    },
+    getLastProducts () {
+      this.$bvModal.hide('confirm-products-modal')
+      if (!this.form.CustomerId || !this.form.WarehouseId || !this.form.PriceListId) {
+        this.$toasted.show(this.$t('insert.order.lastProductsRequiredMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let request = {
+        customerId: this.form.CustomerId,
+        warehouseId: this.form.WarehouseId,
+        priceListId: this.form.PriceListId
+      }
+      this.$api.postByUrl(request, 'VisionNextOrder/api/PurchaseOrder/GetLastOrderProducts').then((response) => {
+        if (response && response.length > 0) {
+          let count = 0
+          this.form.OrderLines = []
+          response.map(product => {
+            this.form.OrderLines.push({
+              Description1: product.ItemDescription,
+              Deleted: 0,
+              System: 0,
+              RecordState: 2,
+              StatusId: 1,
+              LineNumber: count,
+              ItemId: product.ItemId,
+              ItemCode: product.ItemCode,
+              UnitSetId: product.UnitSetId,
+              UnitId: product.UnitId,
+              ConvFact1: 1,
+              ConvFact2: 1,
+              Quantity: product.Quantity ? product.Quantity : 0,
+              ShippedQuantity: 0,
+              Stock: product.Stock,
+              VatRate: product.VatRate ? product.VatRate : 0,
+              TotalVat: product.TotalVat ? product.TotalVat : 0,
+              TotalItemDiscount: 0,
+              TotalOtherDiscount: 0,
+              Price: product.Price ? product.Price : 0,
+              GrossTotal: product.GrossTotal ? product.GrossTotal : 0,
+              NetTotal: product.NetTotal ? product.NetTotal : 0,
+              IsFreeItem: 0,
+              IsCanceled: 0,
+              PriceListPrice: product.Price ? product.Price : 0,
+              SalesQuantity1: product.Quantity ? product.Quantity : 0,
+              SalesUnit1Id: product.UnitId,
+              TempDiscountQuantity: product.Quantity ? product.Quantity : 0,
+              TempDiscountNetTotal: product.NetTotal ? product.NetTotal : 0
+            })
+            count++
+          })
+          this.calculateTotalPrices()
+        } else {
+          this.$toasted.show(this.$t('insert.order.noLastOrderProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
+        }
+      })
     }
   },
   validations () {

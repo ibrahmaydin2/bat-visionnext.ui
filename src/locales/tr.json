@@ -1359,7 +1359,15 @@
       "barcode": "Barkod",
       "fixtureNumber": "Demirbaş No",
       "productName": "Ürün Adı",
-      "products": "Ürünler"
+      "products": "Ürünler",
+      "getLastOrderProducts": "Son Siparişten Ürün Getir",
+      "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
+      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir!",
+      "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
+      "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
+      "noLastInvoiceProducts": "Son faturadaki ürün bilgisi bulunamadı!",
+      "getLastWaybillProducts": "Son İrsaliyeden Ürün Getir",
+      "noLastWaybillProducts": "Son irsaliyedeki ürün bilgisi bulunamadı!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
