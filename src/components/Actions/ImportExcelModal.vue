@@ -101,6 +101,11 @@ export default {
         files: file,
         ExcelIntegrationType: this.modalAction.Query
       }
+
+      if (this.modalAction.QueryMessage !== null) {
+        formData.FileProccessType = this.modalAction.QueryMessage
+      }
+
       this.$store.dispatch('importExcel', formData).then(res => {
         if (res.data.IsCompleted === true) {
           for (const property in res.data.Data) {

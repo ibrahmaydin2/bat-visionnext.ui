@@ -114,13 +114,15 @@ export default {
           this.$set(this.form, fieldName, null)
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
-        if (item.DefaultValue && item.DefaultValue !== '1') {
-          autoLookups += item.DefaultValue + ','
-        }
+
         if (item.modelControlUtil) {
-          this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName}).then(() => {
-            vm.$forceUpdate()
-          })
+          if (item.modelControlUtil.isLookupTable) {
+            autoLookups += item.DefaultValue + ','
+          } else {
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName}).then(() => {
+              vm.$forceUpdate()
+            })
+          }
         }
       })
 

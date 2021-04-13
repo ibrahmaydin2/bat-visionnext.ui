@@ -206,6 +206,7 @@
     <RmaConvertModal v-if="showRmaConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
     <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -219,6 +220,7 @@ import SalesWaybillConvertModal from './Actions/SalesWaybillConvertModal'
 import RmaConvertModal from './Actions/RmaConvertModal'
 import RmaInvoiceModal from './Actions/RmaInvoiceModal'
 import InvoiceConvertModal from './Actions/InvoiceConvertModal'
+import KmModal from './Actions/KmModal'
 let searchQ = {}
 export default {
   components: {
@@ -229,6 +231,7 @@ export default {
     SalesWaybillConvertModal,
     RmaConvertModal,
     RmaInvoiceModal,
+    KmModal,
     InvoiceConvertModal
   },
   props: {
@@ -298,7 +301,8 @@ export default {
       showInvoiceConvertModal: false,
       showPotentialCustomerApproveModal: false,
       showCustomConvertModal: false,
-      showConfirmModal: false
+      showConfirmModal: false,
+      showKmModal: false
     }
   },
   mounted () {
@@ -358,6 +362,7 @@ export default {
       this.showPotentialCustomerApproveModal = false
       this.showPotentialCustomerRejectModal = false
       this.showConfirmModal = false
+      this.showKmModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -399,6 +404,11 @@ export default {
         this.showWaybillConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'salesWaybillConvertModal')
+        })
+      } else if (action.Action === 'KmModal') {
+        this.showKmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'kmModal')
         })
       } else {
         this.showConfirmModal = true
