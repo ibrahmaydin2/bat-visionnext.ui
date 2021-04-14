@@ -1205,7 +1205,6 @@ export default {
           this.$toasted.show(this.$t('insert.startDateLessEndDate'), { type: 'error', keepOnHover: true, duration: '3000' })
           return false
         }
-        debugger
         let contractBenefits = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 3)
         if (contractBenefits && contractBenefits.length > 0) {
           let contractBenefit = contractBenefits[0]
