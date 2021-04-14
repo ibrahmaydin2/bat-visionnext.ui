@@ -10,8 +10,8 @@ export class ApiManager {
     return this.call('post', request, basePath, secondPath)
   }
 
-  async postByUrl (request, url) {
-    return this.call('post', request, null, null, url)
+  async postByUrl (request, url, pagerecordCount) {
+    return this.call('post', request, null, null, url, pagerecordCount)
   }
 
   async put (request, basePath, secondPath) {
@@ -22,7 +22,7 @@ export class ApiManager {
     return this.call('delete', request, basePath, secondPath)
   }
 
-  async call (methodType, request, basePath, secondPath, url) {
+  async call (methodType, request, basePath, secondPath, url, pagerecordCount) {
     if (!url) {
       if (!secondPath) {
         secondPath = basePath
@@ -34,6 +34,7 @@ export class ApiManager {
     }
     request.branchId = store.state.BranchId
     request.companyId = store.state.CompanyId
+    request.pagerecordCount = !pagerecordCount ? 1000 : pagerecordCount
     return axios({
       method: methodType,
       url: url,

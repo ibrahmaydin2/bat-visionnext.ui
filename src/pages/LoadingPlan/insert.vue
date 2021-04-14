@@ -48,7 +48,7 @@
                 v-model="detailPanel.item"
                 url="VisionNextItem/api/Item/Search"
                 searchable
-                or-condition-fields="Code,Description"
+                or-condition-fields="Code,Description1"
                 custom-option/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
