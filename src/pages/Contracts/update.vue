@@ -59,7 +59,7 @@
               <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
-              <NextDropdown v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event)"/>
+              <NextDropdown v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2">
               <NextDropdown
@@ -138,7 +138,7 @@
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
                <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
+            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4 && contractBenefits.benefitType.RecordId !== 5)" md="4" lg="4">
               <v-select
                  :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4 || contractBenefits.benefitType.RecordId === 5)"
                  :options="customerBudgets" label="CustomerDesc"  v-model="contractBenefits.budgetMaster"/>
@@ -1230,6 +1230,7 @@ export default {
           contractEndDate: this.form.ContractValidDates[0].EndDate
         }
       }
+      this.getCustomerBudgets()
     },
     save () {
       this.$v.form.$touch()
@@ -1888,10 +1889,6 @@ export default {
     editRow (objectKey, list, item) {
       this.selectedIndex = list.indexOf(item)
       this[objectKey] = {
-        benefitCondition: {
-          DecimalValue: item.BenefitConditionId,
-          Label: item.BenefitCondition ? item.BenefitCondition.Label : item.BenefitConditionName
-        },
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
@@ -1954,10 +1951,6 @@ export default {
         refInvoiceTaken: item.RefInvoiceTaken,
         refInvoiceNumber: item.RefInvoiceNumber,
         poNumber: item.PoNumber,
-        contractFocType: {
-          DecimalValue: item.ContractFocTypeId,
-          Label: item.ContractFocType ? item.ContractFocType.Label : item.ContractFocTypeName
-        },
         freeQuantityLimit: item.FreeQuantityLimit,
         allowOverLimit: item.AllowOverLimit,
         quotaLevelTaken: item.QuotaLevelTaken,
@@ -1990,6 +1983,24 @@ export default {
           Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
         }
       }
+      this.setBenefitCondition(objectKey, item.BenefitConditionId)
+      this.setContractFocType(objectKey, item.ContractFocTypeId)
+    },
+    setBenefitCondition (objectKey, decimalValue) {
+      if (decimalValue) {
+        let benefitTypes = this.lookup.CONTRACT_BENEFIT_TYPE ? this.lookup.CONTRACT_BENEFIT_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
+        if (benefitTypes && benefitTypes.length > 0) {
+          this[objectKey].benefitCondition = benefitTypes[0]
+        }
+      }
+    },
+    setContractFocType (objectKey, decimalValue) {
+      if (decimalValue) {
+        let focTypes = this.lookup.CONTRACT_FOC_TYPE ? this.lookup.CONTRACT_FOC_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
+        if (focTypes && focTypes.length > 0) {
+          this[objectKey].contractFocType = focTypes[0]
+        }
+      }
     },
     getCustomerBudgets () {
       this.customerBudgets = []
@@ -2002,6 +2013,28 @@ export default {
           }
         })
       }
+    },
+    selectContractType (value) {
+      if (value) {
+        this.form.ContractBenefits = []
+        this.form.ContractAssets = []
+        this.form.ContractItems = []
+        this.form.ContractPriceDiscounts = []
+        this.form.ContractInvestments = []
+        this.form.ContractDiscounts = []
+        this.form.ContractFreeItems = []
+        this.form.ContractPaymentPlans = []
+        this.form.ContractEndorsements = []
+        this.form.ContractCustomPrices = []
+        this.showAssets = false
+        this.showPriceDiscount = false
+        this.showInvestments = false
+        this.showDiscounts = false
+        this.showFreeItems = false
+        this.showPaymentPlans = false
+        this.showEndorsements = false
+        this.showCustomPrices = false
+      }
     }
   },
   validations () {
@@ -2009,22 +2042,25 @@ export default {
       benefitType: {
         required
       },
-      budgetMaster: { },
+      budgetMaster: {
+        required
+      },
       currency: {
         required
       },
-      benefitBudget: {},
+      benefitBudget: {
+        required
+      },
       tciBreak1: {
         required
       }
     }
-    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId !== 4) {
-      contractBenefits.budgetMaster = {
-        required
-      }
-      contractBenefits.benefitBudget = {
-        required
-      }
+    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 4) {
+      contractBenefits.budgetMaster = {}
+      contractBenefits.benefitBudget = {}
+    }
+    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 5) {
+      contractBenefits.budgetMaster = {}
     }
     let contractItems = {
       fieldDescription: {

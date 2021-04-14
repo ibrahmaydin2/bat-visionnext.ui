@@ -18,20 +18,20 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="fromWarehouseId" :error="$v.form.fromWarehouseId" md="2">
-            <v-select :options="warehouses" @input="selectedSearchType('fromWarehouseId', $event)" label="Description1"></v-select>
+          <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="2">
+            <v-select :options="warehouses" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1"></v-select>
           </NextFormGroup>
-          <NextFormGroup item-key="routeId" :error="$v.form.routeId" md="2">
-              <v-select :options="routes" @input="selectedSearchType('routeId', $event)" label="Description1"></v-select>
+          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2">
+              <v-select :options="routes" @input="selectedSearchType('RouteId', $event)" label="Description1"></v-select>
           </NextFormGroup>
-          <NextFormGroup item-key="isDone" :error="$v.form.isDone" md="2">
+          <NextFormGroup item-key="IsDone" :error="$v.form.IsDone" md="2">
               <v-select disabled v-model="selectedDone" :options="vanLoadingStatus" label="Description1"></v-select>
           </NextFormGroup>
-          <NextFormGroup item-key="loadingDate" :error="$v.form.loadingDate" md="2">
-              <b-form-datepicker v-model="form.loadingDate" />
+          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2">
+              <b-form-datepicker v-model="form.LoadingDate" :placeholder="$t('insert.chooseDate')"/>
           </NextFormGroup>
-          <NextFormGroup item-key="canceled" :error="$v.form.canceled" md="2">
-            <NextCheckBox v-model="form.canceled" type="number" toggle/>
+          <NextFormGroup item-key="Canceled" :error="$v.form.Canceled" md="2">
+            <NextCheckBox v-model="form.Canceled" type="number" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -40,9 +40,8 @@
       <b-tabs>
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.items')">
-                <v-select v-model="itemLabel" :disabled="!form.fromWarehouseId || !form.routeId || !form.loadingDate" :options="items" @search="searchItem" @input="selectedItem" label="Description1">
+             <NextFormGroup :title="$t('insert.vanLoading.items')" :required="true" :error="$v.vanLoadingItem.Item" md="3">
+               <v-select v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="searchItem" @input="selectedItem" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -50,8 +49,7 @@
                     {{option.Code + ' - ' + option.Description1}}
                   </template>
                 </v-select>
-              </b-form-group>
-            </b-col>
+             </NextFormGroup>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.vanLoading.FromWhStockQuantity')">
                 <b-form-input type="text" v-model="vanLoadingItem.FromWhStockQuantity" readonly />
@@ -82,11 +80,9 @@
                 <b-form-input type="text" v-model="vanLoadingItem.SuggestedQuantity" readonly />
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.LoadingQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItem.LoadingQuantity" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity" md="3">
+              <b-form-input type="number" v-model="vanLoadingItem.LoadingQuantity" />
+            </NextFormGroup>
             <b-col cols="12" md="3" class="text-right ml-auto">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
                 <AddDetailButton @click.native="addItem()" />
@@ -131,6 +127,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
+import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -140,18 +137,16 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        fromWarehouseId: null,
-        loadingDate: null,
-        routeId: null,
-        isDone: 0,
-        canceled: 0,
-        vanLoadingItems: []
+        FromWarehouseId: null,
+        LoadingDate: null,
+        RouteId: null,
+        IsDone: 0,
+        Canceled: 0,
+        VanLoadingItems: []
       },
       selectedDone: null,
-      routeName: this.$route.meta.baseLink,
+      routeName1: 'StockManagement',
       loadingQuantity: null,
-      item: [],
-      itemLabel: null,
       RecordId: null,
       VanLoadingItems: [],
       vanLoadingItem: {
@@ -159,8 +154,8 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        itemId: null,
-        unitId: null,
+        ItemId: null,
+        UnitId: null,
         FromWhStockQuantity: null,
         ToWhStockQuantity: null,
         AverageSalesQuantity: null,
@@ -168,23 +163,23 @@ export default {
         LastdaySalesQuantity: null,
         SuggestedQuantity: null,
         LoadingQuantity: null,
-        unitSetId: null,
+        UnitSetId: null,
         ConvFact1: 1,
         ConvFact2: 1,
-        RecordId: null
+        RecordId: null,
+        Item: null
       },
       detailPanelRecordId: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'warehouses', 'routes', 'vanLoadingStatus', 'items'])
+    ...mapState(['warehouses', 'routes', 'vanLoadingStatus', 'items'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getSearchItems', {...this.query,
         api: 'VisionNextWarehouse/api/Warehouse/Search',
         name: 'warehouses',
@@ -231,19 +226,17 @@ export default {
     },
     selectedItem (e) {
       if (e) {
-        this.itemLabel = e.Description1
-        this.item = e
         const datas = {
-          'routeId': this.form.routeId,
-          'itemCode': this.item.Code,
-          'warehouseId': this.form.fromWarehouseId,
-          'loadingDate': this.dateConvertToISo(this.form.loadingDate)
+          'routeId': this.form.RouteId,
+          'itemCode': e.Code,
+          'warehouseId': this.form.FromWarehouseId,
+          'loadingDate': this.form.LoadingDate
         }
         this.detailPanelRecordId++
         this.$api.post(datas, 'Item', 'Item/GetItemSearchForVanLoading').then((res) => {
           if (res.Model) {
             this.vanLoadingItem = {
-              Description1: this.itemLabel,
+              Description1: e.Description1,
               unitId: e.UnitId,
               FromWhStockQuantity: e.FromWhStockQuantity,
               ToWhStockQuantity: e.ToWhStockQuantity,
@@ -251,7 +244,7 @@ export default {
               LastSalesQuantity: e.LastSalesQuantity,
               LastdaySalesQuantity: e.LastdaySalesQuantity,
               SuggestedQuantity: e.SuggestedQuantity,
-              itemId: this.item.RecordId,
+              ItemId: e.RecordId,
               LoadingQuantity: this.vanLoadingItem.LoadingQuantity,
               unitSetId: e.UnitSetId,
               ConvFact1: e.ConvFact1,
@@ -259,8 +252,8 @@ export default {
               RecordId: this.detailPanelRecordId
             }
           } else {
-            this.vanLoadingItem.itemId = e.RecordId
-            this.vanLoadingItem.Description1 = this.itemLabel
+            this.vanLoadingItem.ItemId = e.RecordId
+            this.vanLoadingItem.Description1 = e.Description1
             this.vanLoadingItem.unitId = e.UnitId
             this.vanLoadingItem.unitSetId = e.UnitSetId
             this.vanLoadingItem.FromWhStockQuantity = 0
@@ -276,9 +269,18 @@ export default {
       }
     },
     addItem () {
+      this.$v.vanLoadingItem.$touch()
+      if (this.$v.vanLoadingItem.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
       this.VanLoadingItems.push(this.vanLoadingItem)
       this.initNullVanLoadingItem()
-      this.itemLabel = null
+      this.$v.vanLoadingItem.$reset()
     },
     initNullVanLoadingItem () {
       this.vanLoadingItem = {
@@ -286,8 +288,8 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        itemId: null,
-        unitId: null,
+        ItemId: null,
+        UnitId: null,
         FromWhStockQuantity: null,
         ToWhStockQuantity: null,
         AverageSalesQuantity: null,
@@ -295,37 +297,37 @@ export default {
         LastdaySalesQuantity: null,
         SuggestedQuantity: null,
         LoadingQuantity: null,
-        unitSetId: null,
+        UnitSetId: null,
         ConvFact1: 1,
         ConvFact2: 1,
-        RecordId: null
+        RecordId: null,
+        Item: null
       }
     },
     removeVanLoadingItems (item) {
       this.VanLoadingItems.splice(this.VanLoadingItems.indexOf(item), 1)
-      this.item = []
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        this.form.loadingDate = this.dateConvertToISo(this.form.loadingDate)
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        this.form.canceled = this.checkConvertToNumber(this.form.canceled)
-        this.form.vanLoadingItems = this.VanLoadingItems
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextStockManagement/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.form.VanLoadingItems = this.VanLoadingItems
+        this.createData()
       }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      vanLoadingItem: {
+        Item: {
+          required
+        },
+        LoadingQuantity: {
+          required
+        }
+      }
     }
   },
   watch: {
@@ -333,7 +335,7 @@ export default {
       if (e) {
         e.map(item => {
           if (item.RecordId === 0) {
-            this.selectedSearchType('isDone', item)
+            this.selectedSearchType('IsDone', item)
             this.selectedDone = item.Description1
           }
         })
