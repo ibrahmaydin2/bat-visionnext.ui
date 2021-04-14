@@ -30,7 +30,7 @@
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Loyalty, 'object', 'get.LoyaltyExpense.LoyaltyId')"></div>
-              <div v-html="getFormatDataByType(rowData.ConsumptionScore, 'text', 'get.LoyaltyExpense.ConsumptionScore')"></div>
+              <div v-html="getFormatDataByType(rowData.ConsumptionScore, 'text', 'get.LoyaltyExpense.SpentPoint')"></div>
               <div v-html="getFormatDataByType(rowData.TransactionDate, 'date', 'get.LoyaltyExpense.TransactionDate')"></div>
             </b-card>
           </b-row>
