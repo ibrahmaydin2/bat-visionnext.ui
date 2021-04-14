@@ -47,7 +47,7 @@
               <NextDropdown lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <b-form-input type="number" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="2" lg="2">
               <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
@@ -65,7 +65,7 @@
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/Search"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -99,7 +99,7 @@
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/Search"
                 v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -827,7 +827,7 @@
                 v-model="contractEndorsements.freeItem"
                 url="VisionNextItem/api/Item/Search"
                 searchable
-                or-condition-fields="Code,Description"
+                or-condition-fields="Code,Description1"
                 custom-option
                 :disabled="contractEndorsements.endrsPaymentType && contractEndorsements.endrsPaymentType.Code !== 'FOCP'" />
             </NextFormGroup>
@@ -904,7 +904,7 @@
                 v-model="contractCustomPrices.item"
                 url="VisionNextItem/api/Item/Search"
                 searchable
-                or-condition-fields="Code,Description"
+                or-condition-fields="Code,Description1"
                 custom-option />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.customPrice')" :error="$v.contractCustomPrices.customPrice" :required="true" md="3" lg="3">
@@ -1205,12 +1205,13 @@ export default {
           this.$toasted.show(this.$t('insert.startDateLessEndDate'), { type: 'error', keepOnHover: true, duration: '3000' })
           return false
         }
+        debugger
         let contractBenefits = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 3)
         if (contractBenefits && contractBenefits.length > 0) {
           let contractBenefit = contractBenefits[0]
           if (this.form.ContractPaymentPlans && this.form.ContractPaymentPlans.length > 0) {
-            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => x.PaymentAmount).reduce((a, b) => a + b)
-            if (totalPaymentAmount !== contractBenefit.BenefitBudget) {
+            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => parseFloat(x.PaymentAmount)).reduce((a, b) => a + b)
+            if (totalPaymentAmount !== parseFloat(contractBenefit.BenefitBudget)) {
               this.$toasted.show(this.$t('insert.contract.paymentAmountNotDifferentBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
               return false
             }

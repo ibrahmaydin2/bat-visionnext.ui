@@ -86,20 +86,30 @@ export default {
       if (!this.searchable || search.length < 3 || !this.url) {
         return false
       }
+      let pagerecordCount = 1000
+      if (search === '%%%') {
+        search = undefined
+        pagerecordCount = 20
+      } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
+        search = search.replaceAll('%', '')
+        pagerecordCount = 20
+      }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
       let orConditionModels = []
       let orConditionModel = {}
-      if (this.orConditionFields) {
-        let fields = this.orConditionFields.split(',')
-        fields.forEach(field => {
-          orConditionModel[field] = search
-        })
-        orConditionModels = [orConditionModel]
-      } else {
-        andConditionModel.Description1 = search
+      if (search) {
+        if (this.orConditionFields) {
+          let fields = this.orConditionFields.split(',')
+          fields.forEach(field => {
+            orConditionModel[field] = search
+          })
+          orConditionModels = [orConditionModel]
+        } else {
+          andConditionModel.Description1 = search
+        }
       }
       loading(true)
-      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url).then((response) => {
+      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels

@@ -47,7 +47,7 @@
               <NextDropdown v-model="selectedBrand" lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <b-form-input type="number" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="2" lg="2">
               <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
@@ -66,7 +66,7 @@
                 v-model="customer"
                 url="VisionNextCustomer/api/Customer/Search"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -100,7 +100,7 @@
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/Search"
                 v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -835,7 +835,7 @@
                 v-model="contractEndorsements.freeItem"
                 url="VisionNextItem/api/Item/Search"
                 searchable
-                or-condition-fields="Code,Description"
+                or-condition-fields="Code,Description1"
                 custom-option
                 :disabled="contractEndorsements.endrsPaymentType && contractEndorsements.endrsPaymentType.Code !== 'FOCP'" />
             </NextFormGroup>
@@ -912,7 +912,7 @@
                 v-model="contractCustomPrices.item"
                 url="VisionNextItem/api/Item/Search"
                 searchable
-                or-condition-fields="Code,Description"
+                or-condition-fields="Code,Description1"
                 custom-option />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.customPrice')" :error="$v.contractCustomPrices.customPrice" :required="true" md="3" lg="3">
