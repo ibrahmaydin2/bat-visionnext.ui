@@ -6,11 +6,11 @@
           <b-col cols="12" md="6">
             <Breadcrumb />
           </b-col>
-          <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+          <b-col cols="12" md="4" class="text-right">
+            <router-link :to="{name: 'LoadingPlan' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,19 +18,23 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="Code" :error="$v.form.Code">
+          <NextFormGroup item-key="Code" :error="$v.form.Code" md="2" lg="2">
             <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
           </NextFormGroup>
-          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
-          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
+          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2" lg="2">
             <b-form-datepicker v-model="form.LoadingDate" />
           </NextFormGroup>
-          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-            <v-select v-model="routeLabel" :options="routes" @input="selectedRoute" label="Description1"></v-select>
+          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
+             <NextDropdown
+                  v-model="selectedRoute"
+                  url="VisionNextRoute/api/Route/Search"
+                  @input="selectedSearchType('RouteId', $event)"
+                  :dynamic-and-condition="{RouteTypeIds: [1], StatusIds: [1]}" />
           </NextFormGroup>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="2" lg="2">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
@@ -40,26 +44,20 @@
       <b-tabs>
         <b-tab :title="$t('insert.loadingplan.items')" active>
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.loadingplan.items')">
-                <v-select :filterable="false" :options="items" @search="onItemSearch" @input="selectedItem" label="Description1">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.loadingplan.PlanQuantity')">
-                <b-form-input type="text" v-model="planQuantity" />
-              </b-form-group>
-            </b-col>
+           <NextFormGroup :title="$t('insert.loadingplan.items')" :error="$v.detailPanel.item" :required="true">
+               <NextDropdown
+                v-model="detailPanel.item"
+                url="VisionNextItem/api/Item/Search"
+                searchable
+                or-condition-fields="Code,Description1"
+                custom-option/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
+              <b-form-input type="text" v-model="detailPanel.planQuantity" />
+            </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addItems" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -73,7 +71,7 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(r, i) in loadingPlanItems" :key="i">
-                    <b-td>{{r.Description1}}</b-td>
+                    <b-td>{{r.Item ? r.Item.Label : r.Description1}}</b-td>
                     <b-td>{{r.PlanQuantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -88,7 +86,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/update'
+import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -102,154 +101,99 @@ export default {
         LoadingPlanItems: [],
         RecordId: null
       },
-      routeName: this.$route.meta.baseLink,
-      tmpSelectedItem: [],
-      planQuantity: null,
-      detailPanelRecordId: 0,
-      route: null
+      routeName1: 'StockManagement',
+      detailPanel: {
+        item: null,
+        planQuantity: null
+      },
+      selectedRoute: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'rowData', 'items', 'routes']),
+    ...mapState([]),
     loadingPlanItems () {
-      return this.form.LoadingPlanItems.filter(i => i.RecordState !== 4)
+      return this.form.LoadingPlanItems ? this.form.LoadingPlanItems.filter(i => i.RecordState !== 4) : []
     }
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.getData().then(() => this.setData())
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
-
-      this.$store.dispatch('getSearchItems', {...this.query,
-        api: 'VisionNextRoute/api/Route/Search',
-        name: 'routes',
-        andConditionModel: {
-          'RouteTypeIds': [1],
-          'StatusIds': [1]
-        }
-      })
-      this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${e}`, record: this.$route.params.url})
-    },
-    selectedItem (e) {
-      if (e) {
-        this.tmpSelectedItem = e
-      } else {
-        this.tmpSelectedItem = null
+    setData () {
+      let rowData = this.rowData
+      this.form = {
+        Code: rowData.Code,
+        Description1: rowData.Description1,
+        LoadingDate: rowData.LoadingDate,
+        StatusId: rowData.StatusId,
+        RouteId: rowData.RouteId,
+        LoadingPlanItems: rowData.LoadingPlanItems,
+        RecordId: rowData.RecordId
       }
-    },
-    selectedRoute (e) {
-      if (e) {
-        this.form.RouteId = e.RecordId
-      } else {
-        this.form.RouteId = null
-      }
-    },
-    onItemSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchItem(loading, search, this)
-      }
-    },
-    searchItem (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
-        name: 'items',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
+      this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
     },
     addItems () {
-      if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        return
+      this.$v.detailPanel.$touch()
+      if (this.$v.detailPanel.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
       }
-      this.detailPanelRecordId++
+      let filteredArr = this.form.LoadingPlanItems.filter(i => i.ItemId === this.detailPanel.item.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
       this.form.LoadingPlanItems.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        Code: this.tmpSelectedItem.Code,
-        ItemId: this.tmpSelectedItem.RecordId,
-        Description1: this.tmpSelectedItem.Description1,
-        UnitSetId: this.tmpSelectedItem.UnitSetId,
+        Code: this.detailPanel.item.Code,
+        ItemId: this.detailPanel.item.RecordId,
+        Description1: this.detailPanel.item.Description1,
+        UnitSetId: this.detailPanel.item.UnitSetId,
         UnitId: null,
-        PlanQuantity: this.planQuantity,
+        PlanQuantity: this.detailPanel.planQuantity,
         ConvFact1: 1,
-        ConvFact2: 1,
-        RecordId: this.detailPanelRecordId
+        ConvFact2: 1
       })
+      this.detailPanel = {}
+      this.$v.detailPanel.$reset()
     },
     removeItems (item) {
-      this.form.LoadingPlanItems.splice(this.form.LoadingPlanItems.indexOf(item), 1)
-      if (item.RecordState !== 2) {
-        this.form.LoadingPlanItems.push({
-          Deleted: 1,
-          System: 0,
-          RecordState: 4,
-          StatusId: 1,
-          Code: item.Code,
-          ItemId: item.RecordId,
-          Description1: item.Description1,
-          UnitSetId: item.UnitSetId,
-          UnitId: null,
-          PlanQuantity: item.planQuantity,
-          ConvFact1: 1,
-          ConvFact2: 1,
-          RecordId: item.RecordId
-        })
+      if (item.RecordId > 0) {
+        this.form.LoadingPlanItems[this.form.LoadingPlanItems.indexOf(item)].RecordState = 4
+      } else {
+        this.form.LoadingPlanItems.splice(this.form.LoadingPlanItems.indexOf(item), 1)
       }
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        this.form.LoadingDate = this.dateConvertToISo(this.form.LoadingDate)
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNextStockManagement/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.updateData()
       }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      detailPanel: {
+        item: {
+          required
+        },
+        planQuantity: {
+          required
+        }
+      }
     }
   },
   watch: {
-    rowData (e) {
-      if (e) {
-        this.form = {
-          Code: e.Code,
-          Description1: e.Description1,
-          LoadingDate: e.LoadingDate,
-          StatusId: this.numberConvertToString(e.StatusId),
-          RouteId: e.RouteId,
-          LoadingPlanItems: e.LoadingPlanItems,
-          RecordId: e.RecordId
-        }
-        this.route = this.convertLookupValueToSearchValue(e.Route)
-      }
-    }
   }
 }
 </script>
-<style lang="sass">
-</style>

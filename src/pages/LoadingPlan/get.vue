@@ -44,7 +44,7 @@
                   </b-thead>
                   <b-tbody>
                     <tr v-for="(result, i) in rowData.LoadingPlanItems" :key="i">
-                      <b-td>{{ result.Item ? result.Item.Label : '' }}</b-td>
+                      <b-td>{{ result.Item ? result.Item.Label : result.Description1 }}</b-td>
                       <b-td>{{ result.PlanQuantity }}</b-td>
                     </tr>
                   </b-tbody>

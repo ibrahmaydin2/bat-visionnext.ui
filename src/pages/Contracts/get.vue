@@ -168,6 +168,7 @@
                     <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.itemFormula')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
@@ -183,6 +184,7 @@
                       <b-td>{{c.QuotaColumnValue}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                       <b-td>{{c.BranchSharePercent}}</b-td>
                       <b-td>{{c.ItemFormula ? c.ItemFormula.Label : ''}}</b-td>
                       <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>
