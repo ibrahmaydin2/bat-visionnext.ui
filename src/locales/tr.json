@@ -395,6 +395,7 @@
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
+    "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
     "edit": "Düzenle",

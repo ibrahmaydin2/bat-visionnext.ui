@@ -51,14 +51,14 @@
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
               <v-select v-model="routeType" label="Description1" :filterable="false" :options="routeTypes" @input="selectedSearchType('RouteTypeId', $event)"></v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="RouteClassId" :error="$v.form.RouteClassId">
+            <!-- <NextFormGroup item-key="RouteClassId" :error="$v.form.RouteClassId">
               <v-select
                 v-model="routeClass"
                 :options="lookup.ROUTE_CLASS"
                 @input="selectedType('RouteClassId', $event)"
                 label="Label"
               />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
               <v-select
                 v-model="visitStartControl"
@@ -67,14 +67,14 @@
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="RouteGroupId" :error="$v.form.RouteGroupId">
+            <!-- <NextFormGroup item-key="RouteGroupId" :error="$v.form.RouteGroupId">
               <v-select
                 v-model="routeGroup"
                 :options="lookup.ROUTE_GROUP"
                 @input="selectedType('RouteGroupId', $event)"
                 label="Label"
               />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
               <v-select
                 v-model="customerRegion5"
@@ -109,10 +109,12 @@
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="ParishIds" :error="$v.form.ParishIds">
+            <NextFormGroup item-key="ParishIds">
               <v-select
+                v-model="parishes"
+                multiple
+                @input="selectedParish"
                 :options="avenues"
-                @input="selectedType('ParishIds', $event)"
                 label="Label"
               />
             </NextFormGroup>
@@ -139,107 +141,23 @@
             <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day1VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day1FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day1Frequency" />
-            </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day2VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day2FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day2Frequency" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day3VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day3FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day3Frequency" />
-            </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day4VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day4FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day4Frequency" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day5VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day5FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day5Frequency" />
-            </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day6VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day6FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day6Frequency" />
-            </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" :required="true" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day7VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day7FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day7Frequency" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2">
               <b-form-group>
@@ -259,6 +177,8 @@
                 <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.DayFreStartDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.DayFrequency')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -272,6 +192,8 @@
                   <b-td>{{r.Day5VisitOrder}}</b-td>
                   <b-td>{{r.Day6VisitOrder}}</b-td>
                   <b-td>{{r.Day7VisitOrder}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(r.Day1FreStartDate)}}</b-td>
+                  <b-td>{{r.Day1Frequency}}</b-td>
                   <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -316,27 +238,15 @@ export default {
         Customer: null,
         LocationId: null,
         Location: null,
-        Day1Frequency: null,
-        Day1FreStartDate: null,
         Day1VisitOrder: null,
-        Day2Frequency: null,
-        Day2FreStartDate: null,
         Day2VisitOrder: null,
-        Day3Frequency: null,
-        Day3FreStartDate: null,
         Day3VisitOrder: null,
-        Day4Frequency: null,
-        Day4FreStartDate: null,
         Day4VisitOrder: null,
-        Day5Frequency: null,
-        Day5FreStartDate: null,
         Day5VisitOrder: null,
-        Day6Frequency: null,
-        Day6FreStartDate: null,
         Day6VisitOrder: null,
-        Day7Frequency: null,
-        Day7FreStartDate: null,
         Day7VisitOrder: null,
+        DayFreStartDate: null,
+        DayFrequency: null,
         StatusId: null,
         AnnualVisitCount: null,
         CompanyId: null,
@@ -344,6 +254,8 @@ export default {
         Code: null,
         Description1: null
       },
+      parishes: [],
+      avenues: [],
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
@@ -395,7 +307,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['distiricts', 'avenues', 'vehicles', 'employees', 'routeTypes', 'customers', 'customerLocationsList'])
+    ...mapState(['distiricts', 'vehicles', 'employees', 'routeTypes', 'customers', 'customerLocationsList'])
   },
   mounted () {
     this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
@@ -475,15 +387,33 @@ export default {
       } else {
         this.form.CityId = null
         this.form.DistrictId = null
+        this.form.ParishIds = null
+        this.district = null
       }
     },
     selectedDistirict (e) {
       if (e) {
         this.form.DistrictId = e.DecimalValue
-        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
+        this.district = e.Label
+        let request = {
+          'LookupTableCode': 'AVENUE',
+          'UpperValue': e.DecimalValue
+        }
+        this.$api.postByUrl(request, 'VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue').then((res) => {
+          this.avenues = res.Values
+        })
       } else {
         this.form.DistrictId = null
         this.form.ParishIds = null
+        this.district = null
+      }
+    },
+    selectedParish (e) {
+      this.form.ParishIds = []
+      if (e) {
+        e.map(parish => {
+          this.form.ParishIds.push(parish.DecimalValue)
+        })
       }
     },
     selectedCustomer (e) {

@@ -331,7 +331,9 @@ export default {
     } else {
       sortOpt = null
     }
-    this.andConditionalModel = {}
+    if (!this.andConditionalModel) {
+      this.andConditionalModel = {}
+    }
     searchQ = {}
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
