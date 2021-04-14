@@ -59,7 +59,7 @@
               <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
-              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event)"/>
+              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2">
               <NextDropdown
@@ -69,7 +69,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.otherContract')" v-if="customerContracts.length > 0">
+        <b-tab :title="$t('insert.contract.otherContract')" v-if="customerContractList.length > 0">
           <b-row>
             <b-col>
               <b-table-simple bordered small>
@@ -81,7 +81,7 @@
                   <b-th>{{$t('insert.contract.StatusReason')}}</b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(contract, i) in customerContracts" :key="'dl' + i">
+                  <b-tr v-for="(contract, i) in customerContractList" :key="'dl' + i">
                     <b-td>{{contract.Code}}</b-td>
                     <b-td>{{contract.ContractNumber}}</b-td>
                     <b-td>{{contract.Description1}}</b-td>
@@ -1184,7 +1184,8 @@ export default {
         quotaUnit: null
       },
       selectedIndex: -1,
-      customerBudgets: []
+      customerBudgets: [],
+      customerContractList: []
     }
   },
   computed: {
@@ -1192,6 +1193,9 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    if (this.customerContractList) {
+      this.customerContractList = []
+    }
   },
   methods: {
     save () {
@@ -1205,7 +1209,6 @@ export default {
           this.$toasted.show(this.$t('insert.startDateLessEndDate'), { type: 'error', keepOnHover: true, duration: '3000' })
           return false
         }
-        debugger
         let contractBenefits = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 3)
         if (contractBenefits && contractBenefits.length > 0) {
           let contractBenefit = contractBenefits[0]
@@ -1810,10 +1813,6 @@ export default {
     editRow (objectKey, list, item) {
       this.selectedIndex = list.indexOf(item)
       this[objectKey] = {
-        benefitCondition: {
-          DecimalValue: item.BenefitConditionId,
-          Label: item.BenefitCondition ? item.BenefitCondition.Label : item.BenefitConditionName
-        },
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
@@ -1876,10 +1875,6 @@ export default {
         refInvoiceTaken: item.RefInvoiceTaken,
         refInvoiceNumber: item.RefInvoiceNumber,
         poNumber: item.PoNumber,
-        contractFocType: {
-          DecimalValue: item.ContractFocTypeId,
-          Label: item.ContractFocType ? item.ContractFocType.Label : item.ContractFocTypeName
-        },
         freeQuantityLimit: item.FreeQuantityLimit,
         allowOverLimit: item.AllowOverLimit,
         quotaLevelTaken: item.QuotaLevelTaken,
@@ -1912,6 +1907,24 @@ export default {
           Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
         }
       }
+      this.setBenefitCondition(objectKey, item.BenefitConditionId)
+      this.setContractFocType(objectKey, item.ContractFocTypeId)
+    },
+    setBenefitCondition (objectKey, decimalValue) {
+      if (decimalValue) {
+        let benefitTypes = this.lookup.CONTRACT_BENEFIT_TYPE ? this.lookup.CONTRACT_BENEFIT_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
+        if (benefitTypes && benefitTypes.length > 0) {
+          this[objectKey].benefitCondition = benefitTypes[0]
+        }
+      }
+    },
+    setContractFocType (objectKey, decimalValue) {
+      if (decimalValue) {
+        let focTypes = this.lookup.CONTRACT_FOC_TYPE ? this.lookup.CONTRACT_FOC_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
+        if (focTypes && focTypes.length > 0) {
+          this[objectKey].contractFocType = focTypes[0]
+        }
+      }
     },
     getCustomerBudgets () {
       this.customerBudgets = []
@@ -1923,6 +1936,28 @@ export default {
             this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.noCustomerBudget') })
           }
         })
+      }
+    },
+    selectContractType (value) {
+      if (value) {
+        this.form.ContractBenefits = []
+        this.form.ContractAssets = []
+        this.form.ContractItems = []
+        this.form.ContractPriceDiscounts = []
+        this.form.ContractInvestments = []
+        this.form.ContractDiscounts = []
+        this.form.ContractFreeItems = []
+        this.form.ContractPaymentPlans = []
+        this.form.ContractEndorsements = []
+        this.form.ContractCustomPrices = []
+        this.showAssets = false
+        this.showPriceDiscount = false
+        this.showInvestments = false
+        this.showDiscounts = false
+        this.showFreeItems = false
+        this.showPaymentPlans = false
+        this.showEndorsements = false
+        this.showCustomPrices = false
       }
     }
   },
@@ -2321,6 +2356,9 @@ export default {
           })
         }
       }
+    },
+    customerContracts (e) {
+      this.customerContractList = e
     }
   }
 }
