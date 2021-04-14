@@ -233,7 +233,7 @@ export default {
       })
     },
     downloadBtn (r, f) {
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name})
     },
     uploadBtn (route, action) {
       this.modalAction = action
