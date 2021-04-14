@@ -320,13 +320,19 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM')" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
               <b-form-datepicker
               :disabled="!contractPriceDiscounts.benefitCondition
                 || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
               v-model="contractPriceDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3">
+              <b-form-datepicker
+              :disabled="!contractPriceDiscounts.benefitCondition
+                || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
+              v-model="contractPriceDiscounts.beginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
               <b-form-input
@@ -358,6 +364,7 @@
                 <b-th><span>{{$t('insert.contract.quotaColumnValue')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.quotaBeginDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.quotaEndDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.startDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.itemFormula')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
@@ -374,6 +381,7 @@
                   <b-td>{{c.QuotaColumnValueStr ? c.QuotaColumnValueStr : c.QuotaColumnValue}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{c.ItemFormula ? c.ItemFormula.Label : c.ItemFormulaName}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
@@ -1077,7 +1085,8 @@ export default {
         quotaEndDate: null,
         branchSharePercent: null,
         itemFormula: null,
-        currency: null
+        currency: null,
+        beginDate: null
       },
       quotaInvestmentValues: [],
       showInvestments: false,
@@ -1534,6 +1543,7 @@ export default {
         QuotaColumnValueStr: this.contractPriceDiscounts.quotaColumnValue ? this.contractPriceDiscounts.quotaColumnValue.Label : null,
         QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
+        BeginDate: this.contractPriceDiscounts.beginDate,
         BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
         ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,

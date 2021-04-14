@@ -1543,7 +1543,8 @@
       "LoyaltyId": "Sakadat Uygulaması",
       "ConsumptionScore": "Kazanılan Puan",
       "TransactionDate": "İşlem Tarihi",
-      "RepresentativeId": "Personel"
+      "RepresentativeId": "Personel",
+      "SpentPoint": "Harcanan Puan"
     },
     "LoyaltyConsumption": {
       "title": "Müşteri Güncel Puanları",
