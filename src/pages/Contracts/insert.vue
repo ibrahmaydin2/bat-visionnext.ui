@@ -1192,6 +1192,9 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    if (this.customerContracts) {
+      this.customerContracts = []
+    }
   },
   methods: {
     save () {

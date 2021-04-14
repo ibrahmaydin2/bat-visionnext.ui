@@ -524,6 +524,10 @@ export const store = new Vuex.Store({
         'FormId': query.FormId,
         'Columns': query.Columns
       }
+      if (!state.UserId) {
+        store.commit('logout')
+        return
+      }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
         .then(res => {
