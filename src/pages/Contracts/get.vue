@@ -87,6 +87,7 @@
                     <b-th><span>{{$t('insert.contract.BudgetMasterId')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.BenefitBudget')}}</span></b-th>
+                     <b-th><span>{{$t('insert.contract.usedAmount')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.TciBreak1Id')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
@@ -95,6 +96,7 @@
                       <b-td>{{c.BudgetMaster ? c.BudgetMaster.Label : ''}}</b-td>
                       <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>
                       <b-td>{{c.BenefitBudget}}</b-td>
+                      <b-td>{{c.UsedAmount}}</b-td>
                       <b-td>{{c.TciBreak1 ? c.TciBreak1.Label : ''}}</b-td>
                     </b-tr>
                   </b-tbody>

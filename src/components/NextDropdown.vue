@@ -42,7 +42,10 @@ export default {
     },
     dynamicAndCondition: {},
     orConditionFields: {},
-    dynamicRequest: {}
+    dynamicRequest: {},
+    source: {
+      type: Array
+    }
   },
   model: {
     prop: 'value',
@@ -51,6 +54,7 @@ export default {
   data () {
     return {
       values: [],
+      allValues: [],
       selectedValue: undefined,
       labelKey: ''
     }
@@ -79,6 +83,14 @@ export default {
       if (newValue !== oldValue) {
         this.selectedValue = newValue
       }
+    },
+    source (newValue) {
+      if (newValue && newValue.length > 0) {
+        this.values = newValue
+      }
+    },
+    allValues (newValue) {
+      this.$emit('all-source', newValue)
     }
   },
   methods: {
@@ -113,6 +125,7 @@ export default {
         loading(false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels
+          this.allValues = this.values
         }
       })
     },
@@ -133,6 +146,7 @@ export default {
           } else if (response.Values) {
             this.values = response.Values
           }
+          this.allValues = this.values
         }
       })
     },
@@ -143,11 +157,13 @@ export default {
       let lookupValue = this.lookup[this.lookupKey]
       if (lookupValue && lookupValue.length > 0) {
         this.values = lookupValue
+        this.allValues = this.values
         return
       }
       this.$api.postByUrl({LookupTableCode: this.lookupKey}, 'VisionNextCommonApi/api/LookupValue/GetValues').then((response) => {
         if (response) {
           this.values = response.Values
+          this.allValues = this.values
           this.$store.commit('setSingleLookUp', {key: this.lookupKey, value: this.values})
         }
       })

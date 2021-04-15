@@ -1161,7 +1161,10 @@
       "givenQuantity": "Verilen Miktar",
       "paymentAmountNotDifferentBudgetError": "Ödeme tutarları toplamı, Nakit kazanım bütçesine eşit olmalıdır!",
       "executionDateError": "Hesaplama tarihi bitiş tarihinden küçük veya sistem tarihinden küçük olamaz",
-      "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!"
+      "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!",
+      "usedAmount": "Harcanan Tutar",
+      "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
+      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!"
     },
     "loadingplan": {
       "items": "Ürün",
