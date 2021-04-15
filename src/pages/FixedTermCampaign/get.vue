@@ -75,8 +75,8 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in rowData.FixedTermCampaignItems" :key="i">
-                     <b-td>{{f.ColumnName}}</b-td>
-                     <b-td>{{f.ColumnValue}}</b-td>
+                     <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnName}}</b-td>
+                     <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValue}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -94,7 +94,7 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID') : [])" :key="i">
-                    <b-td>{{f.ColumnValue}}</b-td>
+                    <b-td>{{f.Route ? f.Route.Label : f.ColumnValue}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -113,8 +113,8 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID') : [])" :key="i">
-                      <b-td>{{f.ColumnName}}</b-td>
-                      <b-td>{{f.ColumnValue}}</b-td>
+                      <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnName}}</b-td>
+                      <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValue}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -150,7 +150,7 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID') : [])" :key="i">
-                      <b-td>{{f.ColumnValue}}</b-td>
+                       <b-td>{{f.Branch ? f.Branch.Label : f.ColumnValue}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
