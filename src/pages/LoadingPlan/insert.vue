@@ -6,11 +6,11 @@
           <b-col cols="12" md="6">
             <Breadcrumb />
           </b-col>
-          <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+          <b-col cols="12" md="4" class="text-right">
+            <router-link :to="{name: 'LoadingPlan' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,19 +18,22 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="Code" :error="$v.form.Code">
+          <NextFormGroup item-key="Code" :error="$v.form.Code" md="2" lg="2">
             <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
           </NextFormGroup>
-          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
-          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
-            <b-form-datepicker v-model="form.LoadingDate" />
+          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2" lg="2">
+            <b-form-datepicker v-model="form.LoadingDate" :placeholder="$t('insert.chooseDate')"/>
           </NextFormGroup>
-          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-            <v-select :options="routes" @input="selectedRoute" label="Description1"></v-select>
+          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
+             <NextDropdown
+                  url="VisionNextRoute/api/Route/Search"
+                  @input="selectedSearchType('RouteId', $event)"
+                  :dynamic-and-condition="{RouteTypeIds: [1], StatusIds: [1]}" />
           </NextFormGroup>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="2" lg="2">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
@@ -40,24 +43,20 @@
       <b-tabs>
         <b-tab :title="$t('insert.loadingplan.items')" active>
           <b-row>
-            <NextFormGroup :title="$t('insert.loadingplan.items')">
-              <v-select :options="items" @search="searchItem" @input="selectedItem" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.loadingplan.items')" :error="$v.detailPanel.item" :required="true">
+               <NextDropdown
+                v-model="detailPanel.item"
+                url="VisionNextItem/api/Item/Search"
+                searchable
+                or-condition-fields="Code,Description1"
+                custom-option/>
             </NextFormGroup>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.loadingplan.PlanQuantity')">
-                <b-form-input type="text" v-model="planQuantity" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
+              <b-form-input type="text" v-model="detailPanel.planQuantity" />
+            </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addItems" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -86,7 +85,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import { required } from 'vuelidate/lib/validators'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -99,137 +99,78 @@ export default {
         RouteId: null,
         LoadingPlanItems: []
       },
-      routeName: this.$route.meta.baseLink,
-      loadingPlanItems: [],
-      tmpSelectedItem: [],
-      planQuantity: null,
-      detailPanelRecordId: 0
+      routeName1: 'StockManagement',
+      detailPanel: {
+        item: null,
+        planQuantity: null
+      }
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'items', 'routes'])
+    ...mapState([])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
-    getInsertPage (e) {
-      if (!this.insertRules || this.insertRules.length === 0) {
-        this.$store.dispatch('getInsertRules', {...this.query, api: e}).then(() => {
-          Object.keys(this.insertDefaultValue).forEach(el => {
-            if (el !== 'Code' && this.insertDefaultValue[el] && this.form) {
-              this.form[el] = this.insertDefaultValue[el]
-            }
-          })
+    addItems () {
+      this.$v.detailPanel.$touch()
+      if (this.$v.detailPanel.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
         })
-      }
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
-      this.$store.dispatch('getSearchItems', {...this.query,
-        api: 'VisionNextRoute/api/Route/Search',
-        name: 'routes',
-        andConditionModel: {
-          'RouteTypeIds': [1],
-          'StatusIds': [1]
-        }
-      })
-    },
-    selectedItem (e) {
-      if (e) {
-        this.tmpSelectedItem = e
-      } else {
-        this.tmpSelectedItem = null
-      }
-    },
-    selectedRoute (e) {
-      if (e) {
-        this.form.RouteId = e.RecordId
-      } else {
-        this.form.RouteId = null
-      }
-    },
-    searchItem (search, loading) {
-      if (search.length < 3) {
         return false
       }
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
-        name: 'items',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    addItems () {
-      if (this.tmpSelectedItem.length < 1 || !this.planQuantity) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        return
+      let filteredArr = this.form.LoadingPlanItems.filter(i => i.ItemId === this.detailPanel.item.RecordId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
       }
-      this.detailPanelRecordId++
       this.form.LoadingPlanItems.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        Code: this.tmpSelectedItem.Code,
-        ItemId: this.tmpSelectedItem.RecordId,
-        Description1: this.tmpSelectedItem.Description1,
-        UnitSetId: this.tmpSelectedItem.UnitSetId,
+        Code: this.detailPanel.item.Code,
+        ItemId: this.detailPanel.item.RecordId,
+        Description1: this.detailPanel.item.Description1,
+        UnitSetId: this.detailPanel.item.UnitSetId,
         UnitId: null,
-        PlanQuantity: this.planQuantity,
+        PlanQuantity: this.detailPanel.planQuantity,
         ConvFact1: 1,
-        ConvFact2: 1,
-        RecordId: this.detailPanelRecordId
+        ConvFact2: 1
       })
+      this.detailPanel = {}
+      this.$v.detailPanel.$reset()
     },
     removeItems (item) {
       this.form.LoadingPlanItems.splice(this.form.LoadingPlanItems.indexOf(item), 1)
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        this.form.LoadingDate = this.dateConvertToISo(this.form.LoadingDate)
-        this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextStockManagement/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      detailPanel: {
+        item: {
+          required
+        },
+        planQuantity: {
+          required
+        }
+      }
     }
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    }
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    // insertDefaultValue (value) {
-    //   Object.keys(value).forEach(el => {
-    //     if (el !== 'Code') {
-    //       this.form[el] = value[el]
-    //     }
-    //   })
-    // }
   }
 }
 </script>
-<style lang="sass">
-</style>
