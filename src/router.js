@@ -301,7 +301,7 @@ import DebtArrangementUpdate from '@/pages/DebtArrangement/update'
 
 import PriceListIndex from '@/pages/PriceList/'
 import PriceListGet from '@/pages/PriceList/get'
-import PriceListInsert from '@/pages/PriceList/insert'
+// import PriceListInsert from '@/pages/PriceList/insert'
 import PriceListUpdate from '@/pages/PriceList/update'
 
 import CheckOperationsIndex from '@/pages/CheckOperations/'
@@ -583,7 +583,7 @@ const listIndex = [
   {path: '/PremiumOrder', name: 'PremiumOrder', component: PremiumOrderIndex, meta: { title: i18n.t('router.PremiumOrder'), createLink: 'PremiumOrderInsert' }},
   {path: '/CurrentAccountTransactions', name: 'CurrentAccountTransactions', component: CurrentAccountTransactionsIndex, meta: { title: i18n.t('router.CurrentAccountTransactions'), createLink: 'CurrentAccountTransactionsInsert' }},
   {path: '/DebtArrangement', name: 'DebtArrangement', component: DebtArrangementIndex, meta: { title: i18n.t('router.DebtArrangement'), createLink: 'DebtArrangementInsert' }},
-  {path: '/PriceList', name: 'PriceList', component: PriceListIndex, meta: { title: i18n.t('router.PriceList'), createLink: 'PriceListInsert' }},
+  {path: '/PriceList', name: 'PriceList', component: PriceListIndex, meta: { title: i18n.t('router.PriceList') }},
   {path: '/CheckOperations', name: 'CheckOperations', component: CheckOperationsIndex, meta: { title: i18n.t('router.CheckOperations'), createLink: 'CheckOperationsInsert' }},
   {path: '/BankTransaction', name: 'BankTransaction', component: BankTransactionIndex, meta: { title: i18n.t('router.BankTransaction'), createLink: 'BankTransactionInsert' }},
   {path: '/CSCard', name: 'CSCard', component: CSCardIndex, meta: { title: i18n.t('router.CSCard'), createLink: 'CSCardInsert' }},
@@ -889,7 +889,7 @@ const listInsert = [
   { path: '/Insert/PremiumOrder', name: 'PremiumOrderInsert', component: PremiumOrderInsert, meta: { title: i18n.t('router.PremiumOrderInsert'), baseLink: 'PremiumOrder' } },
   { path: '/Insert/CurrentAccountTransactions', name: 'CurrentAccountTransactionsInsert', component: CurrentAccountTransactionsInsert, meta: { title: i18n.t('router.CurrentAccountTransactionsInsert'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/Insert/DebtArrangement', name: 'DebtArrangementInsert', component: DebtArrangementInsert, meta: { title: i18n.t('router.DebtArrangementInsert'), baseLink: 'DebtArrangement' } },
-  { path: '/Insert/PriceList', name: 'PriceListInsert', component: PriceListInsert, meta: { title: i18n.t('router.PriceListInsert'), baseLink: 'PriceList' } },
+  // { path: '/Insert/PriceList', name: 'PriceListInsert', component: PriceListInsert, meta: { title: i18n.t('router.PriceListInsert'), baseLink: 'PriceList' } },
   { path: '/Insert/CheckOperations', name: 'CheckOperationsInsert', component: CheckOperationsInsert, meta: { title: i18n.t('router.CheckOperationsInsert'), baseLink: 'CheckOperations' } },
   { path: '/Insert/BankTransaction', name: 'BankTransactionInsert', component: BankTransactionInsert, meta: { title: i18n.t('router.BankTransactionInsert'), baseLink: 'BankTransaction' } },
   { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
