@@ -107,6 +107,7 @@
                 v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @input="setSearchQ(header.dataField, $event)"
               />
 
               <b-form-input
@@ -774,6 +775,9 @@ export default {
     },
     getFormattedDate (defaultValue) {
       return defaultValue && defaultValue.length === 2 && defaultValue[0] && defaultValue[0].slice && defaultValue[1] && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
+    },
+    setSearchQ (tableField, model) {
+      searchQ[tableField] = model
     }
   },
   watch: {
