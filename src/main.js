@@ -21,6 +21,8 @@ import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import Sortable from 'vue-sortable'
 import { ApiManager } from './managers/api-manager'
+import { Map, TileLayer, OsmSource, Geoloc, Feature, PointGeom, StyleBox, IconStyle } from 'vuelayers'
+import 'vuelayers/lib/style.css' // needs css-loader
 
 import draggable from 'vuedraggable'
 
@@ -54,6 +56,7 @@ import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
+import NextLocation from './components/NextLocation'
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
@@ -69,6 +72,14 @@ Vue.use(Autocomplete)
 Vue.use(VueTheMask)
 Vue.use(VueMasonryPlugin)
 Vue.use(DatePicker)
+Vue.use(Map)
+Vue.use(Feature)
+Vue.use(TileLayer)
+Vue.use(OsmSource)
+Vue.use(Geoloc)
+Vue.use(PointGeom)
+Vue.use(StyleBox)
+Vue.use(IconStyle)
 
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
@@ -97,6 +108,7 @@ Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('NextDropdown', NextDropdown)
 Vue.component('Actions', Actions)
+Vue.component('NextLocation', NextLocation)
 
 Vue.prototype.$api = new ApiManager()
 
