@@ -1159,7 +1159,8 @@ export const store = new Vuex.Store({
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'page': 1
+        'page': 1,
+        'formName': query.formName
       }
 
       return axios.post(query.api, dataQuery, {
