@@ -1,13 +1,16 @@
 <template>
   <b-row class="asc__insertPage">
-    <b-col cols="12">
+   <b-col cols="12">
       <header>
         <b-row>
           <b-col cols="12" md="6">
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <b-button size="sm" variant="warning" @click="$bvModal.show('price-list-excel-modal')" :title="$t('insert.PriceList.importExcel')">
+              <i class="fa fa-upload"></i>
+            </b-button>
+            <router-link :to="{name: 'PriceList' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -62,12 +65,12 @@
             </b-col>
             <b-col v-if="insertVisible.BeginDate != null ? insertVisible.BeginDate : developmentMode" :start-weekday="1" md="3" lg="3">
               <b-form-group :label="insertTitle.BeginDate + (insertRequired.BeginDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BeginDate.$error }">
-                <b-form-datepicker v-model="form.BeginDate" />
+                <b-form-datepicker v-model="form.BeginDate" locale="tr" />
               </b-form-group>
             </b-col>
              <b-col v-if="insertVisible.EndDate != null ? insertVisible.EndDate : developmentMode" :start-weekday="1" md="3" lg="3">
               <b-form-group :label="insertTitle.EndDate + (insertRequired.EndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EndDate.$error }">
-                <b-form-datepicker v-model="form.EndDate" />
+                <b-form-datepicker v-model="form.EndDate" locale="tr" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -88,10 +91,10 @@
                 <NextCheckBox v-model="data.item.UseConsumerPrice" :disabled="!data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(SalesPrice)="data">
-                <b-form-input type="number" v-model="data.item.SalesPrice"/>
+                <b-form-input type="number" readonly v-model="data.item.SalesPrice"/>
               </template>
               <template #cell(ConsumerPrice)="data">
-                <b-form-input type="number" v-model="data.item.ConsumerPrice"/>
+                <b-form-input type="number" readonly v-model="data.item.ConsumerPrice"/>
               </template>
             </b-table>
             <b-pagination
@@ -105,13 +108,18 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    <PriceListExcelModal @update="updatePriceListFromExcel" />
   </b-row>
 </template>
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import PriceListExcelModal from '../../components/Actions/PriceListExcelModal'
 export default {
   mixins: [mixin],
+  components: {
+    PriceListExcelModal
+  },
   data () {
     return {
       form: {
@@ -269,6 +277,24 @@ export default {
         return product
       })
       this.products = this.allUserProducts
+    },
+    updatePriceListFromExcel (excelProducts) {
+      for (const property in excelProducts) {
+        let item = excelProducts[property]
+        this.allUserProducts.map(product => {
+          if (Number(item.ItemCode) === Number(product.Item.Code)) {
+            product.ConsumerPrice = item.ConsPrice
+            product.SalesPrice = item.Price
+          }
+        })
+      }
+      this.products = this.allUserProducts
+      this.$toasted.show(this.$t('index.success'), {
+        type: 'success',
+        keepOnHover: true,
+        duration: '3000'
+      })
+      this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
     }
   },
   validations () {

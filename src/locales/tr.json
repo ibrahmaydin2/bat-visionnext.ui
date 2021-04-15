@@ -1263,7 +1263,8 @@
       "BeginDate": "Geçerlilik Başlangıcı",
       "EndDate": "Geçerlilik Başlangıcı",
       "Active" : "Aktif",
-      "Passive" : "Pasif"
+      "Passive" : "Pasif",
+      "importExcel": "İçeri Aktar"
     },
     "RMA": {
       "Item": "Ürün Kodu",
@@ -1827,7 +1828,10 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
+    "today": "Bugün",
+    "tomorrow": "Yarın",
     "saveRows": "Düzenlemeyi Onayla",
+    "loading": "Yükleniyor",
     "customerNotFound": "Müşteri bulunamadı",
     "pleaseChooseCustomer": "Kayıt edilecek veri bulunamadı.",
     "pleaseChooseOperationType": "Lütfen işlem tipi seçiniz",
