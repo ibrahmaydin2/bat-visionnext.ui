@@ -886,7 +886,15 @@
       "CashCard": "Nakit Ödeme Ana Kayıtları",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "reminder": "Müşteri Bakiyesi"
+      "reminder": "Müşteri Bakiyesi",
+      "IsMultiple": "Çoklu Ödeme",
+      "multipleSave": "Çoklu Kaydet",
+      "Customer": "Müşteri",
+      "Currency": "Para Birimi",
+      "Representative": "Saha Personeli",
+      "Route": "Rota",
+      "CashCardType": "İşlem Tipi",
+      "CashTotal": "Tutar"
     },
     "creditcard": {
       "Code": "Kredi Kartı İşlem Kodu",
