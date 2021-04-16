@@ -34,6 +34,9 @@ export class ApiManager {
     }
     request.branchId = store.state.BranchId
     request.companyId = store.state.CompanyId
+    if (!request.andConditionModel) {
+      request.andConditionModel = {}
+    }
     request.pagerecordCount = !pagerecordCount ? 1000 : pagerecordCount
     return axios({
       method: methodType,

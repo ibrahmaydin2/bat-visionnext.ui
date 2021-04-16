@@ -1350,7 +1350,6 @@ export default {
       this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
     },
     getItemValues (value, property) {
-      debugger
       switch (property) {
         case 'item':
           this.fieldValues = []

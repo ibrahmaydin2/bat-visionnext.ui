@@ -133,8 +133,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
-                  <b-td>{{f.ColumnNameStr ? f.ColumnNameStr : f.ColumnName}}</b-td>
-                  <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
+                  <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnNameStr}}</b-td>
+                  <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValueStr}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -162,7 +162,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID')" :key="i">
-                  <b-td>{{f.ColumnValue ? f.ColumnValue : f.Text}}</b-td>
+                  <b-td>{{f.Route ? f.Route.Label : f.Text}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -194,8 +194,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnNameStr ? f.ColumnNameStr : f.ColumnName}}</b-td>
-                  <b-td>{{f.ColumnValueStr ? f.ColumnValueStr : f.ColumnValue}}</b-td>
+                  <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnNameStr}}</b-td>
+                  <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValueStr}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -273,7 +273,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnValue ? f.ColumnValue : f.Text}}</b-td>
+                  <b-td>{{f.Branch ? f.Branch.Label : f.Text}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
