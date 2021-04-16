@@ -199,6 +199,9 @@
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation :Location="modalItem"/>
+    </b-modal>
     <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
@@ -411,6 +414,11 @@ export default {
         this.showKmModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'kmModal')
+        })
+      } else if (action.Action === 'ShowOnMap') {
+        console.log(row)
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'location-modal')
         })
       } else {
         this.showConfirmModal = true

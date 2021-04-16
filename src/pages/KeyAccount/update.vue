@@ -304,7 +304,13 @@
                   <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                  <b-td class="text-center"><i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                    <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                    <NextLocation :Location='r' />
+                  </b-modal>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1419,6 +1425,19 @@ export default {
     },
     removeCustomerLocation (item) {
       this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
+    },
+    showMap (item) {
+      if (item.XPosition == null || item.YPosition == null) {
+        this.$toasted.show(this.$t('index.errorLocation'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$nextTick(() => {
+        this.$root.$emit('bv::show::modal', 'location-modal', item)
+      })
     },
     addCreditHistories () {
       this.$v.customerCreditHistories.$touch()

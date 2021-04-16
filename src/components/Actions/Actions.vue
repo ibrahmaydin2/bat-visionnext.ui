@@ -58,6 +58,10 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
+        <span class="d-inline-block w-100" v-else-if="action.Action === 'ShowOnMap'" @click.prevent.stop="showMap(action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
         <span class="d-inline-block w-100" v-else>
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
@@ -114,6 +118,17 @@ export default {
     },
     showMultipleModal (action) {
       this.$emit('showMultipleModal', action)
+    },
+    showMap (action, row) {
+      if (row.XPosition == null || row.YPosition == null) {
+        this.$toasted.show(this.$t('index.errorLocation'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$emit('showModal', action, row)
     },
     print (action, row) {
       if (action.Query === 'Invoice') {

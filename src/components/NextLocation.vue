@@ -20,10 +20,10 @@
       </vl-layer-tile>
     </vl-map>
     <div style="padding: 20px">
-      Zoom: {{ zoom }}<br>
-      Center: {{ center }}<br>
-      Rotation: {{ rotation }}<br>
-      My geolocation: {{ geolocPosition }}
+      Lokasyon Kodu: {{Location.Code}}<br>
+      Lokasyon Adı: {{Location.Description1}}<br>
+      Boylam - Enlem: {{ Location.XPosition }} - {{ Location.YPosition }}<br>
+      Adres Detayı: {{ Location.AddressDetail }}<br>
     </div>
   </div>
 </template>
@@ -31,17 +31,21 @@
 <script>
 
 export default {
+  props: {
+    Location: {}
+  },
   data () {
     return {
       zoom: 15,
-      center: [ 29.01728824244658, 41.114476264356966 ],
+      center: [],
       rotation: 0,
       geolocPosition: undefined,
-      test: [29.01728824244658, 41.114476264356966]
+      test: []
     }
   },
   mounted () {
-    console.log('test')
+    this.test = [this.Location.YPosition, this.Location.XPosition]
+    this.center = [this.Location.YPosition, this.Location.XPosition]
   }
 }
 </script>

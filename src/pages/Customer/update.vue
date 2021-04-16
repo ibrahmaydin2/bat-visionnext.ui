@@ -319,6 +319,12 @@
               <b-thead>
                 <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
+                <b-th><span>{{$t('insert.warehouse.Address')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_XPosition')}} - {{$t('insert.customer.Model_YPosition')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_ContactName')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_PhoneNumber1')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_FaxNumber')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Model_Alias')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
@@ -329,14 +335,24 @@
                 <b-tr v-for="(r, i) in form.CustomerLocations" :key="i">
                   <b-td>{{r.Code}}</b-td>
                   <b-td>{{r.Description1}}</b-td>
+                  <b-td>{{r.AddressDetail}}</b-td>
+                  <b-td>{{r.XPosition}} - {{r.YPosition}}</b-td>
+                  <b-td>{{r.ContactName}}</b-td>
+                  <b-td>{{r.PhoneNumber1}}</b-td>
+                  <b-td>{{r.FaxNumber}}</b-td>
+                  <b-td>{{r.Alias}}</b-td>
                   <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td class="text-center">
+                    <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
                     <i @click="editCustomerLocation(r)" class="fa fa-pencil-alt text-warning"></i>
                     <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
+                  <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                    <NextLocation :Location='r' />
+                  </b-modal>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1715,6 +1731,19 @@ export default {
     removeCustomerLocation (item) {
       this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
     },
+    showMap (item) {
+      if (item.XPosition == null || item.YPosition == null) {
+        this.$toasted.show(this.$t('index.errorLocation'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$nextTick(() => {
+        this.$root.$emit('bv::show::modal', 'location-modal', item)
+      })
+    },
     removeEditableInputs () {
       this.customerLocations = []
       this.locationCityLabel = null
@@ -1908,6 +1937,7 @@ export default {
       deep: true
     },
     rowData (e) {
+      console.log(e)
       if (e) {
         this.form = {
           CommercialTitle: e.CommercialTitle,
@@ -2144,6 +2174,7 @@ export default {
       }
     },
     address (value) {
+      console.log(value)
       if (value) {
         this.customerLocations.cityId = value.CityId
         this.customerLocations.districtId = value.DistrictId

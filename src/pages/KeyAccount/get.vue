@@ -56,6 +56,7 @@
               <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
+                    <b-th><span>{{$t('list.location')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
@@ -65,12 +66,18 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.CustomerLocations" :key="i">
+                      <b-td class="text-center">
+                        <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                      </b-td>
                       <b-td>{{r.Code}}</b-td>
                       <b-td>{{r.Description1}}</b-td>
                       <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
+                      <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                        <NextLocation :Location='r' />
+                      </b-modal>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -293,6 +300,19 @@ export default {
         andConditionModel: {
           UpperCustomerIds: [customerId]
         }
+      })
+    },
+    showMap (item) {
+      if (item.XPosition == null || item.YPosition == null) {
+        this.$toasted.show(this.$t('index.errorLocation'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$nextTick(() => {
+        this.$root.$emit('bv::show::modal', 'location-modal', item)
       })
     }
   },
