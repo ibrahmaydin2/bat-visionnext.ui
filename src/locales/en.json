@@ -1837,6 +1837,7 @@
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorLocation": "Boylam - Enlem Bilgisi Eksik",
     "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
     "Convert": {
@@ -1902,7 +1903,8 @@
     "quick": "Hızlı Bakış",
     "downloads": "Dışarı Aktar",
     "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
-    "uploads": "İçeri Aktar"
+    "uploads": "İçeri Aktar",
+    "location": "Lokasyon"
   },
   "dashboard": {
     "search": "Ara",
