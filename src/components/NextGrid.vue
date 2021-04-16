@@ -210,6 +210,7 @@
     <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
     <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -224,6 +225,7 @@ import RmaConvertModal from './Actions/RmaConvertModal'
 import RmaInvoiceModal from './Actions/RmaInvoiceModal'
 import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 import KmModal from './Actions/KmModal'
+import PriceListDayModal from './Actions/PriceListDayModal'
 let searchQ = {}
 export default {
   components: {
@@ -235,7 +237,8 @@ export default {
     RmaConvertModal,
     RmaInvoiceModal,
     KmModal,
-    InvoiceConvertModal
+    InvoiceConvertModal,
+    PriceListDayModal
   },
   props: {
     apiurl: String,
@@ -305,7 +308,8 @@ export default {
       showPotentialCustomerApproveModal: false,
       showCustomConvertModal: false,
       showConfirmModal: false,
-      showKmModal: false
+      showKmModal: false,
+      showPriceListDayModal: false
     }
   },
   mounted () {
@@ -368,6 +372,7 @@ export default {
       this.showPotentialCustomerRejectModal = false
       this.showConfirmModal = false
       this.showKmModal = false
+      this.showPriceListDayModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -379,7 +384,6 @@ export default {
           return
         }
       }
-
       if (action.Action === 'ApprovePotentialCustomer') {
         this.showPotentialCustomerApproveModal = true
         this.$nextTick(() => {
@@ -414,6 +418,11 @@ export default {
         this.showKmModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'kmModal')
+        })
+      } else if (action.Action === 'PriceListDayUpdate') {
+        this.showPriceListDayModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'priceListDayModal')
         })
       } else if (action.Action === 'ShowOnMap') {
         console.log(row)

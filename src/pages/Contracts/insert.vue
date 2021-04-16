@@ -135,7 +135,7 @@
         <b-tab :title="$t('insert.contract.contractBenefits')">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
-               <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search"/>
+              <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4 && contractBenefits.benefitType.RecordId !== 5)" md="4" lg="4">
                  <v-select
@@ -225,8 +225,8 @@
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractItems.fieldValue" :required="true" md="3" lg="3">
               <v-select :disabled="!contractItems.fieldDescription" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.targetQuantity')" :error="$v.contractItems.quotaQuantity" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractItems.quotaQuantity" />
+            <NextFormGroup :title="$t('insert.contract.targetQuantity')" :error="$v.contractItems.quotaQuantity" :required="contractItems.targetType && contractItems.targetType.Code === 'MKTR'" md="3" lg="3">
+              <b-form-input type="number" v-model="contractItems.quotaQuantity" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'TTR'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetType')" :error="$v.contractItems.targetType" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
@@ -286,11 +286,9 @@
                 :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
                 type="number" v-model="contractPriceDiscounts.discountAmount" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
               <b-form-input
-              :disabled="!contractPriceDiscounts.benefitCondition
-                || contractPriceDiscounts.benefitCondition.Code === 'YYM'
-                || contractPriceDiscounts.benefitCondition.Code === 'SOZ'"
+              :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
                 type="number" v-model="contractPriceDiscounts.quotaAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" md="3" lg="3">
@@ -1185,7 +1183,9 @@ export default {
       },
       selectedIndex: -1,
       customerBudgets: [],
-      customerContractList: []
+      customerContractList: [],
+      contractBenefitTypes: [],
+      contractBenefitTypeSource: []
     }
   },
   computed: {
@@ -1281,6 +1281,13 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
+      if (this.contractBenefits.benefitBudget) {
+        let totalBudget = parseFloat(this.contractBenefits.benefitBudget)
+        if (totalBudget === 0) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.totalBudgetMustGreaterThan0') })
+          return false
+        }
+      }
       this.form.ContractBenefits.push({
         Deleted: 0,
         System: 0,
@@ -1343,6 +1350,7 @@ export default {
       this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
     },
     getItemValues (value, property) {
+      debugger
       switch (property) {
         case 'item':
           this.fieldValues = []
@@ -1661,6 +1669,14 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let filteredArray = this.form.ContractPaymentPlans.filter(c => (this.contractPaymentPlans.budgetBeginDate >= c.BudgetBeginDate && this.contractPaymentPlans.budgetBeginDate <= c.BudgetEndDate) ||
+        (this.contractPaymentPlans.budgetEndDate >= c.BudgetBeginDate && this.contractPaymentPlans.budgetEndDate <= c.BudgetEndDate) ||
+        (c.BudgetBeginDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetBeginDate <= this.contractPaymentPlans.budgetEndDate) ||
+        (c.BudgetEndDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetEndDate <= this.contractPaymentPlans.budgetEndDate))
+      if (filteredArray && filteredArray.length) {
+        this.$toasted.show(this.$t('insert.contract.datesShouldNotIntersect'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       let item = {
         Deleted: 0,
         System: 0,
@@ -1958,6 +1974,9 @@ export default {
         this.showPaymentPlans = false
         this.showEndorsements = false
         this.showCustomPrices = false
+        this.contractBenefitTypeSource = value.Code === 'PRT'
+          ? this.contractBenefitTypes.filter(c => c.Code === 'VAR' || c.Code === 'CI')
+          : this.contractBenefitTypes.filter(c => c.Code !== 'CI')
       }
     }
   },
@@ -1987,13 +2006,12 @@ export default {
       contractBenefits.budgetMaster = {}
     }
     let contractItems = {
+      quotaAmount: {},
+      quotaQuantity: {},
       fieldDescription: {
         required
       },
       fieldValue: {
-        required
-      },
-      quotaQuantity: {
         required
       },
       targetType: {
@@ -2008,6 +2026,11 @@ export default {
     }
     if (this.contractItems.targetType && this.contractItems.targetType.Code === 'TTR') {
       contractItems.quotaAmount = {
+        required
+      }
+    }
+    if (this.contractItems.targetType && this.contractItems.targetType.Code === 'MKTR') {
+      contractItems.quotaQuantity = {
         required
       }
     }
@@ -2302,6 +2325,20 @@ export default {
       contractCustomPrices.quotaEndDate = {}
       contractCustomPrices.quotaUnit = {}
     }
+    let contractPriceDiscounts = {
+      discountAmount: {
+        required
+      },
+      benefitCondition: {
+        required
+      },
+      quotaAmount: {
+        required
+      }
+    }
+    if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'KOT') {
+      contractPriceDiscounts.quotaAmount = {}
+    }
     return {
       form: this.insertRules,
       selectedAdditionalCustomer: {
@@ -2325,17 +2362,7 @@ export default {
         }
       },
       contractItems: contractItems,
-      contractPriceDiscounts: {
-        discountAmount: {
-          required
-        },
-        benefitCondition: {
-          required
-        },
-        quotaAmount: {
-          required
-        }
-      },
+      contractPriceDiscounts: contractPriceDiscounts,
       contractInvestments: contractInvestments,
       contractDiscounts: contractDiscounts,
       contractFreeItems: contractFreeItems,

@@ -1161,7 +1161,10 @@
       "givenQuantity": "Verilen Miktar",
       "paymentAmountNotDifferentBudgetError": "Ödeme tutarları toplamı, Nakit kazanım bütçesine eşit olmalıdır!",
       "executionDateError": "Hesaplama tarihi bitiş tarihinden küçük veya sistem tarihinden küçük olamaz",
-      "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!"
+      "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!",
+      "usedAmount": "Harcanan Tutar",
+      "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
+      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!"
     },
     "loadingplan": {
       "items": "Ürün",
@@ -1260,7 +1263,8 @@
       "BeginDate": "Geçerlilik Başlangıcı",
       "EndDate": "Geçerlilik Başlangıcı",
       "Active" : "Aktif",
-      "Passive" : "Pasif"
+      "Passive" : "Pasif",
+      "importExcel": "İçeri Aktar"
     },
     "RMA": {
       "Item": "Ürün Kodu",
@@ -1824,7 +1828,10 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
   },
   "index": {
+    "today": "Bugün",
+    "tomorrow": "Yarın",
     "saveRows": "Düzenlemeyi Onayla",
+    "loading": "Yükleniyor",
     "customerNotFound": "Müşteri bulunamadı",
     "pleaseChooseCustomer": "Kayıt edilecek veri bulunamadı.",
     "pleaseChooseOperationType": "Lütfen işlem tipi seçiniz",
