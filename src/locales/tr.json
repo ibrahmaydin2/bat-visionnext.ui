@@ -1810,7 +1810,16 @@
       "fromState": "Çıkış Statü",
       "operationDate": "İşlem Tarihi",
       "toLocation": "Giriş Lokasyon",
-      "fromLocation": "Çıkış Lokasyon"
+      "fromLocation": "Çıkış Lokasyon",
+      "assets": "Varlıklar",
+      "serialNumber": "Barkod",
+      "quantity": "Miktar",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "assetCode": "Varlık Kodu",
+      "serialNumber2": "Seri No",
+      "serialNumber3": "Demirbaş No",
+      "condition": "Kullanım Durumu"
     }
   },
 
