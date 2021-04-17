@@ -404,6 +404,7 @@ export default {
     lookup (e) {
       if (e.RMA_STATUS) {
         this.rmaStatusLabel = e.RMA_STATUS[0].Label
+        this.form.RmaStatusId = e.RMA_STATUS[0].DecimalValue
         this.approveEmployeeName = this.loginUser.name
         this.form.ApproveEmployeeId = this.UserId
         this.representativeName = this.loginUser.name

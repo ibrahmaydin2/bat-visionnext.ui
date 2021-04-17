@@ -297,7 +297,8 @@ export default {
         districtName: null,
         taxNumber: null
       },
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      address: {}
     }
   },
   computed: {
@@ -500,7 +501,9 @@ export default {
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
-          this.selectedCustomer = response.Model
+          if (response.Model) {
+            this.selectedCustomer = response.Model
+          }
         })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
@@ -578,7 +581,9 @@ export default {
       this.form.InvoiceLogisticCompanies[this.form.InvoiceLogisticCompanies.indexOf(item)].RecordState = 4
     },
     save () {
+      this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
+      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -666,6 +671,14 @@ export default {
       if (e && e.length > 0) {
         this.selectedCurrency = e[0]
         this.form.CurrencyId = e[0].RecordId
+      }
+    },
+    address (e) {
+      if (e) {
+        this.selectedInvoiceLogisticCompany.cityId = e.CityId
+        this.selectedInvoiceLogisticCompany.cityName = e.CityName
+        this.selectedInvoiceLogisticCompany.districtId = e.DistrictId
+        this.selectedInvoiceLogisticCompany.districtName = e.DistrictName
       }
     }
   }

@@ -1753,7 +1753,8 @@
       "GainType": "Kazanç Türü",
       "Code": "Kod",
       "Description":"Açıklama",
-      "Status":"Durum"
+      "Status":"Durum",
+      "customerBudgetNotFound": "Müşterinin Bütçe bilgisi bulunamadı!"
     },
     "discount": {
       "code": "İndirim Kodu",
@@ -1820,7 +1821,8 @@
       "assetCode": "Varlık Kodu",
       "serialNumber2": "Seri No",
       "serialNumber3": "Demirbaş No",
-      "condition": "Kullanım Durumu"
+      "condition": "Kullanım Durumu",
+      "assetMovementCard": "Varlık Hareketleri"
     }
   },
 

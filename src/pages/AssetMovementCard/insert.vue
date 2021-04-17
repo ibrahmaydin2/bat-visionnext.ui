@@ -21,7 +21,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('get.assetMovementCard.general')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('get.assetMovementCard.assetMovementCard')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
               <b-form-input type="number" maxLength="16" :oninput="maxLengthControl" v-model="form.CardNumber" :readonly="insertReadonly.CardNumber" />
@@ -144,17 +144,14 @@ export default {
     }
   },
   mounted () {
-    this.createManualCode()
+    this.createManualCode('CardNumber')
     this.initPage()
   },
   methods: {
     initPage () {
-      this.$api.postByUrl({}, 'VisionNextAsset/api/AssetLocation/Search').then((response) => {
+      this.$api.postByUrl({}, 'VisionNextCustomer/api/CustomerLocation/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
-          this.assetLocations = response.ListModel.BaseModels.map(item => {
-            item.Description1 = item.Location ? item.Location.Label : ''
-            return item
-          })
+          this.assetLocations = response.ListModel.BaseModels
         }
       })
     },
