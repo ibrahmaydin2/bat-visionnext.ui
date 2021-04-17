@@ -328,8 +328,6 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3">
               <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition
-                || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
               v-model="contractPriceDiscounts.beginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
@@ -2049,7 +2047,7 @@ export default {
         this.showPaymentPlans = false
         this.showEndorsements = false
         this.showCustomPrices = false
-        this.contractBenefitTypeSource = value.Code === 'PRT'
+        this.contractBenefitTypeSource = value.Code === 'RS'
           ? this.contractBenefitTypes.filter(c => c.Code === 'VAR' || c.Code === 'CI')
           : this.contractBenefitTypes.filter(c => c.Code !== 'CI')
       }
