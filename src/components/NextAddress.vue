@@ -56,6 +56,7 @@ export default {
   mounted () {
     this.selectedValue = this.value
     this.districtId = this.value.DistrictId
+    debugger
     this.selectedAddress = this.value.Address
     this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
   },
@@ -64,6 +65,7 @@ export default {
   },
   watch: {
     value (newValue) {
+      debugger
       if (newValue) {
         if (!newValue.DistrictId) {
           this.selectedDistrict = null
@@ -94,12 +96,14 @@ export default {
         this.selectedCity = this.cities.find(c => c.DecimalValue === newValue.CityId)
         this.selectCity(this.selectedCity)
         this.selectedValue.DistrictId = newValue.DistrictId
+        this.districtId = newValue.DistrictId
         this.selectedDistrict = this.distiricts.find(c => c.DecimalValue === newValue.DistrictId)
         this.selectedValue.Address = newValue.Address
         this.selectedAddress = newValue.Address
       }
     },
     selectedAddress (newValue) {
+      debugger
       this.selectedValue.Address = newValue
       this.$emit('valuechange', {
         CityId: this.selectedValue.CityId,

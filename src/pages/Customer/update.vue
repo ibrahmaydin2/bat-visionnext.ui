@@ -1689,6 +1689,7 @@ export default {
       this.removeEditableInputs()
     },
     editCustomerLocation (item) {
+      debugger
       this.isLocationEditable = true
       this.locationEditableIndex = this.form.CustomerLocations.indexOf(item)
       let filteredArr = this.form.CustomerLocations[this.locationEditableIndex]
@@ -1722,6 +1723,7 @@ export default {
           DistrictId: filteredArr.DistrictId,
           Address: filteredArr.AddressDetail
         }
+        this.$forceUpdate()
       } else {
         this.customerLocations = filteredArr
         this.customerLocations['recordId'] = null
