@@ -177,7 +177,10 @@
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
                   <b-td>{{c.BenefitBudget}}</b-td>
                   <b-td>{{c.TciBreak1 ? c.TciBreak1.Label : c.TciBreak1Name}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editContractBenefits(c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1312,7 +1315,7 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      let filteredArr = this.form.ContractBenefits.filter(i => i.BenefitTypeId === this.contractBenefits.benefitType.RecordId && i.RecordState !== 4)
+      let filteredArr = this.form.ContractBenefits.filter(i => i.BenefitTypeId === this.contractBenefits.benefitType.RecordId && i.RecordState !== 4 && !this.contractBenefits.isUpdated)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
@@ -1324,22 +1327,29 @@ export default {
           return false
         }
       }
-      this.form.ContractBenefits.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordState: this.contractBenefits.recordId > 0 ? 3 : 2,
+        RecordId: this.contractBenefits.recordId,
         StatusId: 1,
         BenefitTypeId: this.contractBenefits.benefitType.RecordId,
         BenefitTypeName: this.contractBenefits.benefitType.Description1,
         BenefitBudget: this.contractBenefits.benefitBudget,
-        BudgetMasterId: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.RecordId : undefined,
-        BudgetMasterName: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.Description1 : '',
+        BudgetMasterId: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.BudgetId : undefined,
+        BudgetMasterName: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.CustomerDesc : '',
         CurrencyId: this.contractBenefits.currency.RecordId,
         CurrencyName: this.contractBenefits.currency.Description1,
         TciBreak1Id: this.contractBenefits.tciBreak1.DecimalValue,
         TciBreak1Name: this.contractBenefits.tciBreak1.Label,
         usedAmount: 0
-      })
+      }
+      if (this.contractBenefits.isUpdated) {
+        this.form.ContractBenefits[this.selectedIndex] = item
+        this.selectedIndex = -1
+      } else {
+        this.form.ContractBenefits.push(item)
+      }
       this.contractBenefits = {}
       this.$v.contractBenefits.$reset()
       this.showAssets = this.form.ContractBenefits.some(c => c.BenefitTypeId === 4 && c.RecordState !== 4)
@@ -1365,6 +1375,31 @@ export default {
       this.showPaymentPlans = this.form.ContractBenefits.some(c => c.BenefitTypeId === 3 && c.RecordState !== 4)
       this.showEndorsements = this.form.ContractBenefits.some(c => c.BenefitTypeId === 9 && c.RecordState !== 4)
       this.showCustomPrices = this.form.ContractBenefits.some(c => c.BenefitTypeId === 10 && c.RecordState !== 4)
+    },
+    editContractBenefits (item) {
+      this.contractBenefits = {
+        recordId: item.RecordId,
+        benefitType: {
+          RecordId: item.BenefitTypeId,
+          Description1: item.BenefitType ? item.BenefitType.Label : item.BenefitTypeName
+        },
+        benefitBudget: item.BenefitBudget,
+        budgetMaster: {
+          BudgetId: item.BudgetMasterId,
+          CustomerDesc: item.BudgetMaster ? item.BudgetMaster.Label : item.BudgetMasterName
+        },
+        currency: {
+          RecordId: item.CurrencyId,
+          Description1: item.Currency ? item.Currency.Label : item.CurrencyName
+        },
+        tciBreak1: {
+          DecimalValue: item.TciBreak1Id,
+          Label: item.TciBreak1 ? item.TciBreak1.Label : item.TciBreak1Name
+        },
+        usedAmount: item.UsedAmount,
+        isUpdated: true
+      }
+      this.selectedIndex = this.form.ContractBenefits.indexOf(item)
     },
     addContractAssets () {
       this.$v.contractAssets.$touch()
