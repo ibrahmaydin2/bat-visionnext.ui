@@ -75,10 +75,10 @@
                       <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-                        <NextLocation :Location='r' />
-                      </b-modal>
                     </b-tr>
+                    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                      <NextLocation :Location='Location' />
+                    </b-modal>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
@@ -275,7 +275,8 @@ export default {
         ControllerName: 'Customer',
         ClassName: 'Customer',
         PageName: 'pg_KeyAccount'
-      }
+      },
+      Location: {}
     }
   },
   mounted () {
@@ -303,6 +304,7 @@ export default {
       })
     },
     showMap (item) {
+      this.Location = item
       if (item.XPosition == null || item.YPosition == null) {
         this.$toasted.show(this.$t('index.errorLocation'), {
           type: 'error',

@@ -84,10 +84,10 @@
                       <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-                        <NextLocation :Location='r' />
-                      </b-modal>
                     </b-tr>
+                    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                      <NextLocation :Location='Location' />
+                    </b-modal>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
@@ -309,7 +309,8 @@ export default {
       customerTouchpointsFields: [
         {key: 'TouchpointPriority', label: 'İletişim Fırsatı Seviyesi', sortable: true},
         {key: 'TouchpointType', label: 'İletişim Fırsatı Tipi', sortable: true}
-      ]
+      ],
+      Location: {}
     }
   },
   mounted () {
@@ -327,6 +328,7 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
     },
     showMap (item) {
+      this.Location = item
       if (item.XPosition == null || item.YPosition == null) {
         this.$toasted.show(this.$t('index.errorLocation'), {
           type: 'error',

@@ -194,8 +194,14 @@
                   <b-td>{{r.Day7VisitOrder}}</b-td>
                   <b-td>{{dateConvertFromTimezone(r.Day1FreStartDate)}}</b-td>
                   <b-td>{{r.Day1Frequency}}</b-td>
-                  <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                    <i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
+                <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                  <NextLocation :Location='Location' />
+                </b-modal>
               </b-tbody>
             </b-table-simple>
           </b-row>
@@ -269,7 +275,8 @@ export default {
       parish: null,
       routeType: null,
       customerRegion5: null,
-      marketingRegion5: null
+      marketingRegion5: null,
+      Location: {}
     }
   },
   validations () {
@@ -544,6 +551,30 @@ export default {
         this.clearRouteDetails()
         this.$v.routeDetails.$reset()
       }
+    },
+    showMap (item) {
+      this.$api.post({RecordId: item.LocationId}, 'Customer', 'CustomerLocation/Get').then((res) => {
+        this.Location = res.Model
+        if (res.Model) {
+          if (res.Model.XPosition == null || res.Model.YPosition == null) {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'location-modal', res.Model)
+          })
+        } else {
+          this.$toasted.show(this.$t('index.errorLocation'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     },
     removeRouteDetails (r) {
       if (r.RecordState === 2) {

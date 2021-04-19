@@ -350,10 +350,10 @@
                     <i @click="editCustomerLocation(r)" class="fa fa-pencil-alt text-warning"></i>
                     <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
-                  <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-                    <NextLocation :Location='r' />
-                  </b-modal>
                 </b-tr>
+                <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                  <NextLocation :Location='Location' />
+                </b-modal>
               </b-tbody>
             </b-table-simple>
           </b-row>
@@ -1328,7 +1328,8 @@ export default {
       CustomerLabels: [],
       locationEditableIndex: null,
       addressInit: null,
-      paymentTypes: []
+      paymentTypes: [],
+      Location: {}
     }
   },
   computed: {
@@ -1732,6 +1733,7 @@ export default {
       this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
     },
     showMap (item) {
+      this.Location = item
       if (item.XPosition == null || item.YPosition == null) {
         this.$toasted.show(this.$t('index.errorLocation'), {
           type: 'error',
