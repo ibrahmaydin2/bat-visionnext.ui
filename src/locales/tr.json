@@ -485,6 +485,7 @@
       "status": "Durum",
       "routeCode": "Rota Kodu",
       "routeType": "Rota Tipi",
+      "locationFieldRequired": "Lokasyon alanı zorunludur.",
       "title": "Detaylar",
       "type": "Tip",
       "customerArea": "Müşteri Bölgesi 5",

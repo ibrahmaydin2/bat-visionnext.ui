@@ -80,16 +80,16 @@
                 v-model="customerRegion5"
                 :disabled="!showCustomerRegion"
                 :options="lookup.CUSTOMER_REGION_5"
-                @input="selectedType('CustomerRegion5Id', $event)"
+                @input="selectedLabelType('CustomerRegion5Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.CustomerRegion5Id">
+            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
               <v-select
                 v-model="marketingRegion5"
                 :disabled="!showMarketingRegion"
                 :options="lookup.MARKETING_REGION_5"
-                @input="selectedType('MarketingRegion5Id', $event)"
+                @input="selectedLabelType('MarketingRegion5Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
@@ -138,25 +138,25 @@
             <NextFormGroup :title="$t('insert.route.LocationId')" :error="$v.routeDetails.LocationId" :required="true" md="2" lg="2">
               <v-select v-model="routeDetails.Location" :disabled="!showCustomerLocation" label="Description1" :filterable="false" :options="customerLocationsList" @input="selectedCustomerLocation" ></v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day1VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day2VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day3VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day4VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day5VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day6VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day7VisitOrder" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2">
@@ -226,6 +226,7 @@ export default {
         RouteGroupId: null,
         StatusId: null,
         CustomerRegion5Id: null,
+        MarketingRegion5Id: null,
         IsMultidayRoute: null,
         CityId: null,
         RouteDetails: []
@@ -444,14 +445,34 @@ export default {
           if (model.RecordId === 1 || model.RecordId === 6) {
             this.showCustomerRegion = true
             this.showMarketingRegion = false
+            this.insertRules.CustomerRegion5Id = {
+              required
+            }
           } else if (model.RecordId === 5) {
             this.showMarketingRegion = true
             this.showCustomerRegion = false
+            this.insertRules.MarketingRegion5Id = {
+              required
+            }
           } else {
             this.showCustomerRegion = false
             this.showMarketingRegion = false
+            this.insertRules.MarketingRegion5Id = {}
+            this.insertRules.CustomerRegion5Id = {}
           }
         }
+      } else {
+        this.form[label] = null
+      }
+    },
+    selectedLabelType (label, model) {
+      if (label === 'CustomerRegion5Id') {
+        this.form.MarketingRegion5Id = null
+      } else {
+        this.form.CustomerRegion5Id = null
+      }
+      if (model) {
+        this.form[label] = model.DecimalValue
       } else {
         this.form[label] = null
       }
@@ -600,6 +621,14 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.RouteDetails.length < 1) {
+          this.$toasted.show(this.$t('insert.route.locationFieldRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.updateData()
       }
     }
