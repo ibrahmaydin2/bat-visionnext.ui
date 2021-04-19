@@ -1173,7 +1173,9 @@
       "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!",
       "usedAmount": "Harcanan Tutar",
       "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
-      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!"
+      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!",
+      "validBeginDate": "Geçerlilik Başlangıç Tarihi",
+      "validEndDate": "Geçerlilik Bitiş Tarihi"
     },
     "loadingplan": {
       "items": "Ürün",

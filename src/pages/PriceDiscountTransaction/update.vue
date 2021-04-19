@@ -82,11 +82,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget'>
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget' />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
               <v-select
