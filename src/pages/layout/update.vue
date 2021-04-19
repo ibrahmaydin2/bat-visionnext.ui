@@ -81,6 +81,9 @@ export default {
             font-size: 14px
           .nav-link
             color: #000
+          .error-tab
+            border: 1px #ff0000 solid !important
+            border-radius: 0.25rem
       .tab-pane
         padding: 1rem 15px
         background: #fbfbfb

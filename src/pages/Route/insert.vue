@@ -51,13 +51,13 @@
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
               <v-select label="Description1" :filterable="false" :options="routeTypes" @input="selectedSearchType('RouteTypeId', $event)"></v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="RouteClassId" :error="$v.form.RouteClassId">
+            <!-- <NextFormGroup item-key="RouteClassId" :error="$v.form.RouteClassId">
               <v-select
                 :options="lookup.ROUTE_CLASS"
                 @input="selectedType('RouteClassId', $event)"
                 label="Label"
               />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
               <v-select
                 :options="lookup.VISIT_START_CONTROL"
@@ -65,47 +65,49 @@
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="RouteGroupId" :error="$v.form.RouteGroupId">
+            <!-- <NextFormGroup item-key="RouteGroupId" :error="$v.form.RouteGroupId">
               <v-select
                 :options="lookup.ROUTE_GROUP"
                 @input="selectedType('RouteGroupId', $event)"
                 label="Label"
               />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
               <v-select
                 :disabled="!showCustomerRegion"
                 :options="lookup.CUSTOMER_REGION_5"
-                @input="selectedType('CustomerRegion5Id', $event)"
+                @input="selectedLabelType('CustomerRegion5Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.CustomerRegion5Id">
+            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
               <v-select
                 :disabled="!showMarketingRegion"
                 :options="lookup.MARKETING_REGION_5"
-                @input="selectedType('MarketingRegion5Id', $event)"
+                @input="selectedLabelType('MarketingRegion5Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="CityId" :error="$v.form.CityId">
+            <NextFormGroup item-key="CityId">
               <v-select
                 :options="lookup.CITY"
                 @input="selectedCity"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="DistrictId" :error="$v.form.DistrictId">
+            <NextFormGroup item-key="DistrictId">
               <v-select
+                v-model="district"
                 :options="distiricts"
                 @input="selectedDistirict"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="ParishIds" :error="$v.form.ParishIds">
+            <NextFormGroup item-key="ParishIds">
               <v-select
+                multiple
+                @input="selectedParish"
                 :options="avenues"
-                @input="selectedType('ParishIds', $event)"
                 label="Label"
               />
             </NextFormGroup>
@@ -120,7 +122,7 @@
         <b-tab :title="$t('insert.route.locations')">
           <b-row>
             <NextFormGroup :title="$t('insert.route.CustomerId')" :error="$v.routeDetails.CustomerId" :required="true" md="2" lg="2">
-              <v-select v-model="routeDetails.Customer" label="CommercialTitle" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedCustomer">
+              <v-select v-model="routeDetails.Customer" label="Description1" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedCustomer">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -129,102 +131,30 @@
             <NextFormGroup :title="$t('insert.route.LocationId')" :error="$v.routeDetails.LocationId" :required="true" md="2" lg="2">
               <v-select v-model="routeDetails.Location" :disabled="!showCustomerLocation" label="Description1" :filterable="false" :options="customerLocationsList" @input="selectedCustomerLocation" ></v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day1VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day1FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day1Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day2VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day2FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day2Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day3VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day3FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day3Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day4VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day4FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day4Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day5VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day5FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day5Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day6VisitOrder" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.Day6FreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day6Frequency" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day7VisitOrder" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
               <b-form-datepicker
-                v-model="routeDetails.Day7FreStartDate"
+                v-model="routeDetails.DayFreStartDate"
                 :locale="$i18n.locale"
                 class="mb-2"
                 :value-as-date="true"
@@ -232,7 +162,7 @@
               </b-form-datepicker>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day7Frequency" />
+              <b-form-input type="number" :min="0" v-model="routeDetails.DayFrequency" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2">
               <b-form-group>
@@ -252,6 +182,8 @@
                 <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.DayFreStartDate')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.DayFrequency')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -265,6 +197,8 @@
                   <b-td>{{r.Day5VisitOrder}}</b-td>
                   <b-td>{{r.Day6VisitOrder}}</b-td>
                   <b-td>{{r.Day7VisitOrder}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(r.Day1FreStartDate)}}</b-td>
+                  <b-td>{{r.Day1Frequency}}</b-td>
                   <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -287,7 +221,7 @@ export default {
         VisitStartControlId: null,
         IsSuperRoute: null,
         DistrictId: null,
-        ParishIds: null,
+        ParishIds: [],
         Code: null,
         Description1: null,
         RepresentativeId: null,
@@ -297,10 +231,12 @@ export default {
         RouteGroupId: null,
         StatusId: null,
         CustomerRegion5Id: null,
+        MarketingRegion5Id: null,
         IsMultidayRoute: null,
         CityId: null,
         RouteDetails: []
       },
+      avenues: [],
       routeDetails: {
         Deleted: 0,
         System: 0,
@@ -309,27 +245,15 @@ export default {
         Customer: null,
         LocationId: null,
         Location: null,
-        Day1Frequency: null,
-        Day1FreStartDate: null,
         Day1VisitOrder: null,
-        Day2Frequency: null,
-        Day2FreStartDate: null,
         Day2VisitOrder: null,
-        Day3Frequency: null,
-        Day3FreStartDate: null,
         Day3VisitOrder: null,
-        Day4Frequency: null,
-        Day4FreStartDate: null,
         Day4VisitOrder: null,
-        Day5Frequency: null,
-        Day5FreStartDate: null,
         Day5VisitOrder: null,
-        Day6Frequency: null,
-        Day6FreStartDate: null,
         Day6VisitOrder: null,
-        Day7Frequency: null,
-        Day7FreStartDate: null,
         Day7VisitOrder: null,
+        DayFreStartDate: null,
+        DayFrequency: null,
         StatusId: null,
         AnnualVisitCount: null,
         CompanyId: null,
@@ -339,7 +263,8 @@ export default {
       },
       showCustomerLocation: false,
       showCustomerRegion: false,
-      showMarketingRegion: false
+      showMarketingRegion: false,
+      district: null
     }
   },
   validations () {
@@ -377,7 +302,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['distiricts', 'avenues', 'vehicles', 'employees', 'routeTypes', 'customers', 'customerLocationsList'])
+    ...mapState(['distiricts', 'vehicles', 'employees', 'routeTypes', 'customers', 'customerLocationsList'])
   },
   mounted () {
     this.createManualCode()
@@ -391,15 +316,33 @@ export default {
       } else {
         this.form.CityId = null
         this.form.DistrictId = null
+        this.district = null
+        this.avenues = []
       }
     },
     selectedDistirict (e) {
       if (e) {
         this.form.DistrictId = e.DecimalValue
-        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'AVENUE', name: 'avenues', upperValue: e.DecimalValue})
+        this.district = e.Label
+        let request = {
+          'LookupTableCode': 'AVENUE',
+          'UpperValue': e.DecimalValue
+        }
+        this.$api.postByUrl(request, 'VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue').then((res) => {
+          this.avenues = res.Values
+        })
       } else {
         this.form.DistrictId = null
         this.form.ParishIds = null
+        this.district = null
+      }
+    },
+    selectedParish (e) {
+      this.form.ParishIds = []
+      if (e) {
+        e.map(parish => {
+          this.form.ParishIds.push(parish.DecimalValue)
+        })
       }
     },
     selectedCustomer (e) {
@@ -421,6 +364,18 @@ export default {
         this.routeDetails.Customer = null
       }
     },
+    selectedLabelType (label, model) {
+      if (label === 'CustomerRegion5Id') {
+        this.form.MarketingRegion5Id = null
+      } else {
+        this.form.CustomerRegion5Id = null
+      }
+      if (model) {
+        this.form[label] = model.DecimalValue
+      } else {
+        this.form[label] = null
+      }
+    },
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
@@ -428,12 +383,20 @@ export default {
           if (model.RecordId === 1 || model.RecordId === 6) {
             this.showCustomerRegion = true
             this.showMarketingRegion = false
+            this.insertRules.CustomerRegion5Id = {
+              required
+            }
           } else if (model.RecordId === 5) {
             this.showMarketingRegion = true
             this.showCustomerRegion = false
+            this.insertRules.MarketingRegion5Id = {
+              required
+            }
           } else {
             this.showCustomerRegion = false
             this.showMarketingRegion = false
+            this.insertRules.MarketingRegion5Id = {}
+            this.insertRules.CustomerRegion5Id = {}
           }
         }
       } else {
@@ -517,13 +480,29 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.Day1FreStartDate)
-        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.Day2FreStartDate)
-        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.Day3FreStartDate)
-        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.Day4FreStartDate)
-        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.Day5FreStartDate)
-        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.Day6FreStartDate)
-        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.Day7FreStartDate)
+        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day1Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day2Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day3Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day4Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day5Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
+        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
+        if (control) {
+          this.$toasted.show(this.$t('insert.sameLocationField'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.form.RouteDetails.push({...this.routeDetails})
         this.clearRouteDetails()
         this.$v.routeDetails.$reset()
@@ -580,6 +559,14 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.RouteDetails.length < 1) {
+          this.$toasted.show(this.$t('insert.route.locationFieldRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.createData()
       }
     }

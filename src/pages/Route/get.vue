@@ -26,15 +26,13 @@
         <b-tab :title="$t('insert.route.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.RouteGroup, 'object', 'insert.route.routeGroup')"></div>
-              <div v-html="getFormatDataByType(rowData.RouteClass, 'object', 'insert.route.routeClass')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.route.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.route.personel')"></div>
               <div v-html="getFormatDataByType(rowData.Supervisor, 'object', 'insert.route.supervisor')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.route.customerArea')"></div>
+              <div v-html="getFormatDataByType(rowData.VisitStartControl, 'object', 'insert.route.control')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.VisitStartControl, 'object', 'insert.route.control')"></div>
               <div v-html="getFormatDataByType(rowData.City, 'object', 'insert.route.city')"></div>
               <div v-html="getFormatDataByType(rowData.District, 'object', 'insert.route.district')"></div>
               <div v-html="getFormatDataByType(rowData.IsMultidayRoute, 'check', 'insert.route.multiDayRoute')"></div>
@@ -49,6 +47,7 @@
               <b-card class="m-3 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
+                    <b-th><span>{{$t('list.location')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
@@ -61,6 +60,9 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.RouteDetails" :key="i">
+                      <b-td class="text-center">
+                        <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                      </b-td>
                       <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
                       <b-td>{{r.Location ? r.Location.Label : ''}}</b-td>
                       <b-td>{{r.Day1VisitOrder}}</b-td>
@@ -71,6 +73,9 @@
                       <b-td>{{r.Day6VisitOrder}}</b-td>
                       <b-td>{{r.Day7VisitOrder}}</b-td>
                     </b-tr>
+                    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+                      <NextLocation :Location='Location' />
+                    </b-modal>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
@@ -180,7 +185,8 @@ export default {
         { customer: 'TEKEL 61-İDRİS BAŞALI', location: 'TEKEL 61-İDRİS BAŞALI', visit: 1, code: '312' },
         { customer: 'ARZU GIDA-AHMET AKSU', location: 'ARZU GIDA-AHMET AKSU', visit: 1, code: '312' },
         { customer: 'BARBADOS TÜTÜN', location: 'BARBADOS TÜTÜN', visit: 1, code: '312' }
-      ]
+      ],
+      Location: {}
     }
   },
   mounted () {
@@ -196,6 +202,30 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
+    },
+    showMap (item) {
+      this.$api.post({RecordId: item.LocationId}, 'Customer', 'CustomerLocation/Get').then((res) => {
+        this.Location = res.Model
+        if (res.Model) {
+          if (res.Model.XPosition == null || res.Model.YPosition == null) {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'location-modal', res.Model)
+          })
+        } else {
+          this.$toasted.show(this.$t('index.errorLocation'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     }
   },
   watch: {

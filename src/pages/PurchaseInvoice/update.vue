@@ -7,6 +7,9 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
+            <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastInvoiceProducts')">
+              <i class="fa fa-list-alt"></i>
+            </b-button>
             <router-link :to="{name: 'PurchaseInvoice' }">
               <CancelButton />
             </router-link>
@@ -84,6 +87,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
@@ -185,6 +191,16 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    <b-modal id="confirm-products-modal">
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.order.productsWillDeleted')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-products-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="getLastProducts">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -254,7 +270,8 @@ export default {
       currentPage: 1,
       selectedBranch: {},
       selectedStatus: null,
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      paymentTypes: []
     }
   },
   computed: {
@@ -580,8 +597,9 @@ export default {
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
-        this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
+        this.selectedPaymentType = rowData.PaymentType
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
+        this.getPaymentTypes()
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
         }
@@ -591,6 +609,14 @@ export default {
             return item
           })
         }
+      }
+    },
+    getPaymentTypes () {
+      if (this.form.CustomerId > 0) {
+        let me = this
+        this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        })
       }
     },
     save () {
@@ -616,6 +642,61 @@ export default {
           : null
         this.updateData()
       }
+    },
+    getLastProducts () {
+      this.$bvModal.hide('confirm-products-modal')
+      if (!this.form.CustomerId || !this.form.WarehouseId || !this.form.PriceListId) {
+        this.$toasted.show(this.$t('insert.order.lastProductsRequiredMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let request = {
+        customerId: this.form.CustomerId,
+        warehouseId: this.form.WarehouseId,
+        priceListId: this.form.PriceListId
+      }
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseInvoice/GetLastOrderProducts').then((response) => {
+        if (response && response.length > 0) {
+          let count = 0
+          this.form.InvoiceLines = []
+          response.map(product => {
+            this.form.InvoiceLines.push({
+              Description1: product.ItemDescription,
+              Deleted: 0,
+              System: 0,
+              RecordState: 2,
+              StatusId: 1,
+              LineNumber: count,
+              ItemId: product.ItemId,
+              ItemCode: product.ItemCode,
+              UnitSetId: product.UnitSetId,
+              UnitId: product.UnitId,
+              ConvFact1: 1,
+              ConvFact2: 1,
+              Quantity: product.Quantity ? product.Quantity : 0,
+              ShippedQuantity: 0,
+              Stock: product.Stock,
+              VatRate: product.VatRate ? product.VatRate : 0,
+              TotalVat: product.TotalVat ? product.TotalVat : 0,
+              TotalItemDiscount: 0,
+              TotalOtherDiscount: 0,
+              Price: product.Price ? product.Price : 0,
+              GrossTotal: product.GrossTotal ? product.GrossTotal : 0,
+              NetTotal: product.NetTotal ? product.NetTotal : 0,
+              IsFreeItem: 0,
+              IsCanceled: 0,
+              PriceListPrice: product.Price ? product.Price : 0,
+              SalesQuantity1: product.Quantity ? product.Quantity : 0,
+              SalesUnit1Id: product.UnitId,
+              TempDiscountQuantity: product.Quantity ? product.Quantity : 0,
+              TempDiscountNetTotal: product.NetTotal ? product.NetTotal : 0
+            })
+            count++
+          })
+          this.calculateTotalPrices()
+        } else {
+          this.$toasted.show(this.$t('insert.order.noLastInvoiceProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
+        }
+      })
     }
   },
   validations () {
@@ -652,6 +733,7 @@ export default {
   },
   watch: {
     selectedCustomer (e) {
+      this.getPaymentTypes()
       if (e) {
         this.searchPriceList()
         if (e.DefaultLocationId) {

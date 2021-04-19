@@ -463,7 +463,12 @@ export const store = new Vuex.Store({
           }
         ]
       } else {
-        OrderByColumns = []
+        OrderByColumns = [
+          {
+            'column': 'CreatedDateTime',
+            'orderByType': 1
+          }
+        ]
       }
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
@@ -518,6 +523,10 @@ export const store = new Vuex.Store({
         'UserId': state.UserId,
         'FormId': query.FormId,
         'Columns': query.Columns
+      }
+      if (!state.UserId) {
+        store.commit('logout')
+        return
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
@@ -1150,7 +1159,8 @@ export const store = new Vuex.Store({
         },
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'page': 1
+        'page': 1,
+        'formName': query.formName
       }
 
       return axios.post(query.api, dataQuery, {
@@ -1441,6 +1451,9 @@ export const store = new Vuex.Store({
     },
     setLookUp (state, payload) {
       state.lookup = payload
+    },
+    setSingleLookUp (state, payload) {
+      state.lookup[payload.key] = payload.value
     },
     setDetailPanelLookups (state, payload) {
       state.detailLookup = payload

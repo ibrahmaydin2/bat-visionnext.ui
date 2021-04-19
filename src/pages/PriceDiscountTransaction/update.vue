@@ -81,12 +81,6 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
-            </NextFormGroup>
-            <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
-              <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
-            </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
               <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget'>
                 <template slot="no-options">
@@ -119,6 +113,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
               <NextCheckBox v-model="useBudget" type="number" toggle />
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
+              <b-form-input type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -254,6 +254,8 @@ export default {
           if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
             this.budgets = res.ListModel.BaseModels
             me.$forceUpdate()
+          } else {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
           }
         })
         let LoyaltyCustomer = {

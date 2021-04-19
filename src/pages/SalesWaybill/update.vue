@@ -7,6 +7,9 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
+            <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastWaybillProducts')">
+              <i class="fa fa-list-alt"></i>
+            </b-button>
             <router-link :to="{name: 'SalesWaybill' }">
               <CancelButton />
             </router-link>
@@ -272,8 +275,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass.Label}}</b-td>
-                  <b-td>{{o.DiscountClass.Code}}</b-td>
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
                   <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
@@ -312,7 +315,17 @@
       ></b-pagination>
       <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
       <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
-  </b-modal>
+    </b-modal>
+    <b-modal id="confirm-products-modal">
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.order.productsWillDeleted')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-products-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="getLastProducts">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -854,6 +867,62 @@ export default {
         }
         this.updateData()
       }
+    },
+    getLastProducts () {
+      this.$bvModal.hide('confirm-products-modal')
+      if (!this.form.CustomerId || !this.form.WarehouseId || !this.form.PriceListId) {
+        this.$toasted.show(this.$t('insert.order.lastProductsRequiredMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let request = {
+        customerId: this.form.CustomerId,
+        warehouseId: this.form.WarehouseId,
+        priceListId: this.form.PriceListId
+      }
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesWaybill/GetLastOrderProducts').then((response) => {
+        if (response && response.length > 0) {
+          let count = 0
+          this.form.InvoiceLines = []
+          response.map(product => {
+            this.form.InvoiceLines.push({
+              Description1: product.ItemDescription,
+              Deleted: 0,
+              System: 0,
+              RecordState: 2,
+              StatusId: 1,
+              LineNumber: count,
+              ItemId: product.ItemId,
+              ItemCode: product.ItemCode,
+              UnitSetId: product.UnitSetId,
+              UnitId: product.UnitId,
+              ConvFact1: 1,
+              ConvFact2: 1,
+              Quantity: product.Quantity ? product.Quantity : 0,
+              Stock: product.Stock,
+              VatRate: product.VatRate ? product.VatRate : 0,
+              TotalVat: product.TotalVat ? product.TotalVat : 0,
+              TotalItemDiscount: 0,
+              TotalOtherDiscount: 0,
+              Price: product.Price ? product.Price : 0,
+              GrossTotal: product.GrossTotal ? product.GrossTotal : 0,
+              NetTotal: product.NetTotal ? product.NetTotal : 0,
+              IsFreeItem: 0,
+              IsCanceled: 0,
+              PriceListPrice: product.Price ? product.Price : 0,
+              SalesQuantity1: product.Quantity ? product.Quantity : 0,
+              SalesUnit1Id: product.UnitId,
+              TempDiscountQuantity: product.Quantity ? product.Quantity : 0,
+              TempDiscountNetTotal: product.NetTotal ? product.NetTotal : 0,
+              DiscountNetTotal: 0,
+              DiscountQuantity: 0
+            })
+            count++
+          })
+          this.calculateTotalPrices()
+        } else {
+          this.$toasted.show(this.$t('insert.order.noLastWaybillProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
+        }
+      })
     }
   },
   validations () {

@@ -1,5 +1,5 @@
 <template>
-  <b-row class="asc__insertPage">
+  <b-row class="asc__updatePage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -15,7 +15,7 @@
         </b-row>
       </header>
     </b-col>
-    <b-col cols="12" class="asc__insertPage-content-head">
+    <b-col cols="12" class="asc__updatePage-content-head">
       <section>
         <b-row>
           <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" md="4" lg="3">
@@ -258,7 +258,7 @@
           </b-col>
           <b-col v-if="insertVisible.Email != null ? insertVisible.Email : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Email + (insertRequired.Email === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Email.$error }">
-              <b-form-input type="email" v-model="form.Email" :readonly="insertReadonly.Email" />
+              <b-form-input class="lowercase" type="email" v-model="form.Email" @input="emailEntered" :readonly="insertReadonly.Email" />
             </b-form-group>
           </b-col>
         </b-row>
@@ -550,6 +550,9 @@ export default {
     },
     removePrefix (item) {
       this.selectedEInvoices.splice(this.selectedEInvoices.indexOf(item), 1)
+    },
+    emailEntered (value) {
+      this.form.Email = value ? value.toLowerCase() : ''
     }
   },
   validations () {
@@ -616,3 +619,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.lowercase {
+  text-transform: lowercase;
+}
+</style>

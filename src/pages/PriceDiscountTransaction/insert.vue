@@ -249,6 +249,8 @@ export default {
           if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
             this.budgets = res.ListModel.BaseModels
             me.$forceUpdate()
+          } else {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
           }
         })
         let LoyaltyCustomer = {

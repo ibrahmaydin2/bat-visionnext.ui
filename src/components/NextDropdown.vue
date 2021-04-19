@@ -41,7 +41,11 @@ export default {
       default: false
     },
     dynamicAndCondition: {},
-    orConditionFields: {}
+    orConditionFields: {},
+    dynamicRequest: {},
+    source: {
+      type: Array
+    }
   },
   model: {
     prop: 'value',
@@ -50,6 +54,7 @@ export default {
   data () {
     return {
       values: [],
+      allValues: [],
       selectedValue: undefined,
       labelKey: ''
     }
@@ -78,6 +83,14 @@ export default {
       if (newValue !== oldValue) {
         this.selectedValue = newValue
       }
+    },
+    source (newValue) {
+      if (newValue && newValue.length > 0) {
+        this.values = newValue
+      }
+    },
+    allValues (newValue) {
+      this.$emit('all-source', newValue)
     }
   },
   methods: {
@@ -85,23 +98,34 @@ export default {
       if (!this.searchable || search.length < 3 || !this.url) {
         return false
       }
+      let pagerecordCount = 1000
+      if (search === '%%%') {
+        search = undefined
+        pagerecordCount = 20
+      } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
+        search = search.replaceAll('%', '')
+        pagerecordCount = 20
+      }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
       let orConditionModels = []
       let orConditionModel = {}
-      if (this.orConditionFields) {
-        let fields = this.orConditionFields.split(',')
-        fields.forEach(field => {
-          orConditionModel[field] = search
-        })
-        orConditionModels = [orConditionModel]
-      } else {
-        andConditionModel.Description1 = search
+      if (search) {
+        if (this.orConditionFields) {
+          let fields = this.orConditionFields.split(',')
+          fields.forEach(field => {
+            orConditionModel[field] = search
+          })
+          orConditionModels = [orConditionModel]
+        } else {
+          andConditionModel.Description1 = search
+        }
       }
       loading(true)
-      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url).then((response) => {
+      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels
+          this.allValues = this.values
         }
       })
     },
@@ -109,12 +133,20 @@ export default {
       if (!this.url) {
         return
       }
-      let andConditionModel = {
-        ...this.dynamicAndCondition
+      let request = {
+        ...this.dynamicRequest,
+        andConditionModel: {
+          ...this.dynamicAndCondition
+        }
       }
-      this.$api.postByUrl({andConditionModel: andConditionModel}, this.url).then((response) => {
-        if (response && response.ListModel) {
-          this.values = response.ListModel.BaseModels
+      this.$api.postByUrl(request, this.url).then((response) => {
+        if (response) {
+          if (response.ListModel) {
+            this.values = response.ListModel.BaseModels
+          } else if (response.Values) {
+            this.values = response.Values
+          }
+          this.allValues = this.values
         }
       })
     },
@@ -122,13 +154,20 @@ export default {
       this.$emit('input', value)
     },
     getLookupValues () {
+      let lookupValue = this.lookup[this.lookupKey]
+      if (lookupValue && lookupValue.length > 0) {
+        this.values = lookupValue
+        this.allValues = this.values
+        return
+      }
       this.$api.postByUrl({LookupTableCode: this.lookupKey}, 'VisionNextCommonApi/api/LookupValue/GetValues').then((response) => {
         if (response) {
           this.values = response.Values
+          this.allValues = this.values
+          this.$store.commit('setSingleLookUp', {key: this.lookupKey, value: this.values})
         }
       })
     }
   }
 }
-
 </script>

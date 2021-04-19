@@ -107,6 +107,7 @@
                 v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @input="setSearchQ(header.dataField, $event)"
               />
 
               <b-form-input
@@ -199,6 +200,9 @@
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation :Location="modalItem"/>
+    </b-modal>
     <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
@@ -206,6 +210,8 @@
     <RmaConvertModal v-if="showRmaConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
     <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -219,6 +225,8 @@ import SalesWaybillConvertModal from './Actions/SalesWaybillConvertModal'
 import RmaConvertModal from './Actions/RmaConvertModal'
 import RmaInvoiceModal from './Actions/RmaInvoiceModal'
 import InvoiceConvertModal from './Actions/InvoiceConvertModal'
+import KmModal from './Actions/KmModal'
+import PriceListDayModal from './Actions/PriceListDayModal'
 let searchQ = {}
 export default {
   components: {
@@ -229,7 +237,9 @@ export default {
     SalesWaybillConvertModal,
     RmaConvertModal,
     RmaInvoiceModal,
-    InvoiceConvertModal
+    KmModal,
+    InvoiceConvertModal,
+    PriceListDayModal
   },
   props: {
     apiurl: String,
@@ -298,7 +308,9 @@ export default {
       showInvoiceConvertModal: false,
       showPotentialCustomerApproveModal: false,
       showCustomConvertModal: false,
-      showConfirmModal: false
+      showConfirmModal: false,
+      showKmModal: false,
+      showPriceListDayModal: false
     }
   },
   mounted () {
@@ -327,7 +339,9 @@ export default {
     } else {
       sortOpt = null
     }
-    this.andConditionalModel = {}
+    if (!this.andConditionalModel) {
+      this.andConditionalModel = {}
+    }
     searchQ = {}
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
@@ -358,6 +372,8 @@ export default {
       this.showPotentialCustomerApproveModal = false
       this.showPotentialCustomerRejectModal = false
       this.showConfirmModal = false
+      this.showKmModal = false
+      this.showPriceListDayModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -369,7 +385,6 @@ export default {
           return
         }
       }
-
       if (action.Action === 'ApprovePotentialCustomer') {
         this.showPotentialCustomerApproveModal = true
         this.$nextTick(() => {
@@ -399,6 +414,21 @@ export default {
         this.showWaybillConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'salesWaybillConvertModal')
+        })
+      } else if (action.Action === 'KmModal') {
+        this.showKmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'kmModal')
+        })
+      } else if (action.Action === 'PriceListDayUpdate') {
+        this.showPriceListDayModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'priceListDayModal')
+        })
+      } else if (action.Action === 'ShowOnMap') {
+        console.log(row)
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'location-modal')
         })
       } else {
         this.showConfirmModal = true
@@ -762,6 +792,9 @@ export default {
     },
     getFormattedDate (defaultValue) {
       return defaultValue && defaultValue.length === 2 && defaultValue[0] && defaultValue[0].slice && defaultValue[1] && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
+    },
+    setSearchQ (tableField, model) {
+      searchQ[tableField] = model
     }
   },
   watch: {

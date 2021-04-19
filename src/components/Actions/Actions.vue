@@ -54,6 +54,14 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Action'" @click.prevent.stop="openAction(action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
+        <span class="d-inline-block w-100" v-else-if="action.Action === 'ShowOnMap'" @click.prevent.stop="showMap(action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
         <span class="d-inline-block w-100" v-else>
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
@@ -111,6 +119,17 @@ export default {
     showMultipleModal (action) {
       this.$emit('showMultipleModal', action)
     },
+    showMap (action, row) {
+      if (row.XPosition == null || row.YPosition == null) {
+        this.$toasted.show(this.$t('index.errorLocation'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$emit('showModal', action, row)
+    },
     print (action, row) {
       if (action.Query === 'Invoice') {
         this.$api.postByUrl({recordId: row.RecordId}, action.ActionUrl).then((res) => {
@@ -139,6 +158,32 @@ export default {
           this.htmlPrint(res.Html)
         })
       }
+    },
+    openAction (action, row) {
+      let request = {
+        recordId: row.RecordId,
+        model: {}
+      }
+      request.model[action.Query] = action.QueryMessage
+
+      this.$api.postByUrl(request, action.ActionUrl).then((res) => {
+        if (res.IsCompleted === true) {
+          this.$toasted.show(this.$t('insert.success'), {
+            type: 'success',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          setTimeout(() => {
+            this.$router.go()
+          }, 1000)
+        } else {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     },
     getListForDocument (recordId, documentType, customerId) {
       this.$store.commit('setPrintDocuments', [])

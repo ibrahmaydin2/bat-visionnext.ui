@@ -11,15 +11,6 @@
           </header>
         </b-col>
       </b-row>
-      <!-- <b-row>
-        <b-col cols="12">
-          <section>
-            <span><i class="fas fa-code" />  <b>{{$t('get.Code')}}:</b> {{rowData.Code}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('get.Description')}}:</b> {{rowData.Description1}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('get.Status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
-          </section>
-        </b-col>
-      </b-row> -->
       <b-tabs>
         <b-tab :title="$t('get.assetMovementCard.general')" active>
           <b-row class="p-4">
@@ -33,8 +24,38 @@
               <div v-html="getFormatDataByType(rowData.ToState, 'object', 'get.assetMovementCard.toState')"></div>
               <div v-html="getFormatDataByType(rowData.FromState, 'object', 'get.assetMovementCard.fromState')"></div>
               <div v-html="getFormatDataByType(rowData.ToLocation, 'object', 'get.assetMovementCard.toLocation')"></div>
-              <div v-html="getFormatDataByType(rowData.FromLocation, 'date', 'get.assetMovementCard.fromLocation')"></div>
+              <div v-html="getFormatDataByType(rowData.FromLocation, 'object', 'get.assetMovementCard.fromLocation')"></div>
             </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('get.assetMovementCard.assets')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('get.assetMovementCard.assetName')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.assetCode')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.serialNumber')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.quantity')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.condition')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.serialNumber2')}}</span></b-th>
+                    <b-th><span>{{$t('get.assetMovementCard.serialNumber3')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(a, i) in rowData.AssetMovementCardDetails" :key="i">
+                      <b-td>{{a.Asset ? a.Asset.Label : ''}}</b-td>
+                      <b-td>{{a.Asset ? a.Asset.Code : ''}}</b-td>
+                      <b-td>{{a.SerialNumber}}</b-td>
+                      <b-td>{{a.Quantity}}</b-td>
+                      <b-td>{{a.Condition ? a.Condition.Label : ''}}</b-td>
+                      <b-td>{{a.SerialNumber2}}</b-td>
+                      <b-td>{{a.SerialNumber3}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>

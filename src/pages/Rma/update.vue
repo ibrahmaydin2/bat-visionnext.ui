@@ -414,7 +414,8 @@ export default {
               Description1: item.Item.Description1,
               Code: item.Item.Code,
               RecordId: item.Item.RecordId
-            }
+            },
+            RmaId: item.RmaId
           }
           return newItem
         })
@@ -423,45 +424,48 @@ export default {
     },
     setModel () {
       let e = this.rowData
-      e.RmaLines.map(item => {
-        if (item.Item) {
-          this.rmaLines.push({
-            Item: {
-              Description1: item.Item.Label,
-              Code: item.Item.Code,
-              RecordId: item.Item.DecimalValue
-            },
-            Deleted: item.Deleted,
-            System: item.System,
-            RecordState: 3,
-            StatusId: item.StatusId,
-            LineNumber: item.LineNumber,
-            ItemId: item.ItemId,
-            RmaReasonId: item.RmaReasonId,
-            ConvFact1: item.ConvFact1,
-            ConvFact2: item.ConvFact2,
-            Quantity: item.Quantity,
-            Price: item.Price,
-            UnitSetId: item.UnitSetId,
-            UnitId: item.UnitId,
-            RmaQuantity1: item.Quantity,
-            RmaUnit1Id: item.UnitId,
-            RecordId: item.RecordId
-          })
-        }
-      })
-      this.rmaLines.sort(function (a, b) {
-        return a.LineNumber - b.LineNumber
-      })
-      this.form = e
-      this.customer = this.convertLookupValueToSearchValue(e.Customer)
-      this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
-      this.representative = this.convertLookupValueToSearchValue(e.Representative)
-      this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
-      this.route = this.convertLookupValueToSearchValue(e.Route)
-      this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
-      this.rmaStatus = e.RmaStatus
-      this.rmaType = e.RmaType
+      if (e) {
+        e.RmaLines.map(item => {
+          if (item.Item) {
+            this.rmaLines.push({
+              Item: {
+                Description1: item.Item.Label,
+                Code: item.Item.Code,
+                RecordId: item.Item.DecimalValue
+              },
+              Deleted: item.Deleted,
+              System: item.System,
+              RecordState: 3,
+              StatusId: item.StatusId,
+              LineNumber: item.LineNumber,
+              ItemId: item.ItemId,
+              RmaReasonId: item.RmaReasonId,
+              ConvFact1: item.ConvFact1,
+              ConvFact2: item.ConvFact2,
+              Quantity: item.Quantity,
+              Price: item.Price,
+              UnitSetId: item.UnitSetId,
+              UnitId: item.UnitId,
+              RmaQuantity1: item.Quantity,
+              RmaUnit1Id: item.UnitId,
+              RecordId: item.RecordId,
+              RmaId: item.RmaId
+            })
+          }
+        })
+        this.rmaLines.sort(function (a, b) {
+          return a.LineNumber - b.LineNumber
+        })
+        this.form = e
+        this.customer = this.convertLookupValueToSearchValue(e.Customer)
+        this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
+        this.representative = this.convertLookupValueToSearchValue(e.Representative)
+        this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
+        this.route = this.convertLookupValueToSearchValue(e.Route)
+        this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
+        this.rmaStatus = e.RmaStatus
+        this.rmaType = e.RmaType
+      }
     }
   },
   validations () {

@@ -12,8 +12,8 @@
           <date-picker
             range
             type="date"
-            v-model="CreatedDateTime"
-            @change="filterRangeDate(CreatedDateTime)"
+            v-model="DocumentDate"
+            @change="filterDocumentDate(DocumentDate)"
           ></date-picker>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.employee')" md="4" lg="4">
@@ -24,12 +24,17 @@
           </v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.transactionDate')" md="4" lg="4">
-          <b-form-datepicker v-model="form.DocumentDate" />
+          <date-picker
+            range
+            type="date"
+            v-model="CreatedDateTime"
+            @change="filterRangeDate(CreatedDateTime)"
+          ></date-picker>
         </NextFormGroup>
         <b-col md="4" lg="4" class="d-flex align-items-center">
           <b-button
             variant="warning"
-            class="mt-2 w-75"
+            class="mt-2 w-100"
             size="sm"
             @click="search()"
           >
@@ -76,8 +81,7 @@
             </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
-                <b-spinner type="grow" class="align-middle"></b-spinner>
-                <!-- <strong>{{$t('index.pleaseSearchForTable')}}</strong> -->
+                <b-spinner class="align-middle"></b-spinner>
               </div>
             </template>
           </b-table>
@@ -131,13 +135,14 @@ export default {
       form: {
         BranchIds: null,
         documentTypeId: null,
-        documentDate: null,
+        DocumentDate: null,
         CustomerIds: null,
         RepresentativeIds: null
       },
       tableBusy: false,
       employee: null,
       CreatedDateTime: null,
+      DocumentDate: null,
       branchList: JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches,
       documentType: null,
       documentTypes: [
@@ -239,10 +244,13 @@ export default {
       this.form = {
         BranchIds: null,
         documentTypeId: null,
-        documentDate: null,
-        CustomerIds: null
+        DocumentDate: null,
+        CustomerIds: null,
+        RepresentativeIds: null
       }
       this.documentType = null
+      this.DocumentDate = null
+      this.CreatedDateTime = null
       this.employee = null
       this.$v.form.$reset()
       this.clearProgress()
@@ -301,11 +309,6 @@ export default {
         })
       } else {
         this.form.CustomerIds = this.modalItem ? [this.modalItem.RecordId] : null
-        if (this.form.DocumentDate) {
-          this.form.DocumentDate = {
-            Value: this.dateConvertToISo(this.form.DocumentDate)
-          }
-        }
         let request = {
           'AndConditionModel': {
             ...this.form
@@ -320,6 +323,12 @@ export default {
     },
     filterRangeDate (date) {
       this.form.CreatedDateTime = {
+        BeginValue: this.dateConvertToISo(date[0]),
+        EndValue: this.dateConvertToISo(date[1])
+      }
+    },
+    filterDocumentDate (date) {
+      this.form.DocumentDate = {
         BeginValue: this.dateConvertToISo(date[0]),
         EndValue: this.dateConvertToISo(date[1])
       }
@@ -395,6 +404,6 @@ export default {
 </script>
 <style scoped>
   .mx-datepicker-range {
-    width: unset !important;
+    width: 100% !important;
   }
 </style>

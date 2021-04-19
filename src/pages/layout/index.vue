@@ -147,6 +147,7 @@
       <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
       <PrintModal />
       <ImportExcelModal :modalAction="modalAction" />
+      <MultiplePaymentChangeModal :modalAction="modalAction" :recordIds="recordIds" />
   </b-container>
 </template>
 <script>
@@ -154,12 +155,14 @@ import { mapState, mapMutations } from 'vuex'
 import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
 import PrintModal from '../../components/Actions/PrintModal'
 import ImportExcelModal from '../../components/Actions/ImportExcelModal'
+import MultiplePaymentChangeModal from '../../components/Actions/MultiplePaymentChangeModal'
 
 export default {
   components: {
     MultipleConfirmModal,
     PrintModal,
-    ImportExcelModal
+    ImportExcelModal,
+    MultiplePaymentChangeModal
   },
   data () {
     return {
@@ -230,7 +233,7 @@ export default {
       })
     },
     downloadBtn (r, f) {
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url})
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name})
     },
     uploadBtn (route, action) {
       this.modalAction = action
@@ -262,9 +265,12 @@ export default {
         return
       }
       this.modalAction = action
-      // this.selectedTableRows.map(item => {
-      //   this.recordIds.push(item.RecordId)
-      // })
+      if (action.Action === 'MultiPaymentChange') {
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'multiplePaymentChangeModal')
+        })
+        return
+      }
       this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
     }
   }

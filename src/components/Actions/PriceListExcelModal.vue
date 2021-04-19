@@ -1,19 +1,8 @@
 <template>
-  <b-modal id="importExcelModal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal id="price-list-excel-modal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
-          <!-- <b-form-file
-            v-model="files"
-            :placeholder="$t('index.chooseFile')"
-            :drop-placeholder="$t('index.dropFile')"
-          >
-            <template slot="file-name" slot-scope="{ names }">
-              <b-badge variant="dark">{{ names[0] }}</b-badge>
-              <b-badge v-if="names.length > 1" variant="dark" class="ml-1">
-              </b-badge>
-            </template>
-          </b-form-file> -->
           <input type="file">
         </template>
       </b-row>
@@ -27,11 +16,13 @@
             {{$t('index.close')}}
           </b-button>
           <b-button
+            :disabled="isLoading"
             variant="primary"
             size="sm"
             @click="submitFile()"
           >
-            {{$t('index.upload')}}
+            <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
+            <span v-else>{{$t('index.upload')}}</span>
           </b-button>
         </div>
       </b-row>
@@ -61,7 +52,7 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
-  name: 'ImportExcelModal',
+  name: 'PriceListExcelModal',
   mixins: [mixin],
   components: {
   },
@@ -78,7 +69,8 @@ export default {
     return {
       files: null,
       datas: [],
-      isError: false
+      isError: false,
+      isLoading: false
     }
   },
   validations () {
@@ -99,14 +91,11 @@ export default {
     sendFile (file) {
       let formData = {
         files: file,
-        ExcelIntegrationType: this.modalAction.Query
+        ExcelIntegrationType: 6
       }
-
-      if (this.modalAction.QueryMessage !== null) {
-        formData.FileProccessType = this.modalAction.QueryMessage
-      }
-
+      this.isLoading = true
       this.$store.dispatch('importExcel', formData).then(res => {
+        this.isLoading = false
         if (res.data.IsCompleted === true) {
           for (const property in res.data.Data) {
             let item = res.data.Data[property]
@@ -118,21 +107,19 @@ export default {
                   Message: msg.Message,
                   Column: msg.Column
                 })
-                document.querySelector('input[type="file"]').value = ''
               })
             }
           }
           if (!this.isError) {
             document.querySelector('input[type="file"]').value = ''
-            let model = {
-              'documentCacheKey': res.data.DocumentCacheKey,
-              ExcelIntegrationType: this.modalAction.Query
-            }
-            let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile`
-            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model})
+            this.$emit('update', res.data.Data)
           }
         } else {
-          document.querySelector('input[type="file"]').value = ''
+          this.$toasted.show(res.Message, {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
         }
       })
     },
@@ -146,7 +133,7 @@ export default {
       }
     },
     closeModal () {
-      this.$root.$emit('bv::hide::modal', 'importExcelModal')
+      this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
     }
 
   }

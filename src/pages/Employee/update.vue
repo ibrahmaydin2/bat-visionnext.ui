@@ -266,7 +266,7 @@
           </b-col>
           <b-col v-if="insertVisible.Email != null ? insertVisible.Email : developmentMode" md="4" lg="3">
             <b-form-group :label="insertTitle.Email + (insertRequired.Email === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Email.$error }">
-              <b-form-input type="email" v-model="form.Email" :readonly="insertReadonly.Email" />
+              <b-form-input class="lowercase" type="email" v-model="form.Email" @input="emailEntered" :readonly="insertReadonly.Email" />
             </b-form-group>
           </b-col>
         </b-row>
@@ -578,6 +578,9 @@ export default {
     removePrefix (item) {
       let index = this.selectedEInvoices.indexOf(item)
       this.selectedEInvoices.splice(index, 1)
+    },
+    emailEntered (value) {
+      this.form.Email = value ? value.toLowerCase() : ''
     }
   },
   validations () {
@@ -587,20 +590,8 @@ export default {
       minLength: minLength(11),
       maxLength: maxLength(11)
     }
-    form.Telephone1 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.Telephone2 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
     form.GsmNumber = {
       required,
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.FaxNumber = {
       minLength: minLength(10),
       maxLength: maxLength(10)
     }
@@ -670,7 +661,7 @@ export default {
           Telephone2: e.Telephone2,
           GsmNumber: e.GsmNumber,
           FaxNumber: e.FaxNumber,
-          Email: e.Email,
+          Email: e.Email ? e.Email.toLocaleLowerCase() : '',
           Other1: e.Other1,
           TaxNumber: e.TaxNumber,
           BirthDate: e.BirthDate,
@@ -732,3 +723,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.lowercase {
+  text-transform: lowercase;
+}
+</style>
