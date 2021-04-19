@@ -7,7 +7,7 @@
       <vl-geoloc @update:position="geolocPosition = $event">
         <template slot-scope="geoloc">
           <vl-feature v-if="geoloc.position" id="position-feature">
-            <vl-geom-point :coordinates="test"></vl-geom-point>
+            <vl-geom-point :coordinates="location"></vl-geom-point>
             <vl-style-box>
               <vl-style-icon src="http://maps.google.com/mapfiles/ms/icons/red.png" :scale="1.2" :anchor="[0.5, 1]"></vl-style-icon>
             </vl-style-box>
@@ -20,10 +20,10 @@
       </vl-layer-tile>
     </vl-map>
     <div style="padding: 20px">
-      Zoom: {{ zoom }}<br>
-      Center: {{ center }}<br>
-      Rotation: {{ rotation }}<br>
-      My geolocation: {{ geolocPosition }}
+      {{$t('insert.customer.Model_Code')}}: {{Location.Code}}<br>
+      {{$t('insert.customer.Model_Location_Description1')}}: {{Location.Description1}}<br>
+      {{$t('insert.customer.Model_XPosition')}} - {{$t('insert.customer.Model_YPosition')}}: {{ Location.XPosition }} - {{ Location.YPosition }}<br>
+      {{$t('insert.warehouse.Address')}}: {{ Location.AddressDetail }}<br>
     </div>
   </div>
 </template>
@@ -31,17 +31,21 @@
 <script>
 
 export default {
+  props: {
+    Location: {}
+  },
   data () {
     return {
       zoom: 15,
-      center: [ 29.01728824244658, 41.114476264356966 ],
+      center: [],
       rotation: 0,
       geolocPosition: undefined,
-      test: [29.01728824244658, 41.114476264356966]
+      location: []
     }
   },
   mounted () {
-    console.log('test')
+    this.location = [this.Location.YPosition, this.Location.XPosition]
+    this.center = [this.Location.YPosition, this.Location.XPosition]
   }
 }
 </script>

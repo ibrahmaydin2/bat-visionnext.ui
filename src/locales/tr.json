@@ -1762,7 +1762,8 @@
       "GainType": "Kazanç Türü",
       "Code": "Kod",
       "Description":"Açıklama",
-      "Status":"Durum"
+      "Status":"Durum",
+      "customerBudgetNotFound": "Müşterinin Bütçe bilgisi bulunamadı!"
     },
     "discount": {
       "code": "İndirim Kodu",
@@ -1820,7 +1821,17 @@
       "fromState": "Çıkış Statü",
       "operationDate": "İşlem Tarihi",
       "toLocation": "Giriş Lokasyon",
-      "fromLocation": "Çıkış Lokasyon"
+      "fromLocation": "Çıkış Lokasyon",
+      "assets": "Varlıklar",
+      "serialNumber": "Barkod",
+      "quantity": "Miktar",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "assetCode": "Varlık Kodu",
+      "serialNumber2": "Seri No",
+      "serialNumber3": "Demirbaş No",
+      "condition": "Kullanım Durumu",
+      "assetMovementCard": "Varlık Hareketleri"
     }
   },
 
@@ -1867,6 +1878,7 @@
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorLocation": "Boylam - Enlem Bilgisi Eksik",
     "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
     "Convert": {

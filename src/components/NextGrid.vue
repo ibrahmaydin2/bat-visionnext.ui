@@ -107,6 +107,7 @@
                 v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @input="setSearchQ(header.dataField, $event)"
               />
 
               <b-form-input
@@ -198,6 +199,9 @@
     </b-modal>
     <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
       <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
+    </b-modal>
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation :Location="modalItem"/>
     </b-modal>
     <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
@@ -420,6 +424,11 @@ export default {
         this.showPriceListDayModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'priceListDayModal')
+        })
+      } else if (action.Action === 'ShowOnMap') {
+        console.log(row)
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'location-modal')
         })
       } else {
         this.showConfirmModal = true
@@ -783,6 +792,9 @@ export default {
     },
     getFormattedDate (defaultValue) {
       return defaultValue && defaultValue.length === 2 && defaultValue[0] && defaultValue[0].slice && defaultValue[1] && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
+    },
+    setSearchQ (tableField, model) {
+      searchQ[tableField] = model
     }
   },
   watch: {

@@ -88,6 +88,9 @@
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
+            <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)" :disabled="!paymentTypes || paymentTypes.length == 0"/>
+            </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
@@ -276,7 +279,9 @@ export default {
       currentCustomer: {},
       customerSelectCancelled: false,
       selectedBranch: {},
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      selectedPaymentType: null,
+      paymentTypes: []
     }
   },
   computed: {
@@ -604,6 +609,16 @@ export default {
       this.customerSelectCancelled = true
       this.selectedCustomer = this.currentCustomer
     },
+    getPaymentTypes () {
+      if (this.form.CustomerId > 0) {
+        let me = this
+        this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+          me.selectedPaymentType = res.Model.DefaultPaymentType
+          me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
+        })
+      }
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -718,6 +733,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
+      this.getPaymentTypes()
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return
