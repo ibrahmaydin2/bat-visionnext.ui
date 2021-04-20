@@ -35,22 +35,27 @@ var checkSearchObject = function (obj) {
   }
 }
 var numberOfAjaxCAllPending = 0
-var me = this
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
+axios.defaults.timeout = 60000
 axios.interceptors.request.use(function (config) {
   numberOfAjaxCAllPending++
-  me.bigloading = true
+  store.commit('bigLoaded', true)
   return config
 })
 axios.interceptors.response.use(function (response) {
   numberOfAjaxCAllPending--
   if (numberOfAjaxCAllPending === 0) {
-    me.bigloading = false
+    store.commit('bigLoaded', false)
+  } else {
+    store.commit('bigLoaded', true)
   }
   return response
 }, function (error) {
-  me.bigloading = false
-  numberOfAjaxCAllPending--
+  store.commit('bigLoaded', false)
+  numberOfAjaxCAllPending = 0
+  if (error && error.code === 'ECONNABORTED') {
+    store.commit('showAlert', { type: 'danger', msg: i18n.t('general.timeoutError') })
+  }
   return Promise.reject(error)
 })
 export default axios
@@ -289,7 +294,6 @@ export const store = new Vuex.Store({
           } else {
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
-            commit('bigLoaded', false)
           }
         })
         .catch(err => {
@@ -298,7 +302,6 @@ export const store = new Vuex.Store({
           document.getElementById('loginLoader').style.display = 'none'
           commit('showAlert', { type: 'network', msg: err })
           commit('setTableData', [])
-          commit('bigLoaded', false)
         })
     },
     logout ({ commit }, authData) {
@@ -350,7 +353,6 @@ export const store = new Vuex.Store({
     // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ state, commit }, query) {
-      commit('bigLoaded', true)
       commit('setError', {view: false, info: null})
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
@@ -417,7 +419,6 @@ export const store = new Vuex.Store({
             commit('setError', {view: false, info: null})
           } else {
             commit('setError', {view: true, info: res.data.Message})
-            commit('bigLoaded', false)
           }
         })
         .catch(err => {
@@ -448,7 +449,6 @@ export const store = new Vuex.Store({
     getTableData ({ state, commit }, query) {
       commit('setTableData', [])
       commit('showNextgrid', false)
-      commit('bigLoaded', true)
       let dataQuery = {}
       let OrderByColumns = []
       let AndConditionModel = {}
@@ -503,7 +503,6 @@ export const store = new Vuex.Store({
           if (res.data.IsCompleted === true) {
             commit('setError', {view: false, info: null})
             commit('showNextgrid', true)
-            commit('bigLoaded', false)
             commit('setTableData', res.data.ListModel)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
@@ -553,7 +552,6 @@ export const store = new Vuex.Store({
     // tüm GET ekranlarının genel datasını POST metodudyla besleyen fonksiyondur.
     getData ({ state, commit }, query) {
       commit('setTableData', [])
-      commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
         'BranchId': state.BranchId,
@@ -565,15 +563,12 @@ export const store = new Vuex.Store({
         .then(res => {
           switch (res.status) {
             case 200:
-              commit('bigLoaded', false)
               commit('setRowData', res.data.Model)
               break
             case 900:
-              commit('bigLoaded', false)
               commit('logout')
               break
             default:
-              commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
               break
           }
@@ -582,7 +577,6 @@ export const store = new Vuex.Store({
           console.log(err.message)
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
-          // commit('bigLoaded', false)
         })
     },
     // tüm INSERT ekranlarının kontrolleri sağlanır.
@@ -629,31 +623,25 @@ export const store = new Vuex.Store({
         })
     },
     getInsertRules ({ state, commit }, query) {
-      commit('bigLoaded', true)
       return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
           }
         })
         .catch(err => {
-          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
     getCreateCode ({ commit }, query) {
-      commit('bigLoaded', true)
       return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setGetCreateCode', res.data.Model.Code)
           } else {
           }
         })
         .catch(err => {
-          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
@@ -666,12 +654,10 @@ export const store = new Vuex.Store({
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
-      commit('bigLoaded', true)
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
-          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
@@ -746,12 +732,10 @@ export const store = new Vuex.Store({
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
-      commit('bigLoaded', true)
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
-          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           if (res.data.IsCompleted === true) {
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
@@ -797,7 +781,6 @@ export const store = new Vuex.Store({
     // aşağıdaki fonksiyonlar temizlenmeli. birbirini taklit eden fonksiyonlar birleştirilmeli.
     getBranchData ({ state, commit }, query) {
       commit('setTableData', [])
-      commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
         'BranchId': state.BranchId,
@@ -808,15 +791,12 @@ export const store = new Vuex.Store({
         .then(res => {
           switch (res.status) {
             case 200:
-              commit('bigLoaded', false)
               commit('setBranch', res.data.Model)
               break
             case 900:
-              commit('bigLoaded', false)
               commit('logout')
               break
             default:
-              commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
               break
           }
@@ -825,7 +805,6 @@ export const store = new Vuex.Store({
           console.log(err.message)
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
-          // commit('bigLoaded', false)
         })
     },
     // LOOKUP servisleri
@@ -1108,7 +1087,6 @@ export const store = new Vuex.Store({
 
     // Search isteklerinin ortak fonksiyonu
     getSearchItems ({state, commit}, query) {
-      commit('bigLoaded', true)
       let dataQuery = {
         'AndConditionModel': {
           ...checkSearchObject(query.andConditionModel)
@@ -1120,9 +1098,12 @@ export const store = new Vuex.Store({
         'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : pagerecordCount,
         'page': 1
       }
+      let isSearch = query.andConditionModel || query.orConditionModels
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
+          if (isSearch) {
+            commit('bigLoaded', false)
+          }
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
           } else {
@@ -1153,7 +1134,6 @@ export const store = new Vuex.Store({
         })
     },
     getDownloadLink ({state, commit}, query) {
-      commit('bigLoaded', true)
       let dataQuery = {
         'AndConditionModel': {
         },
@@ -1173,17 +1153,13 @@ export const store = new Vuex.Store({
         link.setAttribute('download', 'excel.xlsx')
         document.body.appendChild(link)
         link.click()
-        commit('bigLoaded', false)
       }).catch(err => {
-        commit('bigLoaded', false)
         commit('showAlert', { type: 'danger', msg: err.message })
       })
     },
     getFormFields ({ state, commit }, query) {
-      commit('bigLoaded', true)
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
           if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
             commit('setFormFields', res.data.UIPageModels[0])
           } else {
@@ -1191,41 +1167,34 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     getDashboard ({ state, commit }, query) {
-      commit('bigLoaded', true)
       const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
       return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetUserDashboards/${userId}`, authHeader)
         .then(res => {
           return res
         })
         .catch(err => {
-          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     getDashboardReports ({ state, commit }, query) {
-      commit('bigLoaded', true)
       return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetUserGadgets/${query.id}`, authHeader)
         .then(res => {
           return res
         })
         .catch(err => {
-          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     getDashboardReportDetail ({ state, commit }, query) {
-      commit('bigLoaded', true)
       return axios.get(`VisionNextDashboard/api/BatDashboardApi/GetGadgetDetails/${query.id}`, authHeader)
         .then(res => {
           return res
         })
         .catch(err => {
-          commit('bigLoaded', false)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1271,7 +1240,6 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setGetItems', {data: res.data.Model, name: query.name})
-            commit('bigLoaded', false)
           } else {
             commit('setGetItems', {data: [], name: query.name})
             commit('showAlert', { type: 'danger', msg: res.data.Message })
@@ -1279,7 +1247,6 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
-          commit('bigLoaded', false)
         })
     },
     confirmModal ({ state, commit }, query) {
@@ -1292,7 +1259,6 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setGetItems', {data: res.data.Model, name: query.name})
-            commit('bigLoaded', false)
           } else {
             commit('setGetItems', {data: [], name: query.name})
             commit('showAlert', { type: 'danger', msg: res.data.Message })
@@ -1300,7 +1266,6 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
-          commit('bigLoaded', false)
         })
     },
     importExcel ({ state, commit }, formData) {
@@ -1331,7 +1296,6 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
-          commit('bigLoaded', false)
         })
     }
   },

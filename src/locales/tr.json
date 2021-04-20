@@ -1173,7 +1173,9 @@
       "noCustomerBudget": "Müşterinin bütçe bilgisi bulunamadı!",
       "usedAmount": "Harcanan Tutar",
       "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
-      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!"
+      "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!",
+      "validBeginDate": "Geçerlilik Başlangıç Tarihi",
+      "validEndDate": "Geçerlilik Bitiş Tarihi"
     },
     "loadingplan": {
       "items": "Ürün",
@@ -1284,7 +1286,8 @@
     "RmaOrder": {
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
-      "Quantity": "İade Miktarı"
+      "Quantity": "İade Miktarı",
+      "WarehouseError": "Seçilen deponun, hizmet alınan depoları yok."
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1832,6 +1835,19 @@
       "serialNumber3": "Demirbaş No",
       "condition": "Kullanım Durumu",
       "assetMovementCard": "Varlık Hareketleri"
+    },
+    "asset": {
+      "general": "Genel",
+      "code":"Varlık Kodu",
+      "description1":"Adı",
+      "producer": "Üretici",
+      "brand":"Varlık Markası",
+      "model":"Model",
+      "assetType": "Tipi",
+      "type":"Tip",
+      "assetClass": "Sınıf",
+      "trackType": "İzleme Tipi",
+      "barcode": "Barkod"
     }
   },
 
@@ -1845,7 +1861,8 @@
     "homepage": "Ana Sayfa",
     "notifications": "Bildirimler",
     "notifyItems": "{x} Bildirim",
-    "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
+    "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
+    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz."
   },
   "index": {
     "today": "Bugün",

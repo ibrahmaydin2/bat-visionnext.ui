@@ -90,12 +90,15 @@ export default {
     },
     init (newValue) {
       if (newValue) {
-        this.selectedValue.CityId = newValue.CityId
+        this.selectedValue = {
+          CityId: newValue.CityId,
+          DistrictId: newValue.DistrictId,
+          Address: newValue.Address
+        }
         this.selectedCity = this.cities.find(c => c.DecimalValue === newValue.CityId)
         this.selectCity(this.selectedCity)
-        this.selectedValue.DistrictId = newValue.DistrictId
+        this.districtId = newValue.DistrictId
         this.selectedDistrict = this.distiricts.find(c => c.DecimalValue === newValue.DistrictId)
-        this.selectedValue.Address = newValue.Address
         this.selectedAddress = newValue.Address
       }
     },

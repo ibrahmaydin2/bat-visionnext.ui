@@ -133,7 +133,6 @@ export default {
     ...mapState(['createCode'])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
     this.getCode()
   },
   methods: {

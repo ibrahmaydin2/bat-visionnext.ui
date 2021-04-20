@@ -129,7 +129,7 @@
         <b-tab :title="$t('insert.route.locations')">
           <b-row>
             <NextFormGroup :title="$t('insert.route.CustomerId')" :error="$v.routeDetails.CustomerId" :required="true" md="2" lg="2">
-              <v-select v-model="routeDetails.Customer" label="CommercialTitle" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedCustomer">
+              <v-select v-model="routeDetails.Customer" :disabled="!showCustomer" label="CommercialTitle" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedCustomer">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -159,6 +159,18 @@
             <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" md="2" lg="2">
               <b-form-input type="number" :min="0" v-model="routeDetails.Day7VisitOrder" />
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
+              <b-form-datepicker
+                v-model="routeDetails.DayFreStartDate"
+                :locale="$i18n.locale"
+                class="mb-2"
+                :value-as-date="true"
+              >
+              </b-form-datepicker>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
+              <b-form-input type="number" :min="0" v-model="routeDetails.DayFrequency" />
+            </NextFormGroup>
             <b-col cols="12" md="2" lg="2">
               <b-form-group>
                 <AddDetailButton @click.native="addCustomerLocation()" />
@@ -183,8 +195,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails.filter(f => f.RecordState !== 4)" :key="'dl' + i">
-                  <b-td>{{(r.RecordState === 2) ? r.Customer : r.Customer.Label}}</b-td>
-                  <b-td>{{(r.RecordState === 2) ? r.Location : r.Location.Label}}</b-td>
+                  <b-td>{{(r.RecordState === 2 || r.RecordState === 3) ? r.Customer : r.Customer.Label}}</b-td>
+                  <b-td>{{(r.RecordState === 2 || r.RecordState === 3) ? r.Location : r.Location.Label}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
                   <b-td>{{r.Day3VisitOrder}}</b-td>
@@ -195,7 +207,8 @@
                   <b-td>{{dateConvertFromTimezone(r.Day1FreStartDate)}}</b-td>
                   <b-td>{{r.Day1Frequency}}</b-td>
                   <b-td class="text-center">
-                    <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                    <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary mr-1"></i>
+                    <i @click="editRouteDetails(r)" class="fa fa-pencil-alt text-warning mr-1"></i>
                     <i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -263,6 +276,7 @@ export default {
       },
       parishes: [],
       avenues: [],
+      showCustomer: true,
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
@@ -561,13 +575,33 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.Day1FreStartDate)
-        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.Day2FreStartDate)
-        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.Day3FreStartDate)
-        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.Day4FreStartDate)
-        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.Day5FreStartDate)
-        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.Day6FreStartDate)
-        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.Day7FreStartDate)
+        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
+        this.routeDetails.Day1Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day2Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day3Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day4Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day5Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
+        this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
+        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
+        if (control) {
+          if (this.routeDetails.RecordState === 3) {
+            this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(control), 1)
+          } else {
+            this.$toasted.show(this.$t('insert.sameLocationField'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+        }
         this.form.RouteDetails.push({...this.routeDetails})
         this.clearRouteDetails()
         this.$v.routeDetails.$reset()
@@ -597,12 +631,44 @@ export default {
         }
       })
     },
+    editRouteDetails (item) {
+      const index = this.form.RouteDetails.indexOf(item)
+      const filteredArr = this.form.RouteDetails[index]
+      this.routeDetails = {
+        Deleted: 0,
+        System: 0,
+        RecordState: 3,
+        CustomerId: filteredArr.Customer.DecimalValue,
+        Customer: (filteredArr.RecordState === 2 || filteredArr.RecordState === 3) ? filteredArr.Customer : filteredArr.Customer.Label,
+        LocationId: filteredArr.Location.DecimalValue,
+        Location: (filteredArr.RecordState === 2 || filteredArr.RecordState === 3) ? filteredArr.Location : filteredArr.Location.Label,
+        Day1VisitOrder: filteredArr.Day1VisitOrder,
+        Day2VisitOrder: filteredArr.Day2VisitOrder,
+        Day3VisitOrder: filteredArr.Day3VisitOrder,
+        Day4VisitOrder: filteredArr.Day4VisitOrder,
+        Day5VisitOrder: filteredArr.Day5VisitOrder,
+        Day6VisitOrder: filteredArr.Day6VisitOrder,
+        Day7VisitOrder: filteredArr.Day7VisitOrder,
+        DayFreStartDate: filteredArr.Day1FreStartDate,
+        DayFrequency: filteredArr.Day1Frequency,
+        StatusId: filteredArr.StatusId,
+        AnnualVisitCount: filteredArr.AnnualVisitCount,
+        CompanyId: filteredArr.CompanyId,
+        BranchId: filteredArr.BranchId,
+        Code: filteredArr.Code,
+        Description1: filteredArr.Description1
+      }
+      this.showCustomerLocation = false
+      this.showCustomer = false
+    },
     removeRouteDetails (r) {
       if (r.RecordState === 2) {
         this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(r), 1)
       } else {
         this.form.RouteDetails[this.form.RouteDetails.indexOf(r)].RecordState = 4
       }
+      this.showCustomerLocation = true
+      this.showCustomer = true
     },
     clearRouteDetails () {
       this.routeDetails = {
@@ -641,6 +707,8 @@ export default {
         Code: null,
         Description1: null
       }
+      this.showCustomerLocation = true
+      this.showCustomer = true
     },
     save () {
       this.$v.form.$touch()

@@ -1231,7 +1231,6 @@ export default {
   },
   mounted () {
     // this.$store.commit('setCities', false)
-    this.$store.commit('bigLoaded', false)
     this.getCode()
     this.getLookup()
     this.getDatas()

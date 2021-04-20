@@ -136,7 +136,6 @@ export default {
     ...mapState(['rowData'])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
     this.getData()
   },
   methods: {

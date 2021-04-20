@@ -153,7 +153,6 @@ export default {
     ...mapState(['vehicles', 'branchs', 'warehouses'])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
     this.getData().then(() => {
       this.setModel()
     })

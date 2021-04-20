@@ -25,7 +25,7 @@
           </b-col>
           <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
-              <b-form-datepicker v-model="form.MovementDate" :locale="$i18n.locale" />
+              <b-form-datepicker v-model="form.MovementDate" :locale="$i18n.locale" disabled/>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -37,12 +37,13 @@
                 :label-no-time-selected="$t('insert.chooseTime')"
                 :label-close-button="$t('insert.close')"
                 close-button-variant="outline-danger"
+                disabled
               ></b-form-timepicker>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-              <v-select :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select v-model="selectedRepresentative" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -168,24 +169,31 @@ export default {
       StockAdjustmentItems: [],
       item: null,
       tmpSelectedItem: [],
-      maxPlanQuantity: null
+      maxPlanQuantity: null,
+      selectedRepresentative: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'warehouses', 'items', 'toWarehouseStocks'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'warehouses', 'items', 'toWarehouseStocks', 'loginUser'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextStockManagement/api/${e}/GetCode`})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/StockStatus/Search', name: 'stockStatus'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/WarehouseMovementType/Search', name: 'movementTypes'})
+      if (this.loginUser) {
+        const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
+        this.selectedRepresentative = {
+          Description1: this.loginUser.name,
+          RecordId: userId
+        }
+        this.form.RepresentativeId = userId
+      }
     },
     onItemsSearch (search, loading) {
       if (search.length >= 3) {

@@ -134,7 +134,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
     let allLookups = 'ANALYSIS_VALIDITY_TYPE,APPROVE_STATE'
     this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },

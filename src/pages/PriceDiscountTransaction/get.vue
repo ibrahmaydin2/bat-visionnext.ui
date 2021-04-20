@@ -62,7 +62,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
     let allLookups = 'RMA_STATUS,RETURN_TYPE'
     this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },

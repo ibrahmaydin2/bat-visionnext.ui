@@ -709,9 +709,7 @@ export default {
         Order: this.form
       }
       this.$bvModal.hide('campaign-modal')
-      this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Order', 'Order/ApplyUpdateDiscounts').then((res) => {
-        this.$store.commit('bigLoaded', false)
         if (!res.IsCompleted) {
           this.$toasted.show(this.$t('insert.order.campaignListError'), {
             type: 'error',
@@ -796,10 +794,8 @@ export default {
           })
           return
         }
-        this.$store.commit('bigLoaded', true)
         this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderUpdateDiscounts').then((res) => {
           this.campaigns = res.Models
-          this.$store.commit('bigLoaded', false)
           if (this.campaigns && this.campaigns.length > 0) {
             this.campaignSelectable = true
             this.$bvModal.show('campaign-modal')

@@ -785,7 +785,6 @@ export default {
   },
   mounted () {
     this.$store.commit('setCities', false)
-    this.$store.commit('bigLoaded', false)
     this.getData()
   },
   methods: {

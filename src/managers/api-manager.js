@@ -1,5 +1,6 @@
 import { store } from '../store'
 import axios from 'axios'
+import i18n from '../i18n'
 
 export class ApiManager {
   async get (basePath, secondPath) {
@@ -65,8 +66,10 @@ export class ApiManager {
   }
 
   handleError (error) {
-    let message = 'Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.'
-    if (error && error.response && error.response.data) {
+    let message = i18n.t('general.unExpectedException')
+    if (error && error.code === 'ECONNABORTED') {
+      message = i18n.t('general.timeoutError')
+    } else if (error && error.response && error.response.data) {
       message = error.response.data.Message
     }
     store.commit('showAlert', { type: 'danger', msg: message })

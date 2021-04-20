@@ -1654,6 +1654,7 @@ export default {
         DistrictId: filteredArr.districtId,
         Address: filteredArr.addressDetail
       }
+      this.$forceUpdate()
     },
     removeCustomerLocation (item) {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
