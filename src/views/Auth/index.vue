@@ -6,7 +6,7 @@
       <b-col cols="12" sm="10" md="8" lg="6" xl="4" class="asc__auth-right">
         <b-col cols="12">
           <figure class="figure">
-            <img :src="logo.login" class="figure-img img-fluid" :alt="title.siteName" />
+            <img :src="logo.login" width="200" class="figure-img img-fluid" :alt="title.siteName" />
           </figure>
         </b-col>
         <b-row>
