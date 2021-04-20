@@ -36,6 +36,7 @@ var checkSearchObject = function (obj) {
 }
 var numberOfAjaxCAllPending = 0
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
+axios.defaults.timeout = 60000
 axios.interceptors.request.use(function (config) {
   numberOfAjaxCAllPending++
   store.commit('bigLoaded', true)
@@ -52,6 +53,9 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   store.commit('bigLoaded', false)
   numberOfAjaxCAllPending = 0
+  if (error && error.code === 'ECONNABORTED') {
+    store.commit('showAlert', { type: 'danger', msg: i18n.t('general.timeoutError') })
+  }
   return Promise.reject(error)
 })
 export default axios
