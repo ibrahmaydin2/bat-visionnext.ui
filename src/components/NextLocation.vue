@@ -1,15 +1,15 @@
 <template>
   <div>
     <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
-             data-projection="EPSG:4326" style="height: 400px">
+             data-projection="EPSG:4326" style="height: 600px">
       <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
-      <vl-geoloc @update:position="geolocPosition = $event">
-        <template slot-scope="geoloc">
-          <vl-feature v-if="geoloc.position" id="position-feature">
-            <vl-geom-point :coordinates="location"></vl-geom-point>
+      <vl-geoloc>
+        <template>
+          <vl-feature id="position-feature">
+            <vl-geom-point v-if='location' :coordinates="location"></vl-geom-point>
             <vl-style-box>
-              <vl-style-icon src="http://maps.google.com/mapfiles/ms/icons/red.png" :scale="1.2" :anchor="[0.5, 1]"></vl-style-icon>
+              <vl-style-icon src="../../static/marker.png" :scale="0.3" :anchor="[0.5, 1]"></vl-style-icon>
             </vl-style-box>
           </vl-feature>
         </template>
@@ -36,7 +36,7 @@ export default {
   },
   data () {
     return {
-      zoom: 15,
+      zoom: 16,
       center: [],
       rotation: 0,
       geolocPosition: undefined,

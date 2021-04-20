@@ -29,72 +29,55 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.asset.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="ProducerId" :error="$v.form.ProducerId">
-              <v-select :options="producers"  @search="searchProducer" @input="selectedSearchType('ProducerId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select
+                :options='lookup.ASSET_PRODUCER '
+                v-model="producer"
+                @input="selectedType('ProducerId', $event)"
+                label="Label"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId">
               <v-select
                 :options="lookup.ASSET_BRAND"
+                v-model="brand"
                 @input="selectedType('BrandId', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
+            <!-- <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
               <v-select />
-            </NextFormGroup>
+            </NextFormGroup> -->
             <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <v-select />
+              <v-select
+                :options="lookup.ASSET_MODEL"
+                v-model="model"
+                @input="selectedType('ModelId', $event)"
+                label="Label"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
-              <v-select />
+              <v-select v-model="assetType" :options="assetTypes" @input="selectedSearchType('AssetTypeId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <v-select />
+              <v-select
+                :options="lookup.ASSET_TYPE"
+                v-model="type"
+                @input="selectedType('TypeId', $event)"
+                label="Label"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
-              <v-select />
+              <v-select v-model="assetClass" :options="assetClasses" @input="selectedSearchType('AssetClassId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
-              <v-select />
-            </NextFormGroup>
-            <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
-              <v-select />
+              <v-select v-model="trackType" :options="trackTypes" @input="selectedSearchType('TrackTypeId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
             </NextFormGroup>
-          </b-row>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -103,40 +86,65 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import insertMixin from '../../mixins/insert'
+import updateMixin from '../../mixins/update'
 export default {
-  mixins: [insertMixin],
+  mixins: [updateMixin],
   data () {
     return {
-      form: {}
+      form: {
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        AssetTypeId: null,
+        TypeId: null,
+        GroupId: null,
+        ProducerId: null,
+        Description1: null,
+        Code: null,
+        BrandId: null,
+        AssetClassId: null,
+        Barcode: null,
+        ModelId: null,
+        Category3Id: null,
+        TrackTypeId: null
+      },
+      assetClass: {},
+      assetType: {},
+      trackType: {},
+      producer: {},
+      brand: {},
+      model: {},
+      type: {}
     }
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['producers'])
+    ...mapState(['assetClasses', 'assetTypes', 'trackTypes'])
   },
   mounted () {
-    this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
+    this.getData().then(() => this.setData())
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetClass/Search', name: 'assetClasses'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'assetTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetTrackType/Search', name: 'trackTypes'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
     },
-    searchProducer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextProducer/api/Producer/Search', 'customers', model).then(res => {
-        loading(false)
-      })
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      console.log(this.form)
+      this.assetClass = this.convertLookupValueToSearchValue(rowData.AssetClass)
+      this.assetType = this.convertLookupValueToSearchValue(rowData.AssetType)
+      this.trackType = this.convertLookupValueToSearchValue(rowData.TrackType)
+      this.producer = rowData.Producer
+      this.brand = rowData.Brand
+      this.model = rowData.Model
+      this.type = rowData.Type
     },
     save () {
       this.$v.form.$touch()
@@ -148,9 +156,8 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.createData()
-        // update işlemiyse
-        // this.updateData()
+        this.form.ClassId = this.form.AssetClassId
+        this.updateData()
       }
     }
   },

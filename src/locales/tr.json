@@ -1823,6 +1823,19 @@
       "serialNumber3": "Demirbaş No",
       "condition": "Kullanım Durumu",
       "assetMovementCard": "Varlık Hareketleri"
+    },
+    "asset": {
+      "general": "Genel",
+      "code":"Varlık Kodu",
+      "description1":"Adı",
+      "producer": "Üretici",
+      "brand":"Varlık Markası",
+      "model":"Model",
+      "assetType": "Tipi",
+      "type":"Tip",
+      "assetClass": "Sınıf",
+      "trackType": "İzleme Tipi",
+      "barcode": "Barkod"
     }
   },
 

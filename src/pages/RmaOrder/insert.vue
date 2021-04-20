@@ -39,10 +39,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
+              <v-select :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
@@ -196,6 +193,8 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+      this.searchWarehouse()
+      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
     },
@@ -216,18 +215,6 @@ export default {
           }
         ]
       }).then(res => {
-        loading(false)
-      })
-    },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', model).then(res => {
         loading(false)
       })
     },
@@ -253,6 +240,18 @@ export default {
       }
       this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
         loading(false)
+      })
+    },
+    searchWarehouse () {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/Search',
+        name: 'warehouses',
+        andConditionModel: {
+          IsVehicle: 0,
+          IsVirtualWarehouse: 0,
+          StatusId: 1
+        }
       })
     },
     searchItem (search, loading) {
@@ -344,6 +343,7 @@ export default {
       }
     },
     save () {
+      console.log(this.warehouses)
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -355,8 +355,6 @@ export default {
       } else {
         this.form.RmaOrderLine = this.rmaOrderLines
         this.createData()
-        // update işlemiyse
-        // this.updateData()
       }
     }
   },

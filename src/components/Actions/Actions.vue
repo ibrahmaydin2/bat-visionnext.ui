@@ -120,15 +120,33 @@ export default {
       this.$emit('showMultipleModal', action)
     },
     showMap (action, row) {
-      if (row.XPosition == null || row.YPosition == null) {
+      if (row.DefaultLocation) {
+        this.$api.post({RecordId: row.DefaultLocation.DecimalValue}, 'Customer', 'CustomerLocation/Get').then((res) => {
+          if (res.Model) {
+            if (res.Model.XPosition == null || res.Model.YPosition == null) {
+              this.$toasted.show(this.$t('index.errorLocation'), {
+                type: 'error',
+                keepOnHover: true,
+                duration: '3000'
+              })
+              return
+            }
+            this.$emit('showModal', action, res.Model)
+          } else {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+        })
+      } else {
         this.$toasted.show(this.$t('index.errorLocation'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
-        return
       }
-      this.$emit('showModal', action, row)
     },
     print (action, row) {
       if (action.Query === 'Invoice') {

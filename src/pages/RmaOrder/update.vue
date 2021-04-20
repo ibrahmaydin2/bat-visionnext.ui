@@ -39,7 +39,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -203,6 +203,8 @@ export default {
   methods: {
     getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+      this.searchWarehouse()
+      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -221,18 +223,6 @@ export default {
           }
         ]
       }).then(res => {
-        loading(false)
-      })
-    },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', model).then(res => {
         loading(false)
       })
     },
@@ -258,6 +248,18 @@ export default {
       }
       this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
         loading(false)
+      })
+    },
+    searchWarehouse () {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/Search',
+        name: 'warehouses',
+        andConditionModel: {
+          IsVehicle: 0,
+          IsVirtualWarehouse: 0,
+          StatusId: 1
+        }
       })
     },
     searchItem (search, loading) {

@@ -201,7 +201,7 @@
       <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
     <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-      <NextLocation :Location="modalItem"/>
+      <NextLocation v-if='showLocationModal' :Location="modalItem"/>
     </b-modal>
     <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
@@ -310,7 +310,8 @@ export default {
       showCustomConvertModal: false,
       showConfirmModal: false,
       showKmModal: false,
-      showPriceListDayModal: false
+      showPriceListDayModal: false,
+      showLocationModal: false
     }
   },
   mounted () {
@@ -374,6 +375,7 @@ export default {
       this.showConfirmModal = false
       this.showKmModal = false
       this.showPriceListDayModal = false
+      this.showLocationModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -426,7 +428,7 @@ export default {
           this.$root.$emit('bv::show::modal', 'priceListDayModal')
         })
       } else if (action.Action === 'ShowOnMap') {
-        console.log(row)
+        this.showLocationModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'location-modal')
         })

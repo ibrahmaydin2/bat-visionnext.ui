@@ -95,9 +95,10 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.StatusId === 0) {
+          this.form.StatusId = 2
+        }
         this.createData()
-        // update işlemiyse
-        // this.updateData()
       }
     }
   },
