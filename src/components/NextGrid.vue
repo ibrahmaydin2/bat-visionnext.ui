@@ -572,6 +572,7 @@ export default {
         Description1: input.replaceAll('%', '')
       }
       return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel, pagerecordCount: pagerecordCount}).then((res) => {
+        this.$store.commit('bigLoaded', false)
         return res
       })
     },
