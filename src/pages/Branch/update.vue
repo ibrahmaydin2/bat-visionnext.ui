@@ -740,7 +740,6 @@ export default {
     ...mapState([])
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
   },
   methods: {
     save () {

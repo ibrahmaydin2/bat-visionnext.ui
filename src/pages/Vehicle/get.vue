@@ -124,7 +124,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
     let request = {
       'AndConditionModel': {
         'VehicleIds': [this.$route.params.url]

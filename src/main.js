@@ -6,7 +6,6 @@ import { store } from './store'
 import VueRouter from 'vue-router'
 import router from './router'
 import i18n from './i18n'
-import jQuery from 'jquery'
 import { BootstrapVue, IconsPlugin, BFormDatepicker, ToastPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -113,8 +112,6 @@ Vue.component('NextLocation', NextLocation)
 Vue.prototype.$api = new ApiManager()
 
 Vue.config.productionTip = false
-global.jQuery = jQuery
-global.$ = jQuery
 // eslint-disable-next-line no-new
 new Vue({
   el: '#app',

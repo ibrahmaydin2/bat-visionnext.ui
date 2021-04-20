@@ -1861,7 +1861,8 @@
     "homepage": "Ana Sayfa",
     "notifications": "Bildirimler",
     "notifyItems": "{x} Bildirim",
-    "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz."
+    "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
+    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz."
   },
   "index": {
     "today": "Bugün",
