@@ -1722,6 +1722,7 @@ export default {
           DistrictId: filteredArr.DistrictId,
           Address: filteredArr.AddressDetail
         }
+        this.$forceUpdate()
       } else {
         this.customerLocations = filteredArr
         this.customerLocations['recordId'] = null

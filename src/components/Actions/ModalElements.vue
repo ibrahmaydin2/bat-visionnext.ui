@@ -197,7 +197,9 @@ export default {
           model: this.form,
           RecordIds: this.recordId
         }
+        this.$store.commit('bigLoaded', true)
         this.$api.postByUrl(model, action.ActionUrl).then(res => {
+          this.$store.commit('bigLoaded', false)
           if (res && res.IsCompleted === true) {
             this.$toasted.show(this.$t('insert.success'), {
               type: 'success',

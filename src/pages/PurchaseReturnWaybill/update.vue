@@ -656,7 +656,6 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
-        this.form.PaymentTypeId = e.DefaultPaymentTypeId
         this.form.RecvLocationId = e.DefaultLocationId
         this.searchPriceList()
       }

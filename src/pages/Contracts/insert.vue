@@ -79,6 +79,8 @@
                   <b-th>{{$t('insert.contract.Description1')}}</b-th>
                   <b-th>{{$t('insert.contract.ApproveState')}}</b-th>
                   <b-th>{{$t('insert.contract.StatusReason')}}</b-th>
+                  <b-th>{{$t('insert.contract.validBeginDate')}}</b-th>
+                  <b-th>{{$t('insert.contract.validEndDate')}}</b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(contract, i) in customerContractList" :key="'dl' + i">
@@ -87,6 +89,8 @@
                     <b-td>{{contract.Description1}}</b-td>
                     <b-td>{{contract.ApproveState ? contract.ApproveState.Label : ''}}</b-td>
                     <b-td>{{contract.StatusReason ? contract.StatusReason.Label : ''}}</b-td>
+                    <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].StartDate) : ''}}</b-td>
+                    <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].EndDate) : ''}}</b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -176,7 +180,10 @@
                   <b-td>{{c.CurrencyName}}</b-td>
                   <b-td>{{c.BenefitBudget}}</b-td>
                   <b-td>{{c.TciBreak1Name}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editContractBenefits(c)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -1274,7 +1281,7 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      let filteredArr = this.form.ContractBenefits.filter(i => i.BenefitTypeId === this.contractBenefits.benefitType.RecordId)
+      let filteredArr = this.form.ContractBenefits.filter(i => i.BenefitTypeId === this.contractBenefits.benefitType.RecordId && !this.contractBenefits.isUpdated)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
@@ -1286,10 +1293,11 @@ export default {
           return false
         }
       }
-      this.form.ContractBenefits.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordState: this.contractBenefits.recordId > 0 ? 3 : 2,
+        RecordId: this.contractBenefits.recordId,
         StatusId: 1,
         BenefitTypeId: this.contractBenefits.benefitType.RecordId,
         BenefitTypeName: this.contractBenefits.benefitType.Description1,
@@ -1301,7 +1309,13 @@ export default {
         TciBreak1Id: this.contractBenefits.tciBreak1.DecimalValue,
         TciBreak1Name: this.contractBenefits.tciBreak1.Label,
         usedAmount: 0
-      })
+      }
+      if (this.contractBenefits.isUpdated) {
+        this.form.ContractBenefits[this.selectedIndex] = item
+        this.selectedIndex = -1
+      } else {
+        this.form.ContractBenefits.push(item)
+      }
       this.contractBenefits = {}
       this.$v.contractBenefits.$reset()
       this.showAssets = this.form.ContractBenefits.some(c => c.BenefitTypeId === 4)
@@ -1325,6 +1339,31 @@ export default {
       this.showEndorsements = this.form.ContractBenefits.some(c => c.BenefitTypeId === 9)
       this.showCustomPrices = this.form.ContractBenefits.some(c => c.BenefitTypeId === 10)
       this.$forceUpdate()
+    },
+    editContractBenefits (item) {
+      this.contractBenefits = {
+        recordId: item.RecordId,
+        benefitType: {
+          RecordId: item.BenefitTypeId,
+          Description1: item.BenefitTypeName
+        },
+        benefitBudget: item.BenefitBudget,
+        budgetMaster: {
+          BudgetId: item.BudgetMasterId,
+          CustomerDesc: item.BudgetMasterName
+        },
+        currency: {
+          RecordId: item.CurrencyId,
+          Description1: item.CurrencyName
+        },
+        tciBreak1: {
+          DecimalValue: item.TciBreak1Id,
+          Label: item.TciBreak1Name
+        },
+        usedAmount: item.UsedAmount,
+        isUpdated: true
+      }
+      this.selectedIndex = this.form.ContractBenefits.indexOf(item)
     },
     addContractAssets () {
       this.$v.contractAssets.$touch()

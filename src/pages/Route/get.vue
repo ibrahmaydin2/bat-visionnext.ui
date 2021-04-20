@@ -26,15 +26,13 @@
         <b-tab :title="$t('insert.route.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.RouteGroup, 'object', 'insert.route.routeGroup')"></div>
-              <div v-html="getFormatDataByType(rowData.RouteClass, 'object', 'insert.route.routeClass')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.route.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.route.personel')"></div>
               <div v-html="getFormatDataByType(rowData.Supervisor, 'object', 'insert.route.supervisor')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.route.customerArea')"></div>
+              <div v-html="getFormatDataByType(rowData.VisitStartControl, 'object', 'insert.route.control')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.VisitStartControl, 'object', 'insert.route.control')"></div>
               <div v-html="getFormatDataByType(rowData.City, 'object', 'insert.route.city')"></div>
               <div v-html="getFormatDataByType(rowData.District, 'object', 'insert.route.district')"></div>
               <div v-html="getFormatDataByType(rowData.IsMultidayRoute, 'check', 'insert.route.multiDayRoute')"></div>

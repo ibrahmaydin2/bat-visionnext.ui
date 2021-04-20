@@ -262,7 +262,7 @@ export default {
           this.control()
         } else {
           this.$toasted.show(response.Message, {
-            type: 'success',
+            type: 'error',
             keepOnHover: true,
             duration: '3000'
           })
