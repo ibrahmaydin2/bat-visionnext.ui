@@ -1286,7 +1286,8 @@
     "RmaOrder": {
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
-      "Quantity": "İade Miktarı"
+      "Quantity": "İade Miktarı",
+      "WarehouseError": "Seçilen deponun, hizmet alınan depoları yok."
     },
     "order": {
       "title": "Sipariş Girişi",

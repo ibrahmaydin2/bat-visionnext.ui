@@ -29,17 +29,11 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
+              <v-select v-model='customer' :options="customers" @input="selectedSearchType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
@@ -177,12 +171,16 @@ export default {
       },
       rmaOrderLines: [],
       rmaStatusLabel: null,
+      customerValid: false,
+      warehouse: {},
+      customers: [],
+      customer: {},
       routeName1: 'Rma'
     }
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['customers', 'warehouses', 'employees', 'rmaReasons', 'items'])
+    ...mapState(['warehouses', 'employees', 'rmaReasons', 'items'])
   },
   mounted () {
     this.createManualCode()
@@ -197,26 +195,6 @@ export default {
       // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -331,6 +309,17 @@ export default {
         }
       }
     },
+    selectedSearchType (label, model) {
+      if (model) {
+        if (label === 'CustomerId') {
+          this.form.CustomerId = model.DecimalValue
+        } else {
+          this.form[label] = model.RecordId
+        }
+      } else {
+        this.form[label] = null
+      }
+    },
     selectedItem (e) {
       if (e) {
         this.rmaOrderLine.Item = e
@@ -343,7 +332,7 @@ export default {
       }
     },
     save () {
-      console.log(this.warehouses)
+      console.log(this.form)
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -374,6 +363,26 @@ export default {
       if (e.RMA_STATUS) {
         this.rmaStatusLabel = e.RMA_STATUS[0].Label
       }
+    },
+    warehouse (e) {
+      this.customerValid = false
+      this.customers = []
+      this.customer = {}
+      this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
+        if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
+          let length = res.Model.WarehouseSuppliers.length
+          for (let a = 0; a < length; a++) {
+            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierBranch)
+          }
+          this.customerValid = true
+        } else {
+          this.$toasted.show(this.$t('insert.RmaOrder.WarehouseError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     }
   }
 }
