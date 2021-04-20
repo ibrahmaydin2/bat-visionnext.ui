@@ -428,7 +428,9 @@ export default {
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
-          this.selectedCustomer = response.Model
+          if (response.Model) {
+            this.selectedCustomer = response.Model
+          }
         })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
@@ -520,7 +522,6 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
-        this.form.PaymentTypeId = e.DefaultPaymentTypeId
         this.form.RecvLocationId = e.DefaultLocationId
         this.searchPriceList()
       }

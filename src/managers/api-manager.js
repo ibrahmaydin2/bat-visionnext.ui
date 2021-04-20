@@ -65,6 +65,7 @@ export class ApiManager {
   }
 
   handleError (error) {
+    store.commit('bigLoaded', false)
     let message = 'Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.'
     if (error && error.response && error.response.data) {
       message = error.response.data.Message
