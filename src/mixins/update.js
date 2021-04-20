@@ -33,7 +33,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
     this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName})
   }
 }

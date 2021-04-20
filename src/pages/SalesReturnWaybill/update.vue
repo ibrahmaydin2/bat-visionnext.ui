@@ -527,9 +527,7 @@ export default {
         Order: this.form
       }
       this.$bvModal.hide('campaign-modal')
-      this.$store.commit('bigLoaded', true)
       this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyUpdateDiscounts').then((res) => {
-        this.$store.commit('bigLoaded', false)
         if (!res.IsCompleted) {
           this.$toasted.show(this.$t('insert.order.campaignListError'), {
             type: 'error',

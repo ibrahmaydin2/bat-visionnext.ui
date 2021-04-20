@@ -300,8 +300,6 @@ export default {
     ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList', 'lookup', 'avenues'])
   },
   mounted () {
-    // this.$store.commit('setCities', false)
-    this.$store.commit('bigLoaded', false)
     this.getDatas()
     this.getRowData()
   },

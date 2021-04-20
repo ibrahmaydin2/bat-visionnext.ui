@@ -57,7 +57,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
   },
   computed: {
     ...mapState(['rowData', 'style'])

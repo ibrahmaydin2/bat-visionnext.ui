@@ -76,7 +76,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
     let allLookups = 'CITY,DISTRICT'
     this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },

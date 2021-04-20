@@ -602,7 +602,6 @@ export default {
         }
       })
       if (validCount < this.requiredFields.length) {
-        this.$store.commit('bigLoaded', false)
         return
       }
       this.showRequiredInfo = false

@@ -303,8 +303,6 @@ export default {
     ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'distiricts', 'avenues', 'createCode', 'employees', 'vehicles', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList', 'lookup'])
   },
   mounted () {
-    // this.$store.commit('setCities', false)
-    this.$store.commit('bigLoaded', false)
     this.getDatas()
   },
   methods: {
@@ -316,13 +314,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
     },
     save () {
-      // if (this.selectedParishes.length > 0) {
-      //   this.selectedParishes.map(item => {
-      //     this.form.model.parishIds.push(item.DecimalValue)
-      //   })
-      // } else {
-      //   this.form.model.parishIds = []
-      // }
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextRoute/api/Route', formdata: this.form, return: this.$route.meta.baseLink})
     },
     selectedRouteType (e) {
