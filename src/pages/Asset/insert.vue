@@ -29,11 +29,11 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('firsttab')" :active="!developmentMode">
+        <b-tab :title="$t('get.asset.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="ProducerId" :error="$v.form.ProducerId">
               <v-select
-                :options="lookup.ASSET_PRODUCER "
+                :options='lookup.ASSET_PRODUCER '
                 @input="selectedType('ProducerId', $event)"
                 label="Label"
               />
@@ -51,54 +51,29 @@
             <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
               <v-select
                 :options="lookup.ASSET_MODEL"
-                @input="selectedType('BrandId', $event)"
+                @input="selectedType('ModelId', $event)"
                 label="Label"
               />
             </NextFormGroup>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
-              <v-select v-model="assetType" :options="assetTypes" label="Label"/>
+              <v-select v-model="assetType" :options="assetTypes" @input="selectedSearchType('AssetTypeId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <v-select />
+              <v-select
+                :options="lookup.ASSET_TYPE"
+                @input="selectedType('TypeId', $event)"
+                label="Label"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
-              <v-select v-model="assetClass" :options="assetClasses" label="Label"/>
+              <v-select v-model="assetClass" :options="assetClasses" @input="selectedSearchType('AssetClassId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
-              <v-select />
+              <v-select :options="trackTypes" @input="selectedSearchType('TrackTypeId', $event)" label="Description1"/>
             </NextFormGroup>
-            <!-- <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
-              <v-select />
-            </NextFormGroup> -->
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
             </NextFormGroup>
-          </b-row>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -112,14 +87,31 @@ export default {
   mixins: [insertMixin],
   data () {
     return {
-      form: {},
+      form: {
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        AssetTypeId: null,
+        TypeId: null,
+        GroupId: null,
+        ProducerId: null,
+        Description1: null,
+        Code: null,
+        BrandId: null,
+        AssetClassId: null,
+        Barcode: null,
+        ModelId: null,
+        Category3Id: null,
+        TrackTypeId: null
+      },
       assetClass: {},
       assetType: {}
     }
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['assetClasses', 'assetTypes'])
+    ...mapState(['assetClasses', 'assetTypes', 'trackTypes'])
   },
   mounted () {
     this.createManualCode()
@@ -129,24 +121,11 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      let allLookups = 'ASSET_PRODUCER ,ASSET_BRAND,ASSET_TYPE,EMPLOYEE_TYPE,ASSET_MODEL'
-      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetClass/Search', name: 'assetClasses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'assetTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetTrackType/Search', name: 'trackTypes'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
-    },
-    searchProducer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextProducer/api/Producer/Search', 'customers', model).then(res => {
-        loading(false)
-      })
     },
     save () {
       this.$v.form.$touch()
@@ -158,6 +137,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.ClassId = this.form.AssetClassId
         this.createData()
         // update işlemiyse
         // this.updateData()
