@@ -42,7 +42,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.products')" v-if="rowData.RefDocumentType && rowData.RefDocumentType.Code !== 'AssetMovement'">
+        <b-tab :title="$t('insert.order.products')" v-if="rowData.RefDocumentType && (rowData.RefDocumentType.Code === 'WarehouseMovement' || rowData.RefDocumentType.Code === 'VanLoading')">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -53,10 +53,10 @@
                     <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
-                      <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
-                      <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
-                      <b-td>{{o.Quantity}}</b-td>
+                    <b-tr v-for="(p, i) in products" :key="i">
+                      <b-td>{{p.ItemCode}}</b-td>
+                      <b-td>{{p.ItemDesc}}</b-td>
+                      <b-td>{{p.Quantity}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -78,13 +78,13 @@
                     <b-th><span>{{$t('insert.order.fixtureNumber')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(a, i) in rowData.AssetMovements" :key="i">
+                    <b-tr v-for="(a, i) in rowData.AssetMovementItems" :key="i">
                       <b-td>{{a.Code}}</b-td>
-                      <b-td>{{a.Description1}}</b-td>
-                      <b-td>{{a.SerialNumber}}</b-td>
+                      <b-td>{{a.Description}}</b-td>
+                      <b-td>{{a.SerialNumber2}}</b-td>
                       <b-td>{{a.Quantity}}</b-td>
-                      <b-td>{{a.Barcode}}</b-td>
-                      <b-td>{{a.FixtureNumber}}</b-td>
+                      <b-td>{{a.SerialNumber}}</b-td>
+                      <b-td>{{a.SerialNumber3}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -127,7 +127,9 @@ export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      products: []
+    }
   },
   mounted () {
     this.getData()
@@ -140,7 +142,19 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/DispatchRefDocument', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/DispatchRefDocument', record: this.$route.params.url}).then(() => {
+        let rowData = this.rowData
+        if (rowData.RefDocumentType && rowData.RefDocumentType.Code) {
+          switch (rowData.RefDocumentType.Code) {
+            case 'WarehouseMovement':
+              this.products = rowData.WarehouseMovementItems ? rowData.WarehouseMovementItems : []
+              break
+            case 'VanLoading':
+              this.products = rowData.VanLoadingItems ? rowData.VanLoadingItems : []
+              break
+          }
+        }
+      })
     }
   }
 }
