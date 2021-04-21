@@ -112,7 +112,7 @@
               <b-form-input type="text" v-model="GainTypeName" readonly />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
-              <NextCheckBox v-model="useBudget" type="number" toggle />
+              <NextCheckBox v-model="useBudget" type="number" toggle :disabled="!form.CustomerId || form.CustomerId === 0"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -240,15 +240,18 @@ export default {
   watch: {
     customer (value) {
       if (value) {
-        var me = this
-        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
-          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
-            this.budgets = res.ListModel.BaseModels
-            me.$forceUpdate()
-          } else {
-            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
-          }
-        })
+        if (this.form.CustomerId > 0 && this.useBudget) {
+          var me = this
+          me.budgets = []
+          me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+            if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+              me.budgets = res.ListModel.BaseModels
+              me.$forceUpdate()
+            } else {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
+            }
+          })
+        }
         let LoyaltyCustomer = {
           TableName: 'T_CUSTOMER',
           ColumnName: 'RECORD_ID',
@@ -284,6 +287,7 @@ export default {
     useBudget (e) {
       this.form.ApproveStateId = e === 1 ? 2100 : 2102
       this.form.UseBudget = e
+      this.budgets = []
       if (e === 0) {
         this.budget = {}
       } else {
@@ -293,6 +297,8 @@ export default {
             if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
               me.budgets = res.ListModel.BaseModels
               me.$forceUpdate()
+            } else {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
             }
           })
         }

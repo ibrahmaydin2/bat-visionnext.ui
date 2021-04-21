@@ -69,7 +69,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.otherContract')" v-if="customerContractList.length > 0">
+        <b-tab :title="$t('insert.contract.otherContract')" v-if="form.CustomerId > 0">
           <b-row>
             <b-col>
               <b-table-simple bordered small>
