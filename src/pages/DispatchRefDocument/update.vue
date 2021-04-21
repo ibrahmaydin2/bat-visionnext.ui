@@ -102,7 +102,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.products')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && selectedRefDocumentType.Code !== 'AssetMovement'">
+        <b-tab :title="$t('insert.order.products')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && (selectedRefDocumentType.Code === 'WarehouseMovement' || selectedRefDocumentType.Code === 'VanLoading')">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -111,10 +111,10 @@
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
-                  <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
-                  <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
-                  <b-td>{{o.Quantity}}</b-td>
+                <b-tr v-for="(p, i) in products" :key="i">
+                  <b-td>{{p.ItemCode}}</b-td>
+                  <b-td>{{p.ItemDesc}}</b-td>
+                  <b-td>{{p.Quantity}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -132,13 +132,13 @@
                 <b-th><span>{{$t('insert.order.fixtureNumber')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(a, i) in form.AssetMovements" :key="i">
+                <b-tr v-for="(a, i) in form.AssetMovementItems" :key="i">
                   <b-td>{{a.Code}}</b-td>
-                  <b-td>{{a.Description1}}</b-td>
-                  <b-td>{{a.SerialNumber}}</b-td>
+                  <b-td>{{a.Description}}</b-td>
+                  <b-td>{{a.SerialNumber2}}</b-td>
                   <b-td>{{a.Quantity}}</b-td>
-                  <b-td>{{a.Barcode}}</b-td>
-                  <b-td>{{a.FixtureNumber}}</b-td>
+                  <b-td>{{a.SerialNumber}}</b-td>
+                  <b-td>{{a.SerialNumber3}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -290,7 +290,8 @@ export default {
       address: {},
       selectedDeliveryRepresentative: null,
       selectedStatus: null,
-      selectedRefDocumentType: null
+      selectedRefDocumentType: null,
+      products: []
     }
   },
   computed: {
@@ -374,6 +375,16 @@ export default {
         this.selectedEDocumentStatus = this.convertLookupValueToSearchValue(rowData.EDocumentStatus)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         this.selectedRefDocumentType = rowData.RefDocumentType
+        if (this.selectedRefDocumentType && this.selectedRefDocumentType.Code) {
+          switch (this.selectedRefDocumentType.Code) {
+            case 'WarehouseMovement':
+              this.products = rowData.WarehouseMovementItems ? rowData.WarehouseMovementItems : []
+              break
+            case 'VanLoading':
+              this.products = rowData.VanLoadingItems ? rowData.VanLoadingItems : []
+              break
+          }
+        }
         if (this.orderStatusList && this.orderStatusList.length > 0) {
           this.selectedStatus = this.orderStatusList.find(x => x.RecordId === this.form.StatusId)
         }

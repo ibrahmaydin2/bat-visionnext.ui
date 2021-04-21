@@ -31,6 +31,7 @@ import {VueMasonryPlugin} from 'vue-masonry'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import 'vue2-datepicker/locale/tr'
+import VueLazyload from 'vue-lazyload'
 
 import Nextgrid from './components/NextGrid'
 import Nextform from './components/NextForm'
@@ -57,6 +58,14 @@ import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
 import NextLocation from './components/NextLocation'
 
+// Check that service workers are supported
+if ('serviceWorker' in navigator) {
+  // Use the window load event to keep the page load performant
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+  })
+}
+
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
 Vue.use(VueRouter)
@@ -79,6 +88,7 @@ Vue.use(Geoloc)
 Vue.use(PointGeom)
 Vue.use(StyleBox)
 Vue.use(IconStyle)
+Vue.use(VueLazyload)
 
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
