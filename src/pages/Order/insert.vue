@@ -415,6 +415,11 @@ export default {
         ...this.query,
         api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
+        andConditionModel: {
+          StatusIds: [1],
+          IsBlocked: 0,
+          SapCustomerId: ''
+        },
         orConditionModels: [
           {
             Description1: search,

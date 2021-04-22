@@ -354,7 +354,10 @@ export default {
         api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
         andConditionModel: {
-          SalesDocumentTypeIds: [45, 46]
+          SalesDocumentTypeIds: [45, 46],
+          StatusIds: [1],
+          IsBlocked: 0,
+          SapCustomerId: ''
         },
         orConditionModels: [
           {
