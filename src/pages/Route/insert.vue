@@ -72,17 +72,19 @@
                 label="Label"
               />
             </NextFormGroup> -->
-            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
+            <NextFormGroup :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
               <v-select
                 :disabled="!showCustomerRegion"
+                v-model="CustomerRegion5Id"
                 :options="lookup.CUSTOMER_REGION_5"
                 @input="selectedLabelType('CustomerRegion5Id', $event)"
                 label="Label"
               />
             </NextFormGroup>
-            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
+            <NextFormGroup :title="$t('insert.route.marketingArea')" :required="!!showMarketingRegion" :error="$v.form.MarketingRegion5Id">
               <v-select
                 :disabled="!showMarketingRegion"
+                v-model="MarketingRegion5Id"
                 :options="lookup.MARKETING_REGION_5"
                 @input="selectedLabelType('MarketingRegion5Id', $event)"
                 label="Label"
@@ -158,6 +160,7 @@
                 :locale="$i18n.locale"
                 class="mb-2"
                 :value-as-date="true"
+                label-no-date-selected
               >
               </b-form-datepicker>
             </NextFormGroup>
@@ -264,7 +267,9 @@ export default {
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
-      district: null
+      district: null,
+      CustomerRegion5Id: null,
+      MarketingRegion5Id: null
     }
   },
   validations () {
@@ -367,13 +372,17 @@ export default {
     selectedLabelType (label, model) {
       if (label === 'CustomerRegion5Id') {
         this.form.MarketingRegion5Id = null
+        this.CustomerRegion5Id = null
       } else {
         this.form.CustomerRegion5Id = null
+        this.MarketingRegion5Id = null
       }
       if (model) {
         this.form[label] = model.DecimalValue
+        this[label] = model.Label
       } else {
         this.form[label] = null
+        this[label] = null
       }
     },
     selectedSearchType (label, model) {
@@ -383,18 +392,22 @@ export default {
           if (model.RecordId === 1 || model.RecordId === 6) {
             this.showCustomerRegion = true
             this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
             this.insertRules.CustomerRegion5Id = {
               required
             }
           } else if (model.RecordId === 5) {
             this.showMarketingRegion = true
             this.showCustomerRegion = false
+            this.CustomerRegion5Id = null
             this.insertRules.MarketingRegion5Id = {
               required
             }
           } else {
             this.showCustomerRegion = false
             this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
+            this.CustomerRegion5Id = null
             this.insertRules.MarketingRegion5Id = {}
             this.insertRules.CustomerRegion5Id = {}
           }

@@ -163,7 +163,7 @@ export default {
     getCustomer () {
       this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
         if (res.Model) {
-          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Waybill')
+          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Order')
         }
       })
     },
@@ -171,11 +171,23 @@ export default {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextInvoice/api/InvoiceBase/GetCode`})
     },
     getConvert () {
-      this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, RecordId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, `VisionNextInvoice/api/${this.routeName}/GetConvertToInvoice`).then((response) => {
-        this.orderLines = response.invoiceConvertModel.InvoiceLines
+      let request = {
+        'rmaId': this.modalItem.RecordId,
+        'refDocumentId': this.modalItem.RefDocumentId,
+        'wareHouseId': this.modalItem.WarehouseId
+      }
+      this.$api.postByUrl(request, 'VisionNextRma/api/Rma/RmaTransformDocumentSearch').then((response) => {
+        console.log(response)
+        this.orderLines = response.ListModel.BaseModels
         this.getConvertData = response.invoiceConvertModel
         this.tableBusy = false
       })
+      // this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, RmaId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, 'VisionNextRma/api/Rma/RmaTransformDocumentSearch').then((response) => {
+      //   console.log(response)
+      //   this.orderLines = response.invoiceConvertModel.InvoiceLines
+      //   this.getConvertData = response.invoiceConvertModel
+      //   this.tableBusy = false
+      // })
     },
     selectedType (label, model) {
       if (model) {
