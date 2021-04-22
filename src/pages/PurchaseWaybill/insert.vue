@@ -33,7 +33,8 @@
                   :label-no-time-selected="$t('insert.chooseTime')"
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
-                   v-model="form.DocumentTime"/>
+                   v-model="form.DocumentTime"
+                   disabled />
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="!form.WarehouseId || form.WarehouseId == 0">

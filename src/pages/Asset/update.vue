@@ -59,15 +59,15 @@
               />
             </NextFormGroup>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
-              <v-select v-model="assetType" :options="assetTypes" @input="selectedSearchType('AssetTypeId', $event)" label="Description1"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
               <v-select
+                v-model="assetType"
                 :options="lookup.ASSET_TYPE"
-                v-model="type"
-                @input="selectedType('TypeId', $event)"
+                @input="selectedType('AssetTypeId', $event)"
                 label="Label"
               />
+            </NextFormGroup>
+            <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
+              <v-select v-model="type" :options="types" @input="selectedSearchType('TypeId', $event)" label="Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
               <v-select v-model="assetClass" :options="assetClasses" @input="selectedSearchType('AssetClassId', $event)" label="Description1"/>
@@ -120,7 +120,7 @@ export default {
   },
   computed: {
     // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['assetClasses', 'assetTypes', 'trackTypes'])
+    ...mapState(['assetClasses', 'types', 'trackTypes'])
   },
   mounted () {
     this.getData().then(() => this.setData())
@@ -129,7 +129,7 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetClass/Search', name: 'assetClasses'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'assetTypes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'types'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetTrackType/Search', name: 'trackTypes'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
@@ -137,14 +137,14 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      console.log(this.form)
+      this.form.ClassId = this.form.AssetClass.DecimalValue
       this.assetClass = this.convertLookupValueToSearchValue(rowData.AssetClass)
-      this.assetType = this.convertLookupValueToSearchValue(rowData.AssetType)
+      this.type = this.convertLookupValueToSearchValue(rowData.Type)
       this.trackType = this.convertLookupValueToSearchValue(rowData.TrackType)
       this.producer = rowData.Producer
       this.brand = rowData.Brand
       this.model = rowData.Model
-      this.type = rowData.Type
+      this.assetType = rowData.AssetType
     },
     save () {
       this.$v.form.$touch()
@@ -156,7 +156,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.ClassId = this.form.AssetClassId
+        if (this.form.AssetClassId) {
+          this.form.ClassId = this.form.AssetClassId
+        }
         this.updateData()
       }
     }
