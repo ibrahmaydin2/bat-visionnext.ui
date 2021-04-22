@@ -432,19 +432,17 @@ export default {
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'location-modal')
         })
+      } else if (action.Action === 'OrderRmaConvert') {
+        this.showRmaConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'rmaConvertModal')
+        })
       } else {
         this.showConfirmModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'confirmModal')
         })
       }
-      // if (action.Action === 'RmaConvert') {
-      //   this.showRmaConvertModal = true
-      //   this.$nextTick(() => {
-      //     this.$root.$emit('bv::show::modal', 'rmaConvertModal')
-      //   })
-      //   return
-      // }
       // if (action.Action === 'RmaInvoice') {
       //   this.showRmaInvoiceModal = true
       //   this.$nextTick(() => {
