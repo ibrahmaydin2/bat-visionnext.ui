@@ -1923,7 +1923,14 @@
       "status": "Durum",
       "SupplierId": "Tedarikçi",
       "InvoiceNumber": "Fatura Numarası",
-      "ShippedQuantity": "Teslim Edilen Miktar"
+      "ShippedQuantity": "Teslim Edilen Miktar",
+      "branch": "Şube",
+      "documentNumber": "Belge Numarası",
+      "totalVat": "KDV",
+      "netTotal": "Net Tutar",
+      "grossTotal": "Toplam Tutar",
+      "find": "Bul",
+      "successPurchaseWaybill": "İşleminiz gerçekleştirilmiştir."
     }
   },
   "auth": {

@@ -237,7 +237,6 @@ export default {
         VehicleId: null,
         Printed: 0,
         PrintCount: 0,
-        PaymentTypeId: null,
         Canceled: 0,
         CurrencyId: null,
         NetTotal: 0,
@@ -333,6 +332,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'}).then(() => {
         me.selectedEDocumentStatus = me.eDocumentStatus.find(e => e.Code === 'ReadyForSendToEFU')
         me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
+        this.$forceUpdate()
       })
     },
     searchRoute (search, loading) {
@@ -359,6 +359,11 @@ export default {
         ...this.query,
         api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
+        andConditionModel: {
+          StatusIds: [1],
+          IsBlocked: 0,
+          SapCustomerId: ''
+        },
         orConditionModels: [
           {
             Description1: search,
@@ -551,9 +556,6 @@ export default {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
-        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
-          this.selectedCustomer = response.Model
-        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
@@ -625,6 +627,7 @@ export default {
     save () {
       this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
+      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',

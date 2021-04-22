@@ -268,7 +268,8 @@ export const store = new Vuex.Store({
     SelectedCustomer: {},
     autoGridField: [],
     selectedTableRows: [],
-    printDocuments: []
+    printDocuments: [],
+    showManualActions: false
   },
   actions: {
     // sistem gereksinimleri
@@ -1726,6 +1727,9 @@ export const store = new Vuex.Store({
     },
     setPrintDocuments (state, payload) {
       state.printDocuments = payload
+    },
+    setShowManualActions (state, payload) {
+      state.showManualActions = payload
     }
   }
 })
