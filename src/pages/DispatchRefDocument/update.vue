@@ -474,7 +474,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.form.ActualDeliveryDate < this.form.DocumentDate) {
+        let actualDate = new Date(this.form.ActualDeliveryDate).setHours(0, 0, 0, 0)
+        let documentDate = new Date(this.form.DocumentDate).setHours(0, 0, 0, 0)
+        if (actualDate < documentDate || (actualDate === documentDate && this.form.ActualDeliveryTime < this.form.DocumentTime)) {
           this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
             type: 'error',
             keepOnHover: true,
