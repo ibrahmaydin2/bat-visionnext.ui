@@ -1,15 +1,27 @@
 <template>
-  <b-modal v-if="modalAction" id="purchaseWaybillConvertModal" ref="purchase-waybill-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
+      <b-row>
+        <NextFormGroup :title="$t('index.Convert.SupplierId')" md="4" lg="4">
+          <NextDropdown v-model="supplier" url="VisionNextBranch/api/Branch/Search" searchable/>
+        </NextFormGroup>
+        <NextFormGroup :title="$t('index.Convert.InvoiceNumber')" md="4" lg="4">
+          <b-form-input type="text" v-model="invoiceNumber" />
+        </NextFormGroup>
+        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
+          <b-form-input type="text" v-model="documentNumber" />
+        </NextFormGroup>
+      </b-row>
       <b-row>
         <b-col>
           <b-table
-            :items="purchaseWaybillList"
+            :items="list"
             :fields="fields"
             sticky-header
             selection-mode="single"
             @row-selected="onRowSelected"
             selectable
+            :busy="tableBusy"
           >
             <template #table-busy>
               <div class="text-center text-danger my-2">
@@ -33,7 +45,7 @@
           id="findButton"
           size="sm"
           variant="success"
-          @click="getPurchaseWaybills">
+          @click="getList">
           <i class="fa fa-search"></i>{{$t('index.Convert.find')}}</b-button>
         <b-button
           :disabled="!form || !form.RecordId  || form.RecordId === 0"
@@ -52,7 +64,7 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
-  name: 'PurchaseWaybillConvertModal',
+  name: 'PurchaseInvoiceConvertModal',
   mixins: [mixin],
   components: {
   },
@@ -67,14 +79,25 @@ export default {
     openModal: {
       type: Boolean,
       default: false
-    }
+    },
+    id: {
+      type: String,
+      default: 'convertModal'
+    },
+    listUrl: '',
+    detailUrl: '',
+    convertUrl: ''
   },
   data () {
     return {
       form: {},
-      purchaseWaybillList: [],
+      list: [],
       selectedItem: {},
       showLoading: false,
+      supplier: null,
+      invoiceNumber: null,
+      documentNumber: null,
+      tableBusy: false,
       fields: [
         {
           key: 'Customer.Label',
@@ -87,13 +110,18 @@ export default {
           sortable: true
         },
         {
+          key: 'InvoiceNumber',
+          label: this.$t('index.Convert.InvoiceNumber'),
+          sortable: true
+        },
+        {
           key: 'DocumentNumber',
-          label: this.$t('index.Convert.documentNumber'),
+          label: this.$t('index.Convert.DocumentNumber'),
           sortable: true
         },
         {
           key: 'DocumentDate',
-          label: this.$t('index.Convert.documentDate'),
+          label: this.$t('index.Convert.DocumentDate'),
           sortable: true,
           formatter: (value, key, item) => {
             return this.dateConvertFromTimezone(item.DocumentDate)
@@ -118,30 +146,48 @@ export default {
     }
   },
   mounted () {
-    this.purchaseWaybillList = []
-    this.form = {}
-    this.selectedItem = {}
-    this.showLoading = false
+    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+      if (modalId === this.id) {
+        this.list = []
+        this.form = {}
+        this.selectedItem = {}
+        this.showLoading = false
+        this.supplier = null
+        this.documentNumber = null
+        this.invoiceNumber = null
+      }
+    })
   },
   methods: {
-    getPurchaseWaybills () {
+    getList () {
       this.form = {}
-      this.purchaseWaybillList = []
-      this.$api.postByUrl({documentNumber: '', invoiceNumber: '', SelectedBranchId: null}, 'VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceSearch').then((response) => {
-        if (response.ListModel) {
-          this.purchaseWaybillList = response.ListModel.BaseModels
+      this.list = []
+      let request = {
+        documentNumber: this.documentNumber ? this.documentNumber : '',
+        invoiceNumber: this.invoiceNumber ? this.invoiceNumber : '',
+        selectedBranchId: this.supplier ? this.supplier.RecordId : null
+      }
+      this.$store.commit('setDisabledLoading', true)
+      this.tableBusy = true
+      this.$api.postByUrl(request, this.listUrl).then((response) => {
+        this.tableBusy = false
+        this.$store.commit('setDisabledLoading', false)
+        if (response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+          this.list = response.ListModel.BaseModels
+        } else {
+          this.$toasted.show(this.$t('general.noRecord'), { type: 'error', keepOnHover: true, duration: '3000' })
         }
       })
     },
     closeModal () {
-      this.$root.$emit('bv::hide::modal', 'purchaseWaybillConvertModal')
+      this.$root.$emit('bv::hide::modal', this.id)
     },
     onRowSelected (items) {
       this.form = {}
       this.selectedItem = {}
       if (items && items.length > 0) {
         this.selectedItem = items[0]
-        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, 'VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceDetail').then((response) => {
+        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, this.detailUrl).then((response) => {
           this.form = response.InvoiceLiteModel
         })
       }
@@ -153,14 +199,16 @@ export default {
         invoiceLiteModel: this.form
       }
       this.showLoading = true
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceConvert').then((response) => {
+      this.$store.commit('setDisabledLoading', true)
+      this.$api.postByUrl(request, this.convertUrl).then((response) => {
+        this.$store.commit('setDisabledLoading', false)
         this.form = {}
         this.selectedItem = {}
         this.showLoading = false
-        this.purchaseWaybillList = []
+        this.list = []
         this.closeModal()
         if (response.IsCompleted) {
-          this.$toasted.show(this.$t('index.Convert.successPurchaseWaybill'), { type: 'success', keepOnHover: true, duration: '3000' })
+          this.$toasted.show(this.$t('index.Convert.successConvert'), { type: 'success', keepOnHover: true, duration: '3000' })
         } else {
           this.$toasted.show(this.$t('general.unExpectedException'), { type: 'error', keepOnHover: true, duration: '3000' })
         }
@@ -169,3 +217,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.modalZIndex {
+  z-index: 100;
+}
+</style>

@@ -1845,7 +1845,8 @@
     "notifications": "Bildirimler",
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
-    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz."
+    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
+    "noRecord": "Uygun kayıt bulunamadı!"
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",
@@ -1899,12 +1900,12 @@
       "InvoiceNumber": "Fatura Numarası",
       "ShippedQuantity": "Teslim Edilen Miktar",
       "branch": "Şube",
-      "documentNumber": "Belge Numarası",
+      "DocumentDate": "Döküman Tarihi",
       "totalVat": "KDV",
       "netTotal": "Net Tutar",
       "grossTotal": "Toplam Tutar",
       "find": "Bul",
-      "successPurchaseWaybill": "İşleminiz gerçekleştirilmiştir."
+      "successConvert": "İşleminiz gerçekleştirilmiştir."
     }
   },
   "auth": {
