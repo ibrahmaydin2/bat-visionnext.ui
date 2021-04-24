@@ -98,7 +98,7 @@
                     <b-dropdown-item
                       v-for="(dwn, i) in tableOperations.Downloads"
                       :key="'download' + i"
-                      @click="downloadBtn(thisRout,dwn)"
+                      @click="downloadBtn(thisRoute,dwn)"
                     >
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
@@ -113,7 +113,7 @@
                     <b-dropdown-item
                       v-for="(dwn, i) in tableOperations.Uploads"
                       :key="'upload' + i"
-                      @click="uploadBtn(thisRout,dwn)"
+                      @click="uploadBtn(thisRoute,dwn)"
                     >
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
@@ -148,7 +148,18 @@
       <PrintModal />
       <ImportExcelModal :modalAction="modalAction" />
       <MultiplePaymentChangeModal :modalAction="modalAction" :recordIds="recordIds" />
-       <PurchaseWaybillConvertModal :modalAction="modalAction"/>
+       <PurchaseInvoiceConvertModal
+         id="purchaseWaybillConvertModal"
+         :modalAction="modalAction"
+         list-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceSearch"
+         detail-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceDetail"
+         convert-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceConvert"/>
+       <PurchaseInvoiceConvertModal
+         id="purchaseInvoiceConvertModal"
+         :modalAction="modalAction"
+         list-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceSearch"
+         detail-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceDetail"
+         convert-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceConvert"/>
   </b-container>
 </template>
 <script>
@@ -157,7 +168,7 @@ import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
 import PrintModal from '../../components/Actions/PrintModal'
 import ImportExcelModal from '../../components/Actions/ImportExcelModal'
 import MultiplePaymentChangeModal from '../../components/Actions/MultiplePaymentChangeModal'
-import PurchaseWaybillConvertModal from '../../components/Actions/PurchaseWaybillConvertModal'
+import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoiceConvertModal'
 
 export default {
   components: {
@@ -165,27 +176,33 @@ export default {
     PrintModal,
     ImportExcelModal,
     MultiplePaymentChangeModal,
-    PurchaseWaybillConvertModal
+    PurchaseInvoiceConvertModal
   },
   data () {
     return {
-      thisRout: this.$route.name,
+      thisRoute: this.$route.name,
       pageTitle: this.$route.meta.title,
       createLink: this.$route.meta.createLink,
       filterTitle: '',
       modalAction: null,
       recordIds: [],
-      showActions: false
-
+      showActions: false,
+      showManualActions: false
+    }
+  },
+  mounted () {
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice']
+    if (pages.includes(this.thisRoute)) {
+      this.showManualActions = true
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows', 'showManualActions'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows'])
   },
   watch: {
     $route (to, from) {
       this.$store.commit('setError', {view: false, info: null})
-      this.thisRout = to.name
+      this.thisRoute = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
     },
@@ -273,9 +290,14 @@ export default {
           this.$root.$emit('bv::show::modal', 'multiplePaymentChangeModal')
         })
         return
-      } else if (action.Action === 'PurchaseInvoiceConvert') {
+      } else if (action.Action === 'PurchaseWaybillConvert') {
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'purchaseWaybillConvertModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseInvoiceConvert') {
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseInvoiceConvertModal')
         })
         return
       }
