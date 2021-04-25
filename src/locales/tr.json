@@ -1938,7 +1938,11 @@
       "netTotal": "Net Tutar",
       "grossTotal": "Toplam Tutar",
       "find": "Bul",
-      "successConvert": "İşleminiz gerçekleştirilmiştir."
+      "successConvert": "İşleminiz gerçekleştirilmiştir.",
+      "createSalesWaybillStatusError": "Bu işlem için E-Belge Durumu 'Gibe Gönderildi' veya 'Alıcıya Gönderildi' olmalıdır!",
+      "InvoiceLineQuantity": "Miktar",
+      "RejectedQuantity": "Reddedilen Miktar",
+      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz."
     }
   },
   "auth": {

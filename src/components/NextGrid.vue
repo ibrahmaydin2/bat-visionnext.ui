@@ -212,6 +212,7 @@
     <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -227,6 +228,7 @@ import RmaInvoiceModal from './Actions/RmaInvoiceModal'
 import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 import KmModal from './Actions/KmModal'
 import PriceListDayModal from './Actions/PriceListDayModal'
+import CreateSalesWaybill from './Actions/CreateSalesWaybill'
 let searchQ = {}
 export default {
   components: {
@@ -239,7 +241,8 @@ export default {
     RmaInvoiceModal,
     KmModal,
     InvoiceConvertModal,
-    PriceListDayModal
+    PriceListDayModal,
+    CreateSalesWaybill
   },
   props: {
     apiurl: String,
@@ -311,7 +314,8 @@ export default {
       showConfirmModal: false,
       showKmModal: false,
       showPriceListDayModal: false,
-      showLocationModal: false
+      showLocationModal: false,
+      showCreateSalesWaybillModal: false
     }
   },
   mounted () {
@@ -376,6 +380,7 @@ export default {
       this.showKmModal = false
       this.showPriceListDayModal = false
       this.showLocationModal = false
+      this.showCreateSalesWaybillModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -437,6 +442,15 @@ export default {
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'rmaConvertModal')
         })
+      } else if (action.Action === 'CreateDespatchWaybill') {
+        if (this.modalItem && this.modalItem.EDocumentStatus && (this.modalItem.EDocumentStatus.Code === 'SendToGib' || this.modalItem.EDocumentStatus.Code === 'SendToReceiver')) {
+          this.showCreateSalesWaybillModal = true
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'createSalesWaybillModal')
+          })
+        } else {
+          this.$toasted.show(this.$t('index.Convert.createSalesWaybillStatusError'), { type: 'error', keepOnHover: true, duration: '4000' })
+        }
       } else {
         this.showConfirmModal = true
         this.$nextTick(() => {

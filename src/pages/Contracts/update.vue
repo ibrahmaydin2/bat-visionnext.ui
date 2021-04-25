@@ -37,9 +37,6 @@
             <NextFormGroup item-key="ContractNumber" :error="$v.form.ContractNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
             </NextFormGroup>
-            <!--<NextFormGroup item-key="GroupId" :error="$v.form.GroupId" md="2" lg="2">
-              <NextDropdown lookup-key="CONTRACT_GROUP"  @input="selectedType('GroupId', $event)"/>
-            </NextFormGroup>-->
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
               <NextDropdown v-model="selectedClass" lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
@@ -126,10 +123,10 @@
         <b-tab :title="$t('insert.contract.validDates')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.startDate')" :error="$v.validDates.contractStartDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="validDates.contractStartDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="validDates.contractStartDate" :placeholder="$t('insert.chooseDate')" disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" :error="$v.validDates.contractEndDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="validDates.contractEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="validDates.contractEndDate" :placeholder="$t('insert.chooseDate')" disabled/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -1258,7 +1255,8 @@ export default {
         this.form.ContractValidDates = [{
           Deleted: 0,
           System: 0,
-          RecordState: 2,
+          RecordState: 1,
+          RecordStatus: 1,
           StatusId: 1,
           StartDate: this.validDates.contractStartDate,
           EndDate: this.validDates.contractEndDate

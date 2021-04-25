@@ -37,9 +37,6 @@
             <NextFormGroup item-key="ContractNumber" :error="$v.form.ContractNumber" md="2" lg="2">
               <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
             </NextFormGroup>
-            <!--<NextFormGroup item-key="GroupId" :error="$v.form.GroupId" md="2" lg="2">
-              <NextDropdown lookup-key="CONTRACT_GROUP"  @input="selectedType('GroupId', $event)"/>
-            </NextFormGroup>-->
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
               <NextDropdown lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
