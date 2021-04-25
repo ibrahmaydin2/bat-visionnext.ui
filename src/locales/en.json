@@ -1375,7 +1375,11 @@
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "noLastInvoiceProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "getLastWaybillProducts": "Son İrsaliyeden Ürün Getir",
-      "noLastWaybillProducts": "Son irsaliyedeki ürün bilgisi bulunamadı!"
+      "noLastWaybillProducts": "Son irsaliyedeki ürün bilgisi bulunamadı!",
+      "currency": "Para Birimi",
+      "priceListPrice": "Liste Fiyatı",
+      "totalOtherDiscount": "Dip Toplam İndrimi",
+      "totalItemDiscount": "Ürün İndrimi"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1841,7 +1845,8 @@
     "notifications": "Bildirimler",
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
-    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz."
+    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
+    "noRecord": "Uygun kayıt bulunamadı!"
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",
@@ -1893,7 +1898,14 @@
       "status": "Durum",
       "SupplierId": "Tedarikçi",
       "InvoiceNumber": "Fatura Numarası",
-      "ShippedQuantity": "Teslim Edilen Miktar"
+      "ShippedQuantity": "Teslim Edilen Miktar",
+      "branch": "Şube",
+      "DocumentDate": "Döküman Tarihi",
+      "totalVat": "KDV",
+      "netTotal": "Net Tutar",
+      "grossTotal": "Toplam Tutar",
+      "find": "Bul",
+      "successConvert": "İşleminiz gerçekleştirilmiştir."
     }
   },
   "auth": {

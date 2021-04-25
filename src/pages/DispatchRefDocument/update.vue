@@ -205,8 +205,8 @@ export default {
       form: {
         StateId: 1,
         InvoiceNumber: null,
-        InvoiceKindId: 2,
-        DocumentClassId: 3,
+        InvoiceKindId: null,
+        DocumentClassId: null,
         RefDocumentTypeId: null,
         EDocumentStatusId: null,
         GrossTotal: 0,
@@ -375,6 +375,11 @@ export default {
         this.selectedEDocumentStatus = this.convertLookupValueToSearchValue(rowData.EDocumentStatus)
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         this.selectedRefDocumentType = rowData.RefDocumentType
+        this.form.InvoiceKindId = 0
+        this.form.DocumentClassId = 0
+        this.form.PaymentTypeId = 0
+        this.form.PaymentPeriodId = 0
+        this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
         if (this.selectedRefDocumentType && this.selectedRefDocumentType.Code) {
           switch (this.selectedRefDocumentType.Code) {
             case 'WarehouseMovement':
@@ -460,6 +465,7 @@ export default {
     },
     save () {
       this.$v.form.$touch()
+      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -468,15 +474,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (!this.form.InvoiceLines || this.form.InvoiceLines.length === 0) {
-          this.$toasted.show(this.$t('insert.order.noOrderLines'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (this.form.ActualDeliveryDate < this.form.DocumentDate) {
+        let actualDate = new Date(this.form.ActualDeliveryDate).setHours(0, 0, 0, 0)
+        let documentDate = new Date(this.form.DocumentDate).setHours(0, 0, 0, 0)
+        if (actualDate < documentDate || (actualDate === documentDate && this.form.ActualDeliveryTime < this.form.DocumentTime)) {
           this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
             type: 'error',
             keepOnHover: true,

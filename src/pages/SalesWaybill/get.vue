@@ -67,10 +67,12 @@
               <div v-html="getFormatDataByType(rowData.EDocumentStatus, 'object', 'insert.order.eDocumentStatus')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'insert.order.currency')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -84,10 +86,13 @@
                     <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.price')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.priceListPrice')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.totalItemDiscount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.totalOtherDiscount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
@@ -95,10 +100,13 @@
                       <b-td>{{o.Item.Code}}</b-td>
                       <b-td>{{o.Quantity}}</b-td>
                       <b-td>{{o.Price}}</b-td>
+                      <b-td>{{o.PriceListPrice}}</b-td>
                       <b-td>{{o.VatRate}}</b-td>
                       <b-td>{{o.NetTotal}}</b-td>
                       <b-td>{{o.TotalVat}}</b-td>
                       <b-td>{{o.GrossTotal}}</b-td>
+                      <b-td>{{o.TotalItemDiscount}}</b-td>
+                      <b-td>{{o.TotalOtherDiscount}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -189,7 +197,9 @@ export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      paymentPeriod: 0
+    }
   },
   mounted () {
     this.getData()
@@ -202,7 +212,13 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesWaybill', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesWaybill', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          if (res && res.Model) {
+            this.paymentPeriod = res.Model.PaymentPeriod ? res.Model.PaymentPeriod : 0
+          }
+        })
+      })
     }
   }
 }

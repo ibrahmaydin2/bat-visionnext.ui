@@ -7,9 +7,6 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastWaybillProducts')">
-              <i class="fa fa-list-alt"></i>
-            </b-button>
             <router-link :to="{name: 'SalesWaybill' }">
               <CancelButton />
             </router-link>
@@ -147,46 +144,6 @@
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedInvoiceLine.selectedItem" :options="items" :filterable="false" @search="searchItems" label="Description1" @input="selectItem">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" min=1 />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.price" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.stock')" :error="$v.selectedInvoiceLine.stock" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.stock" disabled />
-            </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.vatRate" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.netTotal')" :error="$v.selectedInvoiceLine.netTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.netTotal" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.vatTotal')" :error="$v.selectedInvoiceLine.totalVat" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.totalVat" disabled />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedInvoiceLine.grossTotal" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.grossTotal" disabled />
-            </NextFormGroup>
-            <b-col cols="12" md="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addInvoiceLine" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>
@@ -209,10 +166,6 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -286,46 +239,6 @@
         </b-tab>
       </b-tabs>
     </b-col>
-    <b-modal id="campaign-modal" hide-footer>
-      <template #modal-title>
-        {{$t('insert.order.campaignSelection')}}
-      </template>
-      <b-table
-          :items="campaigns"
-          :fields="campaignFields"
-          select-mode="multi"
-          responsive
-          id="campaign-list"
-          :selectable="campaignSelectable"
-          bordered
-          tbody-tr-class="bg-white"
-          @row-selected="onCampaignSelected"
-        >
-        <template #cell(selection)="row" v-if="campaignSelectable">
-          <span>
-            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-          </span>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="campaigns ? campaigns.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        aria-controls="campaign-list"
-      ></b-pagination>
-      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
-      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
-    </b-modal>
-    <b-modal id="confirm-products-modal">
-      <template #modal-title>
-        {{$t('insert.order.doYouConfirm')}}
-      </template>
-      {{$t('insert.order.productsWillDeleted')}}
-      <template #modal-footer>
-        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-products-modal')">{{$t('insert.cancel')}}</b-button>
-        <b-button size="sm" class="float-right ml-2" variant="success" @click="getLastProducts">{{$t('insert.okay')}}</b-button>
-      </template>
-    </b-modal>
   </b-row>
 </template>
 <script>
@@ -471,6 +384,11 @@ export default {
         ...this.query,
         api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
+        andConditionModel: {
+          StatusIds: [1],
+          IsBlocked: 0,
+          SapCustomerId: ''
+        },
         orConditionModels: [
           {
             Description1: search,
@@ -636,125 +554,6 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    addInvoiceLine () {
-      this.$v.selectedInvoiceLine.$touch()
-      if (this.$v.selectedInvoiceLine.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
-        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let length = this.form.InvoiceLines.length
-      let selectedItem = this.selectedInvoiceLine.selectedItem
-      let quantity = this.selectedInvoiceLine.quantity
-      let order = {
-        Description1: selectedItem.Description1,
-        Deleted: 0,
-        System: 0,
-        RecordState: this.selectedInvoiceLine.recordState ? this.selectedInvoiceLine.recordState : 2,
-        StatusId: 1,
-        LineNumber: length,
-        ItemId: selectedItem.RecordId,
-        ItemCode: selectedItem.Code,
-        UnitSetId: selectedItem.UnitSetId,
-        UnitId: selectedItem.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        Quantity: quantity,
-        Stock: this.selectedInvoiceLine.stock,
-        VatRate: this.selectedInvoiceLine.vatRate,
-        TotalVat: this.selectedInvoiceLine.totalVat,
-        TotalItemDiscount: 0,
-        TotalOtherDiscount: 0,
-        Price: this.selectedInvoiceLine.price,
-        GrossTotal: this.selectedInvoiceLine.grossTotal,
-        NetTotal: this.selectedInvoiceLine.netTotal,
-        IsFreeItem: 0,
-        IsCanceled: 0,
-        PriceListPrice: this.selectedInvoiceLine.price,
-        SalesQuantity1: quantity,
-        SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: 0,
-        TempDiscountNetTotal: 0,
-        DiscountNetTotal: 0,
-        DiscountQuantity: 0,
-        RecordId: this.selectedInvoiceLine.recordId ? this.selectedInvoiceLine.recordId : null,
-        InvoiceId: this.selectedInvoiceLine.invoiceId
-      }
-      if (this.selectedInvoiceLine.isUpdated) {
-        this.form.InvoiceLines[this.selectedIndex] = order
-        this.selectedInvoiceLine.isUpdated = false
-      } else {
-        this.form.InvoiceLines.push(order)
-      }
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    removeInvoiceLine (item) {
-      this.form.InvoiceLines[this.form.InvoiceLines.indexOf(item)].RecordState = 4
-      this.calculateTotalPrices()
-      this.selectedIndex = null
-      this.selectedInvoiceLine = {}
-      this.$v.selectedInvoiceLine.$reset()
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
-      this.selectedInvoiceLine = {
-        quantity: item.Quantity,
-        price: item.Price,
-        vatRate: item.VatRate,
-        netTotal: item.NetTotal,
-        totalVat: item.TotalVat,
-        grossTotal: item.GrossTotal,
-        stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true,
-        invoiceId: item.InvoiceId
-      }
-      this.getItem(item.ItemId)
-    },
-    addCampaign () {
-      let model = {
-        SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
-        Order: this.form
-      }
-      this.$bvModal.hide('campaign-modal')
-      this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyUpdateDiscounts').then((res) => {
-        if (!res.IsCompleted) {
-          this.$toasted.show(this.$t('insert.order.campaignListError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (res && res.Invoice) {
-          this.form = res.Invoice
-        }
-        this.updateData()
-      })
-    },
-    onCampaignSelected (items) {
-      this.selectedCampaigns = items
-    },
     setData () {
       let rowData = this.rowData
       if (rowData) {
@@ -865,62 +664,6 @@ export default {
         }
         this.updateData()
       }
-    },
-    getLastProducts () {
-      this.$bvModal.hide('confirm-products-modal')
-      if (!this.form.CustomerId || !this.form.WarehouseId || !this.form.PriceListId) {
-        this.$toasted.show(this.$t('insert.order.lastProductsRequiredMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
-        return false
-      }
-      let request = {
-        customerId: this.form.CustomerId,
-        warehouseId: this.form.WarehouseId,
-        priceListId: this.form.PriceListId
-      }
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesWaybill/GetLastOrderProducts').then((response) => {
-        if (response && response.length > 0) {
-          let count = 0
-          this.form.InvoiceLines = []
-          response.map(product => {
-            this.form.InvoiceLines.push({
-              Description1: product.ItemDescription,
-              Deleted: 0,
-              System: 0,
-              RecordState: 2,
-              StatusId: 1,
-              LineNumber: count,
-              ItemId: product.ItemId,
-              ItemCode: product.ItemCode,
-              UnitSetId: product.UnitSetId,
-              UnitId: product.UnitId,
-              ConvFact1: 1,
-              ConvFact2: 1,
-              Quantity: product.Quantity ? product.Quantity : 0,
-              Stock: product.Stock,
-              VatRate: product.VatRate ? product.VatRate : 0,
-              TotalVat: product.TotalVat ? product.TotalVat : 0,
-              TotalItemDiscount: 0,
-              TotalOtherDiscount: 0,
-              Price: product.Price ? product.Price : 0,
-              GrossTotal: product.GrossTotal ? product.GrossTotal : 0,
-              NetTotal: product.NetTotal ? product.NetTotal : 0,
-              IsFreeItem: 0,
-              IsCanceled: 0,
-              PriceListPrice: product.Price ? product.Price : 0,
-              SalesQuantity1: product.Quantity ? product.Quantity : 0,
-              SalesUnit1Id: product.UnitId,
-              TempDiscountQuantity: product.Quantity ? product.Quantity : 0,
-              TempDiscountNetTotal: product.NetTotal ? product.NetTotal : 0,
-              DiscountNetTotal: 0,
-              DiscountQuantity: 0
-            })
-            count++
-          })
-          this.calculateTotalPrices()
-        } else {
-          this.$toasted.show(this.$t('insert.order.noLastWaybillProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
-        }
-      })
     }
   },
   validations () {
