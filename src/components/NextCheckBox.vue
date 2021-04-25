@@ -1,5 +1,5 @@
 <template>
-    <b-form-checkbox v-model="model" name="check-button" :switch="toggle" :disabled="disabled">
+    <b-form-checkbox v-model="model" name="check-button" :switch="toggle" :disabled="disabled" @input="input($event)">
       <span v-if="showText">{{model ? textActive : textPassive}}</span>
     </b-form-checkbox>
 </template>
@@ -60,6 +60,11 @@ export default {
       if (val !== this.model) {
         this.model = val
       }
+    }
+  },
+  methods: {
+    input (value) {
+      this.$emit('input', value)
     }
   }
 }
