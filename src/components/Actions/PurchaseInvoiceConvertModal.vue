@@ -1,5 +1,5 @@
 <template>
-  <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="'purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.SupplierId')" md="4" lg="4">
