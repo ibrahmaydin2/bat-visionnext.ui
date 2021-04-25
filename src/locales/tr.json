@@ -1923,7 +1923,10 @@
       "status": "Durum",
       "SupplierId": "Tedarikçi",
       "InvoiceNumber": "Fatura Numarası",
-      "ShippedQuantity": "Teslim Edilen Miktar"
+      "ShippedQuantity": "Teslim Edilen Miktar",
+      "TransformQuantity": "Talep Edilen İade Miktarı",
+      "TotalAmount": "Toplam Tutar",
+      "Amount": "Toplam"
     }
   },
   "auth": {

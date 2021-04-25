@@ -51,13 +51,6 @@
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
               <v-select label="Description1" :filterable="false" :options="routeTypes" @input="selectedSearchType('RouteTypeId', $event)"></v-select>
             </NextFormGroup>
-            <!-- <NextFormGroup item-key="RouteClassId" :error="$v.form.RouteClassId">
-              <v-select
-                :options="lookup.ROUTE_CLASS"
-                @input="selectedType('RouteClassId', $event)"
-                label="Label"
-              />
-            </NextFormGroup> -->
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
               <v-select
                 :options="lookup.VISIT_START_CONTROL"
@@ -65,13 +58,6 @@
                 label="Label"
               />
             </NextFormGroup>
-            <!-- <NextFormGroup item-key="RouteGroupId" :error="$v.form.RouteGroupId">
-              <v-select
-                :options="lookup.ROUTE_GROUP"
-                @input="selectedType('RouteGroupId', $event)"
-                label="Label"
-              />
-            </NextFormGroup> -->
             <NextFormGroup :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
               <v-select
                 :disabled="!showCustomerRegion"
@@ -161,6 +147,7 @@
                 class="mb-2"
                 :value-as-date="true"
                 label-no-date-selected
+                :placeholder="$t('insert.chooseDate')"
               >
               </b-form-datepicker>
             </NextFormGroup>
@@ -414,6 +401,12 @@ export default {
         }
       } else {
         this.form[label] = null
+        this.showCustomerRegion = false
+        this.showMarketingRegion = false
+        this.MarketingRegion5Id = null
+        this.CustomerRegion5Id = null
+        this.insertRules.MarketingRegion5Id = {}
+        this.insertRules.CustomerRegion5Id = {}
       }
     },
     selectedCustomerLocation (e) {
