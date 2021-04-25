@@ -315,7 +315,8 @@ export default {
       showKmModal: false,
       showPriceListDayModal: false,
       showLocationModal: false,
-      showCreateSalesWaybillModal: false
+      showCreateSalesWaybillModal: false,
+      autoSearchInput: {}
     }
   },
   mounted () {
@@ -588,6 +589,14 @@ export default {
       }
     },
     onAutoCompleteSearch (input) {
+      if (input === '') { return [] }
+      if (this.selectedHeader && this.selectedHeader.modelProperty) {
+        if (input === '' || this.autoSearchInput[this.selectedHeader.modelProperty] === input) {
+          this.autoSearchInput[this.selectedHeader.modelProperty] = input
+          return []
+        }
+        this.autoSearchInput[this.selectedHeader.modelProperty] = input
+      }
       if (input.length < 3) { return [] }
       let pagerecordCount = input.includes('%') ? 20 : 100
       const andConditionModel = input === '%%%' ? {} : {
