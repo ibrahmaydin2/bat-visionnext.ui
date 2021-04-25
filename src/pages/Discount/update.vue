@@ -1276,7 +1276,7 @@ export default {
           this.form.DiscountDetails.push(value)
         })
         this.form.DiscountCustomerSqls = this.discountCustomerSqls
-        this.createData()
+        this.updateData()
       }
     },
     setData () {
