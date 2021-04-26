@@ -320,6 +320,12 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
+        if (this.rowData.Printed === 1) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
+          setTimeout(() => {
+            this.$router.push({ name: 'SalesReturnWaybill' })
+          }, 2000)
+        }
         this.setData()
       })
       var me = this

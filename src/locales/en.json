@@ -1380,7 +1380,7 @@
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
       "totalItemDiscount": "Ürün İndrimi",
-      "eDocumentStatusNotUpdated": "E-belge durumu güncel değil!"
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
