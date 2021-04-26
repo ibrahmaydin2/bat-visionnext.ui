@@ -327,11 +327,12 @@ export default {
       selectedBranch: {},
       selectedDeliveryRepresentative: null,
       paymentTypes: [],
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      warehouses: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
+    ...mapState(['representatives', 'routes', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -343,11 +344,13 @@ export default {
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response && response.Model ? response.Model : {}
+      })
+      this.$api.post({andConditionModel: {StatusIds: [1], IsVehicle: 0}}, 'Warehouse', 'Warehouse/Search').then((response) => {
+        this.warehouses = response && response.ListModel ? response.ListModel.BaseModels : []
       })
     },
     searchRoute (search, loading) {
@@ -372,10 +375,12 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/SearchSapCustomer',
         name: 'customers',
         andConditionModel: {
-          SalesDocumentTypeIds: [45, 46]
+          SalesDocumentTypeIds: [45, 46],
+          StatusIds: [1],
+          IsBlocked: 0
         },
         orConditionModels: [
           {

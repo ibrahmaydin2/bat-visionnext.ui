@@ -39,7 +39,9 @@ axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
 axios.defaults.timeout = 60000
 axios.interceptors.request.use(function (config) {
   numberOfAjaxCAllPending++
-  store.commit('bigLoaded', true)
+  if (!store.state.disabledLoading) {
+    store.commit('bigLoaded', true)
+  }
   return config
 })
 axios.interceptors.response.use(function (response) {
@@ -268,7 +270,8 @@ export const store = new Vuex.Store({
     SelectedCustomer: {},
     autoGridField: [],
     selectedTableRows: [],
-    printDocuments: []
+    printDocuments: [],
+    disabledLoading: false
   },
   actions: {
     // sistem gereksinimleri
@@ -463,12 +466,15 @@ export const store = new Vuex.Store({
           }
         ]
       } else {
-        OrderByColumns = [
-          {
-            'column': 'CreatedDateTime',
-            'orderByType': 1
-          }
-        ]
+        let currentPage = router.history && router.history.current ? router.history.current.name : ''
+        if (currentPage !== 'Discount') {
+          OrderByColumns = [
+            {
+              'column': 'CreatedDateTime',
+              'orderByType': 1
+            }
+          ]
+        }
       }
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
@@ -1726,6 +1732,9 @@ export const store = new Vuex.Store({
     },
     setPrintDocuments (state, payload) {
       state.printDocuments = payload
+    },
+    setDisabledLoading (state, payload) {
+      state.disabledLoading = payload
     }
   }
 })

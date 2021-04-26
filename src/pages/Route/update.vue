@@ -77,7 +77,7 @@
             </NextFormGroup> -->
             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
               <v-select
-                v-model="customerRegion5"
+                v-model="CustomerRegion5Id"
                 :disabled="!showCustomerRegion"
                 :options="lookup.CUSTOMER_REGION_5"
                 @input="selectedLabelType('CustomerRegion5Id', $event)"
@@ -86,7 +86,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
               <v-select
-                v-model="marketingRegion5"
+                v-model="MarketingRegion5Id"
                 :disabled="!showMarketingRegion"
                 :options="lookup.MARKETING_REGION_5"
                 @input="selectedLabelType('MarketingRegion5Id', $event)"
@@ -165,6 +165,8 @@
                 :locale="$i18n.locale"
                 class="mb-2"
                 :value-as-date="true"
+                label-no-date-selected
+                :placeholder="$t('insert.chooseDate')"
               >
               </b-form-datepicker>
             </NextFormGroup>
@@ -289,8 +291,8 @@ export default {
       district: null,
       parish: null,
       routeType: null,
-      customerRegion5: null,
-      marketingRegion5: null,
+      CustomerRegion5Id: null,
+      MarketingRegion5Id: null,
       Location: {}
     }
   },
@@ -466,24 +468,34 @@ export default {
           if (model.RecordId === 1 || model.RecordId === 6) {
             this.showCustomerRegion = true
             this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
             this.insertRules.CustomerRegion5Id = {
               required
             }
           } else if (model.RecordId === 5) {
             this.showMarketingRegion = true
             this.showCustomerRegion = false
+            this.CustomerRegion5Id = null
             this.insertRules.MarketingRegion5Id = {
               required
             }
           } else {
             this.showCustomerRegion = false
             this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
+            this.CustomerRegion5Id = null
             this.insertRules.MarketingRegion5Id = {}
             this.insertRules.CustomerRegion5Id = {}
           }
         }
       } else {
         this.form[label] = null
+        this.showCustomerRegion = false
+        this.showMarketingRegion = false
+        this.MarketingRegion5Id = null
+        this.CustomerRegion5Id = null
+        this.insertRules.MarketingRegion5Id = {}
+        this.insertRules.CustomerRegion5Id = {}
       }
     },
     selectedLabelType (label, model) {
@@ -728,6 +740,10 @@ export default {
           })
           return
         }
+        this.form.RouteDetails.map(item => {
+          delete item['Customer']
+          delete item['Location']
+        })
         this.updateData()
       }
     }
@@ -799,11 +815,11 @@ export default {
           if (e.RouteType.DecimalValue === 1 || e.RouteType.DecimalValue === 6) {
             this.showCustomerRegion = true
             this.showMarketingRegion = false
-            this.customerRegion5 = e.CustomerRegion5
+            this.CustomerRegion5Id = e.CustomerRegion5
           } else if (e.RouteType.DecimalValue === 5) {
             this.showCustomerRegion = false
             this.showMarketingRegion = true
-            this.marketingRegion5 = e.MarketingRegion5 && e.MarketingRegion5.Label
+            this.MarketingRegion5Id = e.MarketingRegion5 && e.MarketingRegion5.Label
           } else {
             this.showCustomerRegion = false
             this.showMarketingRegion = false

@@ -22,7 +22,7 @@
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" :disabled="!isCampaignDateNew"/>
           </NextFormGroup>
            <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
@@ -35,57 +35,57 @@
         <b-tab :title="$t('insert.fixedTermCampaign.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CampaignBeginDate" :error="$v.form.CampaignBeginDate">
-              <b-form-datepicker v-model="form.CampaignBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="form.CampaignBeginDate" :placeholder="$t('insert.chooseDate')" @input="setDisabledValues"/>
             </NextFormGroup>
             <NextFormGroup item-key="CampaignEndDate" :error="$v.form.CampaignEndDate">
               <b-form-datepicker v-model="form.CampaignEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
-              <NextCheckBox v-model="form.UseBudget" type="number" toggle/>
+              <NextCheckBox v-model="form.UseBudget" type="number" toggle disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" :disabled="!form.UseBudget" />
+              <b-form-input type="number" v-model="form.BudgetAmount" disabled />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
-              <b-form-input type="number" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount" :disabled="true" />
+              <b-form-input type="number" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount" disabled />
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
-              <v-select v-model="selectedRouteCriteria" :options="lookup.ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)" label="Label"/>
+              <v-select v-model="selectedRouteCriteria" :options="lookup.ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)" label="Label" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <v-select v-model="selectedCustomerCriteria" :options="lookup.CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" label="Label"/>
+              <v-select v-model="selectedCustomerCriteria" :options="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code !== 'MS') : [])" @input="selectedType('CustomerCriteriaId', $event)" label="Label" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <v-select v-model="selectedItemCriteria" :options="lookup.ITEM_CRITERIA" @input="selectedType('ItemCriteriaId', $event)" label="Label"/>
+              <v-select v-model="selectedItemCriteria" :options="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" @input="selectedType('ItemCriteriaId', $event)" label="Label" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label"/>
+              <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="CampaignTypeId" :error="$v.form.CampaignTypeId">
-              <v-select v-model="discountType" :options="discountTypes" @input="selectedSearchType('CampaignTypeId', $event)" label="Description1"/>
+              <v-select v-model="discountType" :options="discountTypes" @input="selectedSearchType('CampaignTypeId', $event)" label="Description1" disabled/>
             </NextFormGroup>
              <NextFormGroup item-key="CampaignRate" :error="$v.form.CampaignRate">
-              <b-form-input type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" />
+              <b-form-input type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" :disabled="!isCampaignDateNew"/>
             </NextFormGroup>
              <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-              <v-select v-model="selectedCurrency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1" :disabled="!form.UseBudget"/>
+              <v-select v-model="selectedCurrency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1" disabled/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.maturityPeriods')">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.startQuantity')" :error="$v.fixedTermCampaignTaken.startQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.startQuantity" />
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.startQuantity" :disabled="!isCampaignDateNew"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.endQuantity')" :error="$v.fixedTermCampaignTaken.endQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.endQuantity" />
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.endQuantity" :disabled="!isCampaignDateNew" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.paymentPeriod')" :error="$v.fixedTermCampaignTaken.paymentPeriod" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.paymentPeriod" />
+              <b-form-input type="number" v-model="fixedTermCampaignTaken.paymentPeriod" :disabled="!isCampaignDateNew"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignTaken" />
+                <AddDetailButton @click.native="addFixedTermCampaignTaken" :disabled="!isCampaignDateNew"/>
               </b-form-group>
             </b-col>
           </b-row>
@@ -112,32 +112,15 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.campaignItemAreae" :required="true" md="5" lg="5">
-               <v-select v-model="campaignItemArea" :options="campaignItemAreaList" :filterable="false" label="Label"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
-               <v-select v-model="campaignItemValue" :options="campaignItemValueList" :filterable="false" label="Label"/>
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignItem" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
-                  <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnNameStr}}</b-td>
-                  <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValueStr}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                  <b-td>{{f.ColumnNameDescription}}</b-td>
+                  <b-td>{{f.ColumnValueDescription}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -145,60 +128,29 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.routes')" v-if="selectedRouteCriteria && selectedRouteCriteria.Code === 'RL'">
           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.route')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
-              <v-select v-model="selectedRoute" :options="routes" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')" label="Description1"/>
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.route')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID')" :key="i">
-                  <b-td>{{f.Route ? f.Route.Label : f.Text}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignRoutes" :key="i">
+                  <b-td>{{f.Description1}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'">
-           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.customerItemArea" :required="true" md="5" lg="5">
-               <v-select v-model="customerItemArea" :options="customerItemAreaList" :filterable="false" label="Label"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.customerItemValue" :required="true" md="5" lg="5">
-              <v-select v-model="customerItemValue" :options="customerItemValueList" :filterable="false" label="Label" />
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCustomerItem" />
-              </b-form-group>
-            </b-col>
-          </b-row>
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnNameStr}}</b-td>
-                  <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValueStr}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="removeFixedTermCustomerItem(f)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignCustomerCriterias" :key="i">
+                  <b-td>{{f.ColumnNameDescription}}</b-td>
+                  <b-td>{{f.ColumnValueDescription}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -206,39 +158,12 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML' && form.FixedTermCampaignDetails.length > 0">
           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
-              <v-select v-model="customer" :options="customers" @search="searchCustomer" :filterable="false" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.customerCode')" :error="$v.fixedTermCampaignCustomer.customerCode" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
-            </NextFormGroup>
-             <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetId" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignCustomer" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
@@ -246,9 +171,6 @@
                   <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
                   <b-td>{{f.LocationName}}</b-td>
                   <b-td>{{f.Budget ? f.Budget.Label : f.BudgetName}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -256,27 +178,13 @@
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <b-row>
-            <NextFormGroup :title="$t('insert.fixedTermCampaign.branch')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
-              <v-select v-model="selectedBranch" :options="branchs" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')" label="Description1" />
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2" class="text-right">
-              <b-form-group>
-                <AddDetailButton @click.native="addFixedTermCampaignDetail" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.fixedTermCampaign.branch')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')" :key="i">
-                  <b-td>{{f.Branch ? f.Branch.Label : f.Text}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="removeFixedTermCampaignDetail(f)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
+                <b-tr v-for="(f, i) in form.FixedTermCampaignBranchs" :key="i">
+                  <b-td>{{f.CommercialTitle}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -357,7 +265,8 @@ export default {
         budgetId: null,
         budgetName: null
       },
-      selectedCurrency: null
+      selectedCurrency: null,
+      isCampaignDateNew: false
     }
   },
   computed: {
@@ -595,6 +504,7 @@ export default {
       this.discountType = this.convertLookupValueToSearchValue(rowData.CampaignType)
       this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
       this.form.UsedAmount = this.form.UsedAmount ? this.form.UsedAmount : 0
+      this.setDisabledValues()
       this.getCampaignCustomersDetail()
     },
     getCampaignCustomersDetail () {
@@ -630,6 +540,10 @@ export default {
           }
         })
       }
+    },
+    setDisabledValues (value) {
+      let date = value !== undefined ? value : this.form.CampaignBeginDate
+      this.isCampaignDateNew = new Date(date).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0)
     },
     save () {
       this.$v.form.$touch()

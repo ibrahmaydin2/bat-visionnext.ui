@@ -413,8 +413,12 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/SearchSapCustomer',
         name: 'customers',
+        andConditionModel: {
+          StatusIds: [1],
+          IsBlocked: 0
+        },
         orConditionModels: [
           {
             Description1: search,

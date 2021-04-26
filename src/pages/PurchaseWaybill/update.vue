@@ -33,6 +33,10 @@
                   v-model="form.DocumentTime"
                   :disabled="true"/>
               </NextFormGroup>
+              <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="3" lg="3">
+                <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true">
+                </v-select>
+              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
                 <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
                   <template slot="no-options">
@@ -96,10 +100,6 @@
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true"></v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true">
-              </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1" :disabled="true"></v-select>
@@ -238,6 +238,12 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
+        if (this.rowData.Printed === 1) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
+          setTimeout(() => {
+            this.$router.push({ name: 'PurchaseWaybill' })
+          }, 2000)
+        }
         this.setData()
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
@@ -388,7 +394,8 @@ export default {
       }
       let model = {
         WarehouseIds: [this.form.WarehouseId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId],
+        StatusIds: [2]
       }
       var me = this
       this.searchItemsByModel('VisionNextWarehouse/api/WarehouseStock/Search', 'stocks', model, 1).then(() => {

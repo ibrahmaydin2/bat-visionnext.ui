@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'SalesReturnWaybill' }">
+            <router-link :to="{name: 'SalesWaybill' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -21,7 +21,7 @@
           <b-col cols="8">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
+                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" />
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <b-form-timepicker
@@ -31,10 +31,10 @@
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
                   v-model="form.DocumentTime"
-                  :disabled="true"/>
+                />
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
-                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
+                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -63,6 +63,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -71,24 +83,24 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.returnSalesWaybill')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
+              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
+              <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" :disabled="true"/>
+              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2">
-              <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
+             <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+                <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2">
+            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
@@ -101,30 +113,32 @@
               <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
+              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" :disabled="true"></v-select>
+              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <v-select v-model="selectedRoute" label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" :disabled="true">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select v-model="selectedRoute" label="Description1" :options="routes" :filterable="false" @input="selectedSearchType('RouteId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true">
+              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
+              <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
+              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -140,11 +154,12 @@
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
-                  <b-td>{{o.Item.Label }}</b-td>
-                  <b-td>{{o.Item.Code }}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
@@ -156,7 +171,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" :disabled="form.VehicleId > 0">
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0" :disabled="form.VehicleId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
               <b-form-input type="text" v-model="selectedInvoiceLogisticCompany.companyName"/>
@@ -202,6 +217,26 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.InvoiceDiscounts)" :key="i">
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
+                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -237,7 +272,9 @@ export default {
         VehicleId: null,
         Printed: 0,
         PrintCount: 0,
+        PaymentTypeId: null,
         Canceled: 0,
+        PaymentPeriodId: null,
         CurrencyId: null,
         NetTotal: 0,
         TotalVat: 0,
@@ -283,7 +320,8 @@ export default {
         stock: null,
         vatRate: null,
         totalVat: null,
-        isUpdated: false
+        isUpdated: false,
+        invoiceId: null
       },
       campaigns: [],
       isCampaignQuestioned: false,
@@ -292,6 +330,7 @@ export default {
       selectedRoute: null,
       selectedWarehouse: null,
       selectedVehicle: null,
+      selectedPaymentType: null,
       selectedCampaigns: [],
       currentPage: 1,
       campaignSelectable: false,
@@ -305,14 +344,16 @@ export default {
         districtName: null,
         taxNumber: null
       },
+      selectedBranch: {},
       address: {},
       selectedDeliveryRepresentative: null,
       selectedStatus: null,
+      paymentTypes: [],
       selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus', 'invoiceKinds'])
+    ...mapState(['representatives', 'createCode', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentPeriods', 'currencies', 'orderStatusList', 'items', 'priceListItems', 'stocks', 'eDocumentStatus', 'invoiceKinds'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -320,41 +361,19 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
-          setTimeout(() => {
-            this.$router.push({ name: 'SalesReturnWaybill' })
-          }, 2000)
-        }
         this.setData()
       })
-      var me = this
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'}).then(() => {
-        me.selectedEDocumentStatus = me.eDocumentStatus.find(e => e.Code === 'ReadyForSendToEFU')
-        me.form.EDocumentStatusId = me.selectedEDocumentStatus.RecordId
-        this.$forceUpdate()
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'})
+      this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
+        this.selectedBranch = response && response.Model ? response.Model : {}
       })
-    },
-    searchRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/Search',
-          name: 'routes',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -424,9 +443,12 @@ export default {
           ...this.query,
           api: 'VisionNextItem/api/Item/Search',
           name: 'items',
-          andConditionModel: {
-            Description1: search
-          }
+          orConditionModels: [
+            {
+              Description1: search,
+              Code: search
+            }
+          ]
         }).then(res => {
           loading(false)
         })
@@ -531,41 +553,29 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    addCampaign () {
-      let model = {
-        SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
-        Order: this.form
-      }
-      this.$bvModal.hide('campaign-modal')
-      this.$api.post(model, 'Invoice', 'SalesWaybill/ApplyUpdateDiscounts').then((res) => {
-        if (!res.IsCompleted) {
-          this.$toasted.show(this.$t('insert.order.campaignListError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (res && res.Invoice) {
-          this.form = res.Invoice
-        }
-        this.updateData()
-      })
-    },
-    onCampaignSelected (items) {
-      this.selectedCampaigns = items
-    },
     setData () {
       let rowData = this.rowData
       if (rowData) {
         this.form = rowData
+        this.form.InvoiceNumber = null
+        this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextInvoice/api/SalesWaybill/GetCode'}).then(() => {
+          if (this.createCode) {
+            this.form.InvoiceNumber = this.createCode
+          }
+        })
         this.documentDate = rowData.DocumentDate
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.selectedCustomer = response.Model
+          this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        })
         this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
+        this.selectedEDocumentStatus = this.convertLookupValueToSearchValue(rowData.EDocumentStatus)
+        this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         if (this.orderStatusList && this.orderStatusList.length > 0) {
@@ -624,6 +634,7 @@ export default {
       }
       this.form.InvoiceLogisticCompanies.push(logisticCompany)
       this.selectedInvoiceLogisticCompany = {}
+      this.address = {}
       this.$v.selectedInvoiceLogisticCompany.$reset()
     },
     removeInvoiceLogisticCompany (item) {
@@ -632,7 +643,6 @@ export default {
     save () {
       this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
-      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -649,7 +659,30 @@ export default {
           })
           return
         }
-        this.updateData()
+        if (this.form.ActualDeliveryDate < this.form.DocumentDate) {
+          this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.form.RecordId = this.$route.params.url
+        let model = {
+          'model': this.form
+        }
+        this.$api.postByUrl(model, 'VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs').then((res) => {
+          if (res.IsCompleted === true) {
+            this.$router.push({name: 'SalesWaybill'})
+          } else {
+            this.$toasted.show(res.Message, {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+        })
+        // this.updateData()
       }
     }
   },
@@ -704,6 +737,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
+        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
         this.searchPriceList()
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
@@ -737,7 +771,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;
@@ -755,5 +788,13 @@ export default {
 }
 .summary-hr {
   margin: 3px;
+}
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
 }
 </style>

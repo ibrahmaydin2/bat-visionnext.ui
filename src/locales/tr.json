@@ -400,6 +400,7 @@
   "insert": {
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
+    "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
     "edit": "Düzenle",
@@ -488,8 +489,8 @@
       "locationFieldRequired": "Lokasyon alanı zorunludur.",
       "title": "Detaylar",
       "type": "Tip",
-      "customerArea": "Müşteri Bölgesi 5",
-      "marketingArea": "Pazarlama Bölgesi 5",
+      "customerArea": "Müşteri Bölgesi ",
+      "marketingArea": "Pazarlama Bölgesi ",
       "reference": "Referans",
       "CustomerId": "Müşteri Kodu",
       "LocationId": "Lokasyon Kodu",
@@ -1396,7 +1397,12 @@
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "noLastInvoiceProducts": "Son faturadaki ürün bilgisi bulunamadı!",
       "getLastWaybillProducts": "Son İrsaliyeden Ürün Getir",
-      "noLastWaybillProducts": "Son irsaliyedeki ürün bilgisi bulunamadı!"
+      "noLastWaybillProducts": "Son irsaliyedeki ürün bilgisi bulunamadı!",
+      "currency": "Para Birimi",
+      "priceListPrice": "Liste Fiyatı",
+      "totalOtherDiscount": "Dip Toplam İndrimi",
+      "totalItemDiscount": "Ürün İndrimi",
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1862,7 +1868,8 @@
     "notifications": "Bildirimler",
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
-    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz."
+    "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
+    "noRecord": "Uygun kayıt bulunamadı!"
   },
   "index": {
     "today": "Bugün",
@@ -1895,9 +1902,11 @@
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorClosed": "Kapalı durumdaki belge dönüştürülemez.",
     "errorLocation": "Boylam - Enlem Bilgisi Eksik",
-    "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
+    "errorSevk": "Yalnızca Sevk Edilebilir ve Açık durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
+    "errorConfirm": "Yalnızca Onaylandı durumundaki kayıtlar onaylanabilir.",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
@@ -1923,7 +1932,27 @@
       "status": "Durum",
       "SupplierId": "Tedarikçi",
       "InvoiceNumber": "Fatura Numarası",
-      "ShippedQuantity": "Teslim Edilen Miktar"
+      "ShippedQuantity": "Teslim Edilen Miktar",
+      "TransformQuantity": "Talep Edilen İade Miktarı",
+      "TotalAmount": "Toplam Tutar",
+      "Amount": "Toplam",
+      "branch": "Şube",
+      "DocumentDate": "Döküman Tarihi",
+      "totalVat": "KDV",
+      "netTotal": "Net Tutar",
+      "grossTotal": "Toplam Tutar",
+      "find": "Bul",
+      "successConvert": "İşleminiz gerçekleştirilmiştir.",
+      "createSalesWaybillStatusError": "Bu işlem için E-Belge Durumu 'Gibe Gönderildi' veya 'Alıcıya Gönderildi' olmalıdır!",
+      "InvoiceLineQuantity": "Miktar",
+      "RejectedQuantity": "Reddedilen Miktar",
+      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz.",
+      "quantity": "Miktar",
+      "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz.",
+      "loadingBeginDate": "Yükleme Başlangıç Tarihi",
+      "loadingEndDate": "Yükleme Bitiş Tarihi",
+      "route" : "Rota",
+      "day" : "Gün"
     }
   },
   "auth": {

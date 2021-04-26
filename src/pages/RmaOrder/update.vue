@@ -85,7 +85,7 @@
               />
             </NextFormGroup>
           </b-row>
-                    <hr />
+          <hr />
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')">
               <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
@@ -376,6 +376,7 @@ export default {
             Quantity: item.Quantity,
             RmaQuantity1: item.RmaQuantity1,
             RmaUnit1Id: item.RmaUnit1Id,
+            RmaOrderId: item.RmaOrderId,
             Price: item.Price,
             Item: {
               Description1: item.Item.Description1,
@@ -413,7 +414,8 @@ export default {
             UnitId: item.UnitId,
             RmaQuantity1: item.Quantity,
             RmaUnit1Id: item.UnitId,
-            RecordId: item.RecordId
+            RecordId: item.RecordId,
+            RmaOrderId: item.RmaOrderId
           })
         }
       })

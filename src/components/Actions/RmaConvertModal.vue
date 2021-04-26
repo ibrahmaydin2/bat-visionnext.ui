@@ -1,26 +1,24 @@
 <template>
 <!-- Rma apisi bulunmadığı için sonra yapılacak -->
-  <b-modal v-if="modalAction" id="rmaConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" @show="show" id="rmaConvertModal" @hide="hide" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
           <b-form-input type="text" v-model="form.Code" readonly />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
-          <b-form-input type="text" v-model="warehouse" readonly />
+        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
+          <b-form-input type="text" v-model="form.DocumentNumber" />
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.InvoiceKindId" :required="false" md="4" lg="4">
           <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('InvoiceKindId', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
-          <b-form-input type="text" v-model="form.DocumentNumber" />
-        </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.Employee')" md="4" lg="4">
-          <v-select :value="employee" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
-            <template slot="no-options">
-              {{$t('insert.min3')}}
-            </template>
-          </v-select>
+        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
+          <NextDropdown
+            url="VisionNextWarehouse/api/Warehouse/Search"
+            @input="selectedWarehouse"
+            :searchable="true"
+            :custom-option="true"
+          />
         </NextFormGroup>
       </b-row>
       <b-row>
@@ -36,6 +34,12 @@
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
               </div>
+            </template>
+            <template #cell(UsedQuantity)="row">
+              <b-form-input type="number" :min="0" :max="row.item.TransformQuantity" v-model="row.item.UsedQuantity" />
+            </template>
+            <template #cell(TotalAmount)="row">
+              <span>{{calculatedQuantity(row.item)}}</span>
             </template>
           </b-table>
         </b-col>
@@ -65,13 +69,14 @@
 import { required } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 import mixin from '../../mixins/helper'
+import indexMixin from '../../mixins/index'
 export default {
   name: 'RmaConvertModal',
-  mixins: [mixin],
+  mixins: [mixin, indexMixin],
   components: {
   },
   computed: {
-    ...mapState(['employees', 'createCode'])
+    ...mapState(['createCode'])
   },
   props: {
     modalAction: {
@@ -100,26 +105,37 @@ export default {
       tableBusy: true,
       getConvertData: null,
       routeName: this.$route.name,
+      paymentTypeId: 0,
+      paymentPeriod: 0,
       fields: [
         {
           key: 'ItemCode',
           label: this.$t('index.Convert.ItemCode'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return key === 'ItemCode' && item.Item ? item.Item.Code : ''
-          }
+          sortable: true
         },
         {
           key: 'Item',
           label: this.$t('index.Convert.Item'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value ? value.Label : ''
-          }
+          sortable: true
         },
         {
-          key: 'Quantity',
-          label: this.$t('index.Convert.Quantity'),
+          key: 'TransformQuantity',
+          label: this.$t('index.Convert.TransformQuantity'),
+          sortable: true
+        },
+        {
+          key: 'Price',
+          label: this.$t('index.Convert.Amount'),
+          sortable: true
+        },
+        {
+          key: 'UsedQuantity',
+          label: this.$t('index.Convert.quantity'),
+          sortable: true
+        },
+        {
+          key: 'TotalAmount',
+          label: this.$t('index.Convert.TotalAmount'),
           sortable: true
         }
       ]
@@ -134,36 +150,35 @@ export default {
       }
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-      this.orderLines = []
-      this.form = {
-        InvoiceKindId: null,
-        RepresentativeId: null,
-        Code: null,
-        DocumentNumber: null
-      }
-      this.documentType = null
-      this.employee = null
-    })
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+  methods: {
+    show () {
       this.tableBusy = true
       this.orderLines = []
-      let userModel = JSON.parse(localStorage.getItem('UserModel'))
-      this.employee = userModel.Name + ' ' + userModel.Surname
-      this.form.RepresentativeId = userModel.UserId
-      this.warehouse = this.modalItem.Warehouse.Label
-      this.form.DocumentNumber = this.modalItem.DocumentNumber
       this.getCustomer()
       this.getCode()
       this.getConvert()
-    })
-  },
-  methods: {
+    },
+    hide () {
+      this.orderLines = []
+      this.form = {
+        InvoiceKindId: null,
+        Code: null,
+        DocumentNumber: null
+      }
+      this.invoiceType = null
+      this.documentType = null
+      this.warehouse = null
+      this.$v.form.$reset()
+    },
+    calculatedQuantity (item) {
+      return this.roundNumber(item.Price * item.UsedQuantity)
+    },
     getCustomer () {
       this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
         if (res.Model) {
-          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Waybill')
+          this.invoiceTypes = this.getOrderInvoiceTypes(res.Model.SalesDocumentTypeId, 'Rma')
+          this.paymentTypeId = res.Model.DefaultPaymentType ? res.Model.DefaultPaymentTypeId : 0
+          this.paymentPeriod = res.Model.PaymentPeriod ? res.Model.PaymentPeriod : 0
         }
       })
     },
@@ -171,9 +186,12 @@ export default {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextInvoice/api/InvoiceBase/GetCode`})
     },
     getConvert () {
-      this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, RecordId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, `VisionNextInvoice/api/${this.routeName}/GetConvertToInvoice`).then((response) => {
-        this.orderLines = response.invoiceConvertModel.InvoiceLines
-        this.getConvertData = response.invoiceConvertModel
+      let request = {
+        'RmaId': this.modalItem.RecordId,
+        'CurrencyId': 1
+      }
+      this.$api.postByUrl(request, 'VisionNextRma/api/Rma/RmaTransformDocumentSearch').then((response) => {
+        this.orderLines = response.ListModel.BaseModels
         this.tableBusy = false
       })
     },
@@ -201,23 +219,12 @@ export default {
     close () {
       this.$root.$emit('bv::hide::modal', 'rmaConvertModal')
     },
-    onEmployeeSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchEmployee(loading, search)
+    selectedWarehouse (e) {
+      if (e) {
+        this.warehouse = e.RecordId
+      } else {
+        this.warehouse = null
       }
-    },
-    searchEmployee (loading, search) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextEmployee/api/Employee/Search',
-        name: 'employees',
-        andConditionModel: {
-          Description1: search
-        }
-      }).then(res => {
-        loading(false)
-      })
     },
     submitModal () {
       this.$v.form.$touch()
@@ -229,15 +236,37 @@ export default {
         })
         return
       }
-      this.getConvertData.InvoiceKindId = this.form.InvoiceKindId
-      if (this.getConvertData.OrderLines) {
-        this.getConvertData.OrderLines = this.orderLines
+      let checkQuantity = false
+      this.orderLines.map(item => {
+        if (item.UsedQuantity > 0) {
+          checkQuantity = true
+        }
+      })
+      if (!checkQuantity) {
+        this.$toasted.show(this.$t('insert.checkQuantity'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      let filteredList = this.orderLines.filter(o => o.UsedQuantity && parseFloat(o.UsedQuantity) > parseFloat(o.TransformQuantity))
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('index.Convert.rmaConvertQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
       }
       let request = {
-        'recordId': this.modalItem.RecordId,
-        'invoiceConvertModel': this.getConvertData
+        'rmaId': this.modalItem.RecordId,
+        'currencyId': 1,
+        'invoiceClassId': this.form.InvoiceKindId,
+        'invoiceNumber': this.form.Code,
+        'documentNumber': this.form.DocumentNumber,
+        'wareHouseId': this.warehouse,
+        'paymentTypeId': this.paymentTypeId,
+        'paymentPeriodId': this.paymentPeriod,
+        'rmaTransformDocumentResponses': this.orderLines
       }
-      this.$api.postByUrl(request, `VisionNextInvoice/api/${this.routeName}/ConvertToInvoice`).then((res) => {
+      this.$api.postByUrl(request, 'VisionNextRma/api/Rma/RmaTransformDocument').then((res) => {
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',

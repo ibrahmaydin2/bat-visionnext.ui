@@ -82,7 +82,7 @@
               <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" ></v-select>
+              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKindList" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <b-form-input type="text" v-model="form.Genexp2" :readonly="insertReadonly.Genexp2" />
@@ -149,10 +149,10 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" min=1 />
+              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrency($event, selectedInvoiceLine.quantity)" min=1 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.price" disabled />
+              <b-form-input type="number" v-model="selectedInvoiceLine.price" disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.stock')" :error="$v.selectedInvoiceLine.stock" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedInvoiceLine.stock" disabled />
@@ -397,11 +397,13 @@ export default {
       selectedBranch: {},
       selectedPaymentType: null,
       paymentTypes: [],
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      invoiceKindList: [],
+      warehouses: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'warehouses', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
+    ...mapState(['representatives', 'routes', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -411,13 +413,17 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'}).then(() => {
-        this.selectedInvoiceKind = this.invoiceKinds.find(i => i.RecordId === 3)
+        this.selectedInvoiceKind = this.invoiceKinds.find(i => i.Code === 'FAI')
+        this.invoiceKindList = this.invoiceKinds.filter(i => i.Code === 'FAI')
+        this.$forceUpdate()
       })
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
+      })
+      this.$api.post({andConditionModel: {StatusIds: [1], IsVehicle: 0}}, 'Warehouse', 'Warehouse/Search').then((response) => {
+        this.warehouses = response && response.ListModel ? response.ListModel.BaseModels : []
       })
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10)
@@ -449,10 +455,12 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/SearchSapCustomer',
         name: 'customers',
         andConditionModel: {
-          SalesDocumentTypeIds: [45, 46]
+          SalesDocumentTypeIds: [45, 46],
+          StatusIds: [1],
+          IsBlocked: 0
         },
         orConditionModels: [
           {

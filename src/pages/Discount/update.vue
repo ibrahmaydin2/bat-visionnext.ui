@@ -117,9 +117,7 @@
               />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
-              <b-form-checkbox v-model="form.UseBudget" name="check-button" @input="useBudgetEvent($event)" switch>
-                {{(form.UseBudget) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
+              <NextCheckBox v-model="form.UseBudget" type="number" toggle @input="useBudgetEvent($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsCascade" :error="$v.form.IsCascade">
               <b-form-checkbox v-model="form.IsCascade" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
@@ -1046,7 +1044,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_CUSTOMER',
+        TableName: 'T_BRANCH',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
@@ -1276,13 +1274,13 @@ export default {
           this.form.DiscountDetails.push(value)
         })
         this.form.DiscountCustomerSqls = this.discountCustomerSqls
-        this.createData()
+        this.updateData()
       }
     },
     setData () {
-      console.log(this.rowData)
       let rowData = this.rowData
       this.form = rowData
+      this.useBudgetEvent(this.form.UseBudget)
       this.routeCriteria = rowData.RouteCriteria
       this.customerCriteria = rowData.CustomerCriteria
       this.paymentCriteria = rowData.PaymentCriteria
@@ -1336,11 +1334,11 @@ export default {
     getDiscountDetails () {
       if (this.form.DiscountDetails && this.form.DiscountDetails.length > 0) {
         for (let a = 0; a < this.form.DiscountDetails.length; a++) {
-          if (this.form.DiscountDetails[a].PaymentTypeId) {
+          if (this.form.DiscountDetails[a].TableName === 'T_PAYMENT_TYPE') {
             this.discountDetailsPayment.push(this.form.DiscountDetails[a])
-          } else if (this.form.DiscountDetails[a].RouteId) {
+          } else if (this.form.DiscountDetails[a].TableName === 'T_ROUTE') {
             this.discountDetailsRoute.push(this.form.DiscountDetails[a])
-          } else if (this.form.DiscountDetails[a].BranchId) {
+          } else if (this.form.DiscountDetails[a].TableName === 'T_BRANCH') {
             this.discountDetailsBranch.push(this.form.DiscountDetails[a])
           } else {
             this.discountDetailsCustomerCriterias.push(this.form.DiscountDetails[a])
@@ -1381,7 +1379,7 @@ export default {
       this.finishValueValid = false
     },
     useBudgetEvent (e) {
-      if (e === true) {
+      if (e === 1) {
         this.form.ApproveStateId = 2100
         this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {
@@ -1590,7 +1588,7 @@ export default {
       this.insertRules.MaxValue = {}
       this.insertRequired.MaxValue = false
     }
-    if (this.form.UseBudget === true) {
+    if (this.form.UseBudget === 1) {
       this.insertRequired.BudgetId = true
       this.insertRequired.BudgetAmount = true
       this.insertRules.BudgetId = {
