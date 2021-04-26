@@ -19,9 +19,6 @@
       <b-tabs>
         <b-tab :title="$t('get.assetLocation.general')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown url="VisionNextAsset/api/AssetType/Search" @input="selectedSearchType('TypeId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="BranchId" :error="$v.form.BranchId">
               <NextDropdown url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('BranchId', $event)" searchable/>
             </NextFormGroup>
@@ -32,13 +29,7 @@
               <NextDropdown url="VisionNextAsset/api/Asset/Search" @input="selectedSearchType('AssetId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LocationId" :error="$v.form.LocationId">
-              <NextDropdown :source="assetLocations" @input="selectedSearchType('LocationId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="BrandId" :error="$v.form.BrandId">
-              <NextDropdown lookup-key="ASSET_BRAND" @input="selectedType('BrandId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <NextDropdown lookup-key="ASSET_MODEL" @input="selectedType('ModelId', $event)"/>
+              <NextDropdown v-model="location" :source="assetLocations" @input="selectedSearchType('LocationId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LastOperationDate" :error="$v.form.LastOperationDate">
               <b-form-datepicker v-model="form.LastOperationDate" :placeholder="$t('insert.chooseDate')"/>
@@ -53,7 +44,7 @@
               <b-form-input type="text" v-model="form.SerialNumber" :readonly="insertReadonly.SerialNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="ContactId" :error="$v.form.ContactId">
-              <NextDropdown url="VisionNextCustomer/api/CustomerContact/Search" @input="selectedSearchType('ContactId', $event)"/>
+              <NextDropdown :source="contacts" @input="selectedSearchType('ContactId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="AssetPositionId" :error="$v.form.AssetPositionId">
               <NextDropdown lookup-key="ASSET_POSITION" @input="selectedType('AssetPositionId', $event)"/>
@@ -78,13 +69,10 @@ export default {
   data () {
     return {
       form: {
-        TypeId: null,
         BranchId: null,
         LastMovementDate: null,
         AssetId: null,
         LocationId: null,
-        BrandId: null,
-        ModelId: null,
         LastOperationDate: null,
         ConditionId: null,
         StateId: null,
@@ -95,9 +83,9 @@ export default {
         SerialNumber2: null
       },
       routeName1: 'Asset',
-      assetType: null,
-      branch: null,
-      assetLocations: []
+      location: {},
+      assetLocations: [],
+      contacts: []
     }
   },
   computed: {
@@ -132,6 +120,20 @@ export default {
   validations () {
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    location: function (e) {
+      if (e) {
+        this.$api.post({CustomerId: e.CustomerId}, 'Customer', 'CustomerContact/Get').then((res) => {
+          console.log(res)
+          if (res && res.Model) {
+            console.log(res.Model)
+          }
+        })
+      } else {
+        this.contacts = []
+      }
     }
   }
 }
