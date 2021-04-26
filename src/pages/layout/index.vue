@@ -165,6 +165,7 @@
          <SalesReturnInvoiceConvertModal
          :modalAction="modalAction"
          v-if="showSalesReturnInvoiceConvertModal" />
+         <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
   </b-container>
 </template>
 <script>
@@ -175,6 +176,7 @@ import ImportExcelModal from '../../components/Actions/ImportExcelModal'
 import MultiplePaymentChangeModal from '../../components/Actions/MultiplePaymentChangeModal'
 import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoiceConvertModal'
 import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturnInvoiceConvertModal'
+import ItemFormulaModal from '../../components/Actions/ItemFormulaModal'
 
 export default {
   components: {
@@ -183,7 +185,8 @@ export default {
     ImportExcelModal,
     MultiplePaymentChangeModal,
     PurchaseInvoiceConvertModal,
-    SalesReturnInvoiceConvertModal
+    SalesReturnInvoiceConvertModal,
+    ItemFormulaModal
   },
   data () {
     return {
@@ -197,11 +200,12 @@ export default {
       showManualActions: false,
       showPurchaseWaybillConvertModal: false,
       showPurchaseInvoiceConvertModal: false,
-      showSalesReturnInvoiceConvertModal: false
+      showSalesReturnInvoiceConvertModal: false,
+      showItemFormulaModal: false
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -286,7 +290,9 @@ export default {
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
     },
     showMultipleModal (action) {
-      if (this.selectedTableRows.length < 1 && !this.showManualActions) {
+      console.log(action)
+      this.showItemFormulaModal = false
+      if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
           type: 'error',
           keepOnHover: true,
@@ -316,6 +322,14 @@ export default {
         this.showSalesReturnInvoiceConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'salesReturnInvoiceConvertModal')
+        })
+        return
+      } else if (action.Action === 'ItemFormula') {
+        console.log('asdad1')
+        this.showItemFormulaModal = true
+        this.$nextTick(() => {
+          console.log('asdad')
+          this.$root.$emit('bv::show::modal', 'itemFormulaModal')
         })
         return
       }

@@ -293,7 +293,7 @@ export default {
       })
     },
     copy (action, row) {
-      this.$api.postByUrl({recordId: 33602976445}, 'VisionNextInvoice/api/SalesWaybill/CheckCopyDispatch').then((res) => {
+      this.$api.postByUrl({recordId: row.RecordId}, 'VisionNextInvoice/api/SalesWaybill/CheckCopyDispatch').then((res) => {
         if (res.IsCompleted === false) {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
@@ -303,7 +303,7 @@ export default {
           return
         }
         if (confirm(res.ConfirmMessage)) {
-          console.log('evet')
+          this.$router.push({name: 'SalesWaybillCopy', params: {url: row.RecordId}})
         }
       })
     }
