@@ -75,8 +75,8 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in rowData.FixedTermCampaignItems" :key="i">
-                     <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnName}}</b-td>
-                     <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValue}}</b-td>
+                     <b-td>{{f.ColumnNameDescription}}</b-td>
+                     <b-td>{{f.ColumnValueDescription}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -93,8 +93,8 @@
                     <b-th><span>{{$t('insert.fixedTermCampaign.routeId')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID') : [])" :key="i">
-                    <b-td>{{f.Route ? f.Route.Label : f.ColumnValue}}</b-td>
+                    <b-tr v-for="(f, i) in rowData.FixedTermCampaignRoutes" :key="i">
+                      <b-td>{{f.Description1}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -112,9 +112,9 @@
                     <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID') : [])" :key="i">
-                      <b-td>{{f.ColumnNameDesc ? f.ColumnNameDesc.Label : f.ColumnName}}</b-td>
-                      <b-td>{{f.ColumnValueDesc ? f.ColumnValueDesc.Label : f.ColumnValue}}</b-td>
+                    <b-tr v-for="(f, i) in rowData.FixedTermCampaignCustomerCriterias" :key="i">
+                      <b-td>{{f.ColumnNameDescription}}</b-td>
+                      <b-td>{{f.ColumnValueDescription}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -149,8 +149,8 @@
                     <b-th><span>{{$t('insert.fixedTermCampaign.branchId')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.FixedTermCampaignDetails ? rowData.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID') : [])" :key="i">
-                       <b-td>{{f.Branch ? f.Branch.Label : f.ColumnValue}}</b-td>
+                    <b-tr v-for="(f, i) in rowData.FixedTermCampaignBranchs" :key="i">
+                       <b-td>{{f.CommercialTitle}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
