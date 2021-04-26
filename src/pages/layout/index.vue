@@ -153,13 +153,18 @@
          :modalAction="modalAction"
          list-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceSearch"
          detail-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceDetail"
-         convert-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceConvert"/>
+         convert-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceConvert"
+         v-if="showPurchaseWaybillConvertModal"/>
        <PurchaseInvoiceConvertModal
          id="purchaseInvoiceConvertModal"
          :modalAction="modalAction"
          list-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceSearch"
          detail-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceDetail"
-         convert-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceConvert"/>
+         convert-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceConvert"
+         v-if="showPurchaseInvoiceConvertModal"/>
+         <SalesReturnInvoiceConvertModal
+         :modalAction="modalAction"
+         v-if="showSalesReturnInvoiceConvertModal" />
   </b-container>
 </template>
 <script>
@@ -169,6 +174,7 @@ import PrintModal from '../../components/Actions/PrintModal'
 import ImportExcelModal from '../../components/Actions/ImportExcelModal'
 import MultiplePaymentChangeModal from '../../components/Actions/MultiplePaymentChangeModal'
 import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoiceConvertModal'
+import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturnInvoiceConvertModal'
 
 export default {
   components: {
@@ -176,7 +182,8 @@ export default {
     PrintModal,
     ImportExcelModal,
     MultiplePaymentChangeModal,
-    PurchaseInvoiceConvertModal
+    PurchaseInvoiceConvertModal,
+    SalesReturnInvoiceConvertModal
   },
   data () {
     return {
@@ -187,11 +194,14 @@ export default {
       modalAction: null,
       recordIds: [],
       showActions: false,
-      showManualActions: false
+      showManualActions: false,
+      showPurchaseWaybillConvertModal: false,
+      showPurchaseInvoiceConvertModal: false,
+      showSalesReturnInvoiceConvertModal: false
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -291,13 +301,21 @@ export default {
         })
         return
       } else if (action.Action === 'PurchaseWaybillConvert') {
+        this.showPurchaseWaybillConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'purchaseWaybillConvertModal')
         })
         return
       } else if (action.Action === 'PurchaseInvoiceConvert') {
+        this.showPurchaseInvoiceConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'purchaseInvoiceConvertModal')
+        })
+        return
+      } else if (action.Action === 'SalesReturnInvoiceConvert') {
+        this.showSalesReturnInvoiceConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesReturnInvoiceConvertModal')
         })
         return
       }
