@@ -56,7 +56,7 @@
               <v-select v-model="selectedCustomerCriteria" :options="lookup.CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <v-select v-model="selectedItemCriteria" :options="lookup.ITEM_CRITERIA" @input="selectedType('ItemCriteriaId', $event)" label="Label"/>
+              <v-select v-model="selectedItemCriteria" :options="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" @input="selectedType('ItemCriteriaId', $event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label"/>
