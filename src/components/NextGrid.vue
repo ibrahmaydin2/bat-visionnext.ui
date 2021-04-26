@@ -213,6 +213,7 @@
     <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
     <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -229,6 +230,7 @@ import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 import KmModal from './Actions/KmModal'
 import PriceListDayModal from './Actions/PriceListDayModal'
 import CreateSalesWaybill from './Actions/CreateSalesWaybill'
+import MultipleLoadingPlanModal from './Actions/MultipleLoadingPlanModal'
 let searchQ = {}
 export default {
   components: {
@@ -242,7 +244,8 @@ export default {
     KmModal,
     InvoiceConvertModal,
     PriceListDayModal,
-    CreateSalesWaybill
+    CreateSalesWaybill,
+    MultipleLoadingPlanModal
   },
   props: {
     apiurl: String,
@@ -316,7 +319,8 @@ export default {
       showPriceListDayModal: false,
       showLocationModal: false,
       showCreateSalesWaybillModal: false,
-      autoSearchInput: {}
+      autoSearchInput: {},
+      showMultipleLoadingPlanModal: false
     }
   },
   mounted () {
@@ -382,6 +386,7 @@ export default {
       this.showPriceListDayModal = false
       this.showLocationModal = false
       this.showCreateSalesWaybillModal = false
+      this.showMultipleLoadingPlanModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -460,6 +465,11 @@ export default {
         } else {
           this.$toasted.show(this.$t('index.Convert.createSalesWaybillStatusError'), { type: 'error', keepOnHover: true, duration: '4000' })
         }
+      } else if (action.Action === 'LoadingPlanMultiple') {
+        this.showMultipleLoadingPlanModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'multipleLoadingPlanModal')
+        })
       } else {
         this.showConfirmModal = true
         this.$nextTick(() => {
