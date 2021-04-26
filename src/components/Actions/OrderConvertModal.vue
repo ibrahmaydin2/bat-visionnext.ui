@@ -270,6 +270,20 @@ export default {
         })
         return
       }
+      let checkQuantity = false
+      this.orderLines.map(item => {
+        if (item.ConversionQuantity > 0) {
+          checkQuantity = true
+        }
+      })
+      if (!checkQuantity) {
+        this.$toasted.show(this.$t('insert.checkQuantity'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       this.getConvertData.InvoiceKindId = this.form.InvoiceKindId
       this.getConvertData.DocumentNumber = this.form.DocumentNumber
       this.getConvertData.InvoiceNumber = this.form.Code

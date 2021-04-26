@@ -400,6 +400,7 @@
   "insert": {
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
+    "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
     "edit": "Düzenle",
@@ -1900,9 +1901,11 @@
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
     "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorClosed": "Kapalı durumdaki belge dönüştürülemez.",
     "errorLocation": "Boylam - Enlem Bilgisi Eksik",
-    "errorSevk": "Yalnızce Sevk Edilebilir durumundaki siparişler dönüştürülebilir.",
+    "errorSevk": "Yalnızca Sevk Edilebilir ve Açık durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
+    "errorConfirm": "Yalnızca Onaylandı durumundaki kayıtlar onaylanabilir.",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",

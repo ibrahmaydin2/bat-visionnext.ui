@@ -235,6 +235,20 @@ export default {
         })
         return
       }
+      let checkQuantity = false
+      this.orderLines.map(item => {
+        if (item.UsedQuantity > 0) {
+          checkQuantity = true
+        }
+      })
+      if (!checkQuantity) {
+        this.$toasted.show(this.$t('insert.checkQuantity'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       let request = {
         'rmaId': this.modalItem.RecordId,
         'currencyId': 1,

@@ -439,6 +439,14 @@ export default {
           this.$root.$emit('bv::show::modal', 'location-modal')
         })
       } else if (action.Action === 'OrderRmaConvert') {
+        if (row && typeof row.RmaStatusId !== 'undefined' && row.RmaStatusId !== 3) {
+          this.$toasted.show(this.$t('index.errorConfirm'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.showRmaConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'rmaConvertModal')

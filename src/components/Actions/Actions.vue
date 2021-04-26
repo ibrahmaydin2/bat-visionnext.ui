@@ -114,6 +114,14 @@ export default {
         })
         return
       }
+      if (row && typeof row.StateId !== 'undefined' && row.StateId === 3) {
+        this.$toasted.show(this.$t('index.errorClosed'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       this.$emit('showModal', action, row)
     },
     showMultipleModal (action) {
@@ -169,10 +177,26 @@ export default {
         this.getListForDocument(row.RecordId, action.QueryMessage, row.CustomerId)
       } else if (action.Query === 'OtherDispatch') {
         this.$api.postByUrl({recordId: row.RecordId}, action.ActionUrl).then((res) => {
+          if (res && res.IsCompleted === false) {
+            this.$toasted.show(this.$t(res.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
           this.htmlPrint(res.Html)
         })
       } else {
         this.$api.postByUrl({recordId: row.RecordId}, action.ActionUrl).then((res) => {
+          if (res && res.IsCompleted === false) {
+            this.$toasted.show(this.$t(res.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
           this.htmlPrint(res.Html)
         })
       }
@@ -246,7 +270,15 @@ export default {
     },
     multiPrint (action) {
       this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
-        this.htmlPrint(res.Html)
+        if (res.IsCompleted === false) {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.htmlPrint(res.MultiHtml)
       })
     }
   },
