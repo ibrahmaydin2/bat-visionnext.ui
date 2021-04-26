@@ -62,6 +62,10 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Copy'" @click.prevent.stop="copy(action, row)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
         <span class="d-inline-block w-100" v-else>
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
@@ -202,11 +206,18 @@ export default {
       }
     },
     openAction (action, row) {
-      let request = {
-        recordId: row.RecordId,
-        model: {}
+      let request = {}
+      if (action.Action === 'CashCardDebit') {
+        request = {
+          CashCardId: row.RecordId
+        }
+      } else {
+        request = {
+          recordId: row.RecordId,
+          model: {}
+        }
+        request.model[action.Query] = action.QueryMessage
       }
-      request.model[action.Query] = action.QueryMessage
 
       this.$api.postByUrl(request, action.ActionUrl).then((res) => {
         if (res.IsCompleted === true) {
@@ -280,9 +291,22 @@ export default {
         }
         this.htmlPrint(res.MultiHtml)
       })
+    },
+    copy (action, row) {
+      this.$api.postByUrl({recordId: 33602976445}, 'VisionNextInvoice/api/SalesWaybill/CheckCopyDispatch').then((res) => {
+        if (res.IsCompleted === false) {
+          this.$toasted.show(this.$t(res.Message), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        if (confirm(res.ConfirmMessage)) {
+          console.log('evet')
+        }
+      })
     }
-  },
-  mounted () {
   }
 }
 
