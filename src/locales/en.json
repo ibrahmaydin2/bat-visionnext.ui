@@ -1379,7 +1379,8 @@
       "currency": "Para Birimi",
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
-      "totalItemDiscount": "Ürün İndrimi"
+      "totalItemDiscount": "Ürün İndrimi",
+      "eDocumentStatusNotUpdated": "E-belge durumu güncel değil!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
