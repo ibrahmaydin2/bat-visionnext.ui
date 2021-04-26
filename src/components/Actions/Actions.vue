@@ -303,7 +303,7 @@ export default {
           return
         }
         if (confirm(res.ConfirmMessage)) {
-          console.log('evet')
+          this.$router.push({name: 'SalesWaybillCopy', params: {url: row.RecordId}})
         }
       })
     }
