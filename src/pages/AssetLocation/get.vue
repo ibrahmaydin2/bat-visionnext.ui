@@ -24,17 +24,14 @@
         <b-tab :title="$t('get.assetLocation.general')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Type, 'object', 'get.assetLocation.type')"></div>
               <div v-html="getFormatDataByType(rowData.Branch, 'object', 'get.assetLocation.branch')"></div>
               <div v-html="getFormatDataByType(rowData.LastMovementDate, 'date', 'get.assetLocation.lastMovementDate')"></div>
               <div v-html="getFormatDataByType(rowData.Asset, 'object', 'get.assetLocation.asset')"></div>
               <div v-html="getFormatDataByType(rowData.Location, 'object', 'get.assetLocation.location')"></div>
-              <div v-html="getFormatDataByType(rowData.Brand, 'object', 'get.assetLocation.brand')"></div>
-              <div v-html="getFormatDataByType(rowData.Model, 'object', 'get.assetLocation.model')"></div>
               <div v-html="getFormatDataByType(rowData.LastOperationDate, 'date', 'get.assetLocation.lastOperationDate')"></div>
+              <div v-html="getFormatDataByType(rowData.Condition, 'object', 'get.assetLocation.condition')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Condition, 'object', 'get.assetLocation.condition')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'get.assetLocation.state')"></div>
               <div v-html="getFormatDataByType(rowData.SerialNumber, 'text', 'get.assetLocation.serialNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Contact, 'object', 'get.assetLocation.contact')"></div>

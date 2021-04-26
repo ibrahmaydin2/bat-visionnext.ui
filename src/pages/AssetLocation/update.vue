@@ -19,9 +19,6 @@
       <b-tabs>
         <b-tab :title="$t('get.assetLocation.general')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown v-model="assetType" url="VisionNextAsset/api/AssetType/Search" @input="selectedSearchType('TypeId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="BranchId" :error="$v.form.BranchId">
               <NextDropdown v-model="branch" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('BranchId', $event)" searchable />
             </NextFormGroup>
@@ -33,12 +30,6 @@
             </NextFormGroup>
             <NextFormGroup item-key="LocationId" :error="$v.form.LocationId">
               <NextDropdown v-model="location" :source="assetLocations" @input="selectedSearchType('LocationId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="BrandId" :error="$v.form.BrandId">
-              <NextDropdown v-model="brand" lookup-key="ASSET_BRAND" @input="selectedType('BrandId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <NextDropdown v-model="model" lookup-key="ASSET_MODEL" @input="selectedType('ModelId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LastOperationDate" :error="$v.form.LastOperationDate">
               <b-form-datepicker v-model="form.LastOperationDate" :placeholder="$t('insert.chooseDate')"/>
@@ -95,14 +86,11 @@ export default {
         SerialNumber2: null
       },
       routeName1: 'Asset',
-      assetType: null,
       branch: null,
       asset: null,
       location: null,
       state: null,
       contact: null,
-      brand: null,
-      model: null,
       condition: null,
       assetPosition: null,
       assetLocations: []
@@ -126,14 +114,11 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.assetType = this.convertLookupValueToSearchValue(rowData.Type)
       this.branch = this.convertLookupValueToSearchValue(rowData.Branch)
       this.asset = this.convertLookupValueToSearchValue(rowData.Asset)
       this.location = this.convertLookupValueToSearchValue(rowData.Location)
       this.state = this.convertLookupValueToSearchValue(rowData.State)
       this.contact = this.convertLookupValueToSearchValue(rowData.Contact)
-      this.brand = rowData.Brand
-      this.model = rowData.Model
       this.condition = rowData.Condition
       this.assetPosition = rowData.AssetPosition
     },
@@ -154,6 +139,19 @@ export default {
   validations () {
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    location: function (e) {
+      if (e) {
+        this.$api.post({CustomerId: e.CustomerId}, 'Customer', 'CustomerContact/Get').then((res) => {
+          if (res && res.Model) {
+            console.log(res.Model)
+          }
+        })
+      } else {
+        this.contacts = []
+      }
     }
   }
 }
