@@ -293,7 +293,7 @@ export default {
       })
     },
     copy (action, row) {
-      this.$api.postByUrl({recordId: 33602976445}, 'VisionNextInvoice/api/SalesWaybill/CheckCopyDispatch').then((res) => {
+      this.$api.postByUrl({recordId: row.RecordId}, 'VisionNextInvoice/api/SalesWaybill/CheckCopyDispatch').then((res) => {
         if (res.IsCompleted === false) {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
