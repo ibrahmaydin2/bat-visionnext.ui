@@ -19,14 +19,14 @@
       <b-tabs>
         <b-tab :title="$t('get.assetLocation.general')" :active="!developmentMode">
           <b-row>
+            <NextFormGroup item-key="LocationId" :error="$v.form.LocationId">
+              <NextDropdown v-model="location" :source="assetLocations" @input="selectedSearchType('LocationId', $event)" searchable />
+            </NextFormGroup>
             <NextFormGroup item-key="LastMovementDate" :error="$v.form.LastMovementDate">
               <b-form-datepicker v-model="form.LastMovementDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="AssetId" :error="$v.form.AssetId">
               <NextDropdown v-model="asset" url="VisionNextAsset/api/Asset/Search" @input="selectedSearchType('AssetId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="LocationId" :error="$v.form.LocationId">
-              <NextDropdown v-model="location" :source="assetLocations" @input="selectedSearchType('LocationId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LastOperationDate" :error="$v.form.LastOperationDate">
               <b-form-datepicker v-model="form.LastOperationDate" :placeholder="$t('insert.chooseDate')"/>

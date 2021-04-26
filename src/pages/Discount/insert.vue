@@ -1039,7 +1039,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_CUSTOMER',
+        TableName: 'T_BRANCH',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
