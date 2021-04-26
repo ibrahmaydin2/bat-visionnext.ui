@@ -518,6 +518,7 @@ import SalesWaybillIndex from '@/pages/SalesWaybill/'
 import SalesWaybillGet from '@/pages/SalesWaybill/get'
 import SalesWaybillInsert from '@/pages/SalesWaybill/insert'
 import SalesWaybillUpdate from '@/pages/SalesWaybill/update'
+import SalesWaybillCopy from '@/pages/SalesWaybill/copy'
 
 import ServicePurchaseInvoiceIndex from '@/pages/ServicePurchaseInvoice/'
 import ServicePurchaseInvoiceGet from '@/pages/ServicePurchaseInvoice/get'
@@ -837,6 +838,7 @@ const listUpdate = [
   { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
   { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } },
   { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: SalesWaybillUpdate, meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } },
+  { path: '/Copy/SalesWaybill/:url', name: 'SalesWaybillCopy', component: SalesWaybillCopy, meta: { title: i18n.t('router.SalesWaybillCopy'), baseLink: 'SalesWaybill' } },
   { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } },
   { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } }
