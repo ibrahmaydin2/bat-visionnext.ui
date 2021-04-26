@@ -105,14 +105,13 @@ export default {
       tableBusy: true,
       getConvertData: null,
       routeName: this.$route.name,
+      paymentTypeId: 0,
+      paymentPeriod: 0,
       fields: [
         {
           key: 'ItemCode',
           label: this.$t('index.Convert.ItemCode'),
           sortable: true
-          // formatter: (value, key, item) => {
-          //   return key === 'ItemCode' && item.Item ? item.Item.Code : ''
-          // }
         },
         {
           key: 'Item',
@@ -131,7 +130,7 @@ export default {
         },
         {
           key: 'UsedQuantity',
-          label: this.$t('index.Convert.Quantity'),
+          label: this.$t('index.Convert.quantity'),
           sortable: true
         },
         {
@@ -178,6 +177,8 @@ export default {
       this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
         if (res.Model) {
           this.invoiceTypes = this.getOrderInvoiceTypes(res.Model.SalesDocumentTypeId, 'Rma')
+          this.paymentTypeId = res.Model.DefaultPaymentType ? res.Model.DefaultPaymentTypeId : 0
+          this.paymentPeriod = res.Model.PaymentPeriod ? res.Model.PaymentPeriod : 0
         }
       })
     },
@@ -249,6 +250,11 @@ export default {
         })
         return
       }
+      let filteredList = this.orderLines.filter(o => o.UsedQuantity && parseFloat(o.UsedQuantity) > parseFloat(o.TransformQuantity))
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('index.Convert.rmaConvertQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       let request = {
         'rmaId': this.modalItem.RecordId,
         'currencyId': 1,
@@ -256,8 +262,8 @@ export default {
         'invoiceNumber': this.form.Code,
         'documentNumber': this.form.DocumentNumber,
         'wareHouseId': this.warehouse,
-        'paymentTypeId': 2,
-        'paymentPeriodId': null,
+        'paymentTypeId': this.paymentTypeId,
+        'paymentPeriodId': this.paymentPeriod,
         'rmaTransformDocumentResponses': this.orderLines
       }
       this.$api.postByUrl(request, 'VisionNextRma/api/Rma/RmaTransformDocument').then((res) => {

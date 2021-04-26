@@ -1,13 +1,7 @@
 <template>
-  <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="'purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal class="modalZIndex" v-if="modalAction" :id="id" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
-        <NextFormGroup :title="$t('index.Convert.SupplierId')" md="4" lg="4">
-          <NextDropdown v-model="supplier" url="VisionNextBranch/api/Branch/Search" searchable/>
-        </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.InvoiceNumber')" md="4" lg="4">
-          <b-form-input type="text" v-model="invoiceNumber" />
-        </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
           <b-form-input type="text" v-model="documentNumber" />
         </NextFormGroup>
@@ -64,7 +58,7 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
-  name: 'PurchaseInvoiceConvertModal',
+  name: 'SalesReturnInvoiceConvertModal',
   mixins: [mixin],
   components: {
   },
@@ -79,23 +73,15 @@ export default {
     openModal: {
       type: Boolean,
       default: false
-    },
-    id: {
-      type: String,
-      default: 'convertModal'
-    },
-    listUrl: '',
-    detailUrl: '',
-    convertUrl: ''
+    }
   },
   data () {
     return {
       form: {},
       list: [],
+      id: 'salesReturnInvoiceConvertModal',
       selectedItem: {},
       showLoading: false,
-      supplier: null,
-      invoiceNumber: null,
       documentNumber: null,
       tableBusy: false,
       fields: [
@@ -152,9 +138,7 @@ export default {
         this.form = {}
         this.selectedItem = {}
         this.showLoading = false
-        this.supplier = null
         this.documentNumber = null
-        this.invoiceNumber = null
       }
     })
   },
@@ -163,13 +147,11 @@ export default {
       this.form = {}
       this.list = []
       let request = {
-        documentNumber: this.documentNumber ? this.documentNumber : '',
-        invoiceNumber: this.invoiceNumber ? this.invoiceNumber : '',
-        selectedBranchId: this.supplier ? this.supplier.RecordId : null
+        documentNumber: this.documentNumber ? this.documentNumber : ''
       }
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
-      this.$api.postByUrl(request, this.listUrl).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertSearch').then((response) => {
         this.tableBusy = false
         this.$store.commit('setDisabledLoading', false)
         if (response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
@@ -187,20 +169,21 @@ export default {
       this.selectedItem = {}
       if (items && items.length > 0) {
         this.selectedItem = items[0]
-        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, this.detailUrl).then((response) => {
+        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertDetail').then((response) => {
           this.form = response.InvoiceLiteModel
         })
       }
     },
     submitModal () {
       let request = {
+        documentNumber: this.selectedItem.DocumentNumber,
         warehouseId: this.selectedItem.WarehouseId,
         recordId: this.selectedItem.RecordId,
         invoiceLiteModel: this.form
       }
       this.showLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.postByUrl(request, this.convertUrl).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/ReceiveInvoiceConvert').then((response) => {
         this.$store.commit('setDisabledLoading', false)
         this.form = {}
         this.selectedItem = {}

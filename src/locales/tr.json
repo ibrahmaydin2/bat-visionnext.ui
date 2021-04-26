@@ -1401,7 +1401,8 @@
       "currency": "Para Birimi",
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
-      "totalItemDiscount": "Ürün İndrimi"
+      "totalItemDiscount": "Ürün İndrimi",
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1945,7 +1946,9 @@
       "createSalesWaybillStatusError": "Bu işlem için E-Belge Durumu 'Gibe Gönderildi' veya 'Alıcıya Gönderildi' olmalıdır!",
       "InvoiceLineQuantity": "Miktar",
       "RejectedQuantity": "Reddedilen Miktar",
-      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz."
+      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz.",
+      "quantity": "Miktar",
+      "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz."
     }
   },
   "auth": {
