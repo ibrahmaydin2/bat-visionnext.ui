@@ -19,9 +19,6 @@
       <b-tabs>
         <b-tab :title="$t('get.assetLocation.general')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="BranchId" :error="$v.form.BranchId">
-              <NextDropdown url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('BranchId', $event)" searchable/>
-            </NextFormGroup>
             <NextFormGroup item-key="LastMovementDate" :error="$v.form.LastMovementDate">
               <b-form-datepicker v-model="form.LastMovementDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>

@@ -19,9 +19,6 @@
       <b-tabs>
         <b-tab :title="$t('get.assetLocation.general')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="BranchId" :error="$v.form.BranchId">
-              <NextDropdown v-model="branch" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('BranchId', $event)" searchable />
-            </NextFormGroup>
             <NextFormGroup item-key="LastMovementDate" :error="$v.form.LastMovementDate">
               <b-form-datepicker v-model="form.LastMovementDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
@@ -86,7 +83,6 @@ export default {
         SerialNumber2: null
       },
       routeName1: 'Asset',
-      branch: null,
       asset: null,
       location: null,
       state: null,
@@ -114,7 +110,6 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.branch = this.convertLookupValueToSearchValue(rowData.Branch)
       this.asset = this.convertLookupValueToSearchValue(rowData.Asset)
       this.location = this.convertLookupValueToSearchValue(rowData.Location)
       this.state = this.convertLookupValueToSearchValue(rowData.State)
