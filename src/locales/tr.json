@@ -1401,7 +1401,8 @@
       "currency": "Para Birimi",
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
-      "totalItemDiscount": "Ürün İndrimi"
+      "totalItemDiscount": "Ürün İndrimi",
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
