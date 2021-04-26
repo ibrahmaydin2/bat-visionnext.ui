@@ -1910,7 +1910,9 @@
       "createSalesWaybillStatusError": "Bu işlem için E-Belge Durumu 'Gibe Gönderildi' veya 'Alıcıya Gönderildi' olmalıdır!",
       "InvoiceLineQuantity": "Miktar",
       "RejectedQuantity": "Reddedilen Miktar",
-      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz."
+      "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz.",
+      "quantity": "Miktar",
+      "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz."
     }
   },
   "auth": {
