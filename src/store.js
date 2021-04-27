@@ -9,16 +9,20 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
-var pagerecordCount = 1000
+var pagerecordCount = 100
 var checkSearchObject = function (obj) {
   if (obj) {
     let isCustomSearch = false
+    let isAutoComplete = false
     let isList = obj && (obj.length > 0)
     if (isList) {
       obj = obj[0]
     }
     let keys = Object.keys(obj)
     keys.forEach(key => {
+      if (key === 'Description1') {
+        isAutoComplete = true
+      }
       let value = obj[key]
       if (value === '%%%') {
         delete obj[key]
@@ -28,9 +32,10 @@ var checkSearchObject = function (obj) {
         isCustomSearch = true
       }
     })
-    pagerecordCount = isCustomSearch ? 20 : 1000
+    pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
     return !isList ? obj : obj ? [obj] : []
   } else {
+    pagerecordCount = 50
     return undefined
   }
 }

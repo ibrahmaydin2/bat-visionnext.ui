@@ -212,7 +212,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
+        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
         name: 'items',
         orConditionModels: [
           {

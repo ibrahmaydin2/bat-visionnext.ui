@@ -14,7 +14,7 @@
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
           <NextDropdown
-            url="VisionNextWarehouse/api/Warehouse/Search"
+            url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
             @input="selectedWarehouse"
             :searchable="true"
             :custom-option="true"

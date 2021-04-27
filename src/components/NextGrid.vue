@@ -608,7 +608,7 @@ export default {
         this.autoSearchInput[this.selectedHeader.modelProperty] = input
       }
       if (input.length < 3) { return [] }
-      let pagerecordCount = input.includes('%') ? 20 : 100
+      let pagerecordCount = 10
       const andConditionModel = input === '%%%' ? {} : {
         Description1: input.replaceAll('%', '')
       }

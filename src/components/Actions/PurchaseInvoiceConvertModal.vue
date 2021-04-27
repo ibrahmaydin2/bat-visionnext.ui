@@ -3,7 +3,7 @@
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.SupplierId')" md="4" lg="4">
-          <NextDropdown v-model="supplier" url="VisionNextBranch/api/Branch/Search" searchable/>
+          <NextDropdown v-model="supplier" url="VisionNextBranch/api/Branch/AutoCompleteSearch" searchable/>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.InvoiceNumber')" md="4" lg="4">
           <b-form-input type="text" v-model="invoiceNumber" />
