@@ -1953,6 +1953,22 @@
       "loadingEndDate": "Yükleme Bitiş Tarihi",
       "route" : "Rota",
       "day" : "Gün"
+    },
+    "ItemFormula": {
+      "Code": "Kod",
+      "Description1": "Tanım",
+      "BranchCriteria": "Şube Kriteri",
+      "BeginDate": "Başlangıç Tarihi",
+      "EndDate": "Bitiş Tarihi",
+      "FieldDescription": "Alan Açıklaması",
+      "FieldValue": "Değer",
+      "Quantity": "Miktar",
+      "DiscountAmount": "İndirim Miktarı",
+      "UnitId": "Birim",
+      "Currency": "Para Birimi",
+      "ShowDetails": "Detaylar",
+      "Branch": "Şube Ekle",
+      "BranchCommercialTitle": "Şube Adı"
     }
   },
   "auth": {

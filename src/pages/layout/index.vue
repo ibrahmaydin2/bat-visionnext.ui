@@ -289,7 +289,6 @@ export default {
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
     },
     showMultipleModal (action) {
-      console.log(action)
       this.showItemFormulaModal = false
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
@@ -324,10 +323,8 @@ export default {
         })
         return
       } else if (action.Action === 'ItemFormula') {
-        console.log('asdad1')
         this.showItemFormulaModal = true
         this.$nextTick(() => {
-          console.log('asdad')
           this.$root.$emit('bv::show::modal', 'itemFormulaModal')
         })
         return
