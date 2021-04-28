@@ -493,7 +493,7 @@ export default {
       if (search.length >= 3) {
         this.$store.dispatch('getSearchItems', {
           ...this.query,
-          api: 'VisionNextEmployee/api/Employee/Search',
+          api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
           name: 'employees',
           andConditionModel: {
             Description1: search

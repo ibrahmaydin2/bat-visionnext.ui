@@ -1912,7 +1912,11 @@
       "RejectedQuantity": "Reddedilen Miktar",
       "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz.",
       "quantity": "Miktar",
-      "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz."
+      "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz.",
+      "loadingBeginDate": "Yükleme Başlangıç Tarihi",
+      "loadingEndDate": "Yükleme Bitiş Tarihi",
+      "route" : "Rota",
+      "day" : "Gün"
     }
   },
   "auth": {

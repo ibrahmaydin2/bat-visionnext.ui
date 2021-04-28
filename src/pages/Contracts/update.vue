@@ -61,7 +61,7 @@
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2">
               <NextDropdown
                 v-model="customer"
-                url="VisionNextCustomer/api/Customer/Search"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
@@ -95,7 +95,7 @@
           <b-row>
             <NextFormGroup :title="insertTitle.CustomerId" :error="$v.selectedAdditionalCustomer" :required="true" md="3" lg="3">
               <NextDropdown
-                url="VisionNextCustomer/api/Customer/Search"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"/>
             </NextFormGroup>
@@ -829,7 +829,7 @@
             <NextFormGroup :title="$t('insert.contract.freeItem')" :error="$v.contractEndorsements.freeItem" :required="contractEndorsements.endrsPaymentType && contractEndorsements.endrsPaymentType.Code === 'FOCP'" md="3" lg="3">
               <NextDropdown
                 v-model="contractEndorsements.freeItem"
-                url="VisionNextItem/api/Item/Search"
+                url="VisionNextItem/api/Item/AutoCompleteSearch"
                 searchable
                 or-condition-fields="Code,Description1"
                 custom-option
@@ -906,7 +906,7 @@
             <NextFormGroup :title="$t('insert.contract.item')" :error="$v.contractCustomPrices.item" :required="true" md="3" lg="3">
               <NextDropdown
                 v-model="contractCustomPrices.item"
-                url="VisionNextItem/api/Item/Search"
+                url="VisionNextItem/api/Item/AutoCompleteSearch"
                 searchable
                 or-condition-fields="Code,Description1"
                 custom-option />

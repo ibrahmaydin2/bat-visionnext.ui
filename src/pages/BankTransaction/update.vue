@@ -207,7 +207,7 @@ export default {
     searchCustomer (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         orConditionModels: [
           {
@@ -223,7 +223,7 @@ export default {
     searchBank (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextBank/api/Bank/Search',
+        api: 'VisionNextBank/api/Bank/AutoCompleteSearch',
         name: 'banks',
         andConditionModel: {
           Description1: search
@@ -235,7 +235,7 @@ export default {
     searchCustomerBank (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextBank/api/Bank/Search',
+        api: 'VisionNextBank/api/Bank/AutoCompleteSearch',
         name: 'customerBanks',
         andConditionModel: {
           Description1: search

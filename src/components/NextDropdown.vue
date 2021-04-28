@@ -98,13 +98,11 @@ export default {
       if (!this.searchable || search.length < 3 || !this.url) {
         return false
       }
-      let pagerecordCount = 1000
+      let pagerecordCount = 10
       if (search === '%%%') {
         search = undefined
-        pagerecordCount = 20
       } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
         search = search.replaceAll('%', '')
-        pagerecordCount = 20
       }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
       let orConditionModels = []
@@ -140,7 +138,7 @@ export default {
           ...this.dynamicAndCondition
         }
       }
-      this.$api.postByUrl(request, this.url).then((response) => {
+      this.$api.postByUrl(request, this.url, 50).then((response) => {
         if (response) {
           if (response.ListModel) {
             this.values = response.ListModel.BaseModels

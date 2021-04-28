@@ -1044,7 +1044,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_CUSTOMER',
+        TableName: 'T_BRANCH',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
@@ -1182,7 +1182,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         andConditionModel: {
           BranchIds: this.BranchIds
@@ -1206,7 +1206,7 @@ export default {
       let model = {
         Code: search
       }
-      this.searchItemsByModel('VisionNextBranch/api/Branch/Search', 'branchs', model).then(res => {
+      this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
         loading(false)
       })
     },
@@ -1218,7 +1218,7 @@ export default {
       let model = {
         Code: search
       }
-      this.searchItemsByModel('VisionNextRoute/api/Route/Search', 'routes', model).then(res => {
+      this.searchItemsByModel('VisionNextRoute/api/Route/AutoCompleteSearch', 'routes', model).then(res => {
         loading(false)
       })
     },
@@ -1334,11 +1334,11 @@ export default {
     getDiscountDetails () {
       if (this.form.DiscountDetails && this.form.DiscountDetails.length > 0) {
         for (let a = 0; a < this.form.DiscountDetails.length; a++) {
-          if (this.form.DiscountDetails[a].PaymentTypeId) {
+          if (this.form.DiscountDetails[a].TableName === 'T_PAYMENT_TYPE') {
             this.discountDetailsPayment.push(this.form.DiscountDetails[a])
-          } else if (this.form.DiscountDetails[a].RouteId) {
+          } else if (this.form.DiscountDetails[a].TableName === 'T_ROUTE') {
             this.discountDetailsRoute.push(this.form.DiscountDetails[a])
-          } else if (this.form.DiscountDetails[a].BranchId) {
+          } else if (this.form.DiscountDetails[a].TableName === 'T_BRANCH') {
             this.discountDetailsBranch.push(this.form.DiscountDetails[a])
           } else {
             this.discountDetailsCustomerCriterias.push(this.form.DiscountDetails[a])

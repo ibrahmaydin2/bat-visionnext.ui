@@ -299,7 +299,7 @@ export default {
         loading(true)
         this.$store.dispatch('getSearchItems', {
           ...this.query,
-          api: 'VisionNextRoute/api/Route/Search',
+          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
           name: 'routes',
           andConditionModel: {
             Description1: search
@@ -316,7 +316,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         andConditionModel: {
           SalesDocumentTypeIds: [45, 46]
@@ -374,7 +374,7 @@ export default {
         loading(true)
         this.$store.dispatch('getSearchItems', {
           ...this.query,
-          api: 'VisionNextItem/api/Item/Search',
+          api: 'VisionNextItem/api/Item/AutoCompleteSearch',
           name: 'items',
           orConditionModels: [
             {
