@@ -57,7 +57,6 @@
               </div>
               <v-select
                 v-if="header.columnType === 'Boolean'"
-                v-once
                 v-model="header.defaultValue"
                 :options="searchBoolean"
                 @input="filterBoolean(header)"
@@ -87,7 +86,6 @@
 
               <b-form-datepicker
                 v-if="header.columnType === 'DateTime2'"
-                v-once
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
@@ -95,7 +93,6 @@
 
               <b-form-input
                 v-if="header.columnType === 'Time'"
-                v-once
                 v-mask="'##:##:##'"
                 placeholder="00:00:00"
                 v-model="searchText"
@@ -104,7 +101,6 @@
 
               <b-form-input
                 v-if="header.columnType === 'String'"
-                v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
                 @input="setSearchQ(header.dataField, $event)"
@@ -112,7 +108,6 @@
 
               <b-form-input
                 v-if="header.columnType === 'Decimal'"
-                v-once
                 type="number"
                 v-model="header.defaultValue"
                 @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
@@ -120,7 +115,6 @@
 
               <b-form-input
                 v-if="header.columnType === 'Id'"
-                v-once
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
               />
@@ -320,7 +314,8 @@ export default {
       showLocationModal: false,
       showCreateSalesWaybillModal: false,
       autoSearchInput: {},
-      showMultipleLoadingPlanModal: false
+      showMultipleLoadingPlanModal: false,
+      AndConditionalModel: {}
     }
   },
   mounted () {
@@ -349,16 +344,14 @@ export default {
     } else {
       sortOpt = null
     }
-    if (!this.andConditionalModel) {
-      this.andConditionalModel = {}
-    }
+    this.AndConditionalModel = this.andConditionalModel
     searchQ = {}
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid'])
   },
   methods: {
     getWorkflowData () {
@@ -560,7 +553,7 @@ export default {
         Value: this.dateConvertToISo(date)
       }
       this.searchOnTable()
-      this.andConditionalModel[e] = model
+      this.AndConditionalModel[e] = model
       this.searchOnTable()
     },
     filterRangeDate (e, date) {
@@ -568,7 +561,7 @@ export default {
         BeginValue: this.dateConvertToISo(date[0]),
         EndValue: this.dateConvertToISo(date[1])
       }
-      this.andConditionalModel[e] = model
+      this.AndConditionalModel[e] = model
       this.currentPage = 1
       this.searchOnTable()
     },
@@ -584,17 +577,17 @@ export default {
     selectedValue (label, model, type) {
       if (model) {
         this.currentPage = 1
-        if (!this.andConditionalModel) {
-          this.andConditionalModel = {}
+        if (!this.AndConditionalModel) {
+          this.AndConditionalModel = {}
         }
         if (type === 'lookup') {
-          this.andConditionalModel[label] = [model.DecimalValue]
+          this.AndConditionalModel[label] = [model.DecimalValue]
         } else {
-          this.andConditionalModel[label] = [model.RecordId]
+          this.AndConditionalModel[label] = [model.RecordId]
         }
         this.searchOnTable()
       } else {
-        delete this.andConditionalModel[label]
+        delete this.AndConditionalModel[label]
         this.searchOnTable()
       }
     },
@@ -623,13 +616,13 @@ export default {
     handleSubmit (label, model) {
       if (model) {
         this.currentPage = 1
-        if (!this.andConditionalModel) {
-          this.andConditionalModel = {}
+        if (!this.AndConditionalModel) {
+          this.AndConditionalModel = {}
         }
-        this.andConditionalModel[label] = [model.RecordId]
+        this.AndConditionalModel[label] = [model.RecordId]
         this.searchOnTable()
       } else {
-        delete this.andConditionalModel[label]
+        delete this.AndConditionalModel[label]
         this.searchOnTable()
       }
     },
@@ -639,7 +632,7 @@ export default {
       }
       let validCount = 0
       this.requiredFields.forEach(r => {
-        if (searchQ[r.field] || this.andConditionalModel[r.field] || this.andConditionalModel[`${r.field}Ids`]) {
+        if (searchQ[r.field] || this.AndConditionalModel[r.field] || this.AndConditionalModel[`${r.field}Ids`]) {
           validCount++
         }
       })
@@ -659,7 +652,7 @@ export default {
         page: this.currentPage,
         count: this.perPage,
         search: searchQ,
-        andConditionalModel: this.andConditionalModel
+        andConditionalModel: this.AndConditionalModel
       })
     },
     getData (e, p, c, s, requiredFieldsError) {
@@ -672,7 +665,7 @@ export default {
         count: parseInt(c),
         sort: s,
         code: this.$route.query.code,
-        andConditionalModel: this.andConditionalModel,
+        andConditionalModel: this.AndConditionalModel,
         requiredFieldsError: requiredFieldsError
       })
     },
@@ -708,8 +701,8 @@ export default {
       this.$store.commit('setSelectedTableRows', this.selectedItems)
     },
     setDefaultValues (visibleRows) {
-      if (!this.andConditionalModel) {
-        this.andConditionalModel = {}
+      if (!this.AndConditionalModel) {
+        this.AndConditionalModel = {}
       }
       var me = this
       for (let i = 0; i < visibleRows.length; i++) {
@@ -723,9 +716,9 @@ export default {
           }
           let value = parseInt(row.defaultValue)
           if (row.modelControlUtil.inputType === 'AutoComplete') {
-            me.andConditionalModel[row.modelControlUtil.modelProperty] = [value]
+            me.AndConditionalModel[row.modelControlUtil.modelProperty] = [value]
           } else {
-            this.andConditionalModel[row.modelControlUtil.modelProperty] = [value]
+            this.AndConditionalModel[row.modelControlUtil.modelProperty] = [value]
             if (row.modelControlUtil.inputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.modelProperty]) {
               row.defaultValue = me.gridField[row.modelControlUtil.modelProperty].find(l => l.RecordId === value)
             }
@@ -763,7 +756,7 @@ export default {
                     break
                 }
                 row.defaultValue = [model.BeginValue, model.EndValue]
-                me.andConditionalModel[row.dataField] = model
+                me.AndConditionalModel[row.dataField] = model
               }
               break
             case 'String':
@@ -864,7 +857,7 @@ export default {
       }
       let validCount = 0
       this.requiredFields.forEach(r => {
-        if (searchQ[r.field] || this.andConditionalModel[r.field]) {
+        if (searchQ[r.field] || this.AndConditionalModel[r.field]) {
           validCount++
         }
       })
@@ -882,6 +875,28 @@ export default {
         this.totalRowCount = this.tableData.TotalRowCount
         this.totalPageCount = this.tableData.TotalPageCount
         this.perPage = this.tableData.PageRecordCount
+        this.AndConditionalModel = {}
+        searchQ = {}
+      }
+    },
+    filtersCleared: function (e) {
+      if (e === true && this.lastGridItem && this.lastGridItem.BaseModels) {
+        this.currentPage = this.lastGridItem.CurrentPage
+        this.items = this.lastGridItem.BaseModels
+        this.totalRowCount = this.lastGridItem.TotalRowCount
+        this.totalPageCount = this.lastGridItem.TotalPageCount
+        this.perPage = this.lastGridItem.PageRecordCount
+        this.$store.commit('changeFiltersCleared', false)
+        this.head = this.head.map(x => {
+          x.defaultValue = undefined
+          return x
+        })
+      }
+    },
+    reloadGrid: function (e) {
+      if (e === true) {
+        this.searchOnTable()
+        this.$store.commit('setReloadGrid', false)
       }
     },
     isGridFieldsReady: function (e) {

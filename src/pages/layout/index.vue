@@ -236,8 +236,7 @@ export default {
   methods: {
     ...mapMutations(['hideTableRow']),
     clearFilters () {
-      this.$router.push({name: this.$route.name, query: {'page': 1}})
-      this.$router.go(0)
+      this.$store.commit('changeFiltersCleared', true)
     },
     changeRows () {
       this.$store.commit('setTableRows', this.tableRowsAll)

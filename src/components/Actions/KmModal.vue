@@ -93,7 +93,7 @@ export default {
             duration: '3000'
           })
           setTimeout(() => {
-            this.$router.go()
+            this.$store.commit('setReloadGrid', true)
           }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {

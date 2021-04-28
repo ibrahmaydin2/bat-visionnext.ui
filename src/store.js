@@ -276,7 +276,10 @@ export const store = new Vuex.Store({
     autoGridField: [],
     selectedTableRows: [],
     printDocuments: [],
-    disabledLoading: false
+    disabledLoading: false,
+    filtersCleared: false,
+    lastGridItem: {},
+    reloadGrid: false
   },
   actions: {
     // sistem gereksinimleri
@@ -510,6 +513,9 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
+          if (Object.keys(query.andConditionalModel).length === 0 && Object.keys(query.search).length === 0) {
+            commit('setLastGridItem', res.data.ListModel)
+          }
           commit('hideAlert')
           if (res.data.IsCompleted === true) {
             commit('setError', {view: false, info: null})
@@ -1740,6 +1746,15 @@ export const store = new Vuex.Store({
     },
     setDisabledLoading (state, payload) {
       state.disabledLoading = payload
+    },
+    changeFiltersCleared (state, payload) {
+      state.filtersCleared = payload
+    },
+    setLastGridItem (state, payload) {
+      state.lastGridItem = payload
+    },
+    setReloadGrid (state, payload) {
+      state.reloadGrid = payload
     }
   }
 })

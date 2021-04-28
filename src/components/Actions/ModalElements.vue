@@ -206,7 +206,7 @@ export default {
             })
             this.$root.$emit('bv::hide::modal', 'confirmModal')
             setTimeout(() => {
-              this.$router.go()
+              this.$store.commit('setReloadGrid', true)
             }, 1000)
           }
           if (res.IsCompleted === false) {

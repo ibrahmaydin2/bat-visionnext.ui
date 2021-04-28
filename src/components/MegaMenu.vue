@@ -61,7 +61,9 @@ export default {
   },
   methods: {
     closeHeader () {
-      this.$refs.megamenuData.hide(true)
+      if (this.$refs.megamenuData) {
+        this.$refs.megamenuData.hide(true)
+      }
     }
   },
   computed: {
