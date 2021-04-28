@@ -46,7 +46,7 @@
             <NextFormGroup :title="$t('insert.loadingplan.items')" :error="$v.detailPanel.item" :required="true">
                <NextDropdown
                 v-model="detailPanel.item"
-                url="VisionNextItem/api/Item/Search"
+                url="VisionNextItem/api/Item/AutoCompleteSearch"
                 searchable
                 or-condition-fields="Code,Description1"
                 custom-option/>

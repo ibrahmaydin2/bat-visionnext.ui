@@ -3,7 +3,7 @@
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.route')" :error="$v.form.route" md="3" lg="3" :required="true">
-          <NextDropdown v-model="form.route" url="VisionNextRoute/api/Route/Search" searchable />
+          <NextDropdown v-model="form.route" url="VisionNextRoute/api/Route/AutoCompleteSearch" searchable />
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.day')" :error="$v.form.day" md="3" lg="3" :required="true">
           <NextDropdown v-model="form.day" url="VisionNextSystem/api/SysDay/Search" />

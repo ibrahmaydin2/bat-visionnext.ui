@@ -251,7 +251,7 @@ export default {
     searchEmployee (loading, search) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextEmployee/api/Employee/Search',
+        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
         name: 'employees',
         andConditionModel: {
           Description1: search

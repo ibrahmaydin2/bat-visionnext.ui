@@ -526,7 +526,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextVehicle/api/Vehicle/Search',
+        api: 'VisionNextVehicle/api/Vehicle/AutoCompleteSearch',
         name: 'vehicles',
         orConditionModels: [
           {
@@ -545,7 +545,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextEmployee/api/Employee/Search',
+        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
         name: 'employees',
         orConditionModels: [
           {
@@ -564,7 +564,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         orConditionModels: [
           {
