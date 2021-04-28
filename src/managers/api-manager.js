@@ -1,7 +1,6 @@
 import { store } from '../store'
 import axios from 'axios'
 import i18n from '../i18n'
-
 export class ApiManager {
   async get (basePath, secondPath) {
     return this.call('get', {}, basePath, secondPath)
@@ -38,12 +37,21 @@ export class ApiManager {
     if (!request.andConditionModel) {
       request.andConditionModel = {}
     }
-    request.pagerecordCount = !pagerecordCount ? 1000 : pagerecordCount
+    request.pagerecordCount = !pagerecordCount ? 100 : pagerecordCount
+    let header = {'key': localStorage.getItem('Key')}
+    let name = btoa(url)
+    if (name) {
+      if (store.state.cancelToken[name]) {
+        store.state.cancelToken[name].cancel('Operation canceled due to new request.')
+      }
+      store.commit('setCancelToken', {name: name, data: axios.CancelToken.source()})
+    }
     return axios({
       method: methodType,
       url: url,
       data: request,
-      headers: {'key': localStorage.getItem('Key')}
+      headers: header,
+      cancelToken: store.state.cancelToken[name].token
     }).then(function (response) {
       if (typeof response.data.IsCompleted === 'undefined') {
         return response.data
@@ -66,6 +74,9 @@ export class ApiManager {
   }
 
   handleError (error) {
+    if (error && error.message === 'Operation canceled due to new request.') {
+      return error
+    }
     let message = i18n.t('general.unExpectedException')
     if (error && error.code === 'ECONNABORTED') {
       message = i18n.t('general.timeoutError')
