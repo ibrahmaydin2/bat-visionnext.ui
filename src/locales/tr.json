@@ -1949,6 +1949,22 @@
       "createSalesWaybillQuantityError": "Reddedilen miktar, miktar alanından büyük olamaz. Kontrol ediniz.",
       "quantity": "Miktar",
       "rmaConvertQuantityError": "Miktar, 'Talep Edilen İade Miktarı' alanından büyük olamaz. Kontrol ediniz."
+    },
+    "ItemFormula": {
+      "Code": "Kod",
+      "Description1": "Tanım",
+      "BranchCriteria": "Şube Kriteri",
+      "BeginDate": "Başlangıç Tarihi",
+      "EndDate": "Bitiş Tarihi",
+      "FieldDescription": "Alan Açıklaması",
+      "FieldValue": "Değer",
+      "Quantity": "Miktar",
+      "DiscountAmount": "İndirim Miktarı",
+      "UnitId": "Birim",
+      "Currency": "Para Birimi",
+      "ShowDetails": "Detaylar",
+      "Branch": "Şube Ekle",
+      "BranchCommercialTitle": "Şube Adı"
     }
   },
   "auth": {
