@@ -37,7 +37,7 @@ export class ApiManager {
     if (!request.andConditionModel) {
       request.andConditionModel = {}
     }
-    request.pagerecordCount = !pagerecordCount ? 100 : pagerecordCount
+    request.pagerecordCount = !pagerecordCount ? 50 : pagerecordCount
     let header = {'key': localStorage.getItem('Key')}
     let name = btoa(url)
     if (name) {
