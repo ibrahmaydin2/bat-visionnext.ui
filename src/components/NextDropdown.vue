@@ -121,7 +121,6 @@ export default {
       loading(true)
       this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url, pagerecordCount).then((response) => {
         loading(false)
-        this.$store.commit('bigLoaded', false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels
           this.allValues = this.values

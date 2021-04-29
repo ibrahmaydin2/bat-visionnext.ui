@@ -61,7 +61,9 @@ export default {
   },
   methods: {
     closeHeader () {
-      this.$refs.megamenuData.hide(true)
+      if (this.$refs.megamenuData) {
+        this.$refs.megamenuData.hide(true)
+      }
     }
   },
   computed: {
@@ -85,7 +87,6 @@ export default {
   .asc__item-head-search
     display: block
     line-height: normal
-    cursor: default
     font-size: 12px
     height: 50px
     padding: 10px 0 0
@@ -228,7 +229,6 @@ export default {
       display: block
       padding: .5rem
       line-height: normal
-      cursor: default
       font-size: 12px
       & i
         width: 30px
