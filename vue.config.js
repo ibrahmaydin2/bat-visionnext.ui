@@ -9,5 +9,11 @@ module.exports = {
       localeDir: 'locales',
       enableInSFC: false
     }
+  },
+  pwa: {
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+        swSrc: 'dist/service-worker.js',
+    }
   }
 }
