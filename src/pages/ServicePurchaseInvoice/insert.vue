@@ -105,7 +105,7 @@
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <NextDropdown
                   v-model="selectedInvoiceLine.selectedItem"
-                  url="VisionNextItem/api/Item/Search"
+                  url="VisionNextItem/api/Item/AutoCompleteSearch"
                   @input="setTotalPrice"
                   :searchable="true"
                   or-condition-fields="Description1,Code"
@@ -343,7 +343,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         andConditionModel: {
           SalesDocumentTypeIds: [45, 46]

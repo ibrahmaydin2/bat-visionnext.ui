@@ -1,5 +1,26 @@
 <template>
   <b-dropdown class="asc__mega-menu-dropdown" :text="$t('nav.other')" ref="megamenuData">
+    <li>
+      <span class="asc__item-head-search">
+        <i class="fas far fa-search" />
+        <b-form-input type="text" v-model="searchText" :placeholder="$t('nav.search')" />
+      </span>
+        <ul v-if="searchText != ''">
+          <li v-for="(subs, x) in filteredList" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
+            <router-link class="asc__item-head-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
+              <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
+            </router-link>
+            <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
+            <ul v-if="subs.sub.length >= 1">
+              <li v-for="(three, y) in subs.sub" :key="'three' + y">
+                <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }, query: {page: 1}}" @click.native="closeHeader()">
+                  <i :class="three.icon ? 'fas ' + three.icon : 'far fa-circle'" />{{ three.title }}
+                </router-link>
+              </li>
+            </ul>
+          </li>
+        </ul>
+    </li>
     <li v-for="(links, i) in data" :key="i">
       <template v-if="links.sub">
         <span class="asc__item-head-title">
@@ -33,14 +54,57 @@
 export default {
   name: 'MegaMenu',
   props: ['data'],
+  data () {
+    return {
+      searchText: ''
+    }
+  },
   methods: {
     closeHeader () {
-      this.$refs.megamenuData.hide(true)
+      if (this.$refs.megamenuData) {
+        this.$refs.megamenuData.hide(true)
+      }
+    }
+  },
+  computed: {
+    filteredList () {
+      const all = this.data
+      let link = []
+      for (let l = 0; l < all.length; l++) {
+        let subs = all[l].sub
+        for (let s = 0; s < subs.length; s++) {
+          link.push(subs[s])
+        }
+      }
+      return link.filter((data) => {
+        return data.title.toLowerCase().includes(this.searchText.toLowerCase().trim())
+      })
     }
   }
 }
 </script>
 <style lang="sass">
+  .asc__item-head-search
+    display: block
+    line-height: normal
+    font-size: 12px
+    height: 50px
+    padding: 10px 0 0
+    & i
+      width: 30px
+      float: left
+      text-align: center
+      height: 30px
+      line-height: 30px
+      color: #ea8b09
+    & .form-control
+      height: 30px
+      float: left
+      width: 130px
+      background: none
+      border-radius: 0
+      border: none
+      border-bottom: 1px solid #999
   .asc__mega-menu-dropdown
     button
       background: transparent !important
@@ -165,7 +229,6 @@ export default {
       display: block
       padding: .5rem
       line-height: normal
-      cursor: default
       font-size: 12px
       & i
         width: 30px

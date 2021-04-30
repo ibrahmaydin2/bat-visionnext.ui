@@ -9,16 +9,20 @@ import { required, not } from 'vuelidate/lib/validators'
 
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
-var pagerecordCount = 1000
+var pagerecordCount = 100
 var checkSearchObject = function (obj) {
   if (obj) {
     let isCustomSearch = false
+    let isAutoComplete = false
     let isList = obj && (obj.length > 0)
     if (isList) {
       obj = obj[0]
     }
     let keys = Object.keys(obj)
     keys.forEach(key => {
+      if (key === 'Description1') {
+        isAutoComplete = true
+      }
       let value = obj[key]
       if (value === '%%%') {
         delete obj[key]
@@ -28,9 +32,10 @@ var checkSearchObject = function (obj) {
         isCustomSearch = true
       }
     })
-    pagerecordCount = isCustomSearch ? 20 : 1000
+    pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
     return !isList ? obj : obj ? [obj] : []
   } else {
+    pagerecordCount = 50
     return undefined
   }
 }
@@ -53,8 +58,14 @@ axios.interceptors.response.use(function (response) {
   }
   return response
 }, function (error) {
-  store.commit('bigLoaded', false)
-  numberOfAjaxCAllPending = 0
+  if (error && error.message === 'Operation canceled due to new request.') {
+    numberOfAjaxCAllPending--
+  } else {
+    numberOfAjaxCAllPending = 0
+  }
+  if (numberOfAjaxCAllPending === 0) {
+    store.commit('bigLoaded', false)
+  }
   if (error && error.code === 'ECONNABORTED') {
     store.commit('showAlert', { type: 'danger', msg: i18n.t('general.timeoutError') })
   }
@@ -271,7 +282,11 @@ export const store = new Vuex.Store({
     autoGridField: [],
     selectedTableRows: [],
     printDocuments: [],
-    disabledLoading: false
+    disabledLoading: false,
+    filtersCleared: false,
+    lastGridItem: {},
+    reloadGrid: false,
+    cancelToken: {}
   },
   actions: {
     // sistem gereksinimleri
@@ -505,6 +520,9 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
+          if (Object.keys(query.andConditionalModel).length === 0 && Object.keys(query.search).length === 0) {
+            commit('setLastGridItem', res.data.ListModel)
+          }
           commit('hideAlert')
           if (res.data.IsCompleted === true) {
             commit('setError', {view: false, info: null})
@@ -845,6 +863,15 @@ export const store = new Vuex.Store({
         'page': 1,
         'OrderByColumns': []
       }
+      if (query.val) {
+        if (typeof state.cancelToken[query.val] !== typeof undefined) {
+          state.cancelToken[query.val].cancel('Operation canceled due to new request.')
+        }
+        commit('setCancelToken', {name: query.val, data: axios.CancelToken.source()})
+        if (state.cancelToken[query.val]) {
+          authHeader.cancelToken = state.cancelToken[query.val].token
+        }
+      }
       return axios.post(query.serviceUrl, dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
@@ -855,7 +882,9 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
+          if (err && err.message === 'Operation canceled due to new request.') {
+            return
+          }
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1104,12 +1133,17 @@ export const store = new Vuex.Store({
         'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : pagerecordCount,
         'page': 1
       }
-      let isSearch = query.andConditionModel || query.orConditionModels
+      if (query.name) {
+        if (typeof state.cancelToken[query.name] !== typeof undefined) {
+          state.cancelToken[query.name].cancel('Operation canceled due to new request.')
+        }
+        commit('setCancelToken', {name: query.name, data: axios.CancelToken.source()})
+        if (state.cancelToken[query.name]) {
+          authHeader.cancelToken = state.cancelToken[query.name].token
+        }
+      }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
-          if (isSearch) {
-            commit('bigLoaded', false)
-          }
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
           } else {
@@ -1118,6 +1152,9 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
+          if (err && err.message === 'Operation canceled due to new request.') {
+            return
+          }
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1735,6 +1772,18 @@ export const store = new Vuex.Store({
     },
     setDisabledLoading (state, payload) {
       state.disabledLoading = payload
+    },
+    changeFiltersCleared (state, payload) {
+      state.filtersCleared = payload
+    },
+    setLastGridItem (state, payload) {
+      state.lastGridItem = payload
+    },
+    setReloadGrid (state, payload) {
+      state.reloadGrid = payload
+    },
+    setCancelToken (state, payload) {
+      state.cancelToken[payload.name] = payload.data
     }
   }
 })

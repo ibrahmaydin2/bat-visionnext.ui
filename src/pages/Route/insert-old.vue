@@ -449,7 +449,7 @@ export default {
     searchLocation (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/CustomerLocation/Search',
+        api: 'VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch',
         name: 'customerLocationsList',
         andConditionModel: {
           Description1: search

@@ -14,7 +14,7 @@
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
           <NextDropdown
-            url="VisionNextWarehouse/api/Warehouse/Search"
+            url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
             @input="selectedWarehouse"
             :searchable="true"
             :custom-option="true"
@@ -274,7 +274,7 @@ export default {
             duration: '3000'
           })
           setTimeout(() => {
-            this.$router.go()
+            this.$store.commit('setReloadGrid', true)
           }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {

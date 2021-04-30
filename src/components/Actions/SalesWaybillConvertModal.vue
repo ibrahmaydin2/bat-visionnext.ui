@@ -218,7 +218,7 @@ export default {
     searchEmployee (loading, search) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextEmployee/api/Employee/Search',
+        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
         name: 'employees',
         andConditionModel: {
           Description1: search
@@ -253,7 +253,7 @@ export default {
             duration: '3000'
           })
           setTimeout(() => {
-            this.$router.go()
+            this.$store.commit('setReloadGrid', true)
           }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {

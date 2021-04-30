@@ -226,7 +226,7 @@ export default {
     searchCustomer (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         orConditionModels: [
           {
@@ -248,7 +248,7 @@ export default {
     searchRepresentative (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextEmployee/api/Employee/Search',
+        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
         name: 'representatives',
         andConditionModel: {
           Description1: search

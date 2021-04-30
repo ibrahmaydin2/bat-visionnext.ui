@@ -503,7 +503,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         orConditionModels: [
           {

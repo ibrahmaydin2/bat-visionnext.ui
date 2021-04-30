@@ -1452,7 +1452,7 @@ export default {
     searchItems (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextItem/api/Item/Search',
+        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
         name: 'items',
         orConditionModels: [
           {
@@ -1473,7 +1473,7 @@ export default {
     searchCustomer (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         andConditionModel: {
           Description1: search,
@@ -1491,7 +1491,7 @@ export default {
     searchBranch (loading, search, vm) {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextBranch/api/Branch/Search',
+        api: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
         name: 'branchList',
         andConditionModel: {
           BranchCommercialTitle: search

@@ -88,7 +88,7 @@ export default {
           this.status = false
           this.closeModal()
           setTimeout(() => {
-            this.$router.go()
+            this.$store.commit('setReloadGrid', true)
           }, 1000)
         }
       })

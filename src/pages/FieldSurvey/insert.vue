@@ -301,7 +301,7 @@ export default {
         let model = {
           BranchCommercialTitle: search
         }
-        this.searchItemsByModel('VisionNextBranch/api/Branch/Search', 'branchs', model).then(res => {
+        this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
           loading(false)
         })
       }
@@ -311,7 +311,7 @@ export default {
         let model = {
           Description1: search
         }
-        this.searchItemsByModel('VisionNextFieldAnalysis/api/AnalysisQuestions/Search', 'analysisQuestions', model).then(res => {
+        this.searchItemsByModel('VisionNextFieldAnalysis/api/AnalysisQuestions/AutoCompleteSearch', 'analysisQuestions', model).then(res => {
           loading(false)
         })
       }

@@ -116,7 +116,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         orConditionModels: [
           {
@@ -137,7 +137,7 @@ export default {
       let model = {
         Description1: search
       }
-      this.searchItemsByModel('VisionNextRoute/api/Route/Search', 'routes', model).then(res => {
+      this.searchItemsByModel('VisionNextRoute/api/Route/AutoCompleteSearch', 'routes', model).then(res => {
         loading(false)
       })
     },

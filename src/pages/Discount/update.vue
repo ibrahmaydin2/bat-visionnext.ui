@@ -1182,7 +1182,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
         name: 'customers',
         andConditionModel: {
           BranchIds: this.BranchIds
@@ -1206,7 +1206,7 @@ export default {
       let model = {
         Code: search
       }
-      this.searchItemsByModel('VisionNextBranch/api/Branch/Search', 'branchs', model).then(res => {
+      this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
         loading(false)
       })
     },
@@ -1218,7 +1218,7 @@ export default {
       let model = {
         Code: search
       }
-      this.searchItemsByModel('VisionNextRoute/api/Route/Search', 'routes', model).then(res => {
+      this.searchItemsByModel('VisionNextRoute/api/Route/AutoCompleteSearch', 'routes', model).then(res => {
         loading(false)
       })
     },

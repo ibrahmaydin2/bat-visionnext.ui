@@ -297,7 +297,7 @@ export default {
       if (search.length >= 3) {
         this.$store.dispatch('getSearchItems', {
           ...this.query,
-          api: 'VisionNextVehicle/api/Vehicle/Search',
+          api: 'VisionNextVehicle/api/Vehicle/AutoCompleteSearch',
           name: 'vehicles',
           andConditionModel: {
             Description1: search
@@ -312,7 +312,7 @@ export default {
         loading(true)
         this.$store.dispatch('getSearchItems', {
           ...this.query,
-          api: 'VisionNextBranch/api/Branch/Search',
+          api: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
           name: 'branchs',
           andConditionModel: {
             Description1: search

@@ -7,13 +7,13 @@
   "scripts": {
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "local": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
-    "uat": "webpack-dev-server --inline --progress --config build/webpack.uat.conf.js",
-    "qa": "webpack-dev-server --inline --progress --config build/webpack.qa.conf.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "start": "npm run local"
+    "local": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
+    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
+    "qa": "webpack-dev-server --inline --progress --config build/webpack.qa.conf.js",
+    "start": "npm run local",
+    "uat": "webpack-dev-server --inline --progress --config build/webpack.uat.conf.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -26,6 +26,7 @@
     "devextreme": "20.2.5",
     "devextreme-vue": "20.2.5",
     "hooper": "^0.3.4",
+    "register-service-worker": "^1.7.1",
     "smart-webcomponents": "^8.0.0",
     "smart-webcomponents-community": "^8.0.0",
     "vue": "^2.6.12",
@@ -46,6 +47,7 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "@vue/cli-plugin-pwa": "^4.5.12",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
