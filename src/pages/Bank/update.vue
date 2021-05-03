@@ -18,189 +18,142 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.bank.code')"
-            >
-              <b-form-input type="text" v-model="form.model.code" readonly />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.bank.financeCode')"
-            >
-              <b-form-input type="text" v-model="form.model.financeCode"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.bank.description1')"
-            >
-              <b-form-input type="text" v-model="form.model.description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('insert.status')"
-            >
-              <b-form-checkbox v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+           </NextFormGroup>
+           <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="3" lg="3">
+              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+           </NextFormGroup>
+            <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+           </NextFormGroup>
+           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
+           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
-          <b-table-simple bordered small>
-            <b-thead>
-              <b-th width="20%">
-                <b-form-group :label="$t('insert.bank.branchCode')">
-                  <b-form-input type="text" v-model="branchCode" readonly />
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.bank.description1')">
-                  <b-form-input type="text" v-model="branchDescription1"/>
-                </b-form-group>
-              </b-th>
-              <b-th width="30%">
-                <b-form-group :label="$t('insert.bank.financeCode')">
-                  <b-form-input type="text" v-model="branchFinansCode"/>
-                </b-form-group>
-              </b-th>
-              <b-th width="20%">
-                <b-form-group :label="$t('insert.bank.defaultAccountNumber')">
-                  <b-form-input type="text" v-model="defaultAccountNumber"/>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
-                <b-form-group :label="$t('insert.bank.isDefaultBranch')">
-                  <b-form-checkbox v-model="isDefaultBranch">
-                  </b-form-checkbox>
-                </b-form-group>
-              </b-th>
-              <b-th width="10%">
+          <b-row>
+            <NextFormGroup :title="$t('insert.bank.branchCode')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.Code" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.description1')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.Description1" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.financeCode')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.FinanceCode" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.defaultAccountNumber')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.DefaultAccountNumber" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.isDefaultBranch')" md="3" lg="2">
+              <NextCheckBox v-model="bankBranches.IsDefaultBranch" type="number" toggle />
+            </NextFormGroup>
+             <b-col cols="12" md="2" class="text-right">
                 <b-form-group>
-                  <b-button @click="addDetailList" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                  <AddDetailButton @click.native="addDetailList" />
                 </b-form-group>
-              </b-th>
-            </b-thead>
-            <b-tbody>
-              <!-- <b-tr v-for="(r, i) in form.model.bankBranches" :key="i" v-if="r.RecordState !== 4"> -->
-              <b-tr v-for="(r, i) in form.model.bankBranches" :key="i">
-                <b-td>{{r.Code}}</b-td>
-                <b-td>{{r.Description1}}</b-td>
-                <b-td>{{r.FinanceCode}}</b-td>
-                <b-td>{{r.DefaultAccountNumber}}</b-td>
-                <b-td><p><i :class="r.IsDefaultBranch === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p></b-td>
-                <b-td class="text-center"><i @click="removeBankBranch(r)" class="far fa-trash-alt text-danger"></i></b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
+             </b-col>
+          </b-row>
+          <b-row v-if="form.BankBranches.length > 0">
+            <b-table-simple responsive bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.bank.description1')}}</span></b-th>
+                <b-th><span>{{$t('insert.bank.financeCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.bank.defaultAccountNumber')}}</span></b-th>
+                <b-th><span>{{$t('insert.bank.isDefaultBranch')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in (form.BankBranches ? form.BankBranches.filter(b => b.RecordState != 4) : [])" :key="i">
+                  <b-td>{{r.Description1}}</b-td>
+                  <b-td>{{r.FinanceCode}}</b-td>
+                  <b-td>{{r.DefaultAccountNumber}}</b-td>
+                  <b-td><p><i :class="r.IsDefaultBranch === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" /></p></b-td>
+                  <b-td class="text-center">
+                    <i @click="removeBankBranch(r)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-
+import mixin from '../../mixins/update'
 export default {
+  mixins: [mixin],
   data () {
     return {
       form: {
-        model: {
-          code: '',
-          description1: '',
-          recordState: 2,
-          statusId: null,
-          financeCode: null,
-          bankBranches: [],
-          recordId: null,
-          deleted: null
-        }
+        Code: '',
+        Description1: '',
+        RecordState: 2,
+        StatusId: null,
+        FinanceCode: null,
+        BankBranches: [],
+        RecordId: null,
+        Deleted: null
       },
-      dataStatus: null,
-      detailListData: [],
-      branchCode: null,
-      branchDescription1: null,
-      branchFinansCode: null,
-      defaultAccountNumber: null,
-      isDefaultBranch: null
+      bankBranches: {
+        Code: null,
+        Description1: null,
+        FinanceCode: null,
+        DefaultAccountNumber: null,
+        IsDefaultBranch: null
+      }
     }
   },
-  computed: {
-    ...mapState(['rowData'])
-  },
   mounted () {
-    this.getData()
+    this.getData().then(() => this.setData())
   },
   methods: {
-    getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBank/api/Bank', record: this.$route.params.url})
+    setData () {
+      let e = this.rowData
+      if (e) {
+        this.bankBranches.Code = `${e.Code} - ${(e.BankBranches.length ? e.BankBranches.length : 1) + 1}`
+        this.form = {
+          Code: e.Code,
+          Description1: e.Description1,
+          RecordState: 3,
+          StatusId: e.StatusId,
+          FinanceCode: e.FinanceCode,
+          BankBranches: e.BankBranches,
+          RecordId: e.RecordId,
+          Deleted: e.Deleted
+        }
+      }
     },
     save () {
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextBank/api/Bank', formdata: this.form, return: this.$route.meta.baseLink})
+      this.$v.$touch()
+      if (this.$v.$error) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      } else {
+        this.updateData()
+      }
     },
     addDetailList () {
-      this.form.model.bankBranches.push({
-        Code: this.branchCode,
-        Description1: this.branchDescription1,
-        FinanceCode: this.branchFinansCode,
-        DefaultAccountNumber: this.defaultAccountNumber,
-        IsDefaultBranch: this.isDefaultBranch,
+      this.form.BankBranches.push({
+        Code: this.bankBranches.Code,
+        Description1: this.bankBranches.Description1,
+        FinanceCode: this.bankBranches.FinanceCode,
+        DefaultAccountNumber: this.bankBranches.DefaultAccountNumber,
+        IsDefaultBranch: this.bankBranches.IsDefaultBranch,
         RecordState: 2,
         StatusId: 1
       })
-      this.branchDescription1 = null
-      this.branchFinansCode = null
-      this.defaultAccountNumber = null
-      this.isDefaultBranch = null
-      this.branchCode++
+      this.bankBranches = {
+        Code: this.bankBranches.Code++
+      }
     },
     removeBankBranch (item) {
-      this.form.model.bankBranches[this.form.model.bankBranches.indexOf(item)].RecordState = 4
-    }
-  },
-  watch: {
-    rowData: function (e) {
-      if (e) {
-        this.branchCode = `${e.Code} - ${(e.BankBranches.length ? e.BankBranches.length : 1) + 1}`
-        this.form.model = {
-          code: e.Code,
-          description1: e.Description1,
-          recordState: 3,
-          statusId: e.StatusId,
-          financeCode: e.FinanceCode,
-          bankBranches: e.BankBranches,
-          recordId: e.RecordId,
-          deleted: e.Deleted
-        }
-        this.dataStatus = !!e.StatusId
-      }
-    },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.model.statusId = 1
-      } else {
-        this.form.model.statusId = 0
-      }
-    },
-    isDefaultBranch: function (e) {
-      if (e) {
-        this.isDefaultBranch = 1
-      } else {
-        this.isDefaultBranch = 0
-      }
+      this.form.BankBranches[this.form.BankBranches.indexOf(item)].RecordState = 4
     }
   }
 }
 </script>
-<style lang="sass" scope>
-  table
-    i
-      cursor: pointer
-</style>
