@@ -18,26 +18,18 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-            <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-                <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.FinanceCode">
-                <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-                <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-                <NextCheckBox v-model="form.StatusId" type="number" toggle />
-              </b-form-group>
-            </b-col>
+           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
+              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+           </NextFormGroup>
+           <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="3" lg="3">
+              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+           </NextFormGroup>
+            <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
+              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+           </NextFormGroup>
+           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
+              <NextCheckBox v-model="form.StatusId" type="number" toggle />
+           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -45,37 +37,26 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
-              <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.bank.branchCode')">
-                <b-form-input type="text" v-model="bankBranches.Code" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.bank.description1')">
-                <b-form-input type="text" v-model="bankBranches.Description1" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.bank.financeCode')">
-                <b-form-input type="text" v-model="bankBranches.FinanceCode" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.bank.defaultAccountNumber')">
-                <b-form-input type="text" v-model="bankBranches.DefaultAccountNumber" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.bank.isDefaultBranch')">
-                  <b-form-checkbox v-model="bankBranches.IsDefaultBranch">
-                  </b-form-checkbox>
-              </b-form-group>
-            </b-col>
-            <b-th width="10%">
-              <b-form-group>
-                <b-button @click="addbankBranches" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
-            </b-th>
+            <NextFormGroup :title="$t('insert.bank.branchCode')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.Code" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.description1')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.Description1" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.financeCode')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.FinanceCode" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.defaultAccountNumber')" md="3" lg="2">
+              <b-form-input type="text" v-model="bankBranches.DefaultAccountNumber" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.bank.isDefaultBranch')" md="3" lg="2">
+              <NextCheckBox v-model="bankBranches.IsDefaultBranch" type="number" toggle />
+            </NextFormGroup>
+             <b-col cols="12" md="2" class="text-right">
+                <b-form-group>
+                  <AddDetailButton @click.native="addbankBranches" />
+                </b-form-group>
+             </b-col>
           </b-row>
             <b-row v-if="form.bankBranches.length > 0">
               <b-table-simple responsive bordered small>
@@ -99,39 +80,12 @@
               </b-table-simple>
             </b-row>
         </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
-          </b-row>
-        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -152,38 +106,19 @@ export default {
         FinanceCode: null,
         DefaultAccountNumber: null,
         IsDefaultBranch: null
-      },
-      routeName: this.$route.meta.baseLink,
-      dataStatus: null,
-      branchCode: null,
-      branchDescription1: null,
-      branchFinansCode: null,
-      defaultAccountNumber: null
-
+      }
     }
   },
-  computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode'])
-  },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-    },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     },
     addbankBranches () {
@@ -194,7 +129,7 @@ export default {
           Description1: this.bankBranches.Description1,
           FinanceCode: this.bankBranches.FinanceCode,
           DefaultAccountNumber: this.bankBranches.DefaultAccountNumber,
-          IsDefaultBranch: this.bankBranches.IsDefaultBranch ? 1 : 0,
+          IsDefaultBranch: this.bankBranches.IsDefaultBranch,
           RecordState: 2,
           StatusId: 1
         })
@@ -205,7 +140,7 @@ export default {
           Description1: this.bankBranches.Description1,
           FinanceCode: this.bankBranches.FinanceCode,
           DefaultAccountNumber: this.bankBranches.DefaultAccountNumber,
-          IsDefaultBranch: this.bankBranches.IsDefaultBranch ? 1 : 0,
+          IsDefaultBranch: this.bankBranches.IsDefaultBranch,
           RecordState: 2,
           StatusId: 1
         }
@@ -216,40 +151,10 @@ export default {
       this.bankBranches.FinanceCode = null
       this.bankBranches.DefaultAccountNumber = null
       this.bankBranches.IsDefaultBranch = 0
-      console.log(this.form.bankBranches)
-      console.log(this.bankBranches)
     },
     removeBankBranch (item) {
       this.form.bankBranches.splice(this.form.bankBranches.indexOf(item), 1)
     }
-  },
-  validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    return {
-      form: this.insertRules
-    }
-  },
-  watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-        this.bankBranches.Code = `${this.form.Code} - ${this.form.bankBranches.length ? this.form.bankBranches.length : 1}`
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    }
   }
 }
 </script>
-<style lang="sass">
-</style>
