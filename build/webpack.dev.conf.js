@@ -115,9 +115,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     // in a separate chunk, similar to the vendor chunk
     // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['app1', 'app2'],
-      async: 'vendor-async',
+      name: 'app',
+      names: ['app', 'subPageA'],
       children: true,
+      async: true,
       minChunks: 3
     }),
 
