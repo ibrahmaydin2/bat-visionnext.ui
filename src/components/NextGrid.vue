@@ -3,7 +3,7 @@
     <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.map(x => x.label).join()} ${$t('list.requiredFieldsMessage')}`}}</span>
     <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
-        <draggable tag="tr" :list="head">
+        <draggable tag="tr" :list="head" :disabled="disabledDraggable">
           <b-th
             v-for="header in head"
             :key="header.dataField"
@@ -32,6 +32,8 @@
                     @click="onClickAutoComplete(header.modelControlUtil)"
                     :search="onAutoCompleteSearch"
                     class="autocomplete-search"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                   />
@@ -43,6 +45,8 @@
                     :options="lookup[header.modelControlUtil.code]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'lookup')"
                     v-model="header.defaultValue"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
                   >
                   </v-select>
                   <v-select
@@ -51,6 +55,8 @@
                     :options="gridField[header.modelControlUtil.modelProperty]"
                     @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
                     v-model="header.defaultValue"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
                   >
                   </v-select>
                 </div>
@@ -61,6 +67,8 @@
                 :options="searchBoolean"
                 @input="filterBoolean(header)"
                 label="title"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
               <date-picker
                 v-if="header.columnType === 'Date'"
@@ -71,6 +79,8 @@
                 format="YYYY-MM-DD"
                 value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               ></date-picker>
 
               <date-picker
@@ -82,6 +92,8 @@
                 format="YYYY-MM-DD"
                 value-type="format"
                 @change="filterRangeDate(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               ></date-picker>
 
               <b-form-datepicker
@@ -89,6 +101,8 @@
                 v-model="searchText"
                 placeholder=""
                 @input="filterDate(header.dataField, searchText)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
 
               <b-form-input
@@ -97,6 +111,8 @@
                 placeholder="00:00:00"
                 v-model="searchText"
                 @keydown.enter="filterTime(header.dataField, searchText)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
 
               <b-form-input
@@ -104,6 +120,8 @@
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
                 @input="setSearchQ(header.dataField, $event)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
 
               <b-form-input
@@ -111,12 +129,16 @@
                 type="number"
                 v-model="header.defaultValue"
                 @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
 
               <b-form-input
                 v-if="header.columnType === 'Id'"
                 v-model="header.defaultValue"
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
               />
             </div>
           </b-th>
@@ -315,7 +337,8 @@ export default {
       showCreateSalesWaybillModal: false,
       autoSearchInput: {},
       showMultipleLoadingPlanModal: false,
-      AndConditionalModel: {}
+      AndConditionalModel: {},
+      disabledDraggable: false
     }
   },
   mounted () {

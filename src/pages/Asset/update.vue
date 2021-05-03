@@ -32,48 +32,25 @@
         <b-tab :title="$t('get.asset.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="ProducerId" :error="$v.form.ProducerId">
-              <v-select
-                :options='lookup.ASSET_PRODUCER '
-                v-model="producer"
-                @input="selectedType('ProducerId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="producer" @input="selectedType('ProducerId', $event)" lookup-key="ASSET_PRODUCER" />
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId">
-              <v-select
-                :options="lookup.ASSET_BRAND"
-                v-model="brand"
-                @input="selectedType('BrandId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="brand" @input="selectedType('BrandId', $event)" lookup-key="ASSET_BRAND" />
             </NextFormGroup>
-            <!-- <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
-              <v-select />
-            </NextFormGroup> -->
             <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <v-select
-                :options="lookup.ASSET_MODEL"
-                v-model="model"
-                @input="selectedType('ModelId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="model" @input="selectedType('ModelId', $event)" lookup-key="ASSET_MODEL" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
-              <v-select
-                v-model="assetType"
-                :options="lookup.ASSET_TYPE"
-                @input="selectedType('AssetTypeId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="assetType" @input="selectedType('AssetTypeId', $event)" lookup-key="ASSET_TYPE" />
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <v-select v-model="type" :options="types" @input="selectedSearchType('TypeId', $event)" label="Description1"/>
+              <NextDropdown v-model="type" @input="selectedSearchType('TypeId', $event)" url="VisionNextAsset/api/AssetType/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
-              <v-select v-model="assetClass" :options="assetClasses" @input="selectedSearchType('AssetClassId', $event)" label="Description1"/>
+              <NextDropdown v-model="assetClass" @input="selectedSearchType('AssetClassId', $event)" url="VisionNextAsset/api/AssetClass/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
-              <v-select v-model="trackType" :options="trackTypes" @input="selectedSearchType('TrackTypeId', $event)" label="Description1"/>
+              <NextDropdown v-model="trackType" @input="selectedSearchType('TrackTypeId', $event)" url="VisionNextAsset/api/AssetTrackType/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />

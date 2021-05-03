@@ -10,14 +10,6 @@
             <router-link class="asc__item-head-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
-            <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
-            <ul v-if="subs.sub.length >= 1">
-              <li v-for="(three, y) in subs.sub" :key="'three' + y">
-                <router-link class="asc__item-title" :to="{name: three.router, params: { url: three.link }, query: {page: 1}}" @click.native="closeHeader()">
-                  <i :class="three.icon ? 'fas ' + three.icon : 'far fa-circle'" />{{ three.title }}
-                </router-link>
-              </li>
-            </ul>
           </li>
         </ul>
     </li>
@@ -70,12 +62,25 @@ export default {
     filteredList () {
       const all = this.data
       let link = []
-      for (let l = 0; l < all.length; l++) {
-        let subs = all[l].sub
-        for (let s = 0; s < subs.length; s++) {
-          link.push(subs[s])
+      let firstList = all.filter(a => !a.sub || a.sub.length === 0)
+      let secondList = []
+      let thirdList = []
+      all.map(s => {
+        if (s.sub) {
+          secondList = secondList.concat(s.sub.filter(a => !a.sub || a.sub.length === 0))
         }
-      }
+      })
+      all.map(s => {
+        if (s.sub) {
+          s.sub.map(x => {
+            if (x.sub) {
+              thirdList = thirdList.concat(x.sub.filter(a => !a.sub || a.sub.length === 0))
+            }
+          })
+        }
+      })
+
+      link = firstList.concat(secondList).concat(thirdList)
       return link.filter((data) => {
         return data.title.toLowerCase().includes(this.searchText.toLowerCase().trim())
       })

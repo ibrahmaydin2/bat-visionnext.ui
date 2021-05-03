@@ -57,7 +57,12 @@ import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
 import NextLocation from './components/NextLocation'
-import './registerServiceWorker'
+
+if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+  })
+}
 
 Vue.use(Sortable)
 Vue.use(BabelPolyFill)
