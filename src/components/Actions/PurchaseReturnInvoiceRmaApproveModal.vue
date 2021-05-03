@@ -220,7 +220,7 @@ export default {
       this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
     },
     search () {
-      this.$store.state.BranchId = 1
+      // this.$store.state.BranchId = 1
       this.tableBusy = true
       let request = {}
       if (this.approveNumber) {
@@ -242,11 +242,11 @@ export default {
       })
     },
     onRowSelected (item) {
-      this.$store.state.BranchId = 6
+      // this.$store.state.BranchId = 6
       let request = {
         'recordId': item[0].RecordId
       }
-      this.$api.postByUrl(request, 'VisionNextRma/api/Rma/Get').then((res) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnInvoice/ReceiveRmaDetail').then((res) => {
         if (res.IsCompleted) {
           this.rmaLines = res.Model.RmaLines
         } else {
