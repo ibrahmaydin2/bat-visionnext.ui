@@ -32,44 +32,25 @@
         <b-tab :title="$t('get.asset.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="ProducerId" :error="$v.form.ProducerId">
-              <v-select
-                :options='lookup.ASSET_PRODUCER '
-                @input="selectedType('ProducerId', $event)"
-                label="Label"
-              />
+              <NextDropdown @input="selectedType('ProducerId', $event)" lookup-key="ASSET_PRODUCER" />
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId">
-              <v-select
-                :options="lookup.ASSET_BRAND"
-                @input="selectedType('BrandId', $event)"
-                label="Label"
-              />
+               <NextDropdown @input="selectedType('BrandId', $event)" lookup-key="ASSET_BRAND" />
             </NextFormGroup>
-            <!-- <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
-              <v-select />
-            </NextFormGroup> -->
             <NextFormGroup item-key="ModelId" :error="$v.form.ModelId">
-              <v-select
-                :options="lookup.ASSET_MODEL"
-                @input="selectedType('ModelId', $event)"
-                label="Label"
-              />
+              <NextDropdown @input="selectedType('ModelId', $event)" lookup-key="ASSET_MODEL" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId">
-              <v-select
-                :options="lookup.ASSET_TYPE"
-                @input="selectedType('AssetTypeId', $event)"
-                label="Label"
-              />
+              <NextDropdown @input="selectedType('AssetTypeId', $event)" lookup-key="ASSET_TYPE" />
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <v-select v-model="type" :options="types" @input="selectedSearchType('TypeId', $event)" label="Description1"/>
+              <NextDropdown v-model="type" @input="selectedSearchType('TypeId', $event)" url="VisionNextAsset/api/AssetType/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetClassId" :error="$v.form.AssetClassId">
-              <v-select v-model="assetClass" :options="assetClasses" @input="selectedSearchType('AssetClassId', $event)" label="Description1"/>
+              <NextDropdown v-model="assetClass" @input="selectedSearchType('AssetClassId', $event)" url="VisionNextAsset/api/AssetClass/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
-              <v-select :options="trackTypes" @input="selectedSearchType('TrackTypeId', $event)" label="Description1"/>
+              <NextDropdown @input="selectedSearchType('TrackTypeId', $event)" url="VisionNextAsset/api/AssetTrackType/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
@@ -81,7 +62,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -110,23 +90,11 @@ export default {
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['assetClasses', 'types', 'trackTypes'])
   },
   mounted () {
     this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
-    this.getInsertPage(this.routeName)
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetClass/Search', name: 'assetClasses'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetType/Search', name: 'types'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAsset/api/AssetTrackType/Search', name: 'trackTypes'})
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -139,15 +107,7 @@ export default {
       } else {
         this.form.ClassId = this.form.AssetClassId
         this.createData()
-        // update işlemiyse
-        // this.updateData()
       }
-    }
-  },
-  validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
-    return {
-      form: this.insertRules
     }
   }
 }
