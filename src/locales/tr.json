@@ -1969,6 +1969,11 @@
       "ShowDetails": "Detaylar",
       "Branch": "Şube Ekle",
       "BranchCommercialTitle": "Şube Adı"
+    },
+    "PurchaseReturnInvoice": {
+      "ApproveNumber":"Onay Numarası",
+      "Customer": "Müşteri",
+      "Branch":"Şube"
     }
   },
   "auth": {

@@ -166,6 +166,8 @@
          :modalAction="modalAction"
          v-if="showSalesReturnInvoiceConvertModal" />
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
+        <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" />
+
   </b-container>
 </template>
 <script>
@@ -177,6 +179,7 @@ import MultiplePaymentChangeModal from '../../components/Actions/MultiplePayment
 import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoiceConvertModal'
 import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturnInvoiceConvertModal'
 import ItemFormulaModal from '../../components/Actions/ItemFormulaModal'
+import PurchaseReturnInvoiceRmaApproveModal from '../../components/Actions/PurchaseReturnInvoiceRmaApproveModal'
 
 export default {
   components: {
@@ -186,7 +189,8 @@ export default {
     MultiplePaymentChangeModal,
     PurchaseInvoiceConvertModal,
     SalesReturnInvoiceConvertModal,
-    ItemFormulaModal
+    ItemFormulaModal,
+    PurchaseReturnInvoiceRmaApproveModal
   },
   data () {
     return {
@@ -201,11 +205,12 @@ export default {
       showPurchaseWaybillConvertModal: false,
       showPurchaseInvoiceConvertModal: false,
       showSalesReturnInvoiceConvertModal: false,
-      showItemFormulaModal: false
+      showItemFormulaModal: false,
+      showPurchaseReturnInvoiceRmaApproveModal: false
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -290,6 +295,8 @@ export default {
     },
     showMultipleModal (action) {
       this.showItemFormulaModal = false
+      this.showPurchaseReturnInvoiceRmaApproveModal = false
+
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
           type: 'error',
@@ -326,6 +333,12 @@ export default {
         this.showItemFormulaModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'itemFormulaModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseReturnInvoiceRmaApprove') {
+        this.showPurchaseReturnInvoiceRmaApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
         })
         return
       }
