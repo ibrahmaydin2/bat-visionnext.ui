@@ -1311,6 +1311,21 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    cashCardMultipleInsert ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'model': query.item
+      }
+      return axios.post('VisionNextFinance/api/CashCard/Insert', dataQuery, authHeader)
+        .then(res => {
+          return res.data
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     importExcel ({ state, commit }, formData) {
       let dataQuery = {
         'BranchId': state.BranchId,

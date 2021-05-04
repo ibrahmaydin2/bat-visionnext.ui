@@ -391,12 +391,12 @@ export default {
       this.CashCardTypeId = null
     },
     multipleSave () {
+      if (this.cashCards.length < 1) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+      }
       let status = true
       this.cashCards.map(item => {
-        let request = {
-          'model': item
-        }
-        this.$api.postByUrl(request, 'VisionNextFinance/api/CashCard/Insert').then((res) => {
+        this.$store.dispatch('cashCardMultipleInsert', {...this.query, item: item}).then((res) => {
           if (res.IsCompleted === true) {
             item.Status = this.$t('insert.success')
             this.removeCashCard(item)
@@ -405,6 +405,15 @@ export default {
             status = false
           }
         })
+        // this.$api.postByUrl(request, 'VisionNextFinance/api/CashCard/Insert').then((res) => {
+        //   if (res.IsCompleted === true) {
+        //     item.Status = this.$t('insert.success')
+        //     this.removeCashCard(item)
+        //   } else {
+        //     item.Status = res.Message
+        //     status = false
+        //   }
+        // })
       })
       if (status) {
         this.$toasted.show(this.$t('index.success'), {
