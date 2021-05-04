@@ -123,32 +123,9 @@
                 <b-form-input type="text" v-model="customerReminder" :disabled="true"/>
               </b-form-group>
             </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
+            <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
+              <NextCheckBox v-model="form.IsBatcardTransaction" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -179,7 +156,7 @@ export default {
         CardNumber: null,
         RepresentativeId: null,
         RouteId: null,
-        IsBatcardTransaction: null,
+        IsBatcardTransaction: 0,
         SystemCurrencyRate: 0,
         IsManuelClosure: 0
       },

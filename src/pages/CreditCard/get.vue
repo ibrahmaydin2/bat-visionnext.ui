@@ -36,8 +36,8 @@
                 <span><i class="far fa-circle" /> {{$t('get.CreditCard.CardNumber')}}</span> <p>{{rowData.CardNumber}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CreditCard.RepresentativeId')}}</span> <p>{{rowData.Representative && rowData.Representative.Label}}</p>
                 <span><i class="far fa-circle" /> {{$t('get.CreditCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CreditCard.IsBatcardTransaction')}}</span><p><i :class="rowData.IsBatcardTransaction === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
                 <span><i class="far fa-circle" /> {{$t('insert.creditcard.reminder')}}</span> <p>{{customerReminder}}</p>
+                <span><i class="far fa-circle" /> {{$t('get.CreditCard.IsBatcardTransaction')}}</span><p><i :class="rowData.IsBatcardTransaction === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
             </b-card>
           </b-row>
         </b-tab>

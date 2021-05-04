@@ -897,8 +897,6 @@ export default {
         this.totalRowCount = this.tableData.TotalRowCount
         this.totalPageCount = this.tableData.TotalPageCount
         this.perPage = this.tableData.PageRecordCount
-        this.AndConditionalModel = {}
-        searchQ = {}
       }
     },
     filtersCleared: function (e) {
@@ -913,6 +911,8 @@ export default {
           x.defaultValue = undefined
           return x
         })
+        this.AndConditionalModel = {}
+        searchQ = {}
       }
     },
     reloadGrid: function (e) {
