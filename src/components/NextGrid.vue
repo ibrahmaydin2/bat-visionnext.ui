@@ -597,7 +597,7 @@ export default {
     filterDecimal (e, i) {
       this.searchOnTable(e, {value: parseFloat(i)})
     },
-    selectedValue (label, model, type) {
+    selectedValue (label, model, type) {  
       if (model) {
         this.currentPage = 1
         if (!this.AndConditionalModel) {
@@ -897,8 +897,6 @@ export default {
         this.totalRowCount = this.tableData.TotalRowCount
         this.totalPageCount = this.tableData.TotalPageCount
         this.perPage = this.tableData.PageRecordCount
-        this.AndConditionalModel = {}
-        searchQ = {}
       }
     },
     filtersCleared: function (e) {
@@ -913,6 +911,8 @@ export default {
           x.defaultValue = undefined
           return x
         })
+        this.AndConditionalModel = {}
+        searchQ = {}
       }
     },
     reloadGrid: function (e) {
