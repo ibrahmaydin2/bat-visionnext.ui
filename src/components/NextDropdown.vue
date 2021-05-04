@@ -45,6 +45,10 @@ export default {
     dynamicRequest: {},
     source: {
       type: Array
+    },
+    andConditionSearchField: {
+      type: String,
+      default: 'Description1'
     }
   },
   model: {
@@ -115,7 +119,7 @@ export default {
           })
           orConditionModels = [orConditionModel]
         } else {
-          andConditionModel.Description1 = search
+          andConditionModel[this.andConditionSearchField] = search
         }
       }
       loading(true)

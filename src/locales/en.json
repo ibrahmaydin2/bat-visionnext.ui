@@ -395,7 +395,11 @@
     "PurchaseReturnWaybillUpdate": "Alım İade İrsaliyesi Güncelle",
     "DispatchRefDocument": "Diğer İrsaliyeler",
     "DispatchRefDocumentGet": "Diğer İrsaliyeler Görüntüle",
-    "DispatchRefDocumentUpdate": "Diğer İrsaliyeler Güncelle"
+    "DispatchRefDocumentUpdate": "Diğer İrsaliyeler Güncelle",
+    "TerminalMessage": "Mesaj Tanımları",
+    "TerminalMessageGet": "Mesaj Tanımı Görüntüle",
+    "TerminalMessageInsert": "Yeni Mesaj Tanımı",
+    "TerminalMessageUpdate": "Mesaj Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1453,6 +1457,21 @@
       "customerArea": "Müşteri Bölgesi 5",
       "route":"Rota",
       "approveStateId": "Onay Durumu"
+    },
+    "terminalMessage": {
+      "definitions": "Tanımlar",
+      "customerCriterias": "Müşteri Kriterleri",
+      "columnName":"Alan Açıklaması",
+      "columnValue": "Değer",
+      "customerQuery": "Müşteri Sorgusu",
+      "branchs": "Şubeler",
+      "branchCode": "Şube Kodu",
+      "branchName":"Şube Adı",
+      "routes": "Rotalar",
+      "routeCode": "Rota Kodu",
+      "routeName":"Rota Adı",
+      "beginDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi"
     }
   },
   "get": {
