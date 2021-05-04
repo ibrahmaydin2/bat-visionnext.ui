@@ -597,7 +597,7 @@ export default {
     filterDecimal (e, i) {
       this.searchOnTable(e, {value: parseFloat(i)})
     },
-    selectedValue (label, model, type) {  
+    selectedValue (label, model, type) {
       if (model) {
         this.currentPage = 1
         if (!this.AndConditionalModel) {
