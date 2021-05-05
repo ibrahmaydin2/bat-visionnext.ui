@@ -1494,7 +1494,16 @@
       "routeName":"Rota Adı",
       "validDates":"Geçerlilik Tarihleri",
       "beginDate": "Başlangıç Tarihi",
-      "endDate": "Bitiş Tarihi"
+      "endDate": "Bitiş Tarihi",
+      "customerList": "Müşteri Listesi",
+      "customerCode": "Müşteri Kodu",
+      "customerName":"Müşteri Adı",
+      "commercialTitle": "Müşteri Ticari Ünvanı",
+      "location": "Lokasyon",
+      "messageSubject": "Mesaj Başlığı",
+      "messageBody": "Mesaj İçeriği",
+      "messageType": "Mesaj Tipi",
+      "customerCriteria": "Müşteri Kriteri"
     }
   },
   "get": {

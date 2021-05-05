@@ -150,7 +150,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in (form.TerminalMessageDetails ? form.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER') : [])" :key="i">
+                <b-tr v-for="(c, i) in (form.TerminalMessageDetails ? form.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName !== 'RECORD_ID') : [])" :key="i">
                   <b-td>{{c.ColumnNameStr}}</b-td>
                   <b-td>{{c.ColumnValueStr}}</b-td>
                   <b-td class="text-center">
@@ -159,6 +159,55 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+          </b-row>
+        </b-tab>
+         <b-tab :title="$t('insert.terminalMessage.customerList')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.terminalMessage.customerCode')" :error="$v.terminalMessageCustomers.customer" :required="true">
+              <NextDropdown
+                v-model="terminalMessageCustomers.customer"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                searchable
+                label="Code"
+                and-condition-search-field="Code"
+                @input="selectCustomer"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.terminalMessage.customerName')">
+              <b-form-input type="text" v-model="terminalMessageCustomers.customerName" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.terminalMessage.commercialTitle')">
+              <b-form-input type="text" v-model="terminalMessageCustomers.commercialTitle" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.terminalMessage.location')">
+              <b-form-input type="text" v-model="terminalMessageCustomers.locationName" :disabled="true"/>
+            </NextFormGroup>
+            <b-col md="2" class="ml-auto">
+              <b-form-group>
+                <AddDetailButton @click.native="addTerminalMessageCustomer" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-table-simple responsive bordered small>
+                <b-thead>
+                  <b-th><span>{{$t('insert.terminalMessage.customerCode')}}</span></b-th>
+                  <b-th><span>{{$t('insert.terminalMessage.customerName')}}</span></b-th>
+                  <b-th><span>{{$t('insert.terminalMessage.commercialTitle')}}</span></b-th>
+                  <b-th><span>{{$t('insert.terminalMessage.location')}}</span></b-th>
+                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(c, i) in (form.TerminalMessageDetails ? form.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName === 'RECORD_ID') : [])" :key="i">
+                    <b-td>{{c.CustomerCode}}</b-td>
+                    <b-td>{{c.CustomerName}}</b-td>
+                    <b-td>{{c.CommercialTitle}}</b-td>
+                    <b-td>{{c.LocationName}}</b-td>
+                    <b-td class="text-center"><i @click="removeTerminalMessageCustomer(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.customerQuery')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MS'">
@@ -234,7 +283,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/insert'
 export default {
@@ -268,6 +316,12 @@ export default {
         beginDate: null,
         endDate: null
       },
+      terminalMessageCustomers: {
+        customer: null,
+        customerName: null,
+        commercialTitle: null,
+        location: null
+      },
       customerQuery: null,
       selectedMessageType: null,
       selectedCustomerCriteria: null,
@@ -275,7 +329,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['']),
     branchName () {
       return this.terminalMessageBranch ? this.terminalMessageBranch.Description1 : ''
     },
@@ -287,15 +340,6 @@ export default {
     this.createManualCode()
   },
   methods: {
-    setCustomerCriteriaValues (value) {
-      this.customerCriteriaValues = []
-      this.customerCriterias.columnValue = null
-      if (value) {
-        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
-          this.customerCriteriaValues = res.Values
-        })
-      }
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -303,6 +347,15 @@ export default {
         this.tabValidation()
       } else {
         this.createData()
+      }
+    },
+    setCustomerCriteriaValues (value) {
+      this.customerCriteriaValues = []
+      this.customerCriterias.columnValue = null
+      if (value) {
+        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.customerCriteriaValues = res.Values
+        })
       }
     },
     addCustomerCriteria () {
@@ -422,6 +475,14 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
+      if (this.terminalMessageValidDates.endDate < this.terminalMessageValidDates.beginDate) {
+        this.$toasted.show(this.$t('insert.fixedTermCampaign.startDateLessEndDate'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       let item = {
         RecordState: 2,
         StatusId: 1,
@@ -431,11 +492,58 @@ export default {
         EndDate: this.terminalMessageValidDates.endDate
       }
       this.form.TerminalMessageValidDates.push(item)
-      this.terminalMessageValidDates = null
+      this.terminalMessageValidDates = {}
       this.$v.terminalMessageValidDates.$reset()
     },
     removeTerminalMessageValidDate (item) {
       this.form.TerminalMessageValidDates.splice(this.form.TerminalMessageValidDates.indexOf(item), 1)
+    },
+    selectCustomer (value) {
+      this.terminalMessageCustomers.customerName = ''
+      this.terminalMessageCustomers.commercialTitle = ''
+      if (value) {
+        this.terminalMessageCustomers.customerName = value.Description1
+        this.terminalMessageCustomers.commercialTitle = value.CommercialTitle
+        this.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+          if (res && res.Model) {
+            let defaultLocation = res.Model.DefaultLocation
+            if (defaultLocation) {
+              this.terminalMessageCustomers.locationName = defaultLocation.Label
+              this.$forceUpdate()
+            }
+          }
+        })
+      }
+    },
+    addTerminalMessageCustomer () {
+      this.$v.terminalMessageCustomers.$touch()
+      if (this.$v.terminalMessageCustomers.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let filteredArr = this.form.TerminalMessageDetails.filter(i => i.ColumnName === 'RECORD_ID' && i.ColumnValue === this.terminalMessageCustomers.customer.RecordId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
+      this.form.TerminalMessageDetails.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        TableName: 'T_CUSTOMER',
+        ColumnName: 'RECORD_ID',
+        ColumnValue: this.terminalMessageCustomers.customer.RecordId,
+        CustomerCode: this.terminalMessageCustomers.customer.Code,
+        CustomerName: this.terminalMessageCustomers.customerName,
+        CommercialTitle: this.terminalMessageCustomers.commercialTitle,
+        Location: this.terminalMessageCustomers.location
+      })
+      this.terminalMessageCustomers = {}
+      this.$v.terminalMessageCustomers.$reset()
+    },
+    removeTerminalMessageCustomer (item) {
+      this.form.TerminalMessageDetails.splice(this.form.TerminalMessageDetails.indexOf(item), 1)
     }
   },
   validations () {
@@ -474,10 +582,13 @@ export default {
         endDate: {
           required
         }
+      },
+      terminalMessageCustomers: {
+        customer: {
+          required
+        }
       }
     }
-  },
-  watch: {
   }
 }
 </script>
