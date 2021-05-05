@@ -1973,7 +1973,11 @@
     "PurchaseReturnInvoice": {
       "ApproveNumber":"Onay Numarası",
       "Customer": "Müşteri",
-      "Branch":"Şube"
+      "Branch":"Şube",
+      "UsedQuantity": "İade Edilen Miktar",
+      "Quantity": "Talep Edilen İade Miktarı",
+      "Price": "Geri Alış Fiyatı",
+      "Item": "Ürün" 
     }
   },
   "auth": {
