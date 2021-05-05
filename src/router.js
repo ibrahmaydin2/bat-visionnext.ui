@@ -534,6 +534,11 @@ import CreditBudgetGet from '@/pages/CreditBudget/get'
 import CreditBudgetInsert from '@/pages/CreditBudget/insert'
 import CreditBudgetUpdate from '@/pages/CreditBudget/update'
 
+import TerminalMessageIndex from '@/pages/TerminalMessage/'
+import TerminalMessageGet from '@/pages/TerminalMessage/get'
+import TerminalMessageInsert from '@/pages/TerminalMessage/insert'
+import TerminalMessageUpdate from '@/pages/TerminalMessage/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -636,7 +641,8 @@ const listIndex = [
   {path: '/SalesWaybill', name: 'SalesWaybill', component: SalesWaybillIndex, meta: { title: i18n.t('router.SalesWaybill'), createLink: 'SalesWaybillInsert' }},
   {path: '/ServicePurchaseInvoice', name: 'ServicePurchaseInvoice', component: ServicePurchaseInvoiceIndex, meta: { title: i18n.t('router.ServicePurchaseInvoice'), createLink: 'ServicePurchaseInvoiceInsert' }},
   {path: '/DispatchRefDocument', name: 'DispatchRefDocument', component: DispatchRefDocumentIndex, meta: { title: i18n.t('router.DispatchRefDocument') }},
-  {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget') }}
+  {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget') }},
+  {path: '/TerminalMessage', name: 'TerminalMessage', component: TerminalMessageIndex, meta: { title: i18n.t('router.TerminalMessage'), createLink: 'TerminalMessageInsert' }}
 ]
 
 const listGet = [
@@ -739,7 +745,8 @@ const listGet = [
   { path: '/SalesWaybill/:url', name: 'SalesWaybillGet', component: SalesWaybillGet, meta: { title: i18n.t('router.SalesWaybillGet'), baseLink: 'SalesWaybill' } },
   { path: '/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceGet', component: ServicePurchaseInvoiceGet, meta: { title: i18n.t('router.ServicePurchaseInvoiceGet'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/DispatchRefDocument/:url', name: 'DispatchRefDocumentGet', component: DispatchRefDocumentGet, meta: { title: i18n.t('router.DispatchRefDocumentGet'), baseLink: 'DispatchRefDocument' } },
-  { path: '/CreditBudget/:url', name: 'CreditBudgetGet', component: CreditBudgetGet, meta: { title: i18n.t('router.CreditBudgetGet'), baseLink: 'CreditBudget' } }
+  { path: '/CreditBudget/:url', name: 'CreditBudgetGet', component: CreditBudgetGet, meta: { title: i18n.t('router.CreditBudgetGet'), baseLink: 'CreditBudget' } },
+  { path: '/TerminalMessage/:url', name: 'TerminalMessageGet', component: TerminalMessageGet, meta: { title: i18n.t('router.TerminalMessageGet'), baseLink: 'TerminalMessage' } }
 ]
 
 const listUpdate = [
@@ -841,7 +848,8 @@ const listUpdate = [
   { path: '/Copy/SalesWaybill/:url', name: 'SalesWaybillCopy', component: SalesWaybillCopy, meta: { title: i18n.t('router.SalesWaybillCopy'), baseLink: 'SalesWaybill' } },
   { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } },
-  { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } }
+  { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } },
+  { path: '/Update/TerminalMessage/:url', name: 'TerminalMessageUpdate', component: TerminalMessageUpdate, meta: { title: i18n.t('router.TerminalMessageUpdate'), baseLink: 'TerminalMessage' } }
 ]
 
 const listInsert = [
@@ -941,7 +949,8 @@ const listInsert = [
   { path: '/Insert/OverDueDebitSearch', name: 'OverDueDebitSearchInsert', component: OverDueDebitSearchInsert, meta: { title: i18n.t('router.OverDueDebitSearchInsert'), baseLink: 'OverDueDebitSearch' } },
   { path: '/Insert/SalesWaybill', name: 'SalesWaybillInsert', component: SalesWaybillInsert, meta: { title: i18n.t('router.SalesWaybillInsert'), baseLink: 'SalesWaybill' } },
   { path: '/Insert/ServicePurchaseInvoice', name: 'ServicePurchaseInvoiceInsert', component: ServicePurchaseInvoiceInsert, meta: { title: i18n.t('router.ServicePurchaseInvoiceInsert'), baseLink: 'ServicePurchaseInvoice' } },
-  { path: '/Insert/CreditBudget', name: 'CreditBudgetInsert', component: CreditBudgetInsert, meta: { title: i18n.t('router.CreditBudgetInsert'), baseLink: 'CreditBudget' } }
+  { path: '/Insert/CreditBudget', name: 'CreditBudgetInsert', component: CreditBudgetInsert, meta: { title: i18n.t('router.CreditBudgetInsert'), baseLink: 'CreditBudget' } },
+  { path: '/Insert/TerminalMessage', name: 'TerminalMessageInsert', component: TerminalMessageInsert, meta: { title: i18n.t('router.TerminalMessageInsert'), baseLink: 'TerminalMessage' } }
 ]
 
 const routes = [
