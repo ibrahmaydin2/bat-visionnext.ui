@@ -83,6 +83,15 @@ export default {
 
       return this.types
     },
+    getInvoiceClassTypes () {
+      this.types = [
+        {
+          id: 6,
+          label: 'Alım İade Faturası'
+        }
+      ]
+      return this.types
+    },
     dateConvertToISo: function (date) {
       if (!date || typeof date === 'undefined') {
         return ''
