@@ -856,6 +856,7 @@ export const store = new Vuex.Store({
     getAutoGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
       let dataQuery = {
         'AndConditionModel': query.model ? query.model : {},
+        'OrConditionModels': query.orConditionModels ? query.orConditionModels : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 100,
