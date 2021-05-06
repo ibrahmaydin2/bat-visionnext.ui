@@ -1883,9 +1883,9 @@ export default {
         if (!value.UpperValue) {
           return
         }
-        this.Category2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Label === value.UpperValue)
+        this.Category2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
         this.form.Category2Id = this.Category2.DecimalValue
-        this.Category1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Label === this.Category2.UpperValue)
+        this.Category1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.Category2.UpperValue)
         this.form.Category1Id = this.Category1.DecimalValue
       } else {
         this.Category1 = null
