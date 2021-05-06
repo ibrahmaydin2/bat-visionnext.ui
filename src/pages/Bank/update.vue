@@ -18,7 +18,7 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
+           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3" >
               <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
            </NextFormGroup>
            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="3" lg="3">
@@ -37,17 +37,17 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
-            <NextFormGroup :title="$t('insert.bank.branchCode')" md="3" lg="2">
-              <b-form-input type="text" v-model="bankBranches.Code" />
+            <NextFormGroup :title="$t('insert.bank.branchCode')" md="3" lg="2" :error="$v.bankBranches.Code" :required="true">
+              <b-form-input type="text" v-model="bankBranches.Code" disabled/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.bank.description1')" md="3" lg="2">
+            <NextFormGroup :title="$t('insert.bank.description1')" md="3" lg="2" :error="$v.bankBranches.Description1" :required="true">
               <b-form-input type="text" v-model="bankBranches.Description1" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.bank.financeCode')" md="3" lg="2">
               <b-form-input type="text" v-model="bankBranches.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.bank.defaultAccountNumber')" md="3" lg="2">
-              <b-form-input type="text" v-model="bankBranches.DefaultAccountNumber" />
+              <b-form-input type="number" v-model="bankBranches.DefaultAccountNumber" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.bank.isDefaultBranch')" md="3" lg="2">
               <NextCheckBox v-model="bankBranches.IsDefaultBranch" type="number" toggle />
@@ -61,6 +61,7 @@
           <b-row v-if="form.BankBranches.length > 0">
             <b-table-simple responsive bordered small>
               <b-thead>
+                <b-th><span>{{$t('insert.bank.branchCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.bank.description1')}}</span></b-th>
                 <b-th><span>{{$t('insert.bank.financeCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.bank.defaultAccountNumber')}}</span></b-th>
@@ -68,6 +69,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in (form.BankBranches ? form.BankBranches.filter(b => b.RecordState != 4) : [])" :key="i">
+                  <b-td>{{r.Code}}</b-td>
                   <b-td>{{r.Description1}}</b-td>
                   <b-td>{{r.FinanceCode}}</b-td>
                   <b-td>{{r.DefaultAccountNumber}}</b-td>
@@ -85,6 +87,7 @@
   </b-row>
 </template>
 <script>
+import { required } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/update'
 export default {
   mixins: [mixin],
@@ -130,14 +133,19 @@ export default {
       }
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
         this.updateData()
       }
     },
     addDetailList () {
+      this.$v.bankBranches.$touch()
+      if (this.$v.bankBranches.$error) {
+        this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.requiredFields') })
+        return
+      }
       this.form.BankBranches.push({
         Code: this.bankBranches.Code,
         Description1: this.bankBranches.Description1,
@@ -148,11 +156,25 @@ export default {
         StatusId: 1
       })
       this.bankBranches = {
-        Code: this.bankBranches.Code++
+        Code: `${this.form.Code} - ${this.form.BankBranches.length ? this.form.BankBranches.length + 1 : 1}`
       }
+      this.$v.bankBranches.$reset()
     },
     removeBankBranch (item) {
       this.form.BankBranches[this.form.BankBranches.indexOf(item)].RecordState = 4
+    }
+  },
+  validations () {
+    return {
+      form: this.insertRules,
+      bankBranches: {
+        Code: {
+          required
+        },
+        Description1: {
+          required
+        }
+      }
     }
   }
 }

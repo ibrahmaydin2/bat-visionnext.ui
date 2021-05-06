@@ -900,19 +900,23 @@ export default {
       }
     },
     filtersCleared: function (e) {
-      if (e === true && this.lastGridItem && this.lastGridItem.BaseModels) {
-        this.currentPage = this.lastGridItem.CurrentPage
-        this.items = this.lastGridItem.BaseModels
-        this.totalRowCount = this.lastGridItem.TotalRowCount
-        this.totalPageCount = this.lastGridItem.TotalPageCount
-        this.perPage = this.lastGridItem.PageRecordCount
-        this.$store.commit('changeFiltersCleared', false)
+      if (e === true) {
+        this.AndConditionalModel = {}
+        searchQ = {}
         this.head = this.head.map(x => {
           x.defaultValue = undefined
           return x
         })
-        this.AndConditionalModel = {}
-        searchQ = {}
+        if (this.lastGridItem && this.lastGridItem.BaseModels) {
+          this.currentPage = this.lastGridItem.CurrentPage
+          this.items = this.lastGridItem.BaseModels
+          this.totalRowCount = this.lastGridItem.TotalRowCount
+          this.totalPageCount = this.lastGridItem.TotalPageCount
+          this.perPage = this.lastGridItem.PageRecordCount
+        } else {
+          this.searchOnTable()
+        }
+        this.$store.commit('changeFiltersCleared', false)
       }
     },
     reloadGrid: function (e) {
