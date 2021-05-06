@@ -399,7 +399,13 @@
     "TerminalMessage": "Mesaj Tanımları",
     "TerminalMessageGet": "Mesaj Tanımı Görüntüle",
     "TerminalMessageInsert": "Yeni Mesaj Tanımı",
-    "TerminalMessageUpdate": "Mesaj Tanımı Güncelle"
+    "TerminalMessageUpdate": "Mesaj Tanımı Güncelle",
+    "RouteDailyRecord": "Günlük Performans Takibi",
+    "RouteDailyRecordGet": "Günlük Performans Takibi Görüntüle",
+    "Label": "Etiket Tanımları",
+    "LabelGet": "Etiket Tanımı Görüntüle",
+    "LabelInsert": "Yeni Etiket Tanımı",
+    "LabelUpdate": "Etiket Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -456,6 +462,10 @@
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+    "Label": {
+      "Code":"Kod",
+      "Description1": "Açıklama"
+    },
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1883,6 +1893,24 @@
       "assetClass": "Sınıf",
       "trackType": "İzleme Tipi",
       "barcode": "Barkod"
+    },
+    "RouteDailyRecord": {
+      "Code": "Kod",
+      "Description": "Açıklama",
+      "Status": "Durum",
+      "Representative": "Personel",
+      "Vehicle": "Araç",
+      "Route": "Rota",
+      "RouteCancelReason": "Rota İptal Nedeni",
+      "RouteDate": "Rota Tarihi",
+      "RouteStartTime": "Rota Başlangıç Tarihi",
+      "RouteEndTime": "Rota Bitiş Tarihi",
+      "SalesCount": "Satış Adeti",
+      "SalesTotal": "Satış Toplamı",
+      "StartKm": "Başlangıç Kilometresi",
+      "EndKm": "Bitiş Kilometresi",
+      "SuccessVisitCount": "Başarılı Ziyaret Sayısı",
+      "PlannedVisitCount": "Planlanan Ziyaret Sayısı"
     }
   },
 
