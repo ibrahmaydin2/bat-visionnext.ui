@@ -110,8 +110,8 @@ export default {
       this.formActions = res.RowActions
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
+        this.$set(this.form, fieldName, item.DefaultValue)
         if (item.Visible) {
-          this.$set(this.form, fieldName, null)
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
 
