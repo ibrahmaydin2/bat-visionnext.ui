@@ -15,7 +15,7 @@
           <b-form-input type="text" v-model="form.DocumentNumber" />
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.Employee')" md="4" lg="4">
-          <v-select :value="employee" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+          <v-select :value="employee" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
             <template slot="no-options">
               {{$t('insert.min3')}}
             </template>

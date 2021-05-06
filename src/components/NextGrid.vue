@@ -36,6 +36,7 @@
                     @blur="disabledDraggable = false"
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
+                    ref="AutoCompleteDropdown"
                   />
                 </div>
                 <div v-else>
@@ -903,6 +904,12 @@ export default {
       if (e === true) {
         this.AndConditionalModel = {}
         searchQ = {}
+        let autoCompleteDropdowns = this.$refs.AutoCompleteDropdown
+        if (autoCompleteDropdowns && autoCompleteDropdowns.length > 0) {
+          autoCompleteDropdowns.forEach(a => {
+            a.value = ''
+          })
+        }
         this.head = this.head.map(x => {
           x.defaultValue = undefined
           return x

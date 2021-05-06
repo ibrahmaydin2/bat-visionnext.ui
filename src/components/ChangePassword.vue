@@ -6,43 +6,33 @@
     <b-col cols="12" md="6">
       <b-row>
         <b-col class="text-right" cols="3">
-          E-Posta Adresi
-        </b-col>
-        <b-col class="text-left" cols="6">
-          <b-form-group>
-            <b-form-input v-model="Email" readonly type="email" placeholder="Aktif E-Posta Adresiniz" />
-          </b-form-group>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col class="text-right" cols="3">
-          Eski Şifre
+          {{$t('insert.settings.oldPassword')}}
         </b-col>
         <b-col class="text-left" cols="6">
           <b-form-group :class="{ 'form-group--error': $v.OldPassword.$error }">
-            <b-form-input v-model.trim="$v.OldPassword.$model" type="password" placeholder="Eski Şifreniz" />
+            <b-form-input v-model.trim="$v.OldPassword.$model" type="password" :placeholder="$t('insert.settings.yourOldPassword')" />
           </b-form-group>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="text-right" cols="3">
-          Yeni Şifre
+          {{$t('insert.settings.newPassword')}}
         </b-col>
         <b-col class="text-left" cols="6">
           <b-form-group :class="{ 'form-group--error': $v.NewPassword.$error }">
-            <b-form-input  v-model.trim="$v.NewPassword.$model" type="password" placeholder="Yeni Şifreniz" />
-            <div class="error" v-if="!$v.NewPassword.minLength">Şifreniz en az {{ $v.NewPassword.$params.minLength.min }} karakter olmalıdır.</div>
+            <b-form-input  v-model.trim="$v.NewPassword.$model" type="password" :placeholder="$t('insert.settings.yourNewPassword')" />
+            <div class="error" v-if="!$v.NewPassword.minLength">{{$t('insert.settings.passwordMinMessage').replace('{0}',$v.NewPassword.$params.minLength.min)}}</div>
           </b-form-group>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="text-right" cols="3">
-          Yeni Şifre Tekrar
+           {{$t('insert.settings.newPasswordAgain')}}
         </b-col>
         <b-col class="text-left" cols="6">
           <b-form-group :class="{ 'form-group--error': $v.NewPasswordRe.$error }">
-            <b-form-input v-model.trim="$v.NewPasswordRe.$model" type="password" placeholder="Yeni Şifrenizi Tekrar Girin" />
-            <div class="error" v-if="!$v.NewPasswordRe.sameAsPassword">Şifreler Eşleşmiyor...</div>
+            <b-form-input v-model.trim="$v.NewPasswordRe.$model" type="password" :placeholder="$t('insert.settings.yourNewPasswordAgain')" />
+            <div class="error" v-if="!$v.NewPasswordRe.sameAsPassword">{{$t('insert.settings.passwordsDoesNotMatch')}}</div>
           </b-form-group>
         </b-col>
       </b-row>
@@ -51,7 +41,7 @@
         </b-col>
         <b-col class="text-left" cols="6">
           <b-form-group class="text-right">
-            <b-btn @click="changeIt" variant="success">Şifremi Değiştir</b-btn>
+            <b-btn @click="changeIt" variant="success">{{$t('nav.changePassword')}}</b-btn>
           </b-form-group>
         </b-col>
       </b-row>
@@ -70,19 +60,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loginUser']),
-    Email () {
-      return this.loginUser.email
-    }
+    ...mapState(['loginUser'])
 
   },
   methods: {
     changeIt () {
       this.$v.$touch()
       if (this.$v.$error) {
-        this.$toasted.show('Zorunlu alanları doldurun', {type: 'error', keepOnHover: true, duration: '3000'})
+        this.$toasted.show(this.$t('insert.requiredFields'), {type: 'error', keepOnHover: true, duration: '3000'})
       } else {
-        this.$store.dispatch('changePassword', {...this.authData, Email: this.Email, OldPassword: this.OldPassword, NewPassword: this.NewPassword})
+        this.$store.dispatch('changePassword', {OldPassword: this.OldPassword, NewPassword: this.NewPassword})
       }
     }
   },

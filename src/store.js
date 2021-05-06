@@ -33,7 +33,7 @@ var checkSearchObject = function (obj) {
       }
     })
     pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
-    return !isList ? obj : obj ? [obj] : []
+    return !isList ? obj : obj && Object.keys(obj).length > 0 ? [obj] : []
   } else {
     pagerecordCount = 50
     return undefined
@@ -334,14 +334,13 @@ export const store = new Vuex.Store({
     },
     changePassword ({ commit }, authData) {
       return axios.post('VisionNextAuthentication/api/Authentication/ChangePassword', {
-        Email: authData.Email,
-        OldPassword: authData.OldPassword,
-        NewPassword: authData.NewPassword,
-        CuaAuthKey: user.CuaKey
-      })
+        ...authCompanyAndBranch,
+        ...authData
+
+      }, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('showAlert', { type: 'success', msg: 'Şifreniz Değiştirildi.' })
+            commit('showAlert', { type: 'success', msg: i18n.t('general.changedPasswordMessage') })
             setTimeout(() => {
               router.push({name: 'Dashboard'})
             }, 1000)

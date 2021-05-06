@@ -47,7 +47,7 @@
           <b-row>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select v-model="CustomerId" :options="customers"  @search="onCustomerSearch" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+                <v-select v-model="CustomerId" :options="customers" @search="onCustomerSearch" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -79,7 +79,7 @@
             </b-col>
             <b-col v-if="insertVisible.BankId != null ? insertVisible.BankId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.BankId + (insertRequired.BankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BankId.$error }">
-                <v-select v-model="BankId" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1">
+                <v-select v-model="BankId" :options="banks" @search="onBankSearch" @input="selectedSearchType('BankId', $event)" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -98,7 +98,7 @@
             </b-col>
             <b-col v-if="insertVisible.CustomerBankId != null ? insertVisible.CustomerBankId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CustomerBankId + (insertRequired.CustomerBankId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerBankId.$error }">
-                <v-select v-model="CustomerBankId" :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1">
+                <v-select v-model="CustomerBankId" :options="customerBanks" @search="onCustomerBankSearch" @input="selectedSearchType('CustomerBankId', $event)" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>

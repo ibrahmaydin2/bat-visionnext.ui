@@ -135,7 +135,7 @@
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedOrderLine.selectedItem" :required="true" md="2" lg="2">
-              <v-select v-model="selectedOrderLine.selectedItem" :options="items" @search="searchItems" label="Description1" @input="selectItem">
+              <v-select v-model="selectedOrderLine.selectedItem" :options="items" @search="searchItems" label="Description1" @input="selectItem" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
