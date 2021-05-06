@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
              <NextFormGroup :title="$t('insert.vanLoading.items')" :required="true" :error="$v.vanLoadingItem.Item" md="3">
-               <v-select v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="searchItem" @input="selectedItem" label="Description1">
+               <v-select v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="searchItem" @input="selectedItem($event)" label="Description1">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -113,7 +113,10 @@
                     <b-td>{{r.LastdaySalesQuantity}}</b-td>
                     <b-td>{{r.SuggestedQuantity}}</b-td>
                     <b-td>{{r.LoadingQuantity}}</b-td>
-                    <b-td class="text-center"><i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <i @click="editVanLoadingItems(r)" class="fa fa-edit text-warning"></i>
+                      <i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -169,7 +172,8 @@ export default {
         RecordId: null,
         Item: null
       },
-      detailPanelRecordId: null
+      detailPanelRecordId: null,
+      selectedIndex: 0
     }
   },
   computed: {
@@ -224,7 +228,7 @@ export default {
         loading(false)
       })
     },
-    selectedItem (e) {
+    selectedItem (e, loadingQuantity) {
       if (e) {
         const datas = {
           'routeId': this.form.RouteId,
@@ -234,37 +238,34 @@ export default {
         }
         this.detailPanelRecordId++
         this.$api.post(datas, 'Item', 'Item/GetItemSearchForVanLoading').then((res) => {
+          this.vanLoadingItem.ItemId = e.RecordId
+          this.vanLoadingItem.Description1 = e.Description1
+          this.vanLoadingItem.unitId = e.UnitId
+          this.vanLoadingItem.unitSetId = e.UnitSetId
+          this.vanLoadingItem.RecordId = this.detailPanelRecordId
+          if (loadingQuantity >= 0) {
+            this.vanLoadingItem.IsUpdated = true
+          }
           if (res.Model) {
-            this.vanLoadingItem = {
-              Description1: e.Description1,
-              unitId: e.UnitId,
-              FromWhStockQuantity: e.FromWhStockQuantity,
-              ToWhStockQuantity: e.ToWhStockQuantity,
-              AverageSalesQuantity: e.AverageSalesQuantity,
-              LastSalesQuantity: e.LastSalesQuantity,
-              LastdaySalesQuantity: e.LastdaySalesQuantity,
-              SuggestedQuantity: e.SuggestedQuantity,
-              ItemId: e.RecordId,
-              LoadingQuantity: this.vanLoadingItem.LoadingQuantity,
-              unitSetId: e.UnitSetId,
-              ConvFact1: e.ConvFact1,
-              ConvFact2: e.ConvFact2,
-              RecordId: this.detailPanelRecordId
-            }
+            this.vanLoadingItem.FromWhStockQuantity = res.Model.FromWhStockQuantity
+            this.vanLoadingItem.ToWhStockQuantity = res.Model.ToWhStockQuantity
+            this.vanLoadingItem.AverageSalesQuantity = res.Model.AverageSalesQuantity
+            this.vanLoadingItem.LastSalesQuantity = res.Model.LastSalesQuantity
+            this.vanLoadingItem.LastdaySalesQuantity = res.Model.LastdaySalesQuantity
+            this.vanLoadingItem.SuggestedQuantity = res.Model.SuggestedQuantity
+            this.vanLoadingItem.LoadingQuantity = loadingQuantity >= 0 ? loadingQuantity : res.Model.LoadingQuantity
+            this.vanLoadingItem.ConvFact1 = res.Model.ConvFact1
+            this.vanLoadingItem.ConvFact2 = res.Model.ConvFact2
           } else {
-            this.vanLoadingItem.ItemId = e.RecordId
-            this.vanLoadingItem.Description1 = e.Description1
-            this.vanLoadingItem.unitId = e.UnitId
-            this.vanLoadingItem.unitSetId = e.UnitSetId
             this.vanLoadingItem.FromWhStockQuantity = 0
             this.vanLoadingItem.ToWhStockQuantity = 0
             this.vanLoadingItem.AverageSalesQuantity = 0
             this.vanLoadingItem.LastSalesQuantity = 0
             this.vanLoadingItem.LastdaySalesQuantity = 0
             this.vanLoadingItem.SuggestedQuantity = 0
-            this.vanLoadingItem.LoadingQuantity = 0
-            this.vanLoadingItem.RecordId = this.detailPanelRecordId
+            this.vanLoadingItem.LoadingQuantity = loadingQuantity >= 0 ? loadingQuantity : 0
           }
+          this.$forceUpdate()
         })
       }
     },
@@ -278,7 +279,13 @@ export default {
         })
         return false
       }
-      this.VanLoadingItems.push(this.vanLoadingItem)
+      this.vanLoadingItems.LoadingQuantity = this.vanLoadingItems.LoadingQuantity ? parseInt(this.vanLoadingItems.LoadingQuantity) : 0
+      if (this.vanLoadingItem.IsUpdated) {
+        this.VanLoadingItems[this.selectedIndex] = this.vanLoadingItem
+        this.selectedIndex = 0
+      } else {
+        this.VanLoadingItems.push(this.vanLoadingItem)
+      }
       this.initNullVanLoadingItem()
       this.$v.vanLoadingItem.$reset()
     },
@@ -306,6 +313,21 @@ export default {
     },
     removeVanLoadingItems (item) {
       this.VanLoadingItems.splice(this.VanLoadingItems.indexOf(item), 1)
+    },
+    editVanLoadingItems (item) {
+      let request = {
+        andConditionModel: {
+          RecordIds: [item.ItemId]
+        }
+      }
+      this.$api.post(request, 'Item', 'Item/AutoCompleteSearch').then((res) => {
+        if (res.ListModel && res.ListModel.BaseModels) {
+          this.vanLoadingItem.Item = res.ListModel.BaseModels[0]
+          this.selectedIndex = this.VanLoadingItems.indexOf(item)
+          let loadingQuantity = item.LoadingQuantity ? parseInt(item.LoadingQuantity) : 0
+          this.selectedItem(this.vanLoadingItem.Item, loadingQuantity)
+        }
+      })
     },
     save () {
       this.$v.form.$touch()

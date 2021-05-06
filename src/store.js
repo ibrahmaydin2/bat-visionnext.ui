@@ -33,7 +33,7 @@ var checkSearchObject = function (obj) {
       }
     })
     pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
-    return !isList ? obj : obj ? [obj] : []
+    return !isList ? obj : obj && Object.keys(obj).length > 0 ? [obj] : []
   } else {
     pagerecordCount = 50
     return undefined
