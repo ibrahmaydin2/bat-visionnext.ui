@@ -37,7 +37,14 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                     ref="AutoCompleteDropdown"
-                  />
+                  >
+                    <template #result="{ result, props }">
+                      <li v-bind="props">
+                        <span v-if="result.Code">{{`${result.Code} - ${result.Description1}`}}</span>
+                        <span v-if="!result.Code">{{result.Description1}}</span>
+                      </li>
+                    </template>
+                  </autocomplete>
                 </div>
                 <div v-else>
                   <v-select
@@ -626,10 +633,13 @@ export default {
       }
       if (input.length < 3) { return [] }
       let pagerecordCount = 10
-      const andConditionModel = input === '%%%' ? {} : {
-        Description1: input.replaceAll('%', '')
-      }
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel, pagerecordCount: pagerecordCount}).then((res) => {
+      const orConditionModels = input === '%%%' ? [] : [
+        {
+          Description1: input.replaceAll('%', ''),
+          Code: input.replaceAll('%', '')
+        }
+      ]
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount}).then((res) => {
         return res
       })
     },
