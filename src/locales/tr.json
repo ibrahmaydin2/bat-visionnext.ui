@@ -1504,6 +1504,16 @@
       "messageBody": "Mesaj İçeriği",
       "messageType": "Mesaj Tipi",
       "customerCriteria": "Müşteri Kriteri"
+    },
+    "settings": {
+      "oldPassword": "Eski Şifre",
+      "yourOldPassword": "Eski Şifreniz",
+      "newPassword": "Yeni Şifre",
+      "yourNewPassword": "Yeni Şifreniz",
+      "passwordMinMessage": "Şifreniz en az {0} karakter olmalıdır.",
+      "newPasswordAgain": "Yeni Şifre Tekrar",
+      "yourNewPasswordAgain": "Yeni Şifrenizi Tekrar Girin",
+      "passwordsDoesNotMatch": "Şifreler Eşleşmiyor..."
     }
   },
   "get": {
@@ -1898,7 +1908,8 @@
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
-    "noRecord": "Uygun kayıt bulunamadı!"
+    "noRecord": "Uygun kayıt bulunamadı!",
+    "changedPasswordMessage": "Şifreniz Değiştirildi."
   },
   "index": {
     "today": "Bugün",
