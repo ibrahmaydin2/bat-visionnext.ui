@@ -520,7 +520,7 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
-          if (Object.keys(query.andConditionalModel).length === 0 && Object.keys(query.search).length === 0) {
+          if (Object.keys(query.andConditionalModel).length === 0 && (!query.search || Object.keys(query.search).length === 0)) {
             commit('setLastGridItem', res.data.ListModel)
           }
           commit('hideAlert')
