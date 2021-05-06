@@ -60,7 +60,10 @@ export default {
   .vs__selected-options
     height: 24px !important
     overflow: hidden
-    width: max-content
+    min-width: max-content
+  .vs__dropdown-menu
+    overflow: hidden
+    min-width: max-content
   .vs--disabled .vs__clear,
   .vs--disabled .vs__dropdown-toggle,
   .vs--disabled .vs__open-indicator,
