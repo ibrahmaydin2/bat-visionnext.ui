@@ -17,7 +17,7 @@
           </b-button>
         </b-col>
       </b-row>
-      <b-row class="mt-2">
+      <b-row class="mt-2" v-if="showInvoiceLines">
         <b-col>
           <b-table
             v-if="invoiceLines"
@@ -48,18 +48,18 @@
         </b-col>
       </b-row>
     </section>
-    <section>
+    <section v-if="showRmaLines">
       <b-row>
-        <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
-          <b-form-input type="text" v-model="form.Code" readonly />
+        <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4" :error="$v.form.InvoiceNumber">
+          <b-form-input type="text" v-model="form.InvoiceNumber" readonly />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4" :error="$v.form.DocumentNumber">
           <b-form-input type="text" v-model="form.DocumentNumber" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.InvoiceTypeId" :required="false" md="4" lg="4">
-          <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('InvoiceTypeId', $event)"></v-select>
+        <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.DocumentClassId" :required="false" md="4" lg="4">
+          <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('DocumentClassId', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4" :error="$v.form.Warehouse">
           <NextDropdown
             url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
             @input="selectedWarehouse"
@@ -125,10 +125,10 @@ export default {
     return {
       approveNumber: null,
       form: {
-        Code: null,
+        InvoiceNumber: null,
         DocumentNumber: null,
         Warehouse: null,
-        InvoiceTypeId: null
+        DocumentClassId: null
       },
       invoiceType: null,
       invoiceTypes: [],
@@ -178,17 +178,29 @@ export default {
           sortable: true
         },
         {
-          key: 'NetPrice',
-          label: this.$t('index.PurchaseReturnInvoice.NetPrice'),
+          key: 'Price',
+          label: this.$t('index.PurchaseReturnInvoice.Price'),
           sortable: true
         }
-      ]
+      ],
+      showInvoiceLines: false,
+      showRmaLines: false,
+      rmaDetail: []
     }
   },
   validations () {
     return {
       form: {
-        InvoiceTypeId: {
+        DocumentClassId: {
+          required
+        },
+        InvoiceNumber: {
+          required
+        },
+        DocumentNumber: {
+          required
+        },
+        Warehouse: {
           required
         }
       }
@@ -213,6 +225,13 @@ export default {
         this.employee = null
       }
     },
+    selectedWarehouse (e) {
+      if (e) {
+        this.form.Warehouse = e.RecordId
+      } else {
+        this.form.Warehouse = null
+      }
+    },
     closeModal () {
       this.close()
     },
@@ -220,7 +239,8 @@ export default {
       this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
     },
     search () {
-      // this.$store.state.BranchId = 1
+      this.showInvoiceLines = false
+      this.showRmaLines = false
       this.tableBusy = true
       let request = {}
       if (this.approveNumber) {
@@ -232,6 +252,7 @@ export default {
         this.tableBusy = false
         if (res.IsCompleted) {
           this.invoiceLines = res.ListModel.BaseModels
+          this.showInvoiceLines = true
         } else {
           this.$toasted.show(res.Message, {
             type: 'error',
@@ -242,13 +263,19 @@ export default {
       })
     },
     onRowSelected (item) {
-      // this.$store.state.BranchId = 6
+      this.showRmaLines = false
       let request = {
         'recordId': item[0].RecordId
       }
       this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnInvoice/ReceiveRmaDetail').then((res) => {
         if (res.IsCompleted) {
+          this.$api.postByUrl({}, 'VisionNextInvoice/api/PurchaseReturnInvoice/GetCode').then((res) => {
+            this.form.InvoiceNumber = res.Model.Code
+          })
+          this.invoiceTypes = this.getInvoiceClassTypes()
           this.rmaLines = res.Model.RmaLines
+          this.rmaDetail = res.Model
+          this.showRmaLines = true
         } else {
           this.$toasted.show(res.Message, {
             type: 'error',
@@ -269,8 +296,8 @@ export default {
         return
       }
       let checkQuantity = false
-      this.orderLines.map(item => {
-        if (item.ConversionQuantity > 0) {
+      this.rmaLines.map(item => {
+        if (item.UsedQuantity > 0) {
           checkQuantity = true
         }
       })
@@ -282,14 +309,15 @@ export default {
         })
         return
       }
-      if (this.form.documentDate) {
-        this.getConvertData.DocumentDate = this.dateConvertToISo(this.form.documentDate)
-      }
+      this.rmaDetail.InvoiceNumber = this.form.InvoiceNumber
+      this.rmaDetail.DocumentNumber = this.form.DocumentNumber
+      this.rmaDetail.WarehouseId = this.form.Warehouse
+      this.rmaDetail.DocumentClassId = this.form.DocumentClassId
+      this.rmaDetail.RmaLines = this.rmaLines
       let request = {
-        'recordId': this.modalItem.RecordId,
-        'orderConvertModel': this.getConvertData
+        model: this.rmaDetail
       }
-      this.$api.postByUrl(request, 'VisionNextOrder/api/Order/ConvertOrder').then((res) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnWaybill/ReceiveRmaAprrove').then((res) => {
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
