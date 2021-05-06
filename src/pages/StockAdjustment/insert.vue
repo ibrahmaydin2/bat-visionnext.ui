@@ -43,7 +43,7 @@
           </b-col>
           <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-              <v-select v-model="selectedRepresentative" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select v-model="selectedRepresentative" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -89,7 +89,7 @@
           <b-row>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.BranchStockTransfer.ItemCode')">
-                <v-select v-model="item" :options="items" @search="onItemsSearch" @input="selectedItem" label="Description1">
+                <v-select v-model="item" :options="items" @search="onItemsSearch" @input="selectedItem" label="Description1" :filterable="false">
                   <template v-slot:option="option">
                     {{option.Code + ' - ' + option.Description1}}
                   </template>

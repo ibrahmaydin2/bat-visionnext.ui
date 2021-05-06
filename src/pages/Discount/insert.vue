@@ -263,7 +263,7 @@
         <b-tab :title="$t('insert.discount.discountCustomers')" v-if="customerTabValid" @click="DiscountCustomersValid()">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountCustomer.CustomerId" :required="!customerValid">
-              <v-select v-model="customer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid'>
+              <v-select v-model="customer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid' :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -313,7 +313,7 @@
         <b-tab :title="$t('insert.discount.discountExcludedCustomers')" @click="DiscountCustomersValid()">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountExcludedCustomer.CustomerId" :required="!customerValid">
-              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid'>
+              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid' :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -396,7 +396,7 @@
         <b-tab :title="$t('insert.discount.branchs')" v-if="branchTabValid">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="branchTabValid">
-              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" label="Code">
+              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -433,7 +433,7 @@
         <b-tab :title="$t('insert.discount.routes')" v-if="routeTabValid">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.routeCode')" :error="$v.discountDetailsRoute.RouteId" :required="routeTabValid">
-              <v-select :disabled='!form.RouteCriteriaId' v-model="route" :options="routes" @search="searchRoute" label="Code">
+              <v-select :disabled='!form.RouteCriteriaId' v-model="route" :options="routes" @search="searchRoute" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>

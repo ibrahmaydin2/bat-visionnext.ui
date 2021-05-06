@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
             <NextFormGroup :title="$t('insert.vanLoading.items')" :required="true" :error="$v.vanLoadingItems.Item" md="3">
-               <v-select v-model="vanLoadingItems.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="onItemSearch" @input="selectedItem($event)" label="Description1">
+               <v-select v-model="vanLoadingItems.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="onItemSearch" @input="selectedItem($event)" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
