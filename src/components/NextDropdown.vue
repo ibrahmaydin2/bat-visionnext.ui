@@ -4,7 +4,8 @@
       {{$t('insert.min3')}}
     </template>
     <template v-slot:option="option" v-if="customOption">
-      {{option.Code + ' - ' + option.Description1}}
+      <span v-if="isCustomer">{{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}</span>
+      <span v-if="!isCustomer">{{option.Code + ' - ' + option.Description1}}</span>
     </template>
   </v-select>
 </template>
@@ -49,6 +50,10 @@ export default {
     andConditionSearchField: {
       type: String,
       default: 'Description1'
+    },
+    isCustomer: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
