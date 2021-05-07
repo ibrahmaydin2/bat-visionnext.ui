@@ -14,6 +14,10 @@ export class ApiManager {
     return this.call('post', request, null, null, url, pagerecordCount)
   }
 
+  async getByUrl (url, pagerecordCount) {
+    return this.call('get', {}, null, null, url, pagerecordCount)
+  }
+
   async put (request, basePath, secondPath) {
     return this.call('put', request, basePath, secondPath)
   }
