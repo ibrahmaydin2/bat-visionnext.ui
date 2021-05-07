@@ -197,7 +197,7 @@
     </b-col>
     <b-modal id="confirm-products-modal">
       <template #modal-title>
-        {{$t('insert.order.doYouConfirm')}}
+        {{$t('insert.order.getLastOrderProducts')}}
       </template>
       {{$t('insert.order.productsWillDeleted')}}
       <template #modal-footer>

@@ -41,7 +41,7 @@ var checkSearchObject = function (obj) {
 }
 var numberOfAjaxCAllPending = 0
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
-axios.defaults.timeout = 60000
+axios.defaults.timeout = 120000
 axios.interceptors.request.use(function (config) {
   numberOfAjaxCAllPending++
   if (!store.state.disabledLoading) {
@@ -1350,7 +1350,7 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
-          commit('showAlert', { type: 'danger', msg: res.data.Message })
+          commit('showAlert', { type: 'success', msg: i18n.t('general.successFileUpload') })
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })

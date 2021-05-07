@@ -32,6 +32,7 @@
             @click="submitFile()"
           >
             {{$t('index.upload')}}
+            <b-spinner v-if="showLoading" small variant="primary"></b-spinner>
           </b-button>
         </div>
       </b-row>
@@ -78,7 +79,8 @@ export default {
     return {
       files: null,
       datas: [],
-      isError: false
+      isError: false,
+      showLoading: false
     }
   },
   validations () {
@@ -89,6 +91,7 @@ export default {
     this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
       this.datas = []
       this.files = null
+      this.showLoading = false
     })
   },
   methods: {
@@ -105,8 +108,11 @@ export default {
       if (this.modalAction.QueryMessage !== null) {
         formData.FileProccessType = this.modalAction.QueryMessage
       }
-
+      this.showLoading = true
+      this.$store.commit('setDisabledLoading', true)
       this.$store.dispatch('importExcel', formData).then(res => {
+        this.showLoading = false
+        this.$store.commit('setDisabledLoading', false)
         if (res.data.IsCompleted === true) {
           for (const property in res.data.Data) {
             let item = res.data.Data[property]
@@ -129,11 +135,23 @@ export default {
               ExcelIntegrationType: this.modalAction.Query
             }
             let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile`
-            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model})
+            this.showLoading = true
+            this.$store.commit('setDisabledLoading', true)
+            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model}).then(() => {
+              this.showLoading = false
+              this.$store.commit('setDisabledLoading', false)
+              this.closeModal()
+            }).catch(() => {
+              this.showLoading = false
+              this.$store.commit('setDisabledLoading', false)
+            })
           }
         } else {
           document.querySelector('input[type="file"]').value = ''
         }
+      }).catch(() => {
+        this.showLoading = false
+        this.$store.commit('setDisabledLoading', false)
       })
     },
     getBase64 (file) {
