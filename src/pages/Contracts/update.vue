@@ -63,7 +63,8 @@
                 v-model="customer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -97,7 +98,8 @@
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>

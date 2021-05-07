@@ -51,7 +51,8 @@
                 @input="selectedSearchType('CustomerId', $event)"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankId" :error="$v.form.CustomerBankId" md="3" lg="3">
               <NextDropdown @input="selectedSearchType('CustomerBankId', $event)" url="VisionNextBank/api/Bank/AutoCompleteSearch" searchable/>

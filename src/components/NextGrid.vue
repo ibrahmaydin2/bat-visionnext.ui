@@ -346,7 +346,9 @@ export default {
       autoSearchInput: {},
       showMultipleLoadingPlanModal: false,
       AndConditionalModel: {},
-      disabledDraggable: false
+      disabledDraggable: false,
+      firstHead: null,
+      firstSearchItem: null
     }
   },
   mounted () {
@@ -663,6 +665,12 @@ export default {
       if (search || search === 0) {
         this.currentPage = 1
       }
+      if (!this.firstSearchItem) {
+        this.firstSearchItem = {
+          andConditionalModel: { ...this.AndConditionalModel },
+          searchQ: { ...searchQ }
+        }
+      }
       let validCount = 0
       this.requiredFields.forEach(r => {
         if (searchQ[r.field] || this.AndConditionalModel[r.field] || this.AndConditionalModel[`${r.field}Ids`]) {
@@ -855,6 +863,9 @@ export default {
         let row = visibleRows[t]
         this.head.push(row)
       }
+      if (!this.firstHead) {
+        this.firstHead = this.head.map(h => ({...h}))
+      }
       this.searchOnTable()
     },
     getFormattedDate (defaultValue) {
@@ -914,16 +925,18 @@ export default {
       if (e === true) {
         this.AndConditionalModel = {}
         searchQ = {}
+        if (this.firstSearchItem) {
+          this.AndConditionalModel = {...this.firstSearchItem.andConditionalModel}
+          searchQ = { ...this.firstSearchItem.searchQ }
+        }
+
         let autoCompleteDropdowns = this.$refs.AutoCompleteDropdown
         if (autoCompleteDropdowns && autoCompleteDropdowns.length > 0) {
           autoCompleteDropdowns.forEach(a => {
             a.value = ''
           })
         }
-        this.head = this.head.map(x => {
-          x.defaultValue = undefined
-          return x
-        })
+        this.head = this.firstHead.map(h => ({...h}))
         if (this.lastGridItem && this.lastGridItem.BaseModels) {
           this.currentPage = this.lastGridItem.CurrentPage
           this.items = this.lastGridItem.BaseModels
