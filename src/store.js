@@ -284,7 +284,7 @@ export const store = new Vuex.Store({
     printDocuments: [],
     disabledLoading: false,
     filtersCleared: false,
-    lastGridItem: {},
+    lastGridItem: null,
     reloadGrid: false,
     cancelToken: {}
   },
@@ -519,7 +519,7 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
-          if (Object.keys(query.andConditionalModel).length === 0 && (!query.search || Object.keys(query.search).length === 0)) {
+          if (res.data.ListModel && !state.lastGridItem) {
             commit('setLastGridItem', res.data.ListModel)
           }
           commit('hideAlert')
