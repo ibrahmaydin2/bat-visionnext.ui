@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
             <NextFormGroup :title="$t('insert.vanLoading.items')" :required="true" :error="$v.vanLoadingItems.Item" md="3">
-               <v-select v-model="vanLoadingItems.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="searchItem" @input="selectedItem" label="Description1">
+               <v-select v-model="vanLoadingItems.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" :options="items" @search="onItemSearch" @input="selectedItem($event)" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -104,7 +104,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(r, i) in filteredVanLoadingItems" :key="i">
+                  <b-tr v-for="(r, i) in (form.VanLoadingItems ? form.VanLoadingItems.filter(i => i.RecordState !== 4) : [])" :key="i">
                     <b-td>{{r.Description1}}</b-td>
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
@@ -113,7 +113,10 @@
                     <b-td>{{r.LastdaySalesQuantity}}</b-td>
                     <b-td>{{r.SuggestedQuantity}}</b-td>
                     <b-td>{{r.LoadingQuantity}}</b-td>
-                    <b-td class="text-center"><i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <i @click="editVanLoadingItems(r)" class="fa fa-edit text-warning"></i>
+                      <i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -167,14 +170,12 @@ export default {
         ConvFact2: 1,
         RecordId: null,
         Item: null
-      }
+      },
+      selectedIndex: 0
     }
   },
   computed: {
-    ...mapState(['warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading']),
-    filteredVanLoadingItems () {
-      return this.form.VanLoadingItems.filter(i => i.RecordState !== 4)
-    }
+    ...mapState(['warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -228,7 +229,7 @@ export default {
         loading(false)
       })
     },
-    selectedItem (e) {
+    selectedItem (e, loadingQuantity) {
       if (e) {
         const datas = {
           'routeId': this.form.RouteId,
@@ -238,37 +239,34 @@ export default {
         }
         this.detailPanelRecordId++
         this.$api.post(datas, 'Item', 'Item/GetItemSearchForVanLoading').then((res) => {
+          this.vanLoadingItems.ItemId = e.RecordId
+          this.vanLoadingItems.Description1 = e.Description1
+          this.vanLoadingItems.unitId = e.UnitId
+          this.vanLoadingItems.unitSetId = e.UnitSetId
+          this.vanLoadingItems.RecordId = this.detailPanelRecordId
+          if (loadingQuantity >= 0) {
+            this.vanLoadingItems.IsUpdated = true
+          }
           if (res.Model) {
-            this.vanLoadingItems = {
-              Description1: e.Description1,
-              unitId: e.UnitId,
-              FromWhStockQuantity: e.FromWhStockQuantity,
-              ToWhStockQuantity: e.ToWhStockQuantity,
-              AverageSalesQuantity: e.AverageSalesQuantity,
-              LastSalesQuantity: e.LastSalesQuantity,
-              LastdaySalesQuantity: e.LastdaySalesQuantity,
-              SuggestedQuantity: e.SuggestedQuantity,
-              ItemId: e.RecordId,
-              LoadingQuantity: e.LoadingQuantity,
-              unitSetId: e.UnitSetId,
-              ConvFact1: e.ConvFact1,
-              ConvFact2: e.ConvFact2,
-              RecordId: this.detailPanelRecordId
-            }
+            this.vanLoadingItems.FromWhStockQuantity = res.Model.FromWhStockQuantity
+            this.vanLoadingItems.ToWhStockQuantity = res.Model.ToWhStockQuantity
+            this.vanLoadingItems.AverageSalesQuantity = res.Model.AverageSalesQuantity
+            this.vanLoadingItems.LastSalesQuantity = res.Model.LastSalesQuantity
+            this.vanLoadingItems.LastdaySalesQuantity = res.Model.LastdaySalesQuantity
+            this.vanLoadingItems.SuggestedQuantity = res.Model.SuggestedQuantity
+            this.vanLoadingItems.LoadingQuantity = loadingQuantity >= 0 ? loadingQuantity : res.Model.LoadingQuantity
+            this.vanLoadingItems.ConvFact1 = res.Model.ConvFact1
+            this.vanLoadingItems.ConvFact2 = res.Model.ConvFact2
           } else {
-            this.vanLoadingItems.ItemId = e.RecordId
-            this.vanLoadingItems.Description1 = e.Description1
-            this.vanLoadingItems.unitId = e.UnitId
-            this.vanLoadingItems.unitSetId = e.UnitSetId
             this.vanLoadingItems.FromWhStockQuantity = 0
             this.vanLoadingItems.ToWhStockQuantity = 0
             this.vanLoadingItems.AverageSalesQuantity = 0
             this.vanLoadingItems.LastSalesQuantity = 0
             this.vanLoadingItems.LastdaySalesQuantity = 0
             this.vanLoadingItems.SuggestedQuantity = 0
-            this.vanLoadingItems.LoadingQuantity = 0
-            this.vanLoadingItems.RecordId = this.detailPanelRecordId
+            this.vanLoadingItems.LoadingQuantity = loadingQuantity >= 0 ? loadingQuantity : 0
           }
+          this.$forceUpdate()
         })
       }
     },
@@ -282,27 +280,35 @@ export default {
         })
         return false
       }
+      this.vanLoadingItems.LoadingQuantity = this.vanLoadingItems.LoadingQuantity ? parseInt(this.vanLoadingItems.LoadingQuantity) : 0
       this.detailPanelRecordId++
-      this.form.VanLoadingItems.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        ItemId: this.vanLoadingItems.Item.RecordId,
-        UnitId: this.vanLoadingItems.UnitId,
-        FromWhStockQuantity: this.vanLoadingItems.FromWhStockQuantity,
-        ToWhStockQuantity: this.vanLoadingItems.ToWhStockQuantity,
-        AverageSalesQuantity: this.vanLoadingItems.AverageSalesQuantity,
-        LastSalesQuantity: this.vanLoadingItems.LastSalesQuantity,
-        LastdaySalesQuantity: this.vanLoadingItems.LastdaySalesQuantity,
-        SuggestedQuantity: this.vanLoadingItems.SuggestedQuantity,
-        LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
-        unitSetId: this.vanLoadingItems.UnitSetId,
-        ConvFact1: this.vanLoadingItems.ConvFact1,
-        ConvFact2: this.vanLoadingItems.ConvFact2,
-        RecordId: this.detailPanelRecordId,
-        Description1: this.vanLoadingItems.Item.Description1
-      })
+      if (this.vanLoadingItems.IsUpdated) {
+        this.vanLoadingItems.RecordState = 3
+        this.form.VanLoadingItems[this.selectedIndex] = this.vanLoadingItems
+        this.selectedIndex = 0
+        this.$forceUpdate()
+      } else {
+        this.form.VanLoadingItems.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          ItemId: this.vanLoadingItems.Item.RecordId,
+          UnitId: this.vanLoadingItems.UnitId,
+          FromWhStockQuantity: this.vanLoadingItems.FromWhStockQuantity,
+          ToWhStockQuantity: this.vanLoadingItems.ToWhStockQuantity,
+          AverageSalesQuantity: this.vanLoadingItems.AverageSalesQuantity,
+          LastSalesQuantity: this.vanLoadingItems.LastSalesQuantity,
+          LastdaySalesQuantity: this.vanLoadingItems.LastdaySalesQuantity,
+          SuggestedQuantity: this.vanLoadingItems.SuggestedQuantity,
+          LoadingQuantity: this.vanLoadingItems.LoadingQuantity,
+          unitSetId: this.vanLoadingItems.UnitSetId,
+          ConvFact1: this.vanLoadingItems.ConvFact1,
+          ConvFact2: this.vanLoadingItems.ConvFact2,
+          RecordId: this.detailPanelRecordId,
+          Description1: this.vanLoadingItems.Item.Description1
+        })
+      }
       this.vanLoadingItems = {}
       this.$v.vanLoadingItems.$reset()
     },
@@ -312,6 +318,21 @@ export default {
       } else {
         this.form.VanLoadingItems.splice(this.form.VanLoadingItems.indexOf(item), 1)
       }
+    },
+    editVanLoadingItems (item) {
+      let request = {
+        andConditionModel: {
+          RecordIds: [item.ItemId]
+        }
+      }
+      this.$api.post(request, 'Item', 'Item/AutoCompleteSearch').then((res) => {
+        if (res.ListModel && res.ListModel.BaseModels) {
+          this.vanLoadingItems.Item = res.ListModel.BaseModels[0]
+          this.selectedIndex = this.form.VanLoadingItems.indexOf(item)
+          let loadingQuantity = item.LoadingQuantity ? parseInt(item.LoadingQuantity) : 0
+          this.selectedItem(this.vanLoadingItems.Item, loadingQuantity)
+        }
+      })
     },
     save () {
       this.$v.form.$touch()

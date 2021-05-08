@@ -36,7 +36,15 @@
                     @blur="disabledDraggable = false"
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
-                  />
+                    ref="AutoCompleteDropdown"
+                  >
+                    <template #result="{ result, props }">
+                      <li v-bind="props">
+                        <span v-if="result.Code">{{`${result.Code} - ${result.Description1}`}}</span>
+                        <span v-if="!result.Code">{{result.Description1}}</span>
+                      </li>
+                    </template>
+                  </autocomplete>
                 </div>
                 <div v-else>
                   <v-select
@@ -338,7 +346,9 @@ export default {
       autoSearchInput: {},
       showMultipleLoadingPlanModal: false,
       AndConditionalModel: {},
-      disabledDraggable: false
+      disabledDraggable: false,
+      firstHead: null,
+      firstSearchItem: null
     }
   },
   mounted () {
@@ -625,10 +635,13 @@ export default {
       }
       if (input.length < 3) { return [] }
       let pagerecordCount = 10
-      const andConditionModel = input === '%%%' ? {} : {
-        Description1: input.replaceAll('%', '')
-      }
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, model: andConditionModel, pagerecordCount: pagerecordCount}).then((res) => {
+      const orConditionModels = input === '%%%' ? [] : [
+        {
+          Description1: input.replaceAll('%', ''),
+          Code: input.replaceAll('%', '')
+        }
+      ]
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount}).then((res) => {
         return res
       })
     },
@@ -651,6 +664,12 @@ export default {
     searchOnTable (tableField, search) {
       if (search || search === 0) {
         this.currentPage = 1
+      }
+      if (!this.firstSearchItem) {
+        this.firstSearchItem = {
+          andConditionalModel: { ...this.AndConditionalModel },
+          searchQ: { ...searchQ }
+        }
       }
       let validCount = 0
       this.requiredFields.forEach(r => {
@@ -844,6 +863,9 @@ export default {
         let row = visibleRows[t]
         this.head.push(row)
       }
+      if (!this.firstHead) {
+        this.firstHead = this.head.map(h => ({...h}))
+      }
       this.searchOnTable()
     },
     getFormattedDate (defaultValue) {
@@ -900,19 +922,31 @@ export default {
       }
     },
     filtersCleared: function (e) {
-      if (e === true && this.lastGridItem && this.lastGridItem.BaseModels) {
-        this.currentPage = this.lastGridItem.CurrentPage
-        this.items = this.lastGridItem.BaseModels
-        this.totalRowCount = this.lastGridItem.TotalRowCount
-        this.totalPageCount = this.lastGridItem.TotalPageCount
-        this.perPage = this.lastGridItem.PageRecordCount
-        this.$store.commit('changeFiltersCleared', false)
-        this.head = this.head.map(x => {
-          x.defaultValue = undefined
-          return x
-        })
+      if (e === true) {
         this.AndConditionalModel = {}
         searchQ = {}
+        if (this.firstSearchItem) {
+          this.AndConditionalModel = {...this.firstSearchItem.andConditionalModel}
+          searchQ = { ...this.firstSearchItem.searchQ }
+        }
+
+        let autoCompleteDropdowns = this.$refs.AutoCompleteDropdown
+        if (autoCompleteDropdowns && autoCompleteDropdowns.length > 0) {
+          autoCompleteDropdowns.forEach(a => {
+            a.value = ''
+          })
+        }
+        this.head = this.firstHead.map(h => ({...h}))
+        if (this.lastGridItem && this.lastGridItem.BaseModels) {
+          this.currentPage = this.lastGridItem.CurrentPage
+          this.items = this.lastGridItem.BaseModels
+          this.totalRowCount = this.lastGridItem.TotalRowCount
+          this.totalPageCount = this.lastGridItem.TotalPageCount
+          this.perPage = this.lastGridItem.PageRecordCount
+        } else {
+          this.searchOnTable()
+        }
+        this.$store.commit('changeFiltersCleared', false)
       }
     },
     reloadGrid: function (e) {

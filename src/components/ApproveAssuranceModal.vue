@@ -4,12 +4,12 @@
       <section>
         <b-row>
             <NextFormGroup :title="$t('insert.approveAssuranceModal.customerName')" :lg="4">
-              <v-select :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+              <v-select :options="customers"  @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -20,7 +20,7 @@
               <v-select :options="routeTypeOptions" @input="selectedCustomerRegion" label="Label"></v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.approveAssuranceModal.route')" :lg="4">
-              <v-select :options="routes"  @search="searchRoute" @input="selectedSearchType('RoueteId', $event)" label="Description1">
+              <v-select :options="routes"  @search="searchRoute" @input="selectedSearchType('RoueteId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>

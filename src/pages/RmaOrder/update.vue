@@ -29,12 +29,12 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1">
+              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -46,7 +46,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -88,7 +88,7 @@
           <hr />
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code">
+              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>

@@ -13,7 +13,8 @@
     "Branch": "Şube Kayıtları",
     "Warehouse": "Depo Kayıtları",
     "Customer": "Müşteri Kayıtları",
-    "search": "Ara"
+    "search": "Ara",
+    "settings": "Ayarlar"
   },
   "router": {
     "Service": "Servis",
@@ -1374,7 +1375,7 @@
       "products": "Ürünler",
       "getLastOrderProducts": "Son Siparişten Ürün Getir",
       "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
-      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir!",
+      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir! Onaylıyor musunuz?",
       "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "noLastInvoiceProducts": "Son siparişteki ürün bilgisi bulunamadı!",
@@ -1481,6 +1482,16 @@
       "messageBody": "Mesaj İçeriği",
       "messageType": "Mesaj Tipi",
       "customerCriteria": "Müşteri Kriteri"
+    },
+    "settings": {
+      "oldPassword": "Eski Şifre",
+      "yourOldPassword": "Eski Şifreniz",
+      "newPassword": "Yeni Şifre",
+      "yourNewPassword": "Yeni Şifreniz",
+      "passwordMinMessage": "Şifreniz en az {0} karakter olmalıdır.",
+      "newPasswordAgain": "Yeni Şifre Tekrar",
+      "yourNewPasswordAgain": "Yeni Şifrenizi Tekrar Girin",
+      "passwordsDoesNotMatch": "Şifreler Eşleşmiyor..."
     }
   },
   "get": {
@@ -1875,7 +1886,9 @@
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
-    "noRecord": "Uygun kayıt bulunamadı!"
+    "noRecord": "Uygun kayıt bulunamadı!",
+    "changedPasswordMessage": "Şifreniz Değiştirildi.",
+    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir."
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",

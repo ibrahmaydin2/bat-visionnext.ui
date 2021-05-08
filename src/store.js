@@ -33,7 +33,7 @@ var checkSearchObject = function (obj) {
       }
     })
     pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
-    return !isList ? obj : obj ? [obj] : []
+    return !isList ? obj : obj && Object.keys(obj).length > 0 ? [obj] : []
   } else {
     pagerecordCount = 50
     return undefined
@@ -41,7 +41,7 @@ var checkSearchObject = function (obj) {
 }
 var numberOfAjaxCAllPending = 0
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
-axios.defaults.timeout = 60000
+axios.defaults.timeout = 120000
 axios.interceptors.request.use(function (config) {
   numberOfAjaxCAllPending++
   if (!store.state.disabledLoading) {
@@ -284,7 +284,7 @@ export const store = new Vuex.Store({
     printDocuments: [],
     disabledLoading: false,
     filtersCleared: false,
-    lastGridItem: {},
+    lastGridItem: null,
     reloadGrid: false,
     cancelToken: {}
   },
@@ -334,14 +334,13 @@ export const store = new Vuex.Store({
     },
     changePassword ({ commit }, authData) {
       return axios.post('VisionNextAuthentication/api/Authentication/ChangePassword', {
-        Email: authData.Email,
-        OldPassword: authData.OldPassword,
-        NewPassword: authData.NewPassword,
-        CuaAuthKey: user.CuaKey
-      })
+        ...authCompanyAndBranch,
+        ...authData
+
+      }, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('showAlert', { type: 'success', msg: 'Şifreniz Değiştirildi.' })
+            commit('showAlert', { type: 'success', msg: i18n.t('general.changedPasswordMessage') })
             setTimeout(() => {
               router.push({name: 'Dashboard'})
             }, 1000)
@@ -520,7 +519,7 @@ export const store = new Vuex.Store({
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
-          if (Object.keys(query.andConditionalModel).length === 0 && Object.keys(query.search).length === 0) {
+          if (res.data.ListModel && !state.lastGridItem) {
             commit('setLastGridItem', res.data.ListModel)
           }
           commit('hideAlert')
@@ -857,6 +856,7 @@ export const store = new Vuex.Store({
     getAutoGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
       let dataQuery = {
         'AndConditionModel': query.model ? query.model : {},
+        'OrConditionModels': query.orConditionModels ? query.orConditionModels : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 100,
@@ -1350,7 +1350,7 @@ export const store = new Vuex.Store({
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
-          commit('showAlert', { type: 'danger', msg: res.data.Message })
+          commit('showAlert', { type: 'success', msg: i18n.t('general.successFileUpload') })
         })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })

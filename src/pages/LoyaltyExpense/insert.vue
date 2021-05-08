@@ -35,19 +35,19 @@
         <b-tab :title="$t('insert.LoyaltyExpense.title')">
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1">
+              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select :options="customers" @search="searchCustomer" @input="selectCustomerId($event)" label="Description1">
+              <v-select :options="customers" @search="searchCustomer" @input="selectCustomerId($event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
                 </template>
               </v-select>
             </NextFormGroup>

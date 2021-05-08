@@ -13,7 +13,8 @@
     "Branch": "Şube Kayıtları",
     "Warehouse": "Depo Kayıtları",
     "Customer": "Müşteri Kayıtları",
-    "search": "Ara"
+    "search": "Ara",
+    "settings": "Ayarlar"
   },
   "router": {
     "Service": "Servis",
@@ -399,7 +400,17 @@
     "TerminalMessage": "Mesaj Tanımları",
     "TerminalMessageGet": "Mesaj Tanımı Görüntüle",
     "TerminalMessageInsert": "Yeni Mesaj Tanımı",
-    "TerminalMessageUpdate": "Mesaj Tanımı Güncelle"
+    "TerminalMessageUpdate": "Mesaj Tanımı Güncelle",
+    "RouteDailyRecord": "Günlük Performans Takibi",
+    "RouteDailyRecordGet": "Günlük Performans Takibi Görüntüle",
+    "Label": "Etiket Tanımları",
+    "LabelGet": "Etiket Tanımı Görüntüle",
+    "LabelInsert": "Yeni Etiket Tanımı",
+    "LabelUpdate": "Etiket Tanımı Güncelle",
+    "RefContract": "Kontrat Devirleri",
+    "RefContractGet": "Kontrat Devri Görüntüle",
+    "RefContractInsert": "Yeni Kontrat Devri",
+    "RefContractUpdate": "Kontrat Devri Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -456,6 +467,10 @@
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+    "Label": {
+      "Code":"Kod",
+      "Description1": "Açıklama"
+    },
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1396,7 +1411,7 @@
       "products": "Ürünler",
       "getLastOrderProducts": "Son Siparişten Ürün Getir",
       "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
-      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir!",
+      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir! Onaylıyor musunuz?",
       "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "noLastInvoiceProducts": "Son faturadaki ürün bilgisi bulunamadı!",
@@ -1504,6 +1519,16 @@
       "messageBody": "Mesaj İçeriği",
       "messageType": "Mesaj Tipi",
       "customerCriteria": "Müşteri Kriteri"
+    },
+    "settings": {
+      "oldPassword": "Eski Şifre",
+      "yourOldPassword": "Eski Şifreniz",
+      "newPassword": "Yeni Şifre",
+      "yourNewPassword": "Yeni Şifreniz",
+      "passwordMinMessage": "Şifreniz en az {0} karakter olmalıdır.",
+      "newPasswordAgain": "Yeni Şifre Tekrar",
+      "yourNewPasswordAgain": "Yeni Şifrenizi Tekrar Girin",
+      "passwordsDoesNotMatch": "Şifreler Eşleşmiyor..."
     }
   },
   "get": {
@@ -1883,6 +1908,37 @@
       "assetClass": "Sınıf",
       "trackType": "İzleme Tipi",
       "barcode": "Barkod"
+    },
+    "RouteDailyRecord": {
+      "Code": "Kod",
+      "Description": "Açıklama",
+      "Status": "Durum",
+      "Representative": "Personel",
+      "Vehicle": "Araç",
+      "Route": "Rota",
+      "RouteCancelReason": "Rota İptal Nedeni",
+      "RouteDate": "Rota Tarihi",
+      "RouteStartTime": "Rota Başlangıç Tarihi",
+      "RouteEndTime": "Rota Bitiş Tarihi",
+      "SalesCount": "Satış Adeti",
+      "SalesTotal": "Satış Toplamı",
+      "StartKm": "Başlangıç Kilometresi",
+      "EndKm": "Bitiş Kilometresi",
+      "SuccessVisitCount": "Başarılı Ziyaret Sayısı",
+      "PlannedVisitCount": "Planlanan Ziyaret Sayısı"
+    },
+    "RefContract": {
+      "OperationDesc": "Açıklama",
+      "TotalAmount": "Toplam Tutar",
+      "ContractTransferStatus": "Kontrat Transfer Durumu",
+      "IsHero": "Hero Durumu",
+      "SourceContract": "Kaynak Kontrat",
+      "SourceContractStartDate": "Kontrat Başlangıç Tarihi",
+      "SourceCustomer": "Kaynak Müşteri",
+      "TargetCustomer": "Hedef Müşteri",
+      "TransferReason": "Kontrat Devir Sebebi",
+      "SourceContractEndDate": "Kontrat Bitiş Tarihi",
+      "ContractDetail": "Kontrat Detayları"
     }
   },
 
@@ -1898,7 +1954,9 @@
     "notifyItems": "{x} Bildirim",
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
-    "noRecord": "Uygun kayıt bulunamadı!"
+    "noRecord": "Uygun kayıt bulunamadı!",
+    "changedPasswordMessage": "Şifreniz Değiştirildi.",
+    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir."
   },
   "index": {
     "today": "Bugün",
