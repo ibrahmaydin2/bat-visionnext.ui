@@ -547,6 +547,11 @@ import LabelGet from '@/pages/Label/get'
 import LabelInsert from '@/pages/Label/insert'
 import LabelUpdate from '@/pages/Label/update'
 
+import RefContractIndex from '@/pages/RefContract/'
+import RefContractGet from '@/pages/RefContract/get'
+import RefContractInsert from '@/pages/RefContract/insert'
+import RefContractUpdate from '@/pages/RefContract/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -652,6 +657,7 @@ const listIndex = [
   {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget') }},
   {path: '/TerminalMessage', name: 'TerminalMessage', component: TerminalMessageIndex, meta: { title: i18n.t('router.TerminalMessage'), createLink: 'TerminalMessageInsert' }},
   {path: '/Label', name: 'Label', component: LabelIndex, meta: { title: i18n.t('router.Label'), createLink: 'LabelInsert' }},
+  {path: '/RefContract', name: 'RefContract', component: RefContractIndex, meta: { title: i18n.t('router.RefContract'), createLink: 'RefContractInsert' }},
   {path: '/RouteDailyRecord', name: 'RouteDailyRecord', component: RouteDailyRecordIndex, meta: { title: i18n.t('router.RouteDailyRecord') }}
 ]
 
@@ -758,6 +764,7 @@ const listGet = [
   { path: '/CreditBudget/:url', name: 'CreditBudgetGet', component: CreditBudgetGet, meta: { title: i18n.t('router.CreditBudgetGet'), baseLink: 'CreditBudget' } },
   { path: '/TerminalMessage/:url', name: 'TerminalMessageGet', component: TerminalMessageGet, meta: { title: i18n.t('router.TerminalMessageGet'), baseLink: 'TerminalMessage' } },
   { path: '/Label/:url', name: 'LabelGet', component: LabelGet, meta: { title: i18n.t('router.LabelGet'), baseLink: 'Label' } },
+  { path: '/RefContract/:url', name: 'RefContractGet', component: RefContractGet, meta: { title: i18n.t('router.RefContractGet'), baseLink: 'RefContract' } },
   { path: '/RouteDailyRecord/:url', name: 'RouteDailyRecordGet', component: RouteDailyRecordGet, meta: { title: i18n.t('router.RouteDailyRecordGet'), baseLink: 'RouteDailyRecord' } }
 ]
 
@@ -862,7 +869,8 @@ const listUpdate = [
   { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } },
   { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } },
   { path: '/Update/TerminalMessage/:url', name: 'TerminalMessageUpdate', component: TerminalMessageUpdate, meta: { title: i18n.t('router.TerminalMessageUpdate'), baseLink: 'TerminalMessage' } },
-  { path: '/Update/Label/:url', name: 'LabelUpdate', component: LabelUpdate, meta: { title: i18n.t('router.LabelUpdate'), baseLink: 'Label' } }
+  { path: '/Update/Label/:url', name: 'LabelUpdate', component: LabelUpdate, meta: { title: i18n.t('router.LabelUpdate'), baseLink: 'Label' } },
+  { path: '/Update/RefContract/:url', name: 'RefContractUpdate', component: RefContractUpdate, meta: { title: i18n.t('router.RefContractUpdate'), baseLink: 'RefContract' } }
 ]
 
 const listInsert = [
@@ -964,7 +972,8 @@ const listInsert = [
   { path: '/Insert/ServicePurchaseInvoice', name: 'ServicePurchaseInvoiceInsert', component: ServicePurchaseInvoiceInsert, meta: { title: i18n.t('router.ServicePurchaseInvoiceInsert'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Insert/CreditBudget', name: 'CreditBudgetInsert', component: CreditBudgetInsert, meta: { title: i18n.t('router.CreditBudgetInsert'), baseLink: 'CreditBudget' } },
   { path: '/Insert/TerminalMessage', name: 'TerminalMessageInsert', component: TerminalMessageInsert, meta: { title: i18n.t('router.TerminalMessageInsert'), baseLink: 'TerminalMessage' } },
-  { path: '/Insert/Label', name: 'LabelInsert', component: LabelInsert, meta: { title: i18n.t('router.LabelInsert'), baseLink: 'Label' } }
+  { path: '/Insert/Label', name: 'LabelInsert', component: LabelInsert, meta: { title: i18n.t('router.LabelInsert'), baseLink: 'Label' } },
+  { path: '/Insert/RefContract', name: 'RefContractInsert', component: RefContractInsert, meta: { title: i18n.t('router.RefContractInsert'), baseLink: 'RefContract' } }
 ]
 
 const routes = [
