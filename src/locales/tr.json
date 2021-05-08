@@ -13,7 +13,8 @@
     "Branch": "Şube Kayıtları",
     "Warehouse": "Depo Kayıtları",
     "Customer": "Müşteri Kayıtları",
-    "search": "Ara"
+    "search": "Ara",
+    "settings": "Ayarlar"
   },
   "router": {
     "Service": "Servis",
@@ -1410,7 +1411,7 @@
       "products": "Ürünler",
       "getLastOrderProducts": "Son Siparişten Ürün Getir",
       "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
-      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir!",
+      "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir! Onaylıyor musunuz?",
       "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
       "noLastInvoiceProducts": "Son faturadaki ürün bilgisi bulunamadı!",
@@ -1954,7 +1955,8 @@
     "unExpectedException": "Beklenmedik bir hata oluştu! Daha sonra tekrar deneyiniz.",
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
     "noRecord": "Uygun kayıt bulunamadı!",
-    "changedPasswordMessage": "Şifreniz Değiştirildi."
+    "changedPasswordMessage": "Şifreniz Değiştirildi.",
+    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir."
   },
   "index": {
     "today": "Bugün",

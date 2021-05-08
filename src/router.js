@@ -23,7 +23,8 @@ import Pages from '@/pages'
 import AuthRequired from '@/AuthRequired'
 import Dashboard from '@/pages/Dashboard'
 import DashboardIndex from '@/pages/Dashboard/Default'
-import Settings from '@/pages/Dashboard/Settings'
+import ChangePassword from '@/pages/Dashboard/ChangePassword'
+import StockChangePassword from '@/pages/Dashboard/StockChangePassword'
 import i18n from './i18n'
 
 import LayoutIndex from '@/pages/layout/'
@@ -995,9 +996,14 @@ const routes = [
             component: DashboardIndex
           },
           {
-            path: '/Settings/:url',
-            name: 'Settings',
-            component: Settings
+            path: '/ChangePassword',
+            name: 'ChangePassword',
+            component: ChangePassword
+          },
+          {
+            path: '/StockChangePassword',
+            name: 'StockChangePassword',
+            component: StockChangePassword
           }
         ]
       },

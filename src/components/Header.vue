@@ -29,8 +29,17 @@
           <template v-slot:button-content>
             <i class="far fa-user" /> {{loginUser.name}}
           </template>
-          <b-dropdown-item :to="{name: 'Settings', params: {url: 'change-password'}}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
+          <b-dropdown-item :to="{name: 'ChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
+          <b-dropdown variant="menu" class="inline-menu d-none d-md-inline-block" @click.native.capture.stop="showSecondMenu = !showSecondMenu">
+            <template v-slot:button-content>
+              <i class="fa fa-cog" /> {{$t('nav.settings')}}
+            </template>
+          </b-dropdown>
+          <ul v-if="showSecondMenu" class="sub-menu">
+            <b-dropdown-item :to="{name: 'ChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'StockChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.stockChangePassword')}}</b-dropdown-item>
+          </ul>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
@@ -93,7 +102,8 @@ export default {
       toggleLang: 'English',
       modalHeader: '',
       modalContent: '',
-      searchBranch: ''
+      searchBranch: '',
+      showSecondMenu: false
     }
   },
   created () {
@@ -311,4 +321,14 @@ export default {
     & span
       font-weight: 700
       color: #ffa300
+  .inline-menu
+    color: black !important
+    margin-left: 13px
+    button
+      color: black !important
+      border: none
+  .sub-menu
+    list-style-type: none;
+    li
+      width: max-content
 </style>

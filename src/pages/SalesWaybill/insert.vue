@@ -41,7 +41,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -331,7 +331,7 @@
     </b-modal>
     <b-modal id="confirm-products-modal">
       <template #modal-title>
-        {{$t('insert.order.doYouConfirm')}}
+        {{$t('insert.order.getLastOrderProducts')}}
       </template>
       {{$t('insert.order.productsWillDeleted')}}
       <template #modal-footer>
