@@ -406,7 +406,11 @@
     "Label": "Etiket Tanımları",
     "LabelGet": "Etiket Tanımı Görüntüle",
     "LabelInsert": "Yeni Etiket Tanımı",
-    "LabelUpdate": "Etiket Tanımı Güncelle"
+    "LabelUpdate": "Etiket Tanımı Güncelle",
+    "RefContract": "Kontrat Devirleri",
+    "RefContractGet": "Kontrat Devri Görüntüle",
+    "RefContractInsert": "Yeni Kontrat Devri",
+    "RefContractUpdate": "Kontrat Devri Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1922,6 +1926,19 @@
       "EndKm": "Bitiş Kilometresi",
       "SuccessVisitCount": "Başarılı Ziyaret Sayısı",
       "PlannedVisitCount": "Planlanan Ziyaret Sayısı"
+    },
+    "RefContract": {
+      "OperationDesc": "Açıklama",
+      "TotalAmount": "Toplam Tutar",
+      "ContractTransferStatus": "Kontrat Transfer Durumu",
+      "IsHero": "Hero Durumu",
+      "SourceContract": "Kaynak Kontrat",
+      "SourceContractStartDate": "Kontrat Başlangıç Tarihi",
+      "SourceCustomer": "Kaynak Müşteri",
+      "TargetCustomer": "Hedef Müşteri",
+      "TransferReason": "Kontrat Devir Sebebi",
+      "SourceContractEndDate": "Kontrat Bitiş Tarihi",
+      "ContractDetail": "Kontrat Detayları"
     }
   },
 
