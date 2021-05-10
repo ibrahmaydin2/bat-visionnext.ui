@@ -11,7 +11,7 @@
   İptal -> Cancel
   Alan Güncelleme -> QuickUpdate
   Uyarı -> ControlModel -->
-  <b-dropdown-group header="Actions">
+  <b-dropdown-group :header="$t('general.actions')">
     <div v-if="isMultiple">
       <b-dropdown-item v-for="(action, i) in filteredActions" :key="i">
         <span class="d-inline-block w-100" v-if="action.ViewType === 'Modal'" @click.prevent.stop="showMultipleModal (action)">

@@ -1166,7 +1166,10 @@
       "items": "Ürün",
       "PlanQuantity": "Yükleme Miktarı",
       "LoadingDate": "Yükleme Tarihi",
-      "Route": "Rota"
+      "Route": "Rota",
+      "itemCode": "Ürün Kodu",
+      "unit": "Birim",
+      "loadingDateError": "Yükleme tarihi en yakın bir gün sonraya seçilebilir."
     },
     "vanLoading": {
       "items": "Ürün",
@@ -1910,7 +1913,8 @@
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
     "noRecord": "Uygun kayıt bulunamadı!",
     "changedPasswordMessage": "Şifreniz Değiştirildi.",
-    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir."
+    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir.",
+    "actions": "İşlemler"
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",

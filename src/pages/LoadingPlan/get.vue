@@ -39,12 +39,16 @@
                   <b-thead head-variant="light">
                     <b-tr>
                       <b-th>{{$t('insert.loadingplan.items')}}</b-th>
+                      <b-th>{{$t('insert.loadingplan.itemCode')}}</b-th>
+                      <b-th>{{$t('insert.loadingplan.unit')}}</b-th>
                       <b-th>{{$t('insert.loadingplan.PlanQuantity')}}</b-th>
                     </b-tr>
                   </b-thead>
                   <b-tbody>
                     <tr v-for="(result, i) in rowData.LoadingPlanItems" :key="i">
-                      <b-td>{{ result.Item ? result.Item.Label : result.Description1 }}</b-td>
+                      <b-td>{{ result.Item ? result.Item.Label : '' }}</b-td>
+                      <b-td>{{ result.Item ? result.Item.Code : '' }}</b-td>
+                      <b-td>{{ result.Unit ? result.Unit.Label : '' }}</b-td>
                       <b-td>{{ result.PlanQuantity }}</b-td>
                     </tr>
                   </b-tbody>

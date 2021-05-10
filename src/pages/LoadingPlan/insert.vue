@@ -137,7 +137,7 @@ export default {
         ItemId: this.detailPanel.item.RecordId,
         Description1: this.detailPanel.item.Description1,
         UnitSetId: this.detailPanel.item.UnitSetId,
-        UnitId: null,
+        UnitId: this.detailPanel.item.UnitId,
         PlanQuantity: this.detailPanel.planQuantity,
         ConvFact1: 1,
         ConvFact2: 1
@@ -153,6 +153,12 @@ export default {
       if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
+        var date = new Date()
+        let tomorrow = new Date(date.setHours(0, 0, 0, 0)).setDate(new Date().getDate() + 1)
+        if (new Date(this.form.LoadingDate).setHours(0, 0, 0, 0) < tomorrow) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.loadingplan.loadingDateError') })
+          return
+        }
         this.createData()
       }
     }

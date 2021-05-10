@@ -70,10 +70,13 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(r, i) in loadingPlanItems" :key="i">
+                  <b-tr v-for="(r, i) in (form.LoadingPlanItems ? form.LoadingPlanItems.filter(l => l.RecordState !== 4) : [])" :key="i">
                     <b-td>{{r.Item ? r.Item.Label : r.Description1}}</b-td>
                     <b-td>{{r.PlanQuantity}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <i @click="editItems(r)" class="fa fa-edit text-warning"></i>
+                      <i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -106,14 +109,12 @@ export default {
         item: null,
         planQuantity: null
       },
-      selectedRoute: null
+      selectedRoute: null,
+      selectedIndex: 0
     }
   },
   computed: {
-    ...mapState([]),
-    loadingPlanItems () {
-      return this.form.LoadingPlanItems ? this.form.LoadingPlanItems.filter(i => i.RecordState !== 4) : []
-    }
+    ...mapState([])
   },
   mounted () {
     this.getData().then(() => this.setData())
@@ -142,27 +143,36 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.LoadingPlanItems.filter(i => i.ItemId === this.detailPanel.item.RecordId && i.RecordState !== 4)
+      let filteredArr = this.form.LoadingPlanItems.filter(i => i.ItemId === this.detailPanel.item.RecordId && i.RecordState !== 4 && !this.detailPanel.isUpdated)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      this.form.LoadingPlanItems.push({
+      let item = {
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordState: this.detailPanel.recordState ? this.detailPanel.recordState : 2,
+        LoadingPlanId: this.detailPanel.loadingPlanId ? this.detailPanel.loadingPlanId : undefined,
+        RecordId: this.detailPanel.recordId,
         StatusId: 1,
         Code: this.detailPanel.item.Code,
         ItemId: this.detailPanel.item.RecordId,
         Description1: this.detailPanel.item.Description1,
         UnitSetId: this.detailPanel.item.UnitSetId,
-        UnitId: null,
+        UnitId: this.detailPanel.item.UnitId,
         PlanQuantity: this.detailPanel.planQuantity,
         ConvFact1: 1,
         ConvFact2: 1
-      })
+      }
+      if (this.detailPanel.isUpdated) {
+        this.form.LoadingPlanItems[this.selectedIndex] = item
+        this.detailPanel.isUpdated = false
+      } else {
+        this.form.LoadingPlanItems.push(item)
+      }
       this.detailPanel = {}
       this.$v.detailPanel.$reset()
+      this.$forceUpdate()
     },
     removeItems (item) {
       if (item.RecordId > 0) {
@@ -170,6 +180,24 @@ export default {
       } else {
         this.form.LoadingPlanItems.splice(this.form.LoadingPlanItems.indexOf(item), 1)
       }
+    },
+    editItems (item) {
+      let request = {
+        andConditionModel: {
+          RecordIds: [item.ItemId]
+        }
+      }
+      this.$api.post(request, 'Item', 'Item/Search').then((res) => {
+        if (res.ListModel && res.ListModel.BaseModels) {
+          this.detailPanel.item = res.ListModel.BaseModels[0]
+        }
+      })
+      this.detailPanel.planQuantity = item.PlanQuantity
+      this.detailPanel.recordId = item.RecordId
+      this.detailPanel.recordState = 3
+      this.detailPanel.loadingPlanId = this.form.RecordId
+      this.detailPanel.isUpdated = true
+      this.selectedIndex = this.form.LoadingPlanItems.indexOf(item)
     },
     save () {
       this.$v.form.$touch()
