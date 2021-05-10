@@ -4,7 +4,7 @@
       {{$t('insert.min3')}}
     </template>
     <template v-slot:option="option" v-if="customOption">
-      <span v-if="isCustomer">{{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}</span>
+      <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}</span>
       <span v-if="!isCustomer">{{option.Code + ' - ' + option.Description1}}</span>
     </template>
   </v-select>

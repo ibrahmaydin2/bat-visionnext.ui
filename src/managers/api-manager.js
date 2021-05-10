@@ -78,9 +78,6 @@ export class ApiManager {
   }
 
   handleError (error) {
-    if (error && error.message === 'Operation canceled due to new request.') {
-      return error
-    }
     let message = i18n.t('general.unExpectedException')
     if (error && error.code === 'ECONNABORTED') {
       message = i18n.t('general.timeoutError')

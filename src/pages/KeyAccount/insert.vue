@@ -211,6 +211,7 @@
             :address-error="$v.customerLocations.addressDetail.$error"
             :city-error="$v.customerLocations.cityId.$error"
             :district-error="$v.customerLocations.districtId.$error"
+            :init="addressInit"
           />
           <b-row>
             <b-col cols="12" md="3" lg="2">
@@ -321,7 +322,10 @@
                   <b-td>{{r.isInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.isDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{r.isRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                  <b-td class="text-center"><i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                  <b-td class="text-center">
+                    <i @click="editCustomerLocation(r)" class="fa fa-pencil-alt text-warning"></i>
+                    <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -834,7 +838,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
-                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
+                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Code">
                     <template slot="no-options">
                       {{$t('insert.min3')}}
                     </template>
@@ -846,7 +850,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
-                <b-form-input type="text" v-model="customerItemDiscounts.description1" />
+                <b-form-input type="text" v-model="customerItemDiscounts.description1" disabled/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -863,12 +867,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountTci1')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
+                <v-select v-model="customerItemDiscounts.selectedTCi1" :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountTci2')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
+                <v-select v-model="customerItemDiscounts.selectedTCi2" :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -1079,7 +1083,9 @@ export default {
         discountPercent2: null,
         tciBreak1Id: null,
         tciBreak2Id: null,
-        product: null
+        product: null,
+        selectedTCi1: null,
+        selectedTCi2: null
       },
       customerTouchpoints: {
         touchpointPriority: null,
@@ -1109,7 +1115,10 @@ export default {
       customerGroup: {},
       customerClass: {},
       salesDocumentType: {},
-      invoiceCombineRule: {}
+      invoiceCombineRule: {},
+      locationEditableIndex: 0,
+      isLocationEditable: false,
+      addressInit: null
     }
   },
   computed: {
@@ -1235,8 +1244,10 @@ export default {
     selectedItem (e) {
       if (e) {
         this.customerItemDiscounts.code = e.RecordId
+        this.customerItemDiscounts.description1 = e.Description1
       } else {
         this.customerItemDiscounts.code = null
+        this.customerItemDiscounts.description1 = null
       }
     },
     selectedLabelId (e) {
@@ -1366,12 +1377,7 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.customerLocations.push({
+      let location = {
         code: this.customerLocations.code,
         description1: this.customerLocations.description1,
         addressDetail: this.customerLocations.addressDetail,
@@ -1391,16 +1397,40 @@ export default {
         isInvoiceAddress: this.customerLocations.isInvoiceAddress,
         isDeliveryAddress: this.customerLocations.isDeliveryAddress,
         isRouteNode: this.customerLocations.isRouteNode
-      })
-
+      }
+      if (this.isLocationEditable) {
+        this.form.customerLocations[this.locationEditableIndex] = location
+      } else {
+        let filteredArr = this.form.customerLocations.filter(i => i.code === this.customerLocations.code)
+        if (filteredArr.length > 0) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+          return false
+        }
+        this.form.customerLocations.push(location)
+      }
       this.customerLocations = {
         code: `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length + 1 : 1}`
       }
+      this.isLocationEditable = false
+      this.locationEditableIndex = null
       this.address = {}
+      this.addressInit = null
       this.$v.customerLocations.$reset()
     },
     removeCustomerLocation (item) {
       this.form.customerLocations.splice(this.form.customerLocations.indexOf(item), 1)
+    },
+    editCustomerLocation (item) {
+      this.isLocationEditable = true
+      this.locationEditableIndex = this.form.customerLocations.indexOf(item)
+      let filteredArr = this.form.customerLocations[this.locationEditableIndex]
+      this.customerLocations = filteredArr
+      this.addressInit = {
+        CityId: filteredArr.cityId,
+        DistrictId: filteredArr.districtId,
+        Address: filteredArr.addressDetail
+      }
+      this.$forceUpdate()
     },
     addCreditHistories () {
       this.$v.customerCreditHistories.$touch()
