@@ -91,10 +91,10 @@
                 <NextCheckBox v-model="data.item.UseConsumerPrice" :disabled="!data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(SalesPrice)="data">
-                <b-form-input type="number" readonly v-model="data.item.SalesPrice"/>
+                <b-form-input type="number" v-model="data.item.SalesPrice"/>
               </template>
               <template #cell(ConsumerPrice)="data">
-                <b-form-input type="number" readonly v-model="data.item.ConsumerPrice"/>
+                <b-form-input type="number" v-model="data.item.ConsumerPrice"/>
               </template>
             </b-table>
             <b-pagination
@@ -146,12 +146,12 @@ export default {
       currency: null,
       fields: [
         {
-          key: 'Code',
+          key: 'Item.Code',
           label: this.$t('insert.PriceList.ProductCode'),
           thClass: 'list-textbox-width'
         },
         {
-          key: 'Description1',
+          key: 'Item.Label',
           label: this.$t('insert.PriceList.ProductName'),
           thClass: 'list-textbox-width'
         },
