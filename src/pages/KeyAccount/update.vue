@@ -194,6 +194,7 @@
             :address-error="$v.customerLocations.addressDetail.$error"
             :city-error="$v.customerLocations.cityId.$error"
             :district-error="$v.customerLocations.districtId.$error"
+            :init="addressInit"
           />
           <b-row>
             <b-col cols="12" md="3" lg="2">
@@ -297,7 +298,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.CustomerLocations" :key="i">
+                <b-tr v-for="(r, i) in (form.CustomerLocations ? form.CustomerLocations.filter(c => c.RecordState !== 4): [])" :key="i">
                   <b-td>{{r.Code}}</b-td>
                   <b-td>{{r.Description1}}</b-td>
                   <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
@@ -306,6 +307,7 @@
                   <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td class="text-center">
                     <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
+                    <i @click="editCustomerLocation(r)" class="fa fa-pencil-alt text-warning"></i>
                     <i @click="removeCustomerLocation(r)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -863,7 +865,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
-                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
+                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Code">
                     <template slot="no-options">
                       {{$t('insert.min3')}}
                     </template>
@@ -875,7 +877,7 @@
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
-                <b-form-input type="text" v-model="customerItemDiscounts.description1" />
+                <b-form-input type="text" v-model="customerItemDiscounts.description1" disabled/>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -892,12 +894,12 @@
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountTci1')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
+                <v-select v-model="customerItemDiscounts.selectedTCi1" :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.discountTci2')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
+                <v-select v-model="customerItemDiscounts.selectedTCi2" :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -951,7 +953,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in (CustomerLabels != null ? CustomerLabels.filter(c => c.RecordState !== 4) : [])" :key="i">
+                <b-tr v-for="(r, i) in (CustomerLabels ? CustomerLabels.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{r.Label && r.Label.Label ? r.Label.Label : r.Label}}</b-td>
                   <b-td>{{r.LabelValue && r.LabelValue.Label ? r.LabelValue.Label : r.LabelValue}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -1079,7 +1081,9 @@ export default {
         discountPercent1: null,
         discountPercent2: null,
         tciBreak1Id: null,
-        tciBreak2Id: null
+        tciBreak2Id: null,
+        selectedTCi1: null,
+        selectedTCi2: null
       },
       customerTouchpoints: {
         touchpointPriority: null,
@@ -1098,7 +1102,10 @@ export default {
       },
       CustomerLabels: [],
       upperCustomer: null,
-      Location: {}
+      Location: {},
+      locationEditableIndex: 0,
+      isLocationEditable: false,
+      addressInit: null
     }
   },
   computed: {
@@ -1244,8 +1251,10 @@ export default {
     selectedItem (e) {
       if (e) {
         this.customerItemDiscounts.code = e.RecordId
+        this.customerItemDiscounts.description1 = e.Description1
       } else {
         this.customerItemDiscounts.code = null
+        this.customerItemDiscounts.description1 = null
       }
     },
     selectedLabelId (e) {
@@ -1369,12 +1378,7 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.customerLocations.filter(i => i.Code === this.customerLocations.code)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.CustomerLocations.push({
+      let location = {
         Code: this.customerLocations.code,
         Description1: this.customerLocations.description1,
         addressDetail: this.customerLocations.addressDetail,
@@ -1394,7 +1398,17 @@ export default {
         isInvoiceAddress: this.customerLocations.isInvoiceAddress,
         isDeliveryAddress: this.customerLocations.isDeliveryAddress,
         isRouteNode: this.customerLocations.isRouteNode
-      })
+      }
+      if (this.isLocationEditable) {
+        this.form.CustomerLocations[this.locationEditableIndex] = location
+      } else {
+        let filteredArr = this.form.CustomerLocations.filter(i => i.Code === this.customerLocations.Code)
+        if (filteredArr.length > 0) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+          return false
+        }
+        this.form.CustomerLocations.push(location)
+      }
 
       this.customerLocations.code = null
       this.customerLocations.description1 = null
@@ -1415,7 +1429,10 @@ export default {
       this.customerLocations.isInvoiceAddress = null
       this.customerLocations.isDeliveryAddress = null
       this.customerLocations.isRouteNode = null
+      this.isLocationEditable = false
+      this.locationEditableIndex = null
       this.address = {}
+      this.addressInit = null
       this.$v.customerLocations.$reset()
 
       let lastElem = this.form.CustomerLocations[this.form.CustomerLocations.length - 1].Code
@@ -1425,7 +1442,48 @@ export default {
       this.customerLocations.code = `${this.form.Code} - ${tmpCode}`
     },
     removeCustomerLocation (item) {
-      this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.CustomerLocations[this.form.CustomerLocations.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
+      }
+    },
+    editCustomerLocation (item) {
+      this.isLocationEditable = true
+      this.locationEditableIndex = this.form.CustomerLocations.indexOf(item)
+      let filteredArr = this.form.CustomerLocations[this.locationEditableIndex]
+      this.customerLocations = {
+        code: filteredArr.Code,
+        description1: filteredArr.Description1,
+        addressDetail: filteredArr.AddressDetail,
+        phoneNumber1: filteredArr.PhoneNumber1,
+        faxNumber: filteredArr.FaxNumber,
+        addressDescription: filteredArr.AddressDescription,
+        genexp1: filteredArr.Genexp1,
+        contactName: filteredArr.ContactName,
+        cityId: filteredArr.CityId,
+        xPosition: filteredArr.XPosition,
+        yPosition: filteredArr.YPosition,
+        districtId: filteredArr.DistrictId,
+        genexp2: filteredArr.Genexp2,
+        postCode: filteredArr.PostCode,
+        alias: filteredArr.Alias,
+        isDefaultLocation: filteredArr.IsDefaultLocation,
+        isInvoiceAddress: filteredArr.IsInvoiceAddress,
+        isDeliveryAddress: filteredArr.IsDeliveryAddress,
+        isRouteNode: filteredArr.IsRouteNode,
+        cityLabel: filteredArr.City ? filteredArr.City.Label : '',
+        districtLabel: filteredArr.District ? filteredArr.District.Label : '',
+        RecordId: filteredArr.RecordId
+      }
+      this.addressInit = {
+        CityId: filteredArr.CityId,
+        DistrictId: filteredArr.DistrictId,
+        Address: filteredArr.AddressDetail
+      }
+      this.$forceUpdate()
+      this.locationCityLabel = filteredArr['cityLabel']
+      this.locationDistirictLabel = filteredArr['districtLabel']
     },
     showMap (item) {
       this.Location = item
@@ -1709,12 +1767,12 @@ export default {
           TCIBreak1: e.TCIBreak1,
           TCIBreak2: e.TCIBreak2
         }
-        this.CustomerLabels = e.CustomerLabels
+        this.CustomerLabels = e.CustomerLabels ? e.CustomerLabels : []
         this.form.CustomerLabels = e.CustomerLabels
         this.CustomerPaymentTypesArr.push(...e.CustomerPaymentTypes)
         this.customerLocations.code = `${this.form.Code} - ${this.form.CustomerLocations.length ? this.form.CustomerLocations.length + 1 : 1}`
         this.upperCustomer = e.UpperCustomer
-        if (this.lookup.CUSTOMER_BLOCK_REASON) {
+        if (this.lookup.CUSTOMER_BLOCK_REASON && this.lookup.CUSTOMER_BLOCK_REASON.length > 0) {
           this.BlockReason = this.lookup.CUSTOMER_BLOCK_REASON.find(c => c.DecimalValue === this.form.BlockReasonId)
         }
         if (e.CardType) {
@@ -1737,7 +1795,7 @@ export default {
         this.Category2 = e.Category2
         this.Category3 = e.Category3
         if (e.DefaultPaymentType) {
-          this.DefaultPaymentType = this.paymentTypes.find(v => v.RecordId === e.DefaultPaymentTypeId)
+          this.DefaultPaymentType = this.paymentTypes ? this.paymentTypes.find(v => v.RecordId === e.DefaultPaymentTypeId) : null
         }
         if (e.PriceListCategory) {
           this.PriceListCategory = e.PriceListCategory.Label
