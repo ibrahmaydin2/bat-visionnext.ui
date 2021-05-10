@@ -57,6 +57,7 @@ import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
 import NextLocation from './components/NextLocation'
+import NextDatePicker from './components/NextDatePicker'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -116,6 +117,7 @@ Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('NextDropdown', NextDropdown)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
+Vue.component('NextDatePicker', NextDatePicker)
 
 Vue.prototype.$api = new ApiManager()
 

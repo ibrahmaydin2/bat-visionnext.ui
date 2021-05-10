@@ -888,6 +888,29 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getAutoGridFieldsWithOrConditionModel ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      let dataQuery = {
+        ...query.model,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post(query.serviceUrl, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            // commit('setAutoGridField', {data: res.data.ListModel.BaseModels, name: query.val})
+            return res.data.ListModel.BaseModels
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     getLookups ({ state, commit }, query) {
       let dataQuery = {
         'LookupTableCode': query.type,
