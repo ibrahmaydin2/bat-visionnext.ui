@@ -1492,6 +1492,28 @@
       "newPasswordAgain": "Yeni Şifre Tekrar",
       "yourNewPasswordAgain": "Yeni Şifrenizi Tekrar Girin",
       "passwordsDoesNotMatch": "Şifreler Eşleşmiyor..."
+    },
+    "creditBudget": {
+      "title": "Teminat Bütçesi",
+      "remainingBudget": "Kalan Bütçe",
+      "customerGuarantees": "Müşteri Teminatları",
+      "customer": "Müşteri",
+      "creditLimit": "Kredi Limiti",
+      "riskLimit": "Risk Limiti",
+      "currentCredit": "Güncel Limit",
+      "currentRisk": "Güncel Risk",
+      "creditAccountRemainder": "Borç Bakiyesi",
+      "debitAccountRemainder": "Alacak Bakiyesi",
+      "creditAmount": "Merkez Teminat Bütçesi",
+      "amount": "Teminat Bütçesi",
+      "paymentPeriod": "Vade",
+      "beginDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "creditBranchId": "Şube",
+      "budgetAmount": "Bütçe Tutarı",
+      "usedAmount":"Kullanılan Bütçe",
+      "reservedAmount": "Rezerve Bütçe",
+      "leftAmount": "Kalan Bütçe"
     }
   },
   "get": {
