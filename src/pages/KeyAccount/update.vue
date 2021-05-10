@@ -1381,23 +1381,23 @@ export default {
       let location = {
         Code: this.customerLocations.code,
         Description1: this.customerLocations.description1,
-        addressDetail: this.customerLocations.addressDetail,
-        phoneNumber1: this.customerLocations.phoneNumber1,
-        faxNumber: this.customerLocations.faxNumber,
-        addressDescription: this.customerLocations.addressDescription,
-        genexp1: this.customerLocations.genexp1,
-        contactName: this.customerLocations.contactName,
-        cityId: this.customerLocations.cityId,
-        xPosition: this.customerLocations.xPosition,
-        yPosition: this.customerLocations.yPosition,
-        districtId: this.customerLocations.districtId,
-        genexp2: this.customerLocations.genexp2,
-        postCode: this.customerLocations.postCode,
-        alias: this.customerLocations.alias,
-        isDefaultLocation: this.customerLocations.isDefaultLocation,
-        isInvoiceAddress: this.customerLocations.isInvoiceAddress,
-        isDeliveryAddress: this.customerLocations.isDeliveryAddress,
-        isRouteNode: this.customerLocations.isRouteNode
+        AddressDetail: this.customerLocations.addressDetail,
+        PhoneNumber1: this.customerLocations.phoneNumber1,
+        FaxNumber: this.customerLocations.faxNumber,
+        AddressDescription: this.customerLocations.addressDescription,
+        Genexp1: this.customerLocations.genexp1,
+        ContactName: this.customerLocations.contactName,
+        CityId: this.customerLocations.cityId,
+        XPosition: this.customerLocations.xPosition,
+        YPosition: this.customerLocations.yPosition,
+        DistrictId: this.customerLocations.districtId,
+        Genexp2: this.customerLocations.genexp2,
+        PostCode: this.customerLocations.postCode,
+        Alias: this.customerLocations.alias,
+        IsDefaultLocation: this.customerLocations.isDefaultLocation,
+        IsInvoiceAddress: this.customerLocations.isInvoiceAddress,
+        IsDeliveryAddress: this.customerLocations.isDeliveryAddress,
+        IsRouteNode: this.customerLocations.isRouteNode
       }
       if (this.isLocationEditable) {
         this.form.CustomerLocations[this.locationEditableIndex] = location
@@ -1449,6 +1449,7 @@ export default {
       }
     },
     editCustomerLocation (item) {
+      debugger
       this.isLocationEditable = true
       this.locationEditableIndex = this.form.CustomerLocations.indexOf(item)
       let filteredArr = this.form.CustomerLocations[this.locationEditableIndex]
