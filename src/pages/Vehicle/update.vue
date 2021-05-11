@@ -25,7 +25,7 @@
           </b-col>
           <b-col v-if="insertVisible.DefaultDriverEmployeeId != null ? insertVisible.DefaultDriverEmployeeId : developmentMode" cols="12" md="4" lg="3">
             <b-form-group :label="insertTitle.DefaultDriverEmployeeId + (insertRequired.DefaultDriverEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultDriverEmployeeId.$error }">
-              <v-select v-model="defaultDriverEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
+              <v-select v-model="defaultDriverEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @search="onEmployeeSearch" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.VehiclePlateNumber != null ? insertVisible.VehiclePlateNumber : developmentMode" cols="12" md="4" lg="3">
@@ -263,11 +263,22 @@ export default {
     this.getData().then(() => {
       this.setModel()
     })
-    this.getInsertPage(this.routeName)
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'employees'})
+    onEmployeeSearch (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
+          name: 'employees',
+          andConditionModel: {
+            Description1: search
+          }
+        }).then(res => {
+          loading(false)
+        })
+      }
     },
     addReplacementDriver () {
       this.$v.selectedEmployee.$touch()
