@@ -17,11 +17,6 @@
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
-        <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-          </NextFormGroup>
-        </b-row>
       </section>
     </b-col>
     <b-col cols="12">
@@ -34,7 +29,7 @@
                   {{$t('insert.min3')}}
                 </template>
                  <template v-slot:option="option">
-                  {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -58,6 +53,7 @@
                 v-model="rmaStatus"
                 @input="selectedType('RmaStatusId', $event)"
                 label="Label"
+                disabled
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
@@ -143,7 +139,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in rmaLines" :key="i">
+                  <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
@@ -336,7 +332,11 @@ export default {
       this.$v.rmaLine.$reset()
     },
     removeItems (item) {
-      this.rmaLines[this.rmaLines.indexOf(item)].RecordState = 4
+      if (item.RecordId > 0) {
+        this.rmaLines[this.rmaLines.indexOf(item)].RecordState = 4
+      } else {
+        this.rmaLines.splice(this.rmaLines.indexOf(item), 1)
+      }
     },
     initRmaLine (value) {
       this.rmaLine.UnitSetId = value.UnitSetId
@@ -371,7 +371,6 @@ export default {
       }
     },
     selectedItem (e) {
-      console.log(e)
       if (e) {
         this.rmaLine.Item = e
       } else {

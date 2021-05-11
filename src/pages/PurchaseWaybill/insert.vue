@@ -37,7 +37,10 @@
                    disabled />
               </NextFormGroup>
               <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="3" lg="3">
-                <v-select :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+                <v-select :options="warehouses" :filterable="false" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+                   <template slot="no-options">
+                      {{$t('insert.min3')}}
+                    </template>
                 </v-select>
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
@@ -46,7 +49,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
+                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -307,7 +310,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
-      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', {IsVehicle: 1})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'}).then(() => {
         this.selectedInvoiceKind = this.invoiceKinds.find(i => i.RecordId === 2)
@@ -339,6 +341,28 @@ export default {
             CommercialTitle: search
           }
         ]
+      }).then(res => {
+        loading(false)
+      })
+    },
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch',
+        name: 'warehouses',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ],
+        andConditionModel: {
+          IsVehicle: 1
+        }
       }).then(res => {
         loading(false)
       })

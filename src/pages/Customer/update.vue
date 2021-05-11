@@ -332,7 +332,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in form.CustomerLocations" :key="i">
+                <b-tr v-for="(r, i) in (form.CustomerLocations ? form.CustomerLocations.filter(c => c.RecordState !== 4): [])" :key="i">
                   <b-td>{{r.Code}}</b-td>
                   <b-td>{{r.Description1}}</b-td>
                   <b-td>{{r.AddressDetail}}</b-td>
@@ -1731,7 +1731,11 @@ export default {
       this.locationDistirictLabel = filteredArr['districtLabel']
     },
     removeCustomerLocation (item) {
-      this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.CustomerLocations[this.form.CustomerLocations.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerLocations.splice(this.form.CustomerLocations.indexOf(item), 1)
+      }
     },
     showMap (item) {
       this.Location = item

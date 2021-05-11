@@ -1166,20 +1166,25 @@
       "items": "Ürün",
       "PlanQuantity": "Yükleme Miktarı",
       "LoadingDate": "Yükleme Tarihi",
-      "Route": "Rota"
+      "Route": "Rota",
+      "itemCode": "Ürün Kodu",
+      "unit": "Birim",
+      "loadingDateError": "Yükleme tarihi en yakın bir gün sonraya seçilebilir."
     },
     "vanLoading": {
       "items": "Ürün",
       "itemCode": "Ürün Kodu",
       "unit": "Birim",
-      "FromWhStockQuantity": "Stok Miktari",
-      "ToWhStockQuantity": "Mevcut",
-      "AverageSalesQuantity": "Ortalama Satis",
-      "LastSalesQuantity": "Son Satis",
-      "LastdaySalesQuantity": "Son Is Günü Satisi",
+      "FromWhStockQuantity": "Depo Stok Miktarı",
+      "ToWhStockQuantity": "Rezerve Stok Miktarı",
+      "AverageSalesQuantity": "Ortalama Satış",
+      "LastSalesQuantity": "Son Satış",
+      "LastdaySalesQuantity": "Son Iş Günü Satışı",
       "SuggestedQuantity": "Önerilen Miktar",
       "Description1": "Açıklama",
-      "LoadingQuantity": "Yüklenen"
+      "LoadingQuantity": "Yüklenen",
+      "loadingQuantityError": "Yüklenen Miktar, Depo Stok Miktarı'ndan büyük ya da 0 olamaz.",
+      "fromWhStockQuantityError": "Depo Stok Miktarı 0 olduğundan ekleme yapılamaz."
     },
     "BranchStockTransfer": {
       "Items": "Ürün",
@@ -1492,6 +1497,28 @@
       "newPasswordAgain": "Yeni Şifre Tekrar",
       "yourNewPasswordAgain": "Yeni Şifrenizi Tekrar Girin",
       "passwordsDoesNotMatch": "Şifreler Eşleşmiyor..."
+    },
+    "creditBudget": {
+      "title": "Teminat Bütçesi",
+      "remainingBudget": "Kalan Bütçe",
+      "customerGuarantees": "Müşteri Teminatları",
+      "customer": "Müşteri",
+      "creditLimit": "Kredi Limiti",
+      "riskLimit": "Risk Limiti",
+      "currentCredit": "Güncel Limit",
+      "currentRisk": "Güncel Risk",
+      "creditAccountRemainder": "Borç Bakiyesi",
+      "debitAccountRemainder": "Alacak Bakiyesi",
+      "creditAmount": "Merkez Teminat Bütçesi",
+      "amount": "Teminat Bütçesi",
+      "paymentPeriod": "Vade",
+      "beginDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "creditBranchId": "Şube",
+      "budgetAmount": "Bütçe Tutarı",
+      "usedAmount":"Kullanılan Bütçe",
+      "reservedAmount": "Rezerve Bütçe",
+      "leftAmount": "Kalan Bütçe"
     }
   },
   "get": {
@@ -1888,7 +1915,8 @@
     "timeoutError":  "Beklenmedik bir hata oluştu(Zaman Aşımı)! Lütfen sayfayı yenileyeniz.",
     "noRecord": "Uygun kayıt bulunamadı!",
     "changedPasswordMessage": "Şifreniz Değiştirildi.",
-    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir."
+    "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir.",
+    "actions": "İşlemler"
   },
   "index": {
     "saveRows": "Düzenlemeyi Onayla",

@@ -14,6 +14,10 @@ export class ApiManager {
     return this.call('post', request, null, null, url, pagerecordCount)
   }
 
+  async getByUrl (url, pagerecordCount) {
+    return this.call('get', {}, null, null, url, pagerecordCount)
+  }
+
   async put (request, basePath, secondPath) {
     return this.call('put', request, basePath, secondPath)
   }
@@ -74,9 +78,6 @@ export class ApiManager {
   }
 
   handleError (error) {
-    if (error && error.message === 'Operation canceled due to new request.') {
-      return error
-    }
     let message = i18n.t('general.unExpectedException')
     if (error && error.code === 'ECONNABORTED') {
       message = i18n.t('general.timeoutError')

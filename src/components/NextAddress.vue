@@ -96,8 +96,8 @@ export default {
           Address: newValue.Address
         }
         this.selectedCity = this.cities.find(c => c.DecimalValue === newValue.CityId)
-        this.selectCity(this.selectedCity)
         this.districtId = newValue.DistrictId
+        this.selectCity(this.selectedCity)
         this.selectedDistrict = this.distiricts.find(c => c.DecimalValue === newValue.DistrictId)
         this.selectedAddress = newValue.Address
       }

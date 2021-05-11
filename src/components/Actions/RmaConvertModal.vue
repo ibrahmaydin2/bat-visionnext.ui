@@ -268,6 +268,7 @@ export default {
       }
       this.$api.postByUrl(request, 'VisionNextRma/api/Rma/RmaTransformDocument').then((res) => {
         if (res.IsCompleted === true) {
+          this.closeModal()
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
             keepOnHover: true,

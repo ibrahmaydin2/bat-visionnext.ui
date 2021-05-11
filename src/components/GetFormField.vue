@@ -36,7 +36,8 @@ export default {
   },
   data () {
     return {
-      baseLink: this.routeName || this.$route.meta.baseLink
+      baseLink: this.routeName || this.$route.meta.baseLink,
+      createLink: this.$route.meta.createLink
     }
   },
   components: {
@@ -54,7 +55,7 @@ export default {
     filteredInsertAction () {
       if (Object.keys(this.formFields).length) {
         return this.formFields.Actions.filter(item => {
-          return item.Action === 'Insert'
+          return item.Action === 'Insert' && this.createLink
         })
       }
     },

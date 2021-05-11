@@ -539,14 +539,15 @@ export const store = new Vuex.Store({
     },
     // index ekranlarının seçili sütunlarını kullaıcı özelinde günceller.
     setSelectedRows ({ state, commit }, query) {
+      let userId = localStorage.getItem('UserId')
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'UserId': state.UserId,
+        'UserId': userId,
         'FormId': query.FormId,
         'Columns': query.Columns
       }
-      if (!state.UserId) {
+      if (!userId) {
         store.commit('logout')
         return
       }
@@ -888,6 +889,29 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
+    getAutoGridFieldsWithOrConditionModel ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      let dataQuery = {
+        ...query.model,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post(query.serviceUrl, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            // commit('setAutoGridField', {data: res.data.ListModel.BaseModels, name: query.val})
+            return res.data.ListModel.BaseModels
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
     getLookups ({ state, commit }, query) {
       let dataQuery = {
         'LookupTableCode': query.type,
@@ -1134,7 +1158,7 @@ export const store = new Vuex.Store({
         'page': 1
       }
       if (query.name) {
-        if (typeof state.cancelToken[query.name] !== typeof undefined) {
+        if (typeof state.cancelToken[query.name] !== typeof undefined && typeof state.cancelToken[query.name].cancel) {
           state.cancelToken[query.name].cancel('Operation canceled due to new request.')
         }
         commit('setCancelToken', {name: query.name, data: axios.CancelToken.source()})
@@ -1366,17 +1390,22 @@ export const store = new Vuex.Store({
       this._vm.$bvToast.hide()
     },
     showAlert (state, payload) {
+      if (payload.msg === 'Operation canceled due to new request.' || (payload.msg && payload.msg.message === 'Operation canceled due to new request.')) {
+        return
+      }
       switch (payload.type) {
         case 'catch':
-          if (payload.msg.status === 401) {
+          if (payload.msg && payload.msg.status === 401) {
             store.commit('logout')
           }
-          this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
-            title: i18n.t('general.serverError'),
-            variant: 'danger',
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
-          })
+          if (payload.msg && payload.msg.data) {
+            this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
+              title: i18n.t('general.serverError'),
+              variant: 'danger',
+              toaster: 'b-toaster-bottom-right',
+              noCloseButton: false
+            })
+          }
           break
         case 'network':
           const err = payload.msg.message
@@ -1799,6 +1828,9 @@ export const store = new Vuex.Store({
     },
     setCancelToken (state, payload) {
       state.cancelToken[payload.name] = payload.data
+    },
+    resetCancelToken (state, payload) {
+      state.cancelToken = payload
     }
   }
 })

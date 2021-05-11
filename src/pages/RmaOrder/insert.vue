@@ -33,11 +33,14 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
+              <v-select :options="employees" @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -191,7 +194,7 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
-      this.searchWarehouse()
+      // this.searchWarehouse()
       // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
       // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
       // lookup harici dataya ihtiyaç yoksa silinebilir
@@ -220,7 +223,11 @@ export default {
         loading(false)
       })
     },
-    searchWarehouse () {
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: 'VisionNextWarehouse/api/Warehouse/Search',
@@ -230,6 +237,8 @@ export default {
           IsVirtualWarehouse: 0,
           StatusId: 1
         }
+      }).then(res => {
+        loading(false)
       })
     },
     searchItem (search, loading) {

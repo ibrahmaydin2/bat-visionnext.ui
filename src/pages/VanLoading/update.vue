@@ -19,10 +19,18 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="2">
-            <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1"></v-select>
+            <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1">
+              <template slot="no-options">
+                {{$t('insert.min3')}}
+              </template>
+            </v-select>
           </NextFormGroup>
           <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2">
-              <v-select v-model="route" :options="routes" @input="selectedSearchType('RouteId', $event)" label="Description1"></v-select>
+            <v-select v-model="route" :options="routes" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
+              <template slot="no-options">
+                {{$t('insert.min3')}}
+              </template>
+            </v-select>
           </NextFormGroup>
           <NextFormGroup item-key="IsDone" :error="$v.form.IsDone" md="2">
               <v-select disabled v-model="selectedDone" :options="vanLoadingStatus" label="Description1"></v-select>
@@ -178,27 +186,47 @@ export default {
     ...mapState(['warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
     this.getData().then(() => this.setData())
   },
   methods: {
-    getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query,
-        api: 'VisionNextWarehouse/api/Warehouse/Search',
+    searchRoute (search, loading) {
+      if (search.length >= 3) {
+        loading(true)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
+          name: 'routes',
+          andConditionModel: {
+            Description1: search,
+            RouteTypeIds: [1, 6],
+            StatusIds: [1]
+          }
+        }).then(res => {
+          loading(false)
+        })
+      }
+    },
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch',
         name: 'warehouses',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ],
         andConditionModel: {
           'IsVehicle': 0,
           'StatusIds': [1]
         }
-      })
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/VanLoadingStatu/Search', name: 'vanLoadingStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query,
-        api: 'VisionNextRoute/api/Route/Search',
-        name: 'routes',
-        andConditionModel: {
-          'RouteTypeIds': [1],
-          'StatusIds': [1]
-        }
+      }).then(res => {
+        loading(false)
       })
     },
     selectedSearchType (label, model) {
@@ -280,7 +308,15 @@ export default {
         })
         return false
       }
+      if (this.vanLoadingItems.FromWhStockQuantity === 0) {
+        this.$toasted.show(this.$t('insert.vanLoading.fromWhStockQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       this.vanLoadingItems.LoadingQuantity = this.vanLoadingItems.LoadingQuantity ? parseInt(this.vanLoadingItems.LoadingQuantity) : 0
+      if (this.vanLoadingItems.LoadingQuantity === 0 || this.vanLoadingItems.LoadingQuantity > this.vanLoadingItems.FromWhStockQuantity) {
+        this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       this.detailPanelRecordId++
       if (this.vanLoadingItems.IsUpdated) {
         this.vanLoadingItems.RecordState = 3

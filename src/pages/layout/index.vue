@@ -6,6 +6,15 @@
       <b-row v-else class="mb-3">
         <b-col cols="12">
           <div :class="style.viewPush">
+            <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+              <template #overlay>
+                <b-icon
+                  icon="three-dots"
+                  animation="cylon"
+                  scale="8"
+                  variant="warning"
+            ></b-icon>
+            </template>
             <b-card class="asc__listPage shadow">
               <b-row class="asc__listPage-Header">
                 <b-col cols="12" sm="12" md="3" class="pl-0">
@@ -128,19 +137,10 @@
                   </div>
                 </b-col>
               </b-row>
-              <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
-                <template #overlay>
-                  <b-icon
-                    icon="three-dots"
-                    animation="cylon"
-                    scale="8"
-                    variant="warning"
-                  ></b-icon>
-                </template>
-                <router-view />
-                <div class="clearfix" />
-              </b-overlay>
+              <router-view />
+              <div class="clearfix" />
             </b-card>
+            </b-overlay>
           </div>
         </b-col>
       </b-row>

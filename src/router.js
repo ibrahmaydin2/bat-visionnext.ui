@@ -655,7 +655,7 @@ const listIndex = [
   {path: '/SalesWaybill', name: 'SalesWaybill', component: SalesWaybillIndex, meta: { title: i18n.t('router.SalesWaybill'), createLink: 'SalesWaybillInsert' }},
   {path: '/ServicePurchaseInvoice', name: 'ServicePurchaseInvoice', component: ServicePurchaseInvoiceIndex, meta: { title: i18n.t('router.ServicePurchaseInvoice'), createLink: 'ServicePurchaseInvoiceInsert' }},
   {path: '/DispatchRefDocument', name: 'DispatchRefDocument', component: DispatchRefDocumentIndex, meta: { title: i18n.t('router.DispatchRefDocument') }},
-  {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget') }},
+  {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget'), createLink: 'CreditBudgetInsert' }},
   {path: '/TerminalMessage', name: 'TerminalMessage', component: TerminalMessageIndex, meta: { title: i18n.t('router.TerminalMessage'), createLink: 'TerminalMessageInsert' }},
   {path: '/Label', name: 'Label', component: LabelIndex, meta: { title: i18n.t('router.Label'), createLink: 'LabelInsert' }},
   {path: '/RefContract', name: 'RefContract', component: RefContractIndex, meta: { title: i18n.t('router.RefContract'), createLink: 'RefContractInsert' }},

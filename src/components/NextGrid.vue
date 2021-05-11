@@ -1021,9 +1021,9 @@ export default {
     .asc__nextgrid-table-header-Boolean
       width: 120px
     .asc__nextgrid-table-header-Date
-      min-width: 100px
+      width: 170px
     .asc__nextgrid-table-header-DateTime
-      min-width: 100px
+      width: 170px
     .asc__nextgrid-table-header-String
       min-width: 100px
     .asc__nextgrid-table-header-Id
@@ -1077,4 +1077,6 @@ export default {
       text-overflow: ellipsis
       max-width: 200px
       min-width: 50px
+    .mx-datepicker-range
+      width: 160px
 </style>

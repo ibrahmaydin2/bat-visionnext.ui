@@ -55,10 +55,12 @@
               <NextDropdown :disabled="true" v-model="transferLabel" lookup-key="CONTRACT_TRANSFER_STATUS" @input="selectedType('ContractTransferStatusId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractStartDate" :error="$v.form.SourceContractStartDate">
-              <b-form-datepicker v-model="form.SourceContractStartDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.SourceContractStartDate" />
+              <!-- <b-form-datepicker v-model="form.SourceContractStartDate" :placeholder="$t('insert.chooseDate')"/> -->
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractEndDate" :error="$v.form.SourceContractEndDate">
-              <b-form-datepicker v-model="form.SourceContractEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.SourceContractEndDate" />
+              <!-- <b-form-datepicker v-model="form.SourceContractEndDate" :placeholder="$t('insert.chooseDate')"/> -->
             </NextFormGroup>
             <NextFormGroup item-key="TransferReasonId" :error="$v.form.TransferReasonId">
               <NextDropdown lookup-key="TRANSFER_REASON" @input="selectedType('TransferReasonId', $event)"/>
@@ -143,10 +145,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
-        this.tabValidation()
       } else {
-        this.form.SourceContractStartDate = this.dateConvertToISo(this.form.SourceContractStartDate)
-        this.form.SourceContractEndDate = this.dateConvertToISo(this.form.SourceContractEndDate)
         this.createData()
       }
     }

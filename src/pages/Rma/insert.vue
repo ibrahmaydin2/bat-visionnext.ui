@@ -18,9 +18,6 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -34,7 +31,7 @@
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive')) + ' - ' + option.Description1}}
+                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}
                 </template>
               </v-select>
             </NextFormGroup>
