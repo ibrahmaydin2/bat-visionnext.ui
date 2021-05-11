@@ -623,7 +623,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerCreditHistories')"  @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')" :disabled="customerCreditHistoriesDisabled"  @click.prevent="tabValidation()">
           <b-row>
             <b-col cols="12" md="3" lg="2">
               <b-form-group :label="$t('insert.customer.bank')">
@@ -1118,7 +1118,8 @@ export default {
       invoiceCombineRule: {},
       locationEditableIndex: 0,
       isLocationEditable: false,
-      addressInit: null
+      addressInit: null,
+      customerCreditHistoriesDisabled: false
     }
   },
   computed: {
@@ -1141,6 +1142,7 @@ export default {
   },
   methods: {
     getInsertPage (e) {
+      this.getCurrentBranch()
       this.createManualCode().then(() => {
         this.customerLocations.code = `${this.form.Code} - ${this.form.customerLocations.length ? this.form.customerLocations.length + 1 : 1}`
       })
@@ -1161,6 +1163,17 @@ export default {
         name: 'recordTypeList',
         andConditionModel: {
           RecordIds: [3, 4]
+        }
+      })
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordIds: [this.$store.state.BranchId]
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/AutoCompleteSearch').then(response => {
+        if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+          let branch = response.ListModel.BaseModels[0]
+          this.customerCreditHistoriesDisabled = branch.DistributionTypeId !== 6
         }
       })
     },
