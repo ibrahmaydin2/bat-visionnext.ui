@@ -21,7 +21,7 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('get.RmaOrder.RmaOrder')" active>
+        <b-tab :title="$t('get.detail')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.RouteDailyRecord.Representative')"></div>
@@ -42,22 +42,46 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('get.RouteDailyRecord.Visits')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table-simple bordered small sticky-header="500px">
+                  <b-thead>
+                    <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
+                    <b-th><span>{{$t('get.RouteDailyRecord.VisitStart')}}</span></b-th>
+                    <b-th><span>{{$t('get.RouteDailyRecord.VisitEnd')}}</span></b-th>
+                    <b-th><span>{{$t('get.RouteDailyRecord.IsOutRoute')}}</span></b-th>
+                    <b-th><span>{{$t('get.RouteDailyRecord.VisitReason')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in routeDetails" :key="i">
+                      <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
+                      <b-td>{{r.VisitStartTime ? r.VisitStartTime: ''}}</b-td>
+                      <b-td>{{r.VisitEndTime ? r.VisitEndTime: ''}}</b-td>
+                      <b-td>{{(typeof r.IsOutofrouteVisit === 'undefined') ? '' : (r.IsOutofrouteVisit) ? $t('insert.yes') : $t('insert.no')}}</b-td>
+                      <b-td>{{r.VisitCancelReason ? r.VisitCancelReason.Label: ''}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
   data () {
     return {
+      rowData: [],
+      routeDetails: [],
+      datas: []
     }
-  },
-  computed: {
-    ...mapState(['rowData'])
   },
   mounted () {
     this.getData()
@@ -67,7 +91,42 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/RouteDailyRecord', record: this.$route.params.url}).then(() => {
+      this.$api.postByUrl({recordId: this.$route.params.url}, 'VisionNextRoute/api/RouteDailyRecord/Get').then((res) => {
+        this.rowData = res.Model
+        let request = {
+          'AndConditionModel': {
+            'RouteIds': [res.Model.RouteId]
+          }
+        }
+        this.$api.postByUrl(request, '/VisionNextRoute/api/RouteDetail/Search').then((response) => {
+          this.routeDetails = response.ListModel.BaseModels
+          let request1 = {
+            'AndConditionModel': {
+              'RouteDailyIds': [this.$route.params.url]
+            }
+          }
+          this.$api.postByUrl(request1, '/VisionNextCommonApi/api/Visit/Search').then((res1) => {
+            let visits = res1.ListModel.BaseModels
+            let tmpArr = []
+            this.routeDetails.map((routeDetail, index) => {
+              visits.map((visit, i) => {
+                if (routeDetail.CustomerId === visit.CustomerId) {
+                  tmpArr.push(visit)
+                  this.routeDetails.splice(this.routeDetails.indexOf(routeDetail), 1)
+                  delete visits[i]
+                }
+              })
+            })
+            visits.map(visit => {
+              this.routeDetails.push(visit)
+            })
+            tmpArr.map(visit => {
+              this.routeDetails.push(visit)
+            })
+            this.routeDetails.reverse()
+            console.log(this.routeDetails)
+          })
+        })
       })
     }
   }

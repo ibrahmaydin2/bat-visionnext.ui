@@ -65,7 +65,7 @@
                     <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.isRouteNode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.isRouteNode1')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.CustomerLocations" :key="i">
@@ -272,7 +272,7 @@ export default {
         {key: 'IsDefaultLocation', label: this.$t('insert.customer.Model_IsDefaultLocation'), sortable: true},
         {key: 'IsInvoiceAddress', label: this.$t('insert.customer.Model_IsInvoiceAddress'), sortable: true},
         {key: 'IsDeliveryAddress', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
-        {key: 'IsRouteNode', label: this.$t('insert.customer.isRouteNode'), sortable: true},
+        {key: 'IsRouteNode', label: this.$t('insert.customer.isRouteNode1'), sortable: true},
         {key: 'IsVehicleLocation', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
         {key: 'Genexp1', label: this.$t('insert.customer.Model_Genexp1'), sortable: true},
         {key: 'Alias', label: this.$t('insert.customer.Model_Alias'), sortable: true}
