@@ -1175,14 +1175,16 @@
       "items": "Ürün",
       "itemCode": "Ürün Kodu",
       "unit": "Birim",
-      "FromWhStockQuantity": "Stok Miktari",
+      "FromWhStockQuantity": "Rezerve Stok Miktarı",
       "ToWhStockQuantity": "Mevcut",
-      "AverageSalesQuantity": "Ortalama Satis",
-      "LastSalesQuantity": "Son Satis",
-      "LastdaySalesQuantity": "Son Is Günü Satisi",
+      "AverageSalesQuantity": "Ortalama Satış",
+      "LastSalesQuantity": "Son Satış",
+      "LastdaySalesQuantity": "Son Is Günü Satışı",
       "SuggestedQuantity": "Önerilen Miktar",
       "Description1": "Açıklama",
-      "LoadingQuantity": "Yüklenen"
+      "LoadingQuantity": "Yüklenen",
+      "loadingQuantityError": "Yüklenen miktar 0'dan büyük ve Rezerve Stok Miktarı'ndan küçük olmalıdır.",
+      "fromWhStockQuantityError": "Rezerve Stok Miktarı 0 olduğundan ekleme yapılamaz."
     },
     "BranchStockTransfer": {
       "Items": "Ürün",
