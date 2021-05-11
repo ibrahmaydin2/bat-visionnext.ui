@@ -19,14 +19,14 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="2">
-            <v-select :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1">
+            <v-select :options="warehouses" :filterable="false" @search="searchWarehouse" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1">
               <template slot="no-options">
                 {{$t('insert.min3')}}
               </template>
             </v-select>
           </NextFormGroup>
           <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2">
-            <v-select :options="routes" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
+            <v-select :options="routes" :filterable="false" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
               <template slot="no-options">
                 {{$t('insert.min3')}}
               </template>
@@ -311,7 +311,15 @@ export default {
         })
         return false
       }
-      this.vanLoadingItems.LoadingQuantity = this.vanLoadingItems.LoadingQuantity ? parseInt(this.vanLoadingItems.LoadingQuantity) : 0
+      if (this.vanLoadingItem.FromWhStockQuantity === 0) {
+        this.$toasted.show(this.$t('insert.vanLoading.fromWhStockQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
+      this.vanLoadingItem.LoadingQuantity = this.vanLoadingItem.LoadingQuantity ? parseInt(this.vanLoadingItem.LoadingQuantity) : 0
+      if (this.vanLoadingItem.LoadingQuantity === 0 || this.vanLoadingItem.LoadingQuantity > this.vanLoadingItem.FromWhStockQuantity) {
+        this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       if (this.vanLoadingItem.IsUpdated) {
         this.VanLoadingItems[this.selectedIndex] = this.vanLoadingItem
         this.selectedIndex = 0

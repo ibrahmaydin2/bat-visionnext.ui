@@ -308,7 +308,15 @@ export default {
         })
         return false
       }
+      if (this.vanLoadingItems.FromWhStockQuantity === 0) {
+        this.$toasted.show(this.$t('insert.vanLoading.fromWhStockQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       this.vanLoadingItems.LoadingQuantity = this.vanLoadingItems.LoadingQuantity ? parseInt(this.vanLoadingItems.LoadingQuantity) : 0
+      if (this.vanLoadingItems.LoadingQuantity === 0 || this.vanLoadingItems.LoadingQuantity > this.vanLoadingItems.FromWhStockQuantity) {
+        this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
       this.detailPanelRecordId++
       if (this.vanLoadingItems.IsUpdated) {
         this.vanLoadingItems.RecordState = 3
