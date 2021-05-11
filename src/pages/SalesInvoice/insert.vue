@@ -122,7 +122,10 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <v-select :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select :options="warehouses" :filterable="false" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
@@ -398,12 +401,11 @@ export default {
       selectedPaymentType: null,
       paymentTypes: [],
       selectedInvoiceKind: null,
-      invoiceKindList: [],
-      warehouses: []
+      invoiceKindList: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'routes', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds'])
+    ...mapState(['representatives', 'routes', 'customers', 'priceList', 'vehicles', 'currencies', 'items', 'priceListItems', 'stocks', 'invoiceKinds', 'warehouses'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -422,9 +424,9 @@ export default {
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
       })
-      this.$api.post({andConditionModel: {StatusIds: [1], IsVehicle: 0}}, 'Warehouse', 'Warehouse/Search').then((response) => {
-        this.warehouses = response && response.ListModel ? response.ListModel.BaseModels : []
-      })
+      // this.$api.post({andConditionModel: {StatusIds: [1], IsVehicle: 0}}, 'Warehouse', 'Warehouse/Search').then((response) => {
+      //   this.warehouses = response && response.ListModel ? response.ListModel.BaseModels : []
+      // })
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10)
       this.form.ActualDeliveryDate = date
@@ -432,6 +434,29 @@ export default {
       let time = currentDate.toLocaleTimeString()
       this.form.DocumentTime = time
       this.form.ActualDeliveryTime = time
+    },
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch',
+        name: 'warehouses',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ],
+        andConditionModel: {
+          IsVehicle: 1,
+          StatusIds: [1]
+        }
+      }).then(res => {
+        loading(false)
+      })
     },
     searchRoute (search, loading) {
       if (search.length >= 3) {
