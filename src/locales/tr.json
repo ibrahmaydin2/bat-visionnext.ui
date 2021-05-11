@@ -2019,7 +2019,7 @@
     "errorLocation": "Boylam - Enlem Bilgisi Eksik",
     "errorSevk": "Yalnızca Sevk Edilebilir ve Açık durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
-    "errorConfirm": "Yalnızca Onaylandı durumundaki kayıtlar onaylanabilir.",
+    "errorConfirm": "Sadece onaylandı durumundaki kayıtlar dönüştürülebilir.",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
