@@ -792,6 +792,7 @@
       "customerEmail": "E-Mail",
       "Model_Location_Description1": "Lokasyon Adı",
       "isRouteNode": "Rotaya Ekle",
+      "isRouteNode1": "Rotaya Ekli",
       "Model_FaxNumber": "Faks",
       "AdditionalClassInformation": "Ek Sınıflandırma Bilgileri",
       "reservedLimit": "Rezerve Limiti",
@@ -1952,7 +1953,12 @@
       "StartKm": "Başlangıç Kilometresi",
       "EndKm": "Bitiş Kilometresi",
       "SuccessVisitCount": "Başarılı Ziyaret Sayısı",
-      "PlannedVisitCount": "Planlanan Ziyaret Sayısı"
+      "PlannedVisitCount": "Planlanan Ziyaret Sayısı",
+      "Visits": "Ziyaretler",
+      "VisitStart": "Ziyaret Başlangıç Saati",
+      "VisitEnd": "Ziyaret Bitiş Saati",
+      "IsOutRoute": "Rota Dışı Ziyaret Mi?",
+      "VisitReason": "Ziyaret İptal Nedeni"
     },
     "RefContract": {
       "OperationDesc": "Açıklama",

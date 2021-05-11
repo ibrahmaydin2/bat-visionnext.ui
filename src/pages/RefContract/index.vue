@@ -1,4 +1,4 @@
 <template>
-  <Nextgrid apiurl="VisionNextCommonApi/api/Label/Search" />
+  <Nextgrid apiurl="VisionNextContractManagement/api/RefContract/Search" />
 </template>
 <script>
