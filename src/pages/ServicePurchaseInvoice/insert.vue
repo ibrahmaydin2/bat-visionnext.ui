@@ -87,7 +87,7 @@
           </b-row>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" ></v-select>
+              <NextDropdown @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
@@ -311,7 +311,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['representatives', 'customers', 'currencies', 'orderStatusList', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
+    ...mapState(['customers', 'currencies', 'orderStatusList', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -321,7 +321,6 @@ export default {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextOrder/api/OrderStatus/Search', name: 'orderStatusList'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceType/Search', name: 'invoiceTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'}).then(() => {

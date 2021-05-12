@@ -114,8 +114,8 @@
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
                   v-model="selectedRepresentative"
-                  url="VisionNextEmployee/api/Employee/Search"
-                  @input="selectedSearchType('RepresentativeId', $event)"/>
+                  url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                  @input="selectedSearchType('RepresentativeId', $event)" searchable />
               </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
@@ -131,7 +131,7 @@
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <v-select v-model="selectedVehicle" :options="vehicles" :filterable="false" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
+              <NextDropdown @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <v-select v-model="selectedPaymentType" :options="paymentTypes" label="Label"  @input="selectedType('PaymentTypeId', $event)"/>
