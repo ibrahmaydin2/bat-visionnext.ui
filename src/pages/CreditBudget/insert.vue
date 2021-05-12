@@ -85,10 +85,10 @@
             <NextFormGroup :title="$t('insert.creditBudget.creditAmount')" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.CreditAmount" disabled />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.amount')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.Amount" disabled />
+            <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
+              <b-form-input type="number" v-model="customerGuarantees.Amount" disabled/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="true" :error="$v.customerGuarantees.PaymentPeriod" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.PaymentPeriod" disabled />
             </NextFormGroup>
             <b-col cols="12" md="2">
@@ -234,6 +234,12 @@ export default {
       form: this.insertRules,
       customerGuarantees: {
         CustomerId: {
+          required
+        },
+        Amount: {
+          required
+        },
+        PaymentPeriod: {
           required
         }
       }

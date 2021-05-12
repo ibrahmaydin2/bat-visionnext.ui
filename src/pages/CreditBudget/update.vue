@@ -236,6 +236,9 @@ export default {
     setData () {
       this.form = this.rowData
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
+      this.form.LeftAmount = this.form.BudgetAmount > 0
+        ? (parseFloat(this.form.BudgetAmount) - (this.form.UsedAmount + this.form.ReservedAmount))
+        : 0
     }
   },
   validations () {
