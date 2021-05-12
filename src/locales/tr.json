@@ -1547,7 +1547,7 @@
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
       "creditAmount": "Merkez Teminat Bütçesi",
-      "amount": "Teminat Bütçesi",
+      "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
       "endDate": "Bitiş Tarihi",

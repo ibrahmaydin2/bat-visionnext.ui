@@ -40,18 +40,9 @@
       <b-tabs>
         <b-tab :title="$t('insert.LoyaltyExpense.title')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-                <v-select v-model="employee" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
+                <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event); getLoyalties" label="Description1" :filterable="false">
                   <template slot="no-options">
                     {{$t('insert.min3')}}
                   </template>
@@ -61,6 +52,11 @@
                 </v-select>
               </b-form-group>
             </b-col>
+            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.TransactionDate + (insertRequired.TransactionDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionDate.$error }">
+                <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.LoyaltyExpense.chooseDate')" @input="getLoyalties" />
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.LoyaltyId + (insertRequired.LoyaltyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LoyaltyId.$error }">
                 <v-select v-model="loyalty" :options="loyalities" @input="selectedSearchType('LoyaltyId', $event)" label="Description1"></v-select>
@@ -68,14 +64,18 @@
             </b-col>
           </b-row>
           <b-row>
+            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
+              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
+                <v-select v-model="employee" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
             <b-col v-if="insertVisible.ConsumptionScore != null ? insertVisible.ConsumptionScore : developmentMode" cols="12" md="4" lg="3">
               <b-form-group :label="insertTitle.ConsumptionScore + (insertRequired.ConsumptionScore === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ConsumptionScore.$error }">
                 <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.TransactionDate + (insertRequired.TransactionDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionDate.$error }">
-                <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.LoyaltyExpense.chooseDate')"  />
               </b-form-group>
             </b-col>
           </b-row>
@@ -104,11 +104,12 @@ export default {
       routeName1: 'Loyalty',
       employee: null,
       customer: null,
-      loyalty: null
+      loyalty: null,
+      loyalities: []
     }
   },
   computed: {
-    ...mapState(['employees', 'customers', 'loyalities'])
+    ...mapState(['employees', 'customers'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -118,7 +119,6 @@ export default {
       this.getData().then(() => {
         this.setModel()
       })
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextLoyalty/api/Loyalty/Search', name: 'loyalities'})
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -151,6 +151,20 @@ export default {
       }).then(res => {
         loading(false)
       })
+    },
+    getLoyalties () {
+      if (this.form.CustomerId && this.form.TransactionDate) {
+        this.form.LoyaltyId = null
+        this.loyalty = {}
+        let model = {
+          TransactionDate: this.form.TransactionDate,
+          CustomerId: this.form.CustomerId
+        }
+        this.$api.postByUrl({AndConditionModel: model}, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
+          this.loyalities = res.ListModel ? res.ListModel.BaseModels : []
+        })
+        this.getConsumptionScore()
+      }
     },
     save () {
       this.$v.form.$touch()

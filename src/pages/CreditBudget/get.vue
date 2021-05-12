@@ -32,7 +32,7 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.UsedAmount, 'text', 'insert.creditBudget.usedAmount')"></div>
               <div v-html="getFormatDataByType(rowData.ReservedAmount, 'text', 'insert.creditBudget.reservedAmount')"></div>
-              <div v-html="getFormatDataByType(rowData.LeftAmount, 'text', 'insert.creditBudget.leftAmount')"></div>
+              <div v-html="getFormatDataByType((rowData.BudgetAmount > 0 ? rowData.BudgetAmount - (rowData.UsedAmount + rowData.ReservedAmount) : 0), 'text', 'insert.creditBudget.leftAmount')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -54,7 +54,7 @@
                     <b-th><span>{{$t('insert.creditBudget.paymentPeriod')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerGuarantees" :key="i">
+                    <b-tr v-for="(c, i) in rowData.CustomerGuarantees" :key="i">
                       <b-td>{{c.CustomerDesc}}</b-td>
                       <b-td>{{c.CreditLimit}}</b-td>
                       <b-td>{{c.RiskLimit}}</b-td>
