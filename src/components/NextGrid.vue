@@ -238,6 +238,7 @@
     <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -348,7 +349,8 @@ export default {
       AndConditionalModel: {},
       disabledDraggable: false,
       firstHead: null,
-      firstSearchItem: null
+      firstSearchItem: null,
+      showUpdateCreditBudgetModal: false
     }
   },
   mounted () {
@@ -413,6 +415,7 @@ export default {
       this.showLocationModal = false
       this.showCreateSalesWaybillModal = false
       this.showMultipleLoadingPlanModal = false
+      this.showUpdateCreditBudgetModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -495,6 +498,11 @@ export default {
         this.showMultipleLoadingPlanModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'multipleLoadingPlanModal')
+        })
+      } else if (action.Action === 'BudgetUpdate') {
+        this.showUpdateCreditBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'update-credit-budget-modal')
         })
       } else {
         this.showConfirmModal = true

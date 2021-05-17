@@ -1556,7 +1556,15 @@
       "budgetAmount": "Bütçe Tutarı",
       "usedAmount":"Kullanılan Bütçe",
       "reservedAmount": "Rezerve Bütçe",
-      "leftAmount": "Kalan Bütçe"
+      "leftAmount": "Kalan Bütçe",
+      "excelImport": "Müşteri Excel Yükle",
+      "uploadExcel": "Excel Yükle",
+      "movementCode": "Hareket Kodu",
+      "description": "Açıklama",
+      "amount2": "Tutar",
+      "budgetMovementType": "Bütçe Hareket Tipi",
+      "update": "Güncelle",
+      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir."
     }
   },
   "get": {
