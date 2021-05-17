@@ -8,6 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
+            <GetFormField v-model="workFlowModel"/>
           </header>
         </b-col>
       </b-row>
@@ -61,7 +62,12 @@ export default {
       fields: [
         {key: 'OperationDesc', label: this.$t('get.RefContract.OperationDesc'), sortable: false},
         {key: 'TotalAmount', label: this.$t('get.RefContract.TotalAmount'), sortable: false}
-      ]
+      ],
+      workFlowModel: {
+        ControllerName: 'RefContract',
+        ClassName: 'RefContract',
+        PageName: 'pg_ContractTransfer'
+      }
     }
   },
   mounted () {

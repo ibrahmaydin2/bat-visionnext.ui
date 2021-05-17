@@ -126,6 +126,14 @@ export default {
 
       }
       this.$api.post(request, 'Workflow', 'Workflow/ProcessWorkflow').then((res) => {
+        if (!res.Iscomleted) {
+          this.$toasted.show(res.Message, {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.$toasted.show(this.$t('insert.workflowSuccess'), {
           type: 'success',
           keepOnHover: true,
