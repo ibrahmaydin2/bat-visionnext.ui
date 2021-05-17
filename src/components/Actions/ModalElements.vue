@@ -4,13 +4,18 @@
       <b-col cols="6" v-for="(element, i) in formElements" :key="i">
         <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
           <div v-if="element.modelControlUtil.inputType === 'AutoComplete'">
-            <autocomplete
+            <!-- <autocomplete
               @click="onClickAutoComplete(element.modelControlUtil)"
               :search="onAutoCompleteSearch"
               class="autocomplete-search"
               :get-result-value="getResultValue"
               @submit="handleSubmit(element.modelControlUtil.modelProperty, $event)"
-            />
+            /> -->
+            <NextDropdown
+              @input="selectedValue(element.modelControlUtil.modelProperty, $event, 'search')"
+              :url="element.modelControlUtil.serviceUrl"
+              :searchable="true" :custom-option="true"
+              or-condition-fields="Code,Description1,CommercialTitle"/>
           </div>
           <div v-else>
             <v-select
@@ -115,7 +120,7 @@ export default {
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
 
-        if (item.modelControlUtil) {
+        if (item.modelControlUtil && item.modelControlUtil.inputType !== 'AutoComplete') {
           if (item.modelControlUtil.isLookupTable) {
             autoLookups += item.DefaultValue + ','
           } else {
@@ -158,6 +163,7 @@ export default {
       return new Date(date).toISOString()
     },
     onClickAutoComplete (element) {
+      console.log(element)
       this.selectedElement = element
     },
     onAutoCompleteSearch (input) {
