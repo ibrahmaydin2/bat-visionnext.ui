@@ -64,6 +64,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{BranchId: form.CreditBranchId}"
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
