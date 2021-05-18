@@ -58,6 +58,9 @@ import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
 import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
+import NextTimePicker from './components/NextTimePicker'
+import NextInput from './components/NextInput'
+import NextTextArea from './components/NextTextArea'
 import CreditBudgetExcelModal from './components/Actions/CreditBudgetExcelModal'
 import UpdateCreditBudgetModal from './components/Actions/UpdateCreditBudgetModal'
 
@@ -120,6 +123,9 @@ Vue.component('NextDropdown', NextDropdown)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)
+Vue.component('NextTimePicker', NextTimePicker)
+Vue.component('NextInput', NextInput)
+Vue.component('NextTextArea', NextTextArea)
 Vue.component('CreditBudgetExcelModal', CreditBudgetExcelModal)
 Vue.component('UpdateCreditBudgetModal', UpdateCreditBudgetModal)
 
