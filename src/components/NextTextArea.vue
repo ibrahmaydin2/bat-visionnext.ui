@@ -1,19 +1,15 @@
 <template>
-  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" />
+  <b-form-textarea :readonly="disabled" v-model="selectedValue" />
 </template>
 <script>
 export default {
-  name: 'NextInput',
+  name: 'NextTextArea',
   model: {
     prop: 'value',
     event: 'valuechange'
   },
   props: {
-    disabled: null,
-    type: {
-      required: true,
-      type: String
-    }
+    disabled: null
   },
   data () {
     return {
