@@ -1526,7 +1526,12 @@
       "amount2": "Tutar",
       "budgetMovementType": "Bütçe Hareket Tipi",
       "update": "Güncelle",
-      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir."
+      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir.",
+      "approve": "Onayla",
+      "status": "Durum",
+      "searchustomer": "Müşteri Ara",
+      "bulkCustomerApprove": "Toplu Müşteri Onaylama",
+      "approveState":"Onay Durumu"
     }
   },
   "get": {
