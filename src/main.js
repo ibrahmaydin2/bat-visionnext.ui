@@ -60,6 +60,7 @@ import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
 import CreditBudgetExcelModal from './components/Actions/CreditBudgetExcelModal'
 import UpdateCreditBudgetModal from './components/Actions/UpdateCreditBudgetModal'
+import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkApproveModal'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -122,6 +123,7 @@ Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)
 Vue.component('CreditBudgetExcelModal', CreditBudgetExcelModal)
 Vue.component('UpdateCreditBudgetModal', UpdateCreditBudgetModal)
+Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)
 
 Vue.prototype.$api = new ApiManager()
 

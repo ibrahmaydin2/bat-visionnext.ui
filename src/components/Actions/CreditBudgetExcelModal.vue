@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="credit-budget-excel-modal" :title="$t('insert.creditBudget.excelImport')" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal id="credit-budget-excel-modal" @hide="hide" :title="$t('insert.creditBudget.excelImport')" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
@@ -76,13 +76,11 @@ export default {
     return {
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
+  methods: {
+    hide () {
       this.datas = []
       this.files = null
-    })
-  },
-  methods: {
+    },
     submitFile () {
       var file = document.querySelector('input[type="file"]').files[0]
       this.getBase64(file)

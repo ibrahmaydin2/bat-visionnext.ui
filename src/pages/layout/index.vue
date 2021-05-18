@@ -167,7 +167,7 @@
          v-if="showSalesReturnInvoiceConvertModal" />
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
         <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" />
-
+        <CreditBudgetBulkApproveModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :recordIds="recordIds" size="xl"/>
   </b-container>
 </template>
 <script>
@@ -206,7 +206,8 @@ export default {
       showPurchaseInvoiceConvertModal: false,
       showSalesReturnInvoiceConvertModal: false,
       showItemFormulaModal: false,
-      showPurchaseReturnInvoiceRmaApproveModal: false
+      showPurchaseReturnInvoiceRmaApproveModal: false,
+      showUpdateCreditBudgetModal: false
     }
   },
   mounted () {
@@ -296,6 +297,7 @@ export default {
     showMultipleModal (action) {
       this.showItemFormulaModal = false
       this.showPurchaseReturnInvoiceRmaApproveModal = false
+      this.showUpdateCreditBudgetModal = false
 
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
@@ -339,6 +341,12 @@ export default {
         this.showPurchaseReturnInvoiceRmaApproveModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
+        })
+        return
+      } else if (action.Action === 'ContractCustomerApprove') {
+        this.showUpdateCreditBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
         })
         return
       }

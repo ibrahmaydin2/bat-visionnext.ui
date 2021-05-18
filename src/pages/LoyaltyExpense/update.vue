@@ -157,10 +157,10 @@ export default {
         this.form.LoyaltyId = null
         this.loyalty = {}
         let model = {
-          TransactionDate: this.form.TransactionDate,
-          CustomerId: this.form.CustomerId
+          transactionDate: this.form.TransactionDate,
+          customerId: this.form.CustomerId
         }
-        this.$api.postByUrl({AndConditionModel: model}, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
+        this.$api.postByUrl(model, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
           this.loyalities = res.ListModel ? res.ListModel.BaseModels : []
         })
         this.getConsumptionScore()

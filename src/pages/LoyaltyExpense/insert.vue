@@ -48,7 +48,7 @@
               <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')" @input="getLoyalties"/>
             </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Label" :disabled="!form.CustomerId || form.CustomerId === 0 || !form.TransactionDate"/>
+              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Description1" :disabled="!form.CustomerId || form.CustomerId === 0 || !form.TransactionDate"/>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -145,17 +145,17 @@ export default {
         this.form.LoyaltyId = null
         this.loyalty = {}
         let model = {
-          TransactionDate: this.form.TransactionDate,
-          CustomerId: this.form.CustomerId
+          transactionDate: this.form.TransactionDate,
+          customerId: this.form.CustomerId
         }
-        this.$api.postByUrl({AndConditionModel: model}, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
+        this.$api.postByUrl(model, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
           this.loyalities = res.ListModel
         })
         this.getConsumptionScore()
       }
     },
     selectLoyaltyId (value) {
-      this.form.LoyaltyId = value ? value.DecimalValue : null
+      this.form.LoyaltyId = value ? value.RecordId : null
       this.getConsumptionScore()
     },
     getConsumptionScore () {
