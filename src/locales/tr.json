@@ -319,10 +319,10 @@
     "PotentialCustomer": "Potansiyel Müşteri",
     "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
     "PotentialCustomerUpdate": "Potansiyel Müşteri Onayla",
-    "CashCard": "Nakit Ödeme",
-    "CashCardInsert": "Yeni Nakit Ödeme",
-    "CashCardUpdate": "Nakit Ödeme Güncelle",
-    "CashCardGet": "Nakit Ödeme Görüntüle",
+    "CashCard": "Nakit İşlemler",
+    "CashCardInsert": "Yeni Nakit İşlemi",
+    "CashCardUpdate": "Nakit İşlem Güncelle",
+    "CashCardGet": "Nakit İşlem Görüntüle",
     "CreditCard": "Kredi Kartı İşlemleri",
     "CreditCardInsert": "Yeni Kredi Kartı İşlemi",
     "CreditCardUpdate": "Kredi Kartı İşlemi Güncelle",
@@ -905,7 +905,7 @@
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
-      "CashCard": "Nakit Ödeme Ana Kayıtları",
+      "CashCard": "Nakit İşlemler",
       "status": "Durum",
       "code": "Sistem Kodu",
       "reminder": "Müşteri Bakiyesi",
@@ -1564,7 +1564,12 @@
       "amount2": "Tutar",
       "budgetMovementType": "Bütçe Hareket Tipi",
       "update": "Güncelle",
-      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir."
+      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir.",
+      "approve": "Onayla",
+      "status": "Durum",
+      "searchustomer": "Müşteri Ara",
+      "bulkCustomerApprove": "Toplu Müşteri Onaylama",
+      "approveState":"Onay Durumu"
     }
   },
   "get": {

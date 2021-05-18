@@ -1,6 +1,7 @@
 <template>
   <b-row class="asc__insertPage">
     <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
+    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" />
     <b-col cols="12">
       <header>
         <b-row>
@@ -63,6 +64,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{BranchId: form.CreditBranchId}"
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
@@ -105,38 +107,35 @@
                 <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
               </b-form-group>
             </b-col>
+             <b-col cols="12" md="2" v-if="selectedItems.length > 0">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
+              </b-form-group>
+            </b-col>
           </b-row>
           <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.creditBudget.customer')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.creditLimit')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.riskLimit')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.currentCredit')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.currentRisk')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.creditAccountRemainder')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.debitAccountRemainder')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.creditAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.amount')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.paymentPeriod')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.CustomerGuarantees ? form.CustomerGuarantees.filter(c => c.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.CustomerDesc}}</b-td>
-                  <b-td>{{c.CreditLimit}}</b-td>
-                  <b-td>{{c.RiskLimit}}</b-td>
-                  <b-td>{{c.CurrentCredit}}</b-td>
-                  <b-td>{{c.CurrentRisk}}</b-td>
-                  <b-td>{{c.CreditAccountRemainder}}</b-td>
-                  <b-td>{{c.DebitAccountRemainder}}</b-td>
-                  <b-td>{{c.CreditAmount}}</b-td>
-                  <b-td>{{c.Amount}}</b-td>
-                  <b-td>{{c.PaymentPeriod}}</b-td>
-                  <b-td class="text-center"><i @click="removeCustomerGuarantee(c)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
+            <b-table
+              :items="(form.CustomerGuarantees ? form.CustomerGuarantees.filter(c => c.RecordState !== 4) : [])"
+              :fields="customerGuaranteeFields"
+              select-mode="multi"
+              responsive
+              id="customer-guarantees"
+              selectable
+              bordered
+              small
+              @row-selected="onRowSelected"
+            >
+              <template #cell(selection)="row">
+                <span>
+                  <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+                </span>
+              </template>
+              <template #cell(operations)="row">
+                <span>
+                  <i @click="removeCustomerGuarantee(row)" class="far fa-trash-alt text-danger"></i>
+                </span>
+              </template>
+            </b-table>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -185,7 +184,23 @@ export default {
       },
       selectedCustomer: {},
       selectedBranch: null,
-      paymentPeriod: null
+      paymentPeriod: null,
+      selectedItems: [],
+      customerGuaranteeFields: [
+        {key: 'selection', label: '', sortable: false},
+        {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
+        {key: 'CustomerDesc', label: this.$t('insert.creditBudget.customer'), sortable: false},
+        {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
+        {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
+        {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
+        {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
+        {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
+        {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
+        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmount'), sortable: false},
+        {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
+        {key: 'PaymentPeriod', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false},
+        {key: 'operations', label: this.$t('list.operations'), sortable: false}
+      ]
     }
   },
   mounted () {
@@ -257,6 +272,9 @@ export default {
     },
     successExcelImport (data) {
       this.form.CustomerGuarantees = data
+    },
+    onRowSelected (items) {
+      this.selectedItems = items
     }
   },
   validations () {
@@ -277,3 +295,13 @@ export default {
   }
 }
 </script>
+<style scoped>
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
+}
+</style>

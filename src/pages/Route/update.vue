@@ -133,6 +133,9 @@
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
+                <template v-slot:option="option">
+                  <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}</span>
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.LocationId')" :error="$v.routeDetails.LocationId" :required="true" md="2" lg="2">
@@ -744,6 +747,7 @@ export default {
           delete item['Customer']
           delete item['Location']
         })
+        this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.updateData()
       }
     }
