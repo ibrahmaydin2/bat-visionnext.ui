@@ -16,7 +16,7 @@
         <b-row>
           <b-col cols="12" md="3">
             <b-form-group :label="$t('insert.RouteBalance.Route')" :class="{ 'form-group--error': $v.form.FromRouteId.$error }">
-              <v-select :options="fromRoutes" @search="onSearchFromRoute" @input="selectedSearchType('FromRouteId', $event)" label="Description1">
+              <v-select :options="fromRoutes" @search="onSearchFromRoute" @input="selectedSearchType('FromRouteId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -25,7 +25,7 @@
           </b-col>
           <b-col cols="12" md="3">
             <b-form-group :label="$t('insert.RouteBalance.Route')" :class="{ 'form-group--error': $v.form.ToRouteId.$error }">
-              <v-select :options="toRoutes" @search="onSearchToRoute" @input="selectedSearchType('ToRouteId', $event)" label="Description1">
+              <v-select :options="toRoutes" @search="onSearchToRoute" @input="selectedSearchType('ToRouteId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>

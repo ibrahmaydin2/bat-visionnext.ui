@@ -156,7 +156,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML' && form.FixedTermCampaignDetails.length > 0">
+        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>

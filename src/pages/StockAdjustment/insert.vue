@@ -178,6 +178,7 @@ export default {
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.form.MovementNumber = this.createCode
   },
   methods: {
     getInsertPage (e) {
