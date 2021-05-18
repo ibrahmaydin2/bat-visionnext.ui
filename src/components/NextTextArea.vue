@@ -1,11 +1,9 @@
 <template>
-  <b-form-datepicker @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
+  <b-form-textarea :readonly="disabled" v-model="selectedValue" />
 </template>
 <script>
-import mixin from '../mixins/index'
 export default {
-  name: 'NextDatePicker',
-  mixins: [mixin],
+  name: 'NextTextArea',
   model: {
     prop: 'value',
     event: 'valuechange'
@@ -20,14 +18,12 @@ export default {
   },
   methods: {
     input (value) {
-      let val = this.dateConvertToISo(value)
-      this.$emit('input', val)
+      this.$emit('input', value)
     }
   },
   watch: {
     selectedValue (newValue, oldValue) {
       if (newValue !== oldValue) {
-        newValue = this.dateConvertToISo(newValue)
         this.$emit('valuechange', newValue)
       }
     },

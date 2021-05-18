@@ -1,10 +1,18 @@
 <template>
-  <b-form-datepicker @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
+  <b-form-timepicker
+    :placeholder="$t('insert.chooseTime')"
+    locale="tr-Tr"
+    :label-no-time-selected="$t('insert.chooseTime')"
+    :label-close-button="$t('insert.close')"
+    close-button-variant="outline-danger"
+    v-model="selectedValue"
+    :disabled="disabled"
+  />
 </template>
 <script>
 import mixin from '../mixins/index'
 export default {
-  name: 'NextDatePicker',
+  name: 'NextTimePicker',
   mixins: [mixin],
   model: {
     prop: 'value',
@@ -20,14 +28,12 @@ export default {
   },
   methods: {
     input (value) {
-      let val = this.dateConvertToISo(value)
-      this.$emit('input', val)
+      this.$emit('input', value)
     }
   },
   watch: {
     selectedValue (newValue, oldValue) {
       if (newValue !== oldValue) {
-        newValue = this.dateConvertToISo(newValue)
         this.$emit('valuechange', newValue)
       }
     },
