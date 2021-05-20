@@ -1223,7 +1223,8 @@
       "ToStatusId": "Giriş Statü",
       "Description1": "Açıklama",
       "IsPrinted": "Yazdırıldı",
-      "Canceled": "İptal Edildi"
+      "Canceled": "İptal Edildi",
+      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı."
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",
