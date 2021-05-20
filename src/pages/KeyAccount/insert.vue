@@ -1168,11 +1168,11 @@ export default {
     },
     getCurrentBranch () {
       let request = {
-        RecordIds: [this.$store.state.BranchId]
+        RecordId: this.$store.state.BranchId
       }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/AutoCompleteSearch').then(response => {
-        if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
-          let branch = response.ListModel.BaseModels[0]
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
           this.customerCreditHistoriesDisabled = branch.DistributionTypeId !== 6
         }
       })
