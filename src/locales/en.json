@@ -828,7 +828,11 @@
       "UseEDispatch": "E_İrsaliye Kullan",
       "IsWarehouseSale": "Depo Satış",
       "ZdebitAccountRemainder": "Borç Bakiyesi",
-      "ZcreditAccountRemainder": "Alacak Bakiyesi"
+      "ZcreditAccountRemainder": "Alacak Bakiyesi",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "serialNumber":"Seri No",
+      "fixtureNumber":"Demirbaş No"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
