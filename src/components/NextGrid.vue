@@ -380,7 +380,9 @@ export default {
       sortOpt = null
     }
     this.AndConditionalModel = this.andConditionalModel
-    searchQ = {}
+    if (!searchQ) {
+      searchQ = {}
+    }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
@@ -649,7 +651,8 @@ export default {
           Code: input.replaceAll('%', '')
         }
       ]
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount}).then((res) => {
+      let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
         return res
       })
     },
@@ -829,7 +832,8 @@ export default {
             lookups += control.code + ','
           } else {
             hasAnyDropdown = true
-            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty}).then(() => {
+            let andConditions = this.getAndConditionModel(c.AndConditions)
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty, model: andConditions}).then(() => {
               this.isGridFieldsReady = true
             })
           }
@@ -881,6 +885,13 @@ export default {
     },
     setSearchQ (tableField, model) {
       searchQ[tableField] = model
+    },
+    getAndConditionModel (andConditionModels) {
+      let model = {}
+      if (andConditionModels) {
+        model = JSON.parse(`{${decodeURI(andConditionModels)}}`)
+      }
+      return model
     }
   },
   watch: {
