@@ -533,7 +533,17 @@
       "city": "Şehir",
       "distirict": "İlçe",
       "town": "Mahalle",
-      "parish": "Mahalle"
+      "parish": "Mahalle",
+      "Customer": "Müşteri",
+      "Location": "Lokasyon",
+      "preOrder": "Ön Sipariş",
+      "orderCount": "Sipariş Miktarı",
+      "unit": "Birim",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "potentialAnalysis": "Potansiyel Analiz",
+      "question": "Soru",
+      "answer": "Cevap"
     },
     "vehicles": {
       "code": "Araç Kodu",

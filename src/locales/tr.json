@@ -550,7 +550,9 @@
       "city": "Şehir",
       "distirict": "İlçe",
       "town": "Mahalle",
-      "parish": "Mahalle"
+      "parish": "Mahalle",
+      "Customer": "Müşteri",
+      "Location": "Lokasyon"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -861,7 +863,15 @@
       "asset": "Varlık",
       "assetName": "Varlık Adı",
       "serialNumber":"Seri No",
-      "fixtureNumber":"Demirbaş No"
+      "fixtureNumber":"Demirbaş No",
+      "preOrder": "Ön Sipariş",
+      "orderCount": "Sipariş Miktarı",
+      "unit": "Birim",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "potentialAnalysis": "Potansiyel Analiz",
+      "question": "Soru",
+      "answer": "Cevap"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
