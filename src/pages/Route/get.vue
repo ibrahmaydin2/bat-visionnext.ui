@@ -17,7 +17,7 @@
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.route.routeCode')}}:</b> {{rowData.Code}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.RouteType) ? rowData.RouteType.Label : ''}}</span>
-            <span><i class="far fa-circle" />  <b>{{$t('insert.route.routeType')}}:</b> {{(rowData.Description1) ? rowData.Description1 : ''}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('insert.route.name')}}:</b> {{(rowData.Description1) ? rowData.Description1 : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.route.status')}}:</b> {{(rowData.StatusId) ? $t('insert.route.active'): $t('insert.route.passive')}}</span>
           </section>
         </b-col>

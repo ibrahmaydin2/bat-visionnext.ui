@@ -166,8 +166,8 @@
           <b-row v-if="form.RouteDetails.length > 0">
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Customer')}}</span></b-th>
+                <b-th><span>{{$t('insert.route.Location')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
                 <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
@@ -181,8 +181,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails" :key="'dl' + i">
-                  <b-td>{{r.Customer}}</b-td>
-                  <b-td>{{r.Location}}</b-td>
+                  <b-td>{{r.CustomerCode}} - {{r.Customer}}</b-td>
+                  <b-td>{{r.LocationCode}} - {{r.Location}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
                   <b-td>{{r.Day3VisitOrder}}</b-td>
@@ -252,7 +252,14 @@ export default {
         CompanyId: null,
         BranchId: null,
         Code: null,
-        Description1: null
+        Description1: null,
+        Day1Value: 0,
+        Day2Value: 0,
+        Day3Value: 0,
+        Day4Value: 0,
+        Day5Value: 0,
+        Day6Value: 0,
+        Day7Value: 0
       },
       showCustomerLocation: false,
       showCustomerRegion: false,
@@ -341,9 +348,14 @@ export default {
       }
     },
     selectedCustomer (e) {
+      this.routeDetails.LocationId = null
+      this.routeDetails.LocationCode = null
+      this.routeDetails.Location = null
+
       if (e) {
         this.showCustomerLocation = true
         this.routeDetails.CustomerId = e.RecordId
+        this.routeDetails.CustomerCode = e.Code
         this.routeDetails.Customer = e.Description1
         this.$store.dispatch('getSearchItems', {
           ...this.query,
@@ -415,6 +427,7 @@ export default {
     selectedCustomerLocation (e) {
       if (e) {
         this.routeDetails.LocationId = e.RecordId
+        this.routeDetails.LocationCode = e.Code
         this.routeDetails.Location = e.Description1
       } else {
         this.routeDetails.LocationId = null
@@ -503,6 +516,7 @@ export default {
         this.routeDetails.Day5Frequency = this.routeDetails.DayFrequency
         this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
         this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
+        this.routeDetails = this.setDayValues(this.routeDetails)
         const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
         if (control) {
           this.$toasted.show(this.$t('insert.sameLocationField'), {
@@ -557,6 +571,17 @@ export default {
         Code: null,
         Description1: null
       }
+    },
+    setDayValues (item) {
+      item.Day1Value = !item.Day1VisitOrder || item.Day1VisitOrder === '0' ? 0 : 1
+      item.Day2Value = !item.Day2VisitOrder || item.Day2VisitOrder === '0' ? 0 : 1
+      item.Day3Value = !item.Day3VisitOrder || item.Day3VisitOrder === '0' ? 0 : 1
+      item.Day4Value = !item.Day4VisitOrder || item.Day4VisitOrder === '0' ? 0 : 1
+      item.Day5Value = !item.Day5VisitOrder || item.Day5VisitOrder === '0' ? 0 : 1
+      item.Day6Value = !item.Day6VisitOrder || item.Day6VisitOrder === '0' ? 0 : 1
+      item.Day7Value = !item.Day7VisitOrder || item.Day7VisitOrder === '0' ? 0 : 1
+
+      return item
     },
     save () {
       this.$v.form.$touch()

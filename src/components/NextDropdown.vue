@@ -1,5 +1,5 @@
 <template>
-  <v-select :disabled="disabled" v-model="selectedValue" :options="lookupKey && !getLookup ? lookup[lookupKey] : values" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey">
+  <v-select :disabled="disabled" v-model="selectedValue" :options="getSource()" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey">
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
@@ -93,10 +93,14 @@ export default {
         this.selectedValue = newValue
       }
     },
-    source (newValue) {
-      if (newValue && newValue.length > 0) {
-        this.values = newValue
-      }
+    source: {
+      handler (newValue) {
+        if (newValue && newValue.length > 0) {
+          this.values = newValue
+        }
+      },
+      deep: true,
+      immediate: true
     },
     allValues (newValue) {
       this.$emit('all-source', newValue)
@@ -174,6 +178,9 @@ export default {
           this.$store.commit('setSingleLookUp', {key: this.lookupKey, value: this.values})
         }
       })
+    },
+    getSource () {
+      return this.lookupKey && !this.getLookup ? this.lookup[this.lookupKey] : this.values
     }
   }
 }

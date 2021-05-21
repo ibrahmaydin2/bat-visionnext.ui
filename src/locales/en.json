@@ -533,7 +533,17 @@
       "city": "Şehir",
       "distirict": "İlçe",
       "town": "Mahalle",
-      "parish": "Mahalle"
+      "parish": "Mahalle",
+      "Customer": "Müşteri",
+      "Location": "Lokasyon",
+      "preOrder": "Ön Sipariş",
+      "orderCount": "Sipariş Miktarı",
+      "unit": "Birim",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "potentialAnalysis": "Potansiyel Analiz",
+      "question": "Soru",
+      "answer": "Cevap"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -1228,7 +1238,9 @@
       "Description1": "Açıklama",
       "IsPrinted": "Yazdırıldı",
       "Canceled": "İptal Edildi",
-      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı."
+      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı.",
+      "toError": "Giriş Depo ve Giriş Durum alanları boş olamaz.",
+      "fromError": "Çıkış Depo ve Çıkış Durum alanları boş olamaz."
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",

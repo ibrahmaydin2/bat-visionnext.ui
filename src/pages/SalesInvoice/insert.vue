@@ -449,7 +449,6 @@ export default {
           }
         ],
         andConditionModel: {
-          IsVehicle: 1,
           StatusIds: [1]
         }
       }).then(res => {
