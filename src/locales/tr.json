@@ -1002,7 +1002,20 @@
       "unit": "Birim",
       "ItemBoms": "Ürün Gruplama",
       "LineNumber": "Sıra Numarası",
-      "bomItem": "Bileşen Ürün"
+      "bomItem": "Bileşen Ürün",
+      "AdditionalClassificationAreas": "Ek Sınıflandırma Alanları",
+      "ItemTree": "Ürün Ağacı",
+      "CustomerCode": "Müşteri Kodları",
+      "ItemCode": "Ürün Kodları",
+      "ItemBomsId": "Ürün",
+      "ItemBomsUnitId": "Birim Tanimlari",
+      "ItemBomsLineNumber": "Sıra",
+      "ItemBomsQuantity": "Miktar",
+      "ItemCustomersId": "Merkez Müşteri kodu",
+      "ItemCustomersDesc": "Ürün Açıklaması",
+      "ItemCustomersCode": "Ürün Kodu",
+      "ItemBarcodesBarcode": "Barkod",
+      "ItemBarcodesUnitId": "Birim Tanımları"
     },
     "branch": {
       "Code": "Sistem Kodu",
