@@ -8,8 +8,8 @@
         <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4">
           <b-form-input type="text" v-model="warehouse" readonly />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.InvoiceKindId" :required="false" md="4" lg="4">
-          <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('InvoiceKindId', $event)"></v-select>
+        <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.InvoiceKindId" :required="true" md="4" lg="4">
+          <v-select v-model="invoiceType" :options="invoiceTypes" label="Label" @input="selectedType('InvoiceKindId', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
           <b-form-input type="text" v-model="form.DocumentNumber" />
@@ -183,19 +183,11 @@ export default {
       this.form.RepresentativeId = userModel.UserId
       this.warehouse = this.modalItem.Warehouse.Label
       this.form.DocumentNumber = this.modalItem.DocumentNumber
-      this.getCustomer()
       this.getCode()
       this.getConvert()
     })
   },
   methods: {
-    getCustomer () {
-      this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
-        if (res.Model) {
-          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Order')
-        }
-      })
-    },
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextOrder/api/Order/GetCode`})
     },
@@ -204,6 +196,7 @@ export default {
         if (Object.keys(response).length > 0) {
           this.orderLines = response.OrderLines
           this.form.documentDate = response.DocumentDate
+          this.invoiceTypes = response.InvoiceKinds
           this.getConvertData = response
         } else {
           if (response.Message) {
@@ -220,11 +213,9 @@ export default {
     },
     selectedType (label, model) {
       if (model) {
-        this.invoiceType = model.label
-        this.form[label] = model.id
+        this.form[label] = model.DecimalValue
       } else {
         this.form[label] = null
-        this.invoiceType = null
       }
     },
     selectedSearchType (label, model) {

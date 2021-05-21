@@ -857,7 +857,11 @@
       "UseEDispatch": "E_İrsaliye Kullan",
       "IsWarehouseSale": "Depo Satış",
       "ZdebitAccountRemainder": "Borç Bakiyesi",
-      "ZcreditAccountRemainder": "Alacak Bakiyesi"
+      "ZcreditAccountRemainder": "Alacak Bakiyesi",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "serialNumber":"Seri No",
+      "fixtureNumber":"Demirbaş No"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -1272,7 +1276,8 @@
       "ToStatusId": "Giriş Statü",
       "Description1": "Açıklama",
       "IsPrinted": "Yazdırıldı",
-      "Canceled": "İptal Edildi"
+      "Canceled": "İptal Edildi",
+      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı."
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",

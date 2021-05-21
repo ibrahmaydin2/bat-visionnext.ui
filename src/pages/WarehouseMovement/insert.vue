@@ -25,7 +25,7 @@
           </b-col>
           <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
-              <b-form-datepicker v-model="form.MovementDate" />
+              <b-form-datepicker v-model="form.MovementDate" disabled/>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
@@ -44,7 +44,7 @@
           </b-col>
           <b-col v-if="insertVisible.MovementTypeId != null ? insertVisible.MovementTypeId : developmentMode" cols="12" md="2">
             <b-form-group :label="insertTitle.MovementTypeId + (insertRequired.MovementTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTypeId.$error }">
-              <v-select :options="movementTypes" @input="selectedSearchType('MovementTypeId', $event)" label="Description1"></v-select>
+              <v-select v-model="movementType" :options="filteredMovementTypes" @input="selectedSearchType('MovementTypeId', $event); selectStockStatus($event)" label="Description1"></v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
@@ -68,34 +68,34 @@
           <b-row>
             <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
-                <v-select :options="routes" @input="selectedSearchType('RouteId', $event)" label="Description1"></v-select>
+                <v-select :disabled="movementType && movementType.Code === '10'" :options="routes" @input="selectRoute" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FromWarehouseId != null ? insertVisible.FromWarehouseId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.FromWarehouseId + (insertRequired.FromWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromWarehouseId.$error }">
-                <NextDropdown @input="selectedSearchType('FromWarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
+                <NextDropdown :dynamic-and-condition="getFromWarehouseAndCondition()" @input="selectFromWarehouse( $event) " label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.FromStatusId != null ? insertVisible.FromStatusId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.FromStatusId + (insertRequired.FromStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromStatusId.$error }">
-                <v-select :options="stockStatus" @input="selectedSearchType('FromStatusId', $event)" label="Description1"></v-select>
+                <v-select v-model="fromStatus" :options="stockStatus" @input="selectFromStatus" label="Description1"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select :options="vehicles" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
+                <v-select v-model="selectedVehicle" :disabled="movementType && movementType.Code === '10'" :options="vehicles" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ToWarehouseId != null ? insertVisible.ToWarehouseId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.ToWarehouseId + (insertRequired.ToWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToWarehouseId.$error }">
-                <NextDropdown @input="selectedSearchType('ToWarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
+                <NextDropdown :disabled="movementType && movementType.Code === '05'" :dynamic-and-condition="getToWarehouseAndCondition()" v-model="toWarehouse" @input="selectedSearchType('ToWarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.ToStatusId != null ? insertVisible.ToStatusId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.ToStatusId + (insertRequired.ToStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToStatusId.$error }">
-                <v-select :options="stockStatus" @input="selectedSearchType('ToStatusId', $event)" label="Description1"></v-select>
+                <v-select :disabled="movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')" v-model="toStatus" :options="stockStatus" @input="selectedSearchType('ToStatusId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -198,14 +198,27 @@ export default {
       },
       item: null,
       tmpSelectedItem: [],
-      maxPlanQuantity: null
+      maxPlanQuantity: null,
+      fromStatus: null,
+      toStatus: null,
+      movementType: null,
+      toWarehouse: null,
+      selectedVehicle: null
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'vehicles', 'routes', 'items', 'fromWarehouseStocks', 'toWarehouseStocks'])
+    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'vehicles', 'routes', 'items', 'fromWarehouseStocks', 'toWarehouseStocks']),
+    filteredMovementTypes () {
+      let filteredCodes = ['01', '04', '05', '07', '10', '12']
+      return this.movementTypes ? this.movementTypes.filter(m => filteredCodes.includes(m.Code)) : []
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.form.MovementNumber = this.createCode
+    let currentDate = new Date()
+    this.form.MovementDate = currentDate.toISOString().slice(0, 10)
+    this.form.MovementTime = currentDate.toLocaleTimeString()
   },
   methods: {
     getInsertPage (e) {
@@ -375,10 +388,92 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        if (this.movementType && this.movementType.Code === '07') {
+          if (this.form.FromStatusId === this.form.ToStatusId) {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.WarehouseMovement.StatusError') })
+            return
+          }
+        }
         let model = {
           'model': this.form
         }
         this.$store.dispatch('createData', {...this.query, api: `VisionNextWarehouse/api/${this.routeName}`, formdata: model, return: this.routeName})
+      }
+    },
+    selectStockStatus (item) {
+      if (item && item.Code === '12') {
+        let statusList = this.stockStatus.filter(s => s.Code === 'KLLN')
+        if (statusList && statusList.length > 0) {
+          let status = statusList[0]
+          this.fromStatus = status
+          this.form.FromStatusId = status.RecordId
+          this.toStatus = status
+          this.form.ToStatusId = status.RecordId
+        }
+      }
+    },
+    selectFromWarehouse (item) {
+      if (item) {
+        this.form.FromWarehouseId = item.RecordId
+        if (this.movementType && this.movementType.Code === '07') {
+          this.toWarehouse = item
+          this.form.ToWarehouseId = item.RecordId
+        }
+      } else {
+        this.form.FromWarehouseId = null
+      }
+    },
+    getFromWarehouseAndCondition () {
+      if (this.movementType) {
+        switch (this.movementType.Code) {
+          case '01':
+            return {IsVehicle: 0}
+          case '10':
+            return {IsVehicle: 1}
+          case '12':
+            return {IsVehicle: 0}
+          default:
+            return {}
+        }
+      }
+    },
+    getToWarehouseAndCondition () {
+      if (this.movementType) {
+        switch (this.movementType.Code) {
+          case '01':
+            return {IsVehicle: 0}
+          case '10':
+            return {IsVehicle: 1}
+          case '12':
+            return {IsVehicle: 1}
+          default:
+            return {}
+        }
+      }
+    },
+    selectFromStatus (item) {
+      if (item) {
+        if (this.movementType && (this.movementType.Code === '01' | this.movementType.Code === '10')) {
+          this.form.FromStatusId = item.RecordId
+          this.toStatus = item
+          this.form.ToStatusId = item.RecordId
+        }
+      } else {
+        this.fromStatus = null
+        this.form.FromStatusId = null
+        this.toStatus = null
+        this.form.ToStatusId = null
+      }
+    },
+    selectRoute (item) {
+      if (item) {
+        this.form.RouteId = item.RecordId
+        if (item.Vehicle) {
+          this.selectedVehicle = this.convertLookupValueToSearchValue(item.Vehicle)
+          this.form.VehicleId = item.Vehicle.DecimalValue
+        }
+      } else {
+        this.form.RouteId = null
       }
     }
   },
