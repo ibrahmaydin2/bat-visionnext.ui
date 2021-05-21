@@ -451,6 +451,10 @@ export default {
       }
     },
     selectedCustomer (e) {
+      this.routeDetails.LocationId = null
+      this.routeDetails.LocationCode = null
+      this.routeDetails.Location = null
+
       if (e) {
         this.showCustomerLocation = true
         this.routeDetails.CustomerId = e.RecordId
@@ -614,7 +618,7 @@ export default {
         this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
         this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
         this.routeDetails = this.setDayValues(this.routeDetails)
-        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
+        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId && i.RecordState !== 4)
         if (control) {
           if (this.routeDetails.RecordState === 3) {
             this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(control), 1)

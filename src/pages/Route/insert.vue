@@ -348,6 +348,10 @@ export default {
       }
     },
     selectedCustomer (e) {
+      this.routeDetails.LocationId = null
+      this.routeDetails.LocationCode = null
+      this.routeDetails.Location = null
+
       if (e) {
         this.showCustomerLocation = true
         this.routeDetails.CustomerId = e.RecordId
