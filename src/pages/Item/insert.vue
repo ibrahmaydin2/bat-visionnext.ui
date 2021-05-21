@@ -159,7 +159,7 @@
         </b-tab>
         <b-tab :title="$t('insert.item.ItemTree')">
           <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemBomsId')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.item.ItemBomsId')" md="2" lg="2" :required="true" :error="$v.ItemBoms.BomItemId">
               <NextDropdown url="VisionNextItem/api/Item/AutoCompleteSearch" @input="additionalSearchType('ItemBoms', 'BomItemId', $event)" :searchable="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.item.ItemBomsUnitId')" md="2" lg="2">
@@ -200,7 +200,7 @@
         </b-tab>
         <b-tab :title="$t('insert.item.CustomerCode')">
           <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemCustomersId')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.item.ItemCustomersId')" md="2" lg="2" :required="true" :error="$v.ItemCustomers.CustomerId">
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="additionalSearchType('ItemCustomers', 'CustomerId', $event)" :searchable="true" :custom-option="true"
@@ -242,7 +242,7 @@
         </b-tab>
         <b-tab :title="$t('insert.item.ItemCode')">
           <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemBarcodesBarcode')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.item.ItemBarcodesBarcode')" md="2" lg="2" :required="true" :error="$v.ItemBarcodes.Barcode">
               <NextInput v-model="ItemBarcodes.Barcode" type="text" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.item.ItemBarcodesUnitId')" md="2" lg="2">
@@ -492,7 +492,6 @@ export default {
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules,
       ItemBoms: {
@@ -504,11 +503,15 @@ export default {
         }
       },
       ItemCustomers: {
-
+        CustomerId: {
+          required
+        }
       },
       ItemBarcodes: {
-
-      },
+        Barcode: {
+          required
+        }
+      }
     }
   }
 }
