@@ -94,6 +94,8 @@
                 :options="lookup.APPROVE_STATE"
                 @input="selectedType('ApproveStateId', $event)"
                 label="Label"
+                v-model="approveState"
+                disabled
               />
             </NextFormGroup>
             <NextFormGroup item-key="ErpCode" :error="$v.form.ErpCode">
@@ -148,7 +150,7 @@ export default {
         BudgetAmount: 0,
         BudgetConsumption: 0,
         BudgetId: null,
-        ApproveStateId: 2102,
+        ApproveStateId: null,
         ErpCode: null,
         ExpirationDate: null,
         BeginDate: null,
@@ -164,7 +166,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers', 'discountReasons', 'currencies'])
+    ...mapState(['customers', 'discountReasons', 'currencies']),
+    approveState () {
+      return this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.length > 0 ? this.lookup.APPROVE_STATE.find(a => a.Code === 'ONYBK') : {}
+    }
   },
   mounted () {
     this.createManualCode()
@@ -252,23 +257,13 @@ export default {
             }
           })
         }
-        let LoyaltyCustomer = {
-          TableName: 'T_CUSTOMER',
-          ColumnName: 'RECORD_ID',
-          ColumnValue: value.RecordId,
-          BranchId: 6,
-          CompanyId: 1,
-          PagerecordCount: 20,
-          Page: 1,
-          OrderByColumns: []
-        }
-        this.$api.post({LoyaltyCustomer}, 'Loyalty', 'LoyaltyCustomer/Search').then((res) => {
-          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
-            this.form.GainTypeId = this.lookup.GAIN_TYPE[1].DecimalValue
-            this.GainTypeName = this.lookup.GAIN_TYPE[1].Label
+        this.$api.postByUrl({customerId: value.RecordId}, 'VisionNextDiscount/api/PriceDiscountTransaction/SetGainTypeViaCustomer').then((response) => {
+          if (response && response.GainType) {
+            this.form.GainTypeId = response.GainType.DecimalValue
+            this.GainTypeName = response.GainType.Label
           } else {
-            this.form.GainTypeId = this.lookup.GAIN_TYPE[0].DecimalValue
-            this.GainTypeName = this.lookup.GAIN_TYPE[0].Label
+            this.form.GainTypeId = null
+            this.GainTypeName = null
           }
         })
       } else {
@@ -285,7 +280,6 @@ export default {
       }
     },
     useBudget (e) {
-      this.form.ApproveStateId = e === 1 ? 2100 : 2102
       this.form.UseBudget = e
       this.budgets = []
       if (e === 0) {
@@ -303,6 +297,13 @@ export default {
           })
         }
       }
+    },
+    approveState: {
+      handler (newValue) {
+        this.form.ApproveStateId = newValue ? newValue.DecimalValue : null
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
