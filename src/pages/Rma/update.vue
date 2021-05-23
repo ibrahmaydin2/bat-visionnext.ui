@@ -67,12 +67,7 @@
               <b-form-input type="text" v-model="form.ApproveNumber" :readonly="insertReadonly.ApproveNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <v-select
-                :options="lookup.RETURN_TYPE"
-                v-model="rmaType"
-                @input="selectedType('RmaTypeId', $event)"
-                label="Label"
-              />
+              <NextDropdown  v-model="rmaType" lookup-key="RETURN_TYPE" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveDate" :error="$v.form.ApproveDate">
               <b-form-datepicker v-model="form.ApproveDate" />

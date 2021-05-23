@@ -34,13 +34,6 @@
       <b-tabs>
         <b-tab :title="$t('insert.LoyaltyExpense.title')">
           <b-row>
-            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <v-select :options="customers" @search="searchCustomer" @input="selectCustomerId($event)" label="Description1" :filterable="false">
                 <template slot="no-options">
@@ -51,19 +44,26 @@
                 </template>
               </v-select>
             </NextFormGroup>
+            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
+              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')" @input="getLoyalties"/>
+            </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Label" :disabled="!form.CustomerId || form.CustomerId === 0"/>
+              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Description1" :disabled="!form.CustomerId || form.CustomerId === 0 || !form.TransactionDate"/>
             </NextFormGroup>
           </b-row>
           <b-row>
+            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
+              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
             <NextFormGroup :title="$t('insert.LoyaltyExpense.currentScore')">
               <b-form-input type="text" v-model="currentScore" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="ConsumptionScore" :error="$v.form.ConsumptionScore">
               <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
-              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')"  />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -138,18 +138,24 @@ export default {
     },
     selectCustomerId (value) {
       this.form.CustomerId = value ? value.RecordId : null
-      this.form.LoyaltyId = null
-      this.loyalty = {}
-      let model = {
-        CustomerIds: [this.form.CustomerId]
+      this.getLoyalties()
+    },
+    getLoyalties () {
+      if (this.form.CustomerId && this.form.TransactionDate) {
+        this.form.LoyaltyId = null
+        this.loyalty = {}
+        let model = {
+          transactionDate: this.form.TransactionDate,
+          customerId: this.form.CustomerId
+        }
+        this.$api.postByUrl(model, 'VisionNextLoyalty/api/Loyalty/GetCustomerLoyalties').then((res) => {
+          this.loyalities = res.ListModel
+        })
+        this.getConsumptionScore()
       }
-      this.$api.post({AndConditionModel: model}, 'Loyalty', 'LoyaltyCustomer/Search').then((res) => {
-        this.loyalities = res.ListModel && res.ListModel.BaseModels ? res.ListModel.BaseModels.map(l => l.Loyalty).filter((v, i, a) => a.findIndex(t => (t.DecimalValue === v.DecimalValue)) === i) : []
-      })
-      this.getConsumptionScore()
     },
     selectLoyaltyId (value) {
-      this.form.LoyaltyId = value ? value.DecimalValue : null
+      this.form.LoyaltyId = value ? value.RecordId : null
       this.getConsumptionScore()
     },
     getConsumptionScore () {

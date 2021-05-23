@@ -242,6 +242,74 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.preOrder')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card>
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.orderCount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.unit')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.itemCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.itemName')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.CustomerPreOrders " :key="i">
+                      <b-td>{{r.Quantity}}</b-td>
+                      <b-td>{{r.Unit ? r.Unit.Label : ''}}</b-td>
+                      <b-td>{{r.Item ? r.Item.Code : ''}}</b-td>
+                      <b-td>{{r.Item ? r.Item.Label : ''}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.asset')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card>
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.assetName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.barcode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.serialNumber')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.fixtureNumber')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.AssetLocations " :key="i">
+                      <b-td>{{r.Asset ? r.Asset.Label : ''}}</b-td>
+                      <b-td>{{r.SerialNumber}}</b-td>
+                      <b-td>{{r.SerialNumber2}}</b-td>
+                      <b-td>{{r.SerialNumber3}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.potentialAnalysis')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card>
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.question')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.answer')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.FieldSurveyResultDetails " :key="i">
+                      <b-td>{{r.Question ? r.Question.Label : ''}}</b-td>
+                      <b-td>{{r.Answer}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>

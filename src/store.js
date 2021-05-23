@@ -1547,21 +1547,21 @@ export const store = new Vuex.Store({
         switch (rule.ColumnType) {
           case 'Id':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'String':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'LabelValue':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
@@ -1569,19 +1569,19 @@ export const store = new Vuex.Store({
           case 'Select':
             if (fieldDefaultValue != null) {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <NextDropdown lookup-key="${fieldDefaultValue}" @input="selectedType('${fieldName}', $event)"/>
+                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${fieldDefaultValue}" @input="selectedType('${fieldName}', $event)"/>
               </NextFormGroup>`
 
               valueForAutoLookup += fieldDefaultValue + ','
             } else {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)"/>
+                <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)"/>
               </NextFormGroup>`
             }
             break
           case 'SelectSearch':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <NextDropdown url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
+              <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
             </NextFormGroup>`
             break
           case 'Radio':
@@ -1604,27 +1604,21 @@ export const store = new Vuex.Store({
 
           case 'DateTime':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-datepicker v-model="form.${fieldName}" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Text':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-textarea v-model="form.${fieldName}" placeholder="" />
+              <NextTextArea v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Time':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-              <b-form-timepicker
-              :placeholder="$t('insert.chooseTime')"
-              :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
-              :label-no-time-selected="$t('insert.chooseTime')"
-              :label-close-button="$t('insert.close')"
-              close-button-variant="outline-danger"
-              v-model="form.${fieldName}"/>
+              <NextTimePicker v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
             </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break

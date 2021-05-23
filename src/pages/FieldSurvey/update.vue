@@ -486,6 +486,11 @@ export default {
           return item
         })
       }
+      if (typeof this.$route.query.saveAs !== 'undefined' && this.$route.query.saveAs) {
+        this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then(res => {
+          this.form.Code = res.Model.Code
+        })
+      }
     }
   },
   validations () {

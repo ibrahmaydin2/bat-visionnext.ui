@@ -349,7 +349,7 @@ export default {
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response && response.Model ? response.Model : {}
       })
-      this.$api.post({andConditionModel: {StatusIds: [1], IsVehicle: 0}}, 'Warehouse', 'Warehouse/Search').then((response) => {
+      this.$api.post({andConditionModel: {StatusIds: [1]}}, 'Warehouse', 'Warehouse/Search').then((response) => {
         this.warehouses = response && response.ListModel ? response.ListModel.BaseModels : []
       })
     },

@@ -49,23 +49,32 @@
                 <b-table-simple bordered small sticky-header="500px">
                   <b-thead>
                     <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RouteDailyRecord.CustomerName')}}</span></b-th>
                     <b-th><span>{{$t('get.RouteDailyRecord.VisitStart')}}</span></b-th>
                     <b-th><span>{{$t('get.RouteDailyRecord.VisitEnd')}}</span></b-th>
                     <b-th><span>{{$t('get.RouteDailyRecord.IsOutRoute')}}</span></b-th>
                     <b-th><span>{{$t('get.RouteDailyRecord.VisitReason')}}</span></b-th>
+                    <b-th><span>{{$t('list.operations')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in routeDetails" :key="i">
+                      <b-td>{{r.Customer ? r.Customer.Code : ''}}</b-td>
                       <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
                       <b-td>{{r.VisitStartTime ? r.VisitStartTime: ''}}</b-td>
                       <b-td>{{r.VisitEndTime ? r.VisitEndTime: ''}}</b-td>
                       <b-td>{{(typeof r.IsOutofrouteVisit === 'undefined') ? '' : (r.IsOutofrouteVisit) ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{r.VisitCancelReason ? r.VisitCancelReason.Label: ''}}</b-td>
+                      <b-td class="text-center">
+                        <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary mr-1"></i>
+                      </b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
               </b-card>
             </b-col>
+            <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+              <NextLocation :Location='Location' />
+            </b-modal>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -80,7 +89,8 @@ export default {
     return {
       rowData: [],
       routeDetails: [],
-      datas: []
+      datas: [],
+      Location: null
     }
   },
   mounted () {
@@ -89,6 +99,30 @@ export default {
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
+    },
+    showMap (item) {
+      this.$api.post({RecordId: item.LocationId}, 'Customer', 'CustomerLocation/Get').then((res) => {
+        this.Location = res.Model
+        if (res.Model) {
+          if (res.Model.XPosition == null || res.Model.YPosition == null) {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'location-modal', res.Model)
+          })
+        } else {
+          this.$toasted.show(this.$t('index.errorLocation'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     },
     getData () {
       this.$api.postByUrl({recordId: this.$route.params.url}, 'VisionNextRoute/api/RouteDailyRecord/Get').then((res) => {
@@ -124,7 +158,6 @@ export default {
               this.routeDetails.push(visit)
             })
             this.routeDetails.reverse()
-            console.log(this.routeDetails)
           })
         })
       })

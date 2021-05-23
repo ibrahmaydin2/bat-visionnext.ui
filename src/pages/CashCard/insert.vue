@@ -105,7 +105,7 @@
             </b-col>
             <b-col v-if="insertVisible.CashCardTypeId != null ? insertVisible.CashCardTypeId : developmentMode" cols="12" md="3">
               <b-form-group :label="insertTitle.CashCardTypeId + (insertRequired.CashCardTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CashCardTypeId.$error }">
-                <v-select v-model="CashCardTypeId" :options="cashCardTypes" @input="selectedSearchType('CashCardTypeId', $event)" label="Description1"></v-select>
+                <v-select v-model="CashCardTypeId" :options="filteredCashCardTypes" @input="selectedSearchType('CashCardTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
@@ -196,7 +196,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'cashCardTypes', 'routes', 'representatives'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'cashCardTypes', 'routes', 'representatives']),
+    filteredCashCardTypes () {
+      let filterCodes = ['1', '5', '6', '11']
+      return this.cashCardTypes ? this.cashCardTypes.filter(c => filterCodes.includes(c.Code)) : []
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)

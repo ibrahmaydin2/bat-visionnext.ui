@@ -238,6 +238,7 @@
     <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -348,7 +349,8 @@ export default {
       AndConditionalModel: {},
       disabledDraggable: false,
       firstHead: null,
-      firstSearchItem: null
+      firstSearchItem: null,
+      showUpdateCreditBudgetModal: false
     }
   },
   mounted () {
@@ -378,7 +380,9 @@ export default {
       sortOpt = null
     }
     this.AndConditionalModel = this.andConditionalModel
-    searchQ = {}
+    if (!searchQ) {
+      searchQ = {}
+    }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
@@ -413,6 +417,7 @@ export default {
       this.showLocationModal = false
       this.showCreateSalesWaybillModal = false
       this.showMultipleLoadingPlanModal = false
+      this.showUpdateCreditBudgetModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -495,6 +500,11 @@ export default {
         this.showMultipleLoadingPlanModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'multipleLoadingPlanModal')
+        })
+      } else if (action.Action === 'BudgetUpdate') {
+        this.showUpdateCreditBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'update-credit-budget-modal')
         })
       } else {
         this.showConfirmModal = true
@@ -641,7 +651,8 @@ export default {
           Code: input.replaceAll('%', '')
         }
       ]
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount}).then((res) => {
+      let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
         return res
       })
     },
@@ -821,7 +832,8 @@ export default {
             lookups += control.code + ','
           } else {
             hasAnyDropdown = true
-            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty}).then(() => {
+            let andConditions = this.getAndConditionModel(c.AndConditions)
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty, model: andConditions}).then(() => {
               this.isGridFieldsReady = true
             })
           }
@@ -873,6 +885,13 @@ export default {
     },
     setSearchQ (tableField, model) {
       searchQ[tableField] = model
+    },
+    getAndConditionModel (andConditionModels) {
+      let model = {}
+      if (andConditionModels) {
+        model = JSON.parse(`{${decodeURI(andConditionModels)}}`)
+      }
+      return model
     }
   },
   watch: {

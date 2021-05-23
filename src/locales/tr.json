@@ -319,10 +319,10 @@
     "PotentialCustomer": "Potansiyel Müşteri",
     "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
     "PotentialCustomerUpdate": "Potansiyel Müşteri Onayla",
-    "CashCard": "Nakit Ödeme",
-    "CashCardInsert": "Yeni Nakit Ödeme",
-    "CashCardUpdate": "Nakit Ödeme Güncelle",
-    "CashCardGet": "Nakit Ödeme Görüntüle",
+    "CashCard": "Nakit İşlemler",
+    "CashCardInsert": "Yeni Nakit İşlemi",
+    "CashCardUpdate": "Nakit İşlem Güncelle",
+    "CashCardGet": "Nakit İşlem Görüntüle",
     "CreditCard": "Kredi Kartı İşlemleri",
     "CreditCardInsert": "Yeni Kredi Kartı İşlemi",
     "CreditCardUpdate": "Kredi Kartı İşlemi Güncelle",
@@ -550,7 +550,9 @@
       "city": "Şehir",
       "distirict": "İlçe",
       "town": "Mahalle",
-      "parish": "Mahalle"
+      "parish": "Mahalle",
+      "Customer": "Müşteri",
+      "Location": "Lokasyon"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -857,7 +859,19 @@
       "UseEDispatch": "E_İrsaliye Kullan",
       "IsWarehouseSale": "Depo Satış",
       "ZdebitAccountRemainder": "Borç Bakiyesi",
-      "ZcreditAccountRemainder": "Alacak Bakiyesi"
+      "ZcreditAccountRemainder": "Alacak Bakiyesi",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "serialNumber":"Seri No",
+      "fixtureNumber":"Demirbaş No",
+      "preOrder": "Ön Sipariş",
+      "orderCount": "Sipariş Miktarı",
+      "unit": "Birim",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "potentialAnalysis": "Potansiyel Analiz",
+      "question": "Soru",
+      "answer": "Cevap"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -905,7 +919,7 @@
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
-      "CashCard": "Nakit Ödeme Ana Kayıtları",
+      "CashCard": "Nakit İşlemler",
       "status": "Durum",
       "code": "Sistem Kodu",
       "reminder": "Müşteri Bakiyesi",
@@ -998,7 +1012,20 @@
       "unit": "Birim",
       "ItemBoms": "Ürün Gruplama",
       "LineNumber": "Sıra Numarası",
-      "bomItem": "Bileşen Ürün"
+      "bomItem": "Bileşen Ürün",
+      "AdditionalClassificationAreas": "Ek Sınıflandırma Alanları",
+      "ItemTree": "Ürün Ağacı",
+      "CustomerCode": "Müşteri Kodları",
+      "ItemCode": "Ürün Kodları",
+      "ItemBomsId": "Ürün",
+      "ItemBomsUnitId": "Birim Tanimlari",
+      "ItemBomsLineNumber": "Sıra",
+      "ItemBomsQuantity": "Miktar",
+      "ItemCustomersId": "Merkez Müşteri kodu",
+      "ItemCustomersDesc": "Ürün Açıklaması",
+      "ItemCustomersCode": "Ürün Kodu",
+      "ItemBarcodesBarcode": "Barkod",
+      "ItemBarcodesUnitId": "Birim Tanımları"
     },
     "branch": {
       "Code": "Sistem Kodu",
@@ -1259,7 +1286,10 @@
       "ToStatusId": "Giriş Statü",
       "Description1": "Açıklama",
       "IsPrinted": "Yazdırıldı",
-      "Canceled": "İptal Edildi"
+      "Canceled": "İptal Edildi",
+      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı.",
+      "toError": "Giriş Depo ve Giriş Durum alanları boş olamaz.",
+      "fromError": "Çıkış Depo ve Çıkış Durum alanları boş olamaz."
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",
@@ -1548,7 +1578,7 @@
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
       "creditAmount": "Merkez Teminat Bütçesi",
-      "amount": "Teminat Bütçesi",
+      "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
       "endDate": "Bitiş Tarihi",
@@ -1556,7 +1586,20 @@
       "budgetAmount": "Bütçe Tutarı",
       "usedAmount":"Kullanılan Bütçe",
       "reservedAmount": "Rezerve Bütçe",
-      "leftAmount": "Kalan Bütçe"
+      "leftAmount": "Kalan Bütçe",
+      "excelImport": "Müşteri Excel Yükle",
+      "uploadExcel": "Excel Yükle",
+      "movementCode": "Hareket Kodu",
+      "description": "Açıklama",
+      "amount2": "Tutar",
+      "budgetMovementType": "Bütçe Hareket Tipi",
+      "update": "Güncelle",
+      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir.",
+      "approve": "Onayla",
+      "status": "Durum",
+      "searchustomer": "Müşteri Ara",
+      "bulkCustomerApprove": "Toplu Müşteri Onaylama",
+      "approveState":"Onay Durumu"
     }
   },
   "get": {
@@ -1958,7 +2001,8 @@
       "VisitStart": "Ziyaret Başlangıç Saati",
       "VisitEnd": "Ziyaret Bitiş Saati",
       "IsOutRoute": "Rota Dışı Ziyaret Mi?",
-      "VisitReason": "Ziyaret İptal Nedeni"
+      "VisitReason": "Ziyaret İptal Nedeni",
+      "CustomerName": "Müşteri Adı"
     },
     "RefContract": {
       "OperationDesc": "Açıklama",

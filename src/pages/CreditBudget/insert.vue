@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -58,10 +59,12 @@
           <b-row>
             <NextFormGroup :title="$t('insert.creditBudget.customer')" :required="true" :error="$v.customerGuarantees.CustomerId" md="2" lg="2">
               <NextDropdown
+                :disabled="!form.CreditBranchId || form.CreditBranchId === 0"
                 v-model="selectedCustomer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{BranchId: form.CreditBranchId}"
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
@@ -85,15 +88,23 @@
             <NextFormGroup :title="$t('insert.creditBudget.creditAmount')" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.CreditAmount" disabled />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.amount')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.Amount" disabled />
+            <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
+              <b-form-input type="number" v-model="customerGuarantees.Amount"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.PaymentPeriod" disabled />
+            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="true" :error="$v.customerGuarantees.PaymentPeriod" md="2" lg="2">
+              <NextDropdown
+                v-model="paymentPeriod"
+                url="VisionNextCommonApi/api/FixedTerm/Search"
+                @input="selectPaymentPeriod"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
                 <AddDetailButton @click.native="addCustomerGuarantee" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -174,7 +185,8 @@ export default {
         RecordTypeId: null,
         RiskLimit: null
       },
-      selectedCustomer: {}
+      selectedCustomer: {},
+      paymentPeriod: null
     }
   },
   mounted () {
@@ -205,14 +217,18 @@ export default {
         this.$api.getByUrl(`VisionNextBudget/api/CreditBudget/GetCustomerInfo?customerId=${customer.RecordId}`).then((res) => {
           if (res) {
             this.customerGuarantees = res
-            if (!this.customerGuarantees.PaymentPeriod) {
-              this.customerGuarantees.PaymentPeriod = 0
-            }
+            this.customerGuarantees.PaymentPeriod = null
+            this.customerGuarantees.Amount = null
+            this.paymentPeriod = null
+            this.$v.customerGuarantees.$reset()
           } else {
             this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.noCustomerBudget') })
           }
         })
       }
+    },
+    selectPaymentPeriod (paymentPeriod) {
+      this.customerGuarantees.PaymentPeriod = paymentPeriod ? paymentPeriod.RecordId : null
     },
     addCustomerGuarantee () {
       this.$v.customerGuarantees.$touch()
@@ -223,10 +239,14 @@ export default {
       this.form.CustomerGuarantees.push(this.customerGuarantees)
       this.customerGuarantees = {}
       this.selectedCustomer = {}
+      this.paymentPeriod = null
       this.$v.customerGuarantees.$reset()
     },
     removeCustomerGuarantee (item) {
       this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
+    },
+    successExcelImport (data) {
+      this.form.CustomerGuarantees = data
     }
   },
   validations () {
@@ -234,6 +254,12 @@ export default {
       form: this.insertRules,
       customerGuarantees: {
         CustomerId: {
+          required
+        },
+        Amount: {
+          required
+        },
+        PaymentPeriod: {
           required
         }
       }

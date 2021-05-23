@@ -320,9 +320,9 @@
     "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
     "PotentialCustomerUpdate": "Potansiyel Müşteri Onayla",
     "CashCard": "Nakit Ödeme",
-    "CashCardInsert": "Yeni Nakit Ödeme",
-    "CashCardUpdate": "Nakit Ödeme Güncelle",
-    "CashCardGet": "Nakit Ödeme Görüntüle",
+    "CashCardInsert": "Yeni Nakit İşlemi",
+    "CashCardUpdate": "Nakit İşlem Güncelle",
+    "CashCardGet": "Nakit İşlem Görüntüle",
     "CreditCard": "Kredi Kartı İşlemleri",
     "CreditCardInsert": "Yeni Kredi Kartı İşlemi",
     "CreditCardUpdate": "Kredi Kartı İşlemi Güncelle",
@@ -533,7 +533,17 @@
       "city": "Şehir",
       "distirict": "İlçe",
       "town": "Mahalle",
-      "parish": "Mahalle"
+      "parish": "Mahalle",
+      "Customer": "Müşteri",
+      "Location": "Lokasyon",
+      "preOrder": "Ön Sipariş",
+      "orderCount": "Sipariş Miktarı",
+      "unit": "Birim",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "potentialAnalysis": "Potansiyel Analiz",
+      "question": "Soru",
+      "answer": "Cevap"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -828,7 +838,11 @@
       "UseEDispatch": "E_İrsaliye Kullan",
       "IsWarehouseSale": "Depo Satış",
       "ZdebitAccountRemainder": "Borç Bakiyesi",
-      "ZcreditAccountRemainder": "Alacak Bakiyesi"
+      "ZcreditAccountRemainder": "Alacak Bakiyesi",
+      "asset": "Varlık",
+      "assetName": "Varlık Adı",
+      "serialNumber":"Seri No",
+      "fixtureNumber":"Demirbaş No"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -876,7 +890,7 @@
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
-      "CashCard": "Nakit Ödeme Ana Kayıtları",
+      "CashCard": "Nakit İşlemler",
       "status": "Durum",
       "code": "Sistem Kodu",
       "reminder": "Müşteri Bakiyesi"
@@ -1223,7 +1237,10 @@
       "ToStatusId": "Giriş Statü",
       "Description1": "Açıklama",
       "IsPrinted": "Yazdırıldı",
-      "Canceled": "İptal Edildi"
+      "Canceled": "İptal Edildi",
+      "StatusError": "Giriş ve Çıkış Statüleri farklı olmalı.",
+      "toError": "Giriş Depo ve Giriş Durum alanları boş olamaz.",
+      "fromError": "Çıkış Depo ve Çıkış Durum alanları boş olamaz."
     },
     "LoyaltyExpense": {
       "title": "Sadakat Puanı",
@@ -1518,7 +1535,20 @@
       "budgetAmount": "Bütçe Tutarı",
       "usedAmount":"Kullanılan Bütçe",
       "reservedAmount": "Rezerve Bütçe",
-      "leftAmount": "Kalan Bütçe"
+      "leftAmount": "Kalan Bütçe",
+      "excelImport": "Müşteri Excel Yükle",
+      "uploadExcel": "Excel Yükle",
+      "movementCode": "Hareket Kodu",
+      "description": "Açıklama",
+      "amount2": "Tutar",
+      "budgetMovementType": "Bütçe Hareket Tipi",
+      "update": "Güncelle",
+      "successUpdateBudget": "Bütçe başarıyla güncellenmiştir.",
+      "approve": "Onayla",
+      "status": "Durum",
+      "searchustomer": "Müşteri Ara",
+      "bulkCustomerApprove": "Toplu Müşteri Onaylama",
+      "approveState":"Onay Durumu"
     }
   },
   "get": {
