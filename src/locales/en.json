@@ -471,6 +471,11 @@
       "Code":"Kod",
       "Description1": "Açıklama"
     },
+    "chooseFileOrDrop": "Dosya seçin veya sürükleyin",
+    "dropFileHere": "Dosyaları buraya sürükleyin..",
+    "choose": "Seçin",
+    "selectFileMessage": "Dosya seçtikten sonra yükleyebilirsiniz.",
+    "selectedFileWillBeUploaded": "Seçilen dosya yüklenecektir. Onaylıyor musunuz?",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",

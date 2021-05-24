@@ -632,7 +632,7 @@ const listIndex = [
   {path: '/FieldSurvey', name: 'FieldSurvey', component: FieldSurveyIndex, meta: { title: i18n.t('router.FieldSurvey'), createLink: 'FieldSurveyInsert' }},
   {path: '/FixedTerm', name: 'FixedTerm', component: FixedTermIndex, meta: { title: i18n.t('router.FixedTerm'), createLink: 'FixedTermInsert' }},
   {path: '/VanLoading', name: 'VanLoading', component: VanLoadingIndex, meta: { title: i18n.t('router.VanLoading'), createLink: 'VanLoadingInsert' }},
-  {path: '/PotentialCustomer', name: 'PotentialCustomer', component: PotentialCustomerIndex, meta: { title: i18n.t('router.PotentialCustomer'), createLink: 'PotentialCustomerInsert' }},
+  {path: '/PotentialCustomer', name: 'PotentialCustomer', component: PotentialCustomerIndex, meta: { title: i18n.t('router.PotentialCustomer') }},
   {path: '/LoadingPlan', name: 'LoadingPlan', component: LoadingPlanIndex, meta: { title: i18n.t('router.LoadingPlan'), createLink: 'LoadingPlanInsert' }},
   {path: '/CashCard', name: 'CashCard', component: CashCardIndex, meta: { title: i18n.t('router.CashCard'), createLink: 'CashCardInsert' }},
   {path: '/TerminalLog', name: 'TerminalLog', component: TerminalLogIndex, meta: { title: i18n.t('router.TerminalLog'), createLink: 'TerminalLogInsert' }},

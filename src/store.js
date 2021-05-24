@@ -1373,9 +1373,6 @@ export const store = new Vuex.Store({
         'model': { ...query.model }
       }
       return axios.post(query.api, dataQuery, authHeader)
-        .then(res => {
-          commit('showAlert', { type: 'success', msg: i18n.t('general.successFileUpload') })
-        })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
@@ -1734,7 +1731,7 @@ export const store = new Vuex.Store({
         'CompanyId': localStorage.getItem('CompanyId'),
         'BranchId': localStorage.getItem('BranchId')
       }
-      location.reload()
+      location.href = '/dashboard'
     },
     logout () {
       store.commit('clearToken')

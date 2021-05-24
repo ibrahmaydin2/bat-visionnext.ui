@@ -115,7 +115,7 @@
                   {{$t('insert.min3')}}
                 </template>
                 <template v-slot:option="option">
-                  <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}</span>
+                  <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
                 </template>
               </v-select>
             </NextFormGroup>
