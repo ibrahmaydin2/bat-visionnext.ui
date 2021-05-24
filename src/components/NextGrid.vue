@@ -896,8 +896,6 @@ export default {
   },
   watch: {
     $route (to, from) {
-      // sayfa değişikliklerini yakalamak ve içeriği güncellemek için bu bölüm şarttır.
-      let sortOpt = {}
       if (to.query.count) {
         this.perPage = parseInt(to.query.count)
       } else {
@@ -911,21 +909,18 @@ export default {
       if (to.query.sort) {
         this.sort = to.query.sort
         this.sortField = to.query.field
-        sortOpt = {
-          table: this.sortField,
-          sort: this.sort
-        }
-      } else {
-        sortOpt = null
       }
+
       let validCount = 0
       this.requiredFields.forEach(r => {
         if (searchQ[r.field] || this.AndConditionalModel[r.field]) {
           validCount++
         }
       })
-      let requiredFieldsError = validCount < this.requiredFields.length
-      this.getData(to.name, this.currentPage, this.perPage, sortOpt, requiredFieldsError)
+      if (validCount < this.requiredFields.length) {
+        return
+      }
+      this.searchOnTable()
     },
     tableRows: function (e) {
       this.setRows()
