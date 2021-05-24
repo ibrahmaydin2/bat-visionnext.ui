@@ -1734,7 +1734,7 @@ export const store = new Vuex.Store({
         'CompanyId': localStorage.getItem('CompanyId'),
         'BranchId': localStorage.getItem('BranchId')
       }
-      location.reload()
+      location.href = '/dashboard'
     },
     logout () {
       store.commit('clearToken')
