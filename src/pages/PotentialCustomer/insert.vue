@@ -78,7 +78,7 @@ export default {
       // bu fonksiyonda güncelleme yapılmayacak!
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
+      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextCustomer/api/Customer/GetCode`})
     },
     selectedType (label, model) {
       // bu fonksiyonda güncelleme yapılmayacak!
