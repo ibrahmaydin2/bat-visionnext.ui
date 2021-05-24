@@ -37,6 +37,7 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                     ref="AutoCompleteDropdown"
+                    :disabled="$store.state.bigLoading"
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
