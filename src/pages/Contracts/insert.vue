@@ -146,7 +146,7 @@
                  :options="customerBudgets" label="CustomerDesc"  v-model="contractBenefits.budgetMaster"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractBenefits.currency" :required="true" md="4" lg="4">
-              <NextDropdown v-model="contractBenefits.currency" url="VisionNextSystem/api/SysCurrency/Search"/>
+              <NextDropdown v-model="contractBenefits.currency" :source="currencies"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BenefitBudget')" :error="$v.contractBenefits.benefitBudget" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
               <b-form-input
@@ -224,7 +224,7 @@
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractItems.fieldDescription" :required="true" md="3" lg="3">
               <NextDropdown
               v-model="contractItems.fieldDescription"
-              url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+              :source="itemCriterias"
               :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
               @input="getItemValues($event, 'item')"/>
             </NextFormGroup>
@@ -238,13 +238,13 @@
               <NextDropdown v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractItems.unit" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractItems.unit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown v-model="contractItems.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetAmount')" :error="$v.contractItems.quotaAmount" :required="contractItems.targetType && contractItems.targetType.Code === 'TTR'" md="3" lg="3">
               <b-form-input type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractItems.currency" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractItems.currency" url="VisionNextSystem/api/SysCurrency/Search" />
+              <NextDropdown v-model="contractItems.currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -285,7 +285,7 @@
         <b-tab :title="$t('insert.contract.contractPriceDiscounts')" v-if="showPriceDiscount">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
               <b-form-input
@@ -301,7 +301,7 @@
               <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition
                 || contractPriceDiscounts.benefitCondition.Code === 'YYM'
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'"
-                v-model="contractPriceDiscounts.quotaUnit" lookup-key="UNIT" :get-lookup="true"/>
+                v-model="contractPriceDiscounts.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetAmount')" md="3" lg="3">
               <b-form-input
@@ -311,7 +311,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" md="3" lg="3">
               <NextDropdown
                 v-model="contractPriceDiscounts.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quota')"
                 :disabled="!contractPriceDiscounts.benefitCondition
@@ -345,7 +345,7 @@
             <NextFormGroup :title="$t('insert.contract.currency')" md="3" lg="3">
               <NextDropdown
               :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
-              v-model="contractPriceDiscounts.currency" url="VisionNextSystem/api/SysCurrency/Search" />
+              v-model="contractPriceDiscounts.currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -398,7 +398,7 @@
         <b-tab :title="$t('insert.contract.contractInvestments')" v-if="showInvestments">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractInvestments.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractInvestments.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractInvestments.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.plannedInvestedAmount')" :error="$v.contractInvestments.investedAmount" :required="true" md="3" lg="3">
               <b-form-input type="number" v-model="contractInvestments.investedAmount" />
@@ -410,7 +410,7 @@
               <NextDropdown
                 v-model="contractInvestments.quotaColumnName"
                 :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quotaInvestment')"/>
             </NextFormGroup>
@@ -427,7 +427,7 @@
               <b-form-datepicker :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractInvestments.unit" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <NextDropdown :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.unit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.description1')" :error="$v.contractInvestments.description1" md="3" lg="3">
               <b-form-input type="text" v-model="contractInvestments.description1" />
@@ -477,12 +477,12 @@
         <b-tab :title="$t('insert.contract.contractDiscounts')" v-if="showDiscounts">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractDiscounts.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractDiscounts.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractDiscounts.columnName" :required="true" md="3" lg="3">
               <NextDropdown
                 v-model="contractDiscounts.columnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'discountItem')"/>
             </NextFormGroup>
@@ -495,7 +495,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractDiscounts.quotaColumnName" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
                 v-model="contractDiscounts.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'discountQuotaItem')"
                 :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'"/>
@@ -510,7 +510,7 @@
               <b-form-input :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" type="number" v-model="contractDiscounts.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractDiscounts.quotaUnit" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <NextDropdown :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaUnit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractDiscounts.branchSharePercent" :required="true" md="3" lg="3">
               <b-form-input type="number" v-model="contractDiscounts.branchSharePercent" />
@@ -575,7 +575,7 @@
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractFreeItems.columnName" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
               <NextDropdown
                 v-model="contractFreeItems.columnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'freeItem')"/>
             </NextFormGroup>
@@ -585,7 +585,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractFreeItems.quotaColumnName" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
               <NextDropdown
                 v-model="contractFreeItems.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quotaFreeItem')"
                 :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'"/>
@@ -606,7 +606,7 @@
               <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractFreeItems.unit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
-              <NextDropdown :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.unit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractFreeItems.branchSharePercent" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
               <b-form-input type="number" v-model="contractFreeItems.branchSharePercent" />
@@ -676,7 +676,7 @@
         <b-tab :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPaymentPlans.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractPaymentPlans.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractPaymentPlans.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.paymentAmount')" :error="$v.contractPaymentPlans.paymentAmount" :required="true" md="3" lg="3">
               <b-form-input type="number" v-model="contractPaymentPlans.paymentAmount" />
@@ -696,7 +696,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractPaymentPlans.quotaColumnName" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
                 v-model="contractPaymentPlans.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quotaPaymentPlanItem')"
                 :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'"/>
@@ -714,7 +714,7 @@
               <b-form-datepicker :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractPaymentPlans.unit" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <NextDropdown :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.unit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceTaken')" :error="$v.contractPaymentPlans.refInvoiceTaken" md="3" lg="3">
               <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle disabled/>
@@ -780,7 +780,7 @@
         <b-tab :title="$t('insert.contract.contractEndorsements')" v-if="showEndorsements">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractEndorsements.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractEndorsements.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractEndorsements.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endorsementGivenType')" :error="$v.contractEndorsements.endorsementGivenType" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractEndorsements.endorsementGivenType" lookup-key="ENDORSEMENT_TYPE" :get-lookup="true" />
@@ -791,7 +791,7 @@
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractEndorsements.columnName" :required="true" md="3" lg="3">
               <NextDropdown
                 v-model="contractEndorsements.columnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+               :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'endorsementItem')"/>
             </NextFormGroup>
@@ -801,7 +801,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractEndorsements.quotaColumnName" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
                 v-model="contractEndorsements.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quotaEndorsementItem')"
                 :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'"/>
@@ -813,7 +813,7 @@
               <b-form-input :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" type="number" v-model="contractEndorsements.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractEndorsements.unit" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <NextDropdown :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" v-model="contractEndorsements.unit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" v-model="contractEndorsements.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractEndorsements.beginDate" :required="true">
               <b-form-datepicker v-model="contractEndorsements.beginDate" :placeholder="$t('insert.chooseDate')"/>
@@ -899,7 +899,7 @@
         <b-tab :title="$t('insert.contract.contractCustomPrices')" v-if="showCustomPrices">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractCustomPrices.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractCustomPrices.benefitCondition" lookup-key="CONTRACT_BENEFIT_TYPE" :get-lookup="true" />
+              <NextDropdown v-model="contractCustomPrices.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.item')" :error="$v.contractCustomPrices.item" :required="true" md="3" lg="3">
               <NextDropdown
@@ -924,7 +924,7 @@
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractCustomPrices.quotaColumnName" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
                 v-model="contractCustomPrices.quotaColumnName"
-                url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams"
+                :source="itemCriterias"
                 :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
                 @input="getItemValues($event, 'quotaCustomPriceItem')"
                 :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'"/>
@@ -942,7 +942,7 @@
               <b-form-datepicker :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractCustomPrices.quotaUnit" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <NextDropdown :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaUnit" lookup-key="UNIT" :get-lookup="true"/>
+              <NextDropdown :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -1189,7 +1189,10 @@ export default {
       customerBudgets: [],
       customerContractList: [],
       contractBenefitTypes: [],
-      contractBenefitTypeSource: []
+      contractBenefitTypeSource: [],
+      itemCriterias: [],
+      lookupValues: {},
+      currencies: []
     }
   },
   computed: {
@@ -1200,6 +1203,9 @@ export default {
     if (this.customerContractList) {
       this.customerContractList = []
     }
+    this.getItemCriterias()
+    this.getCurrencies()
+    this.getLookups()
   },
   methods: {
     save () {
@@ -1963,7 +1969,7 @@ export default {
     },
     setBenefitCondition (objectKey, decimalValue) {
       if (decimalValue) {
-        let benefitTypes = this.lookup.CONTRACT_BENEFIT_TYPE ? this.lookup.CONTRACT_BENEFIT_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
+        let benefitTypes = this.lookupValues.CONTRACT_BENEFIT_TYPE ? this.lookupValues.CONTRACT_BENEFIT_TYPE.filter(c => c.DecimalValue === decimalValue) : undefined
         if (benefitTypes && benefitTypes.length > 0) {
           this[objectKey].benefitCondition = benefitTypes[0]
         }
@@ -2013,6 +2019,27 @@ export default {
           ? this.contractBenefitTypes.filter(c => c.Code === 'VAR' || c.Code === 'CI')
           : this.contractBenefitTypes.filter(c => c.Code !== 'CI')
       }
+    },
+    getItemCriterias () {
+      this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((response) => {
+        if (response && response.Values && response.Values.length > 0) {
+          this.itemCriterias = response.Values
+        }
+      })
+    },
+    getLookups () {
+      this.$api.postByUrl({LookupTableCode: 'CONTRACT_BENEFIT_TYPE,UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple').then((response) => {
+        if (response && response.Values) {
+          this.lookupValues = response.Values
+        }
+      })
+    },
+    getCurrencies () {
+      this.$api.postByUrl({}, 'VisionNextSystem/api/SysCurrency/Search').then((response) => {
+        if (response && response.ListModel) {
+          this.currencies = response.ListModel.BaseModels
+        }
+      })
     }
   },
   validations () {

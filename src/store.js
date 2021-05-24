@@ -539,17 +539,11 @@ export const store = new Vuex.Store({
     },
     // index ekranlarının seçili sütunlarını kullaıcı özelinde günceller.
     setSelectedRows ({ state, commit }, query) {
-      let userId = localStorage.getItem('UserId')
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'UserId': userId,
         'FormId': query.FormId,
         'Columns': query.Columns
-      }
-      if (!userId) {
-        store.commit('logout')
-        return
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
