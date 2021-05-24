@@ -91,9 +91,6 @@
             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
             </NextFormGroup>
-            <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
-              <NextDropdown :disabled="insertReadonly.ClassId" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
               <NextCheckBox v-model="form.IsOrderAllowed" type="number" toggle />
             </NextFormGroup>

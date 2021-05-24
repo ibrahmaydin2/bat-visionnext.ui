@@ -41,58 +41,55 @@
               <NextInput v-model="form.ShortDescription" type="text" :disabled="insertReadonly.ShortDescription" />
             </NextFormGroup>
             <NextFormGroup item-key="CardTypeId" :error="$v.form.CardTypeId">
-              <NextDropdown :disabled="insertReadonly.CardTypeId" url="VisionNextItem/api/ItemCardType/AutoCompleteSearch" @input="selectedSearchType('CardTypeId', $event)"/>
+              <NextDropdown v-model="CardType" :disabled="insertReadonly.CardTypeId" url="VisionNextItem/api/ItemCardType/AutoCompleteSearch" @input="selectedSearchType('CardTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ProducerCodeId" :error="$v.form.ProducerCodeId">
-              <NextDropdown :disabled="insertReadonly.ProducerCodeId" lookup-key="PRODUCER_CODE" @input="selectedType('ProducerCodeId', $event)"/>
+              <NextDropdown v-model="ProducerCode" :disabled="insertReadonly.ProducerCodeId" lookup-key="PRODUCER_CODE" @input="selectedType('ProducerCodeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown :disabled="insertReadonly.TypeId" lookup-key="ITEM_TYPE" @input="selectedType('TypeId', $event)"/>
+              <NextDropdown v-model="Type" :disabled="insertReadonly.TypeId" lookup-key="ITEM_TYPE" @input="selectedType('TypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
-              <NextDropdown :disabled="insertReadonly.ClassId" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
+              <NextDropdown v-model="Class" :disabled="insertReadonly.ClassId" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PackageTypeId" :error="$v.form.PackageTypeId">
-              <NextDropdown :disabled="insertReadonly.PackageTypeId" lookup-key="ITEM_PACKAGE_TYPE" @input="selectedType('PackageTypeId', $event)"/>
+              <NextDropdown v-model="PackageType" :disabled="insertReadonly.PackageTypeId" lookup-key="ITEM_PACKAGE_TYPE" @input="selectedType('PackageTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CategoryId" :error="$v.form.CategoryId">
-              <NextDropdown :disabled="insertReadonly.CategoryId" lookup-key="ITEM_CATEGORY" @input="selectedType('CategoryId', $event)"/>
+              <NextDropdown v-model="Category" :disabled="insertReadonly.CategoryId" lookup-key="ITEM_CATEGORY" @input="selectedType('CategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FilterTypeId" :error="$v.form.FilterTypeId">
-              <NextDropdown :disabled="insertReadonly.FilterTypeId" lookup-key="ITEM_FILTER_TYPE" @input="selectedType('FilterTypeId', $event)"/>
+              <NextDropdown v-model="FilterType" :disabled="insertReadonly.FilterTypeId" lookup-key="ITEM_FILTER_TYPE" @input="selectedType('FilterTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FilterColorId" :error="$v.form.FilterColorId">
-              <NextDropdown :disabled="insertReadonly.FilterColorId" lookup-key="ITEM_FILTER_COLOR" @input="selectedType('FilterColorId', $event)"/>
+              <NextDropdown v-model="FilterColor" :disabled="insertReadonly.FilterColorId" lookup-key="ITEM_FILTER_COLOR" @input="selectedType('FilterColorId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DimensionId" :error="$v.form.DimensionId">
-              <NextDropdown :disabled="insertReadonly.DimensionId" lookup-key="ITEM_DIMENSION" @input="selectedType('DimensionId', $event)"/>
+              <NextDropdown v-model="Dimension" :disabled="insertReadonly.DimensionId" lookup-key="ITEM_DIMENSION" @input="selectedType('DimensionId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="KindId" :error="$v.form.KindId">
-              <NextDropdown :disabled="insertReadonly.KindId" lookup-key="ITEM_KIND" @input="selectedType('KindId', $event)"/>
+              <NextDropdown v-model="Kind" :disabled="insertReadonly.KindId" lookup-key="ITEM_KIND" @input="selectedType('KindId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiameterId" :error="$v.form.DiameterId">
-              <NextDropdown :disabled="insertReadonly.DiameterId" lookup-key="ITEM_DIAMETER" @input="selectedType('DiameterId', $event)"/>
+              <NextDropdown v-model="Diameter" :disabled="insertReadonly.DiameterId" lookup-key="ITEM_DIAMETER" @input="selectedType('DiameterId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BlendId" :error="$v.form.BlendId">
-              <NextDropdown :disabled="insertReadonly.BlendId" lookup-key="ITEM_BLEND" @input="selectedType('BlendId', $event)"/>
+              <NextDropdown v-model="Blend" :disabled="insertReadonly.BlendId" lookup-key="ITEM_BLEND" @input="selectedType('BlendId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ShelfLife" :error="$v.form.ShelfLife">
               <NextInput v-model="form.ShelfLife" type="text" :disabled="insertReadonly.ShelfLife" />
             </NextFormGroup>
             <NextFormGroup item-key="TimeFrameId" :error="$v.form.TimeFrameId">
-              <NextDropdown :disabled="insertReadonly.TimeFrameId" url="VisionNextSystem/api/SysTimeFrame/AutoCompleteSearch" @input="selectedSearchType('TimeFrameId', $event)"/>
+              <NextDropdown v-model="TimeFrame" :disabled="insertReadonly.TimeFrameId" url="VisionNextSystem/api/SysTimeFrame/AutoCompleteSearch" @input="selectedSearchType('TimeFrameId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ColorId" :error="$v.form.ColorId">
-              <NextDropdown :disabled="insertReadonly.ColorId" url="VisionNextSystem/api/SysColor/AutoCompleteSearch" @input="selectedSearchType('ColorId', $event)"/>
+              <NextDropdown v-model="Color" :disabled="insertReadonly.ColorId" url="VisionNextSystem/api/SysColor/AutoCompleteSearch" @input="selectedSearchType('ColorId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Plant" :error="$v.form.Plant">
               <NextInput v-model="form.Plant" type="text" :disabled="insertReadonly.Plant" />
             </NextFormGroup>
             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
-            </NextFormGroup>
-            <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
-              <NextDropdown :disabled="insertReadonly.ClassId" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
               <NextCheckBox v-model="form.IsOrderAllowed" type="number" toggle />
@@ -123,37 +120,37 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdown :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
+              <NextDropdown v-model="UnitSet" :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup1" :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup2Id" lookup-key="ITEM_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup2" :disabled="insertReadonly.DiscountGroup2Id" lookup-key="ITEM_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup3Id" :error="$v.form.DiscountGroup3Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup3Id" lookup-key="ITEM_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup3" :disabled="insertReadonly.DiscountGroup3Id" lookup-key="ITEM_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup4Id" :error="$v.form.DiscountGroup4Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup4Id" lookup-key="ITEM_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup4" :disabled="insertReadonly.DiscountGroup4Id" lookup-key="ITEM_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup5Id" :error="$v.form.DiscountGroup5Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup5Id" lookup-key="ITEM_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup5" :disabled="insertReadonly.DiscountGroup5Id" lookup-key="ITEM_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup6Id" :error="$v.form.DiscountGroup6Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup6Id" lookup-key="ITEM_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup6" :disabled="insertReadonly.DiscountGroup6Id" lookup-key="ITEM_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" lookup-key="ITEM_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup7" :disabled="insertReadonly.DiscountGroup7Id" lookup-key="ITEM_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup8Id" :error="$v.form.DiscountGroup8Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup8Id" lookup-key="ITEM_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup8" :disabled="insertReadonly.DiscountGroup8Id" lookup-key="ITEM_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup9Id" lookup-key="ITEM_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup9" :disabled="insertReadonly.DiscountGroup9Id" lookup-key="ITEM_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup10Id" lookup-key="ITEM_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup10" :disabled="insertReadonly.DiscountGroup10Id" lookup-key="ITEM_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -187,7 +184,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.ItemBoms" :key="i">
+                <b-tr v-for="(c, i) in (form.ItemBoms ? form.ItemBoms.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{c.BomItemLabel}}</b-td>
                   <b-td>{{c.UnitLabel}}</b-td>
                   <b-td>{{c.LineNumber}}</b-td>
@@ -230,7 +227,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.ItemCustomers" :key="i">
+                <b-tr v-for="(c, i) in (form.ItemCustomers ? form.ItemCustomers.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{c.CustomerLabel}}</b-td>
                   <b-td>{{c.CustomerItemDescription}}</b-td>
                   <b-td>{{c.CustomerItemCode}}</b-td>
@@ -262,7 +259,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.ItemBarcodes" :key="i">
+                <b-tr v-for="(c, i) in (form.ItemBarcodes ? form.ItemBarcodes.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{c.Barcode}}</b-td>
                   <b-td>{{c.UnitSetLabel}}</b-td>
                   <b-td class="text-center"><i @click="removeItemBarcodes(c)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -274,34 +271,34 @@
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
             <NextFormGroup item-key="Category1Id" :error="$v.form.Category1Id">
-              <NextDropdown :disabled="insertReadonly.Category1Id" lookup-key="ITEM_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+              <NextDropdown v-model="Category1" :disabled="insertReadonly.Category1Id" lookup-key="ITEM_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.Category2Id">
-              <NextDropdown :disabled="insertReadonly.Category2Id" lookup-key="ITEM_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+              <NextDropdown v-model="Category2" :disabled="insertReadonly.Category2Id" lookup-key="ITEM_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
-              <NextDropdown :disabled="insertReadonly.Category3Id" lookup-key="ITEM_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="Category3" :disabled="insertReadonly.Category3Id" lookup-key="ITEM_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category4Id" :error="$v.form.Category4Id">
-              <NextDropdown :disabled="insertReadonly.Category4Id" lookup-key="ITEM_CATEGORY_4" @input="selectedType('Category4Id', $event)"/>
+              <NextDropdown v-model="Category4" :disabled="insertReadonly.Category4Id" lookup-key="ITEM_CATEGORY_4" @input="selectedType('Category4Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category5Id" :error="$v.form.Category5Id">
-              <NextDropdown :disabled="insertReadonly.Category5Id" lookup-key="ITEM_CATEGORY_5" @input="selectedType('Category5Id', $event)"/>
+              <NextDropdown v-model="Category5" :disabled="insertReadonly.Category5Id" lookup-key="ITEM_CATEGORY_5" @input="selectedType('Category5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category6Id" :error="$v.form.Category6Id">
-              <NextDropdown :disabled="insertReadonly.Category6Id" lookup-key="ITEM_CATEGORY_6" @input="selectedType('Category6Id', $event)"/>
+              <NextDropdown v-model="Category6" :disabled="insertReadonly.Category6Id" lookup-key="ITEM_CATEGORY_6" @input="selectedType('Category6Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category7Id" :error="$v.form.Category7Id">
-              <NextDropdown :disabled="insertReadonly.Category7Id" lookup-key="ITEM_CATEGORY_7" @input="selectedType('Category7Id', $event)"/>
+              <NextDropdown v-model="Category7" :disabled="insertReadonly.Category7Id" lookup-key="ITEM_CATEGORY_7" @input="selectedType('Category7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category8Id" :error="$v.form.Category8Id">
-              <NextDropdown :disabled="insertReadonly.Category8Id" lookup-key="ITEM_CATEGORY_8" @input="selectedType('Category8Id', $event)"/>
+              <NextDropdown v-model="Category8" :disabled="insertReadonly.Category8Id" lookup-key="ITEM_CATEGORY_8" @input="selectedType('Category8Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category9Id" :error="$v.form.Category9Id">
-              <NextDropdown :disabled="insertReadonly.Category9Id" lookup-key="ITEM_CATEGORY_9" @input="selectedType('Category9Id', $event)"/>
+              <NextDropdown v-model="Category9" :disabled="insertReadonly.Category9Id" lookup-key="ITEM_CATEGORY_9" @input="selectedType('Category9Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category10Id" :error="$v.form.Category10Id">
-              <NextDropdown :disabled="insertReadonly.Category10Id" lookup-key="ITEM_CATEGORY_10" @input="selectedType('Category10Id', $event)"/>
+              <NextDropdown v-model="Category10" :disabled="insertReadonly.Category10Id" lookup-key="ITEM_CATEGORY_10" @input="selectedType('Category10Id', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -311,7 +308,7 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
+import insertMixin from '../../mixins/update'
 export default {
   mixins: [insertMixin],
   data () {
@@ -402,7 +399,42 @@ export default {
         Barcode: null,
         UnitSetId: null,
         UnitSetLabel: null
-      }
+      },
+      Type: {},
+      Class: {},
+      PackageType: {},
+      Category: {},
+      FilterType: {},
+      FilterColor: {},
+      Dimension: {},
+      Kind: {},
+      Diameter: {},
+      Blend: {},
+      CardType: {},
+      ProducerCode: {},
+      TimeFrame: {},
+      Color: {},
+      UnitSet: {},
+      DiscountGroup1: {},
+      DiscountGroup2: {},
+      DiscountGroup3: {},
+      DiscountGroup4: {},
+      DiscountGroup5: {},
+      DiscountGroup6: {},
+      DiscountGroup7: {},
+      DiscountGroup8: {},
+      DiscountGroup9: {},
+      DiscountGroup10: {},
+      Category1: {},
+      Category2: {},
+      Category3: {},
+      Category4: {},
+      Category5: {},
+      Category6: {},
+      Category7: {},
+      Category8: {},
+      Category9: {},
+      Category10: {}
     }
   },
   mounted () {
@@ -411,7 +443,28 @@ export default {
   methods: {
     setData () {
       this.form = this.rowData
-      this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
+      if (this.form.ItemCustomers) {
+        this.form.ItemCustomers.map(item => {
+          item.CustomerLabel = item.Customer ? item.Customer.Label : ''
+        })
+      }
+      if (this.form.ItemBoms) {
+        this.form.ItemBoms.map(item => {
+          item.UnitLabel = item.Unit ? item.Unit.Label : ''
+          item.BomItemLabel = item.BomItem ? item.BomItem.Label : ''
+        })
+      }
+      for (const property in this.rowData) {
+        if (this.rowData[property]) {
+          if (typeof this.rowData[property].Label !== 'undefined') {
+            if (property === 'CardType' || property === 'TimeFrame' || property === 'Color' || property === 'UnitSet') {
+              this[property] = this.convertLookupValueToSearchValue(this.rowData[property])
+            } else {
+              this[property] = this.rowData[property]
+            }
+          }
+        }
+      }
     },
     additionalSearchType (title, label, model) {
       if (title === 'ItemBoms' && label === 'BomItemId') {
@@ -445,7 +498,11 @@ export default {
       this.$v.ItemBoms.$reset()
     },
     removeItemBoms (item) {
-      this.form.ItemBoms.splice(this.form.ItemBoms.indexOf(item), 1)
+      if (item.RecordId) {
+        this.form.ItemBoms[this.form.ItemBoms.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ItemBoms.splice(this.form.ItemBoms.indexOf(item), 1)
+      }
     },
     addItemCustomers () {
       this.$v.ItemCustomers.$touch()
@@ -461,7 +518,11 @@ export default {
       this.$v.ItemCustomers.$reset()
     },
     removeItemCustomers (item) {
-      this.form.ItemCustomers.splice(this.form.ItemCustomers.indexOf(item), 1)
+      if (item.RecordId) {
+        this.form.ItemCustomers[this.form.ItemCustomers.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ItemCustomers.splice(this.form.ItemCustomers.indexOf(item), 1)
+      }
     },
     addItemBarcodes () {
       this.$v.ItemBarcodes.$touch()
@@ -477,7 +538,11 @@ export default {
       this.$v.ItemBarcodes.$reset()
     },
     removeItemBarcodes (item) {
-      this.form.ItemBarcodes.splice(this.form.ItemBarcodes.indexOf(item), 1)
+      if (item.RecordId) {
+        this.form.ItemBarcodes[this.form.ItemBarcodes.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ItemBarcodes.splice(this.form.ItemBarcodes.indexOf(item), 1)
+      }
     },
     save () {
       this.$v.form.$touch()
