@@ -85,8 +85,8 @@
             <NextFormGroup :title="$t('insert.creditBudget.debitAccountRemainder')" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.DebitAccountRemainder" disabled />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.creditAmount')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAmount" disabled />
+            <NextFormGroup :title="$t('insert.creditBudget.creditAmountCentral')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CreditAmountCentral" disabled />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.Amount" />
@@ -168,7 +168,7 @@ export default {
         AppStatus: null,
         ApproveStateId: null,
         CreditAccountRemainder: null,
-        CreditAmount: null,
+        CreditAmountCentral: null,
         CreditLimit: null,
         CurrentCredit: null,
         CurrentRisk: null,
@@ -196,7 +196,7 @@ export default {
         {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
         {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
         {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
-        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmount'), sortable: false},
+        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
         {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
         {key: 'PaymentPeriod', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false},
         {key: 'operations', label: this.$t('list.operations'), sortable: false}
@@ -234,6 +234,7 @@ export default {
             this.customerGuarantees.PaymentPeriod = null
             this.customerGuarantees.Amount = null
             this.paymentPeriod = null
+            this.customerGuarantees.CreditAmountCentral = res.CreditAmount
             this.$v.customerGuarantees.$reset()
           } else {
             this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.noCustomerBudget') })

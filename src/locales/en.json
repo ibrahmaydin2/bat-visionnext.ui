@@ -1583,7 +1583,7 @@
       "currentRisk": "Güncel Risk",
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
-      "creditAmount": "Merkez Teminat Bütçesi",
+      "creditAmountCentral": "Merkez Teminat Bütçesi",
       "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
