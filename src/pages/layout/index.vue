@@ -25,7 +25,7 @@
                     <b-button variant="info" size="sm" @click="clearFilters">
                       <i class="fas fa-search-minus" /> {{$t('list.clear')}}
                     </b-button>
-                    <b-button id="submitButton" class="btn btn-warning btn-sm">
+                    <b-button id="submitButton" class="btn btn-warning btn-sm" :disabled="!this.filterData || Object.keys(this.filterData).length === 0">
                       <i class="fas fa-save" /> {{$t('list.saveFilter')}}
                     </b-button>
                     <b-popover target="submitButton" triggers="hover" placement="top">
@@ -86,7 +86,6 @@
                         :key="'selectedRow' + i"
                         v-model="row.visible"
                         variant="danger"
-                        @input="changeRows"
                         switch>
                           {{ row.label }}
                       </b-form-checkbox>

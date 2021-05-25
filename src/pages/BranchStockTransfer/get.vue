@@ -56,7 +56,7 @@
                     <b-td>{{r.Item && r.Item.Label}}</b-td>
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
-                    <b-td>{{r.Item && r.Unit.Label}}</b-td>
+                    <b-td>{{r.Unit && r.Unit.Label}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
                   </b-tr>
                 </b-tbody>

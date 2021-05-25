@@ -468,6 +468,7 @@
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
     "selectedFileWillBeUploaded": "Seçilen dosya yüklenecektir. Onaylıyor musunuz?",
+    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"

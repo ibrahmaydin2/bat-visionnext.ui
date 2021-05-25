@@ -37,6 +37,7 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                     ref="AutoCompleteDropdown"
+                    :disabled="$store.state.bigLoading"
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
@@ -600,9 +601,18 @@ export default {
       this.searchOnTable()
     },
     filterRangeDate (e, date) {
+      let beginValue = this.dateConvertToISo(date[0])
+      let endValue = this.dateConvertToISo(date[1])
+
+      if (date[0] === date[1]) {
+        beginValue = new Date(date[0]).toISOString()
+        let endDate = new Date(date[1])
+        endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59))
+      }
+
       let model = {
-        BeginValue: this.dateConvertToISo(date[0]),
-        EndValue: this.dateConvertToISo(date[1])
+        BeginValue: beginValue,
+        EndValue: endValue
       }
       this.AndConditionalModel[e] = model
       this.currentPage = 1

@@ -476,6 +476,7 @@
     "choose": "Seçin",
     "selectFileMessage": "Dosya seçtikten sonra yükleyebilirsiniz.",
     "selectedFileWillBeUploaded": "Seçilen dosya yüklenecektir. Onaylıyor musunuz?",
+    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
