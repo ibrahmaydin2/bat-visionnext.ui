@@ -10,7 +10,7 @@
       <b-button size="sm" class="float-right ml-2" variant="success" @click="$bvModal.hide('confirm-modal'); submitFile()">{{$t('insert.okay')}}</b-button>
     </template>
   </b-modal>
-  <b-modal id="importExcelModal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal id="importExcelModal" @hide="resetPage" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
@@ -20,6 +20,7 @@
             :placeholder="$t('insert.chooseFileOrDrop')"
             :drop-placeholder="$t('insert.dropFileHere')"
             :browse-text="$t('insert.choose')"
+            @input="resetPage"
           ></b-form-file>
         </template>
       </b-row>
@@ -44,8 +45,10 @@
           </b-button>
         </div>
       </b-row>
+      <b-row v-if="isSuccess">
+        <b-alert show variant="success">{{$t('general.successFileUpload')}}</b-alert>
+      </b-row>
       <b-row v-if="datas.length > 0" class="mt-3">
-        <b-alert :show="isSuccess">{{$t('general.successFileUpload')}}</b-alert>
         <b-table-simple hover small caption-top responsive>
           <b-thead>
             <b-tr>
@@ -87,7 +90,6 @@ export default {
   },
   data () {
     return {
-      files: null,
       datas: [],
       isError: false,
       showLoading: false,
@@ -100,11 +102,6 @@ export default {
     }
   },
   mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-      this.datas = []
-      this.files = null
-      this.showLoading = false
-    })
   },
   methods: {
     submitFile () {
@@ -152,7 +149,6 @@ export default {
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
               this.isSuccess = true
-              this.closeModal()
             }).catch(() => {
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
@@ -180,15 +176,11 @@ export default {
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'importExcelModal')
-    }
-  },
-  watch: {
-    selectedFile: {
-      handler (val) {
-        this.datas = []
-        this.isSuccess = false
-      },
-      deep: true
+    },
+    resetPage () {
+      this.datas = []
+      this.showLoading = false
+      this.isSuccess = false
     }
   }
 }
