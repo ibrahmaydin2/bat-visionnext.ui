@@ -37,7 +37,7 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                     ref="AutoCompleteDropdown"
-                    :disabled="$store.state.bigLoading"
+                    :disabled="disabledAutoComplete"
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
@@ -351,7 +351,8 @@ export default {
       disabledDraggable: false,
       firstHead: null,
       firstSearchItem: null,
-      showUpdateCreditBudgetModal: false
+      showUpdateCreditBudgetModal: false,
+      disabledAutoComplete: false
     }
   },
   mounted () {
@@ -707,6 +708,7 @@ export default {
       } else {
         delete searchQ[tableField]
       }
+      this.disabledAutoComplete = true
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -715,6 +717,10 @@ export default {
         count: this.perPage,
         search: searchQ,
         andConditionalModel: this.AndConditionalModel
+      }).then(() => {
+        this.disabledAutoComplete = false
+      }).catch(() => {
+        this.disabledAutoComplete = false
       })
     },
     getData (e, p, c, s, requiredFieldsError) {
