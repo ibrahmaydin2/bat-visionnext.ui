@@ -42,7 +42,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}
+                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
                   </template>
                 </v-select>
               </NextFormGroup>
@@ -280,7 +280,8 @@ export default {
       selectedBranch: {},
       selectedInvoiceKind: null,
       selectedPaymentType: null,
-      paymentTypes: []
+      paymentTypes: [],
+      defaultPaymentType: null
     }
   },
   computed: {
@@ -392,7 +393,10 @@ export default {
               Description1: search,
               Code: search
             }
-          ]
+          ],
+          andConditionModel: {
+            StatusId: 1
+          }
         }).then(res => {
           loading(false)
         })
@@ -611,6 +615,7 @@ export default {
         this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
           me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
           me.selectedPaymentType = res.Model.DefaultPaymentType
+          me.defaultPaymentType = res.Model.DefaultPaymentType
           me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
         })
       }
@@ -633,7 +638,8 @@ export default {
           })
           return
         }
-        this.form.PaymentPeriodId = this.selectedCustomer.DefaultPaymentType.Code === 'AH'
+        let defaultPaymentType = this.selectedCustomer.DefaultPaymentType ? this.selectedCustomer.DefaultPaymentType : this.defaultPaymentType
+        this.form.PaymentPeriodId = defaultPaymentType && defaultPaymentType.Code === 'AH'
           ? this.selectedCustomer.PaymentPeriod
           : null
         this.createData()

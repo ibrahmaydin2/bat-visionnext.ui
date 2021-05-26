@@ -539,17 +539,11 @@ export const store = new Vuex.Store({
     },
     // index ekranlarının seçili sütunlarını kullaıcı özelinde günceller.
     setSelectedRows ({ state, commit }, query) {
-      let userId = localStorage.getItem('UserId')
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'UserId': userId,
         'FormId': query.FormId,
         'Columns': query.Columns
-      }
-      if (!userId) {
-        store.commit('logout')
-        return
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post('VisionNextUIOperations/api/UIFormGrid/UpdateSelectedColumn', dataQuery, authHeader)
@@ -1373,9 +1367,6 @@ export const store = new Vuex.Store({
         'model': { ...query.model }
       }
       return axios.post(query.api, dataQuery, authHeader)
-        .then(res => {
-          commit('showAlert', { type: 'success', msg: i18n.t('general.successFileUpload') })
-        })
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
@@ -1734,7 +1725,7 @@ export const store = new Vuex.Store({
         'CompanyId': localStorage.getItem('CompanyId'),
         'BranchId': localStorage.getItem('BranchId')
       }
-      location.reload()
+      location.href = '/dashboard'
     },
     logout () {
       store.commit('clearToken')

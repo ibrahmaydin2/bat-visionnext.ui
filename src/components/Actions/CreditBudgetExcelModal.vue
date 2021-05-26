@@ -3,7 +3,14 @@
     <div class="container">
       <b-row>
         <template>
-          <input type="file">
+          <b-form-file
+            class="col-md-8"
+            v-model="selectedFile"
+            :placeholder="$t('insert.chooseFileOrDrop')"
+            :drop-placeholder="$t('insert.dropFileHere')"
+            :browse-text="$t('insert.choose')"
+            @input="resetPage"
+          ></b-form-file>
         </template>
       </b-row>
       <b-row class="mt-3">
@@ -16,12 +23,13 @@
             {{$t('index.close')}}
           </b-button>
           <b-button
-            :disabled="isLoading"
+            :disabled="isLoading || !selectedFile"
             variant="primary"
             size="sm"
             @click="submitFile()"
+            v-b-tooltip.hover :title="!selectedFile ? $t('insert.selectFileMessage') : ''"
           >
-            <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
+            <span v-if="isLoading"><b-spinner small variant="secondary"></b-spinner> {{$t('index.loading')}}</span>
             <span v-else>{{$t('index.upload')}}</span>
           </b-button>
         </div>
@@ -66,24 +74,19 @@ export default {
   },
   data () {
     return {
-      files: null,
+      selectedFile: null,
       datas: [],
       isError: false,
       isLoading: false
     }
   },
-  validations () {
-    return {
-    }
-  },
   methods: {
-    hide () {
+    resetPage () {
       this.datas = []
-      this.files = null
+      this.isError = false
     },
     submitFile () {
-      var file = document.querySelector('input[type="file"]').files[0]
-      this.getBase64(file)
+      this.getBase64(this.selectedFile)
     },
     sendFile (file) {
       let formData = {
@@ -110,16 +113,15 @@ export default {
             }
           }
           if (!this.isError) {
-            document.querySelector('input[type="file"]').value = ''
+            this.selectedFile = null
             this.closeModal()
             this.$emit('success', res.data.Data)
           }
         } else {
-          this.$toasted.show(res.Message, {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+          this.selectedFile = null
+          if (res.data && res.data.Message) {
+            this.$toasted.show(res.data.Message, { type: 'error', keepOnHover: true, duration: '3000' })
+          }
         }
       })
     },

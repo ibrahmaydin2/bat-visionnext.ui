@@ -39,7 +39,7 @@
                     {{$t('insert.min3')}}
                   </template>
                   <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 1 ? $t('insert.active'): $t('insert.passive'))}}
+                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
                  </template>
                 </v-select>
               </NextFormGroup>
@@ -246,37 +246,6 @@ export default {
         }
         this.searchPriceListItem()
       })
-    },
-    searchItems (search, loading) {
-      if (!this.form.WarehouseId) {
-        this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      if (!this.form.CustomerId) {
-        this.$toasted.show(this.$t('insert.order.chooseCustomer'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextItem/api/Item/Search',
-          name: 'items',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
     },
     getItem (recordId) {
       let request = {

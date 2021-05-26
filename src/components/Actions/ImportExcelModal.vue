@@ -1,20 +1,27 @@
 <template>
-  <b-modal id="importExcelModal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
+<div>
+  <b-modal id="confirm-modal">
+    <template #modal-title>
+      {{$t('insert.order.doYouConfirm')}}
+    </template>
+    {{$t('insert.selectedFileWillBeUploaded')}}
+    <template #modal-footer>
+      <CancelButton class="float-right ml-2" @click.native="$bvModal.hide('confirm-modal')" />
+      <b-button size="sm" class="float-right ml-2" variant="success" @click="$bvModal.hide('confirm-modal'); submitFile()">{{$t('insert.okay')}}</b-button>
+    </template>
+  </b-modal>
+  <b-modal id="importExcelModal" @hide="resetPage" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
-          <!-- <b-form-file
-            v-model="files"
-            :placeholder="$t('index.chooseFile')"
-            :drop-placeholder="$t('index.dropFile')"
-          >
-            <template slot="file-name" slot-scope="{ names }">
-              <b-badge variant="dark">{{ names[0] }}</b-badge>
-              <b-badge v-if="names.length > 1" variant="dark" class="ml-1">
-              </b-badge>
-            </template>
-          </b-form-file> -->
-          <input type="file">
+          <b-form-file
+            class="col-md-8"
+            v-model="selectedFile"
+            :placeholder="$t('insert.chooseFileOrDrop')"
+            :drop-placeholder="$t('insert.dropFileHere')"
+            :browse-text="$t('insert.choose')"
+            @input="resetPage"
+          ></b-form-file>
         </template>
       </b-row>
       <b-row class="mt-3">
@@ -27,14 +34,19 @@
             {{$t('index.close')}}
           </b-button>
           <b-button
+            :disabled="showLoading || !selectedFile"
             variant="primary"
             size="sm"
-            @click="submitFile()"
+            v-b-modal.confirm-modal
+            v-b-tooltip.hover :title="!selectedFile ? $t('insert.selectFileMessage') : ''"
           >
             {{$t('index.upload')}}
-            <b-spinner v-if="showLoading" small variant="primary"></b-spinner>
+            <b-spinner v-if="showLoading" small variant="secondary"></b-spinner>
           </b-button>
         </div>
+      </b-row>
+      <b-row v-if="isSuccess">
+        <b-alert show variant="success">{{$t('general.successFileUpload')}}</b-alert>
       </b-row>
       <b-row v-if="datas.length > 0" class="mt-3">
         <b-table-simple hover small caption-top responsive>
@@ -56,6 +68,7 @@
       </b-row>
     </div>
   </b-modal>
+</div>
 </template>
 <script>
 // import { required } from 'vuelidate/lib/validators'
@@ -77,10 +90,11 @@ export default {
   },
   data () {
     return {
-      files: null,
       datas: [],
       isError: false,
-      showLoading: false
+      showLoading: false,
+      selectedFile: null,
+      isSuccess: false
     }
   },
   validations () {
@@ -88,16 +102,10 @@ export default {
     }
   },
   mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-      this.datas = []
-      this.files = null
-      this.showLoading = false
-    })
   },
   methods: {
     submitFile () {
-      var file = document.querySelector('input[type="file"]').files[0]
-      this.getBase64(file)
+      this.getBase64(this.selectedFile)
     },
     sendFile (file) {
       let formData = {
@@ -129,7 +137,7 @@ export default {
             }
           }
           if (!this.isError) {
-            document.querySelector('input[type="file"]').value = ''
+            this.selectedFile = null
             let model = {
               'documentCacheKey': res.data.DocumentCacheKey,
               ExcelIntegrationType: this.modalAction.Query
@@ -140,14 +148,17 @@ export default {
             this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model}).then(() => {
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
-              this.closeModal()
+              this.isSuccess = true
             }).catch(() => {
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
             })
           }
         } else {
-          document.querySelector('input[type="file"]').value = ''
+          if (res.data && res.data.Message) {
+            this.$store.commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+          this.selectedFile = null
         }
       }).catch(() => {
         this.showLoading = false
@@ -165,8 +176,12 @@ export default {
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'importExcelModal')
+    },
+    resetPage () {
+      this.datas = []
+      this.showLoading = false
+      this.isSuccess = false
     }
-
   }
 }
 </script>

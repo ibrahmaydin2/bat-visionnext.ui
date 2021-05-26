@@ -467,10 +467,16 @@
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+    "selectedFileWillBeUploaded": "Seçilen dosya yüklenecektir. Onaylıyor musunuz?",
+    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
     },
+    "chooseFileOrDrop": "Dosya seçin veya sürükleyin",
+    "dropFileHere": "Dosyaları buraya sürükleyin..",
+    "choose": "Seçin",
+    "selectFileMessage": "Dosya seçtikten sonra yükleyebilirsiniz.",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -957,8 +963,8 @@
       "Model_ShortDescription": "Ürün Kısa Adı",
       "Model_ExportDescription1": "Ürün İngilizce Adı",
       "Model_ProducerCodeId": "Üretici",
-      "Model_TypeId": "Tip",
-      "Model_GroupId": "Grup",
+      "Model_TypeId": "Marka",
+      "Model_GroupId": "Fiyat Grubu",
       "Model_ShelfLife": "Raf Ömrü",
       "Model_TimeFrameId": "Tarih Birimi",
       "Model_IsBarterAllowed": "Takasa Açık mı?",
@@ -1343,7 +1349,7 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "WarehouseError": "Seçilen deponun, hizmet alınan depoları yok."
+      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır."
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1457,7 +1463,8 @@
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
       "totalItemDiscount": "Ürün İndrimi",
-      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
+      "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1577,7 +1584,7 @@
       "currentRisk": "Güncel Risk",
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
-      "creditAmount": "Merkez Teminat Bütçesi",
+      "creditAmountCentral": "Merkez Teminat Bütçesi",
       "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
