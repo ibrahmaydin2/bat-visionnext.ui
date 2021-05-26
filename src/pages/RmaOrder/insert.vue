@@ -29,11 +29,11 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model='customer' :options="customers" @input="selectedSearchType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
+              <v-select v-model='customer' :options="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1">
+              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -381,7 +381,7 @@ export default {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
           let length = res.Model.WarehouseSuppliers.length
           for (let a = 0; a < length; a++) {
-            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierBranch)
+            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierCustomer)
           }
           this.customerValid = true
         } else {
