@@ -373,7 +373,10 @@ export default {
               Description1: search,
               Code: search
             }
-          ]
+          ],
+          andConditionModel: {
+            StatusId: 1
+          }
         }).then(res => {
           loading(false)
         })
