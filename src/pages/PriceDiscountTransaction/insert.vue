@@ -258,9 +258,9 @@ export default {
           })
         }
         this.$api.postByUrl({customerId: value.RecordId}, 'VisionNextDiscount/api/PriceDiscountTransaction/SetGainTypeViaCustomer').then((response) => {
-          if (response && response.GainType) {
-            this.form.GainTypeId = response.GainType.DecimalValue
-            this.GainTypeName = response.GainType.Label
+          if (response && response.gainType) {
+            this.form.GainTypeId = response.gainType.DecimalValue
+            this.GainTypeName = response.gainType.Label
           } else {
             this.form.GainTypeId = null
             this.GainTypeName = null

@@ -1360,7 +1360,9 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/Label/Search', name: 'customerLabels'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/LabelDetail/Search', name: 'customerLabelValues'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysDay/Search', name: 'statementDays'})
-      this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url}).then(() => {
+        this.setData(this.rowData)
+      })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBank/api/Bank/Search', name: 'banks'})
     },
     selectedType (label, model) {
@@ -1391,15 +1393,20 @@ export default {
           duration: '3000'
         })
       } else {
-        this.form.CustomerLabels = this.CustomerLabels.map((item) => {
-          var newItem = {
-            LabelId: item.LabelId,
-            LabelValueId: item.LabelValueId,
-            RecordState: item.RecordId && !item.RecordState ? 3 : item.RecordState,
-            RecordId: item.RecordId
-          }
-          return newItem
-        })
+        if (this.CustomerLabels && this.CustomerLabels.length > 0) {
+          this.form.CustomerLabels = this.CustomerLabels.map((item) => {
+            var newItem = {
+              LabelId: item.LabelId,
+              LabelValueId: item.LabelValueId,
+              RecordState: item.RecordId && !item.RecordState ? 3 : item.RecordState,
+              RecordId: item.RecordId
+            }
+            return newItem
+          })
+        } else {
+          this.form.CustomerLabels = []
+        }
+
         this.form.AllowOverLimit = this.form.AllowOverLimit === true || this.form.AllowOverLimit === 1 ? 1 : 0
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
         this.form.StatusId = this.checkConvertToNumber(this.form.StatusId)
@@ -1834,117 +1841,8 @@ export default {
       }).then(res => {
         loading(false)
       })
-    }
-  },
-  validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    let validation = {
-      form: this.insertRules,
-      customerLocations: {
-        Description1: {
-          required
-        },
-        Code: {
-          required
-        },
-        addressDetail: {
-          required
-        },
-        postCode: {
-          required
-        },
-        phoneNumber1: {
-          required
-        },
-        cityId: {
-          required
-        },
-        districtId: {
-          required
-        }
-      },
-      customerTouchpoints: {
-        TouchpointPriorityNumber: {
-          required
-        },
-        TouchpointTypeId: {
-          required
-        }
-      },
-      customerPaymentTypes: {
-        paymentTypeId: {
-          required
-        }
-      },
-      customerTag: {
-        tagDefinition: {
-          required
-        },
-        tagValue: {
-          required
-        }
-      },
-      customerCreditHistories: {
-        creditAmount: {
-          required
-        },
-        creditDescriptionId: {
-          required
-        },
-        currencyId: {
-          required
-        },
-        creditStartDate: {
-          required
-        },
-        creditEndDate: {
-          required
-        },
-        creditLimit: {
-          required
-        },
-        riskLimit: {
-          required
-        }
-      },
-      customerItemDiscounts: {
-        code: {
-          required
-        },
-        description1: {
-          required
-        }
-      }
-    }
-    validation.form.TaxNumber = {
-      required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
-    }
-    return validation
-  },
-  watch: {
-    statementDays (e) {
-      if (e) {
-        e.map(item => {
-          item.Label = item.DayNumber + ' ' + item.Description1
-        })
-      }
     },
-    paymentTypes (value) {
-      if (value && this.DefaultPaymentTypeId) {
-        this.DefaultPaymentType = value.find(v => v.RecordId === this.DefaultPaymentTypeId)
-      }
-    },
-    lookup: {
-      handler (val) {
-        if (this.form.BlockReasonId && val.CUSTOMER_BLOCK_REASON) {
-          this.BlockReason = val.CUSTOMER_BLOCK_REASON.find(c => c.DecimalValue === this.form.BlockReasonId)
-        }
-      },
-      deep: true
-    },
-    rowData (e) {
-      console.log(e)
+    setData (e) {
       if (e) {
         this.form = {
           CommercialTitle: e.CommercialTitle,
@@ -2179,6 +2077,114 @@ export default {
         }
         this.form.CustomerLocations = e.CustomerLocations
       }
+    }
+  },
+  validations () {
+    // bu fonksiyonda güncelleme yapılmayacak!
+    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
+    let validation = {
+      form: this.insertRules,
+      customerLocations: {
+        Description1: {
+          required
+        },
+        Code: {
+          required
+        },
+        addressDetail: {
+          required
+        },
+        postCode: {
+          required
+        },
+        phoneNumber1: {
+          required
+        },
+        cityId: {
+          required
+        },
+        districtId: {
+          required
+        }
+      },
+      customerTouchpoints: {
+        TouchpointPriorityNumber: {
+          required
+        },
+        TouchpointTypeId: {
+          required
+        }
+      },
+      customerPaymentTypes: {
+        paymentTypeId: {
+          required
+        }
+      },
+      customerTag: {
+        tagDefinition: {
+          required
+        },
+        tagValue: {
+          required
+        }
+      },
+      customerCreditHistories: {
+        creditAmount: {
+          required
+        },
+        creditDescriptionId: {
+          required
+        },
+        currencyId: {
+          required
+        },
+        creditStartDate: {
+          required
+        },
+        creditEndDate: {
+          required
+        },
+        creditLimit: {
+          required
+        },
+        riskLimit: {
+          required
+        }
+      },
+      customerItemDiscounts: {
+        code: {
+          required
+        },
+        description1: {
+          required
+        }
+      }
+    }
+    validation.form.TaxNumber = {
+      required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+    }
+    return validation
+  },
+  watch: {
+    statementDays (e) {
+      if (e) {
+        e.map(item => {
+          item.Label = item.DayNumber + ' ' + item.Description1
+        })
+      }
+    },
+    paymentTypes (value) {
+      if (value && this.DefaultPaymentTypeId) {
+        this.DefaultPaymentType = value.find(v => v.RecordId === this.DefaultPaymentTypeId)
+      }
+    },
+    lookup: {
+      handler (val) {
+        if (this.form.BlockReasonId && val.CUSTOMER_BLOCK_REASON) {
+          this.BlockReason = val.CUSTOMER_BLOCK_REASON.find(c => c.DecimalValue === this.form.BlockReasonId)
+        }
+      },
+      deep: true
     },
     address (value) {
       console.log(value)
