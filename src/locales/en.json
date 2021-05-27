@@ -1464,7 +1464,8 @@
       "totalOtherDiscount": "Dip Toplam İndrimi",
       "totalItemDiscount": "Ürün İndrimi",
       "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
-      "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez."
+      "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez.",
+      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

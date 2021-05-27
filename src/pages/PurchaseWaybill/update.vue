@@ -233,18 +233,19 @@ export default {
     ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       this.getData().then(() => {
         if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentIsPrintedError') })
           setTimeout(() => {
             this.$router.push({ name: 'PurchaseWaybill' })
           }, 2000)
+        } else {
+          this.setData()
         }
-        this.setData()
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
@@ -402,11 +403,7 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedInvoiceLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+          me.selectedOrderLine.stock = 0
         }
       })
     },

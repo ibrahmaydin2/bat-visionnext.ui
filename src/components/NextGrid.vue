@@ -356,6 +356,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
     if (this.$route.query.count) {
