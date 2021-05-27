@@ -237,14 +237,16 @@ export default {
   },
   methods: {
     getInsertPage () {
-      this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentIsPrintedError') })
-          setTimeout(() => {
-            this.$router.push({ name: 'PurchaseWaybill' })
-          }, 2000)
-        } else {
-          this.setData()
+      this.$api.post({RecordId: this.$route.params.url}, 'Invoice', 'PurchaseWaybill/Get').then((response) => {
+        if (response && response.Model) {
+          if (response.Model.Printed === 1) {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentIsPrintedError') })
+            setTimeout(() => {
+              this.$router.push({ name: 'PurchaseWaybill' })
+            }, 2000)
+          } else {
+            this.setData(response.Model)
+          }
         }
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
@@ -425,8 +427,7 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    setData () {
-      let rowData = this.rowData
+    setData (rowData) {
       if (rowData) {
         this.form = rowData
         this.documentDate = rowData.DocumentDate
