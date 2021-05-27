@@ -285,6 +285,7 @@ export const store = new Vuex.Store({
     disabledLoading: false,
     filtersCleared: false,
     lastGridItem: null,
+    lastGridModel: null,
     reloadGrid: false,
     cancelToken: {}
   },
@@ -515,6 +516,7 @@ export const store = new Vuex.Store({
         'page': query.page,
         OrderByColumns
       }
+      commit('setLastGridModel', {AndConditionModel: AndConditionModel, OrderByColumns: OrderByColumns})
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
@@ -1196,8 +1198,7 @@ export const store = new Vuex.Store({
     },
     getDownloadLink ({state, commit}, query) {
       let dataQuery = {
-        'AndConditionModel': {
-        },
+        ...state.lastGridModel,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'page': 1,
@@ -1816,6 +1817,9 @@ export const store = new Vuex.Store({
     },
     resetCancelToken (state, payload) {
       state.cancelToken = payload
+    },
+    setLastGridModel (state, payload) {
+      state.lastGridModel = payload
     }
   }
 })
