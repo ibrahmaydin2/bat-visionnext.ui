@@ -59,10 +59,10 @@ export default {
     font-size: 12px !important
   .vs__selected-options
     height: 24px !important
-    overflow: hidden
+    overflow: auto
     min-width: max-content
   .vs__dropdown-menu
-    overflow: hidden
+    overflow: auto
     min-width: max-content
   .autocomplete-input
     min-width: max-content
