@@ -1490,7 +1490,9 @@
       "customerCode": "Müşteri Kodu",
       "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
       "routeId": "Rota Id",
-      "branchId": "Şube Id"
+      "branchId": "Şube Id",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",

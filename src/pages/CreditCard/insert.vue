@@ -284,16 +284,13 @@ export default {
         loading(false)
       })
     },
-    // getCustomer () {
-    //   console.log('test')
-    // },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
-        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate).substr(0, 10)
         let model = {
           'model': this.form
         }
