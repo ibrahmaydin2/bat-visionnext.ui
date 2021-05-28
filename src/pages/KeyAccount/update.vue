@@ -625,7 +625,7 @@
             </b-col>
             <b-col v-if="insertVisible.DefaultPaymentTypeId != null ? insertVisible.DefaultPaymentTypeId : developmentMode" cols="12" md="2">
               <b-form-group :label="insertTitle.DefaultPaymentTypeId + (insertRequired.DefaultPaymentTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultPaymentTypeId.$error }">
-                <v-select v-model="DefaultPaymentType" :options="paymentTypes" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
+                <v-select v-model="DefaultPaymentType" :options="(paymentTypes ? branchDistributionTypeId === 5 ? paymentTypes.filter(p => p.Code !== 'AH') : paymentTypes : [])" @input="selectedSearchType('DefaultPaymentTypeId', $event)" label="Description1"></v-select>
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.AllowOverLimit != null ? insertVisible.AllowOverLimit : developmentMode" cols="12" md="2">
@@ -767,7 +767,7 @@
           <b-row>
             <b-col cols="12" md="3" lg="2" class="ml-auto">
               <b-form-group>
-                <AddDetailButton @click.native="addCreditHistories" />
+                <AddDetailButton @click.native="addCreditHistories" :disabled="branchDistributionTypeId === 5" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -1106,8 +1106,8 @@ export default {
       locationEditableIndex: 0,
       isLocationEditable: false,
       addressInit: null,
-      branchDistributionTypeId: 0
-
+      branchDistributionTypeId: 0,
+      upperCustomerObj: null
     }
   },
   computed: {
@@ -1974,6 +1974,21 @@ export default {
         }
       },
       deep: true
+    },
+    upperCustomer (value) {
+      if (value && !this.upperCustomerObj) {
+        this.$api.postByUrl({RecordId: value.DecimalValue}, 'VisionNextCustomer/api/Customer/Get').then((response) => {
+          if (response && response.Model) {
+            this.upperCustomerObj = response.Model
+            if (this.upperCustomerObj.DistributionTypeId === 5) {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
+              setTimeout(() => {
+                this.$router.push({ name: 'PurchaseWaybill' })
+              }, 2000)
+            }
+          }
+        })
+      }
     }
   }
 }
