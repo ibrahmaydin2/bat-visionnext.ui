@@ -288,9 +288,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
-      me.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
-        me.customerItemAreaList = res.Values
-      })
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         me.campaignItemAreaList = res.Values
       })
@@ -564,6 +561,13 @@ export default {
           return
         }
         this.updateData()
+      }
+    },
+    getCustomerCriteriaItems () {
+      if (!this.customerItemAreaList || this.customerItemAreaList.length === 0) {
+        this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+          this.customerItemAreaList = res.Values
+        })
       }
     }
   },

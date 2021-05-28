@@ -144,7 +144,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountGivens')" @click="DiscountGivensValid()">
+        <b-tab :title="$t('insert.discount.discountGivens')" @click="ColumnControl()">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="columnNameValid">
               <v-select v-model="discountGivenColumnName" :options="discountGivensColumnNames" :disabled="!columnNameValid" label="Label"/>
@@ -740,7 +740,6 @@ export default {
       discountTotalValid: false,
       startValueValid: false,
       finishValueValid: false,
-      discountGivenAddButtonValid: false,
       takenQuantityValid: false,
       endTakenQuantityValid: false,
       maxTakenAmountValid: false,
@@ -775,9 +774,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCustomerSql/Search', name: 'customerSqls'})
-      this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
-        this.customerCriteriaColumnNames = res.Values
-      })
       this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         this.discountGivensColumnNames = res.Values
         this.discountTakensColumnNames = res.Values
@@ -853,6 +849,15 @@ export default {
           duration: '3000'
         })
         return false
+      }
+      if (this.form.DiscountTypeId == null && this.form.DiscountKindId == null) {
+        this.$toasted.show(this.$t('insert.discount.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
       }
       this.form.DiscountGivens.push({
         Deleted: 0,
@@ -963,6 +968,15 @@ export default {
           duration: '3000'
         })
         return false
+      }
+      if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
+        this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
       }
       let filteredArr = this.form.DiscountExcludedCustomers.filter(f => f.CustomerId === this.discountExcludedCustomer.CustomerId)
       if (filteredArr.length > 0) {
@@ -1217,27 +1231,8 @@ export default {
         loading(false)
       })
     },
-    DiscountGivensValid () {
-      this.ColumnControl()
-      if (this.form.DiscountTypeId == null && this.form.DiscountKindId == null) {
-        this.$toasted.show(this.$t('insert.discount.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-      } else {
-        this.discountGivenAddButtonValid = true
-      }
-    },
     DiscountCustomersValid () {
       if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
-        this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
         this.form.DiscountCustomers = []
         this.form.DiscountExcludedCustomers = []
         this.discountDetailsBranchs = []
@@ -1294,6 +1289,13 @@ export default {
           if (item.DecimalValue === 2102) {
             this.ApproveStateLabel = item.Label
           }
+        })
+      }
+    },
+    getCustomerCriterias () {
+      if (!this.customerCriteriaColumnNames || this.customerCriteriaColumnNames.length === 0) {
+        this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
+          this.customerCriteriaColumnNames = res.Values
         })
       }
     }
@@ -1426,6 +1428,7 @@ export default {
       this.customerSqlsTabValid = false
       if (e !== null && e.DecimalValue === 21) {
         this.customerCriterTabValid = true
+        this.getCustomerCriterias()
       } else if (e !== null && e.DecimalValue === 22) {
         this.customerTabValid = true
       } else if (e !== null && e.DecimalValue === 29) {

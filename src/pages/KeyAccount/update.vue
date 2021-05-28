@@ -1105,7 +1105,9 @@ export default {
       Location: {},
       locationEditableIndex: 0,
       isLocationEditable: false,
-      addressInit: null
+      addressInit: null,
+      branchDistributionTypeId: 0
+
     }
   },
   computed: {
@@ -1117,6 +1119,7 @@ export default {
     }
   },
   mounted () {
+    this.getCurrentBranch()
     this.getInsertPage(this.routeName)
   },
   methods: {
@@ -1587,6 +1590,17 @@ export default {
         }
       })
       this.$router.push('/Insert/KeyAccount')
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.branchDistributionTypeId = branch.DistributionTypeId
+        }
+      })
     }
   },
   validations () {
@@ -1916,7 +1930,7 @@ export default {
       }
     },
     branchs (e) {
-      if (e && e.length > 0) {
+      if (e && e.length > 0 && (!this.allBranchs || this.allBranchs.length === 0)) {
         this.$store.dispatch('getSearchItems', {
           ...this.query,
           api: 'VisionNextBranch/api/Branch/Search',
