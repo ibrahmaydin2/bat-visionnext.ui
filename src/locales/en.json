@@ -877,7 +877,8 @@
       "itemName": "Ürün Adı",
       "potentialAnalysis": "Potansiyel Analiz",
       "question": "Soru",
-      "answer": "Cevap"
+      "answer": "Cevap",
+      "keyAccountNotValidToUpdate": "Zincir Mağaza güncellemeye uygun değildir."
     },
     "fixedTerm": {
       "code": "Vade Kodu",
