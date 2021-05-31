@@ -71,7 +71,7 @@
     "Failurefollowupform": "Failurefollowupform",
     "MasterRecords": "MasterRecords",
     "CustomerRecord": "CustomerRecord",
-    "UnitSet": "UnitSet",
+    "UnitSet": "Birim Seti",
     "Return": "Return",
     "PurchaseReturnOrder": "PurchaseReturnOrder",
     "WeighingInformation": "WeighingInformation",
@@ -131,7 +131,7 @@
     "CustomerRecordGet": "CustomerRecordGet",
     "ItemMasterRecordsGet": "ItemMasterRecordsGet",
     "BranchMasterRecordGet": "BranchMasterRecordGet",
-    "UnitSetGet": "UnitSetGet",
+    "UnitSetGet": "Birim Seti Görüntüle",
     "ReturnGet": "ReturnGet",
     "PurchaseReturnOrderGet": "PurchaseReturnOrderGet",
     "WeighingInformationGet": "WeighingInformationGet",
@@ -191,7 +191,7 @@
     "CustomerRecordUpdate": "CustomerRecordUpdate",
     "ItemMasterRecordsUpdate": "ItemMasterRecordsUpdate",
     "BranchMasterRecordUpdate": "BranchMasterRecordUpdate",
-    "UnitSetUpdate": "UnitSetUpdate",
+    "UnitSetUpdate": "Birim Seti Güncelle",
     "ReturnUpdate": "ReturnUpdate",
     "PurchaseReturnOrderUpdate": "PurchaseReturnOrderUpdate",
     "WeighingInformationUpdate": "WeighingInformationUpdate",
@@ -247,7 +247,7 @@
     "CustomerRecordInsert": "CustomerRecordInsert",
     "ItemMasterRecordsInsert": "ItemMasterRecordsInsert",
     "BranchMasterRecordInsert": "BranchMasterRecordInsert",
-    "UnitSetInsert": "UnitSetInsert",
+    "UnitSetInsert": "Yeni Seti Tanımı",
     "ReturnInsert": "ReturnInsert",
     "PurchaseReturnOrderInsert": "PurchaseReturnOrderInsert",
     "WeighingInformationInsert": "WeighingInformationInsert",
@@ -1655,7 +1655,11 @@
       "volume": "Hacim",
       "volumeUnit": "Hacim Birimi",
       "weight": "Ağırlık",
-      "weightUnit": "Ağırlık Birimi"
+      "weightUnit": "Ağırlık Birimi",
+      "code": "Kodu",
+      "status": "Durum",
+      "description1": "Adı",
+      "cardType": "Birim Seti Tipi"
     }
   },
   "get": {
