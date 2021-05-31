@@ -341,7 +341,6 @@ export default {
           type: 'Dropdown',
           inputType: null,
           modelProperty: 'ColumnName',
-          // parentProperty: 'ForeignField', şuan olmasın
           labelProperty: 'Label',
           request: null,
           url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
@@ -352,7 +351,6 @@ export default {
           hideOnTable: false,
           isUnique: true,
           dynamicRequest: {paramId: 'ITEM_CRITERIA'},
-          // parentId: 1,
           id: 1
         },
         {

@@ -191,6 +191,8 @@ export default {
                 }
                 break
               case 'Dropdown':
+                this.model[item.modelProperty] = {}
+                this.form[item.modelProperty] = null
                 if (item.url && item.request) {
                   let request = JSON.parse(item.request.replace('val', model[item.parentProperty]))
                   this.$api.postByUrl(request, item.url).then((res) => {
@@ -214,6 +216,14 @@ export default {
         }
       } else {
         this.form[label] = null
+        const filteredArr = this.items.filter(item => item.parentId === id)
+        if (filteredArr) {
+          filteredArr.map(item => {
+            this.model[item.modelProperty] = {}
+            this.form[item.modelProperty] = null
+            this.source[item.modelProperty] = []
+          })
+        }
       }
     }
   },
