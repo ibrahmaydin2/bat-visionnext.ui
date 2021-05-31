@@ -9,6 +9,7 @@ export default {
     event: 'valuechange'
   },
   props: {
+    value: null,
     disabled: null,
     type: {
       required: true,
