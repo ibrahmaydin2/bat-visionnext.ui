@@ -2,11 +2,10 @@
   <div>
     <b-row>
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event)" :searchable="true" :disabled="item.disabled" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="selectedType(item.modelProperty, $event)" :disabled="item.disabled" :get-lookup="true" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'LookupWithUrl'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event)" label="Label" :disabled="item.disabled" :dynamicRequest="{paramId: 'ITEM_CRITERIA'}"  />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="item.disabled" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="item.disabled" />
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle/>
@@ -64,7 +63,8 @@ export default {
       model: {},
       label: {},
       source: {},
-      values: []
+      values: [],
+      objectTypes: ['Autocomplete', 'Dropdown', 'Lookup']
     }
   },
   computed: {
@@ -73,12 +73,15 @@ export default {
       this.items.map(item => {
         if (!item.hideOnTable) {
           fields.push({
-            key: this.getKey(item),
+            key: item.modelProperty,
             label: item.label,
             formatter: (value, key, obj) => {
               if (item.type === 'Check') {
                 value = value === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
+              } else if (this.objectTypes.includes(item.type)) {
+                value = item.objectKey && obj[item.objectKey] ? obj[item.objectKey].Label : obj[item.modelProperty + 'Desc']
               }
+
               return value
             }
           })
@@ -110,12 +113,6 @@ export default {
     })
   },
   methods: {
-    getKey (item) {
-      if (item.type === 'Autocomplete' || item.type === 'Dropdown' || item.type === 'Lookup' || 'LookupWithUrl') {
-        return item.objectKey ? `${item.objectKey}.Label` : item.modelProperty + 'Desc'
-      }
-      return item.modelProperty
-    },
     addItems () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -152,11 +149,9 @@ export default {
       const model = Object.keys(this.model)
       for (let index = 0; index < model.length; index++) {
         let item = model[index]
-        console.log(this.model[item])
         let key = item + 'Desc'
         this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
       }
-      console.log(this.form)
       this.values.push({...this.form})
       this.$emit('valuechange', this.values)
       this.form = {}
@@ -171,8 +166,7 @@ export default {
     },
     removeItem (data) {
       const item = data.item
-      const index = data.index
-
+      const index = this.values.indexOf(data.item)
       if (item.RecordId) {
         this.values[index].RecordState = 4
       } else {
@@ -182,7 +176,7 @@ export default {
     },
     additionalSearchType (id, label, model) {
       if (model) {
-        this.form[label] = model.RecordId
+        this.form[label] = model.RecordId ? model.RecordId : model.DecimalValue ? model.DecimalValue : model.Value
         const filteredArr = this.items.filter(item => item.parentId === id)
         if (filteredArr) {
           filteredArr.map(item => {
@@ -202,21 +196,13 @@ export default {
                   this.$api.postByUrl(request, item.url).then((res) => {
                     if (typeof res.ListModel !== 'undefined') {
                       this.source[item.modelProperty] = res.ListModel.BaseModels
-                    } else {
-                      let i = 0
-                      this.source[item.modelProperty] = []
-                      res.Values.map(data => {
-                        this.source[item.modelProperty][i] = this.convertLookupValueToSearchValue(data)
-                        i++
-                      })
+                    } else if (res.Values) {
+                      this.source[item.modelProperty] = res.Values
                       this.$forceUpdate()
                     }
                   })
                   this.$forceUpdate()
                 }
-                break
-              case 'LookupWithUrl':
-                this.form[item.modelProperty] = model[item.parentProperty]
                 break
               case 'Text':
                 this.form[item.modelProperty] = model[item.parentProperty]

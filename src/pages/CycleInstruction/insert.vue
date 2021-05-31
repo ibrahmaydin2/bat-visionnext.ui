@@ -338,10 +338,11 @@ export default {
       ],
       criteriaItems: [
         {
-          type: 'LookupWithUrl',
+          type: 'Dropdown',
           inputType: null,
           modelProperty: 'ColumnName',
-          parentProperty: 'ForeignField',
+          // parentProperty: 'ForeignField', şuan olmasın
+          labelProperty: 'Label',
           request: null,
           url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
           label: this.$t('insert.CycleInstruction.AreaDesc'),
@@ -350,7 +351,8 @@ export default {
           visible: true,
           hideOnTable: false,
           isUnique: true,
-          parentId: 1,
+          dynamicRequest: {paramId: 'ITEM_CRITERIA'},
+          // parentId: 1,
           id: 1
         },
         {
@@ -358,6 +360,7 @@ export default {
           inputType: null,
           modelProperty: 'ColumnValue',
           parentProperty: 'Label',
+          labelProperty: 'Label',
           request: JSON.stringify({ParamName: 'val'}),
           url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
           label: this.$t('insert.CycleInstruction.AreaValue'),
@@ -368,6 +371,14 @@ export default {
           isUnique: true,
           parentId: 1,
           id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 3
         }
       ],
       customerCriterias: [],
