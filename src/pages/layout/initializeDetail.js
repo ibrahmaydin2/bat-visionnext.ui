@@ -6,6 +6,7 @@ var cycleInstructionItems = [
     inputType: null,
     modelProperty: 'EmployeeId',
     parentProperty: null,
+    labelProperty: 'Description1',
     url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
     label: this.$t('insert.CycleInstruction.Employee'),
     required: true,
@@ -14,13 +15,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: null,
-    id: 1
+    id: 1,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Dropdown',
     inputType: null,
     modelProperty: 'CustomerId',
     parentProperty: null,
+    labelProperty: 'Description1',
     url: 'VisionNextCustomer/api/Customer/Search',
     label: this.$t('insert.CycleInstruction.Customer'),
     required: true,
@@ -29,13 +33,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: null,
-    id: 12
+    id: 12,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Dropdown',
     inputType: null,
     modelProperty: 'CustomerLocationId',
     parentProperty: 'RecordId',
+    labelProperty: 'Description1',
     request: '{"AndConditionModel": {"CustomerIds":[val]}}',
     url: 'VisionNextCustomer/api/CustomerLocation/Search',
     label: this.$t('insert.CycleInstruction.CustomerLocation'),
@@ -45,13 +52,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: 1,
-    id: 2
+    id: 2,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Lookup',
     inputType: null,
     modelProperty: 'CustomeLocationId',
     parentProperty: null,
+    labelProperty: 'Description1',
     url: 'CUSTOMER_CATEGORY_3',
     label: this.$t('insert.CycleInstruction.CustomerLookup'),
     required: true,
@@ -60,13 +70,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: null,
-    id: 123
+    id: 123,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Label',
     inputType: 'text',
     modelProperty: 'EmployeeDesc11',
     parentProperty: 'Description1',
+    labelProperty: 'Description1',
     url: null,
     label: this.$t('insert.CycleInstruction.EmployeeDesc11'),
     required: false,
@@ -75,13 +88,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: 1,
-    id: null
+    id: null,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Label',
     inputType: 'text',
     modelProperty: 'BranchDesc11',
     parentProperty: 'BranchId',
+    labelProperty: 'Description1',
     url: 'VisionNextBranch/api/Branch/Get',
     label: this.$t('insert.CycleInstruction.BranchDesc11'),
     required: false,
@@ -90,13 +106,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: 1,
-    id: null
+    id: null,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Text',
     inputType: 'number',
     modelProperty: 'Amount',
     parentProperty: null,
+    labelProperty: 'Description1',
     url: null,
     label: this.$t('insert.CycleInstruction.Amount'),
     required: true,
@@ -105,13 +124,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: null,
-    id: 2
+    id: 2,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Text',
     inputType: 'text',
     modelProperty: 'Code',
     parentProperty: 'Code',
+    labelProperty: 'Description1',
     url: null,
     label: this.$t('insert.CycleInstruction.Code'),
     required: true,
@@ -120,13 +142,16 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: 1,
-    id: null
+    id: null,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   },
   {
     type: 'Check',
     inputType: null,
     modelProperty: 'StatusId',
     parentProperty: null,
+    labelProperty: 'Description1',
     url: null,
     label: this.$t('insert.CycleInstruction.Check'),
     required: true,
@@ -135,6 +160,8 @@ var cycleInstructionItems = [
     hideOnTable: true,
     isUnique: false,
     parentId: null,
-    id: 3
+    id: 3,
+    defaultValue: null,
+    objectKey: null // update için kullanılır
   }
 ]
