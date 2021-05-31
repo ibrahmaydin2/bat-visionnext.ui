@@ -233,18 +233,21 @@ export default {
     ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'vehicles', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
-      this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
-          setTimeout(() => {
-            this.$router.push({ name: 'PurchaseWaybill' })
-          }, 2000)
+    getInsertPage () {
+      this.$api.post({RecordId: this.$route.params.url}, 'Invoice', 'PurchaseWaybill/Get').then((response) => {
+        if (response && response.Model) {
+          if (response.Model.Printed === 1) {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentIsPrintedError') })
+            setTimeout(() => {
+              this.$router.push({ name: 'PurchaseWaybill' })
+            }, 2000)
+          } else {
+            this.setData(response.Model)
+          }
         }
-        this.setData()
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
@@ -402,11 +405,7 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedInvoiceLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+          me.selectedOrderLine.stock = 0
         }
       })
     },
@@ -428,8 +427,7 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
-    setData () {
-      let rowData = this.rowData
+    setData (rowData) {
       if (rowData) {
         this.form = rowData
         this.documentDate = rowData.DocumentDate

@@ -471,6 +471,7 @@
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
@@ -880,7 +881,8 @@
       "itemName": "Ürün Adı",
       "potentialAnalysis": "Potansiyel Analiz",
       "question": "Soru",
-      "answer": "Cevap"
+      "answer": "Cevap",
+      "keyAccountNotValidToUpdate": "Zincir Mağaza güncellemeye uygun değildir."
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -1352,7 +1354,7 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "WarehouseError": "Seçilen deponun, hizmet alınan depoları yok."
+      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır."
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1466,7 +1468,9 @@
       "priceListPrice": "Liste Fiyatı",
       "totalOtherDiscount": "Dip Toplam İndrimi",
       "totalItemDiscount": "Ürün İndrimi",
-      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!"
+      "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
+      "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez.",
+      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1491,7 +1495,9 @@
       "customerCode": "Müşteri Kodu",
       "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
       "routeId": "Rota Id",
-      "branchId": "Şube Id"
+      "branchId": "Şube Id",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -1586,7 +1592,7 @@
       "currentRisk": "Güncel Risk",
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
-      "creditAmount": "Merkez Teminat Bütçesi",
+      "creditAmountCentral": "Merkez Teminat Bütçesi",
       "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",

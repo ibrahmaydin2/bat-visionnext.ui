@@ -102,7 +102,7 @@
               <NextDropdown @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
-              <v-select label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" ></v-select>
+              <v-select label="Description1" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" ></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>
@@ -414,7 +414,10 @@ export default {
               Description1: search,
               Code: search
             }
-          ]
+          ],
+          andConditionModel: {
+            StatusId: 1
+          }
         }).then(res => {
           loading(false)
         })
@@ -498,11 +501,7 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedInvoiceLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+          me.selectedOrderLine.stock = 0
         }
       })
     },

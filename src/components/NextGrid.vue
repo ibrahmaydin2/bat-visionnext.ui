@@ -37,6 +37,7 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
                     ref="AutoCompleteDropdown"
+                    :disabled="disabledAutoComplete"
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
@@ -350,10 +351,12 @@ export default {
       disabledDraggable: false,
       firstHead: null,
       firstSearchItem: null,
-      showUpdateCreditBudgetModal: false
+      showUpdateCreditBudgetModal: false,
+      disabledAutoComplete: false
     }
   },
   mounted () {
+    this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
     if (this.$route.query.count) {
@@ -600,9 +603,18 @@ export default {
       this.searchOnTable()
     },
     filterRangeDate (e, date) {
+      let beginValue = this.dateConvertToISo(date[0])
+      let endValue = this.dateConvertToISo(date[1])
+
+      if (date[0] === date[1]) {
+        beginValue = new Date(date[0]).toISOString()
+        let endDate = new Date(date[1])
+        endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59))
+      }
+
       let model = {
-        BeginValue: this.dateConvertToISo(date[0]),
-        EndValue: this.dateConvertToISo(date[1])
+        BeginValue: beginValue,
+        EndValue: endValue
       }
       this.AndConditionalModel[e] = model
       this.currentPage = 1
@@ -697,6 +709,7 @@ export default {
       } else {
         delete searchQ[tableField]
       }
+      this.disabledAutoComplete = true
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -705,6 +718,10 @@ export default {
         count: this.perPage,
         search: searchQ,
         andConditionalModel: this.AndConditionalModel
+      }).then(() => {
+        this.disabledAutoComplete = false
+      }).catch(() => {
+        this.disabledAutoComplete = false
       })
     },
     getData (e, p, c, s, requiredFieldsError) {

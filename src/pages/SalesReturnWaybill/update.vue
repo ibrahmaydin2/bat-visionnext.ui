@@ -422,8 +422,14 @@ export default {
           ...this.query,
           api: 'VisionNextItem/api/Item/Search',
           name: 'items',
+          orConditionModels: [
+            {
+              Description1: search,
+              Code: search
+            }
+          ],
           andConditionModel: {
-            Description1: search
+            StatusId: 1
           }
         }).then(res => {
           loading(false)

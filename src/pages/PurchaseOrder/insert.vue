@@ -381,7 +381,10 @@ export default {
               Description1: search,
               Code: search
             }
-          ]
+          ],
+          andConditionModel: {
+            StatusId: 1
+          }
         }).then(res => {
           loading(false)
         })
@@ -465,11 +468,6 @@ export default {
           me.selectedOrderLine.stock = me.stocks[0].Quantity
         } else {
           me.selectedOrderLine.stock = 0
-          /*  this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })  */
         }
       })
     },

@@ -280,7 +280,8 @@ export default {
       selectedBranch: {},
       selectedInvoiceKind: null,
       selectedPaymentType: null,
-      paymentTypes: []
+      paymentTypes: [],
+      defaultPaymentType: null
     }
   },
   computed: {
@@ -392,7 +393,10 @@ export default {
               Description1: search,
               Code: search
             }
-          ]
+          ],
+          andConditionModel: {
+            StatusId: 1
+          }
         }).then(res => {
           loading(false)
         })
@@ -475,11 +479,7 @@ export default {
         if (me.stocks && me.stocks.length > 0) {
           me.selectedInvoiceLine.stock = me.stocks[0].Quantity
         } else {
-          this.$toasted.show(this.$t('insert.order.noStocksException'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+          me.selectedInvoiceLine.stock = 0
         }
       })
     },
@@ -611,6 +611,7 @@ export default {
         this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
           me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
           me.selectedPaymentType = res.Model.DefaultPaymentType
+          me.defaultPaymentType = res.Model.DefaultPaymentType
           me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
         })
       }
@@ -633,7 +634,8 @@ export default {
           })
           return
         }
-        this.form.PaymentPeriodId = this.selectedCustomer.DefaultPaymentType.Code === 'AH'
+        let defaultPaymentType = this.selectedCustomer.DefaultPaymentType ? this.selectedCustomer.DefaultPaymentType : this.defaultPaymentType
+        this.form.PaymentPeriodId = defaultPaymentType && defaultPaymentType.Code === 'AH'
           ? this.selectedCustomer.PaymentPeriod
           : null
         this.createData()

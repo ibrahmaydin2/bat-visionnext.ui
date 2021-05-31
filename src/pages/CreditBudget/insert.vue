@@ -85,8 +85,8 @@
             <NextFormGroup :title="$t('insert.creditBudget.debitAccountRemainder')" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.DebitAccountRemainder" disabled />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.creditAmount')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAmount" disabled />
+            <NextFormGroup :title="$t('insert.creditBudget.creditAmountCentral')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CreditAmountCentral" disabled />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
               <b-form-input type="number" v-model="customerGuarantees.Amount"/>
@@ -118,7 +118,7 @@
                 <b-th><span>{{$t('insert.creditBudget.currentRisk')}}</span></b-th>
                 <b-th><span>{{$t('insert.creditBudget.creditAccountRemainder')}}</span></b-th>
                 <b-th><span>{{$t('insert.creditBudget.debitAccountRemainder')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.creditAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.creditBudget.creditAmountCentral')}}</span></b-th>
                 <b-th><span>{{$t('insert.creditBudget.amount')}}</span></b-th>
                 <b-th><span>{{$t('insert.creditBudget.paymentPeriod')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
@@ -132,7 +132,7 @@
                   <b-td>{{c.CurrentRisk}}</b-td>
                   <b-td>{{c.CreditAccountRemainder}}</b-td>
                   <b-td>{{c.DebitAccountRemainder}}</b-td>
-                  <b-td>{{c.CreditAmount}}</b-td>
+                  <b-td>{{c.CreditAmountCentral }}</b-td>
                   <b-td>{{c.Amount}}</b-td>
                   <b-td>{{c.PaymentPeriod}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerGuarantee(c)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -171,7 +171,7 @@ export default {
         AppStatus: null,
         ApproveStateId: null,
         CreditAccountRemainder: null,
-        CreditAmount: null,
+        CreditAmountCentral: null,
         CreditLimit: null,
         CurrentCredit: null,
         CurrentRisk: null,
@@ -219,6 +219,7 @@ export default {
             this.customerGuarantees = res
             this.customerGuarantees.PaymentPeriod = null
             this.customerGuarantees.Amount = null
+            this.customerGuarantees.CreditAmountCentral = res.CreditAmount
             this.paymentPeriod = null
             this.$v.customerGuarantees.$reset()
           } else {
