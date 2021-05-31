@@ -2,9 +2,9 @@
   <div>
     <b-row>
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="selectedType(item.modelProperty, $event)" :disabled="item.disabled" :get-lookup="true" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="item.disabled" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="item.disabled" />
@@ -174,9 +174,13 @@ export default {
       }
       this.$emit('valuechange', this.values)
     },
-    additionalSearchType (id, label, model) {
+    additionalSearchType (id, label, model, valuProperty) {
       if (model) {
-        this.form[label] = model.RecordId ? model.RecordId : model.DecimalValue ? model.DecimalValue : model.Value
+        if (model[valuProperty]) {
+          this.form[label] = model[valuProperty]
+        } else {
+          this.form[label] = model.RecordId ? model.RecordId : model.DecimalValue ? model.DecimalValue : model.Value
+        }
         const filteredArr = this.items.filter(item => item.parentId === id)
         if (filteredArr) {
           filteredArr.map(item => {
