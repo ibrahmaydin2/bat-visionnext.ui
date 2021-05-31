@@ -35,13 +35,13 @@
         <b-tab :title="$t('insert.detail')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <NextDropdown :disabled="insertReadonly.CustomerCriteriaId" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)"/>
+              <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
-              <NextDropdown :disabled="insertReadonly.RouteCriteriaId" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
+              <NextDropdown v-model="routeCriteria" :disabled="insertReadonly.RouteCriteriaId" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown :disabled="insertReadonly.BranchCriteriaId" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
               <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
@@ -55,10 +55,21 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.EmployeesList')" >
-          <NextDetailPanel v-model="form.CycleInstructionEmployees" :items="cycleInstructionItems" />
+          <NextDetailPanel v-model="form.CycleInstructionEmployees" :items="employeeItems" />
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionBranches')" >
-          <NextDetailPanel v-model="cycleInstructionBranches" :items="cycleInstructionBranchItems" />
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="BranchCriteria && BranchCriteria.Code === 'SL'">
+          <NextDetailPanel v-model="branches" :items="branchItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
+          <NextDetailPanel v-model="customers" :items="customerItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="routeCriteria && routeCriteria.Code === 'RL'" >
+          <NextDetailPanel v-model="routes" :items="routeItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')" >
+          <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" />
+        </b-tab><b-tab :title="$t('insert.CycleInstruction.CycleInstructionCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+          <NextDetailPanel v-model="customerCriterias" :items="criteriaItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -84,7 +95,7 @@ export default {
         CycleInstructionDetails: []
       },
       routeName1: 'FieldManagement',
-      cycleInstructionBranchItems: [
+      branchItems: [
         {
           type: 'Autocomplete',
           inputType: null,
@@ -133,7 +144,105 @@ export default {
           id: 3
         }
       ],
-      cycleInstructionItems: [
+      customerItems: [
+        {
+          type: 'Autocomplete',
+          inputType: null,
+          modelProperty: 'ColumnValue',
+          parentProperty: null,
+          url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+          label: this.$t('insert.CycleInstruction.Customer'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: true,
+          parentId: null,
+          id: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          parentProperty: null,
+          url: null,
+          label: null,
+          required: false,
+          disabled: false,
+          visible: false,
+          hideOnTable: true,
+          isUnique: false,
+          defaultValue: 'T_CUSTOMER',
+          parentId: null,
+          id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          parentProperty: null,
+          url: null,
+          label: null,
+          required: false,
+          disabled: false,
+          visible: false,
+          hideOnTable: true,
+          isUnique: false,
+          defaultValue: 'RECORD_ID',
+          parentId: null,
+          id: 3
+        }
+      ],
+      routeItems: [
+        {
+          type: 'Autocomplete',
+          inputType: null,
+          modelProperty: 'ColumnValue',
+          parentProperty: null,
+          url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
+          label: this.$t('insert.CycleInstruction.Route'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: true,
+          parentId: null,
+          id: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          parentProperty: null,
+          url: null,
+          label: null,
+          required: false,
+          disabled: false,
+          visible: false,
+          hideOnTable: true,
+          isUnique: false,
+          defaultValue: 'T_ROUTE',
+          parentId: null,
+          id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          parentProperty: null,
+          url: null,
+          label: null,
+          required: false,
+          disabled: false,
+          visible: false,
+          hideOnTable: true,
+          isUnique: false,
+          defaultValue: 'RECORD_ID',
+          parentId: null,
+          id: 3
+        }
+      ],
+      employeeItems: [
         {
           type: 'Autocomplete',
           inputType: null,
@@ -147,8 +256,7 @@ export default {
           hideOnTable: false,
           isUnique: true,
           parentId: null,
-          id: 1,
-          objectKey: 'Employee'
+          id: 1
         },
         {
           type: 'Label',
@@ -159,7 +267,7 @@ export default {
           label: this.$t('insert.CycleInstruction.EmployeeDescription'),
           required: false,
           disabled: true,
-          visible: true,
+          visible: false,
           hideOnTable: true,
           isUnique: false,
           parentId: 1,
@@ -181,7 +289,94 @@ export default {
           id: null
         }
       ],
-      cycleInstructionBranches: []
+      taskItems: [
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'Code',
+          parentProperty: null,
+          url: null,
+          label: this.$t('insert.CycleInstruction.TaskCode'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: false,
+          parentId: null,
+          id: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'Description1',
+          parentProperty: null,
+          url: null,
+          label: this.$t('insert.CycleInstruction.TaskDescription1'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: false,
+          parentId: null,
+          id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'Genexp1',
+          parentProperty: null,
+          url: null,
+          label: this.$t('insert.CycleInstruction.TaskGenexp1'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: false,
+          parentId: null,
+          id: 3
+        }
+      ],
+      criteriaItems: [
+        {
+          type: 'LookupWithUrl',
+          inputType: null,
+          modelProperty: 'ColumnName',
+          parentProperty: 'ForeignField',
+          request: null,
+          url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
+          label: this.$t('insert.CycleInstruction.AreaDesc'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: true,
+          parentId: 1,
+          id: 1
+        },
+        {
+          type: 'Dropdown',
+          inputType: null,
+          modelProperty: 'ColumnValue',
+          parentProperty: 'Label',
+          request: JSON.stringify({ParamName: 'val'}),
+          url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
+          label: this.$t('insert.CycleInstruction.AreaValue'),
+          required: true,
+          disabled: false,
+          visible: true,
+          hideOnTable: false,
+          isUnique: true,
+          parentId: 1,
+          id: 2
+        }
+      ],
+      customerCriterias: [],
+      branches: [],
+      customers: [],
+      routes: [],
+      customerCriteria: {},
+      BranchCriteria: {},
+      routeCriteria: {}
     }
   },
   mounted () {
@@ -193,33 +388,13 @@ export default {
       console.log(this.form)
       this.cycleInstructionBranches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
 
-      // if (this.form.ItemCustomers) {
-      //   this.form.ItemCustomers.map(item => {
-      //     item.CustomerLabel = item.Customer ? item.Customer.Label : ''
-      //   })
-      // }
-      // if (this.form.ItemBoms) {
-      //   this.form.ItemBoms.map(item => {
-      //     item.UnitLabel = item.Unit ? item.Unit.Label : ''
-      //     item.BomItemLabel = item.BomItem ? item.BomItem.Label : ''
-      //   })
-      // }
-      // for (const property in this.rowData) {
-      //   if (this.rowData[property]) {
-      //     if (typeof this.rowData[property].Label !== 'undefined') {
-      //       if (property === 'CardType' || property === 'TimeFrame' || property === 'Color' || property === 'UnitSet') {
-      //         this[property] = this.convertLookupValueToSearchValue(this.rowData[property])
-      //       } else {
-      //         this[property] = this.rowData[property]
-      //       }
-      //     }
-      //   }
-      // }
+      this.BranchCriteria = this.form.BranchCriteria
+      this.routeCriteria = this.form.RouteCriteria
+      this.customerCriteria = this.form.CustomerCriteria
     },
     save () {
-      if (this.cycleInstructionBranches) {
-        this.form.CycleInstructionDetails.push(...this.cycleInstructionBranches)
-      }
+      this.form.CycleInstructionDetails = []
+      this.form.CycleInstructionDetails.push(...this.branches, ...this.customers, ...this.routes, ...this.customerCriterias)
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -229,12 +404,11 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.updateData()
+        this.createData()
       }
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules
     }

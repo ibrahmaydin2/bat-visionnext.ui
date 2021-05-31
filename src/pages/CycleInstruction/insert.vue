@@ -368,6 +368,22 @@ export default {
           isUnique: true,
           parentId: 1,
           id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          parentProperty: null,
+          url: null,
+          label: null,
+          required: false,
+          disabled: false,
+          visible: false,
+          hideOnTable: true,
+          isUnique: false,
+          defaultValue: 'T_CUSTOMER',
+          parentId: null,
+          id: 3
         }
       ],
       customerCriterias: [],
