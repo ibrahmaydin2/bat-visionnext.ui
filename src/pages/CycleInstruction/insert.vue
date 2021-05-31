@@ -343,6 +343,7 @@ export default {
           modelProperty: 'ColumnName',
           labelProperty: 'Label',
           request: null,
+          valueProperty: 'ForeignField',
           url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
           label: this.$t('insert.CycleInstruction.AreaDesc'),
           required: true,

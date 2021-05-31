@@ -100,6 +100,7 @@ export default {
           type: 'Autocomplete',
           inputType: null,
           modelProperty: 'ColumnValue',
+          objectKey: 'Branch',
           parentProperty: null,
           url: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
           label: this.$t('insert.CycleInstruction.Branch'),
@@ -198,6 +199,7 @@ export default {
           type: 'Autocomplete',
           inputType: null,
           modelProperty: 'ColumnValue',
+          objectKey: 'Route',
           parentProperty: null,
           url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
           label: this.$t('insert.CycleInstruction.Route'),
@@ -245,9 +247,8 @@ export default {
       employeeItems: [
         {
           type: 'Autocomplete',
-          inputType: null,
           modelProperty: 'EmployeeId',
-          parentProperty: null,
+          objectKey: 'Employee',
           url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
           label: this.$t('insert.CycleInstruction.Employee'),
           required: true,
@@ -255,7 +256,6 @@ export default {
           visible: true,
           hideOnTable: false,
           isUnique: true,
-          parentId: null,
           id: 1
         },
         {
@@ -338,11 +338,12 @@ export default {
       ],
       criteriaItems: [
         {
-          type: 'LookupWithUrl',
+          type: 'Dropdown',
           inputType: null,
           modelProperty: 'ColumnName',
-          parentProperty: 'ForeignField',
+          labelProperty: 'Label',
           request: null,
+          valueProperty: 'ForeignField',
           url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
           label: this.$t('insert.CycleInstruction.AreaDesc'),
           required: true,
@@ -350,7 +351,7 @@ export default {
           visible: true,
           hideOnTable: false,
           isUnique: true,
-          parentId: 1,
+          dynamicRequest: {paramId: 'ITEM_CRITERIA'},
           id: 1
         },
         {
@@ -358,6 +359,7 @@ export default {
           inputType: null,
           modelProperty: 'ColumnValue',
           parentProperty: 'Label',
+          labelProperty: 'Label',
           request: JSON.stringify({ParamName: 'val'}),
           url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
           label: this.$t('insert.CycleInstruction.AreaValue'),
@@ -368,6 +370,14 @@ export default {
           isUnique: true,
           parentId: 1,
           id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 3
         }
       ],
       customerCriterias: [],
@@ -387,7 +397,8 @@ export default {
       this.form = this.rowData
       console.log(this.form)
       this.cycleInstructionBranches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
-
+      this.customerCriterias = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'BRANCH_ID' && i.ColumnName !== 'BRANCH_ID')
+      console.log(this.customerCriterias)
       this.BranchCriteria = this.form.BranchCriteria
       this.routeCriteria = this.form.RouteCriteria
       this.customerCriteria = this.form.CustomerCriteria
