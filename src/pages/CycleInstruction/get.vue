@@ -37,55 +37,62 @@
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.EmployeesList')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.CycleInstruction.EmployeeDescription')}}</span></b-th>
-                    <b-th><span>{{$t('insert.CycleInstruction.BranchDescription')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.CycleInstructionEmployees" :key="i">
-                      <b-td>{{c.Employee && c.Employee.Label}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CycleInstructionEmployees" :items="employeeItems" />
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.CycleInstructionCriterias')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.CycleInstruction.customer')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.CycleInstructionDetails" :key="i">
-                      <b-td>{{c.PaymentPeriod}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="customerCriterias" :items="customerItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="branches" :items="branchItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="customers" :items="customerItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="rowData.RouteCriteria && rowData.RouteCriteria.Code === 'RL'" >
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="routes" :items="routeItems" />
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')">
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.ModifiedUser, 'text', 'get.CycleInstruction.CustomerCount')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.ModifiedUser, 'text', 'get.CycleInstruction.ActivityRate')"></div>
+            </b-card>
+          </b-row>
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.CycleInstruction.customer')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.CustomerGuarantees" :key="i">
-                      <b-td>{{c.PaymentPeriod}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CycleInstructionTasks" :items="taskItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -97,11 +104,22 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
   data () {
     return {
+      branchItems: detailData.branchItems,
+      customerItems: detailData.customerItems,
+      routeItems: detailData.routeItems,
+      employeeItems: detailData.employeeItems,
+      taskItems: detailData.taskItems,
+      criteriaItems: detailData.criteriaItems,
+      branches: [],
+      customerCriterias: [],
+      customers: [],
+      routes: []
     }
   },
   mounted () {
@@ -116,6 +134,16 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldManagement/api/CycleInstruction', record: this.$route.params.url})
+    }
+  },
+  watch: {
+    rowData (e) {
+      if (e) {
+        this.branches = e.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
+        this.customerCriterias = e.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'BRANCH_ID' && i.ColumnName !== 'BRANCH_ID')
+        this.customers = e.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+        this.routes = e.CycleInstructionDetails.filter(i => i.TableName === 'T_ROUTE' && i.ColumnName === 'RECORD_ID')
+      }
     }
   }
 }
