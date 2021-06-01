@@ -174,10 +174,10 @@ export default {
       }
       this.$emit('valuechange', this.values)
     },
-    additionalSearchType (id, label, model, valuProperty) {
+    additionalSearchType (id, label, model, valueProperty) {
       if (model) {
-        if (model[valuProperty]) {
-          this.form[label] = model[valuProperty]
+        if (model[valueProperty]) {
+          this.form[label] = model[valueProperty]
         } else {
           this.form[label] = model.RecordId ? model.RecordId : model.DecimalValue ? model.DecimalValue : model.Value
         }
