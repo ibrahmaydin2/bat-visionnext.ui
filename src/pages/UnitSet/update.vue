@@ -69,7 +69,7 @@ export default {
         {
           type: 'Lookup',
           modelProperty: 'UnitId',
-          objectKey: 'Unit',
+          objectKey: 'UnitLookupValue',
           url: 'UNIT',
           label: this.$t('insert.unitSet.unitDefinitions'),
           required: true,
