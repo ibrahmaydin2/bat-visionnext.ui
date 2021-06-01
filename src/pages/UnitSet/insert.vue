@@ -48,6 +48,7 @@
 </template>
 <script>
 import insertMixin from '../../mixins/insert'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -63,157 +64,8 @@ export default {
         CardTypeId: null,
         Units: []
       },
+      unitItems: detailData.unitItems,
       routeName1: 'Unit',
-      unitItems: [
-        {
-          type: 'Lookup',
-          modelProperty: 'UnitId',
-          url: 'UNIT',
-          label: this.$t('insert.unitSet.unitDefinitions'),
-          required: true,
-          visible: true,
-          isUnique: true,
-          id: 1
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'ConvFact1',
-          label: this.$t('insert.unitSet.convFact1'),
-          required: true,
-          visible: true,
-          id: 2
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'ConvFact2',
-          label: this.$t('insert.unitSet.convFact2'),
-          required: true,
-          visible: true,
-          id: 3
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Length',
-          parentProperty: null,
-          url: null,
-          label: this.$t('insert.unitSet.length'),
-          visible: true,
-          id: 4
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'LengthUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=1',
-          label: this.$t('insert.unitSet.lengthUnit'),
-          visible: true,
-          id: 5,
-          dynamicAndCondition: { CardTypeIds: [1] }
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Width',
-          label: this.$t('insert.unitSet.width'),
-          visible: true,
-          id: 6
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'WidthUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=2',
-          label: this.$t('insert.unitSet.widthUnit'),
-          visible: true,
-          id: 7,
-          dynamicAndCondition: { CardTypeIds: [6] }
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Height',
-          label: this.$t('insert.unitSet.height'),
-          visible: true,
-          id: 8
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'HeightUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=3',
-          label: this.$t('insert.unitSet.heightUnit'),
-          visible: true,
-          id: 9,
-          dynamicAndCondition: { CardTypeIds: [7] }
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Area',
-          label: this.$t('insert.unitSet.area'),
-          visible: true,
-          id: 10
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'AreaUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=4',
-          label: this.$t('insert.unitSet.areaUnit'),
-          visible: true,
-          id: 11,
-          dynamicAndCondition: { CardTypeIds: [2] }
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Volume',
-          label: this.$t('insert.unitSet.volume'),
-          visible: true,
-          id: 12
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'VolumeUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=5',
-          label: this.$t('insert.unitSet.volumeUnit'),
-          visible: true,
-          id: 13,
-          dynamicAndCondition: { CardTypeIds: [3] }
-        },
-        {
-          type: 'Text',
-          inputType: 'number',
-          modelProperty: 'Weight',
-          label: this.$t('insert.unitSet.weight'),
-          visible: true,
-          id: 14
-        },
-        {
-          type: 'Dropdown',
-          modelProperty: 'WeightUnitId',
-          url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=6',
-          label: this.$t('insert.unitSet.weightUnit'),
-          visible: true,
-          id: 15,
-          dynamicAndCondition: { CardTypeIds: [4] }
-        },
-        {
-          type: 'Check',
-          inputType: 'number',
-          modelProperty: 'IsMainUnit',
-          label: this.$t('insert.unitSet.isMainUnit'),
-          visible: true,
-          id: 16
-        },
-        {
-          type: 'Check',
-          inputType: 'number',
-          modelProperty: 'IsDivUnit',
-          label: this.$t('insert.unitSet.isDivUnit'),
-          visible: true,
-          id: 17
-        }
-      ],
       cardTypes: [
         {
           Label: this.$t('insert.unitSet.userDefinedDimensions'),
