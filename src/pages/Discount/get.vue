@@ -55,36 +55,6 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountGivens')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.finishValue')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountGivens" :key="i">
-                      <b-td>{{w.ColumnName}}</b-td>
-                      <b-td>{{w.ColumnValue}}</b-td>
-                      <b-td>{{w.GivenQuantity}}</b-td>
-                      <b-td>{{w.DiscountRate}}</b-td>
-                      <b-td>{{w.DiscountTotal}}</b-td>
-                      <b-td>{{w.StartValue}}</b-td>
-                      <b-td>{{w.FinishValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.discount.discountTakens')">
           <b-row>
             <b-col cols="12" md="12">
@@ -108,6 +78,36 @@
                       <b-td>{{w.EndTakenQuantity}}</b-td>
                       <b-td>{{w.MaxTakenAmount}}</b-td>
                       <b-td>{{w.MinTakenQuantity}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.discount.discountGivens')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
+                    <b-th><span>{{$t('insert.discount.finishValue')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(w, i) in rowData.DiscountGivens" :key="i">
+                      <b-td>{{w.ColumnName}}</b-td>
+                      <b-td>{{w.ColumnValue}}</b-td>
+                      <b-td>{{w.GivenQuantity}}</b-td>
+                      <b-td>{{w.DiscountRate}}</b-td>
+                      <b-td>{{w.DiscountTotal}}</b-td>
+                      <b-td>{{w.StartValue}}</b-td>
+                      <b-td>{{w.FinishValue}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

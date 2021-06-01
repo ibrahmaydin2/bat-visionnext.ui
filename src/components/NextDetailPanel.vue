@@ -86,6 +86,8 @@ export default {
                     value = obj[item.objectKey].Label
                   } else if (obj[item.objectKey].Description1) {
                     value = obj[item.objectKey].Description1
+                  } else {
+                    value = obj[item.objectKey]
                   }
                 } else {
                   if (item.type !== 'Label') {

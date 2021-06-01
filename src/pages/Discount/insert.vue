@@ -104,7 +104,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountPayback" :error="$v.form.DiscountPayback">
-              <b-form-input type="text" v-model="form.DiscountPayback" :readonly="insertReadonly.DiscountPayback" />
+              <b-form-input type="number" v-model="form.DiscountPayback" :readonly="insertReadonly.DiscountPayback" maxLength="1" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="MaxUsage" :error="$v.form.MaxUsage">
               <b-form-input type="text" v-model="form.MaxUsage" :readonly="insertReadonly.MaxUsage" />
@@ -142,64 +142,6 @@
             <NextFormGroup item-key="ApplyToTimes" :error="$v.form.ApplyToTimes" md="4" lg="3">
               <NextCheckBox v-model="form.ApplyToTimes" type="number" toggle />
             </NextFormGroup>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.discount.discountGivens')" @click="ColumnControl()">
-          <b-row>
-            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="columnNameValid">
-              <v-select v-model="discountGivenColumnName" :options="discountGivensColumnNames" :disabled="!columnNameValid" label="Label"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="columnNameValid">
-              <v-select v-model="discountGivenColumnValue" :options="discountGivensColumnValues" :disabled="!columnNameValid" label="Label"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.givenQuantity')" :error="$v.discountGiven.GivenQuantity" required>
-              <b-form-input type="text" v-model="discountGiven.GivenQuantity" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.discountRate')" :error="$v.discountGiven.DiscountRate" :required="discountRateValid">
-              <b-form-input type="text" v-model="discountGiven.DiscountRate" :disabled="!discountRateValid" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.discountTotal')" :error="$v.discountGiven.DiscountTotal" :required="discountTotalValid">
-              <b-form-input type="text" v-model="discountGiven.DiscountTotal" :disabled="!discountTotalValid" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.startValue')" :error="$v.discountGiven.StartValue" :required="startValueValid">
-              <b-form-input type="text" v-model="discountGiven.StartValue" :disabled="!startValueValid" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.finishValue')" :error="$v.discountGiven.FinishValue" :required="finishValueValid">
-              <b-form-input type="text" v-model="discountGiven.FinishValue" :disabled="!finishValueValid" />
-            </NextFormGroup>
-            <b-col md="1" class="ml-auto">
-              <b-form-group>
-                <b-button @click="addDiscountGiven()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
-           <b-row>
-            <b-col cols="12">
-              <b-table-simple responsive bordered small>
-                <b-thead>
-                  <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.finishValue')}}</span></b-th>
-                  <b-th><span>{{$t('list.operations')}}</span></b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(w, i) in form.DiscountGivens" :key="i">
-                    <b-td>{{w.ColumnNameStr}}</b-td>
-                    <b-td>{{w.ColumnValueStr}}</b-td>
-                    <b-td>{{w.GivenQuantity}}</b-td>
-                    <b-td>{{w.DiscountRate}}</b-td>
-                    <b-td>{{w.DiscountTotal}}</b-td>
-                    <b-td>{{w.StartValue}}</b-td>
-                    <b-td>{{w.FinishValue}}</b-td>
-                    <b-td class="text-center"><i @click="removeDiscountGiven(w)" class="far fa-trash-alt text-danger"></i></b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountTakens')">
@@ -254,6 +196,64 @@
                     <b-td>{{w.MaxTakenAmount}}</b-td>
                     <b-td>{{w.MinTakenQuantity}}</b-td>
                     <b-td class="text-center"><i @click="removeDiscountTaken(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.discount.discountGivens')" @click="ColumnControl()">
+          <b-row>
+            <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountGivenColumnName" :required="columnNameValid">
+              <v-select v-model="discountGivenColumnName" :options="discountGivensColumnNames" :disabled="!columnNameValid" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="columnNameValid">
+              <v-select v-model="discountGivenColumnValue" :options="discountGivensColumnValues" :disabled="!columnNameValid" label="Label"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.givenQuantity')" :error="$v.discountGiven.GivenQuantity" required>
+              <b-form-input type="text" v-model="discountGiven.GivenQuantity" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.discountRate')" :error="$v.discountGiven.DiscountRate" :required="discountRateValid">
+              <b-form-input type="text" v-model="discountGiven.DiscountRate" :disabled="!discountRateValid" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.discountTotal')" :error="$v.discountGiven.DiscountTotal" :required="discountTotalValid">
+              <b-form-input type="text" v-model="discountGiven.DiscountTotal" :disabled="!discountTotalValid" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.startValue')" :error="$v.discountGiven.StartValue" :required="startValueValid">
+              <b-form-input type="text" v-model="discountGiven.StartValue" :disabled="!startValueValid" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.discount.finishValue')" :error="$v.discountGiven.FinishValue" :required="finishValueValid">
+              <b-form-input type="text" v-model="discountGiven.FinishValue" :disabled="!finishValueValid" />
+            </NextFormGroup>
+            <b-col md="1" class="ml-auto">
+              <b-form-group>
+                <b-button @click="addDiscountGiven()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+           <b-row>
+            <b-col cols="12">
+              <b-table-simple responsive bordered small>
+                <b-thead>
+                  <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
+                  <b-th><span>{{$t('insert.discount.finishValue')}}</span></b-th>
+                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(w, i) in form.DiscountGivens" :key="i">
+                    <b-td>{{w.ColumnNameStr}}</b-td>
+                    <b-td>{{w.ColumnValueStr}}</b-td>
+                    <b-td>{{w.GivenQuantity}}</b-td>
+                    <b-td>{{w.DiscountRate}}</b-td>
+                    <b-td>{{w.DiscountTotal}}</b-td>
+                    <b-td>{{w.StartValue}}</b-td>
+                    <b-td>{{w.FinishValue}}</b-td>
+                    <b-td class="text-center"><i @click="removeDiscountGiven(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -1053,7 +1053,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_BRANCH',
+        TableName: 'T_CUSTOMER',
         ColumnName: 'BRANCH_ID',
         ColumnValue: this.discountDetailsBranch.BranchId,
         BranchId: this.discountDetailsBranch.BranchId,
