@@ -2135,7 +2135,9 @@
       "BranchCriteriaId": "Şube Kriteri",
       "BeginDate": "Aktivite Başlangıcı",
       "EndDate": "Aktivite Bitişi",
-      "Genexp1": "Aktivite Açıklama"
+      "Genexp1": "Aktivite Açıklama",
+      "CustomerCount": "Tanımlanan Müşteri Sayısı",
+      "ActivityRate": "Aktivite Tamamlanma Oranı"
     }
   },
 
