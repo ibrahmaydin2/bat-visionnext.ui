@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row>
+    <b-row v-if="type === 'insert' || type == 'update'">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
@@ -64,7 +64,7 @@ export default {
       label: {},
       source: {},
       values: [],
-      objectTypes: ['Autocomplete', 'Dropdown', 'Lookup']
+      objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label']
     }
   },
   computed: {
@@ -79,9 +79,20 @@ export default {
               if (item.type === 'Check') {
                 value = value === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
               } else if (this.objectTypes.includes(item.type)) {
-                value = item.objectKey && obj[item.objectKey] ? obj[item.objectKey].Label : obj[item.modelProperty + 'Desc']
+                if (item.objectKey && obj[item.objectKey]) {
+                  if (obj[item.objectKey][item.modelProperty]) {
+                    value = obj[item.objectKey][item.modelProperty]
+                  } else if (obj[item.objectKey].Label) {
+                    value = obj[item.objectKey].Label
+                  } else if (obj[item.objectKey].Description1) {
+                    value = obj[item.objectKey].Description1
+                  }
+                } else {
+                  if (item.type !== 'Label') {
+                    value = obj[item.modelProperty + 'Desc']
+                  }
+                }
               }
-
               return value
             }
           })
@@ -243,15 +254,14 @@ export default {
     }
   },
   watch: {
-    // selectedValue (newValue, oldValue) {
-    //   if (newValue !== oldValue) {
-    //     this.$emit('valuechange', newValue)
-    //   }
-    // },
-    value (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        this.values = newValue
-      }
+    value: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.values = newValue
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

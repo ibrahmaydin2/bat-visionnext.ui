@@ -278,6 +278,7 @@ export default {
           inputType: 'text',
           modelProperty: 'BranchDescription',
           parentProperty: 'BranchId',
+          objectKey: 'Employee',
           url: 'VisionNextBranch/api/Branch/Get',
           label: this.$t('insert.CycleInstruction.BranchDescription'),
           required: false,
@@ -395,10 +396,10 @@ export default {
   methods: {
     setData () {
       this.form = this.rowData
-      console.log(this.form)
-      this.cycleInstructionBranches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
+      this.branches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
       this.customerCriterias = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'BRANCH_ID' && i.ColumnName !== 'BRANCH_ID')
-      console.log(this.customerCriterias)
+      this.customers = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+      this.routes = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_ROUTE' && i.ColumnName === 'RECORD_ID')
       this.BranchCriteria = this.form.BranchCriteria
       this.routeCriteria = this.form.RouteCriteria
       this.customerCriteria = this.form.CustomerCriteria
