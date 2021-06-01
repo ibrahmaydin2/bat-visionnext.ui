@@ -59,7 +59,7 @@
                   </b-thead>
                   <b-tbody>
                     <tr v-for="(unit, i) in rowData.Units" :key="i">
-                      <b-td>{{unit.Unit ? unit.Unit.Label : ''}}</b-td>
+                      <b-td>{{unit.UnitLookupValue ? unit.UnitLookupValue.Label : ''}}</b-td>
                       <b-td>{{unit.ConvFact1}}</b-td>
                       <b-td>{{unit.ConvFact2}}</b-td>
                       <b-td>{{unit.Length}}</b-td>
