@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row v-if="type === 'insert' || type == 'update'">
+    <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
@@ -58,13 +58,13 @@ export default {
   },
   data () {
     return {
-      // selectedValue: null
       form: {},
       model: {},
       label: {},
       source: {},
       values: [],
-      objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label']
+      objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
+      editable: this.type === 'insert' || this.type === 'update'
     }
   },
   computed: {
@@ -100,10 +100,13 @@ export default {
           })
         }
       })
-      fields.push({
-        key: 'operations',
-        label: this.$t('list.operations')
-      })
+
+      if (this.editable) {
+        fields.push({
+          key: 'operations',
+          label: this.$t('list.operations')
+        })
+      }
       return fields
     }
   },
@@ -141,6 +144,7 @@ export default {
         ...this.form,
         ...this.label
       }
+
       for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i]
         if (item.isUnique) {
@@ -155,11 +159,13 @@ export default {
           }
         }
       }
+
       this.form.Deleted = 0
       this.form.System = 0
       this.form.RecordState = 2
       this.form.StatusId = 1
       const model = Object.keys(this.model)
+
       for (let index = 0; index < model.length; index++) {
         let item = model[index]
         let key = item + 'Desc'
@@ -173,6 +179,7 @@ export default {
           this.form[item.modelProperty] = item.defaultValue
         }
       })
+
       this.model = {}
       this.label = {}
       this.$v.form.$reset()
@@ -234,6 +241,7 @@ export default {
       } else {
         this.form[label] = null
         const filteredArr = this.items.filter(item => item.parentId === id)
+
         if (filteredArr) {
           filteredArr.map(item => {
             this.model[item.modelProperty] = {}
