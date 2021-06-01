@@ -146,15 +146,13 @@
               <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
-                    <b-th><span>{{$t('insert.fixedTermCampaign.branchId')}}</span></b-th>
                     <b-th><span>{{$t('insert.fixedTermCampaign.branchCode')}}</span></b-th>
                     <b-th><span>{{$t('insert.fixedTermCampaign.branchName')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in rowData.FixedTermCampaignBranchs" :key="i">
-                       <b-td>{{f.CommercialTitle}}</b-td>
                        <b-td>{{f.Code}}</b-td>
-                       <b-td>{{f.Description1}}</b-td>
+                       <b-td>{{f.CommercialTitle}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
