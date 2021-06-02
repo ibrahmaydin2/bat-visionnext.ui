@@ -561,6 +561,11 @@ import RefContractGet from '@/pages/RefContract/get'
 import RefContractInsert from '@/pages/RefContract/insert'
 import RefContractUpdate from '@/pages/RefContract/update'
 
+import CustomerSItemCriteriaIndex from '@/pages/CustomerSItemCriteria/'
+import CustomerSItemCriteriaGet from '@/pages/CustomerSItemCriteria/get'
+import CustomerSItemCriteriaInsert from '@/pages/CustomerSItemCriteria/insert'
+import CustomerSItemCriteriaUpdate from '@/pages/CustomerSItemCriteria/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -669,7 +674,8 @@ const listIndex = [
   {path: '/TerminalMessage', name: 'TerminalMessage', component: TerminalMessageIndex, meta: { title: i18n.t('router.TerminalMessage'), createLink: 'TerminalMessageInsert' }},
   {path: '/Label', name: 'Label', component: LabelIndex, meta: { title: i18n.t('router.Label'), createLink: 'LabelInsert' }},
   {path: '/RefContract', name: 'RefContract', component: RefContractIndex, meta: { title: i18n.t('router.RefContract'), createLink: 'RefContractInsert' }},
-  {path: '/RouteDailyRecord', name: 'RouteDailyRecord', component: RouteDailyRecordIndex, meta: { title: i18n.t('router.RouteDailyRecord') }}
+  {path: '/RouteDailyRecord', name: 'RouteDailyRecord', component: RouteDailyRecordIndex, meta: { title: i18n.t('router.RouteDailyRecord') }},
+  {path: '/CustomerSItemCriteria', name: 'CustomerSItemCriteria', component: CustomerSItemCriteriaIndex, meta: { title: i18n.t('router.CustomerSItemCriteria'), createLink: 'CustomerSItemCriteriaInsert' }}
 ]
 
 const listGet = [
@@ -778,7 +784,8 @@ const listGet = [
   { path: '/TerminalMessage/:url', name: 'TerminalMessageGet', component: TerminalMessageGet, meta: { title: i18n.t('router.TerminalMessageGet'), baseLink: 'TerminalMessage' } },
   { path: '/Label/:url', name: 'LabelGet', component: LabelGet, meta: { title: i18n.t('router.LabelGet'), baseLink: 'Label' } },
   { path: '/RefContract/:url', name: 'RefContractGet', component: RefContractGet, meta: { title: i18n.t('router.RefContractGet'), baseLink: 'RefContract' } },
-  { path: '/RouteDailyRecord/:url', name: 'RouteDailyRecordGet', component: RouteDailyRecordGet, meta: { title: i18n.t('router.RouteDailyRecordGet'), baseLink: 'RouteDailyRecord' } }
+  { path: '/RouteDailyRecord/:url', name: 'RouteDailyRecordGet', component: RouteDailyRecordGet, meta: { title: i18n.t('router.RouteDailyRecordGet'), baseLink: 'RouteDailyRecord' } },
+  { path: '/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaGet', component: CustomerSItemCriteriaGet, meta: { title: i18n.t('router.CustomerSItemCriteriaGet'), baseLink: 'CustomerSItemCriteria' } }
 ]
 
 const listUpdate = [
@@ -884,7 +891,8 @@ const listUpdate = [
   { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } },
   { path: '/Update/TerminalMessage/:url', name: 'TerminalMessageUpdate', component: TerminalMessageUpdate, meta: { title: i18n.t('router.TerminalMessageUpdate'), baseLink: 'TerminalMessage' } },
   { path: '/Update/Label/:url', name: 'LabelUpdate', component: LabelUpdate, meta: { title: i18n.t('router.LabelUpdate'), baseLink: 'Label' } },
-  { path: '/Update/RefContract/:url', name: 'RefContractUpdate', component: RefContractUpdate, meta: { title: i18n.t('router.RefContractUpdate'), baseLink: 'RefContract' } }
+  { path: '/Update/RefContract/:url', name: 'RefContractUpdate', component: RefContractUpdate, meta: { title: i18n.t('router.RefContractUpdate'), baseLink: 'RefContract' } },
+  { path: '/Update/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaUpdate', component: CustomerSItemCriteriaUpdate, meta: { title: i18n.t('router.CustomerSItemCriteriaUpdate'), baseLink: 'CustomerSItemCriteria' } }
 ]
 
 const listInsert = [
@@ -988,7 +996,8 @@ const listInsert = [
   { path: '/Insert/CreditBudget', name: 'CreditBudgetInsert', component: CreditBudgetInsert, meta: { title: i18n.t('router.CreditBudgetInsert'), baseLink: 'CreditBudget' } },
   { path: '/Insert/TerminalMessage', name: 'TerminalMessageInsert', component: TerminalMessageInsert, meta: { title: i18n.t('router.TerminalMessageInsert'), baseLink: 'TerminalMessage' } },
   { path: '/Insert/Label', name: 'LabelInsert', component: LabelInsert, meta: { title: i18n.t('router.LabelInsert'), baseLink: 'Label' } },
-  { path: '/Insert/RefContract', name: 'RefContractInsert', component: RefContractInsert, meta: { title: i18n.t('router.RefContractInsert'), baseLink: 'RefContract' } }
+  { path: '/Insert/RefContract', name: 'RefContractInsert', component: RefContractInsert, meta: { title: i18n.t('router.RefContractInsert'), baseLink: 'RefContract' } },
+  { path: '/Insert/CustomerSItemCriteria', name: 'CustomerSItemCriteriaInsert', component: CustomerSItemCriteriaInsert, meta: { title: i18n.t('router.CustomerSItemCriteriaInsert'), baseLink: 'CustomerSItemCriteria' } }
 ]
 
 const routes = [
