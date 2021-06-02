@@ -56,6 +56,7 @@ import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
+import NextDetailPanel from './components/NextDetailPanel'
 import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
 import NextTimePicker from './components/NextTimePicker'
@@ -121,6 +122,7 @@ Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('NextDropdown', NextDropdown)
+Vue.component('NextDetailPanel', NextDetailPanel)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)

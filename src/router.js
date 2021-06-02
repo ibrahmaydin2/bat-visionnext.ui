@@ -451,6 +451,14 @@ import LoyaltyConsumptionGet from '@/pages/LoyaltyConsumption/get'
 import LoyaltyConsumptionInsert from '@/pages/LoyaltyConsumption/insert'
 import LoyaltyConsumptionUpdate from '@/pages/LoyaltyConsumption/update'
 
+import CycleInstructionIndex from '@/pages/CycleInstruction/'
+import CycleInstructionGet from '@/pages/CycleInstruction/get'
+import CycleInstructionInsert from '@/pages/CycleInstruction/insert'
+import CycleInstructionUpdate from '@/pages/CycleInstruction/update'
+
+import CycleInstructionCustomerIndex from '@/pages/CycleInstructionCustomer/'
+import CycleInstructionCustomerGet from '@/pages/CycleInstructionCustomer/get'
+
 import RmaIndex from '@/pages/Rma/'
 import RmaGet from '@/pages/Rma/get'
 import RmaInsert from '@/pages/Rma/insert'
@@ -640,6 +648,8 @@ const listIndex = [
   {path: '/WarehouseMovement', name: 'WarehouseMovement', component: WarehouseMovementIndex, meta: { title: i18n.t('router.WarehouseMovement'), createLink: 'WarehouseMovementInsert' }},
   {path: '/LoyaltyExpense', name: 'LoyaltyExpense', component: LoyaltyExpenseIndex, meta: { title: i18n.t('router.LoyaltyExpense'), createLink: 'LoyaltyExpenseInsert' }},
   {path: '/LoyaltyConsumption', name: 'LoyaltyConsumption', component: LoyaltyConsumptionIndex, meta: { title: i18n.t('router.LoyaltyConsumption'), createLink: 'LoyaltyConsumptionInsert' }},
+  {path: '/CycleInstruction', name: 'CycleInstruction', component: CycleInstructionIndex, meta: { title: i18n.t('router.CycleInstruction'), createLink: 'CycleInstructionInsert' }},
+  {path: '/CycleInstructionCustomer', name: 'CycleInstructionCustomer', component: CycleInstructionCustomerIndex, meta: { title: i18n.t('router.CycleInstructionCustomer') }},
   {path: '/Rma', name: 'Rma', component: RmaIndex, meta: { title: i18n.t('router.Rma'), createLink: 'RmaInsert' }},
   {path: '/RmaOrder', name: 'RmaOrder', component: RmaOrderIndex, meta: { title: i18n.t('router.RmaOrder'), createLink: 'RmaOrderInsert' }},
   {path: '/FixedTermCampaign', name: 'FixedTermCampaign', component: FixedTermCampaignIndex, meta: { title: i18n.t('router.FixedTermCampaign'), createLink: 'FixedTermCampaignInsert' }},
@@ -747,6 +757,8 @@ const listGet = [
   { path: '/WarehouseMovement/:url', name: 'WarehouseMovementGet', component: WarehouseMovementGet, meta: { title: i18n.t('router.WarehouseMovementGet'), baseLink: 'WarehouseMovement' } },
   { path: '/LoyaltyExpense/:url', name: 'LoyaltyExpenseGet', component: LoyaltyExpenseGet, meta: { title: i18n.t('router.LoyaltyExpenseGet'), baseLink: 'LoyaltyExpense' } },
   { path: '/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionGet', component: LoyaltyConsumptionGet, meta: { title: i18n.t('router.LoyaltyConsumptionGet'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/CycleInstruction/:url', name: 'CycleInstructionGet', component: CycleInstructionGet, meta: { title: i18n.t('router.CycleInstructionGet'), baseLink: 'CycleInstruction' } },
+  { path: '/CycleInstructionCustomer/:url', name: 'CycleInstructionCustomerGet', component: CycleInstructionCustomerGet, meta: { title: i18n.t('router.CycleInstructionCustomerGet'), baseLink: 'CycleInstructionCustomer' } },
   { path: '/Rma/:url', name: 'RmaGet', component: RmaGet, meta: { title: i18n.t('router.RmaGet'), baseLink: 'Rma' } },
   { path: '/RmaOrder/:url', name: 'RmaOrderGet', component: RmaOrderGet, meta: { title: i18n.t('router.RmaOrderGet'), baseLink: 'RmaOrder' } },
   { path: '/FixedTermCampaign/:url', name: 'FixedTermCampaignGet', component: FixedTermCampaignGet, meta: { title: i18n.t('router.FixedTermCampaignGet'), baseLink: 'FixedTermCampaign' } },
@@ -852,6 +864,7 @@ const listUpdate = [
   { path: '/Update/TerminalPasswordLog/:url', name: 'TerminalPasswordLogUpdate', component: TerminalPasswordLogUpdate, meta: { title: i18n.t('router.TerminalPasswordLogUpdate'), baseLink: 'TerminalPasswordLog' } },
   { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
   { path: '/Update/LoyaltyConsumption/:url', name: 'LoyaltyConsumptionUpdate', component: LoyaltyConsumptionUpdate, meta: { title: i18n.t('router.LoyaltyConsumptionUpdate'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/Update/CycleInstruction/:url', name: 'CycleInstructionUpdate', component: CycleInstructionUpdate, meta: { title: i18n.t('router.CycleInstructionUpdate'), baseLink: 'CycleInstruction' } },
   { path: '/Update/Rma/:url', name: 'RmaUpdate', component: RmaUpdate, meta: { title: i18n.t('router.RmaUpdate'), baseLink: 'Rma' } },
   { path: '/Update/RmaOrder/:url', name: 'RmaOrderUpdate', component: RmaOrderUpdate, meta: { title: i18n.t('router.RmaOrderUpdate'), baseLink: 'RmaOrder' } },
   { path: '/Update/FixedTermCampaign/:url', name: 'FixedTermCampaignUpdate', component: FixedTermCampaignUpdate, meta: { title: i18n.t('router.FixedTermCampaignUpdate'), baseLink: 'FixedTermCampaign' } },
@@ -959,6 +972,7 @@ const listInsert = [
   { path: '/Insert/WarehouseMovement', name: 'WarehouseMovementInsert', component: WarehouseMovementInsert, meta: { title: i18n.t('router.WarehouseMovementInsert'), baseLink: 'WarehouseMovement' } },
   { path: '/Insert/LoyaltyExpense', name: 'LoyaltyExpenseInsert', component: LoyaltyExpenseInsert, meta: { title: i18n.t('router.LoyaltyExpenseInsert'), baseLink: 'LoyaltyExpense' } },
   { path: '/Insert/LoyaltyConsumption', name: 'LoyaltyConsumptionInsert', component: LoyaltyConsumptionInsert, meta: { title: i18n.t('router.LoyaltyConsumptionInsert'), baseLink: 'LoyaltyConsumption' } },
+  { path: '/Insert/CycleInstruction', name: 'CycleInstructionInsert', component: CycleInstructionInsert, meta: { title: i18n.t('router.CycleInstructionInsert'), baseLink: 'CycleInstruction' } },
   { path: '/Insert/Rma', name: 'RmaInsert', component: RmaInsert, meta: { title: i18n.t('router.RmaInsert'), baseLink: 'Rma' } },
   { path: '/Insert/RmaOrder', name: 'RmaOrderInsert', component: RmaOrderInsert, meta: { title: i18n.t('router.RmaOrderInsert'), baseLink: 'RmaOrder' } },
   { path: '/Insert/FixedTermCampaign', name: 'FixedTermCampaignInsert', component: FixedTermCampaignInsert, meta: { title: i18n.t('router.FixedTermCampaignInsert'), baseLink: 'FixedTermCampaign' } },

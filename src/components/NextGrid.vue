@@ -603,21 +603,26 @@ export default {
       this.searchOnTable()
     },
     filterRangeDate (e, date) {
-      let beginValue = this.dateConvertToISo(date[0])
-      let endValue = this.dateConvertToISo(date[1])
+      if (date[0] && date[1]) {
+        let beginValue = this.dateConvertToISo(date[0])
+        let endValue = this.dateConvertToISo(date[1])
 
-      if (date[0] === date[1]) {
-        beginValue = new Date(date[0]).toISOString()
-        let endDate = new Date(date[1])
-        endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59))
-      }
+        if (date[0] === date[1]) {
+          beginValue = new Date(date[0]).toISOString()
+          let endDate = new Date(date[1])
+          endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59))
+        }
 
-      let model = {
-        BeginValue: beginValue,
-        EndValue: endValue
+        let model = {
+          BeginValue: beginValue,
+          EndValue: endValue
+        }
+        this.AndConditionalModel[e] = model
+        this.currentPage = 1
+      } else {
+        this.AndConditionalModel[e] = null
+        this.currentPage = 1
       }
-      this.AndConditionalModel[e] = model
-      this.currentPage = 1
       this.searchOnTable()
     },
     filterTime (e, time) {
