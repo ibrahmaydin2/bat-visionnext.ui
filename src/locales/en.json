@@ -410,7 +410,11 @@
     "RefContract": "Kontrat Devirleri",
     "RefContractGet": "Kontrat Devri Görüntüle",
     "RefContractInsert": "Yeni Kontrat Devri",
-    "RefContractUpdate": "Kontrat Devri Güncelle"
+    "RefContractUpdate": "Kontrat Devri Güncelle",
+    "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
+    "CustomerSItemCriteriaGet": "Satılan Satılmayan Ürünler Görüntüle",
+    "CustomerSItemCriteriaInsert": "Yeni Satılan Satılmayan Ürünler",
+    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1637,6 +1641,19 @@
       "status": "Durum",
       "description1": "Adı",
       "cardType": "Birim Seti Tipi"
+    },
+    "customerSItemCriteria": {
+      "title": "Satılan Satılamayan Ürünler",
+      "itemCriteria": "Ürün Kriteri",
+      "customerCriteria": "Müşteri Kriteri",
+      "customers": "Müşteriler",
+      "customer": "Müşteri",
+      "areaDesc": "Alan Açıklaması",
+      "areaValue": "Değer",
+      "code": "Kodu",
+      "description1": "Tanımı",
+      "status": "Durum",
+      "sItemType": "Satış Tipi"
     }
   },
   "get": {
