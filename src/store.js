@@ -58,7 +58,7 @@ axios.interceptors.response.use(function (response) {
   }
   return response
 }, function (error) {
-  if (error && error.message === 'Operation canceled due to new request.') {
+  if (error && error.message === 'CANCELLED_REQUEST') {
     numberOfAjaxCAllPending--
   } else {
     numberOfAjaxCAllPending = 0
@@ -862,7 +862,7 @@ export const store = new Vuex.Store({
       }
       if (query.val) {
         if (typeof state.cancelToken[query.val] !== typeof undefined) {
-          state.cancelToken[query.val].cancel('Operation canceled due to new request.')
+          state.cancelToken[query.val].cancel('CANCELLED_REQUEST')
         }
         commit('setCancelToken', {name: query.val, data: axios.CancelToken.source()})
         if (state.cancelToken[query.val]) {
@@ -879,7 +879,7 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          if (err && err.message === 'Operation canceled due to new request.') {
+          if (err && err.message === 'CANCELLED_REQUEST') {
             return
           }
           commit('showAlert', { type: 'danger', msg: err.message })
@@ -1155,7 +1155,7 @@ export const store = new Vuex.Store({
       }
       if (query.name) {
         if (typeof state.cancelToken[query.name] !== typeof undefined && typeof state.cancelToken[query.name].cancel) {
-          state.cancelToken[query.name].cancel('Operation canceled due to new request.')
+          state.cancelToken[query.name].cancel('CANCELLED_REQUEST')
         }
         commit('setCancelToken', {name: query.name, data: axios.CancelToken.source()})
         if (state.cancelToken[query.name]) {
@@ -1172,7 +1172,7 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          if (err && err.message === 'Operation canceled due to new request.') {
+          if (err && err.message === 'CANCELLED_REQUEST') {
             return
           }
           commit('showAlert', { type: 'danger', msg: err.message })
@@ -1382,7 +1382,7 @@ export const store = new Vuex.Store({
       this._vm.$bvToast.hide()
     },
     showAlert (state, payload) {
-      if (payload.msg === 'Operation canceled due to new request.' || (payload.msg && payload.msg.message === 'Operation canceled due to new request.')) {
+      if (payload.msg === 'CANCELLED_REQUEST' || (payload.msg && payload.msg.message === 'CANCELLED_REQUEST')) {
         return
       }
       switch (payload.type) {

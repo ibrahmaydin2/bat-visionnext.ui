@@ -46,7 +46,7 @@ export class ApiManager {
     let name = btoa(url)
     if (name) {
       if (store.state.cancelToken[name]) {
-        store.state.cancelToken[name].cancel('Operation canceled due to new request.')
+        store.state.cancelToken[name].cancel('CANCELLED_REQUEST')
       }
       store.commit('setCancelToken', {name: name, data: axios.CancelToken.source()})
     }
@@ -83,8 +83,12 @@ export class ApiManager {
       message = i18n.t('general.timeoutError')
     } else if (error && error.response && error.response.data) {
       message = error.response.data.Message
+    } else if (error.message) {
+      message = error.message
     }
-    store.commit('showAlert', { type: 'danger', msg: message })
+    if (message !== 'CANCELLED_REQUEST') {
+      store.commit('showAlert', { type: 'danger', msg: message })
+    }
     return Promise.reject(error)
   }
 }
