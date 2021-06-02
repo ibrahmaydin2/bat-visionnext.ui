@@ -2152,7 +2152,15 @@
       "BranchCriteriaId": "Şube Kriteri",
       "BeginDate": "Aktivite Başlangıcı",
       "EndDate": "Aktivite Bitişi",
-      "Genexp1": "Aktivite Açıklama"
+      "Genexp1": "Aktivite Açıklama",
+      "CustomerCount": "Tanımlanan Müşteri Sayısı",
+      "ActivityRate": "Aktivite Tamamlanma Oranı",
+      "Customer": "Müşteri",
+      "CycleInstruction": "Aktivite",
+      "InstructionState": "Aktivite Durumu",
+      "TaskCode": "Kod",
+      "TaskDescription1": "Açıklama",
+      "TaskStatus": "Görev Durumu"
     }
   },
 
