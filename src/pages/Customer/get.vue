@@ -31,19 +31,18 @@
               <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.customer.Model_TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
               <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p> -->
-              <div v-html="getFormatDataByType(rowData.IsDutyFree, 'check', 'insert.customer.Model_IsDutyFree')"></div>
+              <!-- <div v-html="getFormatDataByType(rowData.IsDutyFree, 'check', 'insert.customer.Model_IsDutyFree')"></div> -->
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
-              <div v-html="getFormatDataByType(rowData.IsTaxExemption, 'check', 'insert.customer.Model_IsTaxExemption')"></div>
+              <!-- <div v-html="getFormatDataByType(rowData.IsTaxExemption, 'check', 'insert.customer.Model_IsTaxExemption')"></div> -->
               <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
+              <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.CardType, 'object', 'insert.customer.Model_CardTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.customer.Model_TypeId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesType, 'object', 'insert.customer.Model_SalesTypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.SalesDocumentType, 'object', 'insert.customer.Model_SalesDocumentTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesPriceChangeRate, 'text', 'insert.customer.Model_SalesPriceChangeRate')"></div>
-              <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -95,59 +94,82 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')">
-          <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category1Id')}}</span><p>{{rowData.Category1 ? rowData.Category1.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category2Id')}}</span><p>{{rowData.Category2 ? rowData.Category2.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Category3Id')}}</span><p>{{rowData.Category3 ? rowData.Category3.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_GroupId')}}</span><p>{{rowData.Group ? rowData.Group.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup1Id')}}</span><p>{{rowData.DiscountGroup1Id}}</p>
-                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup3Id')}}</span><p>{{rowData.DiscountGroup3Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup5Id')}}</span><p>{{rowData.DiscountGroup5Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup6Id')}}</span><p>{{rowData.DiscountGroup6Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup7Id')}}</span><p>{{rowData.DiscountGroup7Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup8Id')}}</span><p>{{rowData.DiscountGroup8Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_SalesMethodId')}}</span><p>{{rowData.SalesMethod ? rowData.SalesMethod.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TradeFocusId')}}</span><p>{{rowData.TradeFocus ? rowData.TradeFocus.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DiscountGroup4Id')}}</span><p>{{rowData.DiscountGroup4Id}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_OwnerTypeId')}}</span><p>{{rowData.OwnerType ? rowData.OwnerType.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassId')}}</span><p>{{rowData.Class ? rowData.Class.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassProposalId')}}</span><p>{{rowData.ClassProposal ? rowData.ClassProposal.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ClassProposalReasonId')}}</span><p>{{rowData.ClassProposalReason ? rowData.ClassProposalReason.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_KindId')}}</span><p>{{rowData.Kind ? rowData.Kind.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_GeographicEnvironmentId')}}</span><p>{{rowData.GeographicEnvironment ? rowData.GeographicEnvironment.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field1')}}</span><p>{{rowData.Field1}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field2')}}</span><p>{{rowData.Field2}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field3')}}</span><p>{{rowData.Field3}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field4')}}</span><p>{{rowData.Field4}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_Field5')}}</span><p>{{rowData.Field5}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TextField6')}}</span><p>{{rowData.TextField6}}</p>
-              </b-card>
-            </b-col>
+         <b-row class="p-4">
+          <b-card class="col-md-6 col-12 asc__showPage-card">
+                <!-- <h6>{{$t('insert.route.title')}}</h6> -->
+                <div v-html="getFormatDataByType(rowData.Category3, 'object', 'insert.customer.Model_Category3Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.customer.Model_Category2Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.customer.Model_Category1Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.customer.Model_GroupId')"></div>
+                <div v-html="getFormatDataByType(rowData.Class, 'object', 'insert.customer.Model_ClassId')"></div>
+                <div v-html="getFormatDataByType(rowData.SalesDocumentType, 'object', 'insert.customer.Model_SalesDocumentTypeId')"></div>
+                <div v-html="getFormatDataByType(rowData.InvoiceCombineRule, 'object', 'insert.customer.Model_InvoiceCombineRuleId')"></div>
+                <!-- <div v-html="getFormatDataByType(rowData.DiscountGroup1Id, 'object', 'insert.customer.Model_DiscountGroup1Id')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountGroup3Id, 'object', 'insert.customer.Model_DiscountGroup3Id')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountGroup5Id, 'object', 'insert.customer.Model_DiscountGroup5Id')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountGroup6Id, 'object', 'insert.customer.Model_DiscountGroup6Id')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountGroup7Id, 'object', 'insert.customer.Model_DiscountGroup7Id')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountGroup8Id, 'object', 'insert.customer.Model_DiscountGroup8Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Field1, 'object', 'insert.customer.Model_Field1')"></div>
+                <div v-html="getFormatDataByType(rowData.Field2, 'object', 'insert.customer.Model_Field2')"></div>
+                <div v-html="getFormatDataByType(rowData.Field3, 'object', 'insert.customer.Model_Field3')"></div> -->
+            </b-card>
+          <b-card class="col-md-6 col-12 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.OwnerType, 'object', 'insert.customer.Model_OwnerTypeId')"></div>
+                <div v-html="getFormatDataByType(rowData.ClassProposal, 'object', 'insert.customer.Model_ClassProposalId')"></div>
+                <div v-html="getFormatDataByType(rowData.ClassProposalReason, 'object', 'insert.customer.Model_ClassProposalReasonId')"></div>
+                <div v-html="getFormatDataByType(rowData.SalesMethod, 'object', 'insert.customer.Model_SalesMethodId')"></div>
+                <div v-html="getFormatDataByType(rowData.GeographicEnvironment, 'object', 'insert.customer.Model_GeographicEnvironmentId')"></div>
+                <div v-html="getFormatDataByType(rowData.TradeFocus, 'object', 'insert.customer.Model_TradeFocusId')"></div>
+                <div v-html="getFormatDataByType(rowData.BackMarginGroup, 'object', 'insert.customer.Model_BackMarginGroupId')"></div>
+                <!-- <div v-html="getFormatDataByType(rowData.DiscountGroup4Id, 'object', 'insert.customer.Model_DiscountGroup4Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Kind, 'object', 'insert.customer.Model_KindId')"></div>
+                <div v-html="getFormatDataByType(rowData.Field4, 'object', 'insert.customer.Model_Field4')"></div>
+                <div v-html="getFormatDataByType(rowData.Field5, 'object', 'insert.customer.Model_Field5')"></div>
+                <div v-html="getFormatDataByType(rowData.TextField6, 'object', 'insert.customer.Model_TextField6')"></div> -->
+            </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')">
-          <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CreditLimit')}}</span><p>{{rowData.CreditLimit}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_RiskLimit')}}</span><p>{{rowData.RiskLimit}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsDefaultLocation')}}</span><p>{{rowData.IsDefaultLocation}}</p>
+          <b-row class="p-4">
+           <b-card class="col-md-6 col-12 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.DefaultPaymentType, 'object', 'insert.customer.Model_DefaultPaymentTypeId')"></div>
+                <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.customer.Model_PaymentPeriod')"></div>
+                <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
+                <div v-html="getFormatDataByType(rowData.CreditLimit, 'object', 'insert.customer.Model_CreditLimit')"></div>
+                <div v-html="getFormatDataByType(rowData.RiskLimit, 'object', 'insert.customer.Model_RiskLimit')"></div>
+                <div v-html="getFormatDataByType(rowData.ReservedLimit, 'object', 'insert.customer.reservedLimit')"></div>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentCredit')}}</span><p>{{rowData.CurrentCredit}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentRisk')}}</span><p>{{rowData.CurrentRisk}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsAutoBlockingOff')}}</span><p>{{rowData.IsAutoBlockingOff}}</p>
+                <div v-html="getFormatDataByType(rowData.DebitAccountRemainder, 'object', 'insert.customer.debitAccountRemainder')"></div>
+                <div v-html="getFormatDataByType(rowData.CreditAccountRemainder, 'object', 'insert.customer.creditAccountRemainder')"></div>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.allowOverLimit')}}</span><p><i :class="rowData.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.isDirectDebit')}}</span><p><i :class="rowData.isDirectDebit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+            </b-card>
+          <b-card class="col-md-6 col-12 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.DiscountPercent1, 'object', 'insert.customer.Model_DiscountPercent1')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountPercent2, 'object', 'insert.customer.Model_DiscountPercent2')"></div>
+                <div v-html="getFormatDataByType(rowData.MainOfBranch, 'object', 'insert.customer.mainOfBranch')"></div>
+                <div v-html="getFormatDataByType(rowData.TciBreak1Id, 'object', 'insert.customer.TciBreak1')"></div>
+                <div v-html="getFormatDataByType(rowData.TciBreak2Id, 'object', 'insert.customer.TciBreak2')"></div>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ManualInvoiceClosure')}}</span><p><i :class="rowData.ManualInvoiceClosure === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.isBlackListed')}}</span><p><i :class="rowData.isBlackListed === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <div v-html="getFormatDataByType(rowData.statement, 'object', 'insert.customer.statement')"></div>
+                <div v-html="getFormatDataByType(rowData.statement, 'object', 'insert.customer.statementDay')"></div>
+                <div v-html="getFormatDataByType(rowData.sapCustomerId, 'object', 'insert.customer.sapCustomerId')"></div>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DeliveryDayParam')}}</span><p>{{rowData.DeliveryDayParam}}</p>
+                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsAutoBlockingOff')}}</span><p><i :class="rowData.IsAutoBlockingOff === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
+                <div v-html="getFormatDataByType(rowData.BlockReason, 'object', 'insert.customer.Model_BlockReasonId')"></div>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_IsBlocked')}}</span> <p><i :class="rowData.IsBlocked === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BlockReasonId')}}</span><p>{{rowData.BlockReason ? rowData.BlockReason.Label : ''}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ManualInvoiceClosure')}}</span><p>{{rowData.ManualInvoiceClosure}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_InvoiceCombineRuleId')}}</span><p>{{rowData.InvoiceCombineRuleId}}</p>
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_ManualInvoiceClosure')}}</span><p><i :class="rowData.ManualInvoiceClosure === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_FinanceCode')}}</span><p>{{rowData.FinanceCode}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerRegion5Id')}}</span><p>{{rowData.CustomerRegion5 ? rowData.CustomerRegion5.Label : ''}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="8">
+                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerRegion5Id')}}</span><p>{{rowData.CustomerRegion5 ? rowData.CustomerRegion5.Label : ''}}</p> -->
+             </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')">
+          <b-row>
+            <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
                 <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
@@ -170,15 +192,7 @@
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
           <b-row>
-            <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.route.title')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_DefaultPaymentTypeId')}}</span><p>{{rowData.DefaultPaymentType ? rowData.DefaultPaymentType.Label : ''}}</p>
-                <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_BankPaymentSystemId')}}</span><p>{{rowData.BankPaymentSystemId}}</p> -->
-                <span><i class="far fa-circle" /> {{$t('insert.customer.Model_PaymentPeriod')}}</span><p>{{rowData.PaymentPeriod}}</p>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="6">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
                 <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields">
@@ -188,7 +202,7 @@
                 </b-table>
               </b-card>
             </b-col>
-            <b-col cols="12" md="4">
+            <b-col cols="12" md="6">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
                 <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields">
@@ -240,6 +254,16 @@
                 </b-table>
               </b-card>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerRegion')">
+         <b-row class="p-4">
+          <b-card class="col-md-6 col-12 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.customer.Model_CustomerRegion5Id')"></div>
+              </b-card>
+          <b-card class="col-md-6 col-12 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.marketingRegion5, 'object', 'insert.customer.marketingRegion5')"></div>
+              </b-card>
           </b-row>
         </b-tab>
       </b-tabs>
