@@ -41,7 +41,7 @@
               <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="SItemTypeId" :error="$v.form.SItemTypeId">
-              <NextDropdown v-model="sItemType" :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedType('SItemTypeId', $event)" searchable/>
+              <NextDropdown v-model="sItemType" :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedType('SItemTypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -59,10 +59,10 @@
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/update'
+import updatetMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 export default {
-  mixins: [insertMixin],
+  mixins: [updatetMixin],
   data () {
     return {
       form: {
@@ -97,7 +97,7 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.itemCriteria = this.form.BranchCriteria
+      this.itemCriteria = this.form.ItemCriteria
       this.customerCriteria = this.form.CustomerCriteria
       this.sItemType = this.convertLookupValueToSearchValue(this.SItemType)
       this.itemCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM')

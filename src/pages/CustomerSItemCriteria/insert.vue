@@ -41,7 +41,7 @@
               <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="SItemTypeId" :error="$v.form.SItemTypeId">
-              <NextDropdown :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedType('SItemTypeId', $event)" searchable/>
+              <NextDropdown :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedType('SItemTypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>

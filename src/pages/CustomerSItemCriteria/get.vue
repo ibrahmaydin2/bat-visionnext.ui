@@ -28,7 +28,7 @@
               <div v-html="getFormatDataByType(rowData.ItemCriteria, 'object', 'insert.customerSItemCriteria.itemCriteria')"></div>
             </b-card>
             <b-card class="col-md-4 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ItemCriteria, 'object', 'insert.customerSItemCriteria.customerCriteria')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerCriteria, 'object', 'insert.customerSItemCriteria.customerCriteria')"></div>
             </b-card>
             <b-card class="col-md-4 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.SItemType, 'object', 'insert.customerSItemCriteria.sItemType')"></div>
