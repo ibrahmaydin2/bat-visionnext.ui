@@ -481,15 +481,12 @@ export const store = new Vuex.Store({
           }
         ]
       } else {
-        let currentPage = router.history && router.history.current ? router.history.current.name : ''
-        if (currentPage !== 'Discount') {
-          OrderByColumns = [
-            {
-              'column': 'CreatedDateTime',
-              'orderByType': 1
-            }
-          ]
-        }
+        OrderByColumns = [
+          {
+            'column': 'CreatedDateTime',
+            'orderByType': 1
+          }
+        ]
       }
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
