@@ -213,14 +213,31 @@ export default {
     ...mapState(['customers', 'employees', 'warehouses', 'routes', 'rmaReasons', 'items', 'loginUser', 'UserId'])
   },
   mounted () {
-    // this.createManualCode()
     this.getInsertPage()
   },
   methods: {
     getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
+      this.getUserInfo()
+    },
+    getUserInfo () {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      if (userModel) {
+        let request = {
+          andConditionModel: {
+            RecordIds: [userModel.UserId]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
+          if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+            let user = response.ListModel.BaseModels[0]
+            this.approveEmployeeName = `${userModel.Name} ${userModel.Surname}`
+            this.form.ApproveEmployeeId = user.EmployeeId
+            this.representativeName = `${userModel.Name} ${userModel.Surname}`
+            this.form.RepresentativeId = user.EmployeeId
+          }
+        })
+      }
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -397,15 +414,15 @@ export default {
     }
   },
   watch: {
-    lookup (e) {
-      if (e.RMA_STATUS) {
-        this.rmaStatusLabel = e.RMA_STATUS[0].Label
-        this.form.RmaStatusId = e.RMA_STATUS[0].DecimalValue
-        this.approveEmployeeName = this.loginUser.name
-        this.form.ApproveEmployeeId = this.UserId
-        this.representativeName = this.loginUser.name
-        this.form.RepresentativeId = this.UserId
-      }
+    lookup: {
+      handler (e) {
+        if (e.RMA_STATUS) {
+          this.rmaStatusLabel = e.RMA_STATUS[0].Label
+          this.form.RmaStatusId = e.RMA_STATUS[0].DecimalValue
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

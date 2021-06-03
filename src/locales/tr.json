@@ -1544,7 +1544,8 @@
       "customerCriterias":"Müşteri Kriterleri",
       "routeId":"Rota Id",
       "branchId":"Şube Id",
-      "paymentTypeId": "Ödeme Tipi Id"
+      "paymentTypeId": "Ödeme Tipi Id",
+      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",

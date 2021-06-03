@@ -414,7 +414,6 @@ export default {
     },
     // Status'un değerini true'dan 1'e çeviriyor
     dataStatus: function (e) {
-      console.log(e)
       if (e === true) {
         this.form.StatusId = 1
       } else {

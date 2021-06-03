@@ -22,7 +22,6 @@ export default {
       this.data = res.data
       if (this.data.length > 0) {
         this.isError = false
-        console.log(this.data)
       } else {
         this.isError = true
       }

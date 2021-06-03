@@ -557,7 +557,6 @@ export default {
     save () {
       this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
-      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',

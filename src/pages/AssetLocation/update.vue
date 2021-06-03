@@ -141,7 +141,6 @@ export default {
       if (e) {
         this.$api.post({CustomerId: e.CustomerId}, 'Customer', 'CustomerContact/Get').then((res) => {
           if (res && res.Model) {
-            console.log(res.Model)
           }
         })
       } else {
