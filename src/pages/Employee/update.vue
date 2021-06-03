@@ -345,7 +345,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/update'
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
@@ -411,16 +411,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'employees', 'userGroups', 'rowData', 'branch'])
+    ...mapState(['employees', 'userGroups', 'rowData', 'branch'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
-      this.$store.dispatch('getData', {...this.query, api: `VisionNext${e}/api/${e}`, record: this.$route.params.url})
+      this.$api.postByUrl({RecordId: this.$route.params.url}, 'VisionNextEmployee/api/Employee/Get').then((response) => {
+        this.setData(response)
+      })
       this.$store.dispatch('getBranchData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
       this.getLists()
     },
@@ -581,63 +581,9 @@ export default {
     },
     emailEntered (value) {
       this.form.Email = value ? value.toLowerCase() : ''
-    }
-  },
-  validations () {
-    let form = this.insertRules
-    form.TaxNumber = {
-      required,
-      minLength: minLength(11),
-      maxLength: maxLength(11)
-    }
-    form.GsmNumber = {
-      required,
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.Email = {
-      required,
-      email
-    }
-    return {
-      form: form,
-      employeeTeam: {
-        required
-      },
-      selectedEInvoice: {
-        required
-      }
-    }
-  },
-  watch: {
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
     },
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
-    userGroups (value) {
-      if (value && this.form.UserGroupId) {
-        this.userGroup = value.find(e => e.RecordId === this.form.UserGroupId)
-      }
-    },
-    branch (e) {
-      if (e) {
-        this.eInvoiceSeqsList = e.EInvoiceSeqs
-        if (this.eInvoiceSeqsList) {
-          this.eInvoiceSeqsList.map(item => {
-            item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
-          })
-        }
-      }
-    },
-    rowData (e) {
+    setData (response) {
+      let e = response.Model
       if (e) {
         this.form = {
           RecordId: e.RecordId,
@@ -716,6 +662,49 @@ export default {
               Label: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
             }
             return newItem
+          })
+        }
+      }
+    }
+  },
+  validations () {
+    let form = this.insertRules
+    form.TaxNumber = {
+      required,
+      minLength: minLength(11),
+      maxLength: maxLength(11)
+    }
+    form.GsmNumber = {
+      required,
+      minLength: minLength(10),
+      maxLength: maxLength(10)
+    }
+    form.Email = {
+      required,
+      email
+    }
+    return {
+      form: form,
+      employeeTeam: {
+        required
+      },
+      selectedEInvoice: {
+        required
+      }
+    }
+  },
+  watch: {
+    userGroups (value) {
+      if (value && this.form.UserGroupId) {
+        this.userGroup = value.find(e => e.RecordId === this.form.UserGroupId)
+      }
+    },
+    branch (e) {
+      if (e) {
+        this.eInvoiceSeqsList = e.EInvoiceSeqs
+        if (this.eInvoiceSeqsList) {
+          this.eInvoiceSeqsList.map(item => {
+            item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
           })
         }
       }

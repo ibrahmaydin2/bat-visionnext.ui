@@ -226,11 +226,6 @@ export default {
         }
       })
     }
-  },
-  watch: {
-    rowData: function (e) {
-      console.log(e)
-    }
   }
 }
 </script>

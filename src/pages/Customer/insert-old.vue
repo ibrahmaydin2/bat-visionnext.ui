@@ -1257,7 +1257,6 @@ export default {
       this.$store.dispatch('getCustomerLabelValues')
     },
     save () {
-      console.log(this.$v)
       this.$v.$touch()
       if (this.$v.$error) {
         this.$toasted.show(this.$t('insert.fillRequireds'), {
@@ -1805,9 +1804,6 @@ export default {
       } else {
         this.form.model.statusId = 0
       }
-    },
-    lookup (e) {
-      console.log(e)
     }
   }
 }

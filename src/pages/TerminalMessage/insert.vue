@@ -89,7 +89,8 @@
                 url="VisionNextBranch/api/Branch/AutoCompleteSearch"
                 searchable
                 label="Code"
-                and-condition-search-field="Code"/>
+                custom-option
+                or-condition-fields="Code,Description1"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.terminalMessage.branchName')">
               <b-form-input type="text" v-model="branchName" :disabled="true"/>

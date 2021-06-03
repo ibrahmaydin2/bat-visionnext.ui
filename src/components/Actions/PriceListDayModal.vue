@@ -60,7 +60,6 @@ export default {
       }
       this.$api.postByUrl(request, 'VisionNextFinance/api/PriceList/PriceListAdjust').then(response => {
         this.isLoading = false
-        console.log(response)
         if (response.IsCompleted === true) {
           this.$toasted.show(this.$t('index.success'), {
             type: 'success',

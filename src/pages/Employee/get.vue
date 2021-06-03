@@ -49,7 +49,7 @@
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.employee.personalType')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.employee.Model_UserGroupId')"></div>
+              <div v-html="getFormatDataByType(rowData.UserGroup, 'object', 'insert.employee.Model_UserGroupId')"></div>
             </b-card>
          </b-row>
         </b-tab>

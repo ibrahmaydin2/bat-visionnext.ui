@@ -359,7 +359,7 @@ export default {
           }
         ],
         andConditionModel: {
-          IsVehicle: 1
+          IsVehicle: 0
         }
       }).then(res => {
         loading(false)

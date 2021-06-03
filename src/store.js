@@ -414,8 +414,7 @@ export const store = new Vuex.Store({
                     commit('setError', {view: true, info: res.data.Message})
                   }
                 })
-                .catch(err => {
-                  console.log(err)
+                .catch(() => {
                   commit('setError', {view: true, info: 'Server Error'})
                 })
             } else {
@@ -439,8 +438,7 @@ export const store = new Vuex.Store({
             commit('setError', {view: true, info: res.data.Message})
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           commit('setError', {view: true, info: 'Server Error'})
         })
     },
@@ -458,8 +456,7 @@ export const store = new Vuex.Store({
             commit('setError', {view: true, info: res.data.Message})
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           commit('setError', {view: true, info: 'Server Error'})
         })
     },
@@ -562,7 +559,6 @@ export const store = new Vuex.Store({
           return res
         })
         .catch(err => {
-          console.log(err)
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
@@ -590,15 +586,26 @@ export const store = new Vuex.Store({
               break
           }
         })
-        .catch(err => {
-          console.log(err.message)
+        .catch(() => {
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
         })
     },
     // tüm INSERT ekranlarının kontrolleri sağlanır.
     getAllLookups ({ state, commit }, query) {
-      const queryType = query.type.split(',').filter(function (item, i, allItems) {
+      let types = query.type.split(',')
+      let filteredList = []
+      types.forEach(item => {
+        if (!state.lookup[item]) {
+          filteredList.push(item)
+        }
+      })
+
+      if (filteredList.length === 0) {
+        return
+      }
+
+      const queryType = filteredList.filter(function (item, i, allItems) {
         return i === allItems.indexOf(item)
       }).join(',')
 
@@ -635,7 +642,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -698,7 +704,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
@@ -737,7 +742,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
@@ -791,7 +795,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -818,8 +821,7 @@ export const store = new Vuex.Store({
               break
           }
         })
-        .catch(err => {
-          console.log(err.message)
+        .catch(() => {
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
         })
@@ -843,7 +845,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -901,7 +902,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -921,7 +921,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -941,7 +940,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -965,7 +963,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -988,7 +985,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1011,7 +1007,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1034,7 +1029,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1058,7 +1052,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1082,7 +1075,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1105,7 +1097,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1130,7 +1121,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('setItemForVanLoading', [])
           commit('showAlert', { type: 'danger', msg: err.message })
         })

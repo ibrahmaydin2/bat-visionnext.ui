@@ -187,7 +187,6 @@ export default {
       }
     },
     addbankBranches () {
-      console.log(this.bankBranches)
       let filteredArr = this.form.bankBranches.filter(i => i.code === this.bankBranches.Code)
       if (filteredArr.length < 1) {
         this.form.bankBranches.push({
@@ -217,8 +216,6 @@ export default {
       this.bankBranches.FinanceCode = null
       this.bankBranches.DefaultAccountNumber = null
       this.bankBranches.IsDefaultBranch = 0
-      console.log(this.form.bankBranches)
-      console.log(this.bankBranches)
     },
     removeBankBranch (item) {
       this.form.bankBranches.splice(this.form.bankBranches.indexOf(item), 1)
