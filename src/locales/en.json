@@ -2265,6 +2265,7 @@
     "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
   },
   "list": {
+    "location": "Lokasyon",
     "filterTitle": "Filtre İsmi",
     "save": "Kaydet",
     "back": "Geri Dön",

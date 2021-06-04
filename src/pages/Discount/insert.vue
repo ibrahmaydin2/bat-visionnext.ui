@@ -65,7 +65,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue">
-              <b-form-input type="text" v-model="form.MaxValue" :disabled='!form.ApplyToTimes' :readonly="insertReadonly.MaxValue" />
+              <b-form-input type="text" v-model="form.MaxValue" :disabled='form.ApplyToTimes !== 1' />
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <v-select
@@ -315,10 +315,10 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountExcludedCustomers')" @click="DiscountCustomersValid()">
+        <b-tab :title="$t('insert.discount.discountExcludedCustomers')">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.customerCode')" :error="$v.discountExcludedCustomer.CustomerId" :required="!customerValid">
-              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code" :disabled='customerValid' :filterable="false">
+              <v-select v-model="excludedCustomer" :options="customers" @search="searchCustomer" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -982,15 +982,6 @@ export default {
           duration: '3000'
         })
         return false
-      }
-      if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
-        this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
       }
       let filteredArr = this.form.DiscountExcludedCustomers.filter(f => f.CustomerId === this.discountExcludedCustomer.CustomerId)
       if (filteredArr.length > 0) {

@@ -101,16 +101,14 @@
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.terminalMessage.customerCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.customerName')}}</span></b-th>
                     <b-th><span>{{$t('insert.terminalMessage.commercialTitle')}}</span></b-th>
                     <b-th><span>{{$t('insert.terminalMessage.location')}}</span></b-th>
                  </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in (rowData.TerminalMessageDetails ? rowData.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName === 'RECORD_ID') : [])" :key="i">
-                      <b-td>{{c.CustomerCode}}</b-td>
-                      <b-td>{{c.ColumnValue}}</b-td>
-                      <b-td>{{c.CommercialTitle}}</b-td>
-                      <b-td>{{c.LocationName}}</b-td>
+                      <b-td>{{c.ColumnNameDesc}}</b-td>
+                      <b-td>{{c.ColumnValueDesc}}</b-td>
+                      <b-td>{{c.ColumnValueDesc2}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
