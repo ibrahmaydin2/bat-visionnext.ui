@@ -474,7 +474,6 @@ export default {
     },
     save () {
       this.$v.form.$touch()
-      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',

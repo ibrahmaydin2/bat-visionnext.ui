@@ -857,6 +857,7 @@
       "tag": "Etiket",
       "labelId": "Etiket Tanımı",
       "labelValueId": "Etiket Değeri",
+      "customerRegion": "Bölgeler",
       "customerTouchpoints": "Tüketici İletişim Fırsatları",
       "touchpointPriority": "İletişim Fırsatı Seviyesi",
       "touchpointTypeId": "İletişim Fırsatı Tipi",
@@ -876,6 +877,8 @@
       "IsWarehouseSale": "Depo Satış",
       "ZdebitAccountRemainder": "Borç Bakiyesi",
       "ZcreditAccountRemainder": "Alacak Bakiyesi",
+      "TciBreak1": "TCI 1",
+      "TciBreak2": "TCI 2",
       "asset": "Varlık",
       "assetName": "Varlık Adı",
       "serialNumber":"Seri No",
@@ -1543,7 +1546,8 @@
       "customerCriterias":"Müşteri Kriterleri",
       "routeId":"Rota Id",
       "branchId":"Şube Id",
-      "paymentTypeId": "Ödeme Tipi Id"
+      "paymentTypeId": "Ödeme Tipi Id",
+      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",

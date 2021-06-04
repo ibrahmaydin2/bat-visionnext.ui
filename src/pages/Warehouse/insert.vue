@@ -166,7 +166,6 @@ export default {
     },
     save () {
       this.$v.form.$touch()
-      console.log(this.form.IsVehicle)
 
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {

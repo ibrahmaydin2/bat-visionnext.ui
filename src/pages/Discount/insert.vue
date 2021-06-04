@@ -1,5 +1,15 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="confirm-modal">
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.discount.listWillBeDeleted')}}
+      <template #modal-footer>
+        <CancelButton class="float-right ml-2" @click.native="cancelSelectedItems" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedItems">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -7,7 +17,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Discount' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -32,7 +42,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.discount.general')" :active="!developmentMode">
+        <b-tab :title="$t('insert.discount.general')" active>
           <b-row>
             <NextFormGroup item-key="DiscountBeginDate" :error="$v.form.DiscountBeginDate">
               <b-form-datepicker v-model="form.DiscountBeginDate" :placeholder="$t('insert.chooseDate')"/>
@@ -41,14 +51,14 @@
               <b-form-datepicker v-model="form.DiscountEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountTypeId" :error="$v.form.DiscountTypeId">
-              <v-select :options="discountTypes" @input="selectedSearchType('DiscountTypeId', $event)" label="Description1">
+              <v-select v-model="selectedDiscountType" :options="discountTypes" @input="selectedSearchType('DiscountTypeId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountKindId" :error="$v.form.DiscountKindId">
-              <v-select :options="discountKinds" @input="selectedSearchType('DiscountKindId', $event)" label="Description1">
+              <v-select v-model="selectedDiscountKind" :options="discountKinds" @input="selectedSearchType('DiscountKindId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -144,7 +154,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountTakens')">
+        <b-tab :title="$t('insert.discount.discountTakens')" @click="ColumnControl()">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.columnName')" :error="$v.discountTakenColumnName" required>
               <v-select v-model="discountTakenColumnName" :options="discountTakensColumnNames" label="Label"/>
@@ -210,9 +220,6 @@
             <NextFormGroup :title="$t('insert.discount.columnValue')" :error="$v.discountGivenColumnValue" :required="columnNameValid">
               <v-select v-model="discountGivenColumnValue" :options="discountGivensColumnValues" :disabled="!columnNameValid" label="Label"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.discount.givenQuantity')" :error="$v.discountGiven.GivenQuantity" required>
-              <b-form-input type="text" v-model="discountGiven.GivenQuantity" />
-            </NextFormGroup>
             <NextFormGroup :title="$t('insert.discount.discountRate')" :error="$v.discountGiven.DiscountRate" :required="discountRateValid">
               <b-form-input type="text" v-model="discountGiven.DiscountRate" :disabled="!discountRateValid" />
             </NextFormGroup>
@@ -237,7 +244,6 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
                   <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                  <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
                   <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
                   <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
@@ -248,7 +254,6 @@
                   <b-tr v-for="(w, i) in form.DiscountGivens" :key="i">
                     <b-td>{{w.ColumnNameStr}}</b-td>
                     <b-td>{{w.ColumnValueStr}}</b-td>
-                    <b-td>{{w.GivenQuantity}}</b-td>
                     <b-td>{{w.DiscountRate}}</b-td>
                     <b-td>{{w.DiscountTotal}}</b-td>
                     <b-td>{{w.StartValue}}</b-td>
@@ -598,7 +603,6 @@ export default {
         ColumnNameStr: null,
         ColumnValue: null,
         ColumnValueStr: null,
-        GivenQuantity: null,
         DiscountRate: null,
         DiscountTotal: null,
         StartValue: null,
@@ -756,7 +760,15 @@ export default {
       paymentTabValid: false,
       customerSqlsTabValid: false,
       customerCriterTabValid: false,
-      customerValid: false
+      customerValid: false,
+      selectedDiscountType: null,
+      selectedDiscountKind: null,
+      currentDiscountType: null,
+      currentInvoiceKind: null,
+      cancelledSelection: false,
+      discountKindFirstSet: true,
+      discountTypeFirstSet: true,
+      watchType: 0
     }
   },
   computed: {
@@ -785,6 +797,9 @@ export default {
         this.discountRateValid = true
         this.finishValueValid = true
         this.startValueValid = true
+        if (this.form.DiscountTypeId === 2) {
+          this.minTakenAmountValid = true
+        }
       } else if (this.form.DiscountKindId === 2) {
         this.discountTotalValid = true
         this.startValueValid = true
@@ -870,7 +885,6 @@ export default {
         ColumnValue: this.discountGivenColumnValue.DecimalValue,
         ColumnNameStr: this.discountGivenColumnName.Label,
         ColumnValueStr: this.discountGivenColumnValue.Label,
-        GivenQuantity: this.discountGiven.GivenQuantity,
         DiscountRate: this.discountGiven.DiscountRate,
         DiscountTotal: this.discountGiven.DiscountTotal,
         StartValue: this.discountGiven.StartValue,
@@ -1274,6 +1288,11 @@ export default {
       this.discountTotalValid = false
       this.startValueValid = false
       this.finishValueValid = false
+      this.takenQuantityValid = false
+      this.minTakenQuantityValid = false
+      this.maxTakenAmountValid = false
+      this.endTakenQuantityValid = false
+      this.minTakenAmountValid = false
     },
     useBudgetEvent (e) {
       if (e === 1) {
@@ -1297,6 +1316,26 @@ export default {
         this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
           this.customerCriteriaColumnNames = res.Values
         })
+      }
+    },
+    selectDiscountTypeAndKind (property, model) {
+      this.form[property] = model.RecordId
+    },
+    confirmSelectedItems () {
+      this.$bvModal.hide('confirm-modal')
+      this.form.DiscountGivens = []
+      this.form.DiscountTakens = []
+    },
+    cancelSelectedItems () {
+      this.$bvModal.hide('confirm-modal')
+      this.cancelledSelection = true
+      if (this.watchType === 1) {
+        this.selectedDiscountType = this.currentDiscountType
+        this.form.DiscountTypeId = this.currentDiscountType ? this.currentDiscountType.RecordId : null
+      }
+      if (this.watchType === 2) {
+        this.selectedDiscountKind = this.currentDiscountKind
+        this.form.DiscountKindId = this.currentDiscountKind ? this.currentDiscountKind.RecordId : null
       }
     }
   },
@@ -1448,12 +1487,37 @@ export default {
       } else {
         this.paymentTabValid = false
       }
+    },
+    selectedDiscountType (newValue, oldValue) {
+      if (this.discountTypeFirstSet) {
+        this.confirmSelectedItems()
+        this.discountTypeFirstSet = false
+        return
+      }
+      if (newValue !== oldValue && !this.cancelledSelection) {
+        this.currentDiscountType = oldValue
+        this.$bvModal.show('confirm-modal')
+        this.watchType = 1
+      }
+      this.cancelledSelection = false
+    },
+    selectedDiscountKind (newValue, oldValue) {
+      if (this.discountKindFirstSet) {
+        this.confirmSelectedItems()
+        this.discountKindFirstSet = false
+        return
+      }
+      if (newValue !== oldValue && !this.cancelledSelection) {
+        this.currentDiscountKind = oldValue
+        this.$bvModal.show('confirm-modal')
+        this.watchType = 2
+      }
+      this.cancelledSelection = false
     }
   },
   validations () {
     let validation = {}
     validation.discountGiven = {
-      GivenQuantity: null,
       DiscountRate: null,
       DiscountTotal: null,
       StartValue: null,
@@ -1510,9 +1574,6 @@ export default {
     }
     this.insertRules.ApproveStateId = {}
     this.insertRequired.ApproveStateId = false
-    validation.discountGiven.GivenQuantity = {
-      required
-    }
     validation.discountGiven.DiscountRate = {}
     validation.discountGiven.DiscountTotal = {}
     validation.discountGiven.StartValue = {}

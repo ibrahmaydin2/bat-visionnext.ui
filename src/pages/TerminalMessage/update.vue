@@ -66,15 +66,38 @@
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.branchs')">
           <b-row>
+            <NextFormGroup :title="$t('insert.terminalMessage.branchCode')" :error="$v.terminalMessageBranch" :required="true" md="5" lg="5">
+              <NextDropdown
+                v-model="terminalMessageBranch"
+                url="VisionNextBranch/api/Branch/Search"
+                searchable
+                label="Code"
+                custom-option
+                or-condition-fields="Code,Description1"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.terminalMessage.branchName')">
+              <b-form-input type="text" v-model="branchName" :disabled="true"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addTerminalMessageBranch" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.terminalMessage.branchCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.terminalMessage.branchName')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.TerminalMessageBranchs" :key="i">
+                <b-tr v-for="(c, i) in (form.TerminalMessageBranchs ? form.TerminalMessageBranchs.filter(i => i.RecordState !== 4): [])" :key="i">
                   <b-td>{{c.Code}}</b-td>
                   <b-td>{{c.Description1}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeTerminalMessageBranch(c)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -177,7 +200,13 @@ export default {
       },
       routeName1: 'CommonApi',
       selectedMessageType: null,
-      selectedCustomerCriteria: null
+      selectedCustomerCriteria: null,
+      terminalMessageBranch: null
+    }
+  },
+  computed: {
+    branchName () {
+      return this.terminalMessageBranch ? this.terminalMessageBranch.Description1 : ''
     }
   },
   mounted () {
@@ -199,6 +228,37 @@ export default {
       } else {
         this.updateData()
       }
+    },
+    addTerminalMessageBranch () {
+      this.$v.terminalMessageBranch.$touch()
+      if (this.$v.terminalMessageBranch.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      let filteredArr = this.form.TerminalMessageBranchs.filter(i => i.Code === this.terminalMessageBranch.Code && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
+      let item = {
+        RecordState: 2,
+        StatusId: 1,
+        Deleted: 0,
+        System: 0,
+        Code: this.terminalMessageBranch.Code,
+        Description1: this.terminalMessageBranch.Description1,
+        MessageBranchId: this.terminalMessageBranch.RecordId
+      }
+      this.form.TerminalMessageBranchs.push(item)
+      this.terminalMessageBranch = null
+      this.$v.terminalMessageBranch.$reset()
+    },
+    removeTerminalMessageBranch (item) {
+      if (item.RecordId > 0) {
+        this.form.TerminalMessageBranchs[this.form.TerminalMessageBranchs.indexOf(item)].RecordState = 4
+      } else {
+        this.form.TerminalMessageBranchs.splice(this.form.TerminalMessageBranchs.indexOf(item), 1)
+      }
     }
   },
   validations () {
@@ -212,7 +272,10 @@ export default {
       this.insertRequired.CustomerCriteriaId = true
     }
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      terminalMessageBranch: {
+        required
+      }
     }
   }
 }

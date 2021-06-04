@@ -29,8 +29,8 @@
               <div v-html="getFormatDataByType(rowData.MessageBody, 'text', 'insert.terminalMessage.messageBody')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.MessageType, 'text', 'insert.terminalMessage.messageType')"></div>
-              <div v-html="getFormatDataByType(rowData.CustomerCriteria, 'text', 'insert.terminalMessage.customerCriteria')"></div>
+              <div v-html="getFormatDataByType(rowData.MessageType, 'object', 'insert.terminalMessage.messageType')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerCriteria, 'object', 'insert.terminalMessage.customerCriteria')"></div>
             </b-card>
           </b-row>
         </b-tab>

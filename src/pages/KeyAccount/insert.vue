@@ -347,7 +347,7 @@
               <b-form-group :label="insertTitle.Category2Id + (insertRequired.Category2Id === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category2Id.$error }">
                 <v-select
                   :options="lookup.CUSTOMER_CATEGORY_2"
-                  @input="selectedType('Category2Id', $event); customerCategory3 = null"
+                  @input="selectedType('Category2Id', $event)"
                   label="Label"
                   v-model="customerCategory2"
                   :disabled="true"

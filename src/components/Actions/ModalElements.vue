@@ -165,7 +165,6 @@ export default {
       return new Date(date).toISOString()
     },
     onClickAutoComplete (element) {
-      console.log(element)
       this.selectedElement = element
     },
     onAutoCompleteSearch (input) {
