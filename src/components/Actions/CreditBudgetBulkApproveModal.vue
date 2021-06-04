@@ -94,6 +94,7 @@ export default {
       filteredCustomerGuarantees: [],
       selectedItems: [],
       workFlowId: 0,
+      workFlowOperationId: null,
       modalOptions: [],
       selectedModalOption: null,
       customerGuaranteeFields: [
@@ -121,7 +122,6 @@ export default {
       this.workFlowId = 0
       this.modalOptions = []
       this.selectedModalOption = null
-
       if (this.items && this.items.length > 0) {
         this.selectedItems = this.items
         this.getWorkFlows()
@@ -165,18 +165,18 @@ export default {
         return
       }
       let request = {
-        'WorkflowOperationId': this.selectedModalOption.DecimalValue,
+        'WorkflowOperationId': this.workFlowOperationId,
         'InfoText': 'Toplu Bütçe Onay',
         'WorkflowId': this.workFlowId,
-        'RecordIds': this.selectedItems.map(s => s.RecordId)
+        'RecordIds': this.selectedItems.map(s => s.CreditBudgetDetailId)
 
       }
       this.isLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.post(request, 'Workflow', 'Workflow/ProcessWorkflow').then((res) => {
+      this.$api.post(request, 'Workflow', 'Workflow/ProcessMultipleWorkflow').then((res) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
-        if (!res.Iscomleted) {
+        if (!res.IsCompleted) {
           this.$toasted.show(res.Message, {
             type: 'error',
             keepOnHover: true,
@@ -195,7 +195,7 @@ export default {
     getWorkFlows () {
       let request = {
         'ControllerName': 'CreditBudget',
-        'ClassName': 'CreditBudget',
+        'ClassName': 'CreditBudgetDetail',
         'PageName': 'pg_CreditBudget'
       }
       this.isLoading = true
@@ -203,7 +203,7 @@ export default {
       this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
-        let workFlowId = res.ListModel.BaseModels ? res.ListModel.BaseModels[0] : 0
+        let workFlowId = res.ListModel.BaseModels ? res.ListModel.BaseModels[0].RecordId : 0
         if (workFlowId > 0) {
           this.getWorkFlowProcessModel(workFlowId)
         } else {
@@ -219,11 +219,11 @@ export default {
       this.workFlowId = workFlowId
       let request = {
         'WorkflowId': workFlowId,
-        'RecordIds': this.selectedItems.map(s => s.CustomerId)
+        'RecordIds': this.selectedItems.map(s => s.CreditBudgetDetailId)
       }
       this.isLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowProcessModel').then((res) => {
+      this.$api.post(request, 'Workflow', 'Workflow/GetMultipleWorkflowProcessModel').then((res) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
         if (!res.ProcessModel || res.ProcessModel.OperationProcessModel.length < 1) {
@@ -235,6 +235,7 @@ export default {
           return
         }
         res.ProcessModel.OperationProcessModel.map(process => {
+          this.workFlowOperationId = process.RecordId
           this.modalOptions.push({
             Id: process.RecordId,
             Label: process.ToValue.Label
