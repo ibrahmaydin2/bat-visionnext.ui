@@ -34,16 +34,16 @@
         <b-tab :title="$t('insert.creditBudget.title')" active>
           <b-row>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
-              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')" disabled />
             </NextFormGroup>
             <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
-              <b-form-datepicker v-model="form.EndDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="form.EndDate" :placeholder="$t('insert.chooseDate')" disabled />
             </NextFormGroup>
             <NextFormGroup item-key="CreditBranchId" :error="$v.form.CreditBranchId">
-              <NextDropdown v-model="selectedBranch" url="VisionNextBranch/api/Branch/AutoCompleteSearch" @input="selectedSearchType('CreditBranchId', $event)"/>
+              <NextDropdown v-model="selectedBranch" url="VisionNextBranch/api/Branch/AutoCompleteSearch" @input="selectedSearchType('CreditBranchId', $event)" disabled />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" @input="changedBudgetAmount" />
+              <b-form-input type="number" v-model="form.BudgetAmount" :readonly="true" @input="changedBudgetAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
               <b-form-input type="text" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount"/>
