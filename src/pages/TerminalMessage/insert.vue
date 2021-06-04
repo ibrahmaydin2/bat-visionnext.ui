@@ -89,7 +89,8 @@
                 url="VisionNextBranch/api/Branch/AutoCompleteSearch"
                 searchable
                 label="Code"
-                and-condition-search-field="Code"/>
+                custom-option
+                or-condition-fields="Code,Description1"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.terminalMessage.branchName')">
               <b-form-input type="text" v-model="branchName" :disabled="true"/>
@@ -170,10 +171,9 @@
                 searchable
                 label="Code"
                 and-condition-search-field="Code"
+                custom-option
+                is-customer
                 @input="selectCustomer"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.terminalMessage.customerName')">
-              <b-form-input type="text" v-model="terminalMessageCustomers.customerName" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.terminalMessage.commercialTitle')">
               <b-form-input type="text" v-model="terminalMessageCustomers.commercialTitle" :disabled="true"/>
@@ -192,7 +192,6 @@
               <b-table-simple responsive bordered small>
                 <b-thead>
                   <b-th><span>{{$t('insert.terminalMessage.customerCode')}}</span></b-th>
-                  <b-th><span>{{$t('insert.terminalMessage.customerName')}}</span></b-th>
                   <b-th><span>{{$t('insert.terminalMessage.commercialTitle')}}</span></b-th>
                   <b-th><span>{{$t('insert.terminalMessage.location')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
@@ -200,7 +199,6 @@
                 <b-tbody>
                   <b-tr v-for="(c, i) in (form.TerminalMessageDetails ? form.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName === 'RECORD_ID') : [])" :key="i">
                     <b-td>{{c.CustomerCode}}</b-td>
-                    <b-td>{{c.CustomerName}}</b-td>
                     <b-td>{{c.CommercialTitle}}</b-td>
                     <b-td>{{c.LocationName}}</b-td>
                     <b-td class="text-center"><i @click="removeTerminalMessageCustomer(w)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -318,7 +316,6 @@ export default {
       },
       terminalMessageCustomers: {
         customer: null,
-        customerName: null,
         commercialTitle: null,
         location: null
       },
@@ -499,10 +496,8 @@ export default {
       this.form.TerminalMessageValidDates.splice(this.form.TerminalMessageValidDates.indexOf(item), 1)
     },
     selectCustomer (value) {
-      this.terminalMessageCustomers.customerName = ''
       this.terminalMessageCustomers.commercialTitle = ''
       if (value) {
-        this.terminalMessageCustomers.customerName = value.Description1
         this.terminalMessageCustomers.commercialTitle = value.CommercialTitle
         this.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
           if (res && res.Model) {
@@ -535,7 +530,6 @@ export default {
         ColumnName: 'RECORD_ID',
         ColumnValue: this.terminalMessageCustomers.customer.RecordId,
         CustomerCode: this.terminalMessageCustomers.customer.Code,
-        CustomerName: this.terminalMessageCustomers.customerName,
         CommercialTitle: this.terminalMessageCustomers.commercialTitle,
         Location: this.terminalMessageCustomers.location
       })

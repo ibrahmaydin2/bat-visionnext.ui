@@ -2187,7 +2187,6 @@ export default {
       deep: true
     },
     address (value) {
-      console.log(value)
       if (value) {
         this.customerLocations.cityId = value.CityId
         this.customerLocations.districtId = value.DistrictId

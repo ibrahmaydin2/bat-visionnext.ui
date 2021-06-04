@@ -804,7 +804,6 @@ export default {
       this.$store.commit('setDistiricts', e.plaka)
     },
     selectedDistirict (e) {
-      console.log(e)
       this.distirict = e.id
     }
   }

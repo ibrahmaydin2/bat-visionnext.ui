@@ -253,10 +253,8 @@ export default {
     },
     getItemValues (e) {
       if (e) {
-        console.log(this.ValidDates)
         this.ValidDates.ColumnName = e.DecimalValue
         this.ValidDates.NameTitle = e.Label
-        console.log(this.ValidDates)
         this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
           this.fieldValues = res.Values
         })
@@ -269,7 +267,6 @@ export default {
     },
     setFieldDesc (e) {
       if (e) {
-        console.log(this.ValidDates)
         this.ValidDates.ColumnValue = e.DecimalValue
         this.ValidDates.ValueTitle = e.Label
       } else {

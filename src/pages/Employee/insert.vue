@@ -337,7 +337,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
@@ -391,7 +391,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'employees', 'userGroups', 'rowData'])
+    ...mapState(['employees', 'userGroups', 'rowData'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -399,30 +399,8 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNext${e}/api/${e}/GetCode`})
+      this.createManualCode()
       this.getLists()
-    },
-    selectedType (label, model) {
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
     },
     save () {
       this.$v.form.$touch()
@@ -594,18 +572,6 @@ export default {
     }
   },
   watch: {
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     rowData (e) {
       if (e) {
         this.eInvoiceSeqsList = e.EInvoiceSeqs

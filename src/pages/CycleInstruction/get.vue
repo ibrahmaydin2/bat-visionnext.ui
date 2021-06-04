@@ -83,10 +83,10 @@
         <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ModifiedUser, 'text', 'get.CycleInstruction.CustomerCount')"></div>
+              <div v-html="getFormatDataByType(rowData.DefinedCustomerCount, 'text', 'get.CycleInstruction.CustomerCount')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ModifiedUser, 'text', 'get.CycleInstruction.ActivityRate')"></div>
+              <div v-html="getFormatDataByType(rowData.ActivityFinishRate, 'text', 'get.CycleInstruction.ActivityRate')"></div>
             </b-card>
           </b-row>
           <b-row>

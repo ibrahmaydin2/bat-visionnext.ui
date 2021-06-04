@@ -123,9 +123,7 @@ export default {
     location: function (e) {
       if (e) {
         this.$api.post({CustomerId: e.CustomerId}, 'Customer', 'CustomerContact/Get').then((res) => {
-          console.log(res)
           if (res && res.Model) {
-            console.log(res.Model)
           }
         })
       } else {

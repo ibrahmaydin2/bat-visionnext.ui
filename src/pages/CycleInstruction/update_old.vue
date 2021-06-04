@@ -190,7 +190,6 @@ export default {
   methods: {
     setData () {
       this.form = this.rowData
-      console.log(this.form)
       this.cycleInstructionBranches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
 
       // if (this.form.ItemCustomers) {

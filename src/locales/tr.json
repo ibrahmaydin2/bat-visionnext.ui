@@ -412,7 +412,9 @@
     "RefContractInsert": "Yeni Kontrat Devri",
     "RefContractUpdate": "Kontrat Devri Güncelle",
     "CycleInstruction": "Aktivite Tanımları",
+    "CycleInstructionCustomer": "Aktivite Tanımı Sonuçları",
     "CycleInstructionGet": "Aktivite Tanımları Görüntüle",
+    "CycleInstructionCustomerGet": "Aktivite Tanımı Sonuçları",
     "CycleInstructionInsert": "Yeni Aktivite Tanımları",
     "CycleInstructionUpdate": "Aktivite Tanımları Güncelle",
     "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
@@ -1544,7 +1546,8 @@
       "customerCriterias":"Müşteri Kriterleri",
       "routeId":"Rota Id",
       "branchId":"Şube Id",
-      "paymentTypeId": "Ödeme Tipi Id"
+      "paymentTypeId": "Ödeme Tipi Id",
+      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
     },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",
@@ -1600,6 +1603,7 @@
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
       "creditAmountCentral": "Merkez Teminat Bütçesi",
+      "creditAmount": "Teminat Bütçesi",
       "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
@@ -2303,6 +2307,7 @@
     "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
   },
   "list": {
+    "location": "Lokasyon",
     "filterTitle": "Filtre İsmi",
     "save": "Kaydet",
     "back": "Geri Dön",

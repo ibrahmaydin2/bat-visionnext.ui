@@ -185,6 +185,15 @@
                   <template #cell(CreditEndDate)="data">
                     {{dateConvertFromTimezone(data.value)}}
                   </template>
+                  <template #cell(Bank)="data">
+                    {{data.value ? data.value.Label : ''}}
+                  </template>
+                  <template #cell(DBS_PRIORITY)="data" >
+                    <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
+                  <template #cell(AllowOverLimit)="data" >
+                    <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                  </template>
                 </b-table>
               </b-card>
             </b-col>
@@ -314,7 +323,10 @@ export default {
         {key: 'RiskLimit', label: this.$t('insert.customer.Model_RiskLimit'), sortable: true},
         {key: 'AllowOverLimit', label: this.$t('insert.customer.Model_AllowOverLimit'), sortable: true},
         {key: 'CreditStartDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
-        {key: 'CreditEndDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true}
+        {key: 'CreditEndDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
+        {key: 'Bank', label: this.$t('insert.customer.bank'), sortable: true},
+        {key: 'DBS_PRIORITY', label: this.$t('insert.customer.dbsPriority'), sortable: true},
+        {key: 'CurrentCredit', label: this.$t('insert.customer.Model_CurrentCredit'), sortable: true}
       ],
       paymentTypeFields: [
         {key: 'PaymentType', label: this.$t('insert.customer.Model_PaymentTypeId'), sortable: true}
