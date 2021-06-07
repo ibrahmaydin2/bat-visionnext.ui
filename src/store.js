@@ -58,11 +58,7 @@ axios.interceptors.response.use(function (response) {
   }
   return response
 }, function (error) {
-  if (error && error.message === 'CANCELLED_REQUEST') {
-    numberOfAjaxCAllPending--
-  } else {
-    numberOfAjaxCAllPending = 0
-  }
+  numberOfAjaxCAllPending--
   if (numberOfAjaxCAllPending === 0) {
     store.commit('bigLoaded', false)
   }
