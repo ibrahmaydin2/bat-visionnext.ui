@@ -401,9 +401,12 @@
         <b-tab :title="$t('insert.discount.branchs')" v-if="branchTabValid">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="branchTabValid">
-              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" label="Code" :filterable="false">
+              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
+                </template>
+                <template slot="option" slot-scope="option">
+                  {{ option.Code + ' - ' + option.Description1 }}
                 </template>
               </v-select>
             </NextFormGroup>
@@ -613,7 +616,7 @@ export default {
         System: 0,
         StatusId: 1,
         RecordState: 2,
-        TableName: 'T_DISCOUNT_TAKEN',
+        TableName: 'T_ITEM',
         ColumnName: null,
         ColumnNameStr: null,
         ColumnValue: null,
@@ -918,7 +921,7 @@ export default {
         RecordState: 2,
         StatusId: 1,
         CompanyId: null,
-        TableName: 'T_DISCOUNT_TAKEN',
+        TableName: 'T_ITEM',
         ColumnName: this.discountTakenColumnName.Code,
         ColumnValue: this.discountTakenColumnValue.DecimalValue,
         ColumnNameStr: this.discountTakenColumnName.Label,
@@ -1218,7 +1221,8 @@ export default {
       }
       loading(true)
       let model = {
-        Code: search
+        Code: search,
+        Description1: search
       }
       this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
         loading(false)
