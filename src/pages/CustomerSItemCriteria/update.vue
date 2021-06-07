@@ -35,24 +35,30 @@
         <b-tab :title="$t('insert.customerSItemCriteria.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" lookup-key="ITEM_CRITERIA" @input="selectedType('ItemCriteriaId', $event)" />
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" :source="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'TU') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)" />
+              <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" @input="selectedType('CustomerCriteriaId', $event)" :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(i => i.Code === 'MK' || i.Code === 'ML') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="SItemTypeId" :error="$v.form.SItemTypeId">
-              <NextDropdown v-model="sItemType" :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedType('SItemTypeId', $event)"/>
+              <NextDropdown v-model="sItemType" :disabled="insertReadonly.SItemTypeId" url="VisionNextCustomer/api/CustomerSItemType/Search" @input="selectedSearchType('SItemTypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="itemCriteria && itemCriteria.Code === 'UK'" >
           <NextDetailPanel v-model="itemCriterias" :items="itemCriteriaItems" />
         </b-tab>
+        <b-tab :title="$t('insert.customerSItemCriteria.items')" v-if="itemCriteria && itemCriteria.Code === 'UL'" >
+          <NextDetailPanel v-model="items" :items="itemItems" />
+        </b-tab>
         <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="customerCriteriaItems" />
         </b-tab>
         <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
-          <NextDetailPanel v-model="form.CustomerSItemCustomers" :items="customerItems" />
+          <NextDetailPanel v-model="customerList" :items="customerItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.customerSItemCriteria.route')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+          <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -87,7 +93,12 @@ export default {
       itemCriteriaItems: detailData.itemCriteriaItems,
       customerCriteriaItems: detailData.customerCriteriaItems,
       customerItems: detailData.customerItems,
-      routeName1: 'Customer'
+      routeItems: detailData.routeItems,
+      itemItems: detailData.itemItems,
+      routeName1: 'Customer',
+      customerList: [],
+      routes: [],
+      items: []
     }
   },
   mounted () {
@@ -100,8 +111,11 @@ export default {
       this.itemCriteria = this.form.ItemCriteria
       this.customerCriteria = this.form.CustomerCriteria
       this.sItemType = this.convertLookupValueToSearchValue(this.SItemType)
-      this.itemCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM')
-      this.customerCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_CUSTOMER')
+      this.itemCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName !== 'RECORD_ID')
+      this.items = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName === 'RECORD_ID')
+      this.customerCriterias = this.form.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+      this.customerList = this.form.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+      this.routes = this.form.CustomerSItemCustomers.filter(i => i.TableName === 'T_ROUTE' && i.ColumnName === 'RECORD_ID')
     },
     save () {
       this.$v.form.$touch()
@@ -113,7 +127,8 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.CustomerSItemDetails = [...this.itemCriterias, ...this.customerCriterias]
+        this.form.CustomerSItemCustomers = [...this.customerList, ...this.routes, ...this.customerCriterias]
+        this.form.CustomerSItemDetails = [...this.itemCriterias, ...this.items]
         this.updateData()
       }
     }
