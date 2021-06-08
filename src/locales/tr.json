@@ -420,7 +420,11 @@
     "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
     "CustomerSItemCriteriaGet": "Satılan Satılmayan Ürünler Görüntüle",
     "CustomerSItemCriteriaInsert": "Yeni Satılan Satılmayan Ürünler",
-    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle"
+    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle",
+    "CancelReason": "İptal Nedenleri",
+    "CancelReasonGet": "İptal Nedenleri Görüntüle",
+    "CancelReasonInsert": "Yeni İptal Nedenleri",
+    "CancelReasonUpdate": "İptal Nedenleri Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1692,6 +1696,9 @@
       "location": "Lokasyon",
       "routeCode":"Rota Kodu",
       "routeName":"Rota Adı"
+    },
+    "cancelReason": {
+      "cardType": "İptal Nedeni"
     }
   },
   "get": {
