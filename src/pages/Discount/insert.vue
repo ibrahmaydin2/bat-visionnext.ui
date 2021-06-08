@@ -401,7 +401,7 @@
         <b-tab :title="$t('insert.discount.branchs')" v-if="branchTabValid">
           <b-row>
             <NextFormGroup :title="$t('insert.discount.branchCode')" :error="$v.discountDetailsBranch.BranchId" :required="branchTabValid">
-              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" :options="branchs" @search="searchBranch" :filterable="false">
+              <v-select :disabled='!form.BranchCriteriaId' v-model="branch" label="Code" :options="branchs" @search="searchBranch" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
