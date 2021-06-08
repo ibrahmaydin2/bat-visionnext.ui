@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.branch.branchRecords')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.branchRecords')" active>
           <b-row>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
               <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
@@ -90,7 +90,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.Detail')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.Detail')">
           <b-row>
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
               <NextDropdown :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
@@ -112,7 +112,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.CustomerFinancialInfo')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
               <NextInput v-model="form.DefaultPaymentTypeId" type="text" maxLength="12" :oninput="maxLengthControl" url="VisionNextCommonApi/api/PaymentType/Search" :disabled="insertReadonly.DefaultPaymentTypeId" />
@@ -148,13 +148,13 @@
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
+              <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
-              <NextDropdown :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
+              <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
               <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
@@ -172,32 +172,6 @@
         </b-tab>
         <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
           <NextDetailPanel v-model="customerItemDiscounts" :items="customerItemDiscountItems"/>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
-          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -295,19 +269,14 @@ export default {
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
     ...mapState([''])
   },
   mounted () {
     this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
     },
     save () {
       this.$v.form.$touch()
@@ -323,13 +292,10 @@ export default {
           this.form.CustomerItemDiscountCrts = [this.customerItemDiscounts]
         }
         this.createData()
-        // update işlemiyse
-        // this.updateData()
       }
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules
     }

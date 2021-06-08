@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.branch.branchRecords')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.branchRecords')" active>
           <b-row>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
               <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
@@ -47,7 +47,7 @@
               <NextInput v-model="form.TaxNumber" type="text" :disabled="insertReadonly.TaxNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
-              <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)"/>
+              <NextDropdown v-model="form.upperBranch" :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
@@ -62,13 +62,13 @@
               <NextInput v-model="form.LicenseValidDate" type="date" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
-              <NextDropdown :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
+              <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BlockReasonId" :error="$v.form.BlockReasonId">
-              <NextDropdown :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
+              <NextDropdown v-model="blockReason" :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SalesDocumentTypeId" :error="$v.form.SalesDocumentTypeId">
-              <NextDropdown :disabled="insertReadonly.SalesDocumentTypeId" lookup-key="SALES_DOCUMENT_TYPE" @input="selectedType('SalesDocumentTypeId', $event)"/>
+              <NextDropdown v-model="salesDocumentType" :disabled="insertReadonly.SalesDocumentTypeId" lookup-key="SALES_DOCUMENT_TYPE" @input="selectedType('SalesDocumentTypeId', $event)"/>
             </NextFormGroup>
               <NextFormGroup item-key="WebUrl" :error="$v.form.WebUrl">
             <NextInput v-model="form.WebUrl" type="text" :disabled="insertReadonly.WebUrl" />
@@ -77,7 +77,7 @@
               <NextInput v-model="form.TradeLicenseNumber" type="text" :disabled="insertReadonly.TradeLicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
-              <NextDropdown :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
+              <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2">
               <NextInput v-model="form.FinanceCode2" type="text" :disabled="insertReadonly.FinanceCode2" />
@@ -86,17 +86,17 @@
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
-              <NextDropdown :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+              <NextDropdown v-model="useEDispatch" :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.Detail')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.Detail')">
           <b-row>
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
+              <NextDropdown v-model="discountGroup10" :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup2Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
+              <NextDropdown v-model="discountGroup2" :disabled="insertReadonly.DiscountGroup2Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
               <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
@@ -105,23 +105,23 @@
               <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
+              <NextDropdown v-model="discountGroup9" :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
               <NextInput v-model="form.BankInfo" type="text" :disabled="insertReadonly.BankInfo" />
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.CustomerFinancialInfo')" v-if="developmentMode" :active="developmentMode">
+        <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
               <NextInput v-model="form.DefaultPaymentTypeId" type="text" maxLength="12" :oninput="maxLengthControl" url="VisionNextCommonApi/api/PaymentType/Search" :disabled="insertReadonly.DefaultPaymentTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown v-model="paymentPeriod" :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
-              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
+              <NextDropdown v-model="priceListCategory" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
               <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
@@ -148,13 +148,13 @@
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
+              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
+              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
-              <NextDropdown :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
+              <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
               <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
@@ -172,32 +172,6 @@
         </b-tab>
         <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
           <NextDetailPanel v-model="customerItemDiscounts" :items="customerItemDiscountItems"/>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
-          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -293,23 +267,49 @@ export default {
       customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerItemDiscounts: [],
       distributionType: {},
-      branchRegion: {}
+      branchRegion: {},
+      upperBranch: {},
+      invoiceCombineRule: {},
+      blockReason: {},
+      salesDocumentType: {},
+      taxCustomerType: {},
+      useEDispatch: {},
+      discountGroup10: {},
+      discountGroup2: {},
+      discountGroup9: {},
+      paymentPeriod: {},
+      priceListCategory: {},
+      tciBreak1: {},
+      tciBreak2: {},
+      statementday: {}
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
     ...mapState([''])
   },
   mounted () {
-    // update işlemiyse
     this.getData().then(() => this.setData())
   },
   methods: {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.distributionType = rowData.DistributionType
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
+      this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
+      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatch)
+      this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
+      this.statementday = this.convertLookupValueToSearchValue(rowData.statementday)
+      this.distributionType = rowData.DistributionType
+      this.invoiceCombineRule = rowData.InvoiceCombineRule
+      this.blockReason = rowData.BlockReason
+      this.salesDocumentType = rowData.SalesDocumentType
+      this.taxCustomerType = rowData.TaxCustomerType
+      this.discountGroup10 = rowData.DiscountGroup10
+      this.discountGroup2 = rowData.DiscountGroup2
+      this.discountGroup9 = rowData.DiscountGroup9
+      this.priceListCategory = rowData.PriceListCategory
+      this.tciBreak1 = rowData.TciBreak1
+      this.tciBreak2 = rowData.TciBreak2
       if (rowData.CustomerItemDiscountCrts && rowData.CustomerItemDiscountCrts.length > 0) {
         this.customerItemDiscounts = rowData.CustomerItemDiscountCrts[0]
       }
