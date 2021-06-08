@@ -67,14 +67,14 @@
              <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
                 <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+            <NextFormGroup item-key="ActualyDeliveryTime" :error="$v.form.ActualyDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
                 <b-form-timepicker
                   :placeholder="$t('insert.chooseTime')"
                   :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
                   :label-no-time-selected="$t('insert.chooseTime')"
                   :label-close-button="$t('insert.close')"
                   close-button-variant="outline-danger"
-                  v-model="form.ActualDeliveryTime"/>
+                  v-model="form.ActualyDeliveryTime"/>
             </NextFormGroup>
             <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2">
               <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
@@ -83,7 +83,7 @@
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable disabled />
+              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
               <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :disabled="true" searchable />
@@ -212,7 +212,7 @@ export default {
         GrossTotal: 0,
         DocumentNumber: null,
         ActualDeliveryDate: null,
-        ActualDeliveryTime: null,
+        ActualyDeliveryTime: null,
         RepresentativeId: null,
         DeliveryRepresentativeId: null,
         Description1: null,
@@ -303,14 +303,14 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
+        if (this.rowData.Canceled === 1) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.dispatchRefDocumentStatusError') })
           setTimeout(() => {
             this.$router.push({ name: 'DispatchRefDocument' })
           }, 2000)
           return
-        } else if (this.rowData.Canceled === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.dispatchRefDocumentStatusError') })
+        } else if (this.rowData.EDocumentStatus.Code !== 'ReadyForSendToEFU') {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
           setTimeout(() => {
             this.$router.push({ name: 'DispatchRefDocument' })
           }, 2000)
@@ -416,9 +416,9 @@ export default {
         } else {
           this.form.InvoiceLogisticCompanies = []
         }
-        if (!this.form.ActualDeliveryTime) {
+        if (!this.form.ActualyDeliveryTime) {
           let time = new Date().toLocaleTimeString()
-          this.form.ActualDeliveryTime = time
+          this.form.ActualyDeliveryTime = time
         }
       }
     },
@@ -484,7 +484,7 @@ export default {
       } else {
         let actualDate = new Date(this.form.ActualDeliveryDate).setHours(0, 0, 0, 0)
         let documentDate = new Date(this.form.DocumentDate).setHours(0, 0, 0, 0)
-        if (actualDate < documentDate || (actualDate === documentDate && this.form.ActualDeliveryTime < this.form.DocumentTime)) {
+        if (actualDate < documentDate || (actualDate === documentDate && this.form.ActualyDeliveryTime < this.form.DocumentTime)) {
           this.$toasted.show(this.$t('insert.order.actualDeliveryDateLessDocumentDate'), {
             type: 'error',
             keepOnHover: true,

@@ -71,6 +71,9 @@ export class ApiManager {
               store.commit('showAlert', { type: 'validation', msg: errmsg })
             }
           }
+        } else {
+          store.commit('bigLoaded', false)
+          store.commit('showAlert', { type: 'error', msg: response.data.Message })
         }
         return response.data
       }

@@ -35,7 +35,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UK'">
+        <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UK'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -44,7 +44,16 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'">
+        <b-tab :title="$t('insert.customerSItemCriteria.items')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UL'" >
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="items" :items="itemItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -53,11 +62,20 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'">
+        <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.CustomerSItemCustomers" :items="customerItems" />
+                <NextDetailPanel type="get" v-model="customerList" :items="customerItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customerSItemCriteria.route')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
+           <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="routes" :items="routeItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -76,9 +94,14 @@ export default {
     return {
       itemCriterias: [],
       customerCriterias: [],
+      customerList: [],
+      routes: [],
+      items: [],
       itemCriteriaItems: detailData.itemCriteriaItems,
       customerCriteriaItems: detailData.customerCriteriaItems,
-      customerItems: detailData.customerItems
+      customerItems: detailData.customerItems,
+      routeItems: detailData.routeItems,
+      itemItems: detailData.itemItems
     }
   },
   mounted () {
@@ -93,8 +116,11 @@ export default {
     },
     getRowData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/CustomerSItemCriteria', record: this.$route.params.url}).then(() => {
-        this.itemCriterias = this.rowData.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM')
-        this.customerCriterias = this.rowData.CustomerSItemDetails.filter(i => i.TableName === 'T_CUSTOMER')
+        this.itemCriterias = this.rowData.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName !== 'RECORD_ID')
+        this.items = this.rowData.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName === 'RECORD_ID')
+        this.customerCriterias = this.rowData.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+        this.customerList = this.rowData.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+        this.routes = this.rowData.CustomerSItemCustomers.filter(i => i.TableName === 'T_ROUTE' && i.ColumnName === 'RECORD_ID')
       })
     }
   }
