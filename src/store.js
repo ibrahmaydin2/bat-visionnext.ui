@@ -750,6 +750,14 @@ export const store = new Vuex.Store({
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
+      if (dataQuery.model && state.insertVisible) {
+        dataQuery.model.updatedProperties = []
+        for (var key in state.insertVisible) {
+          if (state.insertVisible[key] === true) {
+            dataQuery.model.updatedProperties.push(key)
+          }
+        }
+      }
       return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')

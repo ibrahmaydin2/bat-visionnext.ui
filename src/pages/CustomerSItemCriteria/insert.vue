@@ -37,6 +37,21 @@
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
               <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" :source="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'TU') : [])" label="Label" />
             </NextFormGroup>
+            <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" lookup-key="TCI_BREAKDOWN" get-lookup/>
+            </NextFormGroup>
+                        <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" lookup-key="TCI_BREAKDOWN" get-lookup />
+            </NextFormGroup>
+                        <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" lookup-key="TCI_BREAKDOWN" get-lookup />
+            </NextFormGroup>
+                        <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" lookup-key="TCI_BREAKDOWN" get-lookup />
+            </NextFormGroup>
+                        <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
+              <NextDropdown v-model="itemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" lookup-key="TCI_BREAKDOWN" get-lookup />
+            </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
               <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" @input="selectedType('CustomerCriteriaId', $event)" :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(i => i.Code === 'MK' || i.Code === 'ML') : [])" label="Label" />
             </NextFormGroup>
