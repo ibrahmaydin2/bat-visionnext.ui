@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -8,699 +8,194 @@
           </b-col>
           <b-col cols="12" md="6" class="text-right">
             <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
     </b-col>
-    <b-col cols="12" class="asc__updatePage-content-head">
+    <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('update.branch.Model_Code')"
-            >
-              <b-form-input type="text" v-model="form.Code"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('update.branch.Model_Description1')"
-            >
-              <b-form-input type="text" v-model="form.Description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3" lg="2">
-            <b-form-group
-              :label="$t('update.branch.Model_DistributionTypeId')"
-            >
-              <b-form-input type="text" v-model="form.branchType"/>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="BranchCommercialTitle" :error="$v.form.BranchCommercialTitle">
+            <NextInput v-model="form.BranchCommercialTitle" type="text" :disabled="insertReadonly.BranchCommercialTitle" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('update.branch.Branch')" active>
+        <b-tab :title="$t('insert.branch.branchRecords')" v-if="developmentMode" :active="developmentMode">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_BranchCommercialTitle')"
-              >
-                <b-form-input type="text" v-model="form.Unvan"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_TaxCustomerTypeId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_UpperBranchId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsDutyFree')"
-              >
-              <b-form-radio-group v-model="form.IsVehicle">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_TaxOffice')"
-              >
-                <b-form-input type="text" v-model="form.Vergi"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_TaxNumber')"
-              >
-                <b-form-input type="text" v-model="form.vergiNo"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_BranchRegionId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_LicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.vergiNo"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_SalesDocumentTypeId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_InvoiceCombineRuleId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsOrderChangeUnitary')"
-              >
-              <b-form-radio-group v-model="form.isSales">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsWarehouseSale')"
-              >
-              <b-form-radio-group v-model="form.isWarehouse">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_WebUrl')"
-              >
-                <b-form-input type="text" v-model="form.adress"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_TradeLicenseNumber')"
-              >
-                <b-form-input type="text" v-model="form.sicilNo"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_UseEInvoice')"
-              >
-              <b-form-radio-group v-model="form.isEfatura">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_UseEArchive')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_UseEWaybill')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_StatusId')"
-              >
-              <b-form-radio-group v-model="form.isStatus">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_CustomerPrefixCode')"
-              >
-                <b-form-input type="text" v-model="form.OnCode"/>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BranchRegionId" :error="$v.form.BranchRegionId">
+              <NextDropdown v-model="branchRegion" :disabled="insertReadonly.BranchRegionId" url="VisionNextCommonApi/api/Region/Search" @input="selectedSearchType('BranchRegionId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
+              <NextInput v-model="form.TaxNumber" type="text" :disabled="insertReadonly.TaxNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
+              <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
+              <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DistributionTypeId" :error="$v.form.DistributionTypeId">
+              <NextDropdown v-model="distributionType" :disabled="insertReadonly.DistributionTypeId" lookup-key="BRANCH_DISTRIBUTION_TYPE"  @input="selectedType('DistributionTypeId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
+              <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseNumber">
+              <NextInput v-model="form.LicenseValidDate" type="date" :disabled="insertReadonly.LicenseValidDate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
+              <NextDropdown :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BlockReasonId" :error="$v.form.BlockReasonId">
+              <NextDropdown :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="SalesDocumentTypeId" :error="$v.form.SalesDocumentTypeId">
+              <NextDropdown :disabled="insertReadonly.SalesDocumentTypeId" lookup-key="SALES_DOCUMENT_TYPE" @input="selectedType('SalesDocumentTypeId', $event)"/>
+            </NextFormGroup>
+              <NextFormGroup item-key="WebUrl" :error="$v.form.WebUrl">
+            <NextInput v-model="form.WebUrl" type="text" :disabled="insertReadonly.WebUrl" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TradeLicenseNumber" :error="$v.form.TradeLicenseNumber">
+              <NextInput v-model="form.TradeLicenseNumber" type="text" :disabled="insertReadonly.TradeLicenseNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
+              <NextDropdown :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2">
+              <NextInput v-model="form.FinanceCode2" type="text" :disabled="insertReadonly.FinanceCode2" />
+            </NextFormGroup>
+            <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
+              <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
+              <NextDropdown :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('update.branch.BranchDetails')">
+        <b-tab :title="$t('insert.branch.Detail')" v-if="developmentMode" :active="developmentMode">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_DiscountGroup10Id')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_DiscountGroup2Id')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_DiscountGroup9Id')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Genexp1')"
-              >
-                <b-form-input type="text" v-model="form.Note"/>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
+              <NextDropdown :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
+              <NextDropdown :disabled="insertReadonly.DiscountGroup2Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
+              <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BankIban" :error="$v.form.BankIban">
+              <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
+              <NextDropdown :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
+              <NextInput v-model="form.BankInfo" type="text" :disabled="insertReadonly.BankInfo" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('update.branch.BranchLocations')">
+        <b-tab :title="$t('insert.branch.CustomerFinancialInfo')" v-if="developmentMode" :active="developmentMode">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Code_Location')"
-              >
-                <b-form-input type="text" v-model="form.locationCode"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Description1_Location')"
-              >
-                <b-form-input type="text" v-model="form.locationName"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_AddressDetail')"
-              >
-                <b-form-input type="text" v-model="form.add"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_CityId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_DistrictId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_ParishId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_StreetDescription')"
-              >
-                <b-form-input type="text" v-model="form.sokak"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_GsmNumber')"
-              >
-                <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel1"/>
-              </b-form-group>
-            </b-col>
-             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_PhoneNumber1')"
-              >
-                <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel2"/>
-              </b-form-group>
-            </b-col>
-             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_PhoneNumber2')"
-              >
-                <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.tel3"/>
-              </b-form-group>
-            </b-col>
-             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_FaxNumber')"
-              >
-                <b-form-input type="tel" placeholder="(___)___ __ __" v-model="form.faks"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsInvoiceAddress')"
-              >
-              <b-form-radio-group v-model="form.isFaturaAddress">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsDeliveryAddress')"
-              >
-              <b-form-radio-group v-model="form.isTeslimat">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_IsDefaultLocation')"
-              >
-              <b-form-radio-group v-model="form.default">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Genexp1')"
-              >
-                <b-form-input type="text" v-model="form.note1"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-            </b-col>
-            <b-col class="d-flex align-items-end" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
+              <NextInput v-model="form.DefaultPaymentTypeId" type="text" maxLength="12" :oninput="maxLengthControl" url="VisionNextCommonApi/api/PaymentType/Search" :disabled="insertReadonly.DefaultPaymentTypeId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
+              <NextDropdown :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
+              <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
+            </NextFormGroup>
+            <NextFormGroup item-key="RiskLimit" :error="$v.form.riskLimit">
+              <NextInput v-model="form.RiskLimit" type="text" :disabled="insertReadonly.riskLimit" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrentCredit" :error="$v.form.currentCredit">
+              <NextInput v-model="form.CurrentCredit" type="text" :disabled="insertReadonly.currentCredit" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrentRisk" :error="$v.form.currentRisk">
+              <NextInput v-model="form.CurrentRisk" type="text" :disabled="insertReadonly.currentRisk" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DebitAccountRemainder" :error="$v.form.debitAccountRemainder">
+              <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.debitAccountRemainder" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CreditAccountRemainder" :error="$v.form.creditAccountRemainder">
+              <NextInput v-model="form.CreditAccountRemainder" type="text" :disabled="insertReadonly.creditAccountRemainder" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountPercent1" :error="$v.form.discountPercent1">
+              <NextInput v-model="form.DiscountPercent1" type="text" :disabled="insertReadonly.discountPercent1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
+              <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
+              <NextDropdown :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
+              <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
+            </NextFormGroup>
+            <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
+              <NextDropdown :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
+              <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
+              <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('update.branch.BranchFinancialInfo')">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_DefaultPaymentTypeId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_PriceListCategoryId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_MaxBonusRate')"
-              >
-                <b-form-input type="text" v-model="form.prim"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_SalesPriceChangeRate')"
-              >
-                <b-form-input type="text" v-model="form.change"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_PaymentPeriod')">
-                <v-select disabled :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_FinanceCode')"
-              >
-                <b-form-input type="text" v-model="form.note2"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_CreditLimit')"
-              >
-                <b-form-input disabled type="text" v-model="form.limit"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_RiskLimit')"
-              >
-                <b-form-input disabled type="text" v-model="form.limit2"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_AllowOverLimit')"
-              >
-              <b-form-radio-group v-model="form.isRisk">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_DeliveryDayParam')"
-              >
-                <b-form-input type="text" v-model="form.note3"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_DiscountPercent1')"
-              >
-                <b-form-input type="text" v-model="form.note4"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_DiscountPercent2')"
-              >
-                <b-form-input type="text" v-model="form.note5"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_ManualInvoiceClosure')"
-              >
-                <b-form-input type="text" v-model="form.note3"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
+        <b-tab :title="$t('insert.branch.locations')">
+          <NextDetailPanel v-model="form.branchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('update.branch.BranchCreditHistories')">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_CreditDescriptionId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_CreditAmount')"
-              >
-                <b-form-input type="text" v-model="form.tutar"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_CurrencyId')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_BankId')">
-                <v-select disabled :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_CreditStartDate')">
-                <b-form-datepicker id="contract-datepicker1" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date1" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_CreditEndDate')">
-                <b-form-datepicker id="contract-datepicker2" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date2" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_CreditLimit')"
-              >
-                <b-form-input type="text" v-model="form.limit3"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_RiskLimit')"
-              >
-                <b-form-input type="text" v-model="form.limit4"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_AllowOverLimit')"
-              >
-              <b-form-radio-group v-model="form.isRisk2">
-                  <b-form-radio value="1">{{$t('update.yes')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('update.no')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Bail')"
-              >
-                <b-form-input type="text" disabled v-model="form.kefil"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Debtor')"
-              >
-                <b-form-input type="text" disabled v-model="form.borc"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_TextNo')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_TextDate')">
-                <b-form-datepicker disabled id="contract-datepicker3" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date4" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_LandOffice')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak1"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_TraficRegistry')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak2"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_NotaryNo')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak3"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_NotaryDate')">
-                <b-form-datepicker disabled id="contract-datepicker4" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_MortgageValue')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak4"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_Plate')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak5"/>
-              </b-form-group>
-            </b-col>
-             <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('update.branch.Model_PlateNumber')"
-              >
-                <b-form-input type="text" disabled v-model="form.evrak6"/>
-              </b-form-group>
-            </b-col>
-            <b-col class="d-flex align-items-center" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-2" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
+        <b-tab :title="$t('insert.branch.creditHistories')">
+          <NextDetailPanel v-model="form.branchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
-        <b-tab :title="$t('update.branch.Model_PaymentType')">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('update.branch.Model_PaymentType')">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col class="d-flex align-items-end" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-2" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
+        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
+          <NextDetailPanel v-model="customerItemDiscounts" :items="customerItemDiscountItems"/>
         </b-tab>
-        <b-tab title="Ödeme Vadeleri">
+        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Satın Alma Ödeme Vadesi">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col class="d-flex align-items-end" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-2" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab title="Ürün İndirimleri">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Başlangıç Tarihi">
-                <b-form-datepicker id="contract-datepicker5" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Bitiş Tarihi">
-                <b-form-datepicker id="contract-datepicker6" :placeholder="$t('update.vehicles.chooseDate')" v-model="form.date5" locale="tr" class="mb-2"></b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Alan Açıklaması">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Değer">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
+            <b-col>
+              <pre v-if="developmentMode" class="asc__codeHTML">
+                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
+                  {{codeInCode}}
+                </span>
+              </pre>
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ürün İndirimi 1*"
-              >
-                <b-form-input type="text" v-model="form.discount1"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ürün İndirimi 2*"
-              >
-                <b-form-input type="text" v-model="form.discount2"/>
-              </b-form-group>
-            </b-col>
-            <b-col class="d-flex align-items-end" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-2" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
+          </b-row>
+          <b-row>
+            <b-col>
+              <code>{{form}}</code>
             </b-col>
           </b-row>
-        </b-tab>
-        <b-tab title="EFU Kodları">
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                label="Ön Birim Kod*"
-              >
-                <b-form-input type="text" v-model="form.unit1"/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Terminal mi PC mi?">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="VisionPlus EFU Servisleri*">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="İşlem Günü">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group label="Durum">
-                <v-select :options="form.drivers" @input="selectedDriver" label="title"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col class="d-flex align-items-end" cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button class="mt-2" variant="success" size="sm"><i class="fa fa-plus"></i> {{$t('update.branch.add')}}</b-button>
-              </b-form-group>
+            <b-col cols="12">
+              <h3>Form Elements</h3>
+              <p>
+                {{insertFormdata}}
+              </p>
             </b-col>
           </b-row>
         </b-tab>
@@ -710,48 +205,136 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import updateMixin from '../../mixins/update'
+import { detailData } from './detailPanelData'
 export default {
+  mixins: [updateMixin],
   data () {
     return {
       form: {
-        Code: '',
-        Description1: '',
-        branchType: '',
-        driver: null,
-        drivers: [
-          {
-            id: 1,
-            title: 'Örnek 1'
-          },
-          {
-            id: 2,
-            title: 'Örnek 2'
-          },
-          {
-            id: 3,
-            title: 'Örnek 3'
-          }
-        ]
-      }
+        Deleted: 0,
+        System: 0,
+        DefaultLocationId: null,
+        CustomerId: null,
+        StatusId: null,
+        FinanceCode: null,
+        DistributionTypeId: null,
+        CreditLimit: null,
+        AllowOverLimit: null,
+        RiskLimit: null,
+        DefaultPaymentTypeId: null,
+        DiscountPercent1: null,
+        DiscountPercent2: null,
+        PaymentPeriod: null,
+        PriceListCategoryId: null,
+        IsBlocked: null,
+        BlockReasonDescription: null,
+        DiscountGroup10Id: null,
+        DiscountGroup2Id: null,
+        DiscountGroup9Id: null,
+        Genexp1: null,
+        IsDirectDebit: null,
+        SalesPriceChangeRate: null,
+        MaxBonusRate: 0,
+        BankPaymentSystemId: null,
+        WebUrl: null,
+        EInvoiceNumberPrefix: null,
+        EInvoiceTaxExReason: null,
+        TradeLicenseNumber: null,
+        BlockReasonId: null,
+        CashSafeCode: null,
+        CreditCardSafeCode: null,
+        UseEInvoice: null,
+        SSTypeId: null,
+        BranchLocations: null,
+        BranchCreditHistories: null,
+        BranchPaymentTypes: null,
+        CustomFixedTerms: null,
+        CurrentCredit: null,
+        CurrentRisk: null,
+        LicenseNumber: null,
+        TaxCustomerTypeId: null,
+        IsOrderChangeUnitary: null,
+        IsDutyFree: null,
+        IsWarehouseSale: null,
+        SalesDocumentTypeId: null,
+        InvoiceCombineRuleId: null,
+        ManualInvoiceClosure: null,
+        DeliveryDayParam: null,
+        UseEArchive: null,
+        UseEWaybill: null,
+        RecordId: null,
+        EncryptedKey: null,
+        Code: null,
+        Description1: null,
+        RecordState: 2,
+        BranchCommercialTitle: null,
+        UpperBranchId: null,
+        IsHq: null,
+        HqId: null,
+        TaxOffice: null,
+        TaxNumber: null,
+        BranchRegionId: null,
+        CustomerPrefixCode: null,
+        CustomerItemDiscountCrts: [],
+        CustomerBranchs: [],
+        FinanceCode2: null,
+        MersisNumber: null,
+        BankIban: null,
+        BankInfo: null,
+        DebitAccountRemainder: null,
+        CreditAccountRemainder: null,
+        TciBreak1Id: null,
+        TciBreak2Id: null,
+        SapCustomerId: null
+      },
+      customerLocationItems: detailData.customerLocationItems,
+      customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
+      customerItemDiscountItems: detailData.customerItemDiscountItems,
+      customerItemDiscounts: [],
+      distributionType: {},
+      branchRegion: {}
     }
   },
   computed: {
-    ...mapState([])
+    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
+    ...mapState([''])
   },
   mounted () {
+    // update işlemiyse
+    this.getData().then(() => this.setData())
   },
   methods: {
-    save () {
-      let createData = {
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      this.distributionType = rowData.DistributionType
+      this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
+      if (rowData.CustomerItemDiscountCrts && rowData.CustomerItemDiscountCrts.length > 0) {
+        this.customerItemDiscounts = rowData.CustomerItemDiscountCrts[0]
       }
-      this.$store.dispatch('createData', {...this.query, info: createData})
     },
-    selectedDriver (e) {
-      this.form.driver = e.title
+    save () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
+      } else {
+        if (this.customerItemDiscounts && this.customerItemDiscounts.length > 0) {
+          this.form.CustomerItemDiscountCrts = [this.customerItemDiscounts]
+        }
+        this.updateData()
+      }
+    }
+  },
+  validations () {
+    return {
+      form: this.insertRules
     }
   }
 }
 </script>
-<style lang="sass">
-</style>

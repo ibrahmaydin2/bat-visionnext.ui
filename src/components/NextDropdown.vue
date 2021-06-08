@@ -171,7 +171,7 @@ export default {
         this.allValues = this.values
         return
       }
-      this.$api.postByUrl({LookupTableCode: this.lookupKey}, 'VisionNextCommonApi/api/LookupValue/GetValues').then((response) => {
+      this.$api.postByUrl({LookupTableCode: this.lookupKey}, `VisionNextCommonApi/api/LookupValue/GetValues?v=${this.lookupKey}`).then((response) => {
         if (response) {
           this.values = response.Values
           this.allValues = this.values
