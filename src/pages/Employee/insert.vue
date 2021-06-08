@@ -338,7 +338,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
-import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email, requiredIf } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -535,6 +535,11 @@ export default {
   },
   validations () {
     let form = this.insertRules
+    form.PriceListCategoryId = {
+      required: requiredIf(function (nestedModel) {
+        return this.form.CreateCustomerRecord === 1
+      })
+    }
     form.TaxNumber = {
       required,
       minLength: minLength(11),
