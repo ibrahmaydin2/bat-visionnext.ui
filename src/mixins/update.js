@@ -13,7 +13,11 @@ export default {
       if (!this.routeName2) {
         this.routeName2 = this.routeName
       }
-      return this.$store.dispatch('getData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, record: this.$route.params.url})
+      return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}/Get`).then((res) => {
+        if (res.IsCompleted) {
+          this.$store.commit('setRowData', res.Model)
+        }
+      })
     },
     updateData () {
       this.setRouteNames()

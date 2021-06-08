@@ -2,7 +2,7 @@
   <div>
     <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :get-lookup="true" />
@@ -86,6 +86,8 @@ export default {
                     value = obj[item.objectKey].Label
                   } else if (obj[item.objectKey].Description1) {
                     value = obj[item.objectKey].Description1
+                  } else if (item.type === 'Label' && obj[item.modelProperty]) {
+                    value = obj[item.modelProperty]
                   } else {
                     value = obj[item.objectKey]
                   }
@@ -169,7 +171,12 @@ export default {
       for (let index = 0; index < model.length; index++) {
         let item = model[index]
         let key = item + 'Desc'
-        this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
+        let properties = this.items.filter(i => i.modelProperty === item)
+        if (properties && properties.length === 1 && properties[0].labelProperty) {
+          this.form[key] = this.model[item][properties[0].labelProperty]
+        } else {
+          this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
+        }
       }
       this.values.push({...this.form})
       this.$emit('valuechange', this.values)
@@ -207,8 +214,11 @@ export default {
             switch (item.type) {
               case 'Label':
                 if (item.url) {
-                  this.$api.postByUrl({recordId: model[item.parentProperty]}, item.url).then((res) => {
-                    this.label[item.modelProperty] = res.Model.Description1
+                  if (!model[item.parentProperty]) { return }
+                  this.$api.postByUrl({RecordId: model[item.parentProperty]}, item.url).then((res) => {
+                    if (res && res.Model) {
+                      this.label[item.modelProperty] = item.valueProperty ? res.Model[item.valueProperty] : res.Model.Description1
+                    }
                   })
                 } else {
                   this.label[item.modelProperty] = model[item.parentProperty]

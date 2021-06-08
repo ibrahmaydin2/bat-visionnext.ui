@@ -83,7 +83,7 @@
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable disabled />
+              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
               <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :disabled="true" searchable />
@@ -303,14 +303,14 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
+        if (this.rowData.Canceled === 1) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.dispatchRefDocumentStatusError') })
           setTimeout(() => {
             this.$router.push({ name: 'DispatchRefDocument' })
           }, 2000)
           return
-        } else if (this.rowData.Canceled === 1) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.dispatchRefDocumentStatusError') })
+        } else if (this.rowData.EDocumentStatus.Code !== 'ReadyForSendToEFU') {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
           setTimeout(() => {
             this.$router.push({ name: 'DispatchRefDocument' })
           }, 2000)
@@ -474,7 +474,6 @@ export default {
     },
     save () {
       this.$v.form.$touch()
-      console.log(this.$v.form)
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
