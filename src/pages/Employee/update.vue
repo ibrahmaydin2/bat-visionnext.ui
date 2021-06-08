@@ -85,7 +85,7 @@
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
+              <b-form-group :label="insertTitle.PriceListCategoryId + (form.CreateCustomerRecord ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
                 <v-select
                   :options="lookup.PRICE_LIST_CATEGORY_TYPE"
                   @input="selectedType('PriceListCategoryId', $event)"
@@ -346,7 +346,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/update'
-import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email, requiredIf } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -669,6 +669,11 @@ export default {
   },
   validations () {
     let form = this.insertRules
+    form.PriceListCategoryId = {
+      required: requiredIf(function (nestedModel) {
+        return this.form.CreateCustomerRecord === 1
+      })
+    }
     form.TaxNumber = {
       required,
       minLength: minLength(11),

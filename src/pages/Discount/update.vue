@@ -1206,11 +1206,17 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Code: search,
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
+        name: 'branchs',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
