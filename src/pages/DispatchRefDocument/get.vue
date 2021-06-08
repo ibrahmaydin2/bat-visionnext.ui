@@ -25,7 +25,7 @@
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
               <div v-html="getFormatDataByType(rowData.ActualDeliveryDate, 'date', 'insert.order.actualDeliveryDate')"></div>
-              <div v-html="getFormatDataByType(rowData.ActualDeliveryTime ? rowData.ActualDeliveryTime : new Date().toLocaleTimeString(), 'text', 'insert.order.actualDeliveryTime')"></div>
+              <div v-html="getFormatDataByType(rowData.ActualyDeliveryTime ? rowData.ActualyDeliveryTime : new Date().toLocaleTimeString(), 'text', 'insert.order.actualDeliveryTime')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>

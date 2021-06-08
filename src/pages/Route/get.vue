@@ -48,8 +48,8 @@
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('list.location')}}</span></b-th>
-                    <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
-                    <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Customer')}}</span></b-th>
+                    <b-th><span>{{$t('insert.route.Location')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
                     <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
@@ -63,8 +63,8 @@
                       <b-td class="text-center">
                         <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
                       </b-td>
-                      <b-td>{{r.Customer ? r.Customer.Label : ''}}</b-td>
-                      <b-td>{{r.Location ? r.Location.Label : ''}}</b-td>
+                      <b-td>{{r.Customer ? r.Customer.Code + '-' + r.Customer.Label : ''}}</b-td>
+                      <b-td>{{r.Location ? r.Location.Code + '-' + r.Location.Label : ''}}</b-td>
                       <b-td>{{r.Day1VisitOrder}}</b-td>
                       <b-td>{{r.Day2VisitOrder}}</b-td>
                       <b-td>{{r.Day3VisitOrder}}</b-td>
