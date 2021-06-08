@@ -1683,7 +1683,15 @@
       "code": "Kodu",
       "description1": "Tanımı",
       "status": "Durum",
-      "sItemType": "Satış Tipi"
+      "sItemType": "Satış Tipi",
+      "route": "Rota",
+      "items": "Ürünler",
+      "item": "Ürün",
+      "customerCode":"Müşteri Kodu",
+      "commercialTitle":"Tabela Adı",
+      "location": "Lokasyon",
+      "routeCode":"Rota Kodu",
+      "routeName":"Rota Adı"
     }
   },
   "get": {
