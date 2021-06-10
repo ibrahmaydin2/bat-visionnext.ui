@@ -17,11 +17,15 @@
           bordered
           tbody-tr-class="bg-white"
           @row-selected="onRowSelected"
+          show-empty
         >
         <template #cell(selection)="row">
           <span>
             <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
           </span>
+        </template>
+        <template #empty>
+          <h6 class="text-center">{{$t('insert.creditBudget.customerNotFound')}}</h6>
         </template>
       </b-table>
       </div>
