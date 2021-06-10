@@ -61,7 +61,8 @@ export default {
       contractDetail: [],
       fields: [
         {key: 'OperationDesc', label: this.$t('get.RefContract.OperationDesc'), sortable: false},
-        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalAmount'), sortable: false}
+        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalBudget'), sortable: false},
+        {key: 'UsedAmount', label: this.$t('get.RefContract.UseBudget'), sortable: false}
       ],
       workFlowModel: {
         ControllerName: 'RefContract',
@@ -84,7 +85,7 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/RefContract', record: this.$route.params.url})
     },
     getCustomerDetail (id) {
-      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?customerId=${id}`).then((res) => {
+      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
         this.contractDetail = res
       })
     }
@@ -92,8 +93,9 @@ export default {
   watch: {
     rowData (e) {
       if (e) {
-        if (e.SourceCustomerId) {
-          this.getCustomerDetail(e.SourceCustomerId)
+        console.log(e)
+        if (e.SourceContractId) {
+          this.getCustomerDetail(e.SourceContractId)
         }
       }
     }
