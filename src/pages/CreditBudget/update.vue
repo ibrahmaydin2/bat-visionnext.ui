@@ -118,6 +118,7 @@
             <b-table
               :items="(form.CustomerGuarantees ? form.CustomerGuarantees.filter(c => c.RecordState !== 4) : [])"
               :fields="customerGuaranteeFields"
+              sticky-header
               select-mode="multi"
               responsive
               id="customer-guarantees"
@@ -125,6 +126,7 @@
               bordered
               small
               @row-selected="onRowSelected"
+              :tbody-tr-class="rowClass"
             >
               <template #cell(selection)="row">
                 <span>
@@ -225,6 +227,10 @@ export default {
       this.form.LeftAmount = value > 0
         ? (parseFloat(value) - (this.form.UsedAmount + this.form.ReservedAmount))
         : 0
+    },
+    rowClass (item, type) {
+      if (!item || type !== 'row') return
+      if (item.ApproveStateId === 52) return 'tr-disabled'
     },
     selectCustomer (customer) {
       this.customerGuarantees = {}

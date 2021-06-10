@@ -1632,7 +1632,8 @@
       "status": "Durum",
       "searchustomer": "Müşteri Ara",
       "bulkCustomerApprove": "Toplu Müşteri Onaylama",
-      "approveState":"Onay Durumu"
+      "approveState":"Onay Durumu",
+      "customerNotFound": "Onaylanacak müşteri bulunamadı"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",
@@ -2107,8 +2108,10 @@
       "CustomerName": "Müşteri Adı"
     },
     "RefContract": {
-      "OperationDesc": "Açıklama",
+      "OperationDesc": "Kazanım Tipi",
       "TotalAmount": "Toplam Tutar",
+      "TotalBudget": "Toplam Bütçe",
+      "UseBudget": "Kullanılan Bütçe",
       "ContractTransferStatus": "Kontrat Transfer Durumu",
       "IsHero": "Hero Durumu",
       "SourceContract": "Kaynak Kontrat",
