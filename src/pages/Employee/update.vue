@@ -411,7 +411,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['employees', 'userGroups', 'rowData', 'branch'])
+    ...mapState(['employees', 'userGroups', 'rowData', 'branch']),
+    returnCustomerRecord () {
+      return this.form.CreateCustomerRecord
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -631,7 +634,6 @@ export default {
         this.priceListCategoryType = e.PriceListCategory
         this.employeeGroup = e.Group
         this.employeeCategory = e.Category1
-        this.priceListCategoryType = e.PriceListCategory
         this.scoreCardClass = e.ScoreCardClass
         this.employeeType = e.Type
         this.education = e.Education
@@ -711,6 +713,14 @@ export default {
           this.eInvoiceSeqsList.map(item => {
             item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
           })
+        }
+      }
+    },
+    returnCustomerRecord (e) {
+      if (e !== null) {
+        if (e !== 1) {
+          this.priceListCategoryType = {}
+          this.form.PriceListCategoryId = null
         }
       }
     }

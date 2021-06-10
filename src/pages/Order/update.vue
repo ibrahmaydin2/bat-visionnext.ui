@@ -7,6 +7,9 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
+            <b-button size="sm" variant="primary" @click="showAvailableCampaigns()" :title="$t('insert.order.availableCampaigns')">
+              <i class="fa fa-asterisk"></i>
+            </b-button>
             <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastOrderProducts')">
               <i class="fa fa-list-alt"></i>
             </b-button>
@@ -224,6 +227,52 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
+                  <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
+                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                  <b-td>{{o.TotalDiscount}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.appliedDiscounts')">
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.product')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountRate') + ' %'}}</span></b-th>
+                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.givenQuantity')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in (form.OrderDiscountItemDetails)" :key="i">
+                  <b-td>{{o.Discount ? o.Discount.Code : ''}}</b-td>
+                  <b-td>{{o.Discount ? o.Discount.Label : ''}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
+                  <b-td>{{o.DiscountRate }}</b-td>
+                  <b-td>{{o.DiscountTotal}}</b-td>
+                  <b-td>{{o.GivenQuantity}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
         <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
           <b-table-simple bordered small responsive>
             <b-thead>
@@ -259,26 +308,6 @@
               </b-tr>
             </b-tbody>
           </b-table-simple>
-        </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
-                  <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
-                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -365,7 +394,7 @@ export default {
         OrderTypeId: 1
       },
       campaignFields: [
-        {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
+        {key: 'selection', label: '', sortable: false, visible: false},
         {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
         {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
       ],
@@ -770,6 +799,15 @@ export default {
         if (res) {
           this.customerCampaigns = res
           this.showDiscounts = true
+        }
+      })
+    },
+    showAvailableCampaigns () {
+      this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderUpdateDiscounts').then((res) => {
+        this.campaigns = res.Models
+        if (this.campaigns && this.campaigns.length > 0) {
+          this.campaignSelectable = false
+          this.$bvModal.show('campaign-modal')
         }
       })
     },

@@ -73,6 +73,7 @@
                 :options="lookup.BRANCH_CRITERIA"
                 @input="selectedType('BranchCriteriaId', $event)"
                 label="Label"
+                :disabled="distributionTypeControl"
               />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
@@ -113,8 +114,8 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountPayback" :error="$v.form.DiscountPayback">
-              <b-form-input type="number" v-model="form.DiscountPayback" :readonly="insertReadonly.DiscountPayback" maxLength="1" :oninput="maxLengthControl" />
+            <NextFormGroup item-key="BranchSharePercent" :error="$v.form.BranchSharePercent">
+              <b-form-input type="number" v-model="form.BranchSharePercent" :readonly="insertReadonly.BranchSharePercent || distributionTypeControl" maxLength="6" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="MaxUsage" :error="$v.form.MaxUsage">
               <b-form-input type="text" v-model="form.MaxUsage" :readonly="insertReadonly.MaxUsage" />
@@ -579,7 +580,7 @@ export default {
         BudgetConsumption: 0,
         ApproveStateId: 2102,
         DiscountCategoryId: null,
-        DiscountPayback: 0,
+        BranchSharePercent: 0,
         MaxUsage: null,
         IsCascade: 0,
         UseMultiGiven: 0,
@@ -771,7 +772,8 @@ export default {
       cancelledSelection: false,
       discountKindFirstSet: true,
       discountTypeFirstSet: true,
-      watchType: 0
+      watchType: 0,
+      distributionTypeControl: false
     }
   },
   computed: {
@@ -794,6 +796,20 @@ export default {
         this.discountTakensColumnNames = res.Values
       })
     },
+    // getCurrentBranch () {
+    //   let request = {
+    //     RecordId: this.$store.state.BranchId
+    //   }
+    //   this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+    //     if (response && response.Model) {
+    //       let branch = response.Model
+    //       if (branch.DistributionTypeId === 6) {
+    //         this.distributionTypeControl = true
+    //         this.form.BranchSharePercent = 100
+    //       }
+    //     }
+    //   })
+    // },
     ColumnControl () {
       this.initFalseValid()
       if (this.form.DiscountKindId === 1) {
@@ -1010,7 +1026,7 @@ export default {
       this.$v.discountExcludedCustomer.$reset()
     },
     removeDiscountExcludedCustomer (e) {
-      this.DiscountExcludedCustomers.splice(this.DiscountExcludedCustomers.indexOf(e), 1)
+      this.form.DiscountExcludedCustomers.splice(this.form.DiscountExcludedCustomers.indexOf(e), 1)
     },
     addCustomerCriteria () {
       this.$v.customerCriteriaColumnName.$touch()
@@ -1298,7 +1314,7 @@ export default {
       this.minTakenAmountValid = false
     },
     useBudgetEvent (e) {
-      if (e === 1) {
+      if (e) {
         this.form.ApproveStateId = 2100
         this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {
@@ -1453,6 +1469,26 @@ export default {
           if (item.DecimalValue === 2102) {
             this.selectedType('ApproveStateId', item)
             this.ApproveStateLabel = item.Label
+          }
+        })
+      }
+      if (e.BRANCH_CRITERIA) {
+        let request = {
+          RecordId: this.$store.state.BranchId
+        }
+        this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+          if (response && response.Model) {
+            let branch = response.Model
+            if (branch.DistributionTypeId === 6) {
+              this.distributionTypeControl = true
+              this.form.BranchSharePercent = 100
+              e.BRANCH_CRITERIA.map(item => {
+                if (item.DecimalValue === 30) {
+                  this.branchCriteria = item
+                  this.selectedType('BranchCriteriaId', item)
+                }
+              })
+            }
           }
         })
       }
