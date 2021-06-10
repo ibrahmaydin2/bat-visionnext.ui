@@ -63,6 +63,7 @@
                 :options="lookup.BRANCH_CRITERIA"
                 @input="selectedType('BranchCriteriaId', $event)"
                 label="Label"
+                :disabled="distributionTypeControl"
               />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
@@ -103,8 +104,8 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountPayback" :error="$v.form.DiscountPayback">
-              <b-form-input type="number" v-model="form.DiscountPayback" :readonly="insertReadonly.DiscountPayback" maxLength="1" :oninput="maxLengthControl"/>
+            <NextFormGroup item-key="BranchSharePercent" :error="$v.form.BranchSharePercent">
+              <b-form-input type="number" v-model="form.BranchSharePercent" :readonly="insertReadonly.BranchSharePercent || distributionTypeControl" maxLength="6" :oninput="maxLengthControl"/>
             </NextFormGroup>
             <NextFormGroup item-key="MaxUsage" :error="$v.form.MaxUsage">
               <b-form-input type="text" v-model="form.MaxUsage" :readonly="insertReadonly.MaxUsage" />
@@ -574,7 +575,7 @@ export default {
         BudgetConsumption: 0,
         ApproveStateId: 2102,
         DiscountCategoryId: null,
-        DiscountPayback: 0,
+        BranchSharePercent: 0,
         MaxUsage: null,
         IsCascade: 0,
         UseMultiGiven: 0,
@@ -763,7 +764,8 @@ export default {
       customerValid: false,
       discountType: null,
       discountKind: null,
-      budget: null
+      budget: null,
+      distributionTypeControl: false
     }
   },
   computed: {
@@ -868,8 +870,8 @@ export default {
         RecordState: 2,
         StatusId: 1,
         CompanyId: null,
-        TableName: 'T_DISCOUNT_GIVEN',
-        ColumnName: this.discountGivenColumnName.Code,
+        TableName: 'T_ITEM',
+        ColumnName: this.discountGivenColumnName.ForeignField,
         ColumnValue: this.discountGivenColumnValue.DecimalValue,
         ColumnNameStr: this.discountGivenColumnName.Label,
         ColumnValueStr: this.discountGivenColumnValue.Label,
@@ -908,7 +910,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_ITEM',
-        ColumnName: this.discountTakenColumnName.Code,
+        ColumnName: this.discountTakenColumnName.ForeignField,
         ColumnValue: this.discountTakenColumnValue.DecimalValue,
         ColumnNameStr: this.discountTakenColumnName.Label,
         ColumnValueStr: this.discountTakenColumnValue.Label,
@@ -994,7 +996,7 @@ export default {
       this.$v.discountExcludedCustomer.$reset()
     },
     removeDiscountExcludedCustomer (e) {
-      this.DiscountExcludedCustomers.splice(this.DiscountExcludedCustomers.indexOf(e), 1)
+      this.form.DiscountExcludedCustomers.splice(this.form.DiscountExcludedCustomers.indexOf(e), 1)
     },
     addCustomerCriteria () {
       this.$v.customerCriteriaColumnName.$touch()
@@ -1014,7 +1016,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.customerCriteriaColumnName.Code,
+        ColumnName: this.customerCriteriaColumnName.ForeignField,
         ColumnValue: this.customerCriteriaColumnValue.DecimalValue,
         ColumnNameStr: this.customerCriteriaColumnName.Label,
         ColumnValueStr: this.customerCriteriaColumnValue.Label
@@ -1303,6 +1305,17 @@ export default {
       this.getDiscountCustomers()
       this.getDiscountExcludedCustomers()
       this.getDiscountDetails()
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          if (branch.DistributionTypeId === 6) {
+            this.distributionTypeControl = true
+          }
+        }
+      })
     },
     getDiscountGivens () {
       if (this.form.DiscountGivens && this.form.DiscountGivens.length > 0) {
@@ -1389,7 +1402,7 @@ export default {
       this.finishValueValid = false
     },
     useBudgetEvent (e) {
-      if (e === 1) {
+      if (e) {
         this.form.ApproveStateId = 2100
         this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {

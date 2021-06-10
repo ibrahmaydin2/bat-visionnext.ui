@@ -420,7 +420,11 @@
     "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
     "CustomerSItemCriteriaGet": "Satılan Satılmayan Ürünler Görüntüle",
     "CustomerSItemCriteriaInsert": "Yeni Satılan Satılmayan Ürünler",
-    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle"
+    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle",
+    "CancelReason": "İptal Nedenleri",
+    "CancelReasonGet": "İptal Nedenleri Görüntüle",
+    "CancelReasonInsert": "Yeni İptal Nedenleri",
+    "CancelReasonUpdate": "İptal Nedenleri Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1383,7 +1387,7 @@
       "quantityStockException": "Girilen miktar stoktan büyük olamaz!",
       "summary": "Özet",
       "campaign": "Kampanya",
-      "suitableCampaigns": "Uygun Kampanyalar",
+      "suitableCampaigns": "Müşteri Kampanyaları",
       "campaignSelection": "Kampanya Seçimi",
       "noCampaigns": "Girilen siparişe uygun kampanya bulunmamaktadır!",
       "status": "Sevkiyat Durumu",
@@ -1479,7 +1483,10 @@
       "totalItemDiscount": "Ürün İndrimi",
       "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
       "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez.",
-      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez."
+      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez.",
+      "appliedDiscounts": "Uygulanan İndirimler",
+      "givenQuantity": "Bedelsiz Ürün",
+      "availableCampaigns": "Uygun Kampanyalar"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1625,7 +1632,8 @@
       "status": "Durum",
       "searchustomer": "Müşteri Ara",
       "bulkCustomerApprove": "Toplu Müşteri Onaylama",
-      "approveState":"Onay Durumu"
+      "approveState":"Onay Durumu",
+      "customerNotFound": "Onaylanacak müşteri bulunamadı"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",
@@ -1692,6 +1700,9 @@
       "location": "Lokasyon",
       "routeCode":"Rota Kodu",
       "routeName":"Rota Adı"
+    },
+    "cancelReason": {
+      "cardType": "İptal Nedeni"
     }
   },
   "get": {
@@ -2097,8 +2108,10 @@
       "CustomerName": "Müşteri Adı"
     },
     "RefContract": {
-      "OperationDesc": "Açıklama",
+      "OperationDesc": "Kazanım Tipi",
       "TotalAmount": "Toplam Tutar",
+      "TotalBudget": "Toplam Bütçe",
+      "UseBudget": "Kullanılan Bütçe",
       "ContractTransferStatus": "Kontrat Transfer Durumu",
       "IsHero": "Hero Durumu",
       "SourceContract": "Kaynak Kontrat",
