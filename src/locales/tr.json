@@ -247,7 +247,7 @@
     "CustomerRecordInsert": "CustomerRecordInsert",
     "ItemMasterRecordsInsert": "ItemMasterRecordsInsert",
     "BranchMasterRecordInsert": "BranchMasterRecordInsert",
-    "UnitSetInsert": "Yeni Seti Tanımı",
+    "UnitSetInsert": "Yeni Birim Seti Tanımı",
     "ReturnInsert": "ReturnInsert",
     "PurchaseReturnOrderInsert": "PurchaseReturnOrderInsert",
     "WeighingInformationInsert": "WeighingInformationInsert",

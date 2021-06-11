@@ -292,8 +292,8 @@ export default {
     },
     selectedItem (e) {
       if (e) {
-        this.$v.$touch()
-        if (this.$v.$error) {
+        this.$v.form.$touch()
+        if (this.$v.form.$error) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
           this.cleanItem()
           return false
@@ -550,12 +550,6 @@ export default {
       required
     }
     form.FromWarehouseId = {
-      required
-    }
-    form.RouteId = {
-      required
-    }
-    form.VehicleId = {
       required
     }
 
