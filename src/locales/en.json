@@ -247,7 +247,7 @@
     "CustomerRecordInsert": "CustomerRecordInsert",
     "ItemMasterRecordsInsert": "ItemMasterRecordsInsert",
     "BranchMasterRecordInsert": "BranchMasterRecordInsert",
-    "UnitSetInsert": "Yeni Birim Seti",
+    "UnitSetInsert": "Yeni Birim Seti Tanımı",
     "ReturnInsert": "ReturnInsert",
     "PurchaseReturnOrderInsert": "PurchaseReturnOrderInsert",
     "WeighingInformationInsert": "WeighingInformationInsert",
@@ -411,6 +411,12 @@
     "RefContractGet": "Kontrat Devri Görüntüle",
     "RefContractInsert": "Yeni Kontrat Devri",
     "RefContractUpdate": "Kontrat Devri Güncelle",
+    "CycleInstruction": "Aktivite Tanımları",
+    "CycleInstructionCustomer": "Aktivite Tanımı Sonuçları",
+    "CycleInstructionGet": "Aktivite Tanımları Görüntüle",
+    "CycleInstructionCustomerGet": "Aktivite Tanımı Sonuçları",
+    "CycleInstructionInsert": "Yeni Aktivite Tanımları",
+    "CycleInstructionUpdate": "Aktivite Tanımları Güncelle",
     "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
     "CustomerSItemCriteriaGet": "Satılan Satılmayan Ürünler Görüntüle",
     "CustomerSItemCriteriaInsert": "Yeni Satılan Satılmayan Ürünler",
@@ -479,6 +485,7 @@
     "sameRecordError": "Aynı kayıttan 2 defa ekleyemezsiniz.",
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
@@ -488,7 +495,6 @@
     "choose": "Seçin",
     "selectFileMessage": "Dosya seçtikten sonra yükleyebilirsiniz.",
     "selectedFileWillBeUploaded": "Seçilen dosya yüklenecektir. Onaylıyor musunuz?",
-    "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "FieldSurvey": {
       "FieldSurveyDefinitions": "Saha Araştırması Tanımları",
       "Branches": "Şubeler",
@@ -1365,7 +1371,7 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır"
+      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır."
     },
     "order": {
       "title": "Sipariş Girişi",
@@ -1385,7 +1391,7 @@
       "quantityStockException": "Girilen miktar stoktan büyük olamaz!",
       "summary": "Özet",
       "campaign": "Kampanya",
-      "suitableCampaigns": "Uygun Kampanyalar",
+      "suitableCampaigns": "Müşteri Kampanyaları",
       "campaignSelection": "Kampanya Seçimi",
       "noCampaigns": "Girilen siparişe uygun kampanya bulunmamaktadır!",
       "status": "Sevkiyat Durumu",
@@ -1481,7 +1487,10 @@
       "totalItemDiscount": "Ürün İndrimi",
       "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
       "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez.",
-      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez."
+      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez.",
+      "appliedDiscounts": "Uygulanan İndirimler",
+      "givenQuantity": "Bedelsiz Ürün",
+      "availableCampaigns": "Uygun Kampanyalar"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1605,6 +1614,7 @@
       "creditAccountRemainder": "Borç Bakiyesi",
       "debitAccountRemainder": "Alacak Bakiyesi",
       "creditAmountCentral": "Merkez Teminat Bütçesi",
+      "creditAmount": "Teminat Bütçesi",
       "amount": "Teminat Tutarı",
       "paymentPeriod": "Vade",
       "beginDate": "Başlangıç Tarihi",
@@ -1626,7 +1636,27 @@
       "status": "Durum",
       "searchustomer": "Müşteri Ara",
       "bulkCustomerApprove": "Toplu Müşteri Onaylama",
-      "approveState":"Onay Durumu"
+      "approveState":"Onay Durumu",
+      "customerNotFound": "Onaylanacak müşteri bulunamadı"
+    },
+    "CycleInstruction": {
+      "EmployeesList": "Personel Listesi",
+      "CycleInstructionBranches": "Şubeler",
+      "Employee": "Personel",
+      "EmployeeDescription": "Personel Adı",
+      "BranchDescription": "Şube",
+      "Branch": "Şube",
+      "CycleInstructionCustomers": "Müşteriler",
+      "Customer": "Müşteri",
+      "CycleInstructionRoutes": "Rotalar",
+      "Route": "Rota Adı",
+      "CycleInstructionTaskItems": "Görevler",
+      "TaskCode": "Kodu",
+      "TaskDescription1": "Tanımı",
+      "TaskGenexp1": "Açıklama",
+      "CycleInstructionCriterias": "Müşteri Kriteri",
+      "AreaDesc": "Alan Açıklaması",
+      "AreaValue": "Değer"
     },
     "unitSet": {
       "title": "Birim Tanımları",
@@ -2130,8 +2160,10 @@
       "CustomerName": "Müşteri Adı"
     },
     "RefContract": {
-      "OperationDesc": "Açıklama",
+      "OperationDesc": "Kazanım Tipi",
       "TotalAmount": "Toplam Tutar",
+      "TotalBudget": "Toplam Bütçe",
+      "UseBudget": "Kullanılan Bütçe",
       "ContractTransferStatus": "Kontrat Transfer Durumu",
       "IsHero": "Hero Durumu",
       "SourceContract": "Kaynak Kontrat",
@@ -2193,6 +2225,22 @@
       "Category8Id": "Ürün Kategori 8",
       "Category9Id": "Ürün Kategori 9",
       "Category10Id": "Ürün Kategori 10"
+    },
+    "CycleInstruction": {
+      "CustomerCriteriaId": "Müşteri Kriteri",
+      "RouteCriteriaId": "Rota Kriteri",
+      "BranchCriteriaId": "Şube Kriteri",
+      "BeginDate": "Aktivite Başlangıcı",
+      "EndDate": "Aktivite Bitişi",
+      "Genexp1": "Aktivite Açıklama",
+      "CustomerCount": "Tanımlanan Müşteri Sayısı",
+      "ActivityRate": "Aktivite Tamamlanma Oranı",
+      "Customer": "Müşteri",
+      "CycleInstruction": "Aktivite",
+      "InstructionState": "Aktivite Durumu",
+      "TaskCode": "Kod",
+      "TaskDescription1": "Açıklama",
+      "TaskStatus": "Görev Durumu"
     }
   },
 
