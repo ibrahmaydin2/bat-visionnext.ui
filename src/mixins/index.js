@@ -158,6 +158,21 @@ export default {
       if (model != null && model.indexOf('.') > -1 && (model.split('.')[1].length > 0)) {
         $event.preventDefault()
       }
+    },
+    onlyForCurrencyByUnitId ($event, model, isDivUnit) {
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      if (isDivUnit) {
+        if ((keyCode < 48 || keyCode > 57) && (keyCode !== 44 || model.indexOf('.') !== -1)) {
+          $event.preventDefault()
+        }
+        if (model != null && model.indexOf('.') > -1 && (model.split('.')[1].length > 0)) {
+          $event.preventDefault()
+        }
+      } else {
+        if ($event.key === ',' || $event.key === '.') {
+          return $event.preventDefault()
+        }
+      }
     }
   }
 }

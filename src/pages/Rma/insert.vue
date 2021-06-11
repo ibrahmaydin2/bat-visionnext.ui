@@ -105,7 +105,7 @@
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" v-model="rmaLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
+              <v-select :options="items" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -118,7 +118,7 @@
               <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
-              <b-form-input type="text" v-model="rmaLine.Quantity"/>
+              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyByUnitId($event, rmaLine.Quantity, isDivUnit)" min=1 />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -206,7 +206,8 @@ export default {
       rmaStatusLabel: null,
       approveEmployeeName: null,
       representativeName: null,
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      isDivUnit: null
     }
   },
   computed: {
@@ -377,6 +378,16 @@ export default {
     selectedItem (e) {
       if (e) {
         this.rmaLine.Item = e
+        let filteredArr = null
+        let request = {
+          RecordId: e.UnitSetId
+        }
+        this.$api.postByUrl(request, 'VisionNextUnit/api/UnitSet/Get').then(res => {
+          if (res && res.IsCompleted && res.Model.Units.length > 0) {
+            filteredArr = res.Model.Units.filter(i => i.UnitId === e.UnitId)
+            this.isDivUnit = filteredArr[0].IsDivUnit
+          }
+        })
       } else {
         this.rmaLine.Item = {
           Description1: null,
