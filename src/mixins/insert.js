@@ -8,9 +8,11 @@ export default {
   methods: {
     createManualCode (parameter = 'Code') {
       this.setRouteNames()
-      this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then((response) => {
+      return this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then((response) => {
         if (response && response.Model) {
-          this.form[parameter] = response.Model.Code
+          let code = response.Model.Code
+          this.form[parameter] = code
+          this.$store.commit('setGetCreateCode', code)
         }
       })
     },
