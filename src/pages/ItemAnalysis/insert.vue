@@ -44,7 +44,7 @@
               <NextDropdown :disabled="insertReadonly.AnalysisPeriodId" @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <NextDropdown :disabled="insertReadonly.ApproveStateId" @input="selectedType('ApproveStateId', $event)" lookup-key="APPROVE_STATE"/>
+              <NextDropdown v-model="approveState" :disabled="true" @input="selectedType('ApproveStateId', $event)" label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisVisitCount" :error="$v.form.AnalysisVisitCount">
               <NextInput v-model="form.AnalysisVisitCount" type="number" :disabled="insertReadonly.AnalysisVisitCount" />
@@ -64,7 +64,7 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
-              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="insertReadonly.IsNecessary"/>
+              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseOnce" :error="$v.form.UseOnce">
               <NextCheckBox v-model="form.UseOnce" type="number" toggle :disabled="!analysisType || analysisType.Code !== 'KLN'"/>
@@ -120,7 +120,7 @@ export default {
         AnalysisPeriodId: null,
         Description1: null,
         ApproveStateId: null,
-        AnalysisVisitCount: null,
+        AnalysisVisitCount: 0,
         CustomerCriteriaId: null,
         ItemCriteriaId: null,
         IsNecessary: null,
@@ -140,6 +140,7 @@ export default {
       itemCriteria: null,
       validityType: null,
       analysisType: null,
+      approveState: null,
       itemAnalysisQuestionItems: detailData.itemAnalysisQuestionItems,
       itemAnalysisBranchItems: detailData.itemAnalysisBranchItems,
       itemAnalysisEmployeeItems: detailData.itemAnalysisEmployeeItems,
@@ -151,6 +152,7 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    this.setApproveState()
   },
   methods: {
     save () {
@@ -183,6 +185,33 @@ export default {
       }
 
       return true
+    },
+    setApproveState () {
+      if (!this.approveState) {
+        let filteredArr = this.lookup.APPROVE_STATE ? this.lookup.APPROVE_STATE.filter(a => a.Code === 'ONYBK') : []
+        this.approveState = filteredArr && filteredArr.length > 0 ? filteredArr[0] : null
+        this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
+        this.$forceUpdate()
+      }
+    }
+  },
+  watch: {
+    lookup: {
+      handler (value) {
+        this.setApproveState()
+      },
+      deep: true,
+      immediate: true
+    },
+    form: {
+      handler (value) {
+        if (value && value.ItemAnalysisQuestions && value.ItemAnalysisQuestions.length > 0) {
+          let filteredArr = value.ItemAnalysisQuestions.filter(i => i.IsNecessary === 1)
+          this.form.IsNecessary = filteredArr && filteredArr.length > 0 ? 1 : 0
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

@@ -122,7 +122,7 @@ export default {
                 value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
                 if (item.objectKey && obj[item.objectKey]) {
-                  if (obj[item.objectKey] && item.labelProperty) {
+                  if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
                     value = obj[item.objectKey][item.labelProperty]
                   } else if (obj[item.objectKey][item.modelProperty]) {
                     value = obj[item.objectKey][item.modelProperty]

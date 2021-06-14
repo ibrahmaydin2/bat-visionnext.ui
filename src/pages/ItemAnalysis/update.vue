@@ -200,6 +200,18 @@ export default {
       this.itemCriteria = rowData.ItemCriteria
       this.analysisTime = rowData.AnalysisType
     }
+  },
+  watch: {
+    form: {
+      handler (value) {
+        if (value && value.ItemAnalysisQuestions && value.ItemAnalysisQuestions.length > 0) {
+          let filteredArr = value.ItemAnalysisQuestions.filter(i => i.IsNecessary === 1)
+          this.form.IsNecessary = filteredArr && filteredArr.length > 0 ? 1 : 0
+        }
+      },
+      deep: true,
+      immediate: true
+    }
   }
 }
 </script>
