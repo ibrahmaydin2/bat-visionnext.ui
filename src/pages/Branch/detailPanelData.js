@@ -544,47 +544,5 @@ export const detailData = {
       isUnique: true,
       id: 8
     }
-  ],
-  customerClassInfoItems: [
-    {
-      type: 'Lookup',
-      modelProperty: 'Category3Id',
-      objectKey: 'Category3Id',
-      url: 'CUSTOMER_CATEGORY_3',
-      label: i18n.t('insert.branch.Category3Id'),
-      required: true,
-      visible: true,
-      id: 1
-    },
-    {
-      type: 'Lookup',
-      modelProperty: 'Category3Id',
-      objectKey: 'Category3Id',
-      url: 'CUSTOMER_CATEGORY_3',
-      label: i18n.t('insert.branch.Category3Id'),
-      required: true,
-      visible: true,
-      id: 1
-    },
-    {
-      type: 'Lookup',
-      modelProperty: 'Category3Id',
-      objectKey: 'Category3Id',
-      url: 'CUSTOMER_CATEGORY_3',
-      label: i18n.t('insert.branch.Category3Id'),
-      required: true,
-      visible: true,
-      id: 1
-    },
-    {
-      type: 'Lookup',
-      modelProperty: 'CustomerRegion5Id',
-      objectKey: 'CustomerRegion5Id',
-      url: 'CUSTOMER_REGION_5',
-      label: i18n.t('insert.branch.CustomerRegion5Id'),
-      required: true,
-      visible: true,
-      id: 2
-    }
   ]
 }
