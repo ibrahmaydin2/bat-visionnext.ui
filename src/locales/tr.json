@@ -247,7 +247,7 @@
     "CustomerRecordInsert": "CustomerRecordInsert",
     "ItemMasterRecordsInsert": "ItemMasterRecordsInsert",
     "BranchMasterRecordInsert": "BranchMasterRecordInsert",
-    "UnitSetInsert": "Yeni Seti Tanımı",
+    "UnitSetInsert": "Yeni Birim Seti Tanımı",
     "ReturnInsert": "ReturnInsert",
     "PurchaseReturnOrderInsert": "PurchaseReturnOrderInsert",
     "WeighingInformationInsert": "WeighingInformationInsert",
@@ -420,7 +420,15 @@
     "CustomerSItemCriteria": "Satılan Satılmayan Ürünler",
     "CustomerSItemCriteriaGet": "Satılan Satılmayan Ürünler Görüntüle",
     "CustomerSItemCriteriaInsert": "Yeni Satılan Satılmayan Ürünler",
-    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle"
+    "CustomerSItemCriteriaUpdate": "Satılan Satılmayan Ürünler Güncelle",
+    "CancelReason": "İptal Nedenleri",
+    "CancelReasonGet": "İptal Nedenleri Görüntüle",
+    "CancelReasonInsert": "Yeni İptal Nedenleri",
+    "CancelReasonUpdate": "İptal Nedenleri Güncelle",
+    "Loyalty": "Sadakat Uygulaması",
+    "LoyaltyGet": "Sadakat Uygulaması Görüntüle",
+    "LoyaltyInsert": "Yeni Sadakat Uygulaması",
+    "LoyaltyUpdate": "Sadakat Uygulaması Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1381,7 +1389,7 @@
       "quantityStockException": "Girilen miktar stoktan büyük olamaz!",
       "summary": "Özet",
       "campaign": "Kampanya",
-      "suitableCampaigns": "Uygun Kampanyalar",
+      "suitableCampaigns": "Müşteri Kampanyaları",
       "campaignSelection": "Kampanya Seçimi",
       "noCampaigns": "Girilen siparişe uygun kampanya bulunmamaktadır!",
       "status": "Sevkiyat Durumu",
@@ -1477,7 +1485,10 @@
       "totalItemDiscount": "Ürün İndrimi",
       "eDocumentStatusNotUpdated": "'EFU'ya Gönderime Hazır' statüsü dışında irsaliyeler güncellenemez!",
       "dispatchRefDocumentStatusError": "İptal durumunda olan belge güncellenemez.",
-      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez."
+      "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez.",
+      "appliedDiscounts": "Uygulanan İndirimler",
+      "givenQuantity": "Bedelsiz Ürün",
+      "availableCampaigns": "Uygun Kampanyalar"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -1623,7 +1634,8 @@
       "status": "Durum",
       "searchustomer": "Müşteri Ara",
       "bulkCustomerApprove": "Toplu Müşteri Onaylama",
-      "approveState":"Onay Durumu"
+      "approveState":"Onay Durumu",
+      "customerNotFound": "Onaylanacak müşteri bulunamadı"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",
@@ -1690,6 +1702,57 @@
       "location": "Lokasyon",
       "routeCode":"Rota Kodu",
       "routeName":"Rota Adı"
+    },
+    "cancelReason": {
+      "cardType": "İptal Nedeni"
+    },
+    "loyalty": {
+      "title": "Sadakat Tanımları",
+      "pointCriterias": "Puan Kriterleri",
+      "loyaltyCatalogue": "Hediye Kataloğu",
+      "catalogueCode": "Katalog Kodu",
+      "catalogueDescription": "Katalog Tanımı",
+      "pointValue": "Puan Değeri",
+      "isFreeItem": "Bedelsiz Ürün",
+      "quantity": "Miktar",
+      "isDiscount": "Dip Toplam İndirimi",
+      "discountAmount":"İndirim Tutarı",
+      "currency":"Para Birimi",
+      "areaDesc":"Alan Açıklaması",
+      "areaValue": "Değer",
+      "details": "Detay",
+      "customers": "Müşteriler",
+      "branchs": "Şubeler",
+      "customerCriterias": "Müşteri Kriterleri",
+      "customerCode":"Müşteri Kodu",
+      "customerName":"Müşteri Adı",
+      "location": "Lokasyon",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı",
+      "customerQuery":"Müşteri Sorgusu",
+      "categoryDefinition": "Kategory Tanımı",
+      "datePlanType": "Zamanlama Tipi",
+      "datePlanFreq": "Frekans",
+      "customerCriteria":"Müşteri Kriteri",
+      "description": "Açıklama",
+      "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz.",
+      "customerType": "Müşteri Tipi",
+      "constantDates": "Sabit Tarihler",
+      "orderNumber": "Sıra Numarası",
+      "categoryDate": "Kategori Tarihi",
+      "delete": "Sil",
+      "everyFreq": "Her Ziyarette",
+      "code": "Uygulama Kodu",
+      "description1": "Uygulama Tanımı",
+      "status": "Durum",
+      "loyaltyApplicationType": "Sadakat Uygulama Tipi",
+      "loyaltyGroup": "Program Grubu",
+      "loyaltyType": "Program Tipi",
+      "beginDate":"Başlangıç Tarihi",
+      "endDate":"Bitiş Tarihi",
+      "financeCode":"ERP Kodu",
+      "tci": "TCI",
+      "branchCriteria":"Şube Kriteri"
     }
   },
   "get": {
@@ -2095,8 +2158,10 @@
       "CustomerName": "Müşteri Adı"
     },
     "RefContract": {
-      "OperationDesc": "Açıklama",
+      "OperationDesc": "Kazanım Tipi",
       "TotalAmount": "Toplam Tutar",
+      "TotalBudget": "Toplam Bütçe",
+      "UseBudget": "Kullanılan Bütçe",
       "ContractTransferStatus": "Kontrat Transfer Durumu",
       "IsHero": "Hero Durumu",
       "SourceContract": "Kaynak Kontrat",

@@ -292,8 +292,8 @@ export default {
     },
     selectedItem (e) {
       if (e) {
-        this.$v.$touch()
-        if (this.$v.$error) {
+        this.$v.form.$touch()
+        if (this.$v.form.$error) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
           this.cleanItem()
           return false
@@ -552,20 +552,13 @@ export default {
     form.FromWarehouseId = {
       required
     }
-    form.RouteId = {
-      required
-    }
-    form.VehicleId = {
-      required
-    }
-    this.insertRequired.ToStatusId = true
-    this.insertRequired.ToWarehouseId = true
-    this.insertRequired.FromStatusId = true
-    this.insertRequired.FromWarehouseId = true
-    this.insertRequired.RouteId = true
-    this.insertRequired.VehicleId = true
 
     if (this.movementType) {
+      this.insertRequired.ToStatusId = true
+      this.insertRequired.ToWarehouseId = true
+      this.insertRequired.FromStatusId = true
+      this.insertRequired.FromWarehouseId = true
+
       switch (this.movementType.Code) {
         case '01':
           form.ToStatusId = {}
@@ -576,26 +569,12 @@ export default {
           this.insertRequired.FromWarehouseId = false
           form.FromStatusId = {}
           this.insertRequired.FromStatusId = false
-          form.VehicleId = {}
-          this.insertRequired.VehicleId = false
-          form.RouteId = {}
-          this.insertRequired.RouteId = false
           break
         case '05':
           form.ToWarehouseId = {}
           this.insertRequired.ToWarehouseId = false
           form.ToStatusId = {}
           this.insertRequired.ToStatusId = false
-          form.VehicleId = {}
-          this.insertRequired.VehicleId = false
-          form.RouteId = {}
-          this.insertRequired.RouteId = false
-          break
-        case '10':
-          form.RouteId = {}
-          this.insertRequired.RouteId = false
-          form.VehicleId = {}
-          this.insertRequired.VehicleId = false
           break
       }
     }

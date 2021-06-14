@@ -83,7 +83,7 @@
               <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
+              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" orConditionFields="Code,Description1" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
               <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :disabled="true" searchable />
@@ -98,7 +98,7 @@
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :disabled="true" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
+              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" orConditionFields="Code,Description1" searchable :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
             </NextFormGroup>
           </b-row>
         </b-tab>

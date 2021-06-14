@@ -566,6 +566,16 @@ import CustomerSItemCriteriaGet from '@/pages/CustomerSItemCriteria/get'
 import CustomerSItemCriteriaInsert from '@/pages/CustomerSItemCriteria/insert'
 import CustomerSItemCriteriaUpdate from '@/pages/CustomerSItemCriteria/update'
 
+import CancelReasonIndex from '@/pages/CancelReason/'
+import CancelReasonGet from '@/pages/CancelReason/get'
+import CancelReasonInsert from '@/pages/CancelReason/insert'
+import CancelReasonUpdate from '@/pages/CancelReason/update'
+
+import LoyaltyIndex from '@/pages/Loyalty/'
+import LoyaltyGet from '@/pages/Loyalty/get'
+import LoyaltyInsert from '@/pages/Loyalty/insert'
+import LoyaltyUpdate from '@/pages/Loyalty/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -675,7 +685,9 @@ const listIndex = [
   {path: '/Label', name: 'Label', component: LabelIndex, meta: { title: i18n.t('router.Label'), createLink: 'LabelInsert' }},
   {path: '/RefContract', name: 'RefContract', component: RefContractIndex, meta: { title: i18n.t('router.RefContract'), createLink: 'RefContractInsert' }},
   {path: '/RouteDailyRecord', name: 'RouteDailyRecord', component: RouteDailyRecordIndex, meta: { title: i18n.t('router.RouteDailyRecord') }},
-  {path: '/CustomerSItemCriteria', name: 'CustomerSItemCriteria', component: CustomerSItemCriteriaIndex, meta: { title: i18n.t('router.CustomerSItemCriteria'), createLink: 'CustomerSItemCriteriaInsert' }}
+  {path: '/CustomerSItemCriteria', name: 'CustomerSItemCriteria', component: CustomerSItemCriteriaIndex, meta: { title: i18n.t('router.CustomerSItemCriteria'), createLink: 'CustomerSItemCriteriaInsert' }},
+  {path: '/CancelReason', name: 'CancelReason', component: CancelReasonIndex, meta: { title: i18n.t('router.CancelReason'), createLink: 'CancelReasonInsert' }},
+  {path: '/Loyalty', name: 'Loyalty', component: LoyaltyIndex, meta: { title: i18n.t('router.Loyalty'), createLink: 'LoyaltyInsert' }}
 ]
 
 const listGet = [
@@ -785,7 +797,9 @@ const listGet = [
   { path: '/Label/:url', name: 'LabelGet', component: LabelGet, meta: { title: i18n.t('router.LabelGet'), baseLink: 'Label' } },
   { path: '/RefContract/:url', name: 'RefContractGet', component: RefContractGet, meta: { title: i18n.t('router.RefContractGet'), baseLink: 'RefContract' } },
   { path: '/RouteDailyRecord/:url', name: 'RouteDailyRecordGet', component: RouteDailyRecordGet, meta: { title: i18n.t('router.RouteDailyRecordGet'), baseLink: 'RouteDailyRecord' } },
-  { path: '/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaGet', component: CustomerSItemCriteriaGet, meta: { title: i18n.t('router.CustomerSItemCriteriaGet'), baseLink: 'CustomerSItemCriteria' } }
+  { path: '/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaGet', component: CustomerSItemCriteriaGet, meta: { title: i18n.t('router.CustomerSItemCriteriaGet'), baseLink: 'CustomerSItemCriteria' } },
+  { path: '/CancelReason/:url', name: 'CancelReasonGet', component: CancelReasonGet, meta: { title: i18n.t('router.CancelReasonGet'), baseLink: 'CancelReason' } },
+  { path: '/Loyalty/:url', name: 'LoyaltyGet', component: LoyaltyGet, meta: { title: i18n.t('router.LoyaltyGet'), baseLink: 'Loyalty' } }
 ]
 
 const listUpdate = [
@@ -892,7 +906,9 @@ const listUpdate = [
   { path: '/Update/TerminalMessage/:url', name: 'TerminalMessageUpdate', component: TerminalMessageUpdate, meta: { title: i18n.t('router.TerminalMessageUpdate'), baseLink: 'TerminalMessage' } },
   { path: '/Update/Label/:url', name: 'LabelUpdate', component: LabelUpdate, meta: { title: i18n.t('router.LabelUpdate'), baseLink: 'Label' } },
   { path: '/Update/RefContract/:url', name: 'RefContractUpdate', component: RefContractUpdate, meta: { title: i18n.t('router.RefContractUpdate'), baseLink: 'RefContract' } },
-  { path: '/Update/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaUpdate', component: CustomerSItemCriteriaUpdate, meta: { title: i18n.t('router.CustomerSItemCriteriaUpdate'), baseLink: 'CustomerSItemCriteria' } }
+  { path: '/Update/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaUpdate', component: CustomerSItemCriteriaUpdate, meta: { title: i18n.t('router.CustomerSItemCriteriaUpdate'), baseLink: 'CustomerSItemCriteria' } },
+  { path: '/Update/CancelReason/:url', name: 'CancelReasonUpdate', component: CancelReasonUpdate, meta: { title: i18n.t('router.CancelReasonUpdate'), baseLink: 'CancelReason' } },
+  { path: '/Update/Loyalty/:url', name: 'LoyaltyUpdate', component: LoyaltyUpdate, meta: { title: i18n.t('router.LoyaltyUpdate'), baseLink: 'Loyalty' } }
 ]
 
 const listInsert = [
@@ -997,7 +1013,9 @@ const listInsert = [
   { path: '/Insert/TerminalMessage', name: 'TerminalMessageInsert', component: TerminalMessageInsert, meta: { title: i18n.t('router.TerminalMessageInsert'), baseLink: 'TerminalMessage' } },
   { path: '/Insert/Label', name: 'LabelInsert', component: LabelInsert, meta: { title: i18n.t('router.LabelInsert'), baseLink: 'Label' } },
   { path: '/Insert/RefContract', name: 'RefContractInsert', component: RefContractInsert, meta: { title: i18n.t('router.RefContractInsert'), baseLink: 'RefContract' } },
-  { path: '/Insert/CustomerSItemCriteria', name: 'CustomerSItemCriteriaInsert', component: CustomerSItemCriteriaInsert, meta: { title: i18n.t('router.CustomerSItemCriteriaInsert'), baseLink: 'CustomerSItemCriteria' } }
+  { path: '/Insert/CustomerSItemCriteria', name: 'CustomerSItemCriteriaInsert', component: CustomerSItemCriteriaInsert, meta: { title: i18n.t('router.CustomerSItemCriteriaInsert'), baseLink: 'CustomerSItemCriteria' } },
+  { path: '/Insert/CancelReason', name: 'CancelReasonInsert', component: CancelReasonInsert, meta: { title: i18n.t('router.CancelReasonInsert'), baseLink: 'CancelReason' } },
+  { path: '/Insert/Loyalty', name: 'LoyaltyInsert', component: LoyaltyInsert, meta: { title: i18n.t('router.LoyaltyInsert'), baseLink: 'Loyalty' } }
 ]
 
 const routes = [

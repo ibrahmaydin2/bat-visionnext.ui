@@ -112,7 +112,8 @@ export default {
       contractDetail: [],
       fields: [
         {key: 'OperationDesc', label: this.$t('get.RefContract.OperationDesc'), sortable: false},
-        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalAmount'), sortable: false}
+        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalBudget'), sortable: false},
+        {key: 'UsedAmount', label: this.$t('get.RefContract.UseBudget'), sortable: false}
       ]
     }
   },
@@ -143,8 +144,8 @@ export default {
       this.targetCustomer = this.convertLookupValueToSearchValue(this.rowData.TargetCustomer)
       this.transferReason = this.rowData.TransferReason
 
-      if (this.rowData.SourceCustomerId) {
-        this.getCustomerDetail(this.rowData.SourceCustomerId)
+      if (this.rowData.SourceContractId) {
+        this.getCustomerDetail(this.rowData.SourceContractId)
       }
     })
   },
@@ -174,7 +175,7 @@ export default {
       }
     },
     getCustomerDetail (id) {
-      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?customerId=${id}`).then((res) => {
+      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
         this.contractDetail = res
       })
     },

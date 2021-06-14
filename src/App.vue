@@ -173,4 +173,7 @@ export default {
       width: 70vw
       margin: auto
       background: #fff
+  .tr-disabled
+    pointer-events: none !important
+    opacity: 0.7 !important
   </style>

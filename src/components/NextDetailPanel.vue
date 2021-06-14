@@ -1,14 +1,15 @@
 <template>
   <div>
     <b-row v-if="editable">
-      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="item.required" :error="item.required ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="item.disabled" :get-lookup="true" />
-        <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="item.disabled" />
-        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="item.disabled" />
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle/>
+      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item.required)" :error="isRequired(item.required) ? $v.form[item.modelProperty] : {}">
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :get-lookup="true" />
+        <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
+        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
+        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle :disabled="isDisabled(item.disabled)" />
+        <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item.disabled)" />
       </NextFormGroup>
       <b-col cols="12" md="2">
         <b-form-group>
@@ -24,13 +25,28 @@
         <template #cell(operations)="data">
           <i @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
         </template>
+        <template #cell(show_details)="row">
+          <div>
+            <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">
+              <i class="fa fa-arrow-down"></i> {{detailButtonText}}
+            </b-button>
+          </div>
+       </template>
+        <template #row-details v-if="hasDetail">
+          <div class="p-4">
+            <h2><slot name="title" /></h2>
+            <hr>
+            <slot name="body" />
+          </div>
+        </template>
       </b-table>
     </b-row>
   </div>
 </template>
 <script>
 import mixin from '../mixins/index'
-import { required } from 'vuelidate/lib/validators'
+import { requiredIf } from 'vuelidate/lib/validators'
+import { mapState } from 'vuex'
 export default {
   name: 'NextDetailPanel',
   mixins: [mixin],
@@ -44,6 +60,14 @@ export default {
     type: {
       type: String,
       default: 'insert'
+    },
+    hasDetail: {
+      type: Boolean,
+      default: false
+    },
+    detailButtonText: {
+      type: String,
+      default: 'Detay'
     },
     items: {
       type: Array,
@@ -68,6 +92,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['createCode']),
     fields () {
       let fields = []
       this.items.map(item => {
@@ -78,6 +103,8 @@ export default {
             formatter: (value, key, obj) => {
               if (item.type === 'Check') {
                 value = value === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
+              } else if (item.type === 'Date') {
+                value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
                 if (item.objectKey && obj[item.objectKey]) {
                   if (obj[item.objectKey][item.modelProperty]) {
@@ -109,18 +136,28 @@ export default {
           label: this.$t('list.operations')
         })
       }
+
+      if (this.hasDetail) {
+        fields.push({
+          key: 'show_details',
+          label: ''
+        })
+      }
       return fields
     }
   },
   mounted () {
     this.items.forEach(item => {
-      if (item.required) {
+      if (this.isRequired(item.required)) {
         this.$set(this.form, item.modelProperty, null)
-      } else {
-        let defaultValue = null
-        if (item.defaultValue) {
-          defaultValue = item.defaultValue
-        }
+      }
+      let defaultValue = null
+      if (item.defaultValue) {
+        defaultValue = item.defaultValue
+      } else if (item.createCode) {
+        defaultValue = this.createNewCode(item.modelProperty)
+      }
+      if (defaultValue) {
         if (item.type === 'Label') {
           this.$set(this.label, item.modelProperty, defaultValue)
         }
@@ -145,6 +182,10 @@ export default {
       this.form = {
         ...this.form,
         ...this.label
+      }
+
+      if (!this.values) {
+        this.values = []
       }
 
       for (let i = 0; i < this.items.length; i++) {
@@ -184,6 +225,9 @@ export default {
       this.items.map(item => {
         if (item.defaultValue) {
           this.form[item.modelProperty] = item.defaultValue
+        }
+        if (item.createCode) {
+          this.form[item.modelProperty] = this.createNewCode(item.modelProperty)
         }
       })
 
@@ -260,13 +304,36 @@ export default {
           })
         }
       }
+    },
+    isRequired (required) {
+      return (typeof required === 'function') ? required(this.form) : required
+    },
+    isDisabled (disabled) {
+      return (typeof disabled === 'function') ? disabled(this.form) : disabled
+    },
+    createNewCode (modelProperty) {
+      let codes = this.values.map((item) => {
+        return item ? item[modelProperty] : ''
+      })
+      return this.createUniqueCode(codes, 1)
+    },
+    createUniqueCode (codes, index) {
+      let newCode = `${this.createCode}-${index}`
+
+      if (codes.includes(newCode)) {
+        return this.createUniqueCode(codes, (index + 1))
+      } else {
+        return newCode
+      }
     }
   },
   validations () {
     let form = {}
     this.items.forEach(item => {
-      if (item.required) {
-        form[item.modelProperty] = { required }
+      form[item.modelProperty] = {
+        required: requiredIf(function () {
+          return this.isRequired(item.required)
+        })
       }
     })
     return {

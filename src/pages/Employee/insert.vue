@@ -83,8 +83,9 @@
           </b-row>
           <b-row>
             <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
+              <b-form-group :label="insertTitle.PriceListCategoryId + (form.CreateCustomerRecord ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
                 <v-select
+                  v-model="PriceListCategoryType"
                   :options="lookup.PRICE_LIST_CATEGORY_TYPE"
                   @input="selectedType('PriceListCategoryId', $event)"
                   label="Label"
@@ -338,7 +339,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
-import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email, requiredIf } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
   data () {
@@ -387,11 +388,15 @@ export default {
       employeeTeams: [],
       selectedEInvoice: null,
       selectedEInvoices: [],
-      eInvoiceSeqsList: []
+      eInvoiceSeqsList: [],
+      PriceListCategoryType: {}
     }
   },
   computed: {
-    ...mapState(['employees', 'userGroups', 'rowData'])
+    ...mapState(['employees', 'userGroups', 'rowData']),
+    returnCustomerRecord () {
+      return this.form.CreateCustomerRecord
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -535,6 +540,11 @@ export default {
   },
   validations () {
     let form = this.insertRules
+    form.PriceListCategoryId = {
+      required: requiredIf(function (nestedModel) {
+        return this.form.CreateCustomerRecord === 1
+      })
+    }
     form.TaxNumber = {
       required,
       minLength: minLength(11),
@@ -579,6 +589,14 @@ export default {
           this.eInvoiceSeqsList.map(item => {
             item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
           })
+        }
+      }
+    },
+    returnCustomerRecord (e) {
+      if (e !== null) {
+        if (e !== 1) {
+          this.PriceListCategoryType = {}
+          this.form.PriceListCategoryId = null
         }
       }
     }

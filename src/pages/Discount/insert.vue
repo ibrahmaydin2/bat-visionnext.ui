@@ -73,6 +73,7 @@
                 :options="lookup.BRANCH_CRITERIA"
                 @input="selectedType('BranchCriteriaId', $event)"
                 label="Label"
+                :disabled="distributionTypeControl"
               />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
@@ -91,7 +92,7 @@
               <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
+              <v-select v-model="BudgetIds" :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -113,8 +114,8 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountPayback" :error="$v.form.DiscountPayback">
-              <b-form-input type="number" v-model="form.DiscountPayback" :readonly="insertReadonly.DiscountPayback" maxLength="1" :oninput="maxLengthControl" />
+            <NextFormGroup item-key="BranchSharePercent" :error="$v.form.BranchSharePercent">
+              <b-form-input type="number" v-model="form.BranchSharePercent" :readonly="insertReadonly.BranchSharePercent || distributionTypeControl" maxLength="6" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="MaxUsage" :error="$v.form.MaxUsage">
               <b-form-input type="text" v-model="form.MaxUsage" :readonly="insertReadonly.MaxUsage" />
@@ -130,12 +131,12 @@
               <NextCheckBox v-model="form.UseBudget" type="number" toggle @input="useBudgetEvent($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsCascade" :error="$v.form.IsCascade">
-              <b-form-checkbox v-model="form.IsCascade" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.IsCascade" :disabled='(form.DiscountKindId === 1 || form.DiscountKindId === 7)' name="check-button" switch>
                 {{(form.IsCascade) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
             <NextFormGroup item-key="UseMultiGiven" :error="$v.form.UseMultiGiven">
-              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 7 || form.DiscountKindId === 8)' name="check-button" switch>
                 {{(form.UseMultiGiven) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
@@ -579,7 +580,7 @@ export default {
         BudgetConsumption: 0,
         ApproveStateId: 2102,
         DiscountCategoryId: null,
-        DiscountPayback: 0,
+        BranchSharePercent: 0,
         MaxUsage: null,
         IsCascade: 0,
         UseMultiGiven: 0,
@@ -771,7 +772,9 @@ export default {
       cancelledSelection: false,
       discountKindFirstSet: true,
       discountTypeFirstSet: true,
-      watchType: 0
+      watchType: 0,
+      distributionTypeControl: false,
+      BudgetIds: {}
     }
   },
   computed: {
@@ -794,6 +797,20 @@ export default {
         this.discountTakensColumnNames = res.Values
       })
     },
+    // getCurrentBranch () {
+    //   let request = {
+    //     RecordId: this.$store.state.BranchId
+    //   }
+    //   this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+    //     if (response && response.Model) {
+    //       let branch = response.Model
+    //       if (branch.DistributionTypeId === 6) {
+    //         this.distributionTypeControl = true
+    //         this.form.BranchSharePercent = 100
+    //       }
+    //     }
+    //   })
+    // },
     ColumnControl () {
       this.initFalseValid()
       if (this.form.DiscountKindId === 1) {
@@ -823,6 +840,7 @@ export default {
           this.endTakenQuantityValid = true
         } else if (this.form.DiscountTypeId === 2) {
           this.maxTakenAmountValid = true
+          this.minTakenAmountValid = true
         }
       } else if (this.form.DiscountKindId === 8) {
         this.discountTotalValid = true
@@ -835,6 +853,7 @@ export default {
           this.endTakenQuantityValid = true
         } else if (this.form.DiscountTypeId === 2) {
           this.maxTakenAmountValid = true
+          this.minTakenAmountValid = true
         }
       }
     },
@@ -883,8 +902,8 @@ export default {
         RecordState: 2,
         StatusId: 1,
         CompanyId: null,
-        TableName: 'T_DISCOUNT_GIVEN',
-        ColumnName: this.discountGivenColumnName.Code,
+        TableName: 'T_ITEM',
+        ColumnName: this.discountGivenColumnName.ForeignField,
         ColumnValue: this.discountGivenColumnValue.DecimalValue,
         ColumnNameStr: this.discountGivenColumnName.Label,
         ColumnValueStr: this.discountGivenColumnValue.Label,
@@ -922,7 +941,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_ITEM',
-        ColumnName: this.discountTakenColumnName.Code,
+        ColumnName: this.discountTakenColumnName.ForeignField,
         ColumnValue: this.discountTakenColumnValue.DecimalValue,
         ColumnNameStr: this.discountTakenColumnName.Label,
         ColumnValueStr: this.discountTakenColumnValue.Label,
@@ -1008,7 +1027,7 @@ export default {
       this.$v.discountExcludedCustomer.$reset()
     },
     removeDiscountExcludedCustomer (e) {
-      this.DiscountExcludedCustomers.splice(this.DiscountExcludedCustomers.indexOf(e), 1)
+      this.form.DiscountExcludedCustomers.splice(this.form.DiscountExcludedCustomers.indexOf(e), 1)
     },
     addCustomerCriteria () {
       this.$v.customerCriteriaColumnName.$touch()
@@ -1028,7 +1047,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.customerCriteriaColumnName.Code,
+        ColumnName: this.customerCriteriaColumnName.ForeignField,
         ColumnValue: this.customerCriteriaColumnValue.DecimalValue,
         ColumnNameStr: this.customerCriteriaColumnName.Label,
         ColumnValueStr: this.customerCriteriaColumnValue.Label
@@ -1220,11 +1239,17 @@ export default {
         return false
       }
       loading(true)
-      let model = {
-        Code: search,
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
+        name: 'branchs',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }).then(res => {
         loading(false)
       })
     },
@@ -1241,7 +1266,11 @@ export default {
       })
     },
     DiscountCustomersValid () {
-      if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
+      if (this.form.BranchCriteriaId === 31) {
+        this.customerValid = false
+        return
+      }
+      if (this.form.BranchCriteriaId === null || this.BranchIds.length === 0) {
         this.form.DiscountCustomers = []
         this.form.DiscountExcludedCustomers = []
         this.discountDetailsBranchs = []
@@ -1290,7 +1319,7 @@ export default {
       this.minTakenAmountValid = false
     },
     useBudgetEvent (e) {
-      if (e === 1) {
+      if (e) {
         this.form.ApproveStateId = 2100
         this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {
@@ -1304,6 +1333,9 @@ export default {
             this.ApproveStateLabel = item.Label
           }
         })
+        this.form.BudgetAmount = null
+        this.BudgetIds = {}
+        this.form.BudgetId = null
       }
     },
     getCustomerCriterias () {
@@ -1445,6 +1477,26 @@ export default {
           if (item.DecimalValue === 2102) {
             this.selectedType('ApproveStateId', item)
             this.ApproveStateLabel = item.Label
+          }
+        })
+      }
+      if (e.BRANCH_CRITERIA) {
+        let request = {
+          RecordId: this.$store.state.BranchId
+        }
+        this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+          if (response && response.Model) {
+            let branch = response.Model
+            if (branch.DistributionTypeId === 6) {
+              this.distributionTypeControl = true
+              this.form.BranchSharePercent = 100
+              e.BRANCH_CRITERIA.map(item => {
+                if (item.DecimalValue === 30) {
+                  this.branchCriteria = item
+                  this.selectedType('BranchCriteriaId', item)
+                }
+              })
+            }
           }
         })
       }
