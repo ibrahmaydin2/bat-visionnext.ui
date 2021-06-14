@@ -92,7 +92,7 @@
               <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
+              <v-select v-model="BudgetIds" :disabled="!form.UseBudget" :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="Description1">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -131,12 +131,12 @@
               <NextCheckBox v-model="form.UseBudget" type="number" toggle @input="useBudgetEvent($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsCascade" :error="$v.form.IsCascade">
-              <b-form-checkbox v-model="form.IsCascade" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.IsCascade" :disabled='(form.DiscountKindId === 1 || form.DiscountKindId === 7)' name="check-button" switch>
                 {{(form.IsCascade) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
             <NextFormGroup item-key="UseMultiGiven" :error="$v.form.UseMultiGiven">
-              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 7 || form.DiscountKindId === 8)' name="check-button" switch>
                 {{(form.UseMultiGiven) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
@@ -773,7 +773,8 @@ export default {
       discountKindFirstSet: true,
       discountTypeFirstSet: true,
       watchType: 0,
-      distributionTypeControl: false
+      distributionTypeControl: false,
+      BudgetIds: {}
     }
   },
   computed: {
@@ -1265,7 +1266,11 @@ export default {
       })
     },
     DiscountCustomersValid () {
-      if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
+      if (this.form.BranchCriteriaId === 31) {
+        this.customerValid = false
+        return
+      }
+      if (this.form.BranchCriteriaId === null || this.BranchIds.length === 0) {
         this.form.DiscountCustomers = []
         this.form.DiscountExcludedCustomers = []
         this.discountDetailsBranchs = []
@@ -1328,6 +1333,9 @@ export default {
             this.ApproveStateLabel = item.Label
           }
         })
+        this.form.BudgetAmount = null
+        this.BudgetIds = {}
+        this.form.BudgetId = null
       }
     },
     getCustomerCriterias () {

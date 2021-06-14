@@ -121,12 +121,12 @@
               <NextCheckBox v-model="form.UseBudget" type="number" toggle @input="useBudgetEvent($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsCascade" :error="$v.form.IsCascade">
-              <b-form-checkbox v-model="form.IsCascade" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.IsCascade" :disabled='(form.DiscountKindId === 1 || form.DiscountKindId === 7)' name="check-button" switch>
                 {{(form.IsCascade) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
             <NextFormGroup item-key="UseMultiGiven" :error="$v.form.UseMultiGiven">
-              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 2)' name="check-button" switch>
+              <b-form-checkbox v-model="form.UseMultiGiven" :disabled='!(form.DiscountKindId === 7 || form.DiscountKindId === 8)' name="check-button" switch>
                 {{(form.UseMultiGiven) ? $t('insert.active'): $t('insert.passive')}}
               </b-form-checkbox>
             </NextFormGroup>
@@ -1248,6 +1248,10 @@ export default {
       }
     },
     DiscountCustomersValid () {
+      if (this.form.BranchCriteriaId === 31) {
+        this.customerValid = false
+        return
+      }
       if (this.form.BranchCriteriaId == null || this.BranchIds.length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
@@ -1416,6 +1420,9 @@ export default {
             this.ApproveStateLabel = item.Label
           }
         })
+        this.form.BudgetAmount = null
+        this.budget = {}
+        this.form.BudgetId = null
       }
     }
   },

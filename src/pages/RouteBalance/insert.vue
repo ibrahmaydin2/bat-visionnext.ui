@@ -127,17 +127,17 @@
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
-                    <span class="sr-only">Selected</span>
+                    <span class="sr-only">{{$t('insert.RouteBalance.Selected')}}</span>
                   </template>
                   <template v-else>
                     <span aria-hidden="true">&nbsp;</span>
-                    <span class="sr-only">Not selected</span>
+                    <span class="sr-only">{{$t('insert.RouteBalance.NonSelected')}}</span>
                   </template>
                 </template>
                 <template #table-busy>
                   <div class="text-center text-danger my-2">
                     <b-spinner type="grow" class="align-middle"></b-spinner>
-                    <strong>Tablo içeriği için rota seçiniz</strong>
+                    <strong>{{$t('insert.RouteBalance.SelectRouteforTable')}}</strong>
                   </div>
                 </template>
                 <template #cell(Day1Value)="row">
