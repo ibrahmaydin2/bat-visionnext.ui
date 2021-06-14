@@ -428,7 +428,11 @@
     "Loyalty": "Sadakat Uygulaması",
     "LoyaltyGet": "Sadakat Uygulaması Görüntüle",
     "LoyaltyInsert": "Yeni Sadakat Uygulaması",
-    "LoyaltyUpdate": "Sadakat Uygulaması Güncelle"
+    "LoyaltyUpdate": "Sadakat Uygulaması Güncelle",
+    "ItemAnalysis": "Ürün Analizi Tanımları",
+    "ItemAnalysisGet": "Ürün Analizi Tanımları Görüntüle",
+    "ItemAnalysisInsert": "Yeni Ürün Analizi Tanımları",
+    "ItemAnalysisUpdate": "Ürün Analizi Tanımları Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -486,6 +490,7 @@
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
     "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
+    "lineNumber": "Sıra No",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
@@ -1755,6 +1760,45 @@
       "financeCode":"ERP Kodu",
       "tci": "TCI",
       "branchCriteria":"Şube Kriteri"
+    },
+    "itemAnalysis": {
+      "title": "Ürün Analizi Tanımı",
+      "analysisQuestions": "Analiz Soruları",
+      "questionCode":"Soru Kodu",
+      "questionName": "Soru",
+      "isNecessary": "Zorunlu",
+      "branchs": "Şubeler",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı",
+      "employeeType":"Personel Tipi",
+      "itemList": "Ürün Listesi",
+      "itemCode":"Ürün Kodu",
+      "itemName":"Ürün Adı",
+      "customerList":"Müşteri Listesi",
+      "customerCode":"Müşteri Kodu",
+      "commercialTitle":"Müşteri Ticari Ünvanı",
+      "location": "Lokasyon",
+      "validDates": "Geçerlilik Tarihleri",
+      "startDate":"Başlangıç Tarihi",
+      "endDate":"Bitiş Tarihi",
+      "validDatesError": "Başlangıç ve Bitiş tarihleri kesişmemelidir.",
+      "customerCriterias": "Müşteri Kriterleri",
+      "areaDesc":"Alan Açıklaması",
+      "areaValue": "Değer",
+      "answerType": "Cevap Tipi",
+      "code": "Tanım Kodu",
+      "description1": "Açıklama",
+      "status": "Durum",
+      "validityType": "Analiz Geçerlilik Tipi",
+      "analysisType": "Ürün Analiz Tipi",
+      "analysisPeriod": "Analiz Periyodu",
+      "approveState":"Onay Durumu",
+      "analysisVisitCount": "Ziyaret Sayısı",
+      "customerCriteria":"Müşteri Kriteri",
+      "itemCriteria":"Ürün Kriteri",
+      "useOnce": "Tek Seferlik",
+      "sortOrder":"Görünüm Sırası",
+      "analysisTime": "Analiz Zamanı"
     }
   },
   "get": {
