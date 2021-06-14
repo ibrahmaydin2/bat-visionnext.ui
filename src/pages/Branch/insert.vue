@@ -44,7 +44,7 @@
               <NextDropdown :disabled="insertReadonly.BranchRegionId" url="VisionNextCommonApi/api/Region/Search" @input="selectedSearchType('BranchRegionId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="text" :disabled="insertReadonly.TaxNumber" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
               <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)"/>
@@ -88,6 +88,21 @@
             <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
               <NextDropdown :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEArchive" :error="$v.form.UseEArchive">
+              <NextCheckBox v-model="form.UseEArchive" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.Detail')">
@@ -115,7 +130,7 @@
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
-              <NextInput v-model="form.DefaultPaymentTypeId" type="text" maxLength="12" :oninput="maxLengthControl" url="VisionNextCommonApi/api/PaymentType/Search" :disabled="insertReadonly.DefaultPaymentTypeId" />
+              <NextDropdown url="VisionNextCommonApi/api/PaymentType/Search"  @input="selectedSearchType('DefaultPaymentTypeId', $event)" :disabled="insertReadonly.DefaultPaymentTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
               <NextDropdown :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
@@ -154,7 +169,7 @@
               <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
-              <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
+              <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
               <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
@@ -162,16 +177,50 @@
             <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
             </NextFormGroup>
+            <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
+              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Statement" :error="$v.form.Statement">
+              <NextCheckBox v-model="form.Statement" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="AllowOverLimit" :error="$v.form.AllowOverLimit">
+              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDirectDebit" :error="$v.form.IsDirectDebit">
+              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle/>
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.customerClassInfo')">
+          <b-row>
+            <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
+              <NextDropdown :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
+              <NextDropdown :disabled="insertReadonly.category2Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
+              <NextDropdown :disabled="insertReadonly.category1Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
+              <NextDropdown :disabled="insertReadonly.customerRegion5Id" :get-lookup="true" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
+              <NextDropdown :disabled="insertReadonly.backMarginGroupId" :get-lookup="true" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="form.branchLocations" :items="customerLocationItems" />
+          <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')">
-          <NextDetailPanel v-model="form.branchCreditHistories" :items="customerCreditHistoriesItems" />
+          <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <NextDetailPanel v-model="customerItemDiscounts" :items="customerItemDiscountItems"/>
+          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerItemDiscountItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.InvoiceSeqs')">
+          <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -190,8 +239,9 @@ export default {
         System: 0,
         DefaultLocationId: null,
         CustomerId: null,
-        StatusId: null,
+        StatusId: 1,
         FinanceCode: null,
+        StatementDay: null,
         DistributionTypeId: null,
         CreditLimit: null,
         AllowOverLimit: null,
@@ -201,7 +251,7 @@ export default {
         DiscountPercent2: null,
         PaymentPeriod: null,
         PriceListCategoryId: null,
-        IsBlocked: null,
+        IsBlocked: 0,
         BlockReasonDescription: null,
         DiscountGroup10Id: null,
         DiscountGroup2Id: null,
@@ -209,7 +259,7 @@ export default {
         Genexp1: null,
         IsDirectDebit: null,
         SalesPriceChangeRate: null,
-        MaxBonusRate: 0,
+        // MaxBonusRate: null,
         BankPaymentSystemId: null,
         WebUrl: null,
         EInvoiceNumberPrefix: null,
@@ -218,27 +268,26 @@ export default {
         BlockReasonId: null,
         CashSafeCode: null,
         CreditCardSafeCode: null,
-        UseEInvoice: null,
+        UseEInvoice: 0,
         SSTypeId: null,
-        BranchLocations: null,
-        BranchCreditHistories: null,
+        BranchLocations: [],
+        BranchCreditHistories: [],
+        EInvoiceSeqs: [],
         BranchPaymentTypes: null,
         CustomFixedTerms: null,
         CurrentCredit: null,
         CurrentRisk: null,
         LicenseNumber: null,
         TaxCustomerTypeId: null,
-        IsOrderChangeUnitary: null,
+        IsOrderChangeUnitary: 0,
         IsDutyFree: null,
-        IsWarehouseSale: null,
+        IsWarehouseSale: 0,
         SalesDocumentTypeId: null,
         InvoiceCombineRuleId: null,
-        ManualInvoiceClosure: null,
+        ManualInvoiceClosure: 0,
         DeliveryDayParam: null,
-        UseEArchive: null,
+        UseEArchive: 0,
         UseEWaybill: null,
-        RecordId: null,
-        EncryptedKey: null,
         Code: null,
         Description1: null,
         RecordState: 2,
@@ -251,21 +300,26 @@ export default {
         BranchRegionId: null,
         CustomerPrefixCode: null,
         CustomerItemDiscountCrts: [],
+        CustomerItemDiscounts: [],
         CustomerBranchs: [],
         FinanceCode2: null,
         MersisNumber: null,
         BankIban: null,
         BankInfo: null,
+        Statement: 0,
         DebitAccountRemainder: null,
         CreditAccountRemainder: null,
         TciBreak1Id: null,
         TciBreak2Id: null,
-        SapCustomerId: null
+        SapCustomerId: null,
+        UseEDispatch: 0
+
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerItemDiscountItems: detailData.customerItemDiscountItems,
-      customerItemDiscounts: []
+      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems
+
     }
   },
   computed: {
@@ -288,9 +342,6 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.customerItemDiscounts && this.customerItemDiscounts.length > 0) {
-          this.form.CustomerItemDiscountCrts = [this.customerItemDiscounts]
-        }
         this.createData()
       }
     }

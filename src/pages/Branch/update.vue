@@ -88,6 +88,21 @@
             <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
               <NextDropdown v-model="useEDispatch" :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEArchive" :error="$v.form.UseEArchive">
+              <NextCheckBox v-model="form.UseEArchive" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.Detail')">
@@ -115,7 +130,7 @@
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
-              <NextInput v-model="form.DefaultPaymentTypeId" type="text" maxLength="12" :oninput="maxLengthControl" url="VisionNextCommonApi/api/PaymentType/Search" :disabled="insertReadonly.DefaultPaymentTypeId" />
+              <NextDropdown v-model="defaultPaymentType" url="VisionNextCommonApi/api/PaymentType/Search"  @input="selectedSearchType('DefaultPaymentTypeId', $event)" :disabled="insertReadonly.DefaultPaymentTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
               <NextDropdown v-model="paymentPeriod" :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
@@ -154,7 +169,7 @@
               <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
-              <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('statementDay', $event)"/>
+              <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
               <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
@@ -162,16 +177,50 @@
             <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
             </NextFormGroup>
+            <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
+              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Statement" :error="$v.form.Statement">
+              <NextCheckBox v-model="form.Statement" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="AllowOverLimit" :error="$v.form.AllowOverLimit">
+              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDirectDebit" :error="$v.form.IsDirectDebit">
+              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle/>
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.customerClassInfo')">
+          <b-row>
+            <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
+              <NextDropdown v-model="form.category3" :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
+              <NextDropdown v-model="form.category2" :disabled="insertReadonly.category2Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
+              <NextDropdown v-model="form.category1" :disabled="insertReadonly.category1Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
+              <NextDropdown v-model="form.customerRegion5" :disabled="insertReadonly.customerRegion5Id" :get-lookup="true" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
+              <NextDropdown v-model="form.backMarginGroup" :disabled="insertReadonly.backMarginGroupId" :get-lookup="true" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="form.branchLocations" :items="customerLocationItems" />
+          <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')">
-          <NextDetailPanel v-model="form.branchCreditHistories" :items="customerCreditHistoriesItems" />
+          <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <NextDetailPanel v-model="customerItemDiscounts" :items="customerItemDiscountItems"/>
+          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerItemDiscountItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.InvoiceSeqs')">
+          <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -260,11 +309,17 @@ export default {
         CreditAccountRemainder: null,
         TciBreak1Id: null,
         TciBreak2Id: null,
-        SapCustomerId: null
+        SapCustomerId: null,
+        category3Id: null,
+        category2Id: null,
+        category1Id: null,
+        CustomerRegion5Id: null,
+        BackMarginGroupId: null
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerItemDiscountItems: detailData.customerItemDiscountItems,
+      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
       customerItemDiscounts: [],
       distributionType: {},
       branchRegion: {},
@@ -281,7 +336,13 @@ export default {
       priceListCategory: {},
       tciBreak1: {},
       tciBreak2: {},
-      statementday: {}
+      statementday: {},
+      defaultPaymentType: {},
+      category3: {},
+      category2: {},
+      category1: {},
+      customerRegion5: {},
+      backMarginGroup: {}
     }
   },
   computed: {
@@ -298,7 +359,8 @@ export default {
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
       this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatch)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
-      this.statementday = this.convertLookupValueToSearchValue(rowData.statementday)
+      this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
+      this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
@@ -310,8 +372,25 @@ export default {
       this.priceListCategory = rowData.PriceListCategory
       this.tciBreak1 = rowData.TciBreak1
       this.tciBreak2 = rowData.TciBreak2
-      if (rowData.CustomerItemDiscountCrts && rowData.CustomerItemDiscountCrts.length > 0) {
-        this.customerItemDiscounts = rowData.CustomerItemDiscountCrts[0]
+      this.category3 = rowData.Category3
+      this.category2 = rowData.Category2
+      this.category1 = rowData.Category1
+      this.customerRegion5 = rowData.CustomerRegion5
+      this.backMarginGroup = rowData.BackMarginGroup
+      // if (rowData.CustomerItemDiscountCrts && rowData.CustomerItemDiscountCrts.length > 0) {
+      //   this.customerItemDiscounts = rowData.CustomerItemDiscountCrts[0]
+      // }
+      if (!rowData.CustomerItemDiscounts) {
+        this.form.CustomerItemDiscounts = []
+      }
+      if (!rowData.BranchLocations) {
+        this.form.BranchLocations = []
+      }
+      if (!rowData.BranchCreditHistories) {
+        this.form.BranchCreditHistories = []
+      }
+      if (!rowData.EInvoiceSeqs) {
+        this.form.EInvoiceSeqs = []
       }
     },
     save () {
@@ -324,9 +403,6 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.customerItemDiscounts && this.customerItemDiscounts.length > 0) {
-          this.form.CustomerItemDiscountCrts = [this.customerItemDiscounts]
-        }
         this.updateData()
       }
     }

@@ -43,10 +43,10 @@
         <b-table :items="form.ItemFormulaValidDates" :fields="fields" striped responsive>
           <template #cell(show_details)="row">
             <b-button size="sm" @click="row.toggleDetails" class="mr-2">
-              Tanımlamaları {{ row.detailsShowing ? 'Gizle' : 'Göster'}}
+              {{$t('index.ItemFormula.Descriptions')}} {{ row.detailsShowing ? 'Gizle' : 'Göster'}}
             </b-button>
             <b-button size="sm" @click="detailRow(row)" class="mr-2">
-              Tanımlama Ekle
+              {{$t('index.ItemFormula.AddDescription')}}
             </b-button>
           </template>
           <template #row-details="row">

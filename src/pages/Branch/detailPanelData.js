@@ -178,8 +178,8 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'IsDeliveryAddress',
-      label: i18n.t('insert.branch.isDeliveryAddress'),
+      modelProperty: 'GsmNumber',
+      label: i18n.t('insert.branch.GsmNumber'),
       required: false,
       visible: true,
       isUnique: true,
@@ -460,6 +460,131 @@ export const detailData = {
       visible: true,
       isUnique: true,
       id: 6
+    }
+  ],
+  customerEInvoiceSeqsItems: [
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Prefix',
+      objectKey: 'Prefix',
+      label: i18n.t('insert.branch.Prefix'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'TerminalOrPcId',
+      objectKey: 'TerminalOrPc',
+      url: 'TERMINAL_OR_PC',
+      label: i18n.t('insert.branch.TerminalOrPcId'),
+      required: false,
+      visible: true,
+      id: 2
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'EInvoiceTypeId',
+      objectKey: 'EInvoiceType',
+      url: 'EFA_SERVICES',
+      label: i18n.t('insert.branch.TerminalOrPcId'),
+      required: false,
+      visible: true,
+      id: 3
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'TransactionDayId',
+      objectKey: 'TransactionDay',
+      url: 'TRANSACTION_DAY',
+      label: i18n.t('insert.branch.TransactionDayId'),
+      required: false,
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Check',
+      modelProperty: 'StatusId',
+      objectKey: 'Status',
+      label: i18n.t('insert.branch.StatusId'),
+      required: true,
+      visible: true,
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'LastSequence',
+      objectKey: 'LastSequence',
+      label: i18n.t('insert.branch.LastSequence'),
+      required: false,
+      visible: true,
+      id: 6
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'EmployeeId',
+      objectKey: 'Employee',
+      label: i18n.t('insert.branch.EmployeeId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 7
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Year',
+      objectKey: 'Year',
+      label: i18n.t('insert.branch.Year'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 8
+    }
+  ],
+  customerClassInfoItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'Category3Id',
+      objectKey: 'Category3Id',
+      url: 'CUSTOMER_CATEGORY_3',
+      label: i18n.t('insert.branch.Category3Id'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'Category3Id',
+      objectKey: 'Category3Id',
+      url: 'CUSTOMER_CATEGORY_3',
+      label: i18n.t('insert.branch.Category3Id'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'Category3Id',
+      objectKey: 'Category3Id',
+      url: 'CUSTOMER_CATEGORY_3',
+      label: i18n.t('insert.branch.Category3Id'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'CustomerRegion5Id',
+      objectKey: 'CustomerRegion5Id',
+      url: 'CUSTOMER_REGION_5',
+      label: i18n.t('insert.branch.CustomerRegion5Id'),
+      required: true,
+      visible: true,
+      id: 2
     }
   ]
 }
