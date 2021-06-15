@@ -61,6 +61,7 @@ export default {
         Description1: null,
         QuestionChoice: []
       },
+      routeName1: 'FieldAnalysis',
       customerQuestionChoiceItems: detailData.customerQuestionChoiceItems,
       cardType: {},
       answerType: {}
@@ -70,13 +71,9 @@ export default {
     ...mapState([''])
   },
   mounted () {
-    this.getCode()
     this.getData().then(() => this.setData())
   },
   methods: {
-    getCode () {
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextFieldAnalysis/api/AnalysisQuestions/GetCode'})
-    },
     setData () {
       let rowData = this.rowData
       this.form = rowData
@@ -98,11 +95,6 @@ export default {
       } else {
         this.updateData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   }
 }

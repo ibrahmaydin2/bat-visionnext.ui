@@ -1161,7 +1161,8 @@
       "Description1": "Seçenek",
       "ChoiceOrder": "Sıra",
       "CardTypeId": "Soru Tipi",
-      "AnswerTypeId": "Cevap Tipi"
+      "AnswerTypeId": "Cevap Tipi",
+      "StatusId": "Durum"
     },
     "bank": {
       "code":"Banka Kodu",

@@ -61,21 +61,18 @@ export default {
         Description1: null,
         QuestionChoice: []
       },
-      customerQuestionChoiceItems: detailData.customerQuestionChoiceItems
+      customerQuestionChoiceItems: detailData.customerQuestionChoiceItems,
+      routeName1: 'FieldAnalysis'
     }
   },
   computed: {
     ...mapState([''])
   },
   mounted () {
-    this.getCode()
-    // this.createManualCode()
+    this.createManualCode()
     this.getInsertPage(this.routeName)
   },
   methods: {
-    getCode () {
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextFieldAnalysis/api/AnalysisQuestions/GetCode'})
-    },
     getInsertPage (e) {
     },
     save () {
@@ -90,11 +87,6 @@ export default {
       } else {
         this.createData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   }
 }
