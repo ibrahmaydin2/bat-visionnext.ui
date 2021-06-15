@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Branch' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -377,9 +377,6 @@ export default {
       this.category1 = rowData.Category1
       this.customerRegion5 = rowData.CustomerRegion5
       this.backMarginGroup = rowData.BackMarginGroup
-      // if (rowData.CustomerItemDiscountCrts && rowData.CustomerItemDiscountCrts.length > 0) {
-      //   this.customerItemDiscounts = rowData.CustomerItemDiscountCrts[0]
-      // }
       if (!rowData.CustomerItemDiscounts) {
         this.form.CustomerItemDiscounts = []
       }
