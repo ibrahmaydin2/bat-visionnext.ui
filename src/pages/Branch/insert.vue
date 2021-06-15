@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Branch' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -327,11 +327,8 @@ export default {
   },
   mounted () {
     this.createManualCode()
-    this.getInsertPage(this.routeName)
   },
   methods: {
-    getInsertPage (e) {
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
