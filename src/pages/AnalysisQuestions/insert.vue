@@ -73,8 +73,6 @@ export default {
     this.getInsertPage(this.routeName)
   },
   methods: {
-    getInsertPage (e) {
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
