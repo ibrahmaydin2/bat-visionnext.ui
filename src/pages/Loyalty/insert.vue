@@ -120,7 +120,7 @@
                   <h3>{{$t('insert.loyalty.customerQuery')}}</h3>
                   <NextDetailPanel v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtSqls" :items="loyaltyActiveCtSqlItems" />
                 </div>
-                <div class="p-4 mt-2 nested-detail-panel" v-if="(item.DatePlanType && row.item.DatePlanType.Code === 'ST') || (item.DatePlanTypeIdCode === 'ST')">
+                <div class="p-4 mt-2 nested-detail-panel" v-if="(item.DatePlanType && item.DatePlanType.Code === 'ST') || (item.DatePlanTypeIdCode === 'ST')">
                   <h3>{{$t('insert.loyalty.constantDates')}}</h3>
                   <NextDetailPanel v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtDates" :items="loyaltyActiveCtDateItems" />
                 </div>
