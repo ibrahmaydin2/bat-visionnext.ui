@@ -44,6 +44,10 @@
     "BranchGet": "Şube Görüntüle",
     "BranchUpdate": "Şube Güncelle",
     "BranchInsert": "Yeni Şube",
+    "AnalysisQuestions": "Analiz Soruları",
+    "AnalysisQuestionsGet": "Analiz Soruları Görüntüle",
+    "AnalysisQuestionsUpdate": "Analiz Soruları Güncelle",
+    "AnalysisQuestionsInsert": "Yeni Analiz Soruları",
     "Warehouse": "Depo Kayıtları",
     "WarehouseGet": "Depo Görüntüle",
     "WarehouseUpdate": "Depo Güncelle",
@@ -1144,7 +1148,15 @@
       "Statement": "Statement",
       "IsDirectDebit": "Direct Debit",
       "IsBlocked": "Satışa Kapalı"
-
+    },
+    "AnalysisQuestions": {
+      "QuestionOptions": "Soru Seçenekleri",
+      "IsCommentable": "Yorumlanabilir",
+      "Code": "Soru Kodu",
+      "Description1": "Seçenek",
+      "ChoiceOrder": "Sıra",
+      "CardTypeId": "Soru Tipi",
+      "AnswerTypeId": "Cevap Tipi"
     },
     "bank": {
       "code":"Banka Kodu",
