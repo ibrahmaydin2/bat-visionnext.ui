@@ -153,7 +153,7 @@ export default {
       }
       let filteredArr = this.form.PriceDecreaseItems.filter(i => i.ItemId === this.priceDecreaseItem.item.RecordId && i.RecordState !== 4)
       if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecord') })
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
 
