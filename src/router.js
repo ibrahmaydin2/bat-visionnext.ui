@@ -581,6 +581,11 @@ import LoyaltyGet from '@/pages/Loyalty/get'
 import LoyaltyInsert from '@/pages/Loyalty/insert'
 import LoyaltyUpdate from '@/pages/Loyalty/update'
 
+import ItemAnalysisIndex from '@/pages/ItemAnalysis/'
+import ItemAnalysisGet from '@/pages/ItemAnalysis/get'
+import ItemAnalysisInsert from '@/pages/ItemAnalysis/insert'
+import ItemAnalysisUpdate from '@/pages/ItemAnalysis/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -693,7 +698,8 @@ const listIndex = [
   {path: '/RouteDailyRecord', name: 'RouteDailyRecord', component: RouteDailyRecordIndex, meta: { title: i18n.t('router.RouteDailyRecord') }},
   {path: '/CustomerSItemCriteria', name: 'CustomerSItemCriteria', component: CustomerSItemCriteriaIndex, meta: { title: i18n.t('router.CustomerSItemCriteria'), createLink: 'CustomerSItemCriteriaInsert' }},
   {path: '/CancelReason', name: 'CancelReason', component: CancelReasonIndex, meta: { title: i18n.t('router.CancelReason'), createLink: 'CancelReasonInsert' }},
-  {path: '/Loyalty', name: 'Loyalty', component: LoyaltyIndex, meta: { title: i18n.t('router.Loyalty'), createLink: 'LoyaltyInsert' }}
+  {path: '/Loyalty', name: 'Loyalty', component: LoyaltyIndex, meta: { title: i18n.t('router.Loyalty'), createLink: 'LoyaltyInsert' }},
+  {path: '/ItemAnalysis', name: 'ItemAnalysis', component: ItemAnalysisIndex, meta: { title: i18n.t('router.ItemAnalysis'), createLink: 'ItemAnalysisInsert' }}
 ]
 
 const listGet = [
@@ -806,7 +812,8 @@ const listGet = [
   { path: '/RouteDailyRecord/:url', name: 'RouteDailyRecordGet', component: RouteDailyRecordGet, meta: { title: i18n.t('router.RouteDailyRecordGet'), baseLink: 'RouteDailyRecord' } },
   { path: '/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaGet', component: CustomerSItemCriteriaGet, meta: { title: i18n.t('router.CustomerSItemCriteriaGet'), baseLink: 'CustomerSItemCriteria' } },
   { path: '/CancelReason/:url', name: 'CancelReasonGet', component: CancelReasonGet, meta: { title: i18n.t('router.CancelReasonGet'), baseLink: 'CancelReason' } },
-  { path: '/Loyalty/:url', name: 'LoyaltyGet', component: LoyaltyGet, meta: { title: i18n.t('router.LoyaltyGet'), baseLink: 'Loyalty' } }
+  { path: '/Loyalty/:url', name: 'LoyaltyGet', component: LoyaltyGet, meta: { title: i18n.t('router.LoyaltyGet'), baseLink: 'Loyalty' } },
+  { path: '/ItemAnalysis/:url', name: 'ItemAnalysisGet', component: ItemAnalysisGet, meta: { title: i18n.t('router.ItemAnalysisGet'), baseLink: 'ItemAnalysis' } }
 ]
 
 const listUpdate = [
@@ -916,7 +923,8 @@ const listUpdate = [
   { path: '/Update/RefContract/:url', name: 'RefContractUpdate', component: RefContractUpdate, meta: { title: i18n.t('router.RefContractUpdate'), baseLink: 'RefContract' } },
   { path: '/Update/CustomerSItemCriteria/:url', name: 'CustomerSItemCriteriaUpdate', component: CustomerSItemCriteriaUpdate, meta: { title: i18n.t('router.CustomerSItemCriteriaUpdate'), baseLink: 'CustomerSItemCriteria' } },
   { path: '/Update/CancelReason/:url', name: 'CancelReasonUpdate', component: CancelReasonUpdate, meta: { title: i18n.t('router.CancelReasonUpdate'), baseLink: 'CancelReason' } },
-  { path: '/Update/Loyalty/:url', name: 'LoyaltyUpdate', component: LoyaltyUpdate, meta: { title: i18n.t('router.LoyaltyUpdate'), baseLink: 'Loyalty' } }
+  { path: '/Update/Loyalty/:url', name: 'LoyaltyUpdate', component: LoyaltyUpdate, meta: { title: i18n.t('router.LoyaltyUpdate'), baseLink: 'Loyalty' } },
+  { path: '/Update/ItemAnalysis/:url', name: 'ItemAnalysisUpdate', component: ItemAnalysisUpdate, meta: { title: i18n.t('router.ItemAnalysisUpdate'), baseLink: 'ItemAnalysis' } }
 ]
 
 const listInsert = [
@@ -1024,7 +1032,8 @@ const listInsert = [
   { path: '/Insert/RefContract', name: 'RefContractInsert', component: RefContractInsert, meta: { title: i18n.t('router.RefContractInsert'), baseLink: 'RefContract' } },
   { path: '/Insert/CustomerSItemCriteria', name: 'CustomerSItemCriteriaInsert', component: CustomerSItemCriteriaInsert, meta: { title: i18n.t('router.CustomerSItemCriteriaInsert'), baseLink: 'CustomerSItemCriteria' } },
   { path: '/Insert/CancelReason', name: 'CancelReasonInsert', component: CancelReasonInsert, meta: { title: i18n.t('router.CancelReasonInsert'), baseLink: 'CancelReason' } },
-  { path: '/Insert/Loyalty', name: 'LoyaltyInsert', component: LoyaltyInsert, meta: { title: i18n.t('router.LoyaltyInsert'), baseLink: 'Loyalty' } }
+  { path: '/Insert/Loyalty', name: 'LoyaltyInsert', component: LoyaltyInsert, meta: { title: i18n.t('router.LoyaltyInsert'), baseLink: 'Loyalty' } },
+  { path: '/Insert/ItemAnalysis', name: 'ItemAnalysisInsert', component: ItemAnalysisInsert, meta: { title: i18n.t('router.ItemAnalysisInsert'), baseLink: 'ItemAnalysis' } }
 ]
 
 const routes = [
