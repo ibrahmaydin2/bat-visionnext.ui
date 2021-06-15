@@ -436,7 +436,11 @@
     "ItemAnalysis": "Ürün Analizi Tanımları",
     "ItemAnalysisGet": "Ürün Analizi Tanımları Görüntüle",
     "ItemAnalysisInsert": "Yeni Ürün Analizi Tanımları",
-    "ItemAnalysisUpdate": "Ürün Analizi Tanımları Güncelle"
+    "ItemAnalysisUpdate": "Ürün Analizi Tanımları Güncelle",
+    "PriceDecrease": "Fiyat İndirimi",
+    "PriceDecreaseGet": "Fiyat İndirimi Görüntüle",
+    "PriceDecreaseInsert": "Yeni Fiyat İndirimi",
+    "PriceDecreaseUpdate": "Fiyat İndirimi Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1810,6 +1814,23 @@
       "useOnce": "Tek Seferlik",
       "sortOrder":"Görünüm Sırası",
       "analysisTime": "Analiz Zamanı"
+    },
+    "priceDecrease": {
+      "title": "Fiyat İndirimi",
+      "assetTypeDefinition": "Varlık Tip Tanımı",
+      "itemCode":"Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "listPrice": "Liste Fiyatı",
+      "setPriceError": "Fiyat Listesi Kategori Tipi ve Geçerlilik Bitiş Tarihi alanlarını giriniz.",
+      "newSalesPrice": "İndirimli Fiyat",
+      "decreasePrice": "Yapılan İndirim",
+      "newSalesPriceError": "İndirimli Fiyat alanı Liste Fiyatı alanından büyük olamaz",
+      "code": "İndirim Kodu",
+      "description1": "İndirim Açıklaması",
+      "priceListCategory": "Fiyat Listesi Kategori Tipi",
+      "tciBreak1": "TCI",
+      "beginDate": "Geçerlilik Başlangıç Tarihi",
+      "endDate":"Geçerlilik Bitiş Tarihi"
     }
   },
   "get": {

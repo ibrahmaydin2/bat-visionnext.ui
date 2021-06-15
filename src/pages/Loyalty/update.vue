@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="allInputsAreDisabled" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+            <NextInput type="text" v-model="form.Description1" :disabled="someInputsAreDisabled"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="someInputsAreDisabled"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -35,42 +35,42 @@
         <b-tab :title="$t('insert.loyalty.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <NextInput type="text" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1"/>
+              <NextInput type="text" v-model="form.Genexp1" :disabled="allInputsAreDisabled"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" @input="selectedType('CustomerCriteriaId', $event)" lookup-key="CUSTOMER_CRITERIA"/>
+              <NextDropdown v-model="customerCriteria" :disabled="allInputsAreDisabled" @input="selectedType('CustomerCriteriaId', $event)" lookup-key="CUSTOMER_CRITERIA"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="branchCriteria" :disabled="insertReadonly.BranchCriteriaId" @input="selectedType('BranchCriteriaId', $event)" lookup-key="BRANCH_CRITERIA"/>
+              <NextDropdown v-model="branchCriteria" :disabled="allInputsAreDisabled" @input="selectedType('BranchCriteriaId', $event)" lookup-key="BRANCH_CRITERIA"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApplicationTypeId" :error="$v.form.ApplicationTypeId">
-              <NextDropdown v-model="applicationType" :disabled="insertReadonly.ApplicationTypeId" @input="selectedType('ApplicationTypeId', $event)" lookup-key="LOYALTY_APPLICATION_TYPE"/>
+              <NextDropdown v-model="applicationType" :disabled="allInputsAreDisabled" @input="selectedType('ApplicationTypeId', $event)" lookup-key="LOYALTY_APPLICATION_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
-              <NextDropdown v-model="group" :disabled="insertReadonly.GroupId" @input="selectedType('GroupId', $event)" lookup-key="LOYALTY_GROUP"/>
+              <NextDropdown v-model="group" :disabled="allInputsAreDisabled" @input="selectedType('GroupId', $event)" lookup-key="LOYALTY_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown v-model="type" :disabled="insertReadonly.TypeId" @input="selectedType('TypeId', $event)" lookup-key="LOYALTY_TYPE"/>
+              <NextDropdown v-model="type" :disabled="allInputsAreDisabled" @input="selectedType('TypeId', $event)" lookup-key="LOYALTY_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="LoyaltyBeginDate" :error="$v.form.LoyaltyBeginDate">
-              <NextDatePicker v-model="form.LoyaltyBeginDate" :disabled="insertReadonly.LoyaltyBeginDate" />
+              <NextDatePicker v-model="form.LoyaltyBeginDate" :disabled="allInputsAreDisabled" />
             </NextFormGroup>
             <NextFormGroup item-key="LoyaltyEndDate" :error="$v.form.LoyaltyEndDate">
-              <NextDatePicker v-model="form.LoyaltyEndDate" :disabled="insertReadonly.LoyaltyEndDate" />
+              <NextDatePicker v-model="form.LoyaltyEndDate" :disabled="someInputsAreDisabled" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
-              <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
+              <NextInput v-model="form.FinanceCode" type="text" :disabled="allInputsAreDisabled" />
             </NextFormGroup>
             <NextFormGroup item-key="TCIBreak1Id" :error="$v.form.TCIBreak1Id">
-              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TCIBreak1Id" @input="selectedType('TCIBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
+              <NextDropdown v-model="tciBreak1" :disabled="allInputsAreDisabled" @input="selectedType('TCIBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails">
-          <NextDetailPanel v-model="form.LoyaltyCatalogues" :items="loyaltyCatalogueItems" />
+          <NextDetailPanel :type="someInputsAreDisabled ? 'get' : 'update'" v-model="form.LoyaltyCatalogues" :items="loyaltyCatalogueItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyalty.pointCriterias')" @click="setDatePlanType">
-          <b-row>
+          <!-- <b-row>
             <NextFormGroup :title="$t('insert.loyalty.categoryDefinition')" :error="$v.loyaltyActiveCategory.loyaltyCategory" :required="true">
               <NextDropdown v-model="loyaltyActiveCategory.loyaltyCategory" url="VisionNextLoyalty/api/LoyaltyCategory/Search"></NextDropdown>
             </NextFormGroup>
@@ -91,7 +91,7 @@
                 <AddDetailButton @click.native="addLoyaltyActiveCategory" />
               </b-form-group>
             </b-col>
-          </b-row>
+          </b-row>-->
           <b-row>
             <b-table
               :fields="loyaltyActiveCategoryFields"
@@ -99,9 +99,9 @@
               bordered responsive >
               <template #cell(operations)="row">
                 <div class="text-center">
-                  <b-button size="sm" @click="removeLoyaltyActiveCategory(row.item)" class="mr-2" variant="danger">
+                  <!--<b-button size="sm" @click="removeLoyaltyActiveCategory(row.item)" class="mr-2" variant="danger">
                     <i class="far fa-trash-alt"></i> {{$t('insert.loyalty.delete')}}
-                  </b-button>
+                  </b-button>-->
                   <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success"
                     v-if="(row.item.CustomerCriteria && row.item.CustomerCriteria.Code !== 'TM')
                       || (row.item.CustomerCriteriaIdCode !== 'TM')
@@ -114,31 +114,31 @@
               <template #row-details="{item, index}">
                 <div class="p-4 mt-2 nested-detail-panel" v-if="(item.CustomerCriteria && item.CustomerCriteria.Code === 'MK') || (item.CustomerCriteriaIdCode === 'MK')">
                   <h3>{{$t('insert.loyalty.customerCriteria')}}</h3>
-                  <NextDetailPanel v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtCrits" :items="loyaltyActiveCtCritItems" />
+                  <NextDetailPanel type="get" v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtCrits" :items="loyaltyActiveCtCritItems" />
                 </div>
                 <div class="p-4 mt-2 nested-detail-panel" v-if="(item.CustomerCriteria && item.CustomerCriteria.Code === 'MS') || (item.CustomerCriteriaIdCode === 'MS')">
                   <h3>{{$t('insert.loyalty.customerQuery')}}</h3>
-                  <NextDetailPanel v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtSqls" :items="loyaltyActiveCtSqlItems" />
+                  <NextDetailPanel type="get" v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtSqls" :items="loyaltyActiveCtSqlItems" />
                 </div>
-                <div class="p-4 mt-2 nested-detail-panel" v-if="(item.DatePlanType && row.item.DatePlanType.Code === 'ST') || (item.DatePlanTypeIdCode === 'ST')">
+                <div class="p-4 mt-2 nested-detail-panel" v-if="(item.DatePlanType && item.DatePlanType.Code === 'ST') || (item.DatePlanTypeIdCode === 'ST')">
                   <h3>{{$t('insert.loyalty.constantDates')}}</h3>
-                  <NextDetailPanel v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtDates" :items="loyaltyActiveCtDateItems" />
+                  <NextDetailPanel type="get" v-model="form.LoyaltyActiveCategories[index].LoyaltyActiveCtDates" :items="loyaltyActiveCtDateItems" />
                 </div>
               </template>
             </b-table>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
-          <NextDetailPanel v-model="customers" :items="loyaltyCustomerItems" />
+          <NextDetailPanel :type="someInputsAreDisabled ? 'get' : 'update'" v-model="customers" :items="loyaltyCustomerItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
-          <NextDetailPanel v-model="customerCriterias" :items="loyaltyCustomerCriteriaItems" />
+          <NextDetailPanel :type="someInputsAreDisabled ? 'get' : 'update'" v-model="customerCriterias" :items="loyaltyCustomerCriteriaItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyalty.customerQuery')" v-if="customerCriteria && customerCriteria.Code === 'MS'">
-          <NextDetailPanel v-model="form.LoyaltyCustomerSqls" :items="loyaltyCustomerSqlItems" />
+          <NextDetailPanel :type="someInputsAreDisabled ? 'get' : 'update'" v-model="form.LoyaltyCustomerSqls" :items="loyaltyCustomerSqlItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyalty.branchs')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
-          <NextDetailPanel v-model="branchs" :items="loyaltyBranchItems" />
+          <NextDetailPanel :type="someInputsAreDisabled ? 'get' : 'update'" v-model="branchs" :items="loyaltyBranchItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -196,7 +196,9 @@ export default {
       applicationType: null,
       group: null,
       type: null,
-      tciBreak1: null
+      tciBreak1: null,
+      allInputsAreDisabled: false,
+      someInputsAreDisabled: false
     }
   },
   mounted () {
@@ -222,6 +224,19 @@ export default {
           this.customers = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
           this.branchs = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
           this.customerCriterias = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+        }
+
+        if (this.form.LoyaltyBeginDate) {
+          let loyaltyBeginDate = new Date(this.form.LoyaltyBeginDate)
+          let nowDate = new Date()
+
+          if (loyaltyBeginDate <= nowDate) {
+            this.someInputsAreDisabled = false
+            this.allInputsAreDisabled = true
+          } else {
+            this.someInputsAreDisabled = true
+            this.allInputsAreDisabled = false
+          }
         }
       }
     },
