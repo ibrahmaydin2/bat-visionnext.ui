@@ -28,7 +28,7 @@
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
           </NextFormGroup>
           <NextFormGroup item-key="CardTypeId" :error="$v.form.CardTypeId">
-            <NextDropdown :disabled="insertReadonly.CardTypeId" @input="selectedSearchType('CardTypeId', $event)" url="" />
+            <NextDropdown :disabled="insertReadonly.CardTypeId" @input="selectedSearchType('CardTypeId', $event)" url="VisionNextCommonApi/api/CancelType/Search" />
           </NextFormGroup>
         </b-row>
       </section>
@@ -48,7 +48,7 @@ export default {
         RecordState: 2,
         Code: null,
         Description1: null,
-        CardTypeId: 2
+        CardTypeId: null
       },
       routeName1: 'CommonApi'
     }
