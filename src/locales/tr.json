@@ -392,6 +392,14 @@
     "AssetMovementCardGet": "Varlık Hareketleri Görüntüle",
     "AssetMovementCardInsert": "Yeni Varlık Hareketleri",
     "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle",
+    "AssetProperty": "Varlık Özellikleri Tanımı",
+    "AssetPropertyGet": "Varlık Özellikleri Tanımı Görüntüle",
+    "AssetPropertyInsert": "Yeni Varlık Özellikleri Tanımı",
+    "AssetPropertyUpdate": "Varlık Özellikleri Tanımı Güncelle",    
+    "AssetType": "Varlık Tipi Tanımı",
+    "AssetTypeGet": "Varlık Tipi Tanımı Görüntüle",
+    "AssetTypeInsert": "Yeni Varlık Tipi Tanımı",
+    "AssetTypeUpdate": "Varlık Tipi Tanımı Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
@@ -1731,6 +1739,20 @@
     },
     "cancelReason": {
       "cardType": "İptal Nedeni"
+    },
+    "AssetProperty": {
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum"
+    },
+    "AssetType": {
+      "PropertyId": "Tip Özellik",
+      "EmployeeTypeId": "Çalışan Türü Kimliği",
+      "Types": "Tip Özellikleri",
+      "PersonelType": "Personel Tip",
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum"
     },
     "loyalty": {
       "title": "Sadakat Tanımları",

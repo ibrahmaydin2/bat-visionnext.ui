@@ -517,6 +517,16 @@ import AssetMovementCardGet from '@/pages/AssetMovementCard/get'
 import AssetMovementCardInsert from '@/pages/AssetMovementCard/insert'
 import AssetMovementCardUpdate from '@/pages/AssetMovementCard/update'
 
+import AssetPropertyIndex from '@/pages/AssetProperty/'
+import AssetPropertyGet from '@/pages/AssetProperty/get'
+import AssetPropertyInsert from '@/pages/AssetProperty/insert'
+import AssetPropertyUpdate from '@/pages/AssetProperty/update'
+
+import AssetTypeIndex from '@/pages/AssetType/'
+import AssetTypeGet from '@/pages/AssetType/get'
+import AssetTypeInsert from '@/pages/AssetType/insert'
+import AssetTypeUpdate from '@/pages/AssetType/update'
+
 import OverDueDebitSearchIndex from '@/pages/OverDueDebitSearch/'
 import OverDueDebitSearchGet from '@/pages/OverDueDebitSearch/get'
 import OverDueDebitSearchInsert from '@/pages/OverDueDebitSearch/insert'
@@ -711,6 +721,8 @@ const listIndex = [
   {path: '/Loyalty', name: 'Loyalty', component: LoyaltyIndex, meta: { title: i18n.t('router.Loyalty'), createLink: 'LoyaltyInsert' }},
   {path: '/ItemAnalysis', name: 'ItemAnalysis', component: ItemAnalysisIndex, meta: { title: i18n.t('router.ItemAnalysis'), createLink: 'ItemAnalysisInsert' }},
   {path: '/PriceDecrease', name: 'PriceDecrease', component: PriceDecreaseIndex, meta: { title: i18n.t('router.PriceDecrease'), createLink: 'PriceDecreaseInsert' }},
+  {path: '/AssetProperty', name: 'AssetProperty', component: AssetPropertyIndex, meta: { title: i18n.t('router.AssetProperty'), createLink: 'AssetPropertyInsert' }},
+  {path: '/AssetType', name: 'AssetType', component: AssetTypeIndex, meta: { title: i18n.t('router.AssetType'), createLink: 'AssetTypeInsert' }},
   {path: '/LoyaltyGain', name: 'LoyaltyGain', component: LoyaltyGainIndex, meta: { title: i18n.t('router.LoyaltyGain'), createLink: 'LoyaltyGainInsert' }}
 ]
 
@@ -827,6 +839,8 @@ const listGet = [
   { path: '/Loyalty/:url', name: 'LoyaltyGet', component: LoyaltyGet, meta: { title: i18n.t('router.LoyaltyGet'), baseLink: 'Loyalty' } },
   { path: '/ItemAnalysis/:url', name: 'ItemAnalysisGet', component: ItemAnalysisGet, meta: { title: i18n.t('router.ItemAnalysisGet'), baseLink: 'ItemAnalysis' } },
   { path: '/PriceDecrease/:url', name: 'PriceDecreaseGet', component: PriceDecreaseGet, meta: { title: i18n.t('router.PriceDecreaseGet'), baseLink: 'PriceDecrease' } },
+  { path: '/AssetProperty/:url', name: 'AssetPropertyGet', component: AssetPropertyGet, meta: { title: i18n.t('router.AssetPropertyGet'), baseLink: 'AssetProperty' } },
+  { path: '/AssetType/:url', name: 'AssetTypeGet', component: AssetTypeGet, meta: { title: i18n.t('router.AssetTypeGet'), baseLink: 'AssetType' } },
   { path: '/LoyaltyGain/:url', name: 'LoyaltyGainGet', component: LoyaltyGainGet, meta: { title: i18n.t('router.LoyaltyGainGet'), baseLink: 'LoyaltyGain' } }
 ]
 
@@ -940,6 +954,8 @@ const listUpdate = [
   { path: '/Update/Loyalty/:url', name: 'LoyaltyUpdate', component: LoyaltyUpdate, meta: { title: i18n.t('router.LoyaltyUpdate'), baseLink: 'Loyalty' } },
   { path: '/Update/ItemAnalysis/:url', name: 'ItemAnalysisUpdate', component: ItemAnalysisUpdate, meta: { title: i18n.t('router.ItemAnalysisUpdate'), baseLink: 'ItemAnalysis' } },
   { path: '/Update/PriceDecrease/:url', name: 'PriceDecreaseUpdate', component: PriceDecreaseUpdate, meta: { title: i18n.t('router.PriceDecreaseUpdate'), baseLink: 'PriceDecrease' } },
+  { path: '/Update/AssetProperty/:url', name: 'AssetPropertyUpdate', component: AssetPropertyUpdate, meta: { title: i18n.t('router.AssetPropertyUpdate'), baseLink: 'AssetProperty' } },
+  { path: '/Update/AssetType/:url', name: 'AssetTypeUpdate', component: AssetTypeUpdate, meta: { title: i18n.t('router.AssetTypeUpdate'), baseLink: 'AssetType' } },
   { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } }
 ]
 
@@ -1051,6 +1067,8 @@ const listInsert = [
   { path: '/Insert/Loyalty', name: 'LoyaltyInsert', component: LoyaltyInsert, meta: { title: i18n.t('router.LoyaltyInsert'), baseLink: 'Loyalty' } },
   { path: '/Insert/ItemAnalysis', name: 'ItemAnalysisInsert', component: ItemAnalysisInsert, meta: { title: i18n.t('router.ItemAnalysisInsert'), baseLink: 'ItemAnalysis' } },
   { path: '/Insert/PriceDecrease', name: 'PriceDecreaseInsert', component: PriceDecreaseInsert, meta: { title: i18n.t('router.PriceDecreaseInsert'), baseLink: 'PriceDecrease' } },
+  { path: '/Insert/AssetProperty', name: 'AssetPropertyInsert', component: AssetPropertyInsert, meta: { title: i18n.t('router.AssetPropertyInsert'), baseLink: 'AssetProperty' } },
+  { path: '/Insert/AssetType', name: 'AssetTypeInsert', component: AssetTypeInsert, meta: { title: i18n.t('router.AssetTypeInsert'), baseLink: 'AssetType' } },
   { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } }
 ]
 
