@@ -392,6 +392,10 @@
     "AssetMovementCardGet": "Varlık Hareketleri Görüntüle",
     "AssetMovementCardInsert": "Yeni Varlık Hareketleri",
     "AssetMovementCardUpdate": "Varlık Hareketleri Güncelle",
+    "AssetProperty": "Varlık Özelliği",
+    "AssetPropertyGet": "Varlık Özelliği Görüntüle",
+    "AssetPropertyInsert": "Varlık Özelliği İndirimi",
+    "AssetPropertyUpdate": "Varlık Özelliği Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
@@ -1727,6 +1731,11 @@
     },
     "cancelReason": {
       "cardType": "İptal Nedeni"
+    },
+    "AssetProperty": {
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum"
     },
     "loyalty": {
       "title": "Sadakat Tanımları",
