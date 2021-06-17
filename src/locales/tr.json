@@ -1522,7 +1522,8 @@
       "eDocumentIsPrintedError": "Yazdırıldı durumunda olan belge güncellenemez.",
       "appliedDiscounts": "Uygulanan İndirimler",
       "givenQuantity": "Bedelsiz Ürün",
-      "availableCampaigns": "Uygun Kampanyalar"
+      "availableCampaigns": "Uygun Kampanyalar",
+      "noSupplierCustomers": "Seçili depoya ait tedarikçi kaydı bulunamadı."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
