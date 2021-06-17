@@ -87,7 +87,7 @@
                 v-model="header.defaultValue"
                 format="YYYY-MM-DD"
                 value-type="format"
-                @change="filterRangeDate(header.dataField, header.defaultValue)"
+                @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
               ></date-picker>
@@ -100,7 +100,7 @@
                 v-model="header.defaultValue"
                 format="YYYY-MM-DD"
                 value-type="format"
-                @change="filterRangeDate(header.dataField, header.defaultValue)"
+                @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
               ></date-picker>
@@ -602,15 +602,26 @@ export default {
       this.AndConditionalModel[e] = model
       this.searchOnTable()
     },
-    filterRangeDate (e, date) {
+    filterRangeDate (e, date, type) {
       if (date[0] && date[1]) {
         let beginValue = this.dateConvertToISo(date[0])
         let endValue = this.dateConvertToISo(date[1])
+        let endDate = new Date(date[1])
 
-        if (date[0] === date[1]) {
-          beginValue = new Date(date[0]).toISOString()
-          let endDate = new Date(date[1])
-          endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59))
+        switch (type) {
+          case 'DateTime':
+            if (date[0] === date[1]) {
+              endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59)).toISOString()
+            }
+            break
+          case 'Date':
+            beginValue = beginValue.substr(0, 10)
+            if (date[0] === date[1]) {
+              endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), (endDate.getDate() + 1), 0, 0, 0)).toISOString().substr(0, 10)
+            } else {
+              endValue = endValue.substr(0, 10)
+            }
+            break
         }
 
         let model = {
@@ -828,6 +839,10 @@ export default {
                     model.BeginValue = me.dateConvertToISo(today)
                     model.EndValue = me.dateConvertToISo(today)
                     break
+                }
+                if (row.columnType === 'Date') {
+                  model.BeginValue = model.BeginValue.substr(0, 10)
+                  model.EndValue = model.EndValue.substr(0, 10)
                 }
                 row.defaultValue = [model.BeginValue, model.EndValue]
                 me.AndConditionalModel[row.dataField] = model

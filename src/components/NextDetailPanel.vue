@@ -5,7 +5,7 @@
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="selectedType(item.modelProperty, $event)" :disabled="isDisabled(item.disabled)" :get-lookup="true" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :get-lookup="true" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle :disabled="isDisabled(item.disabled)" />
@@ -74,6 +74,13 @@ export default {
       default: () => {
         return []
       }
+    },
+    hasLineNumber: {
+      type: Boolean,
+      default: false
+    },
+    beforeAdd: {
+      type: Function
     }
   },
   model: {
@@ -88,13 +95,21 @@ export default {
       source: {},
       values: [],
       objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
-      editable: this.type === 'insert' || this.type === 'update'
+      editable: this.type === 'insert' || this.type === 'update',
+      lineNumber: 1
     }
   },
   computed: {
     ...mapState(['createCode']),
     fields () {
       let fields = []
+      if (this.hasLineNumber) {
+        fields.push({
+          key: 'LineNumber',
+          label: this.$t('insert.lineNumber')
+        })
+      }
+
       this.items.map(item => {
         if (!item.hideOnTable) {
           fields.push({
@@ -107,7 +122,9 @@ export default {
                 value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
                 if (item.objectKey && obj[item.objectKey]) {
-                  if (obj[item.objectKey][item.modelProperty]) {
+                  if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
+                    value = obj[item.objectKey][item.labelProperty]
+                  } else if (obj[item.objectKey][item.modelProperty]) {
                     value = obj[item.objectKey][item.modelProperty]
                   } else if (obj[item.objectKey].Label) {
                     value = obj[item.objectKey].Label
@@ -188,6 +205,10 @@ export default {
         this.values = []
       }
 
+      if (this.beforeAdd && !this.beforeAdd(this.form, this.values)) {
+        return
+      }
+
       for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i]
         if (item.isUnique) {
@@ -218,6 +239,10 @@ export default {
         } else {
           this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
         }
+      }
+      if (this.hasLineNumber) {
+        this.form.LineNumber = this.lineNumber
+        this.lineNumber++
       }
       this.values.push({...this.form})
       this.$emit('valuechange', this.values)
@@ -265,7 +290,9 @@ export default {
                     }
                   })
                 } else {
-                  this.label[item.modelProperty] = model[item.parentProperty]
+                  this.label[item.modelProperty] = model[item.parentProperty] && model[item.parentProperty].Label
+                    ? model[item.parentProperty].Label
+                    : model[item.parentProperty]
                 }
                 break
               case 'Dropdown':

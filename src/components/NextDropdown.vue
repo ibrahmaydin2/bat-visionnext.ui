@@ -171,7 +171,7 @@ export default {
         this.allValues = this.values
         return
       }
-      let random = new Date().getTime()
+      let random = Math.random()
       this.$api.postByUrl({LookupTableCode: this.lookupKey}, `VisionNextCommonApi/api/LookupValue/GetValues?v=${random}`).then((response) => {
         if (response) {
           this.values = response.Values

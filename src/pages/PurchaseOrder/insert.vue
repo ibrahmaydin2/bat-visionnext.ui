@@ -40,15 +40,11 @@
               </NextFormGroup>
             </b-row>
             <b-row>
+              <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="4" lg="4">
+                <NextDropdown @input="selectWarehouse($event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
+              </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
-                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="form.WarehouseId == null">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                  </template>
-                </v-select>
+                <v-select v-model="selectedCustomer" :options="customers" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="form.WarehouseId == null || customers.length === 0" />
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
                 <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
@@ -103,9 +99,6 @@
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <NextDropdown @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable />
@@ -279,11 +272,12 @@ export default {
       documentDateFirstSet: true,
       currentPage: 1,
       currentCustomer: {},
-      customerSelectCancelled: false
+      customerSelectCancelled: false,
+      customers: []
     }
   },
   computed: {
-    ...mapState(['routes', 'customers', 'priceList', 'paymentPeriods', 'currencies', 'items', 'priceListItems', 'stocks'])
+    ...mapState(['routes', 'priceList', 'paymentPeriods', 'currencies', 'items', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.createManualCode('OrderNumber')
@@ -311,26 +305,6 @@ export default {
           loading(false)
         })
       }
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
     },
     searchPriceList () {
       if (!this.selectedCustomer || !this.form.DocumentDate) {
@@ -576,7 +550,7 @@ export default {
       this.customerFirstSet = false
       this.searchPriceList()
       this.form.OrderLines = []
-      this.form.RecvLocationId = this.selectedCustomer.DefaultLocationId
+      this.form.RecvLocationId = this.selectedCustomer ? this.selectedCustomer.DefaultLocationId : null
     },
     cancelSelectedCustomer () {
       this.$bvModal.hide('confirm-modal')
@@ -658,6 +632,49 @@ export default {
           this.$toasted.show(this.$t('insert.order.noLastOrderProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
         }
       })
+    },
+    selectWarehouse (warehouse) {
+      this.form.CustomerId = null
+      this.selectedCustomer = null
+      this.customers = []
+      if (warehouse) {
+        this.form.WarehouseId = warehouse.RecordId
+        let model = {
+          RecordId: warehouse.RecordId
+        }
+        this.$api.postByUrl(model, 'VisionNextWarehouse/api/Warehouse/Get').then((response) => {
+          if (response && response.Model && response.Model.WarehouseSuppliers) {
+            let recordIds = response.Model.WarehouseSuppliers.map(w => w.SupplierCustomerId)
+            this.getSupplierCustomers(recordIds)
+          } else {
+            this.$toasted.show(this.$t('insert.order.noSupplierCustomers'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+        })
+      } else {
+        this.form.WarehouseId = null
+      }
+    },
+    getSupplierCustomers (recordIds) {
+      let model = {
+        andConditionModel: {
+          RecordIds: recordIds
+        }
+      }
+      this.$api.postByUrl(model, 'VisionNextCustomer/api/Customer/SupplierCustomerSearch').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.customers = response.ListModel.BaseModels
+        } else {
+          this.$toasted.show(this.$t('insert.order.noSupplierCustomers'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     }
   },
   validations () {
@@ -674,7 +691,7 @@ export default {
         price: {
           required
         },
-        grossTotal: {
+        grrossTotal: {
           required
         },
         netTotal: {
