@@ -448,7 +448,11 @@
     "PriceDecrease": "Fiyat İndirimi",
     "PriceDecreaseGet": "Fiyat İndirimi Görüntüle",
     "PriceDecreaseInsert": "Yeni Fiyat İndirimi",
-    "PriceDecreaseUpdate": "Fiyat İndirimi Güncelle"
+    "PriceDecreaseUpdate": "Fiyat İndirimi Güncelle",
+    "LoyaltyGain": "Sadakat Puan Kazanımı",
+    "LoyaltyGainGet": "Sadakat Puan Kazanımı Görüntüle",
+    "LoyaltyGainInsert": "Yeni Sadakat Puan Kazanımı",
+    "LoyaltyGainUpdate": "Sadakat Puan Kazanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1853,6 +1857,18 @@
       "tciBreak1": "TCI",
       "beginDate": "Geçerlilik Başlangıç Tarihi",
       "endDate":"Geçerlilik Bitiş Tarihi"
+    },
+    "loyaltyGain": {
+      "title": "Sadakat Puan Kazanımı",
+      "loyalty": "Sadakat",
+      "category": "Kategori",
+      "description": "Açıklama",
+      "value": "Kazanılan Puan",
+      "financeCode":"ERP Kodu",
+      "customer": "Müşteri",
+      "date": "Tarih",
+      "employee": "Personel",
+      "contact": "Kişi"
     }
   },
   "get": {

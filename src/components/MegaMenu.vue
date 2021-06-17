@@ -20,7 +20,10 @@
         </span>
         <ul>
           <li v-for="(subs, x) in links.sub" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
-            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
+            <a v-if="subs.sub.length >= 1" class="asc__item-title">
+              <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
+            </a>
+            <router-link v-if="subs.sub.length === 0" class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
             <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
@@ -248,9 +251,14 @@ export default {
       color: #fff !important
       & a
         color: #fff !important
+        width: 100%
         & i
           color: #fff !important
       & li
         & a
           color: #000
+          width: 100%
+  .fa-angle-double-right
+    position: fixed
+    padding-left: 100px
 </style>
