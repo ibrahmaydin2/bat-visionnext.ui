@@ -174,7 +174,7 @@ export const detailData = {
       label: i18n.t('insert.itemAnalysis.endDate'),
       required: true,
       visible: true,
-      id: 1
+      id: 2
     }
   ],
   itemAnalysisDetailItems: [

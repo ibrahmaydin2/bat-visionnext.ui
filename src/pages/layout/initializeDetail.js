@@ -34,8 +34,9 @@ var cycleInstructionItems = [
     createCode: true, // bazı detay panellerde örneğin şube lokasyonu eklerken Code alanı (EkranKodu -1) şeklinde eklenmesi isteniyor.
     // bu nedenle bu alan true ise Ekran koduna göre her eklemede default bir value set eder.
     dynamicRequest: {paramId: 'ITEM_CRITERIA'}, // api isteği yaptığımız durumlarda isteğe ekenecek requesti setleyebiliriz.
-    request: JSON.stringify({ParamName: 'val'}) // parent child ilişkisinde child isteği atarken parentProperty kısmındaki alan 'val'
+    request: JSON.stringify({ParamName: 'val'}), // parent child ilişkisinde child isteği atarken parentProperty kısmındaki alan 'val'
     // kısmı ile replace olur ve requeste eklenir. Bu sayede parenta göre child bilgisi getirilebilir.
+    sameValue: true // Text tiplerinde parentId deki değer sameValue true olana atanır.
   },
   {
     type: 'Dropdown',
