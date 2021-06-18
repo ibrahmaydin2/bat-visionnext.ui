@@ -436,7 +436,9 @@ export const detailData = {
       objectKey: 'TciBreak1',
       url: 'TCI_BREAKDOWN',
       label: i18n.t('insert.branch.TciBreak1Id'),
-      required: true,
+      required: (form) => {
+        return form.DiscountPercent1 !== null && form.DiscountPercent1 !== ''
+      },
       visible: true,
       id: 4
     },
@@ -446,7 +448,9 @@ export const detailData = {
       objectKey: 'TciBreak2',
       url: 'TCI_BREAKDOWN',
       label: i18n.t('insert.branch.TciBreak2Id'),
-      required: true,
+      required: (form) => {
+        return form.DiscountPercent2 !== null && form.DiscountPercent2 !== ''
+      },
       visible: true,
       id: 5
     },

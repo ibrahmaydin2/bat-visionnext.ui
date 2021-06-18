@@ -156,6 +156,8 @@ export default {
             this.values = response.ListModel.BaseModels
           } else if (response.Values) {
             this.values = response.Values
+          } else if (response.length > 0) {
+            this.values = response
           }
           this.allValues = this.values
         }

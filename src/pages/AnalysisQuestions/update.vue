@@ -22,10 +22,10 @@
             <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="CardTypeId" :error="$v.form.CardTypeId">
-            <NextDropdown v-model="cardType" :disabled="insertReadonly.CardTypeId" url="" @input="selectedSearchType('CardTypeId', $event)"/>
+            <NextDropdown v-model="cardType" :disabled="insertReadonly.CardTypeId" url="VisionNextFieldAnalysis/api/AnalysisQuestions/GetQuestionCardType" @input="selectedSearchType('CardTypeId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="AnswerTypeId" :error="$v.form.AnswerTypeId">
-            <NextDropdown v-model="answerType" :disabled="insertReadonly.AnswerTypeId" url="" @input="selectedSearchType('AnswerTypeId', $event)"/>
+            <NextDropdown v-model="answerType" :disabled="insertReadonly.AnswerTypeId" url="VisionNextFieldAnalysis/api/AnalysisQuestions/GetAnswerType" @input="selectedSearchType('AnswerTypeId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
