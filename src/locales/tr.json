@@ -400,6 +400,10 @@
     "AssetTypeGet": "Varlık Tipi Tanımı Görüntüle",
     "AssetTypeInsert": "Yeni Varlık Tipi Tanımı",
     "AssetTypeUpdate": "Varlık Tipi Tanımı Güncelle",
+    "AssetOperation": "Servis İşlemleri Tanımları",
+    "AssetOperationGet": "Servis İşlemleri Tanımları Görüntüle",
+    "AssetOperationInsert": "Yeni Servis İşlemleri Tanımı",
+    "AssetOperationUpdate": "Servis İşlemleri Tanımları Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
@@ -1758,6 +1762,16 @@
       "Code": "Kod",
       "Description1": "Açıklama",
       "StatusId": "Durum"
+    },
+    "AssetOperation": {
+      "ServiceDuration": "Servis Süresi",      
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum",
+      "AssetId": "Varlık",
+      "IsAssetMandatory": "Varlık Zorunlu",
+      "AssetUsage": "Varlık Kullanımı",
+      "IsAssetUsed": "Varlık Kullanılacak"
     },
     "loyalty": {
       "title": "Sadakat Tanımları",
