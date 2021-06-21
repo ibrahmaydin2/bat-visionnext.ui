@@ -45,9 +45,9 @@
     "BranchUpdate": "Şube Güncelle",
     "BranchInsert": "Yeni Şube",
     "AnalysisQuestions": "Analiz Soruları",
-    "AnalysisQuestionsGet": "Analiz Soruları Görüntüle",
-    "AnalysisQuestionsUpdate": "Analiz Soruları Güncelle",
-    "AnalysisQuestionsInsert": "Yeni Analiz Soruları",
+    "AnalysisQuestionsGet": "Analiz Sorusu Görüntüle",
+    "AnalysisQuestionsUpdate": "Analiz Sorusu Güncelle",
+    "AnalysisQuestionsInsert": "Yeni Analiz Sorusu",
     "Warehouse": "Depo Kayıtları",
     "WarehouseGet": "Depo Görüntüle",
     "WarehouseUpdate": "Depo Güncelle",
@@ -400,6 +400,10 @@
     "AssetTypeGet": "Varlık Tipi Tanımı Görüntüle",
     "AssetTypeInsert": "Yeni Varlık Tipi Tanımı",
     "AssetTypeUpdate": "Varlık Tipi Tanımı Güncelle",
+    "AssetOperation": "Servis İşlemleri Tanımları",
+    "AssetOperationGet": "Servis İşlemleri Tanımları Görüntüle",
+    "AssetOperationInsert": "Yeni Servis İşlemleri Tanımı",
+    "AssetOperationUpdate": "Servis İşlemleri Tanımları Güncelle",
     "SalesReturnWaybill": "Satış İade İrsaliyesi",
     "SalesReturnWaybillGet": "Satış İade İrsaliyesi Görüntüle",
     "SalesReturnWaybillUpdate": "Satış İade İrsaliyesi Güncelle",
@@ -452,7 +456,11 @@
     "LoyaltyGain": "Sadakat Puan Kazanımı",
     "LoyaltyGainGet": "Sadakat Puan Kazanımı Görüntüle",
     "LoyaltyGainInsert": "Yeni Sadakat Puan Kazanımı",
-    "LoyaltyGainUpdate": "Sadakat Puan Kazanımı Güncelle"
+    "LoyaltyGainUpdate": "Sadakat Puan Kazanımı Güncelle",
+    "BudgetMaster": "Bütçe Tanımlama",
+    "BudgetMasterGet": "Bütçe Tanımımı Görüntüle",
+    "BudgetMasterInsert": "Yeni Bütçe Tanımlama",
+    "BudgetMasterUpdate": "Bütçe Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1755,6 +1763,16 @@
       "Description1": "Açıklama",
       "StatusId": "Durum"
     },
+    "AssetOperation": {
+      "ServiceDuration": "Servis Süresi",      
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum",
+      "AssetId": "Varlık",
+      "IsAssetMandatory": "Varlık Zorunlu",
+      "AssetUsage": "Varlık Kullanımı",
+      "IsAssetUsed": "Varlık Kullanılacak"
+    },
     "loyalty": {
       "title": "Sadakat Tanımları",
       "pointCriterias": "Puan Kriterleri",
@@ -1870,6 +1888,26 @@
       "date": "Tarih",
       "employee": "Personel",
       "contact": "Kişi"
+    },
+    "budgetMaster": {
+      "title": "Bütçe Tanımlama",
+      "budgetDetail": "Bütçe Detayı",
+      "beginDate":"Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "financeCode":"ERP Kodu",
+      "totalAmount": "Toplam Bütçe",
+      "reservedAmount": "Rezerv Bütçe",
+      "freeAmount": "Kullanılabilen Bütçe",
+      "usedAmount": "Kullanılan Bütçe",
+      "branches": "Şubeler",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı",
+      "employee": "Bütçe Sahibi",
+      "budgetGroup": "Bütçe Grubu",
+      "customerColumnName": "Müşteri Kriteri",
+      "customerColumnValue": "Kriter Değeri",
+      "currency":"Para Birimi",
+      "branchCriteria":"Şube Kriteri"
     }
   },
   "get": {
@@ -2494,7 +2532,12 @@
     "password": "Şifre",
     "login": "OTURUM AÇ",
     "forgotPassword": "Şifremi Unuttum",
-    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
+    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin.",
+    "resetPassword": "Şifremi Sıfırla",
+    "successForgotPassword": "Şifre sıfırlama linki e-posta adresine gönderilmiştir.",
+    "rePassword": "Şifre Tekrar",
+    "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
+    "passwordsNotMatch": "Şifreler aynı değildir."
   },
   "list": {
     "location": "Lokasyon",

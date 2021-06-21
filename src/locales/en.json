@@ -440,7 +440,11 @@
     "LoyaltyGain": "Sadakat Puan Kazanımı",
     "LoyaltyGainGet": "Sadakat Puan Kazanımı Görüntüle",
     "LoyaltyGainInsert": "Yeni Sadakat Puan Kazanımı",
-    "LoyaltyGainUpdate": "Sadakat Puan Kazanımı Güncelle"
+    "LoyaltyGainUpdate": "Sadakat Puan Kazanımı Güncelle",
+    "BudgetMaster": "Bütçe Tanımlama",
+    "BudgetMasterGet": "Bütçe Tanımımı Görüntüle",
+    "BudgetMasterInsert": "Yeni Bütçe Tanımlama",
+    "BudgetMasterUpdate": "Bütçe Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1836,6 +1840,26 @@
       "date": "Tarih",
       "employee": "Personel",
       "contact": "Kişi"
+    },
+    "budgetMaster": {
+      "title": "Bütçe Tanımlama",
+      "budgetDetail": "Bütçe Detayı",
+      "beginDate":"Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "financeCode":"ERP Kodu",
+      "totalAmount": "Toplam Bütçe",
+      "reservedAmount": "Rezerv Bütçe",
+      "freeAmount": "Kullanılabilen Bütçe",
+      "usedAmount": "Kullanılan Bütçe",
+      "branches": "Şubeler",
+      "branchCode":"Şube Kodu",
+      "branchName":"Şube Adı",
+      "employee": "Bütçe Sahibi",
+      "budgetGroup": "Bütçe Grubu",
+      "customerColumnName": "Müşteri Kriteri",
+      "customerColumnValue": "Kriter Değeri",
+      "currency":"Para Birimi",
+      "branchCriteria":"Şube Kriteri"
     }
   },
   "get": {
@@ -2458,7 +2482,12 @@
     "password": "Şifre",
     "login": "OTURUM AÇ",
     "forgotPassword": "Şifremi Unuttum",
-    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
+    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin.",
+    "resetPassword": "Şifremi Sıfırla",
+    "successForgotPassword": "Şifre sıfırlama linki e-posta adresine gönderilmiştir.",
+    "rePassword": "Şifre Tekrar",
+    "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
+    "passwordsNotMatch": "Şifreler aynı değildir."
   },
   "list": {
     "location": "Lokasyon",

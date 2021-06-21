@@ -527,6 +527,11 @@ import AssetTypeGet from '@/pages/AssetType/get'
 import AssetTypeInsert from '@/pages/AssetType/insert'
 import AssetTypeUpdate from '@/pages/AssetType/update'
 
+import AssetOperationIndex from '@/pages/AssetOperation/'
+import AssetOperationGet from '@/pages/AssetOperation/get'
+import AssetOperationInsert from '@/pages/AssetOperation/insert'
+import AssetOperationUpdate from '@/pages/AssetOperation/update'
+
 import OverDueDebitSearchIndex from '@/pages/OverDueDebitSearch/'
 import OverDueDebitSearchGet from '@/pages/OverDueDebitSearch/get'
 import OverDueDebitSearchInsert from '@/pages/OverDueDebitSearch/insert'
@@ -605,6 +610,11 @@ import LoyaltyGainIndex from '@/pages/LoyaltyGain/'
 import LoyaltyGainGet from '@/pages/LoyaltyGain/get'
 import LoyaltyGainInsert from '@/pages/LoyaltyGain/insert'
 import LoyaltyGainUpdate from '@/pages/LoyaltyGain/update'
+
+import BudgetMasterIndex from '@/pages/BudgetMaster/'
+import BudgetMasterGet from '@/pages/BudgetMaster/get'
+import BudgetMasterInsert from '@/pages/BudgetMaster/insert'
+import BudgetMasterUpdate from '@/pages/BudgetMaster/update'
 
 Vue.use(Router)
 
@@ -723,7 +733,9 @@ const listIndex = [
   {path: '/PriceDecrease', name: 'PriceDecrease', component: PriceDecreaseIndex, meta: { title: i18n.t('router.PriceDecrease'), createLink: 'PriceDecreaseInsert' }},
   {path: '/AssetProperty', name: 'AssetProperty', component: AssetPropertyIndex, meta: { title: i18n.t('router.AssetProperty'), createLink: 'AssetPropertyInsert' }},
   {path: '/AssetType', name: 'AssetType', component: AssetTypeIndex, meta: { title: i18n.t('router.AssetType'), createLink: 'AssetTypeInsert' }},
-  {path: '/LoyaltyGain', name: 'LoyaltyGain', component: LoyaltyGainIndex, meta: { title: i18n.t('router.LoyaltyGain'), createLink: 'LoyaltyGainInsert' }}
+  {path: '/LoyaltyGain', name: 'LoyaltyGain', component: LoyaltyGainIndex, meta: { title: i18n.t('router.LoyaltyGain'), createLink: 'LoyaltyGainInsert' }},
+  {path: '/AssetOperation', name: 'AssetOperation', component: AssetOperationIndex, meta: { title: i18n.t('router.AssetOperation'), createLink: 'AssetOperationInsert' }},
+  {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }}
 ]
 
 const listGet = [
@@ -841,7 +853,9 @@ const listGet = [
   { path: '/PriceDecrease/:url', name: 'PriceDecreaseGet', component: PriceDecreaseGet, meta: { title: i18n.t('router.PriceDecreaseGet'), baseLink: 'PriceDecrease' } },
   { path: '/AssetProperty/:url', name: 'AssetPropertyGet', component: AssetPropertyGet, meta: { title: i18n.t('router.AssetPropertyGet'), baseLink: 'AssetProperty' } },
   { path: '/AssetType/:url', name: 'AssetTypeGet', component: AssetTypeGet, meta: { title: i18n.t('router.AssetTypeGet'), baseLink: 'AssetType' } },
-  { path: '/LoyaltyGain/:url', name: 'LoyaltyGainGet', component: LoyaltyGainGet, meta: { title: i18n.t('router.LoyaltyGainGet'), baseLink: 'LoyaltyGain' } }
+  { path: '/LoyaltyGain/:url', name: 'LoyaltyGainGet', component: LoyaltyGainGet, meta: { title: i18n.t('router.LoyaltyGainGet'), baseLink: 'LoyaltyGain' } },
+  { path: '/AssetOperation/:url', name: 'AssetOperationGet', component: AssetOperationGet, meta: { title: i18n.t('router.AssetOperationGet'), baseLink: 'AssetOperation' } },
+  { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } }
 ]
 
 const listUpdate = [
@@ -956,7 +970,9 @@ const listUpdate = [
   { path: '/Update/PriceDecrease/:url', name: 'PriceDecreaseUpdate', component: PriceDecreaseUpdate, meta: { title: i18n.t('router.PriceDecreaseUpdate'), baseLink: 'PriceDecrease' } },
   { path: '/Update/AssetProperty/:url', name: 'AssetPropertyUpdate', component: AssetPropertyUpdate, meta: { title: i18n.t('router.AssetPropertyUpdate'), baseLink: 'AssetProperty' } },
   { path: '/Update/AssetType/:url', name: 'AssetTypeUpdate', component: AssetTypeUpdate, meta: { title: i18n.t('router.AssetTypeUpdate'), baseLink: 'AssetType' } },
-  { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } }
+  { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } },
+  { path: '/Update/AssetOperation/:url', name: 'AssetOperationUpdate', component: AssetOperationUpdate, meta: { title: i18n.t('router.AssetOperationUpdate'), baseLink: 'AssetOperation' } },
+  { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } }
 ]
 
 const listInsert = [
@@ -1069,7 +1085,9 @@ const listInsert = [
   { path: '/Insert/PriceDecrease', name: 'PriceDecreaseInsert', component: PriceDecreaseInsert, meta: { title: i18n.t('router.PriceDecreaseInsert'), baseLink: 'PriceDecrease' } },
   { path: '/Insert/AssetProperty', name: 'AssetPropertyInsert', component: AssetPropertyInsert, meta: { title: i18n.t('router.AssetPropertyInsert'), baseLink: 'AssetProperty' } },
   { path: '/Insert/AssetType', name: 'AssetTypeInsert', component: AssetTypeInsert, meta: { title: i18n.t('router.AssetTypeInsert'), baseLink: 'AssetType' } },
-  { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } }
+  { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } },
+  { path: '/Insert/AssetOperation', name: 'AssetOperationInsert', component: AssetOperationInsert, meta: { title: i18n.t('router.AssetOperationInsert'), baseLink: 'AssetOperation' } },
+  { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } }
 ]
 
 const routes = [
