@@ -116,6 +116,8 @@ export default {
   mixins: [mixin],
   data () {
     return {
+      customers: [],
+      customerCriterias: [],
       itemAnalysisQuestionItems: detailData.itemAnalysisQuestionItems,
       itemAnalysisBranchItems: detailData.itemAnalysisBranchItems,
       itemAnalysisEmployeeItems: detailData.itemAnalysisEmployeeItems,
@@ -136,7 +138,12 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/ItemAnalysis', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/ItemAnalysis', record: this.$route.params.url}).then(() => {
+        if (this.rowData.ItemAnalysisDetails) {
+          this.customerCriterias = this.rowData.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+          this.customers = this.rowData.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+        }
+      })
     }
   }
 }
