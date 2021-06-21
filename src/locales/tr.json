@@ -2532,7 +2532,12 @@
     "password": "Şifre",
     "login": "OTURUM AÇ",
     "forgotPassword": "Şifremi Unuttum",
-    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin."
+    "loginError": "Oturum Açılamadı. Lütfen Tekrar Deneyin.",
+    "resetPassword": "Şifremi Sıfırla",
+    "successForgotPassword": "Şifre sıfırlama linki e-posta adresine gönderilmiştir.",
+    "rePassword": "Şifre Tekrar",
+    "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
+    "passwordsNotMatch": "Şifreler aynı değildir."
   },
   "list": {
     "location": "Lokasyon",
