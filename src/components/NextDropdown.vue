@@ -54,6 +54,9 @@ export default {
     isCustomer: {
       type: Boolean,
       default: false
+    },
+    filter: {
+      type: Function
     }
   },
   model: {
@@ -159,6 +162,11 @@ export default {
           } else if (response.length > 0) {
             this.values = response
           }
+
+          if (this.filter) {
+            this.values = this.values.filter(i => this.filter(i))
+          }
+
           this.allValues = this.values
         }
       })

@@ -107,7 +107,7 @@ export default {
         }
       ],
       budgetTransactions: [],
-      currentPage: 0
+      currentPage: 1
     }
   },
   mounted () {
@@ -166,7 +166,7 @@ export default {
         }
       }
       this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetTransaction/Search').then((response) => {
-        if (response.ListModel && response.ListModel.BaseModels) {
+        if (response.ListModel) {
           this.budgetTransactions = response.ListModel.BaseModels
         }
       })

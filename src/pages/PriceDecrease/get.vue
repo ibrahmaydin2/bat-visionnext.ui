@@ -25,7 +25,7 @@
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.priceDecrease.priceListCategory')"></div>
-              <div v-html="getFormatDataByType(rowData.TCIBreak1, 'object', 'insert.priceDecrease.tciBreak1')"></div>
+              <div v-html="getFormatDataByType(rowData.TciBreak, 'object', 'insert.priceDecrease.tciBreak1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.BeginDate, 'date', 'insert.priceDecrease.beginDate')"></div>

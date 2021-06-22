@@ -1,9 +1,9 @@
 <template>
   <div>
     <b-row v-if="editable">
-      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item.required)" :error="isRequired(item.required) ? $v.form[item.modelProperty] : {}">
+      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :get-lookup="true" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
@@ -169,7 +169,7 @@ export default {
   },
   mounted () {
     this.items.forEach(item => {
-      if (this.isRequired(item.required)) {
+      if (this.isRequired(item)) {
         this.$set(this.form, item.modelProperty, null)
       }
       let defaultValue = null
@@ -182,7 +182,7 @@ export default {
         if (item.type === 'Label') {
           this.$set(this.label, item.modelProperty, defaultValue)
         }
-        if (item.type === 'Text') {
+        if (item.type === 'Text' || item.type === 'Check') {
           this.$set(this.form, item.modelProperty, defaultValue)
         }
       }
@@ -231,17 +231,19 @@ export default {
       this.form.Deleted = 0
       this.form.System = 0
       this.form.RecordState = 2
-      this.form.StatusId = 1
+      this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       const model = Object.keys(this.model)
 
       for (let index = 0; index < model.length; index++) {
         let item = model[index]
-        let key = item + 'Desc'
-        let properties = this.items.filter(i => i.modelProperty === item)
-        if (properties && properties.length === 1 && properties[0].labelProperty) {
-          this.form[key] = this.model[item][properties[0].labelProperty]
-        } else {
-          this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
+        if (this.model[item]) {
+          let key = item + 'Desc'
+          let properties = this.items.filter(i => i.modelProperty === item)
+          if (properties && properties.length === 1 && properties[0].labelProperty) {
+            this.form[key] = this.model[item][properties[0].labelProperty]
+          } else {
+            this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
+          }
         }
       }
       if (this.hasLineNumber) {
@@ -336,8 +338,21 @@ export default {
         }
       }
     },
-    isRequired (required) {
-      return (typeof required === 'function') ? required(this.form) : required
+    isRequired (item) {
+      if ((typeof item.required === 'function')) {
+        let isRequired = item.required(this.form)
+        if (!isRequired) {
+          if (this.form[item.modelProperty]) {
+            this.$set(this.form, item.modelProperty, null)
+          }
+          if (this.model[item.modelProperty]) {
+            this.$set(this.model, item.modelProperty, null)
+            delete this.model[item.modelProperty]
+          }
+        }
+        return isRequired
+      }
+      return item.required
     },
     isDisabled (disabled) {
       return (typeof disabled === 'function') ? disabled(this.form) : disabled
@@ -369,7 +384,7 @@ export default {
     this.items.forEach(item => {
       form[item.modelProperty] = {
         required: requiredIf(function () {
-          return this.isRequired(item.required)
+          return this.isRequired(item)
         })
       }
     })
