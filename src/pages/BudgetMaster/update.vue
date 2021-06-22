@@ -1,5 +1,8 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+      <BudgetDetail :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -55,7 +58,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
@@ -67,8 +70,12 @@
 <script>
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
+import BudgetDetail from './Details.vue'
 export default {
   mixins: [updateMixin],
+  components: {
+    BudgetDetail
+  },
   data () {
     return {
       form: {
@@ -98,7 +105,8 @@ export default {
       budgetGroup: null,
       customerColumnName: null,
       budgetItems: detailData.budgetItems,
-      selectedBranchItems: detailData.selectedBranchItems
+      selectedBranchItems: detailData.selectedBranchItems,
+      selectedBudgetDetail: null
     }
   },
   mounted () {
@@ -171,6 +179,10 @@ export default {
 
         return budget
       })
+    },
+    getDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('detail-modal')
     }
   }
 }

@@ -1907,7 +1907,16 @@
       "customerColumnName": "Müşteri Kriteri",
       "customerColumnValue": "Kriter Değeri",
       "currency":"Para Birimi",
-      "branchCriteria":"Şube Kriteri"
+      "branchCriteria":"Şube Kriteri",
+      "movementCode":"Hareket Kodu",
+      "description": "Açıklama",
+      "budget": "Bütçe",
+      "amount": "Tutar",
+      "budgetMovementType":"Bütçe Hareket Tipi",
+      "budgetMovements": "Bütçe Hareketleri",
+      "save": "Kaydet",
+      "successSaveBudgetTransaction": "Bütçe Hareketleri başarıyla kaydedildi.",
+      "newAdd": "Yeni Ekle"
     }
   },
   "get": {

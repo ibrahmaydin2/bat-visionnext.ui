@@ -23,7 +23,8 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <i @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
+          <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
+          <i v-if="getDetail" @click="getDetail(data.item)" class="ml-3 fa fa-arrow-down text-success"></i>
         </template>
         <template #cell(show_details)="row">
           <div>
@@ -80,6 +81,9 @@ export default {
       default: false
     },
     beforeAdd: {
+      type: Function
+    },
+    getDetail: {
       type: Function
     }
   },
@@ -147,7 +151,7 @@ export default {
         }
       })
 
-      if (this.editable) {
+      if (this.editable || this.getDetail) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')
