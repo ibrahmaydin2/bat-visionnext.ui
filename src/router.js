@@ -68,7 +68,6 @@ import WarehouseInsert from '@/pages/Warehouse/insert' // yeni kayıt
 import WarehouseUpdate from '@/pages/Warehouse/update' // güncelleme
 
 import CustomerIndex from '@/pages/Customer/' // liste ekranı
-import CustomerGet from '@/pages/Customer/get' // fullpage görünümü
 import CustomerInsert from '@/pages/Customer/insert' // yeni kayıt
 import CustomerUpdate from '@/pages/Customer/update' // güncelleme
 
@@ -618,6 +617,15 @@ import BudgetMasterUpdate from '@/pages/BudgetMaster/update'
 
 Vue.use(Router)
 
+// TenantBase Pages
+var tenant = process.env.TENANT
+
+let getTenantPage = (pageName, type) => {
+  type = !type ? '' : type
+  const page = () => import(`@/pages/${pageName}/${tenant}/${type}`)
+  return page
+}
+
 const listIndex = [
   {path: '/RouteMasterRecord', name: 'RouteMasterRecord', component: RouteMasterRecordIndex, meta: { title: i18n.t('router.RouteMasterRecord'), createLink: 'RouteMasterRecordInsert' }},
   {path: '/VehicleMasterRecord', name: 'VehicleMasterRecord', component: VehicleMasterRecordIndex, meta: { title: i18n.t('router.VehicleMasterRecord'), createLink: 'VehicleMasterRecordInsert' }},
@@ -746,7 +754,7 @@ const listGet = [
   { path: '/Branch/:url', name: 'BranchGet', component: BranchGet, meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
   { path: '/AnalysisQuestions/:url', name: 'AnalysisQuestionsGet', component: AnalysisQuestionsGet, meta: { title: i18n.t('router.AnalysisQuestionsGet'), baseLink: 'AnalysisQuestions' } },
   { path: '/Warehouse/:url', name: 'WarehouseGet', component: WarehouseGet, meta: { title: i18n.t('router.WarehouseGet'), baseLink: 'Warehouse' } },
-  { path: '/Customer/:url', name: 'CustomerGet', component: CustomerGet, meta: { title: i18n.t('router.CustomerGet'), baseLink: 'Customer' } },
+  { path: '/Customer/:url', name: 'CustomerGet', component: getTenantPage('Customer', 'get'), meta: { title: i18n.t('router.CustomerGet'), baseLink: 'Customer' } },
   { path: '/KeyAccount/:url', name: 'KeyAccountGet', component: KeyAccountGet, meta: { title: i18n.t('router.KeyAccountGet'), baseLink: 'KeyAccount' } },
   { path: '/Service/:url', name: 'ServiceGet', component: ServiceGet, meta: { title: i18n.t('router.ServiceGet'), baseLink: 'Service' } },
   { path: '/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementGet', component: EDocumentErrorManagementGet, meta: { title: i18n.t('router.EDocumentErrorManagementGet'), baseLink: 'EDocumentErrorManagement' } },

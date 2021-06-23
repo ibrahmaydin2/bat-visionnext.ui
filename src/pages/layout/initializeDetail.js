@@ -4,6 +4,7 @@
 // örneğin basit bir checkBox eklemek istersek type,id,modelProperty,visible,label kısımları eklemek yeterlidir.
 // Her alan için kullanılsa da kullanılmasa da modelProperty eklemek gerekir.
 
+// eslint-disable-next-line no-unused-vars
 var cycleInstructionItems = [
   {
     type: 'Autocomplete', // component tipi -> AutoComplete, Dropdown, Lookup, Text, Label, Date, Check
