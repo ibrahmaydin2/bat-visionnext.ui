@@ -22,13 +22,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" disabled />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" disabled toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -41,19 +41,19 @@
               <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetGroupId" :error="$v.form.BudgetGroupId">
-              <NextDropdown v-model="budgetGroup" :disabled="insertReadonly.BudgetGroupId" @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
+              <NextDropdown v-model="budgetGroup" disabled @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnName" :error="$v.form.CustomerColumnName">
-              <NextDropdown v-model="customerColumnName" :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
+              <NextDropdown v-model="customerColumnName" disabled @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
-              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
+              <NextDropdown v-model="customerColumnValue" disabled @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-              <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
+              <NextDropdown v-model="currency" disabled @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
             </NextFormGroup>
              <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="branchCriteria" :disabled="insertReadonly.BranchCriteriaId" @input="selectedType('BranchCriteriaId', $event)" label="Label" :source="(lookup.BRANCH_CRITERIA ? lookup.BRANCH_CRITERIA.filter(b => b.Code != 'SK') : [])" />
+              <NextDropdown v-model="branchCriteria" disabled @input="selectedType('BranchCriteriaId', $event)" label="Label" :source="(lookup.BRANCH_CRITERIA ? lookup.BRANCH_CRITERIA.filter(b => b.Code != 'SK') : [])" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -148,7 +148,7 @@ export default {
       if (customerColumnName) {
         this.form.CustomerColumnName = customerColumnName.ForeignName
         let model = {
-          ColumnName: customerColumnName.ForeignName
+          ColumnName: customerColumnName.Desc
         }
         this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
           if (response) {
