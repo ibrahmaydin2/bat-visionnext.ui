@@ -250,7 +250,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.LoyaltyCustomers = [...this.customers, this.branchs, this.customerCriterias]
+        this.form.LoyaltyCustomers = [...this.customers, ...this.branchs, ...this.customerCriterias]
         this.updateData()
       }
     },

@@ -37,8 +37,8 @@
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
               <NextDropdown v-model="priceListCategory" :disabled="insertReadonly.PriceListCategoryId" @input="selectedType('PriceListCategoryId', $event)" lookup-key="PRICE_LIST_CATEGORY_TYPE"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TCIBreak1Id" :error="$v.form.TCIBreak1Id">
-              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TCIBreak1Id" @input="selectedType('TCIBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
+            <NextFormGroup item-key="TciBreakId" :error="$v.form.TciBreakId">
+              <NextDropdown v-model="tciBreak" :disabled="insertReadonly.TciBreakId" @input="selectedType('TciBreakId', $event)" lookup-key="TCI_BREAKDOWN"/>
             </NextFormGroup>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
               <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate"></NextDatePicker>
@@ -113,7 +113,7 @@ export default {
         Code: null,
         Description1: null,
         PriceListCategoryId: null,
-        TCIBreak1Id: null,
+        TciBreakId: null,
         BeginDate: null,
         EndDate: null,
         PriceDecreaseItems: []
@@ -124,7 +124,7 @@ export default {
       selectedPrice: null,
       activeTabIndex: 0,
       priceListCategory: null,
-      tciBreak1: null
+      tciBreak: null
     }
   },
   mounted () {
@@ -253,7 +253,7 @@ export default {
       let rowData = this.rowData
       this.form = rowData
       this.priceListCategory = rowData.PriceListCategory
-      this.tciBreak1 = rowData.TCIBreak1
+      this.tciBreak = rowData.TciBreak
     }
   },
   computed: {
