@@ -194,6 +194,8 @@ export default {
                   border-bottom: none
                 & a
                   color: #000 !important
+                & ul
+                  height: 310px
         & a
           color: #6e6e6e
           font-size: 12px
@@ -217,8 +219,11 @@ export default {
                 .isub
                   transform: translateX(10px)
                   transition: .3s
+                  position: absolute
               & ul
                 visibility: hidden
+                overflow: hidden
+                height: 100%
               &:hover
                 & ul
                   visibility: visible
@@ -258,7 +263,4 @@ export default {
         & a
           color: #000
           width: 100%
-  .fa-angle-double-right
-    position: fixed
-    padding-left: 100px
 </style>
