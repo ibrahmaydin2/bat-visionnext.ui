@@ -460,7 +460,13 @@
     "BudgetMaster": "Bütçe Tanımlama",
     "BudgetMasterGet": "Bütçe Tanımımı Görüntüle",
     "BudgetMasterInsert": "Yeni Bütçe Tanımlama",
-    "BudgetMasterUpdate": "Bütçe Tanımı Güncelle"
+    "BudgetMasterUpdate": "Bütçe Tanımı Güncelle",
+    "IntegrationDataPark": "Entegrasyon Hata Yönetimi",
+    "IntegrationDataParkGet": "Entegrasyon Hata Yönetimi Görüntüle",
+    "LoyaltyCategory": "Sadakat Kategori Tanımları",
+    "LoyaltyCategoryGet": "Sadakat Kategori Tanımı Görüntüle",
+    "LoyaltyCategoryInsert": "Yeni Sadakat Kategori Tanımı",
+    "LoyaltyCategoryUpdate": "Sadakat Kategori Tanımları Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1773,6 +1779,14 @@
       "AssetUsage": "Varlık Kullanımı",
       "IsAssetUsed": "Varlık Kullanılacak"
     },
+    "IntegrationDataPark": {
+      "InterfaceList": "",
+      "CODE": "Interface No",
+      "Description1": "Açıklama",
+      "StatusId": "Durum",
+      "COMPANY_NAME": "Organizasyon",
+      "interface_name": "Interface Adı"
+    },
     "loyalty": {
       "title": "Sadakat Tanımları",
       "pointCriterias": "Puan Kriterleri",
@@ -1821,6 +1835,35 @@
       "tci": "TCI",
       "branchCriteria":"Şube Kriteri"
     },
+    "loyaltyCategory": {
+      "Description1 ": "Tanım",
+      "Code": "Kod",
+      "StatusId": "Durum",
+      "MinValue": "Minimum Değer",
+      "MaxValue": "Maksimum Değer",
+      "CategoryTypeId": "Kategori Tipi",
+      "CalcTypeId": "Hesaplama Kategorisi",
+      "LoyaltyPoint": "Puan",
+      "FieldAnalysisId": "Saha Analizi",
+      "ByFrequency": "Frekans Bazında",
+      "salesTarget": "Satış Hedefi",
+      "ColumnName": "Alan Açıklaması",
+      "ColumnValue": "Değer",
+      "UnitId": "Birim Tanımları",
+      "Quantity": "Miktar",
+      "salesTargetQuota": "Satış Hedefi Kotası",
+      "BeginDate": "Kota Başlangıç Tarihi",
+      "EndDate": "Kota Bitiş Tarihi",
+      "analysisResult": "Analiz Sonucu",
+      "Description1": "Koşul Adı",
+      "Value": "Değer",
+      "questionChoice": "Soru Seçenekleri",
+      "activityResult": "Aktivite Sonucu",
+      "CycleInstructionId": "Aktivite",
+      "CycleInstructionTaskId": "Görev",
+      "salesAnalysis": "Satış Analizi"
+    },
+
     "itemAnalysis": {
       "title": "Ürün Analizi Tanımı",
       "analysisQuestions": "Analiz Soruları",

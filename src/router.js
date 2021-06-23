@@ -616,6 +616,14 @@ import BudgetMasterGet from '@/pages/BudgetMaster/get'
 import BudgetMasterInsert from '@/pages/BudgetMaster/insert'
 import BudgetMasterUpdate from '@/pages/BudgetMaster/update'
 
+import IntegrationDataParkIndex from '@/pages/IntegrationDataPark/'
+import IntegrationDataParkGet from '@/pages/IntegrationDataPark/get'
+
+import LoyaltyCategoryIndex from '@/pages/LoyaltyCategory/'
+import LoyaltyCategoryGet from '@/pages/LoyaltyCategory/get'
+import LoyaltyCategoryInsert from '@/pages/LoyaltyCategory/insert'
+import LoyaltyCategoryUpdate from '@/pages/LoyaltyCategory/update'
+
 Vue.use(Router)
 
 const listIndex = [
@@ -735,7 +743,10 @@ const listIndex = [
   {path: '/AssetType', name: 'AssetType', component: AssetTypeIndex, meta: { title: i18n.t('router.AssetType'), createLink: 'AssetTypeInsert' }},
   {path: '/LoyaltyGain', name: 'LoyaltyGain', component: LoyaltyGainIndex, meta: { title: i18n.t('router.LoyaltyGain'), createLink: 'LoyaltyGainInsert' }},
   {path: '/AssetOperation', name: 'AssetOperation', component: AssetOperationIndex, meta: { title: i18n.t('router.AssetOperation'), createLink: 'AssetOperationInsert' }},
-  {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }}
+  {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }},
+  {path: '/IntegrationDataPark', name: 'IntegrationDataPark', component: IntegrationDataParkIndex, meta: { title: i18n.t('router.IntegrationDataPark'), createLink: 'IntegrationDataParkInsert' }},
+  {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert' }}
+
 ]
 
 const listGet = [
@@ -855,7 +866,10 @@ const listGet = [
   { path: '/AssetType/:url', name: 'AssetTypeGet', component: AssetTypeGet, meta: { title: i18n.t('router.AssetTypeGet'), baseLink: 'AssetType' } },
   { path: '/LoyaltyGain/:url', name: 'LoyaltyGainGet', component: LoyaltyGainGet, meta: { title: i18n.t('router.LoyaltyGainGet'), baseLink: 'LoyaltyGain' } },
   { path: '/AssetOperation/:url', name: 'AssetOperationGet', component: AssetOperationGet, meta: { title: i18n.t('router.AssetOperationGet'), baseLink: 'AssetOperation' } },
-  { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } }
+  { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } },
+  { path: '/IntegrationDataPark/:url', name: 'IntegrationDataParkGet', component: IntegrationDataParkGet, meta: { title: i18n.t('router.IntegrationDataParkGet'), baseLink: 'IntegrationDataPark' } },
+  { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } }
+
 ]
 
 const listUpdate = [
@@ -972,7 +986,9 @@ const listUpdate = [
   { path: '/Update/AssetType/:url', name: 'AssetTypeUpdate', component: AssetTypeUpdate, meta: { title: i18n.t('router.AssetTypeUpdate'), baseLink: 'AssetType' } },
   { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } },
   { path: '/Update/AssetOperation/:url', name: 'AssetOperationUpdate', component: AssetOperationUpdate, meta: { title: i18n.t('router.AssetOperationUpdate'), baseLink: 'AssetOperation' } },
-  { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } }
+  { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
+  { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } }
+
 ]
 
 const listInsert = [
@@ -1087,7 +1103,9 @@ const listInsert = [
   { path: '/Insert/AssetType', name: 'AssetTypeInsert', component: AssetTypeInsert, meta: { title: i18n.t('router.AssetTypeInsert'), baseLink: 'AssetType' } },
   { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } },
   { path: '/Insert/AssetOperation', name: 'AssetOperationInsert', component: AssetOperationInsert, meta: { title: i18n.t('router.AssetOperationInsert'), baseLink: 'AssetOperation' } },
-  { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } }
+  { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } },
+  { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } }
+
 ]
 
 const routes = [
