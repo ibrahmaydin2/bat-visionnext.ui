@@ -1,7 +1,7 @@
 <template>
   <div class="asc__showPage">
     <div class="asc__showPage-times">
-      <i class="fas fa-times-circle" @click="closeQuick()" />
+      <i class="fas fa-times-circle" @click="closeQuick()" />BAT
     </div>
     <div class="asc__showPage-container">
       <b-row>

@@ -1190,7 +1190,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
-import mixin from '../../../mixins/index'
+import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
   data () {
