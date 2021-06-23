@@ -1797,7 +1797,7 @@
       "branchCode":"Şube Kodu",
       "branchName":"Şube Adı",
       "customerQuery":"Müşteri Sorgusu",
-      "categoryDefinition": "Kategory Tanımı",
+      "categoryDefinition": "Kategori Tanımı",
       "datePlanType": "Zamanlama Tipi",
       "datePlanFreq": "Frekans",
       "customerCriteria":"Müşteri Kriteri",
