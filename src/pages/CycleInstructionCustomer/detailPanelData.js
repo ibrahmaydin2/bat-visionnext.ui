@@ -2,25 +2,19 @@ import i18n from '../../i18n'
 export const detailData = {
   taskItems: [
     {
-      type: 'Text',
+      type: 'Label',
       inputType: 'text',
       modelProperty: 'Code',
-      parentProperty: null,
-      url: null,
+      objectKey: 'CycleInstructionTask',
       label: i18n.t('get.CycleInstruction.TaskCode'),
-      hideOnTable: false,
-      isUnique: false,
       id: 1
     },
     {
-      type: 'Text',
+      type: 'Label',
       inputType: 'text',
-      modelProperty: 'Description1',
-      parentProperty: null,
-      url: null,
+      modelProperty: 'Label',
+      objectKey: 'CycleInstructionTask',
       label: i18n.t('get.CycleInstruction.TaskDescription1'),
-      hideOnTable: false,
-      isUnique: false,
       id: 2
     },
     {
@@ -28,8 +22,6 @@ export const detailData = {
       modelProperty: 'TaskStateId',
       objectKey: 'TaskState',
       label: i18n.t('get.CycleInstruction.TaskStatus'),
-      hideOnTable: false,
-      isUnique: false,
       id: 3
     }
   ]
