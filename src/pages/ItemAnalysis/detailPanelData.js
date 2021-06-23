@@ -119,8 +119,8 @@ export const detailData = {
   itemAnalysisCustomerItems: [
     {
       type: 'Autocomplete',
-      modelProperty: 'CustomerId',
-      objectKey: 'Customer',
+      modelProperty: 'ColumnValue',
+      objectKey: 'ColumnNameDesc',
       labelProperty: 'Code',
       customOption: true,
       isCustomer: true,
@@ -135,8 +135,8 @@ export const detailData = {
     {
       type: 'Label',
       inputType: 'text',
-      modelProperty: 'Label',
-      objectKey: 'Customer',
+      modelProperty: 'CustomerName',
+      objectKey: 'ColumnValueDesc',
       parentProperty: 'Description1',
       label: i18n.t('insert.itemAnalysis.commercialTitle'),
       visible: true,
@@ -149,7 +149,7 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Location',
       valueProperty: 'AddressDetail',
-      objectKey: 'CustomerLocation',
+      objectKey: 'ColumnValueDesc2',
       parentProperty: 'DefaultLocationId',
       url: 'VisionNextCustomer/api/CustomerLocation/Get',
       label: i18n.t('insert.itemAnalysis.location'),
@@ -157,6 +157,22 @@ export const detailData = {
       disabled: true,
       parentId: 1,
       id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      hideOnTable: true,
+      defaultValue: 'RECORD_ID',
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_CUSTOMER',
+      id: 5
     }
   ],
   itemAnalysisValidDateItems: [

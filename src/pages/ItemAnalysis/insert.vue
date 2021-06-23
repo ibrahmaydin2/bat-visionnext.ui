@@ -93,10 +93,10 @@
           <NextDetailPanel v-model="form.ItemAnalysisItems" :items="itemAnalysisItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.itemAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
-          <NextDetailPanel v-model="form.ItemAnalysisCustomers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.itemAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
-          <NextDetailPanel v-model="form.ItemAnalysisDetails" :items="itemAnalysisDetailItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customerCriterias" :items="itemAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -141,6 +141,8 @@ export default {
       validityType: null,
       analysisType: null,
       approveState: null,
+      customers: [],
+      customerCriterias: [],
       itemAnalysisQuestionItems: detailData.itemAnalysisQuestionItems,
       itemAnalysisBranchItems: detailData.itemAnalysisBranchItems,
       itemAnalysisEmployeeItems: detailData.itemAnalysisEmployeeItems,
@@ -165,6 +167,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.ItemAnalysisDetails = [...this.customers, ...this.customerCriterias]
         this.createData()
       }
     },

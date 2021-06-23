@@ -54,7 +54,11 @@ export default {
     submitForm () {
       this.$v.$touch()
       if (this.$v.$error) {
-        this.$toasted.show('Zorunlu alanları doldurun', {type: 'error', keepOnHover: true, duration: '3000'})
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
         this.$store.dispatch('login', {...this.authData, UserName: this.user.UserName, Password: this.user.Password, InstanceHash: this.user.InstanceHash})
       }

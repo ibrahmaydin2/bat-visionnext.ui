@@ -93,10 +93,10 @@
           <NextDetailPanel v-model="form.ItemAnalysisItems" :items="itemAnalysisItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.itemAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
-          <NextDetailPanel v-model="form.ItemAnalysisCustomers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.itemAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
-          <NextDetailPanel v-model="form.ItemAnalysisDetails" :items="itemAnalysisDetailItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customerCriterias" :items="itemAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -143,6 +143,8 @@ export default {
       analysisPeriod: null,
       approveState: null,
       analysisTime: null,
+      customers: [],
+      customerCriterias: [],
       itemAnalysisQuestionItems: detailData.itemAnalysisQuestionItems,
       itemAnalysisBranchItems: detailData.itemAnalysisBranchItems,
       itemAnalysisEmployeeItems: detailData.itemAnalysisEmployeeItems,
@@ -199,6 +201,10 @@ export default {
       this.customerCriteria = rowData.CustomerCriteria
       this.itemCriteria = rowData.ItemCriteria
       this.analysisTime = rowData.AnalysisType
+      if (this.form.ItemAnalysisDetails) {
+        this.customerCriterias = this.form.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+        this.customers = this.form.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+      }
     }
   },
   watch: {
