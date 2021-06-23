@@ -1,5 +1,8 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+      <BudgetDetail :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -41,10 +44,10 @@
               <NextDropdown v-model="budgetGroup" :disabled="insertReadonly.BudgetGroupId" @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnName" :error="$v.form.CustomerColumnName">
-              <NextDropdown v-model="customerColumnName" :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams" label="Label" :dynamic-request="{paramId: 'CUSTOMER_CRITERIA'}" />
+              <NextDropdown v-model="customerColumnName" :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
-              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Label"/>
+              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
@@ -55,7 +58,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
@@ -67,8 +70,12 @@
 <script>
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
+import BudgetDetail from './Details.vue'
 export default {
   mixins: [updateMixin],
+  components: {
+    BudgetDetail
+  },
   data () {
     return {
       form: {
@@ -98,7 +105,8 @@ export default {
       budgetGroup: null,
       customerColumnName: null,
       budgetItems: detailData.budgetItems,
-      selectedBranchItems: detailData.selectedBranchItems
+      selectedBranchItems: detailData.selectedBranchItems,
+      selectedBudgetDetail: null
     }
   },
   mounted () {
@@ -138,13 +146,13 @@ export default {
       this.customerColumnValue = null
       this.customerColumnValues = []
       if (customerColumnName) {
-        this.form.CustomerColumnName = customerColumnName.ForeignField
+        this.form.CustomerColumnName = customerColumnName.ForeignName
         let model = {
-          ParamName: customerColumnName.Label
+          ColumnName: customerColumnName.ForeignName
         }
-        this.$api.postByUrl(model, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((response) => {
-          if (response && response.Values) {
-            this.customerColumnValues = response.Values
+        this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
+          if (response) {
+            this.customerColumnValues = response
           }
         })
       } else {
@@ -171,6 +179,10 @@ export default {
 
         return budget
       })
+    },
+    getDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('detail-modal')
     }
   }
 }

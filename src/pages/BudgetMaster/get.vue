@@ -1,5 +1,8 @@
 <template>
   <div class="asc__showPage">
+    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+      <BudgetDetail :addable="false" :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
@@ -40,7 +43,7 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.Budgets" :items="budgetItems"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="rowData.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -62,12 +65,17 @@
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 import { detailData } from './detailPanelData'
+import BudgetDetail from './Details.vue'
 export default {
   mixins: [mixin],
+  components: {
+    BudgetDetail
+  },
   data () {
     return {
       budgetItems: detailData.budgetItems,
-      selectedBranchItems: detailData.selectedBranchItems
+      selectedBranchItems: detailData.selectedBranchItems,
+      selectedBudgetDetail: null
     }
   },
   mounted () {
@@ -82,6 +90,10 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/BudgetMaster', record: this.$route.params.url})
+    },
+    getDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('detail-modal')
     }
   }
 }
