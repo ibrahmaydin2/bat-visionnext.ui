@@ -64,13 +64,13 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
-              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="insertReadonly.IsNecessary"/>
+              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseOnce" :error="$v.form.UseOnce">
               <NextCheckBox v-model="form.UseOnce" type="number" toggle :disabled="!analysisType || analysisType.Code !== 'KLN'"/>
             </NextFormGroup>
             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
-              <NextInput v-model="form.SortOrder" type="number" :disabled="insertReadonly.SortOrder" />
+              <NextInput v-model="form.SortOrder" type="number" :disabled="insertReadonly.SortOrder" maxLength="2" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisTimeId" :error="$v.form.AnalysisTimeId">
               <NextDropdown v-model="analysisTime" :disabled="insertReadonly.AnalysisTimeId" @input="selectedType('AnalysisTimeId', $event)" lookup-key="ANALYSIS_TIME"/>

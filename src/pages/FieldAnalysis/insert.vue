@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'ItemAnalysis' }">
+            <router-link :to="{name: 'FieldAnalysis' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -32,13 +32,13 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.itemAnalysis.title')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.fieldAnalysis.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="ValidityTypeId" :error="$v.form.ValidityTypeId">
               <NextDropdown v-model="validityType" :disabled="insertReadonly.ValidityTypeId" @input="selectedType('ValidityTypeId', $event)" lookup-key="ANALYSIS_VALIDITY_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisTypeId" :error="$v.form.AnalysisTypeId">
-              <NextDropdown v-model="analysisType" :disabled="insertReadonly.AnalysisTypeId" @input="selectedType('AnalysisTypeId', $event)" lookup-key="ITEM_ANALYSIS_TYPE"/>
+              <NextDropdown v-model="analysisType" :disabled="insertReadonly.AnalysisTypeId" @input="selectedType('AnalysisTypeId', $event)" lookup-key="FIELD_ANALYSIS_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisPeriodId" :error="$v.form.AnalysisPeriodId">
               <NextDropdown :disabled="insertReadonly.AnalysisPeriodId" @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD"/>
@@ -56,13 +56,6 @@
                 :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code != 'MS'): [])"
                 label="Label"/>
             </NextFormGroup>
-            <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <NextDropdown v-model="itemCriteria"
-                :disabled="insertReadonly.ItemCriteriaId"
-                @input="selectedType('ItemCriteriaId', $event)"
-                :source="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(c => c.Code == 'TU' || c.Code === 'UL'): [])"
-                label="Label"/>
-            </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
               <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="true"/>
             </NextFormGroup>
@@ -75,28 +68,28 @@
             <NextFormGroup item-key="AnalysisTimeId" :error="$v.form.AnalysisTimeId">
               <NextDropdown :disabled="insertReadonly.AnalysisTimeId" @input="selectedType('AnalysisTimeId', $event)" lookup-key="ANALYSIS_TIME"/>
             </NextFormGroup>
+            <NextFormGroup item-key="FollowingAnalysis" :error="$v.form.FollowingAnalysis">
+              <NextCheckBox v-model="form.FollowingAnalysis" type="number" toggle :disabled="insertReadonly.FollowingAnalysis"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.analysisQuestions')">
-          <NextDetailPanel v-model="form.ItemAnalysisQuestions" :items="itemAnalysisQuestionItems" :has-line-number="true"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.question')">
+          <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.branchs')">
-          <NextDetailPanel v-model="form.ItemAnalysisBranches" :items="itemAnalysisBranchItems"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.branchs')">
+          <NextDetailPanel v-model="form.FieldAnalysisBranchs" :items="fieldAnalysisBranchItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.employeeType')">
-          <NextDetailPanel v-model="form.ItemAnalysisEmployeeTypes" :items="itemAnalysisEmployeeItems"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.employeeType')">
+          <NextDetailPanel v-model="form.FieldAnalysisEmployeeTypes" :items="fieldAnalysisEmployeeItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
-          <NextDetailPanel v-model="form.ItemAnalysisValidDates" :items="itemAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
+          <NextDetailPanel v-model="form.FieldAnalysisValidDates" :items="fieldAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.itemList')" v-if="itemCriteria && itemCriteria.Code === 'UL'">
-          <NextDetailPanel v-model="form.ItemAnalysisItems" :items="itemAnalysisItems"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+          <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
-          <NextDetailPanel v-model="customers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
-        </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
-          <NextDetailPanel v-model="customerCriterias" :items="itemAnalysisDetailItems"></NextDetailPanel>
+        <b-tab :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
+          <NextDetailPanel v-model="customerCriterias" :items="fieldAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -115,41 +108,36 @@ export default {
         RecordState: 2,
         StatusId: 1,
         Code: null,
-        ValidityTypeId: null,
         AnalysisTypeId: null,
-        AnalysisPeriodId: null,
+        ValidityTypeId: null,
         Description1: null,
-        ApproveStateId: null,
-        AnalysisVisitCount: 0,
-        CustomerCriteriaId: null,
-        ItemCriteriaId: null,
-        IsNecessary: null,
-        UseOnce: null,
         SortOrder: null,
+        ApproveStateId: null,
+        IsNecessary: null,
+        CustomerCriteriaId: null,
+        UseOnce: null,
+        AnalysisVisitCount: null,
+        AnalysisPeriodId: null,
         AnalysisTimeId: null,
-        ItemAnalysisQuestions: [],
-        ItemAnalysisBranches: [],
-        ItemAnalysisEmployeeTypes: [],
-        ItemAnalysisItems: [],
-        ItemAnalysisCustomers: [],
-        ItemAnalysisValidDates: [],
-        ItemAnalysisDetails: []
+        FollowingAnalysis: null,
+        FieldAnalysisQuestions: [],
+        FieldAnalysisBranchs: [],
+        FieldAnalysisEmployeeTypes: [],
+        FieldAnalysisValidDates: [],
+        FieldAnalysisDetails: []
       },
-      routeName1: 'FieldAnalysis',
       customerCriteria: null,
-      itemCriteria: null,
       validityType: null,
       analysisType: null,
       approveState: null,
       customers: [],
       customerCriterias: [],
-      itemAnalysisQuestionItems: detailData.itemAnalysisQuestionItems,
-      itemAnalysisBranchItems: detailData.itemAnalysisBranchItems,
-      itemAnalysisEmployeeItems: detailData.itemAnalysisEmployeeItems,
-      itemAnalysisItems: detailData.itemAnalysisItems,
-      itemAnalysisCustomerItems: detailData.itemAnalysisCustomerItems,
-      itemAnalysisValidDateItems: detailData.itemAnalysisValidDateItems,
-      itemAnalysisDetailItems: detailData.itemAnalysisDetailItems
+      fieldAnalysisQuestionItems: detailData.fieldAnalysisQuestionItems,
+      fieldAnalysisBranchItems: detailData.fieldAnalysisBranchItems,
+      fieldAnalysisEmployeeItems: detailData.fieldAnalysisEmployeeItems,
+      fieldAnalysisCustomerItems: detailData.fieldAnalysisCustomerItems,
+      fieldAnalysisValidDateItems: detailData.fieldAnalysisValidDateItems,
+      fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems
     }
   },
   mounted () {
@@ -167,7 +155,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.ItemAnalysisDetails = [...this.customers, ...this.customerCriterias]
+        this.form.FieldAnalysisDetails = [...this.customers, ...this.customerCriterias]
         this.createData()
       }
     },
@@ -179,7 +167,7 @@ export default {
         (item.StartDate <= l.EndDate && l.EndDate <= item.EndDate))
 
       if (filteredList && filteredList.length > 0) {
-        this.$toasted.show(this.$t('insert.itemAnalysis.validDatesError'), {
+        this.$toasted.show(this.$t('insert.fieldAnalysis.validDatesError'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -208,8 +196,8 @@ export default {
     },
     form: {
       handler (value) {
-        if (value && value.ItemAnalysisQuestions && value.ItemAnalysisQuestions.length > 0) {
-          let filteredArr = value.ItemAnalysisQuestions.filter(i => i.IsNecessary === 1)
+        if (value && value.FieldAnalysisQuestions && value.FieldAnalysisQuestions.length > 0) {
+          let filteredArr = value.FieldAnalysisQuestions.filter(i => i.IsNecessary === 1)
           this.form.IsNecessary = filteredArr && filteredArr.length > 0 ? 1 : 0
         }
       },
