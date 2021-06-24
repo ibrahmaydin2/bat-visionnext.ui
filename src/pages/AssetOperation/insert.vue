@@ -30,9 +30,6 @@
           <NextFormGroup item-key="IsAssetUsed" :error="$v.form.IsAssetUsed">
             <NextCheckBox v-model="form.IsAssetUsed" type="number" :disabled="insertReadonly.IsAssetUsed" toggle/>
           </NextFormGroup>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
-          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
