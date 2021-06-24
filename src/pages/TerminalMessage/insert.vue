@@ -361,7 +361,7 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      let filteredArr = this.form.TerminalMessageDetails.filter(i => i.ColumnName === this.customerCriterias.columnName.Code && i.ColumnValue === this.customerCriterias.columnValue.DecimalValue)
+      let filteredArr = this.form.TerminalMessageDetails.filter(i => i.ColumnName === this.customerCriterias.columnName.ForeignField && i.ColumnValue === this.customerCriterias.columnValue.DecimalValue)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
@@ -372,7 +372,7 @@ export default {
         RecordState: 2,
         StatusId: 1,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.customerCriterias.columnName.Code,
+        ColumnName: this.customerCriterias.columnName.ForeignField,
         ColumnValue: this.customerCriterias.columnValue.DecimalValue,
         ColumnNameStr: this.customerCriterias.columnName.Label,
         ColumnValueStr: this.customerCriterias.columnValue.Label

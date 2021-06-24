@@ -253,7 +253,7 @@ export default {
     },
     getItemValues (e) {
       if (e) {
-        this.ValidDates.ColumnName = e.DecimalValue
+        this.ValidDates.ColumnName = e.ForeignField
         this.ValidDates.NameTitle = e.Label
         this.$api.postByUrl({paramName: e.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
           this.fieldValues = res.Values

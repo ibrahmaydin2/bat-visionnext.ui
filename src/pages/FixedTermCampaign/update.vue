@@ -310,7 +310,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_ITEM',
-        ColumnName: this.campaignItemArea.Code,
+        ColumnName: this.campaignItemArea.ForeignField,
         ColumnValue: this.campaignItemValue.DecimalValue,
         ColumnNameStr: this.campaignItemArea.Label,
         ColumnValueStr: this.campaignItemValue.Label
@@ -385,7 +385,7 @@ export default {
         StatusId: 1,
         CompanyId: null,
         TableName: 'T_CUSTOMER',
-        ColumnName: this.customerItemArea.Code,
+        ColumnName: this.customerItemArea.ForeignField,
         ColumnValue: this.customerItemValue.DecimalValue,
         ColumnNameStr: this.customerItemArea.Label,
         ColumnValueStr: this.customerItemValue.Label

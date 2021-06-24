@@ -44,7 +44,7 @@
               <NextDropdown v-model="budgetGroup" disabled @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnName" :error="$v.form.CustomerColumnName">
-              <NextDropdown v-model="customerColumnName" disabled @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
+              <NextDropdown v-model="customerColumnName" disabled @input="selectCustomerColumnName($event)" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams" label="Label" :dynamic-request="{paramId: 'CUSTOMER_CRITERIA'}" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
               <NextDropdown v-model="customerColumnValue" disabled @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
@@ -146,13 +146,13 @@ export default {
       this.customerColumnValue = null
       this.customerColumnValues = []
       if (customerColumnName) {
-        this.form.CustomerColumnName = customerColumnName.ForeignName
+        this.form.CustomerColumnName = customerColumnName.ForeignField
         let model = {
-          ColumnName: customerColumnName.Desc
+          ParamName: customerColumnName.Label
         }
-        this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
+        this.$api.postByUrl(model, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((response) => {
           if (response) {
-            this.customerColumnValues = response
+            this.customerColumnValues = response.Values
           }
         })
       } else {
