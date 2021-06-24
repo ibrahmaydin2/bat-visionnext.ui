@@ -44,7 +44,7 @@
               <NextDropdown :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams" label="Label" :dynamic-request="{paramId: 'CUSTOMER_CRITERIA'}" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
-              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Label"/>
+              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
