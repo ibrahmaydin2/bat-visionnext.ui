@@ -62,18 +62,6 @@ export const detailData = {
       id: 6
     }
   ],
-  loyaltyCategoryCritsItems: [
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'Description1',
-      objectKey: 'Description1',
-      label: i18n.t('insert.loyaltyCategory.Description1'),
-      required: true,
-      visible: true,
-      id: 1
-    }
-  ],
   loyaltyCategoryValuesItems: [
     {
       type: 'Text',
@@ -128,6 +116,67 @@ export const detailData = {
       required: true,
       visible: true,
       id: 1
+    }
+  ],
+  loyaltyActiveCategoryFields: [
+    {
+      key: 'Description1',
+      label: i18n.t('insert.loyaltyCategory.description')
+    },
+    {
+      key: 'operations',
+      label: i18n.t('list.operations')
+    }
+  ],
+  loyaltyCategoryCritDetailItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'QuestionId',
+      objectKey: 'Question',
+      labelProperty: 'Description1',
+      valueProperty: 'RecordId',
+      url: 'SELECTED_FIELD_ANALYSIS_QUESTIONS',
+      label: i18n.t('insert.loyaltyCategory.QuestionId'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'AnswerId',
+      objectKey: 'Answer',
+      url: 'VisionNextFieldAnalysis/api/AnalysisQuestions/Get',
+      label: i18n.t('insert.loyaltyCategory.AnswerId'),
+      required: true,
+      visible: true,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Answer',
+      label: i18n.t('insert.loyaltyCategory.Answer'),
+      required: true,
+      visible: true,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'AnswerStart',
+      label: i18n.t('insert.loyaltyCategory.AnswerStart'),
+      required: true,
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'AnswerEnd',
+      label: i18n.t('insert.loyaltyCategory.AnswerEnd'),
+      required: true,
+      visible: true,
+      id: 5
     }
   ]
 }

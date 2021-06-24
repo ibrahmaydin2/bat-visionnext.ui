@@ -1855,13 +1855,19 @@
       "BeginDate": "Kota Başlangıç Tarihi",
       "EndDate": "Kota Bitiş Tarihi",
       "analysisResult": "Analiz Sonucu",
-      "Description1": "Koşul Adı",
       "Value": "Değer",
       "questionChoice": "Soru Seçenekleri",
       "activityResult": "Aktivite Sonucu",
       "CycleInstructionId": "Aktivite",
       "CycleInstructionTaskId": "Görev",
-      "salesAnalysis": "Satış Analizi"
+      "salesAnalysis": "Satış Analizi",
+      "description": "Koşul Adı",
+      "details": "Detaylar",
+      "delete": "Sil",
+      "AnswerStart": "Cevap Başlangıç",
+      "QuestionId": "Soru",
+      "AnswerEnd": "Cevap Bitiş",
+      "Answer": "Cevap"
     },
 
     "itemAnalysis": {
