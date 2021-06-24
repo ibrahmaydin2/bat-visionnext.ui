@@ -1192,11 +1192,12 @@
       "QuestionOptions": "Soru Seçenekleri",
       "IsCommentable": "Yorumlanabilir",
       "Code": "Soru Kodu",
-      "Description1": "Seçenek",
+      "Description1": "Soru",
       "ChoiceOrder": "Sıra",
       "CardTypeId": "Soru Tipi",
       "AnswerTypeId": "Cevap Tipi",
-      "StatusId": "Durum"
+      "StatusId": "Durum",
+      "description1": "Seçenek"
     },
     "bank": {
       "code":"Banka Kodu",

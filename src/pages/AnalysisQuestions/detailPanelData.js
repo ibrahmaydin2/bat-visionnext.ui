@@ -5,7 +5,7 @@ export const detailData = {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'Description1',
-      label: i18n.t('insert.AnalysisQuestions.Description1'),
+      label: i18n.t('insert.AnalysisQuestions.description1'),
       required: true,
       visible: true,
       id: 1
@@ -19,14 +19,6 @@ export const detailData = {
       visible: true,
       isUnique: true,
       id: 2
-    },
-    {
-      type: 'Check',
-      modelProperty: 'StatusId',
-      label: i18n.t('insert.AnalysisQuestions.StatusId'),
-      required: true,
-      visible: true,
-      id: 3
     }
   ]
 }
