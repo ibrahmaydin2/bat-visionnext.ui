@@ -90,7 +90,7 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get"  v-model="rowData.ItemAnalysisCustomers" :items="itemAnalysisCustomerItems" />
+                <NextDetailPanel type="get"  v-model="customers" :items="itemAnalysisCustomerItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -99,7 +99,7 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ItemAnalysisDetails" :items="itemAnalysisDetailItems" />
+                <NextDetailPanel type="get" v-model="customerCriterias" :items="itemAnalysisDetailItems" />
               </b-card>
             </b-col>
           </b-row>

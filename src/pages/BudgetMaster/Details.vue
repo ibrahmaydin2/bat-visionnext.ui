@@ -8,7 +8,7 @@
         <NextInput v-model="form.Description1"></NextInput>
       </NextFormGroup>
       <NextFormGroup :title="$t('insert.budgetMaster.budget')" md="4" lg="4">
-        <NextInput disabled v-model="budget"></NextInput>
+        <b-form-input type="text" disabled v-model="budget"/>
       </NextFormGroup>
       <NextFormGroup :title="$t('insert.budgetMaster.amount')" :required="true" :error="$v.form.Amount" md="4" lg="4">
         <NextInput type="number" v-model="form.Amount"></NextInput>
@@ -139,7 +139,8 @@ export default {
               keepOnHover: true,
               duration: '3000'
             })
-            this.$bvModal.hide('detail-modal')
+            this.getBudgetTransactions()
+            this.showInsert = false
             this.$store.commit('setDisabledLoading', false)
           }
         }).catch(() => {
