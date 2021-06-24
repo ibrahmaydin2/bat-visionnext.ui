@@ -41,10 +41,10 @@
               <NextDropdown :disabled="insertReadonly.BudgetGroupId" @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnName" :error="$v.form.CustomerColumnName">
-              <NextDropdown :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
+              <NextDropdown :disabled="insertReadonly.CustomerColumnName" @input="selectCustomerColumnName($event)" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams" label="Label" :dynamic-request="{paramId: 'CUSTOMER_CRITERIA'}" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
-              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
+              <NextDropdown v-model="customerColumnValue" :disabled="!form.CustomerColumnName" @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
@@ -144,13 +144,13 @@ export default {
       this.customerColumnValue = null
       this.customerColumnValues = []
       if (customerColumnName) {
-        this.form.CustomerColumnName = customerColumnName.ForeignName
+        this.form.CustomerColumnName = customerColumnName.ForeignField
         let model = {
-          ColumnName: customerColumnName.Desc
+          ParamName: customerColumnName.Label
         }
-        this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
+        this.$api.postByUrl(model, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((response) => {
           if (response) {
-            this.customerColumnValues = response
+            this.customerColumnValues = response.Values
           }
         })
       } else {
