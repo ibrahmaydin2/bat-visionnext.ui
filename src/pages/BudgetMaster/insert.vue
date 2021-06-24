@@ -146,7 +146,7 @@ export default {
       if (customerColumnName) {
         this.form.CustomerColumnName = customerColumnName.ForeignName
         let model = {
-          ColumnName: customerColumnName.ForeignName
+          ColumnName: customerColumnName.Desc
         }
         this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
           if (response) {

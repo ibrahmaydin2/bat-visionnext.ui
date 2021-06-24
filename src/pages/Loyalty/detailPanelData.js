@@ -36,6 +36,9 @@ export const detailData = {
       modelProperty: 'IsFreeItem',
       visible: true,
       label: i18n.t('insert.loyalty.isFreeItem'),
+      disabled: (form) => {
+        return form.IsDiscount === 1
+      },
       id: 4
     },
     {
@@ -97,6 +100,9 @@ export const detailData = {
       modelProperty: 'IsDiscount',
       visible: true,
       label: i18n.t('insert.loyalty.isDiscount'),
+      disabled: (form) => {
+        return form.IsFreeItem === 1
+      },
       id: 8
     },
     {
