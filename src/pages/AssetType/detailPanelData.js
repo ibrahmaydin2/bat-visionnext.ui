@@ -5,7 +5,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'PropertyId',
       objectKey: 'Property',
-      url: 'VisionNextAsset/api/AssetType/Search',
+      url: 'VisionNextAsset/api/AssetProperty/Search',
       label: i18n.t('insert.AssetType.PropertyId'),
       required: true,
       visible: true,

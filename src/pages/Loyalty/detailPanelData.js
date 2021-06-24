@@ -9,6 +9,7 @@ export const detailData = {
       visible: true,
       required: true,
       isUnique: true,
+      disabled: true,
       label: i18n.t('insert.loyalty.catalogueCode'),
       id: 1
     },
@@ -35,6 +36,9 @@ export const detailData = {
       modelProperty: 'IsFreeItem',
       visible: true,
       label: i18n.t('insert.loyalty.isFreeItem'),
+      disabled: (form) => {
+        return form.IsDiscount === 1
+      },
       id: 4
     },
     {
@@ -58,6 +62,9 @@ export const detailData = {
       valueProperty: 'ForeignField',
       objectKey: 'ColumnNameDesc',
       url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
+      filter: (item) => {
+        return item.Code === 'RECORD_ID'
+      },
       label: i18n.t('insert.loyalty.areaDesc'),
       visible: true,
       required: (form) => {
@@ -79,7 +86,6 @@ export const detailData = {
       url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
       label: i18n.t('insert.loyalty.areaValue'),
       visible: true,
-      isUnique: true,
       required: (form) => {
         return form.IsFreeItem === 1
       },
@@ -94,6 +100,9 @@ export const detailData = {
       modelProperty: 'IsDiscount',
       visible: true,
       label: i18n.t('insert.loyalty.isDiscount'),
+      disabled: (form) => {
+        return form.IsFreeItem === 1
+      },
       id: 8
     },
     {
@@ -132,6 +141,14 @@ export const detailData = {
       hideOnTable: true,
       defaultValue: 'T_ITEM',
       id: 11
+    },
+    {
+      type: 'Check',
+      modelProperty: 'StatusId',
+      defaultValue: 1,
+      visible: true,
+      label: i18n.t('insert.loyalty.status'),
+      id: 4
     }
   ],
   loyaltyCustomerItems: [
