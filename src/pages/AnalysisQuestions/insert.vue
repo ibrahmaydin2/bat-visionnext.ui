@@ -79,7 +79,7 @@ export default {
   computed: {
     ...mapState(['']),
     answers: function () {
-      return this.form.CardTypeId === 1 ? this.allAnswers.filter(l => l.Code === 'CS') : this.allAnswers
+      return this.form.CardTypeId === 1 ? this.allAnswers.filter(l => l.Code === 'SY' || l.Code === 'TT' || l.Code === 'SY2') : this.allAnswers
     }
   },
   mounted () {
