@@ -105,8 +105,14 @@
                     <NextFormGroup :title="$t('insert.loyaltyCategory.QuestionId')" :error="$v.loyaltyQuestion.question" :required="true">
                       <NextDropdown v-model="loyaltyQuestion.question" :source="questions" @input="selectQuestion"></NextDropdown>
                    </NextFormGroup>
-                    <NextFormGroup v-if="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'MULTI'" :title="$t('insert.loyaltyCategory.Answer')" :error="$v.loyaltyQuestion.multipleAnswer" :required="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'MULTI'">
+                    <NextFormGroup v-if="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'" :title="$t('insert.loyaltyCategory.Answer')" :error="$v.loyaltyQuestion.multipleAnswer" :required="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'">
                       <NextDropdown v-model="loyaltyQuestion.multipleAnswer"  :source="answers"></NextDropdown>
+                   </NextFormGroup>
+                   <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerStart')" :error="$v.loyaltyQuestion.AnswerStart" :required="true" >
+                      <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
+                   </NextFormGroup>
+                   <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerEnd')" :error="$v.loyaltyQuestion.AnswerEnd" :required="true" >
+                      <NextInput v-model="loyaltyQuestion.AnswerEnd" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
                    </NextFormGroup>
                    <b-col cols="12" md="2" class="text-right">
                      <b-form-group>
@@ -126,7 +132,57 @@
           <NextDetailPanel v-model="form.LoyaltyCategoryTasks" :items="loyaltyCategoryTasksItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyaltyCategory.salesAnalysis')" v-if="CalcType && CalcType.Code === 'SA'">
-          <NextDetailPanel v-model="form.LoyaltyCatSales" :items="loyaltyCatSalesItems" />
+          <b-row>
+            <NextFormGroup :title="$t('insert.loyaltyCategory.description')" :error="$v.loyaltySalesCategory.description" :required="true">
+              <NextInput type="text" v-model="loyaltySalesCategory.description"></NextInput>
+            </NextFormGroup>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addloyaltySalesCategory" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table
+              :fields="loyaltySalesCategoryFields"
+              :items="this.form.LoyaltyCategoryCrits ? this.form.LoyaltyCategoryCrits.filter(i => i.RecordState !== 4) : []"
+              bordered responsive >
+              <template #cell(operations)="row">
+                <div class="text-center">
+                  <b-button size="sm" @click="removeloyaltySalesCategory(row.item)" class="mr-2" variant="danger">
+                    <i class="far fa-trash-alt"></i> {{$t('insert.loyaltyCategory.delete')}}
+                  </b-button>
+                  <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">
+                    <i :class="row.detailsShowing ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"></i> {{$t('insert.loyaltyCategory.details')}}
+                  </b-button>
+                </div>
+              </template>
+              <template #row-details="{index}">
+                <div class="p-4 mt-2 nested-detail-panel">
+                  <h3>{{$t('insert.loyaltyCategory.analysisResult')}}</h3>
+                  <b-row>
+                    <NextFormGroup :title="$t('insert.loyaltyCategory.QuestionId')" :error="$v.loyaltyQuestion.question" :required="true">
+                      <NextDropdown v-model="loyaltyQuestion.question" :source="questions" @input="selectQuestion"></NextDropdown>
+                   </NextFormGroup>
+                    <NextFormGroup v-if="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'" :title="$t('insert.loyaltyCategory.Answer')" :error="$v.loyaltyQuestion.multipleAnswer" :required="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'">
+                      <NextDropdown v-model="loyaltyQuestion.multipleAnswer"  :source="answers"></NextDropdown>
+                   </NextFormGroup>
+                   <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerStart')" :error="$v.loyaltyQuestion.AnswerStart" :required="true" >
+                      <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
+                   </NextFormGroup>
+                   <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerEnd')" :error="$v.loyaltyQuestion.AnswerEnd" :required="true" >
+                      <NextInput v-model="loyaltyQuestion.AnswerEnd" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
+                   </NextFormGroup>
+                   <b-col cols="12" md="2" class="text-right">
+                     <b-form-group>
+                       <AddDetailButton @click.native="addLoyaltyQuestion(index)" />
+                     </b-form-group>
+                   </b-col>
+                 </b-row>
+                </div>
+              </template>
+            </b-table>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -165,7 +221,9 @@ export default {
       loyaltyCategoryTasksItems: detailData.loyaltyCategoryTasksItems,
       loyaltyCatSalesItems: detailData.loyaltyCatSalesItems,
       loyaltyActiveCategoryFields: detailData.loyaltyActiveCategoryFields,
+      loyaltySalesCategoryFields: detailData.loyaltySalesCategoryFields,
       loyaltyActiveCategory: {},
+      loyaltySalesCategory: {},
       loyaltyQuestion: {},
       questions: [],
       answers: []
@@ -216,6 +274,29 @@ export default {
       this.loyaltyActiveCategory = {}
       this.$v.loyaltyActiveCategory.$reset()
     },
+    addloyaltySalesCategory () {
+      this.$v.loyaltySalesCategory.$touch()
+      if (this.$v.loyaltySalesCategory.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.LoyaltyCatSales.filter(i => i.LoyaltyCategoryId === this.loyaltySalesCategory.loyaltyCategory.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.loyaltyCategory.sameCategoryError') })
+        return false
+      }
+
+      this.form.LoyaltyCatSales.push({
+        Description1: this.loyaltySalesCategory.description
+      })
+      this.setDatePlanType()
+      this.loyaltySalesCategory = {}
+      this.$v.loyaltySalesCategory.$reset()
+    },
     addLoyaltyQuestion (index) {
       this.$v.loyaltyQuestion.$touch()
       if (this.$v.loyaltyQuestion.$error) {
@@ -227,11 +308,11 @@ export default {
         return false
       }
 
-      if (!this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails) {
-        this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails = []
+      if (!this.form.LoyaltyCatSales[index].LoyaltyCatSalesDetails) {
+        this.form.LoyaltyCatSales[index].LoyaltyCatSalesDetails = []
       }
 
-      this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.push({
+      this.form.LoyaltyCatSales[index].LoyaltyCatSalesDetails.push({
         QuestionId: this.loyaltyQuestion.RecordId,
         AnswerId: this.loyaltyQuestion.multipleAnswer ? this.loyaltyQuestion.multipleAnswer.RecordId : null
       })
@@ -279,7 +360,7 @@ export default {
       }
     },
     selectQuestion (value) {
-      if (value && value.AnswerType && value.AnswerType.Code === 'MULTI') {
+      if (value && value.AnswerType && value.AnswerType.Code === 'CS') {
         this.$api.postByUrl({RecordId: value.RecordId}, 'VisionNextFieldAnalysis/api/AnalysisQuestions/Get').then((response) => {
           if (response.Model && response.Model) {
             this.answers = response.Model.QuestionChoices
@@ -311,7 +392,7 @@ export default {
         },
         multipleAnswer: {
           required: requiredIf(function () {
-            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code === 'MULTI'
+            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code === 'CS'
           })
         }
       }

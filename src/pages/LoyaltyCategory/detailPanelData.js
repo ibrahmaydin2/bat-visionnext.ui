@@ -112,13 +112,23 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Description1',
       objectKey: 'Description1',
-      label: i18n.t('insert.loyaltyCategory.Description1'),
+      label: i18n.t('insert.loyaltyCategory.description'),
       required: true,
       visible: true,
       id: 1
     }
   ],
   loyaltyActiveCategoryFields: [
+    {
+      key: 'Description1',
+      label: i18n.t('insert.loyaltyCategory.description')
+    },
+    {
+      key: 'operations',
+      label: i18n.t('list.operations')
+    }
+  ],
+  loyaltySalesCategoryFields: [
     {
       key: 'Description1',
       label: i18n.t('insert.loyaltyCategory.description')
