@@ -1841,7 +1841,7 @@
       "branchCriteria":"Şube Kriteri"
     },
     "loyaltyCategory": {
-      "Description1 ": "Tanım",
+      "Description1": "Tanım",
       "Code": "Kod",
       "StatusId": "Durum",
       "MinValue": "Minimum Değer",
@@ -1872,7 +1872,11 @@
       "AnswerStart": "Cevap Başlangıç",
       "QuestionId": "Soru",
       "AnswerEnd": "Cevap Bitiş",
-      "Answer": "Cevap"
+      "Answer": "Cevap",
+      "ItemId": "Ürün Kodu",
+      "itemName": "Ürün Adı",
+      "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz."
+
     },
 
     "itemAnalysis": {

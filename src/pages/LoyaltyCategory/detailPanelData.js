@@ -128,16 +128,6 @@ export const detailData = {
       label: i18n.t('list.operations')
     }
   ],
-  loyaltySalesCategoryFields: [
-    {
-      key: 'Description1',
-      label: i18n.t('insert.loyaltyCategory.description')
-    },
-    {
-      key: 'operations',
-      label: i18n.t('list.operations')
-    }
-  ],
   loyaltyCategoryCritDetailItems: [
     {
       type: 'Lookup',
@@ -187,6 +177,29 @@ export const detailData = {
       required: true,
       visible: true,
       id: 5
+    }
+  ],
+  LoyaltyCatSalesDetailsItems: [
+    {
+      type: 'Autocomplete',
+      modelProperty: 'ItemId',
+      objectKey: 'Item',
+      url: 'VisionNextItem/api/Item/Search',
+      label: i18n.t('insert.loyaltyCategory.ItemId'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      objectKey: 'itemName',
+      modelProperty: 'itemName',
+      label: i18n.t('insert.loyaltyCategory.itemName'),
+      required: true,
+      visible: true,
+      id: 2
     }
   ]
 }
