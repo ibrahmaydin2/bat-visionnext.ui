@@ -324,6 +324,11 @@ import CSCardGet from '@/pages/CSCard/get'
 import CSCardInsert from '@/pages/CSCard/insert'
 import CSCardUpdate from '@/pages/CSCard/update'
 
+import VoucherIndex from '@/pages/Voucher/'
+import VoucherGet from '@/pages/Voucher/get'
+import VoucherInsert from '@/pages/Voucher/insert'
+import VoucherUpdate from '@/pages/Voucher/update'
+
 import AccountTransactionIndex from '@/pages/AccountTransaction/'
 import AccountTransactionGet from '@/pages/AccountTransaction/get'
 import AccountTransactionInsert from '@/pages/AccountTransaction/insert'
@@ -684,6 +689,7 @@ const listIndex = [
   {path: '/CheckOperations', name: 'CheckOperations', component: CheckOperationsIndex, meta: { title: i18n.t('router.CheckOperations'), createLink: 'CheckOperationsInsert' }},
   {path: '/BankTransaction', name: 'BankTransaction', component: BankTransactionIndex, meta: { title: i18n.t('router.BankTransaction'), createLink: 'BankTransactionInsert' }},
   {path: '/CSCard', name: 'CSCard', component: CSCardIndex, meta: { title: i18n.t('router.CSCard'), createLink: 'CSCardInsert' }},
+  {path: '/Voucher', name: 'Voucher', component: VoucherIndex, meta: { title: i18n.t('router.Voucher'), createLink: 'VoucherInsert' }},
   {path: '/AccountTransaction', name: 'AccountTransaction', component: AccountTransactionIndex, meta: { title: i18n.t('router.AccountTransaction'), createLink: 'AccountTransactionInsert' }},
   {path: '/CreditCard', name: 'CreditCard', component: CreditCardIndex, meta: { title: i18n.t('router.CreditCard'), createLink: 'CreditCardInsert' }},
   {path: '/CashTransactions', name: 'CashTransactions', component: CashTransactionsIndex, meta: { title: i18n.t('router.CashTransactions'), createLink: 'CashTransactionsInsert' }},
@@ -805,6 +811,7 @@ const listGet = [
   { path: '/CheckOperations/:url', name: 'CheckOperationsGet', component: CheckOperationsGet, meta: { title: i18n.t('router.CheckOperationsGet'), baseLink: 'CheckOperations' } },
   { path: '/BankTransaction/:url', name: 'BankTransactionGet', component: BankTransactionGet, meta: { title: i18n.t('router.BankTransactionGet'), baseLink: 'BankTransaction' } },
   { path: '/CSCard/:url', name: 'CSCardGet', component: CSCardGet, meta: { title: i18n.t('router.CSCardGet'), baseLink: 'CSCard' } },
+  { path: '/Voucher/:url', name: 'VoucherGet', component: VoucherGet, meta: { title: i18n.t('router.VoucherGet'), baseLink: 'Voucher' } },
   { path: '/AccountTransaction/:url', name: 'AccountTransactionGet', component: AccountTransactionGet, meta: { title: i18n.t('router.AccountTransactionGet'), baseLink: 'AccountTransaction' } },
   { path: '/CreditCard/:url', name: 'CreditCardGet', component: CreditCardGet, meta: { title: i18n.t('router.CreditCardGet'), baseLink: 'CreditCard' } },
   { path: '/CashTransactions/:url', name: 'CashTransactionsGet', component: CashTransactionsGet, meta: { title: i18n.t('router.CashTransactionsGet'), baseLink: 'CashTransactions' } },
@@ -926,6 +933,7 @@ const listUpdate = [
   { path: '/Update/CheckOperations/:url', name: 'CheckOperationsUpdate', component: CheckOperationsUpdate, meta: { title: i18n.t('router.CheckOperationsUpdate'), baseLink: 'CheckOperations' } },
   { path: '/Update/BankTransaction/:url', name: 'BankTransactionUpdate', component: BankTransactionUpdate, meta: { title: i18n.t('router.BankTransactionUpdate'), baseLink: 'BankTransaction' } },
   { path: '/Update/CSCard/:url', name: 'CSCardUpdate', component: CSCardUpdate, meta: { title: i18n.t('router.CSCardUpdate'), baseLink: 'CSCard' } },
+  { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
   { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: CreditCardUpdate, meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
   { path: '/Update/CashTransactions/:url', name: 'CashTransactionsUpdate', component: CashTransactionsUpdate, meta: { title: i18n.t('router.CashTransactionsUpdate'), baseLink: 'CashTransactions' } },
@@ -1043,6 +1051,7 @@ const listInsert = [
   { path: '/Insert/CheckOperations', name: 'CheckOperationsInsert', component: CheckOperationsInsert, meta: { title: i18n.t('router.CheckOperationsInsert'), baseLink: 'CheckOperations' } },
   { path: '/Insert/BankTransaction', name: 'BankTransactionInsert', component: BankTransactionInsert, meta: { title: i18n.t('router.BankTransactionInsert'), baseLink: 'BankTransaction' } },
   { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
+  { path: '/Insert/Voucher', name: 'VoucherInsert', component: VoucherInsert, meta: { title: i18n.t('router.VoucherInsert'), baseLink: 'Voucher' } },
   { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
   { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: CreditCardInsert, meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/CashTransactions', name: 'CashTransactionsInsert', component: CashTransactionsInsert, meta: { title: i18n.t('router.CashTransactionsInsert'), baseLink: 'CashTransactions' } },

@@ -337,6 +337,10 @@
     "CSCardInsert": "Yeni Çek İşlemi",
     "CSCardUpdate": "Çek İşlemi Güncelle",
     "CSCardGet": "Çek İşlemi Görüntüle",
+    "Voucher": "Senet İşlemleri",
+    "VoucherInsert": "Yeni Senet İşlemi",
+    "VoucherUpdate": "Senet İşlemi Güncelle",
+    "VoucherGet": "Senet İşlemi Görüntüle",
     "RouteBalance": "Rota Dengeleme",
     "AccountTransaction": "Cari Hesap Hareketleri",
     "AccountTransactionGet": "Cari Hesap Hareketleri Görüntüle",
@@ -1012,6 +1016,17 @@
       "code": "Sistem Kodu",
       "reminder": "Müşteri Bakiyesi",
       "description": "Açıklama"
+    },
+    "Voucher": {
+      "Code": "Senet İşlem Kodu",
+      "CsCard": "Senet İşlem Ana Kayıtları",
+      "status": "Durum",
+      "code": "Sistem Kodu",
+      "reminder": "Müşteri Bakiyesi",
+      "description": "Açıklama",
+      "CustomerId": "Müşteri",
+      "VoucherDetails": "Senet İşlemleri Detay",
+      "orderStatusException": "dsadsadsadsada"
     },
     "item": {
       "Detail": "Detaylar",
@@ -2148,6 +2163,29 @@
       "RepresentativeId": "Saha Personeli",
       "RouteId": "Rota",
       "CsCard": "Genel"
+    },
+    "Voucher": {
+      "VoucherDetails": "Senet İşlemleri Detay",
+      "title":"Çek İşlem Ana Kayıtları",
+      "StatusId": "Durum",
+      "Description": "Açıklama",
+      "Code": "Kodu",
+      "CustomerId": "Müşteri",
+      "DocumentNumber": "Belge Numarası",
+      "DocumentDate": "Senet Tarihi",
+      "CsType": "İşlem Tipi",
+      "DueDate": "Ödeme Tarihi",
+      "SerialNumber": "Seri No",
+      "Owner": "Çekin Sahibi",
+      "PayCity": "İl",
+      "Bank": "Bank",
+      "CorrespondentBranch": "Banka Şubesi",
+      "CurrencyId": "Para Birimi",
+      "CsTotal": "Senet Tutarı",
+      "RepresentativeId": "Saha Personeli",
+      "RouteId": "Rota",
+      "CsCard": "Genel",
+      "reminder": "Müşteri Bakiyesi"
     },
     "BankTransaction": {
       "Customer": "Müşteri",
