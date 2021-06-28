@@ -25,7 +25,10 @@
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
           </NextFormGroup>
           <NextFormGroup item-key="ServiceDuration" :error="$v.form.ServiceDuration">
-            <NextInput type="text" v-model="form.ServiceDuration" :disabled="insertReadonly.ServiceDuration"/>
+            <NextInput type="number" maxlength="4" :oninput="maxLengthControl" v-model="form.ServiceDuration" :disabled="insertReadonly.ServiceDuration"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="IsAssetUsed" :error="$v.form.IsAssetUsed">
             <NextCheckBox v-model="form.IsAssetUsed" type="number" :disabled="insertReadonly.IsAssetUsed" toggle/>
@@ -52,7 +55,7 @@ export default {
       form: {
         Deleted: 0,
         System: 0,
-        StatusId: null,
+        StatusId: 1,
         RecordState: 2,
         Code: null,
         Description1: null,
