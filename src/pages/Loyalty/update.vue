@@ -66,7 +66,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails">
+        <b-tab lazy :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails">
           <NextDetailPanel v-model="form.LoyaltyCatalogues" :items="loyaltyCatalogueItems" />
         </b-tab>
         <b-tab :title="$t('insert.loyalty.pointCriterias')" @click="setDatePlanType">
@@ -128,16 +128,16 @@
             </b-table>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
           <NextDetailPanel v-model="customers" :items="loyaltyCustomerItems" />
         </b-tab>
-        <b-tab :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
+        <b-tab lazy :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="loyaltyCustomerCriteriaItems" />
         </b-tab>
-        <b-tab :title="$t('insert.loyalty.customerQuery')" v-if="customerCriteria && customerCriteria.Code === 'MS'">
+        <b-tab lazy :title="$t('insert.loyalty.customerQuery')" v-if="customerCriteria && customerCriteria.Code === 'MS'">
           <NextDetailPanel v-model="form.LoyaltyCustomerSqls" :items="loyaltyCustomerSqlItems" />
         </b-tab>
-        <b-tab :title="$t('insert.loyalty.branchs')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.loyalty.branchs')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="branchs" :items="loyaltyBranchItems" />
         </b-tab>
       </b-tabs>

@@ -14,7 +14,7 @@
         <NextInput type="number" v-model="form.Amount"></NextInput>
       </NextFormGroup>
       <NextFormGroup :title="$t('insert.budgetMaster.budgetMovementType')" :required="true" :error="$v.form.MovementType" md="4" lg="4">
-        <NextDropdown :source="movementTypes" label="Label" @input="selectMovementType" />
+        <NextDropdown v-model="movementType" :source="movementTypes" label="Label" @input="selectMovementType($event, 'form')" />
       </NextFormGroup>
        <b-col cols="12" md="4" lg="4">
         <b-form-group>
@@ -28,8 +28,31 @@
     <b-row v-if="!showInsert">
       <b-col cols="12" v-if="addable">
         <b-form-group class="text-right">
-          <b-button @click="showInsert = true" id="submitButton" size="sm" variant="success" :disabled="isLoading">
+          <b-button @click="addNew" id="submitButton" size="sm" variant="success" :disabled="isLoading">
             <span>{{$t('insert.budgetMaster.newAdd')}}</span>
+        </b-button>
+        </b-form-group>
+      </b-col>
+       <NextFormGroup :title="$t('insert.budgetMaster.movementCode')" :required="true" :error="$v.form.Code" md="4" lg="4">
+        <NextInput v-model="filter.Code"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('insert.budgetMaster.description')" :required="true" :error="$v.form.Description1" md="4" lg="4">
+        <NextInput v-model="filter.Description1"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('insert.budgetMaster.budget')" md="4" lg="4">
+        <b-form-input type="text" disabled v-model="budget"/>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('insert.budgetMaster.amount')" :required="true" :error="$v.form.Amount" md="4" lg="4">
+        <NextInput type="number" v-model="filter.Amount"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('insert.budgetMaster.budgetMovementType')" :required="true" :error="$v.form.MovementType" md="4" lg="4">
+        <NextDropdown v-model="movementType" :source="allMovementTypes" label="Label" @input="selectMovementType($event, 'filter')" />
+      </NextFormGroup>
+      <b-col cols="12" md="4" lg="4">
+        <b-form-group>
+          <b-button @click="getBudgetTransactions"  class="mt-4" size="sm" variant="success" :disabled="isLoading">
+             <b-spinner v-if="isLoading" small></b-spinner>
+            <span>{{$t('insert.budgetMaster.find')}}</span>
         </b-button>
         </b-form-group>
       </b-col>
@@ -107,14 +130,15 @@ export default {
         }
       ],
       budgetTransactions: [],
-      currentPage: 1
+      currentPage: 1,
+      filter: {},
+      allMovementTypes: [],
+      movementType: null
     }
   },
   mounted () {
-    this.form.BudgetId = this.budgetDetail.RecordId
     this.budget = this.budgetDetail.Description1
     this.getMovementTypes()
-    this.getBudgetTransactions()
   },
   computed: {
     ...mapState(['lookup'])
@@ -131,6 +155,7 @@ export default {
       } else {
         this.$store.commit('setDisabledLoading', true)
         this.isLoading = true
+        this.form.BudgetId = this.budgetDetail.RecordId
         this.$api.postByUrl({model: this.form}, 'VisionNextBudget/api/BudgetTransaction/Insert').then((response) => {
           this.isLoading = false
           if (response.IsCompleted === true) {
@@ -139,7 +164,8 @@ export default {
               keepOnHover: true,
               duration: '3000'
             })
-            this.getBudgetTransactions()
+            this.movementType = null
+            this.filter = {}
             this.showInsert = false
             this.$store.commit('setDisabledLoading', false)
           }
@@ -149,13 +175,14 @@ export default {
         })
       }
     },
-    selectMovementType (data) {
-      this.form.MovementType = data ? data.DecimalValue : null
+    selectMovementType (data, obj) {
+      this[obj].MovementType = data ? data.DecimalValue : null
     },
     getMovementTypes () {
       let random = Math.random()
       this.$api.postByUrl({LookupTableCode: 'BUDGET_MOVEMENT_TYPE'}, `VisionNextCommonApi/api/LookupValue/GetValues?v=${random}`).then((response) => {
         if (response.Values) {
+          this.allMovementTypes = response.Values
           this.movementTypes = response.Values.filter(i => i.Code === 'ART' || i.Code === 'AZ')
         }
       })
@@ -163,12 +190,35 @@ export default {
     getBudgetTransactions () {
       let model = {
         AndConditionModel: {
-          BudgetIds: [this.budgetDetail.RecordId]
+          BudgetIds: [this.budgetDetail.RecordId],
+          Amount: this.filter.Amount ? this.filter.Amount : null,
+          Code: this.filter.Code ? this.filter.Code : null,
+          Description1: this.filter.Description1 ? this.filter.Description1 : null,
+          MovementType: this.filter.MovementType ? this.filter.MovementType : null
         }
       }
+      this.$store.commit('setDisabledLoading', true)
+      this.isLoading = true
       this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetTransaction/Search').then((response) => {
+        this.$store.commit('setDisabledLoading', false)
+        this.isLoading = false
         if (response.ListModel) {
           this.budgetTransactions = response.ListModel.BaseModels
+        }
+      }).catch(() => {
+        this.$store.commit('setDisabledLoading', false)
+        this.isLoading = false
+      })
+    },
+    addNew () {
+      this.showInsert = true
+      this.form = {}
+      this.$v.form.$reset()
+      this.movementType = null
+      this.$api.postByUrl({}, 'VisionNextBudget/api/BudgetTransaction/GetCode').then((response) => {
+        if (response && response.Model) {
+          this.form.Code = response.Model.Code
+          this.$forceUpdate()
         }
       })
     }

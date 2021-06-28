@@ -1936,10 +1936,11 @@
       "budgetMovements": "Bütçe Hareketleri",
       "save": "Kaydet",
       "successSaveBudgetTransaction": "Bütçe Hareketleri başarıyla kaydedildi.",
-      "newAdd": "Yeni Ekle"
+      "newAdd": "Yeni Ekle",
+      "find": "Bul"
     },
     "fieldAnalysis": {
-      "title": "Saha Araştırması Tanımları",
+      "title": "Analiz Tanımları",
       "question": "Soru",
       "questionCode":"Soru Kodu",
       "questionName": "Soru",

@@ -35,7 +35,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UK'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -44,7 +44,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.items')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UL'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.items')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UL'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -53,7 +53,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -62,7 +62,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -71,7 +71,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.route')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.route')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'" >
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">

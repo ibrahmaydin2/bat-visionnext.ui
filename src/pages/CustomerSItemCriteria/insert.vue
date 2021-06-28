@@ -45,19 +45,19 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="itemCriteria && itemCriteria.Code === 'UK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="itemCriteria && itemCriteria.Code === 'UK'" >
           <NextDetailPanel v-model="itemCriterias" :items="itemCriteriaItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.items')" v-if="itemCriteria && itemCriteria.Code === 'UL'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.items')" v-if="itemCriteria && itemCriteria.Code === 'UL'" >
           <NextDetailPanel v-model="items" :items="itemItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="customerCriteriaItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
           <NextDetailPanel v-model="customerList" :items="customerItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.route')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.route')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
       </b-tabs>
