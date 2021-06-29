@@ -31,11 +31,25 @@
       <b-tabs>
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextDropdown :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url="" searchable/>
-            </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
               <NextDropdown :disabled="insertReadonly.LoyaltyId" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <v-select
+                v-model="customer"
+                :disabled="!form.LoyaltyId"
+                @input="selectedSearchType('CustomerId', $event)"
+                @search="searchCustomer"
+                :options="customers"
+                :filterable="false"
+                label="Description1">
+              <template slot="no-options">
+                {{$t('insert.min3')}}
+              </template>
+              <template v-slot:option="option">
+                <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+              </template>
+              </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
@@ -85,7 +99,9 @@ export default {
       },
       routeName1: 'Loyalty',
       employee: null,
-      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields
+      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
+      customer: null,
+      customers: []
     }
   },
   mounted () {
@@ -125,6 +141,8 @@ export default {
       }
     },
     selectLoyalty (loyalty) {
+      this.customer = null
+      this.form.CustomerId = null
       if (loyalty) {
         this.form.LoyaltyId = loyalty.RecordId
         let model = {
@@ -144,6 +162,29 @@ export default {
           }
         })
       }
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      if (search === '%%%') {
+        search = undefined
+      } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
+        search = search.replaceAll('%', '')
+      }
+      let request = {
+        model: {
+          loyaltyId: this.form.LoyaltyId,
+          description: search
+        }
+      }
+      loading(true)
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/GetLoyaltyCustomers').then((response) => {
+        loading(false)
+        if (response && response.ListModel) {
+          this.customers = response.ListModel.BaseModels
+        }
+      })
     }
   }
 }
