@@ -1026,7 +1026,7 @@
       "description": "Açıklama",
       "CustomerId": "Müşteri",
       "VoucherDetails": "Senet İşlemleri Detay",
-      "orderStatusException": "dsadsadsadsada"
+      "voucherStatusException": "Teslim Alındı Tipi Dışındaki Kayıtlar Güncellenemez"
     },
     "item": {
       "Detail": "Detaylar",
