@@ -28,7 +28,7 @@
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="MinValue" :error="$v.form.MinValue">
-            <NextInput v-model="form.MinValue" type="number" :disabled="insertReadonly.MinValue" />
+            <NextInput v-model="form.MinValue" type="number" :disabled="CategoryType == '' && CategoryType.Code !== 'ARA'" />
           </NextFormGroup>
           <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue">
             <NextInput v-model="form.MaxValue" type="number" :disabled="insertReadonly.MaxValue" />

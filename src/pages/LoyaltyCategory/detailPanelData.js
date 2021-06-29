@@ -198,6 +198,7 @@ export const detailData = {
       modelProperty: 'itemName',
       label: i18n.t('insert.loyaltyCategory.itemName'),
       required: true,
+      labelProperty: 'Label',
       visible: true,
       id: 2
     }
