@@ -48,7 +48,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.budgetMaster.branches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">

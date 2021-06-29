@@ -57,18 +57,19 @@
         <b-tab :title="$t('insert.CycleInstruction.EmployeesList')" >
           <NextDetailPanel v-model="form.CycleInstructionEmployees" :items="employeeItems" />
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="BranchCriteria && BranchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="BranchCriteria && BranchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="branches" :items="branchItems" />
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
           <NextDetailPanel v-model="customers" :items="customerItems" />
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="routeCriteria && routeCriteria.Code === 'RL'" >
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="routeCriteria && routeCriteria.Code === 'RL'" >
           <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')" >
           <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" />
-        </b-tab><b-tab :title="$t('insert.CycleInstruction.CycleInstructionCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+        </b-tab>
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="criteriaItems" />
         </b-tab>
       </b-tabs>

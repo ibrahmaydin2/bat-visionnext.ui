@@ -48,13 +48,10 @@
               <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
-                <b-form-datepicker v-model="form.DocumentDate" />
-            </NextFormGroup>
-            <NextFormGroup item-key="CsTypeId" :error="$v.form.CsTypeId">
-                <v-select v-model="csType" :options="csTypes" @input="selectedSearchType('CsTypeId', $event)" label="Description1"></v-select>
+                <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup item-key="DueDate" :error="$v.form.DueDate">
-                <b-form-datepicker v-model="form.DueDate" />
+                <b-form-datepicker v-model="form.DueDate" :placeholder="$t('insert.chooseDate')" />
             </NextFormGroup>
             <NextFormGroup item-key="SerialNumber" :error="$v.form.SerialNumber">
                 <b-form-input type="text" v-model="form.SerialNumber" :readonly="insertReadonly.SerialNumber" />
@@ -185,13 +182,12 @@ export default {
       route: null,
       bank: null,
       payCity: null,
-      csType: null,
       branch: null,
       routeName1: 'Finance'
     }
   },
   computed: {
-    ...mapState(['customers', 'currencies', 'banks', 'routes', 'representatives', 'csTypes'])
+    ...mapState(['customers', 'currencies', 'banks', 'routes', 'representatives'])
   },
   mounted () {
     this.getData().then(() => {
@@ -202,7 +198,6 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getInsertRules', {...this.query, api: 'CsCard'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextFinance/api/CsType/Search', name: 'csTypes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
     },
     selectedSearchType (label, model) {
@@ -326,7 +321,6 @@ export default {
       this.currency = this.convertLookupValueToSearchValue(e.Currency)
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
       this.route = this.convertLookupValueToSearchValue(e.Route)
-      this.csType = this.convertLookupValueToSearchValue(e.CsType)
       this.branch = this.convertLookupValueToSearchValue(e.BankBranch)
       this.form = e
       this.form.CsTotal = this.form.CurrencyCsTotal

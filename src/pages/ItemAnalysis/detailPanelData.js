@@ -11,6 +11,7 @@ export const detailData = {
       visible: true,
       required: true,
       isUnique: true,
+      customOption: true,
       id: 1
     },
     {
@@ -30,7 +31,7 @@ export const detailData = {
       type: 'Label',
       inputType: 'text',
       modelProperty: 'Label',
-      objectKey: 'AnswerType',
+      objectKey: 'Question',
       parentProperty: 'AnswerType',
       label: i18n.t('insert.itemAnalysis.answerType'),
       visible: true,

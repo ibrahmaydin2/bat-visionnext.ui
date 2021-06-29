@@ -26,11 +26,10 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.loyaltyGain.customer')"></div>
               <div v-html="getFormatDataByType(rowData.Loyalty, 'object', 'insert.loyaltyGain.loyalty')"></div>
-              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.loyaltyGain.date')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.loyaltyGain.date')"></div>
               <div v-html="getFormatDataByType(rowData.Employee, 'object', 'insert.loyaltyGain.employee')"></div>
-              <div v-html="getFormatDataByType(rowData.Contact, 'object', 'insert.loyaltyGain.contact')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -42,6 +41,12 @@
                   :fields="loyaltyGainDetailFields"
                   :items="(rowData && rowData.LoyaltyGainDetails ? rowData.LoyaltyGainDetails.filter(l => l.Value > 0) : [])"
                   bordered responsive >
+                  <template #cell(ActiveCategoryId)="{item}">
+                    {{item.ActiveCategory && item.ActiveCategory.LoyaltyCategory ? item.ActiveCategory.LoyaltyCategory.Label : '-'}}
+                  </template>
+                   <template #cell(Description)="{item}">
+                   {{item.ActiveCategory ? item.ActiveCategory.Genexp1 : '-'}}
+                  </template>
                 </b-table>
               </b-card>
             </b-col>
