@@ -465,10 +465,10 @@
     "BudgetMasterGet": "Bütçe Tanımımı Görüntüle",
     "BudgetMasterInsert": "Yeni Bütçe Tanımlama",
     "BudgetMasterUpdate": "Bütçe Tanımı Güncelle",
-    "FieldAnalysis": "Aktivite Noktası Analizleri - Analiz Tanımları",
-    "FieldAnalysisGet": "Aktivite Noktası Analizleri - Analiz Tanımları Görüntüle",
-    "FieldAnalysisInsert": "Aktivite Noktası Analizleri - Yeni Analiz Tanımları",
-    "FieldAnalysisUpdate": "Aktivite Noktası Analizleri - Analiz Tanımları Güncelle"
+    "FieldAnalysis": "Aktivite Noktası Analiz Tanımları",
+    "FieldAnalysisGet": "Aktivite Noktası Analiz Tanımları Görüntüle",
+    "FieldAnalysisInsert": "Yeni Aktivite Noktası Analiz Tanımları",
+    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1940,7 +1940,7 @@
       "find": "Bul"
     },
     "fieldAnalysis": {
-      "title": "Analiz Tanımları",
+      "title": "Saha Araştırması Tanımları",
       "question": "Soru",
       "questionCode":"Soru Kodu",
       "questionName": "Soru",
