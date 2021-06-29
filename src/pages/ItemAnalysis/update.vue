@@ -38,7 +38,7 @@
               <NextDropdown v-model="validityType" :disabled="insertReadonly.ValidityTypeId" @input="selectedType('ValidityTypeId', $event)" lookup-key="ANALYSIS_VALIDITY_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisTypeId" :error="$v.form.AnalysisTypeId">
-              <NextDropdown v-model="analysisType" :disabled="insertReadonly.AnalysisTypeId" @input="selectedType('AnalysisTypeId', $event)" lookup-key="ITEM_ANALYSIS_TYPE"/>
+              <NextDropdown v-model="analysisType" :disabled="insertReadonly.AnalysisTypeId" @input="selectedType('AnalysisTypeId', $event); setUseOnce($event)" lookup-key="ITEM_ANALYSIS_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisPeriodId" :error="$v.form.AnalysisPeriodId">
               <NextDropdown v-model="analysisPeriod" :disabled="insertReadonly.AnalysisPeriodId" @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD"/>
@@ -86,16 +86,16 @@
         <b-tab :title="$t('insert.itemAnalysis.employeeType')">
           <NextDetailPanel v-model="form.ItemAnalysisEmployeeTypes" :items="itemAnalysisEmployeeItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
+        <b-tab lazy :title="$t('insert.itemAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
           <NextDetailPanel v-model="form.ItemAnalysisValidDates" :items="itemAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.itemList')" v-if="itemCriteria && itemCriteria.Code === 'UL'">
+        <b-tab lazy :title="$t('insert.itemAnalysis.itemList')" v-if="itemCriteria && itemCriteria.Code === 'UL'">
           <NextDetailPanel v-model="form.ItemAnalysisItems" :items="itemAnalysisItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.itemAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'" :disabled="!form.ItemAnalysisBranches || form.ItemAnalysisBranches.length === 0" >
           <NextDetailPanel v-model="customers" :items="itemAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.itemAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
+        <b-tab lazy :title="$t('insert.itemAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="itemAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
@@ -205,6 +205,9 @@ export default {
         this.customerCriterias = this.form.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         this.customers = this.form.ItemAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
       }
+    },
+    setUseOnce (model) {
+      this.form.UseOnce = !model || model.Code !== 'KLN' ? 0 : this.form.UseOnce
     }
   },
   watch: {

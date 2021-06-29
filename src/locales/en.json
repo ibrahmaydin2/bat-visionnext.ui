@@ -445,10 +445,10 @@
     "BudgetMasterGet": "Bütçe Tanımımı Görüntüle",
     "BudgetMasterInsert": "Yeni Bütçe Tanımlama",
     "BudgetMasterUpdate": "Bütçe Tanımı Güncelle",
-    "FieldAnalysis": "Aktivite Noktası Analizleri - Analiz Tanımları",
-    "FieldAnalysisGet": "Aktivite Noktası Analizleri - Analiz Tanımları Görüntüle",
-    "FieldAnalysisInsert": "Aktivite Noktası Analizleri - Yeni Analiz Tanımları",
-    "FieldAnalysisUpdate": "Aktivite Noktası Analizleri - Analiz Tanımları Güncelle"
+    "FieldAnalysis": "Aktivite Noktası Analiz Tanımları",
+    "FieldAnalysisGet": "Aktivite Noktası Analiz Tanımları Görüntüle",
+    "FieldAnalysisInsert": "Yeni Aktivite Noktası Analiz Tanımları",
+    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -1872,7 +1872,8 @@
       "budgetMovements": "Bütçe Hareketleri",
       "save": "Kaydet",
       "successSaveBudgetTransaction": "Bütçe Hareketleri başarıyla kaydedildi.",
-      "newAdd": "Yeni Ekle"
+      "newAdd": "Yeni Ekle",
+      "find": "Bul"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",

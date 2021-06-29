@@ -38,7 +38,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AssetOperation.AssetUsage')" v-if="form.IsAssetUsed === 1" >
+        <b-tab lazy :title="$t('insert.AssetOperation.AssetUsage')" v-if="form.IsAssetUsed === 1" >
           <NextDetailPanel v-model="form.AssetOperationDetails" :items="assetOperationDetailsItems" />
         </b-tab>
       </b-tabs>

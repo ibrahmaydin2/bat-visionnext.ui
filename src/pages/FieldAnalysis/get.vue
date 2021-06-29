@@ -68,7 +68,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.validDates')" v-if="rowData.ValidityType && rowData.ValidityType.Code === 'SS'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.validDates')" v-if="rowData.ValidityType && rowData.ValidityType.Code === 'SS'">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -77,7 +77,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.customerList')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -86,7 +86,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">

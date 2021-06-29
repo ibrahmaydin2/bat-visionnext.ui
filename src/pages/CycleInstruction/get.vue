@@ -53,7 +53,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -62,7 +62,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -71,7 +71,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="rowData.RouteCriteria && rowData.RouteCriteria.Code === 'RL'" >
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="rowData.RouteCriteria && rowData.RouteCriteria.Code === 'RL'" >
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">

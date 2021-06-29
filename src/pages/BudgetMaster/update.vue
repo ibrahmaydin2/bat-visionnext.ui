@@ -60,7 +60,7 @@
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
           <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
