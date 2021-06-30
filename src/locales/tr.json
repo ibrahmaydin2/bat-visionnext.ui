@@ -1839,7 +1839,18 @@
       "endDate":"Bitiş Tarihi",
       "financeCode":"ERP Kodu",
       "tci": "TCI",
-      "branchCriteria":"Şube Kriteri"
+      "branchCriteria":"Şube Kriteri",
+      "commercialTitle":"Müşteri Ticari Ünvanı",
+      "search": "Ara",
+      "save": "Kaydet",
+      "searchedCustomers": "Aranan Müşteriler",
+      "currentCustomers": "Mevcut Müşteriler",
+      "customerBulkOperations": "Toplu Müşteri Ekle/Çıkar",
+      "add": "Eke",
+      "remove": "Çıkar",
+      "customerGroup": "Yetki Sınıfı",
+      "customerClass": "Kalite Sınıfı",
+      "customerKind": "Satış Hacim Sınıfı"
     },
     "itemAnalysis": {
       "title": "Ürün Analizi Tanımı",
