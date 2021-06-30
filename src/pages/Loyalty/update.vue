@@ -22,7 +22,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="datePassed" />
+            <NextInput v-model="form.Code" type="text" :disabled="datePassed || isSaveAs" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" />
@@ -239,8 +239,9 @@ export default {
           this.branchs = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
           this.customerCriterias = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         }
-
-        if (this.form.LoyaltyBeginDate) {
+        if (this.isSaveAs) {
+          this.createManualCode()
+        } else if (this.form.LoyaltyBeginDate) {
           let loyaltyBeginDate = new Date(this.form.LoyaltyBeginDate)
           let nowDate = new Date()
 

@@ -6,6 +6,16 @@ export default {
     ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup'])
   },
   methods: {
+    createManualCode (parameter = 'Code') {
+      this.setRouteNames()
+      return this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then((response) => {
+        if (response && response.Model) {
+          let code = response.Model.Code
+          this.form[parameter] = code
+          this.$store.commit('setGetCreateCode', code)
+        }
+      })
+    },
     getData () {
       if (!this.routeName1) {
         this.routeName1 = this.routeName
@@ -34,6 +44,10 @@ export default {
     }
   },
   mounted () {
+    this.isSaveAs = this.$route.query.saveAs === 1
+    if (this.isSaveAs) {
+      this.createManualCode()
+    }
     this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName})
   }
 }
