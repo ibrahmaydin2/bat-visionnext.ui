@@ -2625,7 +2625,9 @@
     "successForgotPassword": "Şifre sıfırlama linki e-posta adresine gönderilmiştir.",
     "rePassword": "Şifre Tekrar",
     "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
-    "passwordsNotMatch": "Şifreler aynı değildir."
+    "passwordsNotMatch": "Şifreler aynı değildir.",
+    "newPassword":"Yeni Şifre",
+    "reNewPassword": "Yeni Şifre Tekrar"
   },
   "list": {
     "location": "Lokasyon",

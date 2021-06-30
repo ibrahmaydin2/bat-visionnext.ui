@@ -2,10 +2,10 @@
   <b-form @submit.prevent="submitForm()">
     <b-alert v-if="isSuccess" show variant="success">{{$t('auth.successResetPassword')}}</b-alert>
     <b-form-group v-if="!isSuccess" :label="$t('auth.password')" :class="{ 'form-group--error': $v.model.password.$error}">
-      <b-form-input v-model="model.password" type="password" :placeholder="$t('auth.password')" />
+      <b-form-input v-model="model.password" type="password" :placeholder="$t('auth.newPassword')" />
     </b-form-group>
     <b-form-group v-if="!isSuccess" :label="$t('auth.rePassword')" :class="{ 'form-group--error': $v.model.rePassword.$error}">
-      <b-form-input v-model="model.rePassword" type="password" :placeholder="$t('auth.rePassword')" />
+      <b-form-input v-model="model.rePassword" type="password" :placeholder="$t('auth.reNewPassword')" />
     </b-form-group>
     <b-row class="text-center">
       <b-col cols="12" v-if="!isSuccess">
@@ -35,7 +35,8 @@ export default {
     }
   },
   mounted () {
-    this.model.guid = this.$route.query.guid
+    this.model.accountHash = this.$route.query.guid
+    this.model.userName = this.$route.query.userName
   },
   validations () {
     return {
@@ -64,7 +65,7 @@ export default {
           return
         }
         this.isLoading = true
-        this.$api.postByUrl(this.model, 'VisionNextAuthentication/api/Authentication/ChangePassword').then((response) => {
+        this.$api.postByUrl(this.model, 'VisionNextAuthentication/api/Authentication/ResetPassword').then((response) => {
           this.isLoading = false
           if (response.IsCompleted) {
             this.isSuccess = true
