@@ -11,6 +11,9 @@ export default {
     return {
     }
   },
+  created () {
+    document.title = process.env.TENANT
+  },
   computed: {
     ...mapState(['modalLoad'])
   }
