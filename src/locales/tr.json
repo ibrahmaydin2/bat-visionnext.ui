@@ -1965,7 +1965,8 @@
       "spentAmount": "Harcanan Bütçe",
       "approve": "Onayla",
       "reject": "Reddet",
-      "search": "Ara"
+      "search": "Ara",
+      "noBudgetMasterList": "Uygun bütçe bulunamadı."
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
