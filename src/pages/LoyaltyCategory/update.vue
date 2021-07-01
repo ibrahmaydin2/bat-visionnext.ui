@@ -224,7 +224,6 @@ export default {
       ColumnValueDesc: null,
       Unit: null,
       Quantity: null,
-      /// approveState: null,
       loyaltyCatQuotasItems: detailData.loyaltyCatQuotasItems,
       loyaltyCategoryCritsItems: detailData.loyaltyCategoryCritsItems,
       loyaltyCategoryValuesItems: detailData.loyaltyCategoryValuesItems,

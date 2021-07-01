@@ -133,7 +133,6 @@ export default {
       CalcType: null,
       FieldAnalysis: null,
       CategoryType: null,
-      /// approveState: null,
       loyaltyCatQuotasItems: detailData.loyaltyCatQuotasItems,
       loyaltyCategoryCritsItems: detailData.loyaltyCategoryCritsItems,
       loyaltyCategoryValuesItems: detailData.loyaltyCategoryValuesItems,
