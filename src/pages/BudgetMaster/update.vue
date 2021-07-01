@@ -1,7 +1,10 @@
 <template>
   <b-row class="asc__insertPage">
-    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+    <b-modal id="detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
       <BudgetDetail :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
+    <b-modal id="monthly-budget-detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.monthlyBudgetDetail')" no-close-on-backdrop>
+      <MonthlyBudgetDetails :budget-detail="selectedBudgetDetail"/>
     </b-modal>
     <b-col cols="12">
       <header>
@@ -58,7 +61,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail" :detail-buttons="detailButtons"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
@@ -71,10 +74,12 @@
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 import BudgetDetail from './Details.vue'
+import MonthlyBudgetDetails from './MonthlyBudgetDetails.vue'
 export default {
   mixins: [updateMixin],
   components: {
-    BudgetDetail
+    BudgetDetail,
+    MonthlyBudgetDetails
   },
   data () {
     return {
@@ -106,7 +111,16 @@ export default {
       customerColumnName: null,
       budgetItems: detailData.budgetItems,
       selectedBranchItems: detailData.selectedBranchItems,
-      selectedBudgetDetail: null
+      selectedBudgetDetail: null,
+      detailButtons: [
+        {
+          title: this.$t('insert.budgetMaster.monthlyBudgetDetail'),
+          icon: 'fa fa-list',
+          getDetail: (data) => {
+            this.getMonthlyBudgetDetail(data)
+          }
+        }
+      ]
     }
   },
   mounted () {
@@ -183,6 +197,10 @@ export default {
     getDetail (data) {
       this.selectedBudgetDetail = data
       this.$bvModal.show('detail-modal')
+    },
+    getMonthlyBudgetDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('monthly-budget-detail-modal')
     }
   }
 }

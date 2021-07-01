@@ -24,7 +24,8 @@
         </template>
         <template #cell(operations)="data">
           <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
-          <i v-if="getDetail" @click="getDetail(data.item)" class="ml-3 fa fa-arrow-down text-success"></i>
+          <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
+          <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
         </template>
         <template #cell(show_details)="row">
           <div>
@@ -85,6 +86,9 @@ export default {
     },
     getDetail: {
       type: Function
+    },
+    detailButtons: {
+      type: Array
     }
   },
   model: {
@@ -153,7 +157,7 @@ export default {
         }
       })
 
-      if (this.editable || this.getDetail) {
+      if (this.editable || this.getDetail || this.detailButtons) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')

@@ -1967,7 +1967,9 @@
       "approve": "Onayla",
       "reject": "Reddet",
       "search": "Ara",
-      "noBudgetMasterList": "Uygun bütçe bulunamadı."
+      "noBudgetMasterList": "Uygun bütçe bulunamadı.",
+      "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
+      "transactionDate": "İşlem Tarihi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
