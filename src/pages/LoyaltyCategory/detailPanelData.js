@@ -4,22 +4,39 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'ColumnName',
-      objectKey: 'ColumnName',
-      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
+      labelProperty: 'Label',
+      valueProperty: 'ForeignField',
+      objectKey: 'ColumnNameDesc',
+      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
       label: i18n.t('insert.loyaltyCategory.ColumnName'),
       required: true,
       visible: true,
+      isUnique: true,
+      dynamicRequest: {paramId: 'ITEM_CRITERIA'},
       id: 1
     },
     {
       type: 'Dropdown',
       modelProperty: 'ColumnValue',
-      objectKey: 'ColumnValue',
-      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams',
+      parentProperty: 'Label',
+      labelProperty: 'Label',
+      objectKey: 'ColumnValueDesc',
+      request: JSON.stringify({ParamName: 'val'}),
+      url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
       label: i18n.t('insert.loyaltyCategory.ColumnValue'),
       required: true,
       visible: true,
+      isUnique: true,
+      parentId: 1,
       id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_ITEM',
+      id: 3
     },
     {
       type: 'Text',
@@ -29,7 +46,7 @@ export const detailData = {
       label: i18n.t('insert.loyaltyCategory.Quantity'),
       required: true,
       visible: true,
-      id: 3
+      id: 4
     },
     {
       type: 'Text',
@@ -39,7 +56,7 @@ export const detailData = {
       label: i18n.t('insert.loyaltyCategory.BeginDate'),
       required: true,
       visible: true,
-      id: 4
+      id: 5
     },
     {
       type: 'Text',
@@ -49,17 +66,18 @@ export const detailData = {
       label: i18n.t('insert.loyaltyCategory.EndDate'),
       required: true,
       visible: true,
-      id: 5
+      id: 6
     },
     {
       type: 'Dropdown',
       modelProperty: 'UnitId',
       objectKey: 'Unit',
+      labelProperty: 'UnitLookupValue.Label',
       url: 'VisionNextUnit/api/Unit/Search',
       label: i18n.t('insert.loyaltyCategory.UnitId'),
       required: true,
       visible: true,
-      id: 6
+      id: 7
     }
   ],
   loyaltyCategoryValuesItems: [
@@ -89,10 +107,15 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'CycleInstructionTaskId',
       objectKey: 'CycleInstructionTask',
+      labelProperty: 'Description1',
+      parentProperty: 'RecordId',
+      responseProperty: 'CycleInstructionTasks',
       url: 'VisionNextFieldManagement/api/CycleInstruction/Get',
       label: i18n.t('insert.loyaltyCategory.CycleInstructionTaskId'),
+      request: JSON.stringify({RecordId: 'val'}),
       required: true,
       visible: true,
+      parentId: 1,
       id: 2
     },
     {
@@ -118,10 +141,38 @@ export const detailData = {
       id: 1
     }
   ],
-  loyaltyActiveCategoryFields: [
+  loyaltyCategoryFields: [
     {
       key: 'Description1',
       label: i18n.t('insert.loyaltyCategory.description')
+    },
+    {
+      key: 'operations',
+      label: i18n.t('list.operations')
+    }
+  ],
+  loyaltyQuestionFields: [
+    {
+      key: 'QuestionId',
+      label: i18n.t('insert.loyaltyCategory.QuestionId'),
+      formatter: (value, key, obj) => {
+        return obj.Question ? obj.Question.label : obj.QuestionIdDesc
+      }
+    },
+    {
+      key: 'Answer',
+      label: i18n.t('insert.loyaltyCategory.Answer'),
+      formatter: (value, key, obj) => {
+        return obj.Answer ? obj.Answer.label : obj.AnswerIdDesc
+      }
+    },
+    {
+      key: 'AnswerStart',
+      label: i18n.t('insert.loyaltyCategory.AnswerStart')
+    },
+    {
+      key: 'AnswerEnd',
+      label: i18n.t('insert.loyaltyCategory.AnswerEnd')
     },
     {
       key: 'operations',

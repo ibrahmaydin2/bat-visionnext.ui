@@ -314,6 +314,9 @@ export default {
                     } else if (res.Values) {
                       this.source[item.modelProperty] = res.Values
                       this.$forceUpdate()
+                    } else if (res.Model && item.responseProperty) {
+                      this.source[item.modelProperty] = res.Model[item.responseProperty]
+                      this.$forceUpdate()
                     }
                   })
                   this.$forceUpdate()

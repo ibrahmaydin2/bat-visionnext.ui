@@ -600,6 +600,11 @@ import LoyaltyGet from '@/pages/Loyalty/get'
 import LoyaltyInsert from '@/pages/Loyalty/insert'
 import LoyaltyUpdate from '@/pages/Loyalty/update'
 
+import LoyaltyCategoryIndex from '@/pages/LoyaltyCategory/'
+import LoyaltyCategoryGet from '@/pages/LoyaltyCategory/get'
+import LoyaltyCategoryInsert from '@/pages/LoyaltyCategory/insert'
+import LoyaltyCategoryUpdate from '@/pages/LoyaltyCategory/update'
+
 import ItemAnalysisIndex from '@/pages/ItemAnalysis/'
 import ItemAnalysisGet from '@/pages/ItemAnalysis/get'
 import ItemAnalysisInsert from '@/pages/ItemAnalysis/insert'
@@ -624,14 +629,6 @@ import FieldAnalysisIndex from '@/pages/FieldAnalysis/'
 import FieldAnalysisGet from '@/pages/FieldAnalysis/get'
 import FieldAnalysisInsert from '@/pages/FieldAnalysis/insert'
 import FieldAnalysisUpdate from '@/pages/FieldAnalysis/update'
-
-import IntegrationDataParkIndex from '@/pages/IntegrationDataPark/'
-import IntegrationDataParkGet from '@/pages/IntegrationDataPark/get'
-
-import LoyaltyCategoryIndex from '@/pages/LoyaltyCategory/'
-import LoyaltyCategoryGet from '@/pages/LoyaltyCategory/get'
-import LoyaltyCategoryInsert from '@/pages/LoyaltyCategory/insert'
-import LoyaltyCategoryUpdate from '@/pages/LoyaltyCategory/update'
 
 Vue.use(Router)
 
@@ -764,7 +761,6 @@ const listIndex = [
   {path: '/AssetOperation', name: 'AssetOperation', component: AssetOperationIndex, meta: { title: i18n.t('router.AssetOperation'), createLink: 'AssetOperationInsert' }},
   {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }},
   {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert' }},
-  {path: '/IntegrationDataPark', name: 'IntegrationDataPark', component: IntegrationDataParkIndex, meta: { title: i18n.t('router.IntegrationDataPark'), createLink: 'IntegrationDataParkInsert' }},
   {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert' }}
 
 ]
@@ -889,7 +885,6 @@ const listGet = [
   { path: '/AssetOperation/:url', name: 'AssetOperationGet', component: AssetOperationGet, meta: { title: i18n.t('router.AssetOperationGet'), baseLink: 'AssetOperation' } },
   { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } },
   { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } },
-  { path: '/IntegrationDataPark/:url', name: 'IntegrationDataParkGet', component: IntegrationDataParkGet, meta: { title: i18n.t('router.IntegrationDataParkGet'), baseLink: 'IntegrationDataPark' } },
   { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } }
 ]
 

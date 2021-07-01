@@ -68,7 +68,8 @@ export default {
       values: [],
       allValues: [],
       selectedValue: undefined,
-      labelKey: ''
+      labelKey: '',
+      labelObjectKey: null
     }
   },
   mounted () {
@@ -79,6 +80,13 @@ export default {
         this.getLookupValues()
       }
     } else if (!this.searchable) {
+      if (this.labelKey.includes('.')) {
+        let keys = this.labelKey.split('.')
+        if (keys && keys.length === 2) {
+          this.labelObjectKey = keys[0]
+          this.labelKey = keys[1]
+        }
+      }
       this.getValues()
     }
   },
@@ -165,6 +173,13 @@ export default {
 
           if (this.filter) {
             this.values = this.values.filter(i => this.filter(i))
+          }
+
+          if (this.labelObjectKey) {
+            this.values = this.values.map((item) => {
+              item[this.labelKey] = item[this.labelObjectKey] ? item[this.labelObjectKey][this.labelKey] : ''
+              return item
+            })
           }
 
           this.allValues = this.values

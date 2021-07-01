@@ -36,7 +36,7 @@
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.AnalysisQuestions.QuestionOptions')">
-          <NextDetailPanel v-model="form.QuestionChoice" :items="customerQuestionChoiceItems"/>
+          <NextDetailPanel v-model="form.QuestionChoices" :items="customerQuestionChoiceItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -59,7 +59,7 @@ export default {
         CardTypeId: null,
         AnswerTypeId: null,
         Description1: null,
-        QuestionChoice: []
+        QuestionChoices: []
       },
       routeName1: 'FieldAnalysis',
       customerQuestionChoiceItems: detailData.customerQuestionChoiceItems,
@@ -79,8 +79,8 @@ export default {
       this.form = rowData
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.answerType = this.convertLookupValueToSearchValue(rowData.AnswerType)
-      if (!rowData.QuestionChoice) {
-        this.form.QuestionChoice = []
+      if (!rowData.QuestionChoices) {
+        this.form.QuestionChoices = []
       }
     },
     save () {

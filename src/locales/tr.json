@@ -423,6 +423,10 @@
     "TerminalMessageUpdate": "Mesaj Tanımı Güncelle",
     "RouteDailyRecord": "Günlük Performans Takibi",
     "RouteDailyRecordGet": "Günlük Performans Takibi Görüntüle",
+    "LoyaltyCategory": "Sadakat Kategori Tanımları",
+    "LoyaltyCategoryGet": "Sadakat Kategori Tanımı Görüntüle",
+    "LoyaltyCategoryInsert": "Yeni Sadakat Kategori Tanımı",
+    "LoyaltyCategoryUpdate": "Sadakat Kategori Tanımı Güncelle",
     "Label": "Etiket Tanımları",
     "LabelGet": "Etiket Tanımı Görüntüle",
     "LabelInsert": "Yeni Etiket Tanımı",
@@ -1792,14 +1796,6 @@
       "IsAssetMandatory": "Varlık Zorunlu",
       "AssetUsage": "Varlık Kullanımı",
       "IsAssetUsed": "Varlık Kullanılacak"
-    },
-    "IntegrationDataPark": {
-      "InterfaceList": "",
-      "CODE": "Interface No",
-      "Description1": "Açıklama",
-      "StatusId": "Durum",
-      "COMPANY_NAME": "Organizasyon",
-      "interface_name": "Interface Adı"
     },
     "loyalty": {
       "title": "Sadakat Tanımları",

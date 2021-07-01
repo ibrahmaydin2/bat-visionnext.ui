@@ -29,12 +29,12 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.loyaltyCategory.salesTarget')"  @click.prevent="tabValidation()" v-if="CalcType && CalcType.Code === 'SH'">
+        <b-tab :title="$t('insert.loyaltyCategory.salesTarget')"  v-if="rowData.CalcType && rowData.CalcType.Code === 'SH'">
           <b-row class="p-4">
-             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ColumnName, 'object', 'insert.loyaltyCategory.ColumnName')"></div>
-              <div v-html="getFormatDataByType(rowData.ColumnValue, 'object', 'insert.loyaltyCategory.ColumnValue')"></div>
-              <div v-html="getFormatDataByType(rowData.UnitId, 'object', 'insert.loyaltyCategory.UnitId')"></div>
+             <b-card class="col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.ColumnNameDesc, 'object', 'insert.loyaltyCategory.ColumnName')"></div>
+              <div v-html="getFormatDataByType(rowData.ColumnValueDesc, 'object', 'insert.loyaltyCategory.ColumnValue')"></div>
+              <div v-html="getFormatDataByType(rowData.Unit, 'object', 'insert.loyaltyCategory.UnitId')"></div>
               <div v-html="getFormatDataByType(rowData.Quantity, 'text', 'insert.loyaltyCategory.Quantity')"></div>
             </b-card>
           </b-row>
@@ -48,12 +48,12 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.loyaltyCategory.analysisResult')" @click="setDatePlanType" v-if="rowData.CalcType && rowData.CalcType.Code === 'ANS' && rowData.FieldAnalysis && rowData.FieldAnalysis.Code !== ''">
+        <b-tab :title="$t('insert.loyaltyCategory.analysisResult')" v-if="rowData.CalcType && rowData.CalcType.Code === 'ANS' && rowData.FieldAnalysis && rowData.FieldAnalysis.Code !== ''">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <b-table
-                  :fields="loyaltyActiveCategoryFields"
+                  :fields="loyaltyCategoryFields"
                   :items="this.rowData.LoyaltyCategoryCrits"
                   bordered responsive >
                   <template #cell(operations)="row">
@@ -64,7 +64,7 @@
                     </div>
                   </template>
                   <template #row-details="{}">
-                    <div v-html="getFormatDataByType(rowData.QuestionId, 'object', 'insert.loyaltyCategory.QuestionId')"></div>
+                    <div v-html="getFormatDataByType(rowData.Question, 'object', 'insert.loyaltyCategory.QuestionId')"></div>
                     <div v-html="getFormatDataByType(rowData.Answer, 'object', 'insert.loyaltyCategory.Answer')"></div>
                     <div v-html="getFormatDataByType(rowData.AnswerStart, 'text', 'insert.loyaltyCategory.AnswerStart')"></div>
                     <div v-html="getFormatDataByType(rowData.AnswerEnd, 'text', 'insert.loyaltyCategory.AnswerEnd')"></div>
@@ -97,7 +97,7 @@
             <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <b-table
-                  :fields="loyaltyActiveCategoryFields"
+                  :fields="loyaltyCategoryFields"
                   :items="this.rowData.LoyaltyCatSales"
                   bordered responsive >
                   <template #cell(operations)="row">
@@ -139,13 +139,14 @@ export default {
       loyaltyCategoryValuesItems: detailData.loyaltyCategoryValuesItems,
       loyaltyCategoryTasksItems: detailData.loyaltyCategoryTasksItems,
       loyaltyCatSalesItems: detailData.loyaltyCatSalesItems,
-      loyaltyActiveCategoryFields: detailData.loyaltyActiveCategoryFields,
+      loyaltyCategoryFields: detailData.loyaltyCategoryFields,
       LoyaltyCatSalesDetailsItems: detailData.LoyaltyCatSalesDetailsItems,
-      loyaltyActiveCategory: {},
+      loyaltyQuestionFields: detailData.loyaltyQuestionFields,
+      loyaltyCategory: {},
       loyaltyQuestion: {},
       questions: [],
-      LoyaltyCategoryTasks: [],
-      answers: []
+      answers: [],
+      columnValues: []
     }
   },
   mounted () {
