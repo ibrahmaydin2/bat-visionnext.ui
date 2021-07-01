@@ -1030,7 +1030,7 @@
       "description": "Açıklama",
       "CustomerId": "Müşteri",
       "VoucherDetails": "Senet İşlemleri Detay",
-      "orderStatusException": "dsadsadsadsada"
+      "voucherStatusException": "Teslim Alındı Tipi Dışındaki Kayıtlar Güncellenemez"
     },
     "item": {
       "Detail": "Detaylar",
@@ -1843,7 +1843,18 @@
       "endDate":"Bitiş Tarihi",
       "financeCode":"ERP Kodu",
       "tci": "TCI",
-      "branchCriteria":"Şube Kriteri"
+      "branchCriteria":"Şube Kriteri",
+      "commercialTitle":"Müşteri Ticari Ünvanı",
+      "search": "Ara",
+      "save": "Kaydet",
+      "searchedCustomers": "Aranan Müşteriler",
+      "currentCustomers": "Mevcut Müşteriler",
+      "customerBulkOperations": "Toplu Müşteri Ekle/Çıkar",
+      "add": "Eke",
+      "remove": "Çıkar",
+      "customerGroup": "Yetki Sınıfı",
+      "customerClass": "Kalite Sınıfı",
+      "customerKind": "Satış Hacim Sınıfı"
     },
     "loyaltyCategory": {
       "Description1": "Tanım",
@@ -1980,7 +1991,24 @@
       "save": "Kaydet",
       "successSaveBudgetTransaction": "Bütçe Hareketleri başarıyla kaydedildi.",
       "newAdd": "Yeni Ekle",
-      "find": "Bul"
+      "find": "Bul",
+      "customerCode":"Müşteri Kodu",
+      "customerName":"Müşteri Adı",
+      "campaignCode": "İndirim Kodu",
+      "campaignDescription": "İndirim Tanımı",
+      "contractCode": "Kontrat Kodu",
+      "contractDescription": "Kontrat Tanımı",
+      "approveState":"Onay Durumu",
+      "successApprove": "Onaylama işleminiz başarıyla tamamlanmıştır.",
+      "successReject": "Reddetme işleminiz başarıyla tamamlanmıştır.",
+      "code": "Kodu",
+      "budgetDescription": "Tanımı",
+      "customer": "Müşteri",
+      "benefitType": "Kazanım Tipi",
+      "spentAmount": "Harcanan Bütçe",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "search": "Ara"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
@@ -2668,7 +2696,9 @@
     "successForgotPassword": "Şifre sıfırlama linki e-posta adresine gönderilmiştir.",
     "rePassword": "Şifre Tekrar",
     "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
-    "passwordsNotMatch": "Şifreler aynı değildir."
+    "passwordsNotMatch": "Şifreler aynı değildir.",
+    "newPassword":"Yeni Şifre",
+    "reNewPassword": "Yeni Şifre Tekrar"
   },
   "list": {
     "location": "Lokasyon",

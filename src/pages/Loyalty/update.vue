@@ -1,5 +1,8 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="customer-operation-modal" size="lg" hide-footer :title="$t('insert.loyalty.customerBulkOperations')">
+      <MultipleCustomerOperations v-model="customers" />
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -19,7 +22,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="datePassed" />
+            <NextInput v-model="form.Code" type="text" :disabled="datePassed || isSaveAs" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" />
@@ -129,6 +132,14 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-form-group class="text-right">
+                <b-button v-b-modal.customer-operation-modal class="mt-1" size="sm" variant="success"><i class="fa fa-list"></i> {{$t('insert.loyalty.customerBulkOperations')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <hr />
           <NextDetailPanel v-model="customers" :items="loyaltyCustomerItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
@@ -148,8 +159,12 @@
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 import { required, requiredIf } from 'vuelidate/lib/validators'
+import MultipleCustomerOperations from './MultipleCustomerOperations'
 export default {
   mixins: [updateMixin],
+  components: {
+    MultipleCustomerOperations
+  },
   data () {
     return {
       form: {
@@ -224,8 +239,9 @@ export default {
           this.branchs = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
           this.customerCriterias = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         }
-
-        if (this.form.LoyaltyBeginDate) {
+        if (this.isSaveAs) {
+          this.createManualCode()
+        } else if (this.form.LoyaltyBeginDate) {
           let loyaltyBeginDate = new Date(this.form.LoyaltyBeginDate)
           let nowDate = new Date()
 

@@ -31,11 +31,11 @@
       <b-tabs>
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextDropdown :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url="" searchable/>
-            </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
               <NextDropdown :disabled="true" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <NextDropdown v-model="customer" :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url="VisionNextCustomer/api/Customer/GetLoyaltyCustomers" :dynamic-request="{LoyaltyId: form.LoyaltyId}" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
@@ -85,7 +85,8 @@ export default {
       },
       routeName1: 'Loyalty',
       employee: null,
-      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields
+      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
+      customer: null
     }
   },
   mounted () {

@@ -1,5 +1,8 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="customer-operation-modal" size="lg" hide-footer :title="$t('insert.loyalty.customerBulkOperations')">
+      <MultipleCustomerOperations v-model="customers" />
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -129,6 +132,14 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-form-group class="text-right">
+                <b-button v-b-modal.customer-operation-modal class="mt-1" size="sm" variant="success"><i class="fa fa-list"></i> {{$t('insert.loyalty.customerBulkOperations')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <hr />
           <NextDetailPanel v-model="customers" :items="loyaltyCustomerItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
@@ -148,8 +159,12 @@
 import insertMixin from '../../mixins/insert'
 import { detailData } from './detailPanelData'
 import { required, requiredIf } from 'vuelidate/lib/validators'
+import MultipleCustomerOperations from './MultipleCustomerOperations'
 export default {
   mixins: [insertMixin],
+  components: {
+    MultipleCustomerOperations
+  },
   data () {
     return {
       form: {

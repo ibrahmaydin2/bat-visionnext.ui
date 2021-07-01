@@ -265,8 +265,8 @@ export default {
     setModel () {
       let e = this.rowData
       let rowData = this.rowData
-      if (rowData.StatusId !== 1) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.Voucher.orderStatusException') })
+      if (rowData.StatusId === 1) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.Voucher.voucherStatusException') })
         setTimeout(() => {
           this.$router.push({ name: 'Voucher' })
         }, 2000)
