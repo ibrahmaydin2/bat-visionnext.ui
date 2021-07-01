@@ -42,7 +42,8 @@
             id="searchButton"
             class="mt-1"
             size="sm"
-            variant="success">
+            variant="success"
+            :disabled="isLoading">
               <span v-if="isLoading"><b-spinner small></b-spinner></span>
               <span v-else><i class="fa fa-list"> </i> {{$t('insert.loyalty.search')}}</span>
           </b-button>
@@ -55,7 +56,7 @@
           <h4>{{$t('insert.loyalty.searchedCustomers')}}</h4>
           <b-form-group class="text-right">
             <b-button
-              v-if="selectedSearchCustomerList && selectedSearchCustomerList.length>0"
+              v-if="selectedSearchCustomerList && selectedSearchCustomerList.length > 0"
               @click="add" id="addButton" class="mt-1" size="sm" variant="success">
               <i class="fa fa-plus"> </i> {{$t('insert.loyalty.add')}}
             </b-button>
@@ -96,7 +97,7 @@
           <h4>{{$t('insert.loyalty.currentCustomers')}}</h4>
           <b-form-group class="text-right">
             <b-button
-              v-if="selectedCurrentCustomerList && selectedCurrentCustomerList.length>0"
+              v-if="selectedCurrentCustomerList && selectedCurrentCustomerList.length > 0"
               @click="remove" id="addButton" class="mt-1" size="sm" variant="success">
               <i class="fa fa-trash"> </i> {{$t('insert.loyalty.remove')}}
             </b-button>
@@ -159,8 +160,6 @@ export default {
       perPage: 10,
       isLoading: false
     }
-  },
-  computed: {
   },
   mounted () {
     let customers = this.value ? this.value : []
@@ -238,10 +237,6 @@ export default {
       this.$forceUpdate()
       this.$emit('valuechange', this.currentCustomerList)
     }
-  },
-  validations () {
-  },
-  watch: {
   }
 }
 </script>
