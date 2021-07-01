@@ -14,20 +14,20 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.Code')}}:</b> {{ rowData.Code }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.CardTypeId')}}:</b> {{ rowData.CardType ? rowData.CardType.Label : '-'}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.AnswerTypeId')}}:</b> {{ rowData.AnswerType ? rowData.AnswerType.Label : '-' }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.Description1')}}:</b> {{ rowData.Description1 }}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.AnalysisQuestions.StatusId')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{ rowData.Code }}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('get.description1')}}:</b> {{ rowData.Description1 }}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.discountPackage.PackageKindId')}}:</b> {{ rowData.PackageKindId  && rowData.PackageKind.Label }}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.discountPackage.MaxScore')}}:</b> {{ rowData.MaxScore }}</span>
           </section>
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.AnalysisQuestions.QuestionOptions')">
+        <b-tab :title="$t('insert.discountPackage.campaigns')">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.QuestionChoices" :items="customerQuestionChoiceItems"/>
+                <NextDetailPanel type="get" v-model="rowData.DiscountPackageDetails" :items="discountPackageDetailsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -45,7 +45,7 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      customerQuestionChoiceItems: detailData.customerQuestionChoiceItems
+      discountPackageDetailsItems: detailData.discountPackageDetailsItems
     }
   },
   mounted () {
@@ -59,7 +59,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFieldAnalysis/api/AnalysisQuestions', record: this.$route.params.url}).then(() => {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextDiscount/api/DiscountPackage', record: this.$route.params.url}).then(() => {
 
       })
     }
