@@ -488,6 +488,11 @@ import DiscountReasonGet from '@/pages/DiscountReason/get'
 import DiscountReasonInsert from '@/pages/DiscountReason/insert'
 import DiscountReasonUpdate from '@/pages/DiscountReason/update'
 
+import DiscountPackageIndex from '@/pages/DiscountPackage/'
+import DiscountPackageGet from '@/pages/DiscountPackage/get'
+import DiscountPackageInsert from '@/pages/DiscountPackage/insert'
+import DiscountPackageUpdate from '@/pages/DiscountPackage/update'
+
 import PriceDiscountTransactionIndex from '@/pages/PriceDiscountTransaction/'
 import PriceDiscountTransactionGet from '@/pages/PriceDiscountTransaction/get'
 import PriceDiscountTransactionInsert from '@/pages/PriceDiscountTransaction/insert'
@@ -729,6 +734,7 @@ const listIndex = [
   {path: '/RmaOrder', name: 'RmaOrder', component: RmaOrderIndex, meta: { title: i18n.t('router.RmaOrder'), createLink: 'RmaOrderInsert' }},
   {path: '/FixedTermCampaign', name: 'FixedTermCampaign', component: FixedTermCampaignIndex, meta: { title: i18n.t('router.FixedTermCampaign'), createLink: 'FixedTermCampaignInsert' }},
   {path: '/DiscountReason', name: 'DiscountReason', component: DiscountReasonIndex, meta: { title: i18n.t('router.DiscountReason'), createLink: 'DiscountReasonInsert' }},
+  {path: '/DiscountPackage', name: 'DiscountPackage', component: DiscountPackageIndex, meta: { title: i18n.t('router.DiscountPackage'), createLink: 'DiscountPackageInsert' }},
   {path: '/PriceDiscountTransaction', name: 'PriceDiscountTransaction', component: PriceDiscountTransactionIndex, meta: { title: i18n.t('router.PriceDiscountTransaction'), createLink: 'PriceDiscountTransactionInsert' }},
   {path: '/SalesReturnWaybill', name: 'SalesReturnWaybill', component: SalesReturnWaybillIndex, meta: { title: i18n.t('router.SalesReturnWaybill') }},
   {path: '/PurchaseReturnWaybill', name: 'PurchaseReturnWaybill', component: PurchaseReturnWaybillIndex, meta: { title: i18n.t('router.PurchaseReturnWaybill') }},
@@ -851,6 +857,7 @@ const listGet = [
   { path: '/RmaOrder/:url', name: 'RmaOrderGet', component: RmaOrderGet, meta: { title: i18n.t('router.RmaOrderGet'), baseLink: 'RmaOrder' } },
   { path: '/FixedTermCampaign/:url', name: 'FixedTermCampaignGet', component: FixedTermCampaignGet, meta: { title: i18n.t('router.FixedTermCampaignGet'), baseLink: 'FixedTermCampaign' } },
   { path: '/DiscountReason/:url', name: 'DiscountReasonGet', component: DiscountReasonGet, meta: { title: i18n.t('router.DiscountReasonGet'), baseLink: 'DiscountReason' } },
+  { path: '/DiscountPackage/:url', name: 'DiscountPackageGet', component: DiscountPackageGet, meta: { title: i18n.t('router.DiscountPackageGet'), baseLink: 'DiscountPackage' } },
   { path: '/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionGet', component: PriceDiscountTransactionGet, meta: { title: i18n.t('router.PriceDiscountTransactionGet'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/SalesReturnWaybill/:url', name: 'SalesReturnWaybillGet', component: SalesReturnWaybillGet, meta: { title: i18n.t('router.SalesReturnWaybillGet'), baseLink: 'SalesReturnWaybill' } },
   { path: '/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillGet', component: PurchaseReturnWaybillGet, meta: { title: i18n.t('router.PurchaseReturnWaybillGet'), baseLink: 'PurchaseReturnWaybill' } },
@@ -970,6 +977,7 @@ const listUpdate = [
   { path: '/Update/RmaOrder/:url', name: 'RmaOrderUpdate', component: RmaOrderUpdate, meta: { title: i18n.t('router.RmaOrderUpdate'), baseLink: 'RmaOrder' } },
   { path: '/Update/FixedTermCampaign/:url', name: 'FixedTermCampaignUpdate', component: FixedTermCampaignUpdate, meta: { title: i18n.t('router.FixedTermCampaignUpdate'), baseLink: 'FixedTermCampaign' } },
   { path: '/Update/DiscountReason/:url', name: 'DiscountReasonUpdate', component: DiscountReasonUpdate, meta: { title: i18n.t('router.DiscountReasonUpdate'), baseLink: 'DiscountReason' } },
+  { path: '/Update/DiscountPackage/:url', name: 'DiscountPackageUpdate', component: DiscountPackageUpdate, meta: { title: i18n.t('router.DiscountPackageUpdate'), baseLink: 'DiscountPackage' } },
   { path: '/Update/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionUpdate', component: PriceDiscountTransactionUpdate, meta: { title: i18n.t('router.PriceDiscountTransactionUpdate'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/Update/SalesReturnWaybill/:url', name: 'SalesReturnWaybillUpdate', component: SalesReturnWaybillUpdate, meta: { title: i18n.t('router.SalesReturnWaybillUpdate'), baseLink: 'SalesReturnWaybill' } },
   { path: '/Update/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillUpdate', component: PurchaseReturnWaybillUpdate, meta: { title: i18n.t('router.PurchaseReturnWaybillUpdate'), baseLink: 'PurchaseReturnWaybill' } },
@@ -1091,6 +1099,7 @@ const listInsert = [
   { path: '/Insert/RmaOrder', name: 'RmaOrderInsert', component: RmaOrderInsert, meta: { title: i18n.t('router.RmaOrderInsert'), baseLink: 'RmaOrder' } },
   { path: '/Insert/FixedTermCampaign', name: 'FixedTermCampaignInsert', component: FixedTermCampaignInsert, meta: { title: i18n.t('router.FixedTermCampaignInsert'), baseLink: 'FixedTermCampaign' } },
   { path: '/Insert/DiscountReason', name: 'DiscountReasonInsert', component: DiscountReasonInsert, meta: { title: i18n.t('router.DiscountReasonInsert'), baseLink: 'DiscountReason' } },
+  { path: '/Insert/DiscountPackage', name: 'DiscountPackageInsert', component: DiscountPackageInsert, meta: { title: i18n.t('router.DiscountPackageInsert'), baseLink: 'DiscountPackage' } },
   { path: '/Insert/PriceDiscountTransaction', name: 'PriceDiscountTransactionInsert', component: PriceDiscountTransactionInsert, meta: { title: i18n.t('router.PriceDiscountTransactionInsert'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/Insert/PurchaseWaybill', name: 'PurchaseWaybillInsert', component: PurchaseWaybillInsert, meta: { title: i18n.t('router.PurchaseWaybillInsert'), baseLink: 'PurchaseWaybill' } },
   { path: '/Insert/Asset', name: 'AssetInsert', component: AssetInsert, meta: { title: i18n.t('router.AssetInsert'), baseLink: 'Asset' } },
