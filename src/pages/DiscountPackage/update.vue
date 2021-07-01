@@ -97,11 +97,6 @@ export default {
         this.updateData()
       }
     }
-  },
-  validations () {
-    return {
-      form: this.insertRules
-    }
   }
 }
 </script>
