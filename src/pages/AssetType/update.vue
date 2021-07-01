@@ -15,7 +15,7 @@
         </b-row>
       </header>
     </b-col>
-    <b-col cols="12" class="asc__insertPage-content-head" :active="!developmentMode">
+    <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
@@ -32,7 +32,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AssetType.Types')" >
+        <b-tab :title="$t('insert.AssetType.Types')" active>
           <NextDetailPanel v-model="form.AssetTypeProperties" :items="assetTypePropertiesItems" />
         </b-tab>
         <b-tab :title="$t('insert.AssetType.PersonelType')">

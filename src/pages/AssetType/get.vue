@@ -21,7 +21,7 @@
         </b-col>
       </b-row>
       <b-tabs>
-        <b-tab :title="$t('insert.AssetType.Types')">
+        <b-tab :title="$t('insert.AssetType.Types')" active>
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
