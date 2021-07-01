@@ -68,7 +68,6 @@
           responsive
           :selectable="true"
           bordered
-          tbody-tr-class="bg-white"
           @row-selected="rowSelected"
           :current-page="currentPage"
           :per-page="10">
@@ -162,7 +161,16 @@ export default {
       this.$api.postByUrl({model: this.model, recordIds: [this.modalItem.RecordId]}, 'VisionNextBudget/api/BudgetMaster/SearchApproveBenefit').then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
-        this.budgetMasters = response
+        if (response && response.length > 0) {
+          this.budgetMasters = response.map(r => {
+            if (r.Approvestate && ((r.Approvestate.Code !== 'ONYBK') || (r.Approvestate.Code !== 'FOB'))) {
+              r._rowVariant = 'row-disabled'
+            }
+            return r
+          })
+        } else {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.budgetMaster.noBudgetMasterList') })
+        }
       }).catch(() => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
@@ -219,7 +227,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .success-color {
   color: #28a745;
   font-size: medium;
@@ -227,5 +235,11 @@ export default {
 .gray-color {
   color: lightgray;
   font-size: medium;
+}
+.table.b-table > tbody > .table-row-disabled {
+    background-color: rgb(252, 55, 55);
+    cursor: not-allowed;
+    color: white;
+    pointer-events: none;
 }
 </style>

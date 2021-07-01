@@ -1786,7 +1786,9 @@
       "remove": "Çıkar",
       "customerGroup": "Yetki Sınıfı",
       "customerClass": "Kalite Sınıfı",
-      "customerKind": "Satış Hacim Sınıfı"
+      "customerKind": "Satış Hacim Sınıfı",
+      "pleaseFirstSelectBranch": "Lütfen önce şubeleri seçiniz.",
+      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz."
     },
     "itemAnalysis": {
       "title": "Ürün Analizi Tanımı",
@@ -1842,7 +1844,8 @@
       "priceListCategory": "Fiyat Listesi Kategori Tipi",
       "tciBreak1": "TCI",
       "beginDate": "Geçerlilik Başlangıç Tarihi",
-      "endDate":"Geçerlilik Bitiş Tarihi"
+      "endDate":"Geçerlilik Bitiş Tarihi",
+      "items": "Ürünler"
     },
     "loyaltyGain": {
       "title": "Sadakat Puan Kazanımı",
@@ -1901,7 +1904,10 @@
       "spentAmount": "Harcanan Bütçe",
       "approve": "Onayla",
       "reject": "Reddet",
-      "search": "Ara"
+      "search": "Ara",
+      "noBudgetMasterList": "Uygun bütçe bulunamadı.",
+      "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
+      "transactionDate": "İşlem Tarihi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
