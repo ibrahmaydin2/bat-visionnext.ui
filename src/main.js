@@ -65,6 +65,7 @@ import NextTextArea from './components/NextTextArea'
 import CreditBudgetExcelModal from './components/Actions/CreditBudgetExcelModal'
 import UpdateCreditBudgetModal from './components/Actions/UpdateCreditBudgetModal'
 import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkApproveModal'
+import BudgetMasterApproveModal from './components/Actions/BudgetMasterApproveModal'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -132,6 +133,7 @@ Vue.component('NextTextArea', NextTextArea)
 Vue.component('CreditBudgetExcelModal', CreditBudgetExcelModal)
 Vue.component('UpdateCreditBudgetModal', UpdateCreditBudgetModal)
 Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)
+Vue.component('BudgetMasterApproveModal', BudgetMasterApproveModal)
 
 Vue.prototype.$api = new ApiManager()
 

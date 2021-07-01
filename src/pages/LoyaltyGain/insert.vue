@@ -155,6 +155,9 @@ export default {
                 ActiveCategoryId: item.LoyaltyCategoryId,
                 ActiveCategory: item.LoyaltyCategory,
                 Genexp1: item.Genexp1,
+                Deleted: 0,
+                System: 0,
+                RecordState: 2,
                 Value: null
               }
               return loyaltyGainDetail

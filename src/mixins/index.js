@@ -5,7 +5,8 @@ export default {
       maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
       routeName: this.$route.meta.baseLink,
       routeName1: '',
-      routeName2: ''
+      routeName2: '',
+      isSaveAs: false
     }
   },
   computed: {
