@@ -85,6 +85,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.loyalty.branchs')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
+           <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="branchs" :items="loyaltyBranchItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customers')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'">
            <b-row>
             <b-col>
@@ -108,15 +117,6 @@
             <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <NextDetailPanel type="get" v-model="rowData.LoyaltyCustomerSqls" :items="loyaltyCustomerSqlItems" />
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab lazy :title="$t('insert.loyalty.branchs')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
-           <b-row>
-            <b-col>
-              <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="branchs" :items="loyaltyBranchItems" />
               </b-card>
             </b-col>
           </b-row>

@@ -34,10 +34,7 @@ export default {
         },
         {
           key: 'TransactionDate',
-          label: this.$t('insert.budgetMaster.transactionDate'),
-          formatter: (value, key, item) => {
-            return value !== null ? this.dateConvertFromTimezone(value) : '-'
-          }
+          label: this.$t('insert.budgetMaster.transactionDate')
         }
       ],
       currentPage: 1,

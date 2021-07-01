@@ -34,7 +34,7 @@
       </section>
     </b-col>
     <b-col cols="12">
-      <b-tabs>
+      <b-tabs v-model="activeTabIndex">
         <b-tab :title="$t('insert.loyalty.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
@@ -131,7 +131,10 @@
             </b-table>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.loyalty.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.loyalty.branchs')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
+          <NextDetailPanel v-model="branchs" :items="loyaltyBranchItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.loyalty.customers')" @click.prevent="customersTabClicked" v-if="customerCriteria && customerCriteria.Code === 'ML'">
           <b-row>
             <b-col cols="12" md="12">
               <b-form-group class="text-right">
@@ -140,16 +143,13 @@
             </b-col>
           </b-row>
           <hr />
-          <NextDetailPanel v-model="customers" :items="loyaltyCustomerItems" />
+          <NextDetailPanel v-model="customers" :items="getLoyaltyCustomerItems()" />
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="loyaltyCustomerCriteriaItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.customerQuery')" v-if="customerCriteria && customerCriteria.Code === 'MS'">
           <NextDetailPanel v-model="form.LoyaltyCustomerSqls" :items="loyaltyCustomerSqlItems" />
-        </b-tab>
-        <b-tab lazy :title="$t('insert.loyalty.branchs')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
-          <NextDetailPanel v-model="branchs" :items="loyaltyBranchItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -195,7 +195,6 @@ export default {
       customerCriteria: null,
       branchCriteria: null,
       loyaltyCatalogueItems: detailData.loyaltyCatalogueItems,
-      loyaltyCustomerItems: detailData.loyaltyCustomerItems,
       loyaltyBranchItems: detailData.loyaltyBranchItems,
       loyaltyCustomerCriteriaItems: detailData.loyaltyCustomerCriteriaItems,
       loyaltyCustomerSqlItems: detailData.loyaltyCustomerSqlItems,
@@ -212,7 +211,8 @@ export default {
       group: null,
       type: null,
       tciBreak1: null,
-      datePassed: false
+      datePassed: false,
+      activeTabIndex: 0
     }
   },
   mounted () {
@@ -322,6 +322,89 @@ export default {
       } else {
         this.disabledDatePlanType = false
       }
+    },
+    customersTabClicked () {
+      if (!this.branchCriteria) {
+        this.$toasted.show(this.$t('insert.loyalty.pleaseFirstSelectBranchCriteria'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        setTimeout(() => {
+          this.activeTabIndex = 0
+        }, 1)
+      } else if (this.branchCriteria.Code === 'SL' && this.branchs.length === 0) {
+        this.$toasted.show(this.$t('insert.loyalty.pleaseFirstSelectBranch'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        setTimeout(() => {
+          this.activeTabIndex = 3
+        }, 1)
+      }
+    },
+    getLoyaltyCustomerItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'ColumnValue',
+          objectKey: 'ColumnNameDesc',
+          labelProperty: 'Code',
+          customOption: true,
+          isCustomer: true,
+          orConditionFields: 'Code,Description1',
+          url: 'VisionNextCustomer/api/Customer/GetBranchsCustomerSearch',
+          label: this.$t('insert.loyalty.customerCode'),
+          dynamicAndCondition: this.branchs.length > 0 ? { BranchIds: this.branchs.map(b => b.ColumnValue) } : {},
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'CommercialTitle',
+          objectKey: 'ColumnValueDesc',
+          parentProperty: 'Description1',
+          label: this.$t('insert.loyalty.customerName'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 2
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Location',
+          valueProperty: 'AddressDetail',
+          objectKey: 'ColumnValueDesc2',
+          parentProperty: 'DefaultLocationId',
+          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          label: this.$t('insert.customerSItemCriteria.location'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 5
+        }
+      ]
     }
   },
   validations () {

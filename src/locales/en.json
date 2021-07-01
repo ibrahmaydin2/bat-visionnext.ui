@@ -1786,7 +1786,9 @@
       "remove": "Çıkar",
       "customerGroup": "Yetki Sınıfı",
       "customerClass": "Kalite Sınıfı",
-      "customerKind": "Satış Hacim Sınıfı"
+      "customerKind": "Satış Hacim Sınıfı",
+      "pleaseFirstSelectBranch": "Lütfen önce şubeleri seçiniz.",
+      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz."
     },
     "itemAnalysis": {
       "title": "Ürün Analizi Tanımı",
