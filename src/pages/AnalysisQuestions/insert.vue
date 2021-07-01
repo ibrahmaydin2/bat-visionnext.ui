@@ -44,7 +44,7 @@
     <b-col cols="12">
       <b-tabs>
         <b-tab lazy :title="$t('insert.AnalysisQuestions.QuestionOptions')" v-if="form.AnswerTypeId === 1 || form.AnswerTypeId === 5">
-            <NextDetailPanel v-model="form.QuestionChoice" :items="customerQuestionChoiceItems"/>
+            <NextDetailPanel v-model="form.QuestionChoices" :items="customerQuestionChoiceItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -67,7 +67,7 @@ export default {
         CardTypeId: null,
         AnswerTypeId: null,
         Description1: null,
-        QuestionChoice: []
+        QuestionChoices: []
       },
       customerQuestionChoiceItems: detailData.customerQuestionChoiceItems,
       routeName1: 'FieldAnalysis',
