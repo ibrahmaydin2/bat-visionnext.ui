@@ -27,16 +27,19 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
           </NextFormGroup>
+          <NextFormGroup item-key="PackageKindId" :error="$v.form.PackageKindId">
+            <NextDropdown :disabled="insertReadonly.PackageKindId" lookup-key="PACKAGE_KIND" label="Label"  @input="selectedType('PackageKindId', $event)"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="MaxScore" :error="$v.form.MaxScore">
+            <NextInput v-model="form.MaxScore" type="number" :disabled="insertReadonly.MaxScore" />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AssetType.Types')" >
-          <NextDetailPanel v-model="form.AssetTypeProperties" :items="assetTypePropertiesItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.AssetType.PersonelType')">
-          <NextDetailPanel v-model="form.AssetEmployeeTypes" :items="assetEmployeeTypesItems" />
+        <b-tab :title="$t('insert.discountPackage.campaigns')" >
+          <NextDetailPanel v-model="form.DiscountPackageDetails" :items="discountPackageDetailsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -44,6 +47,7 @@
 </template>
 <script>
 import mixin from '../../mixins/insert'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -51,15 +55,16 @@ export default {
       form: {
         Deleted: 0,
         System: 0,
-        StatusId: null,
+        StatusId: 1,
         RecordState: 2,
         Code: null,
         Description1: null,
-        BranchId: null,
-        AssetTypeProperties: [],
-        AssetEmployeeTypes: []
+        PackageKindId: null,
+        MaxScore: null,
+        DiscountPackageDetails: []
       },
-      routeName1: 'Discount'
+      routeName1: 'Discount',
+      discountPackageDetailsItems: detailData.discountPackageDetailsItems
 
     }
   },

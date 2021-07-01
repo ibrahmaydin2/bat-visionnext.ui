@@ -27,7 +27,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.QuestionChoice" :items="customerQuestionChoiceItems"/>
+                <NextDetailPanel type="get" v-model="rowData.QuestionChoices" :items="customerQuestionChoiceItems"/>
               </b-card>
             </b-col>
           </b-row>

@@ -1625,6 +1625,16 @@
       "paymentTypeId": "Ödeme Tipi Id",
       "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
     },
+    "discountPackage": {
+      "PackageKindId": "uygulama Türü",
+      "MaxScore": "Puan",
+      "DiscountId": "Kampanya",
+      "Score": "Harcanan Puan",
+      "campaigns": "Kampanyalar",
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum"
+    },
     "approveAssuranceModal": {
       "customerName":"Müşteri Adı",
       "customerCode":"Müşteri Kodu",
@@ -2355,6 +2365,16 @@
       "isMandatory": "Zorunlu",
       "isDoubleScore": "İki Kat Puan Kazan",
       "applyToTimes": "Katlarına Uygula"
+    },
+    "discountPackage": {
+      "PackageKindId": "uygulama Türü",
+      "MaxScore": "Puan",
+      "DiscountId": "Kampanya",
+      "Score": "Harcanan Puan",
+      "campaigns": "Kampanyalar",
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "StatusId": "Durum"
     },
     "assetLocation": {
       "general": "Genel",
