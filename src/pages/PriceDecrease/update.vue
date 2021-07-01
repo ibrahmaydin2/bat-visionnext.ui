@@ -48,7 +48,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.priceDecrease.assetTypeDefinition')" @click.prevent="searchPriceList">
+        <b-tab :title="$t('insert.priceDecrease.items')" @click.prevent="searchPriceList">
           <b-row>
             <NextFormGroup :title="$t('insert.priceDecrease.itemCode')" :error="$v.priceDecreaseItem.item" :required="true">
               <NextDropdown

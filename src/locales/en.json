@@ -1842,7 +1842,8 @@
       "priceListCategory": "Fiyat Listesi Kategori Tipi",
       "tciBreak1": "TCI",
       "beginDate": "Geçerlilik Başlangıç Tarihi",
-      "endDate":"Geçerlilik Bitiş Tarihi"
+      "endDate":"Geçerlilik Bitiş Tarihi",
+      "items": "Ürünler"
     },
     "loyaltyGain": {
       "title": "Sadakat Puan Kazanımı",

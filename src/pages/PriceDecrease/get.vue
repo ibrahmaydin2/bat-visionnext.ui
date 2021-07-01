@@ -33,7 +33,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.priceDecrease.assetTypeDefinition')">
+        <b-tab :title="$t('insert.priceDecrease.items')">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
