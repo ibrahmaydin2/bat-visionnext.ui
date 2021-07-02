@@ -18,7 +18,14 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-table :fields="fields" :items="values ? values.filter(i => i.RecordState !== 4) : []" bordered responsive>
+      <b-table
+        :id="id"
+        :fields="fields"
+        :items="values ? values.filter(i => i.RecordState !== 4) : []"
+        bordered
+        responsive
+        :current-page="currentPage"
+        :per-page="10">
         <template #cell()="data">
           <span v-html="data.value"></span>
         </template>
@@ -42,6 +49,12 @@
           </div>
         </template>
       </b-table>
+      <b-pagination
+        :total-rows="values ? values.length : 0"
+        v-model="currentPage"
+        :per-page="10"
+        :aria-controls="id"
+      ></b-pagination>
     </b-row>
   </div>
 </template>
@@ -104,7 +117,9 @@ export default {
       values: [],
       objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
       editable: this.type === 'insert' || this.type === 'update',
-      lineNumber: 1
+      lineNumber: 1,
+      currentPage: 1,
+      id: Math.random().toString(36).substring(2)
     }
   },
   computed: {

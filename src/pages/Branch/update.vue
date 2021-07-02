@@ -211,7 +211,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
+          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
@@ -342,7 +342,8 @@ export default {
       category2: {},
       category1: {},
       customerRegion5: {},
-      backMarginGroup: {}
+      backMarginGroup: {},
+      branchLocations: []
     }
   },
   computed: {
@@ -350,6 +351,7 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.getBranchLocations()
   },
   methods: {
     setData () {
@@ -400,8 +402,21 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.BranchLocations = this.branchLocations
         this.updateData()
       }
+    },
+    getBranchLocations () {
+      let request = {
+        andConditionModel: {
+          branchIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/BranchLocation/CustomSearch', 1000).then((response) => {
+        if (response && response.ListModel) {
+          this.branchLocations = response.ListModel.BaseModels
+        }
+      })
     }
   },
   validations () {
