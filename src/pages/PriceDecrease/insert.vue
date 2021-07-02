@@ -48,14 +48,15 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.priceDecrease.items')" @click.prevent="searchPriceList">
+        <b-tab :title="$t('insert.priceDecrease.items')" @click.prevent="checkPriceListCategory">
           <b-row>
             <NextFormGroup :title="$t('insert.priceDecrease.itemCode')" :error="$v.priceDecreaseItem.item" :required="true">
               <NextDropdown
                 v-model="priceDecreaseItem.item"
-                url="VisionNextItem/api/Item/AutoCompleteSearch"
+                url="VisionNextFinance/api/PriceDecrease/SearchPriceDecreaseItems"
                 searchable
                 or-condition-fields="Code,Description1"
+                :dynamic-and-condition="{priceListCategoryId: form.PriceListCategoryId}"
                 label="Code"
                 custom-option
                 @input="selectItem" />
@@ -121,7 +122,6 @@ export default {
       routeName1: 'Finance',
       priceDecreaseItemFields: detailData.priceDecreaseItemFields,
       priceDecreaseItem: {},
-      selectedPrice: null,
       activeTabIndex: 0
     }
   },
@@ -163,7 +163,11 @@ export default {
       }
 
       this.form.PriceDecreaseItems.push({
-        ItemId: this.priceDecreaseItem.item.RecordId,
+        System: 0,
+        Deleted: 0,
+        RecordState: 2,
+        StatusId: 1,
+        ItemId: this.priceDecreaseItem.item.ItemId,
         ItemIdCode: this.priceDecreaseItem.item.Code,
         ItemIdDesc: this.priceDecreaseItem.item.Description1,
         CurrentSalesPrice: this.priceDecreaseItem.currentSalesPrice,
@@ -183,33 +187,16 @@ export default {
     selectItem (item) {
       this.priceDecreaseItem.newSalesPrice = null
       this.priceDecreaseItem.decrease = null
-      if (this.selectedPrice && item) {
-        let model = {
-          PriceListIds: [this.selectedPrice.RecordId],
-          ItemIds: [item.RecordId]
-        }
-
-        this.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
-          if (this.checkResponse(response)) {
-            let pricelistItem = response.ListModel.BaseModels[0]
-            if (pricelistItem.UseConsumerPrice === 1) {
-              this.priceDecreaseItem.currentSalesPrice = this.roundNumber(pricelistItem.ConsumerPrice)
-            } else {
-              this.priceDecreaseItem.currentSalesPrice = this.roundNumber(pricelistItem.SalesPrice)
-            }
-          } else {
-            this.priceDecreaseItem.currentSalesPrice = 0
-          }
-          this.$forceUpdate()
-        })
+      if (item) {
+        this.priceDecreaseItem.currentSalesPrice = item.SalesPrice
       } else {
         this.priceDecreaseItem.currentSalesPrice = 0
         this.$forceUpdate()
       }
     },
-    searchPriceList () {
-      if (!this.form.PriceListCategoryId || !this.form.EndDate) {
-        this.$toasted.show(this.$t('insert.priceDecrease.setPriceError'), {
+    checkPriceListCategory () {
+      if (!this.form.PriceListCategoryId) {
+        this.$toasted.show(this.$t('insert.priceDecrease.setPriceCategoryError'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
@@ -217,23 +204,7 @@ export default {
         setTimeout(() => {
           this.activeTabIndex = 0
         }, 1)
-        return
       }
-
-      this.selectedPrice = null
-      let model = {
-        PriceListCategoryIds: [this.form.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.EndDate
-        }
-      }
-      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/Search').then((response) => {
-        if (this.checkResponse(response)) {
-          this.selectedPrice = response.ListModel.BaseModels[0]
-        } else {
-          this.selectedPrice = null
-        }
-      })
     },
     checkResponse (response) {
       return response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0

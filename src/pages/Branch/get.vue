@@ -110,7 +110,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.BranchLocations" :items="customerLocationItems" />
+                <NextDetailPanel type="get" v-model="branchLocations" :items="customerLocationItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -159,11 +159,13 @@ export default {
       customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
-      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems
+      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
+      branchLocations: []
     }
   },
   mounted () {
     this.getData()
+    this.getBranchLocations()
   },
   computed: {
     ...mapState(['rowData', 'style'])
@@ -176,6 +178,18 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextBranch/api/Branch', record: this.$route.params.url}).then(() => {
         if (this.rowData.CustomerItemDiscountCrts && this.rowData.CustomerItemDiscountCrts.length > 0) {
           this.customerItemDiscounts = this.rowData.CustomerItemDiscountCrts[0]
+        }
+      })
+    },
+    getBranchLocations () {
+      let request = {
+        andConditionModel: {
+          branchIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/BranchLocation/CustomSearch', 1000).then((response) => {
+        if (response && response.ListModel) {
+          this.branchLocations = response.ListModel.BaseModels
         }
       })
     }

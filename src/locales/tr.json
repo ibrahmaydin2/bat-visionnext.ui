@@ -1966,7 +1966,8 @@
       "tciBreak1": "TCI",
       "beginDate": "Geçerlilik Başlangıç Tarihi",
       "endDate":"Geçerlilik Bitiş Tarihi",
-      "items": "Ürünler"
+      "items": "Ürünler",
+      "setPriceCategoryError": "Lütfen Fiyat Listesi Kategori Tipi seçiniz."
     },
     "loyaltyGain": {
       "title": "Sadakat Puan Kazanımı",
