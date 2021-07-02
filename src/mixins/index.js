@@ -2,7 +2,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
+      maxLengthControl: 'javascript: if (this.maxLength > 0 && this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
       routeName: this.$route.meta.baseLink,
       routeName1: '',
       routeName2: '',
