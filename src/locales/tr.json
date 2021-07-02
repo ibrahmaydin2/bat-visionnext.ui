@@ -476,7 +476,11 @@
     "FieldAnalysis": "Aktivite Noktası Analiz Tanımları",
     "FieldAnalysisGet": "Aktivite Noktası Analiz Tanımları Görüntüle",
     "FieldAnalysisInsert": "Yeni Aktivite Noktası Analiz Tanımları",
-    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle"
+    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle",
+    "Sao": "Sao Tanımı",
+    "SaoGet": "Sao Tanımı Görüntüle",
+    "SaoInsert": "Yeni Sao Tanımı",
+    "SaoUpdate": "Sao Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -562,7 +566,7 @@
       "statusId": "Durum",
       "analysisTypeId": "Analiz Tipi",
       "validityTypeId": "Geçerlilik Tipi",
-      "description1": "Açiklama",
+      "description1": "Açıklama",
       "sortOrder": "Görünüm Sırası",
       "approveStateId": "Onay Durumu",
       "isNecessary": "Zorunlu",
@@ -1279,7 +1283,7 @@
       "plannedInvestedAmount": "Planlanan Yatırım Tutarı",
       "plannedInvestmentDate": "Planlanan Yatırım Tarihi",
       "quotaQuantity": "Kota Miktarı",
-      "description1": "Açiklama",
+      "description1": "Açıklama",
       "contractDiscounts": "İndirimler",
       "discountRate": "İndirim Oranı",
       "contractFreeItems": "Bedelsiz Ürünler",
@@ -2065,6 +2069,24 @@
       "sortOrder":"Görünüm Sırası",
       "analysisTime": "Analiz Zamanı",
       "followingAnalysis": "Takip Edilen Analiz"
+    },
+    "sao": {
+      "title": "Sao Tanımı",
+      "details": "Detaylar",
+      "minCardBoardPurchase": "Minimum Karton Alımı",
+      "item": "Ürün",
+      "discountKind": "Kampanya Kazanım Tipi",
+      "discountRate":"İndirim Oranı",
+      "numberOfVisit": "Kontrol Edilecek Ziyaret Sayısı",
+      "minNumPurchasesCampaign": "Kampanya İçin Minimum Alım Adedi",
+      "itemPriorityOrder": "Ürün Öncelik Sırası",
+      "discountAmount":"İndirim Tutarı",
+      "validityStartDate": "Geçerlilik Başlangıç Tarihi",
+      "validityEndDate": "Geçerlilik Bitiş Tarihi",
+      "staffType": "Personel Tipi",
+      "bcpClusterCrteria": "BCP Cluster",
+      "regionCriteria": "Bölge"
+
     }
   },
   "get": {
@@ -2072,7 +2094,7 @@
     "sharing": "Paylaşım",
     "code": "Kod",
     "status": "Durum",
-    "description1": "Açiklama",
+    "description1": "Açıklama",
     "ItemAnalysisResult": {
       "title": "Ürün Analizleri Sonuçları",
       "Code": "Ürün Analiz Kodu",
