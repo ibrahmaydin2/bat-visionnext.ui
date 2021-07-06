@@ -19,7 +19,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code || isSaveAs" />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
@@ -102,6 +102,9 @@ export default {
       if (this.isSaveAs) {
         this.createManualCode()
       }
+      if (!this.form.SaoDetails) {
+        this.form.SaoDetails = []
+      }
     },
     save () {
       this.$v.form.$touch()
@@ -113,6 +116,14 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.SaoDetails.filter(i => i.RecordState !== 4).length === 0) {
+          this.$toasted.show(this.$t('insert.sao.detailsRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.updateData()
       }
     }

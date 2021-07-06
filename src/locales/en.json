@@ -1964,8 +1964,8 @@
       "validityEndDate": "Geçerlilik Bitiş Tarihi",
       "staffType": "Personel Tipi",
       "bcpClusterCrteria": "BCP Cluster",
-      "regionCriteria": "Bölge"
-
+      "regionCriteria": "Bölge",
+      "detailsRequired": "Lütfen Detayları doldurunuz."
     }
   },
   "get": {
