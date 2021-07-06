@@ -37,9 +37,9 @@ export default {
       if (typeof this.$route.query.saveAs !== 'undefined' && this.$route.query.saveAs) {
         model.model.RecordId = null
         model.model.RecordState = 2
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
+        return this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
       } else {
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
+        return this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
       }
     }
   },
