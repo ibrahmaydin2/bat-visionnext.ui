@@ -289,6 +289,11 @@ import DiscountGet from '@/pages/Discount/get'
 import DiscountInsert from '@/pages/Discount/insert'
 import DiscountUpdate from '@/pages/Discount/update'
 
+import DiscountLimitIndex from '@/pages/DiscountLimit/'
+import DiscountLimitGet from '@/pages/DiscountLimit/get'
+import DiscountLimitInsert from '@/pages/DiscountLimit/insert'
+import DiscountLimitUpdate from '@/pages/DiscountLimit/update'
+
 import PremiumOrderIndex from '@/pages/PremiumOrder/'
 import PremiumOrderGet from '@/pages/PremiumOrder/get'
 import PremiumOrderInsert from '@/pages/PremiumOrder/insert'
@@ -692,6 +697,7 @@ const listIndex = [
   {path: '/PremiumResult', name: 'PremiumResult', component: PremiumResultIndex, meta: { title: i18n.t('router.PremiumResult'), createLink: 'PremiumResultInsert' }},
   {path: '/VoucherOperations', name: 'VoucherOperations', component: VoucherOperationsIndex, meta: { title: i18n.t('router.VoucherOperations'), createLink: 'VoucherOperationsInsert' }},
   {path: '/Discount', name: 'Discount', component: DiscountIndex, meta: { title: i18n.t('router.Discount'), createLink: 'DiscountInsert' }},
+  {path: '/DiscountLimit', name: 'DiscountLimit', component: DiscountLimitIndex, meta: { title: i18n.t('router.DiscountLimit'), createLink: 'DiscountLimitInsert' }},
   {path: '/PremiumOrder', name: 'PremiumOrder', component: PremiumOrderIndex, meta: { title: i18n.t('router.PremiumOrder'), createLink: 'PremiumOrderInsert' }},
   {path: '/CurrentAccountTransactions', name: 'CurrentAccountTransactions', component: CurrentAccountTransactionsIndex, meta: { title: i18n.t('router.CurrentAccountTransactions'), createLink: 'CurrentAccountTransactionsInsert' }},
   {path: '/DebtArrangement', name: 'DebtArrangement', component: DebtArrangementIndex, meta: { title: i18n.t('router.DebtArrangement'), createLink: 'DebtArrangementInsert' }},
@@ -817,6 +823,7 @@ const listGet = [
   { path: '/PremiumResult/:url', name: 'PremiumResultGet', component: PremiumResultGet, meta: { title: i18n.t('router.PremiumResultGet'), baseLink: 'PremiumResult' } },
   { path: '/VoucherOperations/:url', name: 'VoucherOperationsGet', component: VoucherOperationsGet, meta: { title: i18n.t('router.VoucherOperationsGet'), baseLink: 'VoucherOperations' } },
   { path: '/Discount/:url', name: 'DiscountGet', component: DiscountGet, meta: { title: i18n.t('router.DiscountGet'), baseLink: 'Discount' } },
+  { path: '/DiscountLimit/:url', name: 'DiscountLimitGet', component: DiscountLimitGet, meta: { title: i18n.t('router.DiscountLimitGet'), baseLink: 'DiscountLimit' } },
   { path: '/PremiumOrder/:url', name: 'PremiumOrderGet', component: PremiumOrderGet, meta: { title: i18n.t('router.PremiumOrderGet'), baseLink: 'PremiumOrder' } },
   { path: '/CurrentAccountTransactions/:url', name: 'CurrentAccountTransactionsGet', component: CurrentAccountTransactionsGet, meta: { title: i18n.t('router.CurrentAccountTransactionsGet'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/DebtArrangement/:url', name: 'DebtArrangementGet', component: DebtArrangementGet, meta: { title: i18n.t('router.DebtArrangementGet'), baseLink: 'DebtArrangement' } },
@@ -941,6 +948,7 @@ const listUpdate = [
   { path: '/Update/PremiumResult/:url', name: 'PremiumResultUpdate', component: PremiumResultUpdate, meta: { title: i18n.t('router.PremiumResultUpdate'), baseLink: 'PremiumResult' } },
   { path: '/Update/VoucherOperations/:url', name: 'VoucherOperationsUpdate', component: VoucherOperationsUpdate, meta: { title: i18n.t('router.VoucherOperationsUpdate'), baseLink: 'VoucherOperations' } },
   { path: '/Update/Discount/:url', name: 'DiscountUpdate', component: DiscountUpdate, meta: { title: i18n.t('router.DiscountUpdate'), baseLink: 'Discount' } },
+  { path: '/Update/DiscountLimit/:url', name: 'DiscountLimitUpdate', component: DiscountLimitUpdate, meta: { title: i18n.t('router.DiscountLimitUpdate'), baseLink: 'DiscountLimit' } },
   { path: '/Update/PremiumOrder/:url', name: 'PremiumOrderUpdate', component: PremiumOrderUpdate, meta: { title: i18n.t('router.PremiumOrderUpdate'), baseLink: 'PremiumOrder' } },
   { path: '/Update/CurrentAccountTransactions/:url', name: 'CurrentAccountTransactionsUpdate', component: CurrentAccountTransactionsUpdate, meta: { title: i18n.t('router.CurrentAccountTransactionsUpdate'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/Update/DebtArrangement/:url', name: 'DebtArrangementUpdate', component: DebtArrangementUpdate, meta: { title: i18n.t('router.DebtArrangementUpdate'), baseLink: 'DebtArrangement' } },
@@ -1061,6 +1069,7 @@ const listInsert = [
   { path: '/Insert/PremiumResult', name: 'PremiumResultInsert', component: PremiumResultInsert, meta: { title: i18n.t('router.PremiumResultInsert'), baseLink: 'PremiumResult' } },
   { path: '/Insert/VoucherOperations', name: 'VoucherOperationsInsert', component: VoucherOperationsInsert, meta: { title: i18n.t('router.VoucherOperationsInsert'), baseLink: 'VoucherOperations' } },
   { path: '/Insert/Discount', name: 'DiscountInsert', component: DiscountInsert, meta: { title: i18n.t('router.DiscountInsert'), baseLink: 'Discount' } },
+  { path: '/Insert/DiscountLimit', name: 'DiscountLimitInsert', component: DiscountLimitInsert, meta: { title: i18n.t('router.DiscountLimitInsert'), baseLink: 'DiscountLimit' } },
   { path: '/Insert/PremiumOrder', name: 'PremiumOrderInsert', component: PremiumOrderInsert, meta: { title: i18n.t('router.PremiumOrderInsert'), baseLink: 'PremiumOrder' } },
   { path: '/Insert/CurrentAccountTransactions', name: 'CurrentAccountTransactionsInsert', component: CurrentAccountTransactionsInsert, meta: { title: i18n.t('router.CurrentAccountTransactionsInsert'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/Insert/DebtArrangement', name: 'DebtArrangementInsert', component: DebtArrangementInsert, meta: { title: i18n.t('router.DebtArrangementInsert'), baseLink: 'DebtArrangement' } },
