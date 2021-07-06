@@ -187,7 +187,8 @@ export const detailData = {
     },
     {
       type: 'Text',
-      inputType: 'text',
+      inputType: 'number',
+      isPostCode: true,
       modelProperty: 'PostCode',
       label: i18n.t('insert.branch.postCode'),
       required: true,
