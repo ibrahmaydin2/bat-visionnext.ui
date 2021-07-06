@@ -699,6 +699,7 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -775,6 +776,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
