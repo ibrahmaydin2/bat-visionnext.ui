@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'AssetType' }">
+            <router-link :to="{name: 'DiscountPackage' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="true" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
