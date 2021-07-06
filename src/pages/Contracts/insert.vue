@@ -1307,7 +1307,7 @@ export default {
         BenefitTypeId: this.contractBenefits.benefitType.RecordId,
         BenefitTypeName: this.contractBenefits.benefitType.Description1,
         BenefitBudget: this.contractBenefits.benefitBudget,
-        BudgetMasterId: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.BudgetId : undefined,
+        BudgetMasterId: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.BudgetMasterId : undefined,
         BudgetMasterName: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.CustomerDesc : '',
         CurrencyId: this.contractBenefits.currency.RecordId,
         CurrencyName: this.contractBenefits.currency.Description1,

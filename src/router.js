@@ -640,6 +640,11 @@ import FieldAnalysisGet from '@/pages/FieldAnalysis/get'
 import FieldAnalysisInsert from '@/pages/FieldAnalysis/insert'
 import FieldAnalysisUpdate from '@/pages/FieldAnalysis/update'
 
+import SaoIndex from '@/pages/Sao/'
+import SaoGet from '@/pages/Sao/get'
+import SaoInsert from '@/pages/Sao/insert'
+import SaoUpdate from '@/pages/Sao/update'
+
 Vue.use(Router)
 
 // TenantBase Pages
@@ -773,7 +778,8 @@ const listIndex = [
   {path: '/AssetOperation', name: 'AssetOperation', component: AssetOperationIndex, meta: { title: i18n.t('router.AssetOperation'), createLink: 'AssetOperationInsert' }},
   {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }},
   {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert' }},
-  {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert' }}
+  {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert' }},
+  {path: '/Sao', name: 'Sao', component: SaoIndex, meta: { title: i18n.t('router.Sao'), createLink: 'SaoInsert' }}
 
 ]
 
@@ -899,7 +905,8 @@ const listGet = [
   { path: '/AssetOperation/:url', name: 'AssetOperationGet', component: AssetOperationGet, meta: { title: i18n.t('router.AssetOperationGet'), baseLink: 'AssetOperation' } },
   { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } },
   { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } },
-  { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } }
+  { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Sao/:url', name: 'SaoGet', component: SaoGet, meta: { title: i18n.t('router.SaoGet'), baseLink: 'Sao' } }
 ]
 
 const listUpdate = [
@@ -1021,7 +1028,8 @@ const listUpdate = [
   { path: '/Update/AssetOperation/:url', name: 'AssetOperationUpdate', component: AssetOperationUpdate, meta: { title: i18n.t('router.AssetOperationUpdate'), baseLink: 'AssetOperation' } },
   { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
   { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
-  { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } }
+  { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } }
 ]
 
 const listInsert = [
@@ -1141,7 +1149,8 @@ const listInsert = [
   { path: '/Insert/AssetOperation', name: 'AssetOperationInsert', component: AssetOperationInsert, meta: { title: i18n.t('router.AssetOperationInsert'), baseLink: 'AssetOperation' } },
   { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } },
   { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } },
-  { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } }
+  { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } }
 ]
 
 const routes = [

@@ -299,7 +299,7 @@ export default {
 </script>
 <style>
   .table.b-table > tbody > .table-active {
-    background-color: #c3e6cb !important;
+    background-color: #c3e6cb;
   }
   .w-10 {
     width: 10% !important;

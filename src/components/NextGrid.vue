@@ -240,6 +240,7 @@
     <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
     <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -352,7 +353,8 @@ export default {
       firstHead: null,
       firstSearchItem: null,
       showUpdateCreditBudgetModal: false,
-      disabledAutoComplete: false
+      disabledAutoComplete: false,
+      showBudgetMasterApproveModal: false
     }
   },
   mounted () {
@@ -421,6 +423,7 @@ export default {
       this.showCreateSalesWaybillModal = false
       this.showMultipleLoadingPlanModal = false
       this.showUpdateCreditBudgetModal = false
+      this.showBudgetMasterApproveModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -508,6 +511,11 @@ export default {
         this.showUpdateCreditBudgetModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'update-credit-budget-modal')
+        })
+      } else if (action.Action && action.Action.trim() === 'BudgetMasterApprove') {
+        this.showBudgetMasterApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'budget-master-approve-modal')
         })
       } else {
         this.showConfirmModal = true

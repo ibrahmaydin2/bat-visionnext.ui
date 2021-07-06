@@ -480,7 +480,11 @@
     "FieldAnalysis": "Aktivite Noktası Analiz Tanımları",
     "FieldAnalysisGet": "Aktivite Noktası Analiz Tanımları Görüntüle",
     "FieldAnalysisInsert": "Yeni Aktivite Noktası Analiz Tanımları",
-    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle"
+    "FieldAnalysisUpdate": "Aktivite Noktası Tanımları Güncelle",
+    "Sao": "Sao Tanımı",
+    "SaoGet": "Sao Tanımı Görüntüle",
+    "SaoInsert": "Yeni Sao Tanımı",
+    "SaoUpdate": "Sao Tanımı Güncelle"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -566,7 +570,7 @@
       "statusId": "Durum",
       "analysisTypeId": "Analiz Tipi",
       "validityTypeId": "Geçerlilik Tipi",
-      "description1": "Açiklama",
+      "description1": "Açıklama",
       "sortOrder": "Görünüm Sırası",
       "approveStateId": "Onay Durumu",
       "isNecessary": "Zorunlu",
@@ -1283,7 +1287,7 @@
       "plannedInvestedAmount": "Planlanan Yatırım Tutarı",
       "plannedInvestmentDate": "Planlanan Yatırım Tarihi",
       "quotaQuantity": "Kota Miktarı",
-      "description1": "Açiklama",
+      "description1": "Açıklama",
       "contractDiscounts": "İndirimler",
       "discountRate": "İndirim Oranı",
       "contractFreeItems": "Bedelsiz Ürünler",
@@ -1898,7 +1902,9 @@
       "remove": "Çıkar",
       "customerGroup": "Yetki Sınıfı",
       "customerClass": "Kalite Sınıfı",
-      "customerKind": "Satış Hacim Sınıfı"
+      "customerKind": "Satış Hacim Sınıfı",
+      "pleaseFirstSelectBranch": "Lütfen önce şubeleri seçiniz.",
+      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz."
     },
     "loyaltyCategory": {
       "Description1": "Tanım",
@@ -1993,7 +1999,9 @@
       "priceListCategory": "Fiyat Listesi Kategori Tipi",
       "tciBreak1": "TCI",
       "beginDate": "Geçerlilik Başlangıç Tarihi",
-      "endDate":"Geçerlilik Bitiş Tarihi"
+      "endDate":"Geçerlilik Bitiş Tarihi",
+      "items": "Ürünler",
+      "setPriceCategoryError": "Lütfen Fiyat Listesi Kategori Tipi seçiniz."
     },
     "loyaltyGain": {
       "title": "Sadakat Puan Kazanımı",
@@ -2052,7 +2060,10 @@
       "spentAmount": "Harcanan Bütçe",
       "approve": "Onayla",
       "reject": "Reddet",
-      "search": "Ara"
+      "search": "Ara",
+      "noBudgetMasterList": "Uygun bütçe bulunamadı.",
+      "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
+      "transactionDate": "İşlem Tarihi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
@@ -2088,6 +2099,24 @@
       "sortOrder":"Görünüm Sırası",
       "analysisTime": "Analiz Zamanı",
       "followingAnalysis": "Takip Edilen Analiz"
+    },
+    "sao": {
+      "title": "Sao Tanımı",
+      "details": "Detaylar",
+      "minCardBoardPurchase": "Minimum Karton Alımı",
+      "item": "Ürün",
+      "discountKind": "Kampanya Kazanım Tipi",
+      "discountRate":"İndirim Oranı",
+      "numberOfVisit": "Kontrol Edilecek Ziyaret Sayısı",
+      "minNumPurchasesCampaign": "Kampanya İçin Minimum Alım Adedi",
+      "itemPriorityOrder": "Ürün Öncelik Sırası",
+      "discountAmount":"İndirim Tutarı",
+      "validityStartDate": "Geçerlilik Başlangıç Tarihi",
+      "validityEndDate": "Geçerlilik Bitiş Tarihi",
+      "staffType": "Personel Tipi",
+      "bcpClusterCrteria": "BCP Cluster",
+      "regionCriteria": "Bölge"
+
     }
   },
   "get": {
@@ -2095,7 +2124,7 @@
     "sharing": "Paylaşım",
     "code": "Kod",
     "status": "Durum",
-    "description1": "Açiklama",
+    "description1": "Açıklama",
     "ItemAnalysisResult": {
       "title": "Ürün Analizleri Sonuçları",
       "Code": "Ürün Analiz Kodu",
