@@ -2059,7 +2059,10 @@ export default {
     getCustomerBudgets () {
       this.customerBudgets = []
       if (this.form.CustomerId > 0) {
-        this.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+        let request = {
+          customerId: this.form.CustomerId
+        }
+        this.$api.postByUrl(request, 'VisionNextBudget/api/BudgetMaster/GetCustomerBudget').then((res) => {
           if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
             this.customerBudgets = res.ListModel.BaseModels
           } else {
