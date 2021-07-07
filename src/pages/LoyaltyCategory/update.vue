@@ -46,7 +46,7 @@
             <NextDropdown v-model="CalcType" :disabled="!(CategoryType && CategoryType.Code == 'OTO')" lookup-key="LOYALTY_CATEGORY_CALC_TYPE"  @input="selectCalcType"/>
           </NextFormGroup>
           <NextFormGroup item-key="LoyaltyPoint" :error="$v.form.LoyaltyPoint">
-            <NextInput v-model="form.LoyaltyPoint" type="number"  :disabled="!(CalcType && CalcType.Code == 'SA')" />
+            <NextInput v-model="form.LoyaltyPoint" type="number"  :disabled="!(CalcType && CalcType.Code == 'SH') && !(CalcType && CalcType.Code == 'SA')" />
           </NextFormGroup>
           <NextFormGroup item-key="FieldAnalysisId" :error="$v.form.FieldAnalysisId">
             <NextDropdown v-model="FieldAnalysis" label="Description1"  :disabled="!(CalcType && CalcType.Code == 'ANS')"  url="VisionNextFieldAnalysis/api/FieldAnalysis/Search"  @input="selectAnalysis($event)"/>
