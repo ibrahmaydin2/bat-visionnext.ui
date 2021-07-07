@@ -110,7 +110,7 @@ export default {
       this.form = rowData
       this.itemCriteria = this.form.ItemCriteria
       this.customerCriteria = this.form.CustomerCriteria
-      this.sItemType = this.convertLookupValueToSearchValue(this.SItemType)
+      this.sItemType = this.convertLookupValueToSearchValue(this.rowData.SItemType)
       this.itemCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName !== 'RECORD_ID')
       this.items = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName === 'RECORD_ID')
       this.customerCriterias = this.form.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
