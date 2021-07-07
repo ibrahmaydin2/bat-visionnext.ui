@@ -42,7 +42,10 @@ export class ApiManager {
       request.andConditionModel = {}
     }
     request.pagerecordCount = !pagerecordCount ? 50 : pagerecordCount
-    let header = {'key': localStorage.getItem('Key')}
+    let header = {
+      'key': localStorage.getItem('Key'),
+      'hash': process.env.HASH
+    }
     let name = btoa(url)
     if (name) {
       if (store.state.cancelToken[name]) {

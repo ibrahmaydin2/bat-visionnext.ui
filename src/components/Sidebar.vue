@@ -6,7 +6,9 @@
     </div>
     <div class="px-3 py-2 asc__sidebar-body text-center">
       <b-card v-for="(app,i) in otherApps" :key="'otherapp' + i" class="mb-3">
-        {{app.Name}}
+        <a :href="app.SuccessReturnUrl" target="_blank">
+          {{app.Name}}
+        </a>
       </b-card>
       <!-- <b-img src="https://picsum.photos/500/500/?image=53" fluid thumbnail></b-img> -->
     </div>
@@ -21,7 +23,8 @@ export default {
     }
   },
   mounted () {
-    this.otherApps = JSON.parse(localStorage.getItem('UserModel')).AuthorizedInstances
+    let otherApps = JSON.parse(localStorage.getItem('UserModel')).AuthorizedInstances
+    this.otherApps = otherApps ? otherApps.filter(o => o.Hash !== process.env.HASH) : []
   }
 }
 </script>

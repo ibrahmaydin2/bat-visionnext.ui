@@ -1,5 +1,5 @@
 <template>
-  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)"/>
+  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"/>
 </template>
 <script>
 export default {
@@ -14,7 +14,8 @@ export default {
     type: {
       type: String,
       default: 'text'
-    }
+    },
+    oninput: null
   },
   data () {
     return {

@@ -5,5 +5,6 @@ module.exports = {
   VUE_APP_SYSTEM_NAME: "'BAT UI PROD'",
   VUE_APP_VESION_NO: "'1.0.1.34'",
   BASE_URL: "'http://batfeuat.visionnext.com.tr/'",
-  TENANT: "'SAAS'"
+  TENANT: "'SAAS'",
+  HASH: "'8ced6612-e737-4f10-82be-76db0177e462'"
 }

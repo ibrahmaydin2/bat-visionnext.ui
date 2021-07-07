@@ -71,7 +71,8 @@ export default axios
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
-    'key': localStorage.getItem('Key')
+    'key': localStorage.getItem('Key'),
+    'hash': process.env.HASH
   }
 }
 
@@ -297,8 +298,8 @@ export const store = new Vuex.Store({
         SessionId: authData.SessionId,
         UserName: authData.UserName,
         Password: authData.Password,
-        InstanceHash: authData.InstanceHash
-      })
+        InstanceHash: process.env.HASH
+      }, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('loginButton').disabled = false
@@ -698,6 +699,7 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -774,6 +776,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -1667,7 +1670,8 @@ export const store = new Vuex.Store({
       state.loginUser.company = user.AuthorizedBranches[0].Desciption
       authHeader = {
         headers: {
-          'key': localStorage.getItem('Key')
+          'key': localStorage.getItem('Key'),
+          'hash': process.env.HASH
         }
       }
       store.commit('userIDs', {

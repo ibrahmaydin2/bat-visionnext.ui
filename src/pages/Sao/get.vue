@@ -17,7 +17,7 @@
           <section>
             <span><i class="fas fa-code" /> <b>{{$t('get.code')}}:</b> {{rowData.Code}}</span>
             <span><i class="far fa-circle" /> <b>{{$t('get.description1')}}:</b> {{rowData.Description1}}</span>
-            <span><i class="fas fa-check" /> <b>{{$t('get.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : $t('insert.active')}}</span>
+            <span><i class="fas fa-check" /> <b>{{$t('get.status')}}:</b> {{rowData.StatusId === 1 ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>

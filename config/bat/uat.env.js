@@ -8,5 +8,6 @@ module.exports = merge(prodEnv, {
   VUE_APP_SYSTEM_NAME: "'BAT UI UAT'",
   VUE_APP_VESION_NO: "'1.0.1.35'",
   BASE_URL: "'http://batfeuat.visionnext.com.tr/'",
-  TENANT: "'BAT'"
+  TENANT: "'BAT'",
+  HASH: "'8ced6612-e737-4f10-82be-76db0177e462'"
 })

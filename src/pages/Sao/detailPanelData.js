@@ -19,6 +19,7 @@ export const detailData = {
       inputType: 'number',
       modelProperty: 'MinCardBoardPurchase',
       visible: true,
+      required: true,
       label: i18n.t('insert.sao.minCardBoardPurchase'),
       id: 2
     },
@@ -30,6 +31,7 @@ export const detailData = {
       label: i18n.t('insert.sao.discountKind'),
       dynamicAndCondition: { RecordIds: [1, 2] },
       visible: true,
+      required: true,
       id: 3
     },
     {
@@ -51,6 +53,7 @@ export const detailData = {
       inputType: 'number',
       modelProperty: 'NumberOfVisit',
       visible: true,
+      required: true,
       label: i18n.t('insert.sao.numberOfVisit'),
       maxLength: 4,
       id: 5
@@ -60,6 +63,7 @@ export const detailData = {
       inputType: 'number',
       modelProperty: 'MinNumPurchasesCampaign',
       visible: true,
+      required: true,
       label: i18n.t('insert.sao.minNumPurchasesCampaign'),
       id: 6
     },
@@ -68,6 +72,7 @@ export const detailData = {
       inputType: 'number',
       modelProperty: 'ItemPriorityOrder',
       visible: true,
+      required: true,
       label: i18n.t('insert.sao.itemPriorityOrder'),
       id: 7
     },

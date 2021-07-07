@@ -3,6 +3,7 @@ export default {
   data () {
     return {
       maxLengthControl: 'javascript: if (this.maxLength > 0 && this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
+      postCodeControl: 'javascript: if (this.value.length > 5) this.value = this.value.slice(0, 5); if (this.value === "9") this.value = ""; if (this.value === "00") this.value = "0"; if (this.value > "81" && this.value.length === 2) this.value = "8";',
       routeName: this.$route.meta.baseLink,
       routeName1: '',
       routeName2: '',
