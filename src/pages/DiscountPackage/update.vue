@@ -22,7 +22,7 @@
             <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="true" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
@@ -31,7 +31,7 @@
             <NextDropdown v-model="PackageKind" :disabled="insertReadonly.PackageKindId"  lookup-key="PACKAGE_KIND" label="Label"  @input="selectedType('PackageKindId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="MaxScore" :error="$v.form.MaxScore">
-            <NextInput v-model="form.MaxScore" type="number" :disabled="insertReadonly.MaxScore" />
+            <NextInput v-model="form.MaxScore" type="number" :disabled="true" />
           </NextFormGroup>
         </b-row>
       </section>

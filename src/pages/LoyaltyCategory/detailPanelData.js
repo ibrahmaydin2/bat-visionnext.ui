@@ -235,6 +235,8 @@ export const detailData = {
       type: 'Autocomplete',
       modelProperty: 'ItemId',
       objectKey: 'Item',
+      labelProperty: 'Code',
+      orConditionFields: 'Code,Description1',
       url: 'VisionNextItem/api/Item/Search',
       label: i18n.t('insert.loyaltyCategory.ItemId'),
       required: true,
@@ -247,10 +249,13 @@ export const detailData = {
       inputType: 'text',
       objectKey: 'itemName',
       modelProperty: 'itemName',
+      orConditionFields: 'Code,Description1',
+      parentProperty: 'Description1',
       label: i18n.t('insert.loyaltyCategory.itemName'),
       required: true,
       labelProperty: 'Label',
       visible: true,
+      parentId: 1,
       id: 2
     }
   ]

@@ -155,7 +155,8 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'ColumnValue',
-      objectKey: 'ColumnValueDesc',
+      objectKey: 'ColumnNameDesc',
+      labelProperty: 'Code',
       customOption: true,
       orConditionFields: 'Code,Description1',
       url: 'VisionNextItem/api/Item/AutoCompleteSearch',
@@ -166,13 +167,28 @@ export const detailData = {
       id: 1
     },
     {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'ItemName',
+      objectKey: 'ColumnValueDesc',
+      orConditionFields: 'Code,Description1',
+      parentProperty: 'Description1',
+      label: i18n.t('insert.discountLimit.ItemName'),
+      required: true,
+      visible: true,
+      disabled: true,
+      isUnique: true,
+      parentId: 1,
+      id: 2
+    },
+    {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'TableName',
       hideOnTable: true,
       defaultValue: 'T_ITEM',
       parentId: null,
-      id: 2
+      id: 3
     },
     {
       type: 'Text',
@@ -182,23 +198,13 @@ export const detailData = {
       hideOnTable: true,
       defaultValue: 'RECORD_ID',
       parentId: null,
-      id: 3
+      id: 4
     },
     {
       type: 'Text',
       inputType: 'number',
       modelProperty: 'MaxDiscountRate',
       label: i18n.t('insert.discountLimit.MaxDiscountRate'),
-      required: true,
-      visible: true,
-      isUnique: true,
-      id: 4
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'Description1',
-      label: i18n.t('insert.discountLimit.ItemName'),
       required: true,
       visible: true,
       isUnique: true,

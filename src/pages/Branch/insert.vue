@@ -58,8 +58,8 @@
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseNumber">
-              <NextInput v-model="form.LicenseValidDate" type="date" :disabled="insertReadonly.LicenseValidDate" />
+            <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseValidDate">
+              <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
               <NextDropdown :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
@@ -259,7 +259,7 @@ export default {
         Genexp1: null,
         IsDirectDebit: null,
         SalesPriceChangeRate: null,
-        // MaxBonusRate: null,
+        LicenseValidDate: null,
         BankPaymentSystemId: null,
         WebUrl: null,
         EInvoiceNumberPrefix: null,

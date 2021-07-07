@@ -22,31 +22,37 @@
             <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1 " :error="$v.form.Description1 ">
-            <NextInput v-model="form.Description1 " type="text" :disabled="insertReadonly.Description1 " />
+            <NextInput v-model="form.Description1 " type="text" :disabled="insertReadonly.Description1 "/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
-          <NextFormGroup item-key="MinValue" :error="$v.form.MinValue">
-            <NextInput v-model="form.MinValue" type="number" :disabled="CategoryType && CategoryType.Code != 'ARA'" />
+          <NextFormGroup item-key="MinValue" :error="$v.form.MinValue" :required="CategoryType && CategoryType.Code == 'ARA'">
+            <NextInput v-model="form.MinValue" type="number" :disabled="!(CategoryType && CategoryType.Code == 'ARA')" />
           </NextFormGroup>
-          <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue">
-            <NextInput v-model="form.MaxValue" type="number" :disabled="CategoryType && CategoryType.Code != 'ARA'" />
+          <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue" :required="CategoryType && CategoryType.Code == 'ARA'">
+            <NextInput v-model="form.MaxValue" type="number" :disabled="!(CategoryType && CategoryType.Code == 'ARA')" />
           </NextFormGroup>
           <NextFormGroup item-key="CategoryTypeId" :error="$v.form.CategoryTypeId">
-            <NextDropdown v-model="CategoryType" :required="true" :disabled="insertReadonly.CategoryTypeId" url="VisionNextLoyalty/api/LoyaltyCategoryType/Search" @input="selectedSearchType('CategoryTypeId', $event)"/>
+            <NextDropdown
+              v-model="CategoryType"
+              :disabled="insertReadonly.CategoryTypeId"
+              @input="selectedSearchType('CategoryTypeId', $event)"
+              :options="types"
+              :source="(types ? types.filter(c => c.Code == 'DEG' || c.Code == 'ARA' || c.Code == 'OTO' ): [])"
+              label="Description1"/>
           </NextFormGroup>
           <NextFormGroup item-key="CalcTypeId" :error="$v.form.CalcTypeId">
-            <NextDropdown v-model="CalcType" :disabled="CategoryType && CategoryType.Code != 'OTO'" lookup-key="LOYALTY_CATEGORY_CALC_TYPE"  @input="selectedType('CalcTypeId', $event)"/>
+            <NextDropdown v-model="CalcType" :disabled="!(CategoryType && CategoryType.Code == 'OTO')" lookup-key="LOYALTY_CATEGORY_CALC_TYPE"  @input="selectCalcType"/>
           </NextFormGroup>
           <NextFormGroup item-key="LoyaltyPoint" :error="$v.form.LoyaltyPoint">
-            <NextInput v-model="form.LoyaltyPoint" type="number" :disabled="CalcType && CalcType.Code != 'SA'" />
+            <NextInput v-model="form.LoyaltyPoint" type="number" :disabled="!(CalcType && CalcType.Code == 'SH')" />
           </NextFormGroup>
           <NextFormGroup item-key="FieldAnalysisId" :error="$v.form.FieldAnalysisId">
-            <NextDropdown v-model="FieldAnalysis" :disabled="CalcType && CalcType.Code != 'ANS'" url="VisionNextFieldAnalysis/api/FieldAnalysis/Search"  @input="selectAnalysis($event)"/>
+            <NextDropdown v-model="FieldAnalysis" :disabled="!(CalcType && CalcType.Code == 'ANS')" url="VisionNextFieldAnalysis/api/FieldAnalysis/Search"  @input="selectAnalysis($event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="ByFrequency" :error="$v.form.ByFrequency">
-            <NextCheckBox v-model="form.ByFrequency" type="number" :disabled="CalcType && CalcType.Code != 'SA' && CalcType.Code != 'ANS' " toggle/>
+            <NextCheckBox v-model="form.ByFrequency" type="number" :disabled="!(CalcType && CalcType.Code == 'SA') && !(CalcType && CalcType.Code == 'ANS')" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -55,11 +61,11 @@
       <b-tabs>
         <b-tab :title="$t('insert.loyaltyCategory.salesTarget')"  v-if="CalcType && CalcType.Code === 'SH'">
           <b-row>
-            <NextFormGroup item-key="ColumnName" :error="$v.form.ColumnName" :required="true" v-if="CalcType && CalcType.Code === 'SH'">
+            <NextFormGroup item-key="ColumnName" :error="$v.form.ColumnName" v-if="CalcType && CalcType.Code === 'SH'">
               <NextDropdown v-model="form.ColumnNameDesc" :disabled="insertReadonly.ColumnName" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=2" :dynamic-request="{paramId: 'ITEM_CRITERIA'}"  @input="selectColumnName($event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="ColumnValue" :error="$v.form.ColumnValue" v-if="CalcType && CalcType.Code === 'SH'">
-              <NextDropdown v-model="form.ColumnValueDesc" :disabled="!form.ColumnName" :source="columnValues" @input="selectedType('ColumnValue', $event)" label="Label"/>
+              <NextDropdown v-model="form.ColumnValueDesc" :disabled="!form.ColumnNameDesc" :source="columnValues" @input="selectedType('ColumnValue', $event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="UnitId" :error="$v.form.UnitId" v-if="CalcType && CalcType.Code === 'SH'">
               <NextDropdown :disabled="insertReadonly.UnitId" url="VisionNextUnit/api/Unit/Search"  @input="selectedSearchType('UnitId', $event)" label="UnitLookupValue.Label"/>
@@ -235,11 +241,11 @@ export default {
     }
   },
   computed: {
-    ...mapState([''])
+    ...mapState(['types'])
   },
   mounted () {
     this.createManualCode()
-    // this.setApproveState()
+    this.getLists()
   },
   methods: {
     save () {
@@ -254,6 +260,9 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getLists () {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextLoyalty/api/LoyaltyCategoryType/Search', name: 'types'})
     },
     addLoyaltyCategory (listName) {
       this.$v.loyaltyCategory.$touch()
@@ -388,6 +397,19 @@ export default {
         })
       } else {
         this.form.ColumnName = null
+      }
+    },
+    selectCalcType (value) {
+      if (value) {
+        this.form.CalcTypeId = value.DecimalValue
+        if (value.Code !== 'SA' && value.Code !== 'ANS') {
+          this.form.ByFrequency = null
+        } else {
+          this.form.ByFrequency = value.DecimalValue
+        }
+      } else {
+        this.form.CalcTypeId = null
+        this.form.ByFrequency = 0
       }
     }
   },

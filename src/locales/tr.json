@@ -1941,7 +1941,8 @@
       "Answer": "Cevap",
       "ItemId": "Ürün Kodu",
       "itemName": "Ürün Adı",
-      "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz."
+      "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz.",
+      "LoyaltyCategory": "Sadakat Kategori Tanımları"
 
     },
 

@@ -350,7 +350,7 @@ export const detailData = {
       id: 15
     },
     {
-      type: 'Text',
+      type: 'Date',
       inputType: 'date',
       modelProperty: 'CreditStartDate',
       label: i18n.t('insert.branch.creditStartDate'),
@@ -360,7 +360,7 @@ export const detailData = {
       id: 16
     },
     {
-      type: 'Text',
+      type: 'Date',
       inputType: 'date',
       modelProperty: 'CreditEndDate',
       label: i18n.t('insert.branch.creditEndDate'),
@@ -370,7 +370,7 @@ export const detailData = {
       id: 17
     },
     {
-      type: 'Text',
+      type: 'Date',
       inputType: 'date',
       modelProperty: 'TextDate',
       label: i18n.t('insert.branch.textDate'),
@@ -380,7 +380,7 @@ export const detailData = {
       id: 18
     },
     {
-      type: 'Text',
+      type: 'Date',
       inputType: 'date',
       modelProperty: 'NotaryDate',
       label: i18n.t('insert.branch.notaryDate'),
