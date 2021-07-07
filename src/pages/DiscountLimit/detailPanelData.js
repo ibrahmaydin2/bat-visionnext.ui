@@ -155,7 +155,8 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'ColumnValue',
-      objectKey: 'ColumnValueDesc',
+      objectKey: 'ColumnNameDesc',
+      labelProperty: 'Code',
       customOption: true,
       orConditionFields: 'Code,Description1',
       url: 'VisionNextItem/api/Item/AutoCompleteSearch',
@@ -195,13 +196,18 @@ export const detailData = {
       id: 4
     },
     {
-      type: 'Text',
+      type: 'Label',
       inputType: 'text',
-      modelProperty: 'Description1',
+      modelProperty: 'ItemName',
+      objectKey: 'ColumnValueDesc',
+      orConditionFields: 'Code,Description1',
+      parentProperty: 'Description1',
       label: i18n.t('insert.discountLimit.ItemName'),
       required: true,
       visible: true,
+      disabled: true,
       isUnique: true,
+      parentId: 1,
       id: 5
     }
   ]

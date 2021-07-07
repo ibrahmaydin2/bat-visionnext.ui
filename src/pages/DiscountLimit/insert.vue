@@ -81,7 +81,7 @@ export default {
       form: {
         Deleted: 0,
         System: 0,
-        StatusId: null,
+        StatusId: 1,
         RecordState: 2,
         Code: null,
         BeginDate: null,
