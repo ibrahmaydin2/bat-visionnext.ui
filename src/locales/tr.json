@@ -484,7 +484,10 @@
     "Sao": "Sao Tanımı",
     "SaoGet": "Sao Tanımı Görüntüle",
     "SaoInsert": "Yeni Sao Tanımı",
-    "SaoUpdate": "Sao Tanımı Güncelle"
+    "SaoUpdate": "Sao Tanımı Güncelle",
+    "AssetService": "Servis Ana Kayıtları",
+    "AssetServiceGet": "Servis Ana Kayıtları Görüntüle",
+    "AssetServiceInsert": "Yeni Servis Ana Kayıtları"
   },
   "insert": {
     "chooseDate": "Tarih Seçiniz",
@@ -2118,6 +2121,29 @@
       "bcpClusterCrteria": "BCP Cluster",
       "regionCriteria": "Bölge",
       "detailsRequired": "Lütfen Detayları doldurunuz."
+    },
+    "assetService": {
+      "details": "Detaylar",
+      "serialNumber": "Barkod",
+      "genexp1": "Açıklama 2",
+      "serviceNumber": "Servis Numarası",
+      "isAssetMovement": "Varlık Hareketi Var Mı?",
+      "serviceState": "Servis Durumu",
+      "requestDate": "Bildirim Tarihi",
+      "requestTime": "Bildirim Saati",
+      "location": "Nokta",
+      "employee": "Personel",
+      "responseDate": "Müdahale Tarihi",
+      "responseTime": "Müdahale Saati",
+      "assetType": "Varlık Tipi",
+      "asset": "Varlık",
+      "serviceType": "Servis Tipi",
+      "itemSelectionMethod": "Malzeme Seçim Yöntemi",
+      "estimatedResponseDate": "Planlanan Müd. Tarihi",
+      "estimatedResponseTime": "Planlanan Müd. saati",
+      "completionDate": "Tamamlama Tarihi",
+      "completionTime": "Tamamlama Saati",
+      "fromLocation": "Giriş/Çıkış Lokasyon"
     }
   },
   "get": {
