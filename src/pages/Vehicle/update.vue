@@ -25,7 +25,11 @@
           </b-col>
           <b-col v-if="insertVisible.DefaultDriverEmployeeId != null ? insertVisible.DefaultDriverEmployeeId : developmentMode" cols="12" md="4" lg="3">
             <b-form-group :label="insertTitle.DefaultDriverEmployeeId + (insertRequired.DefaultDriverEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultDriverEmployeeId.$error }">
-              <v-select v-model="defaultDriverEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @search="onEmployeeSearch" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
+              <v-select v-model="defaultDriverEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @search="onEmployeeSearch" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname" :filterable="false">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.VehiclePlateNumber != null ? insertVisible.VehiclePlateNumber : developmentMode" cols="12" md="4" lg="3">
@@ -160,7 +164,11 @@
           <b-row>
             <b-col cols="12" md="4" lg="3">
               <b-form-group  :label="$t('insert.vehicles.replacementDriver') + ' *'" :class="{ 'form-group--error': $v.selectedEmployee.$error }">
-                <v-select v-model="selectedEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" label="nameSurname"></v-select>
+                <v-select v-model="selectedEmployee" :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" label="nameSurname"  @search="onEmployeeSearch">
+                  <template slot="no-options">
+                    {{$t('insert.min3')}}
+                  </template>
+                </v-select>
               </b-form-group>
             </b-col>
             <b-col cols="12" md="3" lg="2">
@@ -366,6 +374,10 @@ export default {
         this.category1 = e.Category1
         this.category2 = e.Category2
         this.category3 = e.Category3
+        if (e.DefaultDriverEmployee) {
+          this.defaultDriverEmployee = this.convertLookupValueToSearchValue(e.DefaultDriverEmployee)
+          this.defaultDriverEmployee.nameSurname = e.DefaultDriverEmployee.Label
+        }
 
         e.VehicleReplacementDrivers.map(item => {
           this.form.VehicleReplacementDrivers.push({
@@ -386,7 +398,6 @@ export default {
         e.map(item => {
           item.nameSurname = `${item.Name} ${item.Surname}`
         })
-        this.defaultDriverEmployee = e.find(d => d.RecordId === this.form.DefaultDriverEmployeeId)
       }
     }
   }

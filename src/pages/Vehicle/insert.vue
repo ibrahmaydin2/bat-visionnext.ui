@@ -25,7 +25,11 @@
           </b-col>
           <b-col v-if="insertVisible.DefaultDriverEmployeeId != null ? insertVisible.DefaultDriverEmployeeId : developmentMode" cols="12" md="4" lg="3">
             <b-form-group :label="insertTitle.DefaultDriverEmployeeId + (insertRequired.DefaultDriverEmployeeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DefaultDriverEmployeeId.$error }">
-              <v-select :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @search="onEmployeeSearch" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname"></v-select>
+              <v-select :options="(employees ? employees.filter(e => e.StatusId == 1) : [])" @search="onEmployeeSearch" @input="selectedSearchType('DefaultDriverEmployeeId', $event)" label="nameSurname" :filterable="false">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
             </b-form-group>
           </b-col>
           <b-col v-if="insertVisible.VehiclePlateNumber != null ? insertVisible.VehiclePlateNumber : developmentMode" cols="12" md="4" lg="3">
