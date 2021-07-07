@@ -167,35 +167,6 @@ export const detailData = {
       id: 1
     },
     {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'TableName',
-      hideOnTable: true,
-      defaultValue: 'T_ITEM',
-      parentId: null,
-      id: 2
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'ColumnName',
-      parentProperty: null,
-      hideOnTable: true,
-      defaultValue: 'RECORD_ID',
-      parentId: null,
-      id: 3
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
-      modelProperty: 'MaxDiscountRate',
-      label: i18n.t('insert.discountLimit.MaxDiscountRate'),
-      required: true,
-      visible: true,
-      isUnique: true,
-      id: 4
-    },
-    {
       type: 'Label',
       inputType: 'text',
       modelProperty: 'ItemName',
@@ -208,6 +179,35 @@ export const detailData = {
       disabled: true,
       isUnique: true,
       parentId: 1,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_ITEM',
+      parentId: null,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      parentProperty: null,
+      hideOnTable: true,
+      defaultValue: 'RECORD_ID',
+      parentId: null,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'MaxDiscountRate',
+      label: i18n.t('insert.discountLimit.MaxDiscountRate'),
+      required: true,
+      visible: true,
+      isUnique: true,
       id: 5
     }
   ]
