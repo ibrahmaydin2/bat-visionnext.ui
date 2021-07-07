@@ -1674,17 +1674,20 @@ export const store = new Vuex.Store({
           'hash': process.env.HASH
         }
       }
+      let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0]
       store.commit('userIDs', {
         userId: user.UserId,
         company: user.AuthorizedCompanies[0].Id,
-        branch: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Id,
-        branchName: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Desciption
+        branch: defaultBranch.Id,
+        branchName: defaultBranch.Desciption,
+        customerId: defaultBranch.CustomerId
       })
     },
     userIDs (state, payload) {
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
@@ -1706,6 +1709,7 @@ export const store = new Vuex.Store({
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
