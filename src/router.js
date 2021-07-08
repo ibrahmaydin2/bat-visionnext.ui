@@ -100,6 +100,9 @@ import ItemAnalysisResultGet from '@/pages/ItemAnalysisResult/get'
 import ItemAnalysisResultInsert from '@/pages/ItemAnalysisResult/insert'
 import ItemAnalysisResultUpdate from '@/pages/ItemAnalysisResult/update'
 
+import IntegrationDataParkIndex from '@/pages/IntegrationDataPark/'
+import IntegrationDataParkGet from '@/pages/IntegrationDataPark/get'
+
 import FieldSurveyResultIndex from '@/pages/FieldSurveyResult/'
 import FieldSurveyResultGet from '@/pages/FieldSurveyResult/get'
 import FieldSurveyResultInsert from '@/pages/FieldSurveyResult/insert'
@@ -736,6 +739,7 @@ const listIndex = [
   {path: '/Contracts', name: 'Contracts', component: ContractsIndex, meta: { title: i18n.t('router.Contracts'), createLink: 'ContractsInsert' }},
   {path: '/FieldAnalysisResult', name: 'FieldAnalysisResult', component: FieldAnalysisResultIndex, meta: { title: i18n.t('router.FieldAnalysisResult'), createLink: 'FieldAnalysisResultInsert' }},
   {path: '/ItemAnalysisResult', name: 'ItemAnalysisResult', component: ItemAnalysisResultIndex, meta: { title: i18n.t('router.ItemAnalysisResult'), createLink: 'ItemAnalysisResultInsert' }},
+  {path: '/IntegrationDataPark', name: 'IntegrationDataPark', component: IntegrationDataParkIndex, meta: { title: i18n.t('router.IntegrationDataPark'), createLink: 'IntegrationDataParkInsert' }},
   {path: '/FieldSurveyResult', name: 'FieldSurveyResult', component: FieldSurveyResultIndex, meta: { title: i18n.t('router.FieldSurveyResult'), createLink: 'FieldSurveyResultInsert' }},
   {path: '/FieldSurvey', name: 'FieldSurvey', component: FieldSurveyIndex, meta: { title: i18n.t('router.FieldSurvey'), createLink: 'FieldSurveyInsert' }},
   {path: '/FixedTerm', name: 'FixedTerm', component: FixedTermIndex, meta: { title: i18n.t('router.FixedTerm'), createLink: 'FixedTermInsert' }},
@@ -864,6 +868,7 @@ const listGet = [
   { path: '/Contracts/:url', name: 'ContractsGet', component: ContractsGet, meta: { title: i18n.t('router.ContractsGet'), baseLink: 'Contracts' } },
   { path: '/FieldAnalysisResult/:url', name: 'FieldAnalysisResultGet', component: FieldAnalysisResultGet, meta: { title: i18n.t('router.FieldAnalysisResultGet'), baseLink: 'FieldAnalysisResult' } },
   { path: '/ItemAnalysisResult/:url', name: 'ItemAnalysisResultGet', component: ItemAnalysisResultGet, meta: { title: i18n.t('router.ItemAnalysisResultGet'), baseLink: 'ItemAnalysisResult' } },
+  { path: '/IntegrationDataPark/:url', name: 'IntegrationDataParkGet', component: IntegrationDataParkGet, meta: { title: i18n.t('router.IntegrationDataParkGet'), baseLink: 'IntegrationDataPark' } },
   { path: '/FieldSurveyResult/:url', name: 'FieldSurveyResultGet', component: FieldSurveyResultGet, meta: { title: i18n.t('router.FieldSurveyResultGet'), baseLink: 'FieldSurveyResult' } },
   { path: '/FieldSurvey/:url', name: 'FieldSurveyGet', component: FieldSurveyGet, meta: { title: i18n.t('router.FieldSurveyGet'), baseLink: 'FieldSurvey' } },
   { path: '/FixedTerm/:url', name: 'FixedTermGet', component: FixedTermGet, meta: { title: i18n.t('router.FixedTermGet'), baseLink: 'FixedTerm' } },

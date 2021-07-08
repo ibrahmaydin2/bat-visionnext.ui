@@ -465,6 +465,8 @@
     "ItemAnalysisGet": "Ürün Analizi Tanımları Görüntüle",
     "ItemAnalysisInsert": "Yeni Ürün Analizi Tanımları",
     "ItemAnalysisUpdate": "Ürün Analizi Tanımları Güncelle",
+    "IntegrationDataPark": "Entegrasyon Yönetimi",
+    "IntegrationDataParkGet": "Entegrasyon Yönetimi Görüntüle",
     "PriceDecrease": "Fiyat İndirimi",
     "PriceDecreaseGet": "Fiyat İndirimi Görüntüle",
     "PriceDecreaseInsert": "Yeni Fiyat İndirimi",
