@@ -64,7 +64,7 @@ export const detailData = {
   selectedBranchItems: [
     {
       type: 'Autocomplete',
-      modelProperty: 'BranchId',
+      modelProperty: 'ColumnValue',
       objectKey: 'Branch',
       labelProperty: 'Code',
       customOption: true,
@@ -80,14 +80,29 @@ export const detailData = {
       type: 'Label',
       inputType: 'text',
       parentProperty: 'Description1',
-      modelProperty: 'BranchName',
-      labelProperty: 'Label',
+      modelProperty: 'Label',
       objectKey: 'Branch',
       label: i18n.t('insert.budgetMaster.branchName'),
       visible: true,
       disabled: true,
       parentId: 1,
       id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_CUSTOMER',
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      hideOnTable: true,
+      defaultValue: 'BRANCH_ID',
+      id: 4
     }
   ]
 }

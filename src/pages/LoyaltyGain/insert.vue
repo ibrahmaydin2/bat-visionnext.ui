@@ -31,20 +31,31 @@
       <b-tabs>
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextDropdown :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url=""/>
-            </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <NextDropdown :disabled="insertReadonly.LoyaltyId" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}"/>
+              <NextDropdown :disabled="insertReadonly.LoyaltyId" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <v-select
+                v-model="customer"
+                :disabled="!form.LoyaltyId"
+                @input="selectedSearchType('CustomerId', $event)"
+                @search="searchCustomer"
+                :options="customers"
+                :filterable="false"
+                label="Description1">
+              <template slot="no-options">
+                {{$t('insert.min3')}}
+              </template>
+              <template v-slot:option="option">
+                <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+              </template>
+              </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
               <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ContactId" :error="$v.form.ContactId">
-              <NextDropdown :disabled="insertReadonly.ContactId" @input="selectedSearchType('ContactId', $event)" url="" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -84,12 +95,13 @@ export default {
         EmployeeId: null,
         Description1: null,
         FinanceCode: null,
-        ContactId: null,
         LoyaltyGainDetails: []
       },
       routeName1: 'Loyalty',
       employee: null,
-      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields
+      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
+      customer: null,
+      customers: []
     }
   },
   mounted () {
@@ -129,6 +141,8 @@ export default {
       }
     },
     selectLoyalty (loyalty) {
+      this.customer = null
+      this.form.CustomerId = null
       if (loyalty) {
         this.form.LoyaltyId = loyalty.RecordId
         let model = {
@@ -141,6 +155,9 @@ export default {
                 ActiveCategoryId: item.LoyaltyCategoryId,
                 ActiveCategory: item.LoyaltyCategory,
                 Genexp1: item.Genexp1,
+                Deleted: 0,
+                System: 0,
+                RecordState: 2,
                 Value: null
               }
               return loyaltyGainDetail
@@ -148,6 +165,29 @@ export default {
           }
         })
       }
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      if (search === '%%%') {
+        search = undefined
+      } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
+        search = search.replaceAll('%', '')
+      }
+      let request = {
+        model: {
+          loyaltyId: this.form.LoyaltyId,
+          description: search
+        }
+      }
+      loading(true)
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/GetLoyaltyCustomers').then((response) => {
+        loading(false)
+        if (response && response.ListModel) {
+          this.customers = response.ListModel.BaseModels
+        }
+      })
     }
   }
 }

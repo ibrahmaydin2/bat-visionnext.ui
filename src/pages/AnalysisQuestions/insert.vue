@@ -22,10 +22,18 @@
               <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
             </NextFormGroup>
             <NextFormGroup item-key="CardTypeId" :error="$v.form.CardTypeId">
-              <NextDropdown :disabled="insertReadonly.CardTypeId" url="VisionNextFieldAnalysis/api/AnalysisQuestions/GetQuestionCardType" @input="selectedSearchType('CardTypeId', $event)" />
+              <NextDropdown
+                :disabled="insertReadonly.CardTypeId"
+                url="VisionNextFieldAnalysis/api/AnalysisQuestions/GetQuestionCardType"
+                @input="selectedSearchType('CardTypeId', $event); form.AnswerTypeId = null; AnswerType = null" />
             </NextFormGroup>
             <NextFormGroup item-key="AnswerTypeId" :error="$v.form.AnswerTypeId">
-              <NextDropdown :disabled="insertReadonly.AnswerTypeId" url="VisionNextFieldAnalysis/api/AnalysisQuestions/GetAnswerType" @input="selectedSearchType('AnswerTypeId', $event)" />
+              <NextDropdown
+                v-model="AnswerType"
+                @input="selectedSearchType('AnswerTypeId', $event)"
+                :source="answers"
+                label="Description1"
+                :disabled="!form.CardTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
               <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
@@ -35,8 +43,8 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AnalysisQuestions.QuestionOptions')" v-if="form.AnswerTypeId === 1 || form.AnswerTypeId === 5">
-            <NextDetailPanel v-model="form.QuestionChoice" :items="customerQuestionChoiceItems"/>
+        <b-tab lazy :title="$t('insert.AnalysisQuestions.QuestionOptions')" v-if="form.AnswerTypeId === 1 || form.AnswerTypeId === 5">
+            <NextDetailPanel v-model="form.QuestionChoices" :items="customerQuestionChoiceItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -59,17 +67,24 @@ export default {
         CardTypeId: null,
         AnswerTypeId: null,
         Description1: null,
-        QuestionChoice: []
+        QuestionChoices: []
       },
       customerQuestionChoiceItems: detailData.customerQuestionChoiceItems,
-      routeName1: 'FieldAnalysis'
+      routeName1: 'FieldAnalysis',
+      AnswerType: null,
+      CardType: null,
+      allAnswers: []
     }
   },
   computed: {
-    ...mapState([''])
+    ...mapState(['']),
+    answers: function () {
+      return this.form.CardTypeId === 1 ? this.allAnswers.filter(l => l.Code === 'SY' || l.Code === 'TT' || l.Code === 'SY2') : this.allAnswers
+    }
   },
   mounted () {
     this.createManualCode()
+    this.getAnswers()
   },
   methods: {
     save () {
@@ -84,6 +99,11 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getAnswers () {
+      this.$api.postByUrl({}, 'VisionNextFieldAnalysis/api/AnalysisQuestions/GetAnswerType').then((response) => {
+        this.allAnswers = response
+      })
     }
   }
 }

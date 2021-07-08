@@ -71,7 +71,8 @@ export default axios
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
-    'key': localStorage.getItem('Key')
+    'key': localStorage.getItem('Key'),
+    'hash': process.env.HASH
   }
 }
 
@@ -297,8 +298,8 @@ export const store = new Vuex.Store({
         SessionId: authData.SessionId,
         UserName: authData.UserName,
         Password: authData.Password,
-        InstanceHash: authData.InstanceHash
-      })
+        InstanceHash: process.env.HASH
+      }, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('loginButton').disabled = false
@@ -698,6 +699,7 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -774,6 +776,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -1667,20 +1670,24 @@ export const store = new Vuex.Store({
       state.loginUser.company = user.AuthorizedBranches[0].Desciption
       authHeader = {
         headers: {
-          'key': localStorage.getItem('Key')
+          'key': localStorage.getItem('Key'),
+          'hash': process.env.HASH
         }
       }
+      let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0]
       store.commit('userIDs', {
         userId: user.UserId,
         company: user.AuthorizedCompanies[0].Id,
-        branch: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Id,
-        branchName: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Desciption
+        branch: defaultBranch.Id,
+        branchName: defaultBranch.Desciption,
+        customerId: defaultBranch.CustomerId
       })
     },
     userIDs (state, payload) {
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
@@ -1702,6 +1709,7 @@ export const store = new Vuex.Store({
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')

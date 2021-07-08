@@ -59,17 +59,12 @@
             </b-col>
             <b-col v-if="insertVisible.DocumentDate != null ? insertVisible.DocumentDate : developmentMode" :start-weekday="1" cols="12" md="3">
               <b-form-group :label="insertTitle.DocumentDate + (insertRequired.DocumentDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DocumentDate.$error }">
-                <b-form-datepicker v-model="form.DocumentDate" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CsTypeId != null ? insertVisible.CsTypeId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.CsTypeId + (insertRequired.CsTypeId === true ? ' *' : '')" >
-                <v-select :options="csTypes" @input="selectedSearchType('CsTypeId', $event)" label="Description1"></v-select>
+                <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.DueDate != null ? insertVisible.DueDate : developmentMode" :start-weekday="1" cols="12" md="3">
               <b-form-group :label="insertTitle.DueDate + (insertRequired.DueDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DueDate.$error }">
-                <b-form-datepicker v-model="form.DueDate" />
+                <b-form-datepicker v-model="form.DueDate" :placeholder="$t('insert.chooseDate')" />
               </b-form-group>
             </b-col>
             <b-col v-if="insertVisible.SerialNumber != null ? insertVisible.SerialNumber : developmentMode" cols="12" md="3">
@@ -166,7 +161,7 @@ export default {
         CustomerId: null,
         DocumentNumber: null,
         DocumentDate: new Date(),
-        CsTypeId: null,
+        CsTypeId: 1,
         TransactionTypeId: 2400,
         DueDate: null,
         SerialNumber: null,
@@ -192,7 +187,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'banks', 'routes', 'representatives', 'csTypes'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'customers', 'currencies', 'banks', 'routes', 'representatives'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -203,7 +198,6 @@ export default {
       // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: 'CsCard'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextFinance/api/CsType/Search', name: 'csTypes'})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/CsCard/GetCode`})
     },
     selectedType (label, model) {

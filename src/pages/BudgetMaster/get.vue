@@ -1,7 +1,10 @@
 <template>
   <div class="asc__showPage">
-    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+    <b-modal id="detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
       <BudgetDetail :addable="false" :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
+    <b-modal id="monthly-budget-detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.monthlyBudgetDetail')" no-close-on-backdrop>
+      <MonthlyBudgetDetails :budget-detail="selectedBudgetDetail"/>
     </b-modal>
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
@@ -43,12 +46,12 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="rowData.Budgets" :items="budgetItems" :get-detail="getDetail" :detail-buttons="detailButtons"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.budgetMaster.branches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="rowData.BranchCriteria && rowData.BranchCriteria.Code === 'SL'">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -66,16 +69,27 @@ import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 import { detailData } from './detailPanelData'
 import BudgetDetail from './Details.vue'
+import MonthlyBudgetDetails from './MonthlyBudgetDetails.vue'
 export default {
   mixins: [mixin],
   components: {
-    BudgetDetail
+    BudgetDetail,
+    MonthlyBudgetDetails
   },
   data () {
     return {
       budgetItems: detailData.budgetItems,
       selectedBranchItems: detailData.selectedBranchItems,
-      selectedBudgetDetail: null
+      selectedBudgetDetail: null,
+      detailButtons: [
+        {
+          title: this.$t('insert.budgetMaster.monthlyBudgetDetail'),
+          icon: 'fa fa-list',
+          getDetail: (data) => {
+            this.getMonthlyBudgetDetail(data)
+          }
+        }
+      ]
     }
   },
   mounted () {
@@ -94,6 +108,10 @@ export default {
     getDetail (data) {
       this.selectedBudgetDetail = data
       this.$bvModal.show('detail-modal')
+    },
+    getMonthlyBudgetDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('monthly-budget-detail-modal')
     }
   }
 }

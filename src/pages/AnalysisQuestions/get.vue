@@ -15,9 +15,10 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.Code')}}:</b> {{ rowData.Code }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.CardTypeId')}}:</b> {{ rowData.CardTypeId }}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.AnswerTypeId')}}:</b> {{ rowData.AnswerTypeId }}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.AnalysisQuestions.Description1')}}:</b> {{(rowData.Description1) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.CardTypeId')}}:</b> {{ rowData.CardType ? rowData.CardType.Label : '-'}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.AnswerTypeId')}}:</b> {{ rowData.AnswerType ? rowData.AnswerType.Label : '-' }}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.AnalysisQuestions.Description1')}}:</b> {{ rowData.Description1 }}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.AnalysisQuestions.StatusId')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
@@ -26,7 +27,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.QuestionChoice" :items="customerQuestionChoiceItems"/>
+                <NextDetailPanel type="get" v-model="rowData.QuestionChoices" :items="customerQuestionChoiceItems"/>
               </b-card>
             </b-col>
           </b-row>

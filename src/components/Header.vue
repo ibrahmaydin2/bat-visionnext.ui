@@ -150,7 +150,8 @@ export default {
         company: localStorage.getItem('CompanyId'),
         companyName: e.CommercialTitle,
         branch: e.Id,
-        branchName: e.Desciption
+        branchName: e.Desciption,
+        customerId: e.CustomerId
       })
     },
     changeLang () {

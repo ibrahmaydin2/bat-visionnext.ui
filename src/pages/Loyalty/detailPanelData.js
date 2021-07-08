@@ -160,7 +160,7 @@ export const detailData = {
       customOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+      url: 'VisionNextCustomer/api/Customer/GetBranchsCustomerSearch',
       label: i18n.t('insert.loyalty.customerCode'),
       required: true,
       visible: true,
@@ -412,6 +412,33 @@ export const detailData = {
       visible: true,
       label: i18n.t('insert.loyalty.categoryDate'),
       id: 2
+    }
+  ],
+  customerListFields: [
+    {
+      key: 'selection',
+      label: ''
+    },
+    {
+      key: 'ColumnNameDesc',
+      label: i18n.t('insert.loyalty.customerCode'),
+      formatter: (value, key, obj) => {
+        return obj.ColumnNameDesc ? obj.ColumnNameDesc : obj.ColumnValueDesc
+      }
+    },
+    {
+      key: 'ColumnValueDesc',
+      label: i18n.t('insert.loyalty.commercialTitle'),
+      formatter: (value, key, obj) => {
+        return obj.CommercialTitle ? obj.CommercialTitle : value
+      }
+    },
+    {
+      key: 'ColumnValueDesc2',
+      label: i18n.t('insert.loyalty.location'),
+      formatter: (value, key, obj) => {
+        return obj.Location ? obj.Location : value
+      }
     }
   ]
 }

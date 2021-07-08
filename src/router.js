@@ -100,6 +100,9 @@ import ItemAnalysisResultGet from '@/pages/ItemAnalysisResult/get'
 import ItemAnalysisResultInsert from '@/pages/ItemAnalysisResult/insert'
 import ItemAnalysisResultUpdate from '@/pages/ItemAnalysisResult/update'
 
+import IntegrationDataParkIndex from '@/pages/IntegrationDataPark/'
+import IntegrationDataParkGet from '@/pages/IntegrationDataPark/get'
+
 import FieldSurveyResultIndex from '@/pages/FieldSurveyResult/'
 import FieldSurveyResultGet from '@/pages/FieldSurveyResult/get'
 import FieldSurveyResultInsert from '@/pages/FieldSurveyResult/insert'
@@ -289,6 +292,11 @@ import DiscountGet from '@/pages/Discount/get'
 import DiscountInsert from '@/pages/Discount/insert'
 import DiscountUpdate from '@/pages/Discount/update'
 
+import DiscountLimitIndex from '@/pages/DiscountLimit/'
+import DiscountLimitGet from '@/pages/DiscountLimit/get'
+import DiscountLimitInsert from '@/pages/DiscountLimit/insert'
+import DiscountLimitUpdate from '@/pages/DiscountLimit/update'
+
 import PremiumOrderIndex from '@/pages/PremiumOrder/'
 import PremiumOrderGet from '@/pages/PremiumOrder/get'
 import PremiumOrderInsert from '@/pages/PremiumOrder/insert'
@@ -323,6 +331,11 @@ import CSCardIndex from '@/pages/CSCard/'
 import CSCardGet from '@/pages/CSCard/get'
 import CSCardInsert from '@/pages/CSCard/insert'
 import CSCardUpdate from '@/pages/CSCard/update'
+
+import VoucherIndex from '@/pages/Voucher/'
+import VoucherGet from '@/pages/Voucher/get'
+import VoucherInsert from '@/pages/Voucher/insert'
+import VoucherUpdate from '@/pages/Voucher/update'
 
 import AccountTransactionIndex from '@/pages/AccountTransaction/'
 import AccountTransactionGet from '@/pages/AccountTransaction/get'
@@ -483,6 +496,11 @@ import DiscountReasonGet from '@/pages/DiscountReason/get'
 import DiscountReasonInsert from '@/pages/DiscountReason/insert'
 import DiscountReasonUpdate from '@/pages/DiscountReason/update'
 
+import DiscountPackageIndex from '@/pages/DiscountPackage/'
+import DiscountPackageGet from '@/pages/DiscountPackage/get'
+import DiscountPackageInsert from '@/pages/DiscountPackage/insert'
+import DiscountPackageUpdate from '@/pages/DiscountPackage/update'
+
 import PriceDiscountTransactionIndex from '@/pages/PriceDiscountTransaction/'
 import PriceDiscountTransactionGet from '@/pages/PriceDiscountTransaction/get'
 import PriceDiscountTransactionInsert from '@/pages/PriceDiscountTransaction/insert'
@@ -595,6 +613,11 @@ import LoyaltyGet from '@/pages/Loyalty/get'
 import LoyaltyInsert from '@/pages/Loyalty/insert'
 import LoyaltyUpdate from '@/pages/Loyalty/update'
 
+import LoyaltyCategoryIndex from '@/pages/LoyaltyCategory/'
+import LoyaltyCategoryGet from '@/pages/LoyaltyCategory/get'
+import LoyaltyCategoryInsert from '@/pages/LoyaltyCategory/insert'
+import LoyaltyCategoryUpdate from '@/pages/LoyaltyCategory/update'
+
 import ItemAnalysisIndex from '@/pages/ItemAnalysis/'
 import ItemAnalysisGet from '@/pages/ItemAnalysis/get'
 import ItemAnalysisInsert from '@/pages/ItemAnalysis/insert'
@@ -619,6 +642,15 @@ import FieldAnalysisIndex from '@/pages/FieldAnalysis/'
 import FieldAnalysisGet from '@/pages/FieldAnalysis/get'
 import FieldAnalysisInsert from '@/pages/FieldAnalysis/insert'
 import FieldAnalysisUpdate from '@/pages/FieldAnalysis/update'
+
+import SaoIndex from '@/pages/Sao/'
+import SaoGet from '@/pages/Sao/get'
+import SaoInsert from '@/pages/Sao/insert'
+import SaoUpdate from '@/pages/Sao/update'
+
+import AssetServiceIndex from '@/pages/AssetService/'
+import AssetServiceGet from '@/pages/AssetService/get'
+import AssetServiceInsert from '@/pages/AssetService/insert'
 
 Vue.use(Router)
 
@@ -677,6 +709,7 @@ const listIndex = [
   {path: '/PremiumResult', name: 'PremiumResult', component: PremiumResultIndex, meta: { title: i18n.t('router.PremiumResult'), createLink: 'PremiumResultInsert' }},
   {path: '/VoucherOperations', name: 'VoucherOperations', component: VoucherOperationsIndex, meta: { title: i18n.t('router.VoucherOperations'), createLink: 'VoucherOperationsInsert' }},
   {path: '/Discount', name: 'Discount', component: DiscountIndex, meta: { title: i18n.t('router.Discount'), createLink: 'DiscountInsert' }},
+  {path: '/DiscountLimit', name: 'DiscountLimit', component: DiscountLimitIndex, meta: { title: i18n.t('router.DiscountLimit'), createLink: 'DiscountLimitInsert' }},
   {path: '/PremiumOrder', name: 'PremiumOrder', component: PremiumOrderIndex, meta: { title: i18n.t('router.PremiumOrder'), createLink: 'PremiumOrderInsert' }},
   {path: '/CurrentAccountTransactions', name: 'CurrentAccountTransactions', component: CurrentAccountTransactionsIndex, meta: { title: i18n.t('router.CurrentAccountTransactions'), createLink: 'CurrentAccountTransactionsInsert' }},
   {path: '/DebtArrangement', name: 'DebtArrangement', component: DebtArrangementIndex, meta: { title: i18n.t('router.DebtArrangement'), createLink: 'DebtArrangementInsert' }},
@@ -684,6 +717,7 @@ const listIndex = [
   {path: '/CheckOperations', name: 'CheckOperations', component: CheckOperationsIndex, meta: { title: i18n.t('router.CheckOperations'), createLink: 'CheckOperationsInsert' }},
   {path: '/BankTransaction', name: 'BankTransaction', component: BankTransactionIndex, meta: { title: i18n.t('router.BankTransaction'), createLink: 'BankTransactionInsert' }},
   {path: '/CSCard', name: 'CSCard', component: CSCardIndex, meta: { title: i18n.t('router.CSCard'), createLink: 'CSCardInsert' }},
+  {path: '/Voucher', name: 'Voucher', component: VoucherIndex, meta: { title: i18n.t('router.Voucher'), createLink: 'VoucherInsert' }},
   {path: '/AccountTransaction', name: 'AccountTransaction', component: AccountTransactionIndex, meta: { title: i18n.t('router.AccountTransaction'), createLink: 'AccountTransactionInsert' }},
   {path: '/CreditCard', name: 'CreditCard', component: CreditCardIndex, meta: { title: i18n.t('router.CreditCard'), createLink: 'CreditCardInsert' }},
   {path: '/CashTransactions', name: 'CashTransactions', component: CashTransactionsIndex, meta: { title: i18n.t('router.CashTransactions'), createLink: 'CashTransactionsInsert' }},
@@ -705,6 +739,7 @@ const listIndex = [
   {path: '/Contracts', name: 'Contracts', component: ContractsIndex, meta: { title: i18n.t('router.Contracts'), createLink: 'ContractsInsert' }},
   {path: '/FieldAnalysisResult', name: 'FieldAnalysisResult', component: FieldAnalysisResultIndex, meta: { title: i18n.t('router.FieldAnalysisResult'), createLink: 'FieldAnalysisResultInsert' }},
   {path: '/ItemAnalysisResult', name: 'ItemAnalysisResult', component: ItemAnalysisResultIndex, meta: { title: i18n.t('router.ItemAnalysisResult'), createLink: 'ItemAnalysisResultInsert' }},
+  {path: '/IntegrationDataPark', name: 'IntegrationDataPark', component: IntegrationDataParkIndex, meta: { title: i18n.t('router.IntegrationDataPark'), createLink: 'IntegrationDataParkInsert' }},
   {path: '/FieldSurveyResult', name: 'FieldSurveyResult', component: FieldSurveyResultIndex, meta: { title: i18n.t('router.FieldSurveyResult'), createLink: 'FieldSurveyResultInsert' }},
   {path: '/FieldSurvey', name: 'FieldSurvey', component: FieldSurveyIndex, meta: { title: i18n.t('router.FieldSurvey'), createLink: 'FieldSurveyInsert' }},
   {path: '/FixedTerm', name: 'FixedTerm', component: FixedTermIndex, meta: { title: i18n.t('router.FixedTerm'), createLink: 'FixedTermInsert' }},
@@ -723,6 +758,7 @@ const listIndex = [
   {path: '/RmaOrder', name: 'RmaOrder', component: RmaOrderIndex, meta: { title: i18n.t('router.RmaOrder'), createLink: 'RmaOrderInsert' }},
   {path: '/FixedTermCampaign', name: 'FixedTermCampaign', component: FixedTermCampaignIndex, meta: { title: i18n.t('router.FixedTermCampaign'), createLink: 'FixedTermCampaignInsert' }},
   {path: '/DiscountReason', name: 'DiscountReason', component: DiscountReasonIndex, meta: { title: i18n.t('router.DiscountReason'), createLink: 'DiscountReasonInsert' }},
+  {path: '/DiscountPackage', name: 'DiscountPackage', component: DiscountPackageIndex, meta: { title: i18n.t('router.DiscountPackage'), createLink: 'DiscountPackageInsert' }},
   {path: '/PriceDiscountTransaction', name: 'PriceDiscountTransaction', component: PriceDiscountTransactionIndex, meta: { title: i18n.t('router.PriceDiscountTransaction'), createLink: 'PriceDiscountTransactionInsert' }},
   {path: '/SalesReturnWaybill', name: 'SalesReturnWaybill', component: SalesReturnWaybillIndex, meta: { title: i18n.t('router.SalesReturnWaybill') }},
   {path: '/PurchaseReturnWaybill', name: 'PurchaseReturnWaybill', component: PurchaseReturnWaybillIndex, meta: { title: i18n.t('router.PurchaseReturnWaybill') }},
@@ -749,7 +785,11 @@ const listIndex = [
   {path: '/LoyaltyGain', name: 'LoyaltyGain', component: LoyaltyGainIndex, meta: { title: i18n.t('router.LoyaltyGain'), createLink: 'LoyaltyGainInsert' }},
   {path: '/AssetOperation', name: 'AssetOperation', component: AssetOperationIndex, meta: { title: i18n.t('router.AssetOperation'), createLink: 'AssetOperationInsert' }},
   {path: '/BudgetMaster', name: 'BudgetMaster', component: BudgetMasterIndex, meta: { title: i18n.t('router.BudgetMaster'), createLink: 'BudgetMasterInsert' }},
-  {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert' }}
+  {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert' }},
+  {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert' }},
+  {path: '/Sao', name: 'Sao', component: SaoIndex, meta: { title: i18n.t('router.Sao'), createLink: 'SaoInsert' }},
+  {path: '/AssetService', name: 'AssetService', component: AssetServiceIndex, meta: { title: i18n.t('router.AssetService'), createLink: 'AssetServiceInsert' }}
+
 ]
 
 const listGet = [
@@ -798,6 +838,7 @@ const listGet = [
   { path: '/PremiumResult/:url', name: 'PremiumResultGet', component: PremiumResultGet, meta: { title: i18n.t('router.PremiumResultGet'), baseLink: 'PremiumResult' } },
   { path: '/VoucherOperations/:url', name: 'VoucherOperationsGet', component: VoucherOperationsGet, meta: { title: i18n.t('router.VoucherOperationsGet'), baseLink: 'VoucherOperations' } },
   { path: '/Discount/:url', name: 'DiscountGet', component: DiscountGet, meta: { title: i18n.t('router.DiscountGet'), baseLink: 'Discount' } },
+  { path: '/DiscountLimit/:url', name: 'DiscountLimitGet', component: DiscountLimitGet, meta: { title: i18n.t('router.DiscountLimitGet'), baseLink: 'DiscountLimit' } },
   { path: '/PremiumOrder/:url', name: 'PremiumOrderGet', component: PremiumOrderGet, meta: { title: i18n.t('router.PremiumOrderGet'), baseLink: 'PremiumOrder' } },
   { path: '/CurrentAccountTransactions/:url', name: 'CurrentAccountTransactionsGet', component: CurrentAccountTransactionsGet, meta: { title: i18n.t('router.CurrentAccountTransactionsGet'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/DebtArrangement/:url', name: 'DebtArrangementGet', component: DebtArrangementGet, meta: { title: i18n.t('router.DebtArrangementGet'), baseLink: 'DebtArrangement' } },
@@ -805,6 +846,7 @@ const listGet = [
   { path: '/CheckOperations/:url', name: 'CheckOperationsGet', component: CheckOperationsGet, meta: { title: i18n.t('router.CheckOperationsGet'), baseLink: 'CheckOperations' } },
   { path: '/BankTransaction/:url', name: 'BankTransactionGet', component: BankTransactionGet, meta: { title: i18n.t('router.BankTransactionGet'), baseLink: 'BankTransaction' } },
   { path: '/CSCard/:url', name: 'CSCardGet', component: CSCardGet, meta: { title: i18n.t('router.CSCardGet'), baseLink: 'CSCard' } },
+  { path: '/Voucher/:url', name: 'VoucherGet', component: VoucherGet, meta: { title: i18n.t('router.VoucherGet'), baseLink: 'Voucher' } },
   { path: '/AccountTransaction/:url', name: 'AccountTransactionGet', component: AccountTransactionGet, meta: { title: i18n.t('router.AccountTransactionGet'), baseLink: 'AccountTransaction' } },
   { path: '/CreditCard/:url', name: 'CreditCardGet', component: CreditCardGet, meta: { title: i18n.t('router.CreditCardGet'), baseLink: 'CreditCard' } },
   { path: '/CashTransactions/:url', name: 'CashTransactionsGet', component: CashTransactionsGet, meta: { title: i18n.t('router.CashTransactionsGet'), baseLink: 'CashTransactions' } },
@@ -826,6 +868,7 @@ const listGet = [
   { path: '/Contracts/:url', name: 'ContractsGet', component: ContractsGet, meta: { title: i18n.t('router.ContractsGet'), baseLink: 'Contracts' } },
   { path: '/FieldAnalysisResult/:url', name: 'FieldAnalysisResultGet', component: FieldAnalysisResultGet, meta: { title: i18n.t('router.FieldAnalysisResultGet'), baseLink: 'FieldAnalysisResult' } },
   { path: '/ItemAnalysisResult/:url', name: 'ItemAnalysisResultGet', component: ItemAnalysisResultGet, meta: { title: i18n.t('router.ItemAnalysisResultGet'), baseLink: 'ItemAnalysisResult' } },
+  { path: '/IntegrationDataPark/:url', name: 'IntegrationDataParkGet', component: IntegrationDataParkGet, meta: { title: i18n.t('router.IntegrationDataParkGet'), baseLink: 'IntegrationDataPark' } },
   { path: '/FieldSurveyResult/:url', name: 'FieldSurveyResultGet', component: FieldSurveyResultGet, meta: { title: i18n.t('router.FieldSurveyResultGet'), baseLink: 'FieldSurveyResult' } },
   { path: '/FieldSurvey/:url', name: 'FieldSurveyGet', component: FieldSurveyGet, meta: { title: i18n.t('router.FieldSurveyGet'), baseLink: 'FieldSurvey' } },
   { path: '/FixedTerm/:url', name: 'FixedTermGet', component: FixedTermGet, meta: { title: i18n.t('router.FixedTermGet'), baseLink: 'FixedTerm' } },
@@ -844,6 +887,7 @@ const listGet = [
   { path: '/RmaOrder/:url', name: 'RmaOrderGet', component: RmaOrderGet, meta: { title: i18n.t('router.RmaOrderGet'), baseLink: 'RmaOrder' } },
   { path: '/FixedTermCampaign/:url', name: 'FixedTermCampaignGet', component: FixedTermCampaignGet, meta: { title: i18n.t('router.FixedTermCampaignGet'), baseLink: 'FixedTermCampaign' } },
   { path: '/DiscountReason/:url', name: 'DiscountReasonGet', component: DiscountReasonGet, meta: { title: i18n.t('router.DiscountReasonGet'), baseLink: 'DiscountReason' } },
+  { path: '/DiscountPackage/:url', name: 'DiscountPackageGet', component: DiscountPackageGet, meta: { title: i18n.t('router.DiscountPackageGet'), baseLink: 'DiscountPackage' } },
   { path: '/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionGet', component: PriceDiscountTransactionGet, meta: { title: i18n.t('router.PriceDiscountTransactionGet'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/SalesReturnWaybill/:url', name: 'SalesReturnWaybillGet', component: SalesReturnWaybillGet, meta: { title: i18n.t('router.SalesReturnWaybillGet'), baseLink: 'SalesReturnWaybill' } },
   { path: '/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillGet', component: PurchaseReturnWaybillGet, meta: { title: i18n.t('router.PurchaseReturnWaybillGet'), baseLink: 'PurchaseReturnWaybill' } },
@@ -870,7 +914,10 @@ const listGet = [
   { path: '/LoyaltyGain/:url', name: 'LoyaltyGainGet', component: LoyaltyGainGet, meta: { title: i18n.t('router.LoyaltyGainGet'), baseLink: 'LoyaltyGain' } },
   { path: '/AssetOperation/:url', name: 'AssetOperationGet', component: AssetOperationGet, meta: { title: i18n.t('router.AssetOperationGet'), baseLink: 'AssetOperation' } },
   { path: '/BudgetMaster/:url', name: 'BudgetMasterGet', component: BudgetMasterGet, meta: { title: i18n.t('router.BudgetMasterGet'), baseLink: 'BudgetMaster' } },
-  { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } }
+  { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } },
+  { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Sao/:url', name: 'SaoGet', component: SaoGet, meta: { title: i18n.t('router.SaoGet'), baseLink: 'Sao' } },
+  { path: '/AssetService/:url', name: 'AssetServiceGet', component: AssetServiceGet, meta: { title: i18n.t('router.AssetServiceGet'), baseLink: 'AssetService' } }
 ]
 
 const listUpdate = [
@@ -919,6 +966,7 @@ const listUpdate = [
   { path: '/Update/PremiumResult/:url', name: 'PremiumResultUpdate', component: PremiumResultUpdate, meta: { title: i18n.t('router.PremiumResultUpdate'), baseLink: 'PremiumResult' } },
   { path: '/Update/VoucherOperations/:url', name: 'VoucherOperationsUpdate', component: VoucherOperationsUpdate, meta: { title: i18n.t('router.VoucherOperationsUpdate'), baseLink: 'VoucherOperations' } },
   { path: '/Update/Discount/:url', name: 'DiscountUpdate', component: DiscountUpdate, meta: { title: i18n.t('router.DiscountUpdate'), baseLink: 'Discount' } },
+  { path: '/Update/DiscountLimit/:url', name: 'DiscountLimitUpdate', component: DiscountLimitUpdate, meta: { title: i18n.t('router.DiscountLimitUpdate'), baseLink: 'DiscountLimit' } },
   { path: '/Update/PremiumOrder/:url', name: 'PremiumOrderUpdate', component: PremiumOrderUpdate, meta: { title: i18n.t('router.PremiumOrderUpdate'), baseLink: 'PremiumOrder' } },
   { path: '/Update/CurrentAccountTransactions/:url', name: 'CurrentAccountTransactionsUpdate', component: CurrentAccountTransactionsUpdate, meta: { title: i18n.t('router.CurrentAccountTransactionsUpdate'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/Update/DebtArrangement/:url', name: 'DebtArrangementUpdate', component: DebtArrangementUpdate, meta: { title: i18n.t('router.DebtArrangementUpdate'), baseLink: 'DebtArrangement' } },
@@ -926,6 +974,7 @@ const listUpdate = [
   { path: '/Update/CheckOperations/:url', name: 'CheckOperationsUpdate', component: CheckOperationsUpdate, meta: { title: i18n.t('router.CheckOperationsUpdate'), baseLink: 'CheckOperations' } },
   { path: '/Update/BankTransaction/:url', name: 'BankTransactionUpdate', component: BankTransactionUpdate, meta: { title: i18n.t('router.BankTransactionUpdate'), baseLink: 'BankTransaction' } },
   { path: '/Update/CSCard/:url', name: 'CSCardUpdate', component: CSCardUpdate, meta: { title: i18n.t('router.CSCardUpdate'), baseLink: 'CSCard' } },
+  { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
   { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: CreditCardUpdate, meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
   { path: '/Update/CashTransactions/:url', name: 'CashTransactionsUpdate', component: CashTransactionsUpdate, meta: { title: i18n.t('router.CashTransactionsUpdate'), baseLink: 'CashTransactions' } },
@@ -962,6 +1011,7 @@ const listUpdate = [
   { path: '/Update/RmaOrder/:url', name: 'RmaOrderUpdate', component: RmaOrderUpdate, meta: { title: i18n.t('router.RmaOrderUpdate'), baseLink: 'RmaOrder' } },
   { path: '/Update/FixedTermCampaign/:url', name: 'FixedTermCampaignUpdate', component: FixedTermCampaignUpdate, meta: { title: i18n.t('router.FixedTermCampaignUpdate'), baseLink: 'FixedTermCampaign' } },
   { path: '/Update/DiscountReason/:url', name: 'DiscountReasonUpdate', component: DiscountReasonUpdate, meta: { title: i18n.t('router.DiscountReasonUpdate'), baseLink: 'DiscountReason' } },
+  { path: '/Update/DiscountPackage/:url', name: 'DiscountPackageUpdate', component: DiscountPackageUpdate, meta: { title: i18n.t('router.DiscountPackageUpdate'), baseLink: 'DiscountPackage' } },
   { path: '/Update/PriceDiscountTransaction/:url', name: 'PriceDiscountTransactionUpdate', component: PriceDiscountTransactionUpdate, meta: { title: i18n.t('router.PriceDiscountTransactionUpdate'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/Update/SalesReturnWaybill/:url', name: 'SalesReturnWaybillUpdate', component: SalesReturnWaybillUpdate, meta: { title: i18n.t('router.SalesReturnWaybillUpdate'), baseLink: 'SalesReturnWaybill' } },
   { path: '/Update/PurchaseReturnWaybill/:url', name: 'PurchaseReturnWaybillUpdate', component: PurchaseReturnWaybillUpdate, meta: { title: i18n.t('router.PurchaseReturnWaybillUpdate'), baseLink: 'PurchaseReturnWaybill' } },
@@ -988,7 +1038,9 @@ const listUpdate = [
   { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } },
   { path: '/Update/AssetOperation/:url', name: 'AssetOperationUpdate', component: AssetOperationUpdate, meta: { title: i18n.t('router.AssetOperationUpdate'), baseLink: 'AssetOperation' } },
   { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
-  { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } }
+  { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
+  { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } }
 ]
 
 const listInsert = [
@@ -1036,6 +1088,7 @@ const listInsert = [
   { path: '/Insert/PremiumResult', name: 'PremiumResultInsert', component: PremiumResultInsert, meta: { title: i18n.t('router.PremiumResultInsert'), baseLink: 'PremiumResult' } },
   { path: '/Insert/VoucherOperations', name: 'VoucherOperationsInsert', component: VoucherOperationsInsert, meta: { title: i18n.t('router.VoucherOperationsInsert'), baseLink: 'VoucherOperations' } },
   { path: '/Insert/Discount', name: 'DiscountInsert', component: DiscountInsert, meta: { title: i18n.t('router.DiscountInsert'), baseLink: 'Discount' } },
+  { path: '/Insert/DiscountLimit', name: 'DiscountLimitInsert', component: DiscountLimitInsert, meta: { title: i18n.t('router.DiscountLimitInsert'), baseLink: 'DiscountLimit' } },
   { path: '/Insert/PremiumOrder', name: 'PremiumOrderInsert', component: PremiumOrderInsert, meta: { title: i18n.t('router.PremiumOrderInsert'), baseLink: 'PremiumOrder' } },
   { path: '/Insert/CurrentAccountTransactions', name: 'CurrentAccountTransactionsInsert', component: CurrentAccountTransactionsInsert, meta: { title: i18n.t('router.CurrentAccountTransactionsInsert'), baseLink: 'CurrentAccountTransactions' } },
   { path: '/Insert/DebtArrangement', name: 'DebtArrangementInsert', component: DebtArrangementInsert, meta: { title: i18n.t('router.DebtArrangementInsert'), baseLink: 'DebtArrangement' } },
@@ -1043,6 +1096,7 @@ const listInsert = [
   { path: '/Insert/CheckOperations', name: 'CheckOperationsInsert', component: CheckOperationsInsert, meta: { title: i18n.t('router.CheckOperationsInsert'), baseLink: 'CheckOperations' } },
   { path: '/Insert/BankTransaction', name: 'BankTransactionInsert', component: BankTransactionInsert, meta: { title: i18n.t('router.BankTransactionInsert'), baseLink: 'BankTransaction' } },
   { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
+  { path: '/Insert/Voucher', name: 'VoucherInsert', component: VoucherInsert, meta: { title: i18n.t('router.VoucherInsert'), baseLink: 'Voucher' } },
   { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
   { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: CreditCardInsert, meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/CashTransactions', name: 'CashTransactionsInsert', component: CashTransactionsInsert, meta: { title: i18n.t('router.CashTransactionsInsert'), baseLink: 'CashTransactions' } },
@@ -1082,6 +1136,7 @@ const listInsert = [
   { path: '/Insert/RmaOrder', name: 'RmaOrderInsert', component: RmaOrderInsert, meta: { title: i18n.t('router.RmaOrderInsert'), baseLink: 'RmaOrder' } },
   { path: '/Insert/FixedTermCampaign', name: 'FixedTermCampaignInsert', component: FixedTermCampaignInsert, meta: { title: i18n.t('router.FixedTermCampaignInsert'), baseLink: 'FixedTermCampaign' } },
   { path: '/Insert/DiscountReason', name: 'DiscountReasonInsert', component: DiscountReasonInsert, meta: { title: i18n.t('router.DiscountReasonInsert'), baseLink: 'DiscountReason' } },
+  { path: '/Insert/DiscountPackage', name: 'DiscountPackageInsert', component: DiscountPackageInsert, meta: { title: i18n.t('router.DiscountPackageInsert'), baseLink: 'DiscountPackage' } },
   { path: '/Insert/PriceDiscountTransaction', name: 'PriceDiscountTransactionInsert', component: PriceDiscountTransactionInsert, meta: { title: i18n.t('router.PriceDiscountTransactionInsert'), baseLink: 'PriceDiscountTransaction' } },
   { path: '/Insert/PurchaseWaybill', name: 'PurchaseWaybillInsert', component: PurchaseWaybillInsert, meta: { title: i18n.t('router.PurchaseWaybillInsert'), baseLink: 'PurchaseWaybill' } },
   { path: '/Insert/Asset', name: 'AssetInsert', component: AssetInsert, meta: { title: i18n.t('router.AssetInsert'), baseLink: 'Asset' } },
@@ -1104,7 +1159,10 @@ const listInsert = [
   { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } },
   { path: '/Insert/AssetOperation', name: 'AssetOperationInsert', component: AssetOperationInsert, meta: { title: i18n.t('router.AssetOperationInsert'), baseLink: 'AssetOperation' } },
   { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } },
-  { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } }
+  { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } },
+  { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
+  { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } },
+  { path: '/Insert/AssetService', name: 'AssetServiceInsert', component: AssetServiceInsert, meta: { title: i18n.t('router.AssetServiceInsert'), baseLink: 'AssetService' } }
 ]
 
 const routes = [

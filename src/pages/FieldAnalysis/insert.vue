@@ -82,13 +82,13 @@
         <b-tab :title="$t('insert.fieldAnalysis.employeeType')">
           <NextDetailPanel v-model="form.FieldAnalysisEmployeeTypes" :items="fieldAnalysisEmployeeItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.validDates')" v-if="validityType && validityType.Code === 'SS'">
           <NextDetailPanel v-model="form.FieldAnalysisValidDates" :items="fieldAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'" :disabled="!form.FieldAnalysisBranchs || form.FieldAnalysisBranchs.length === 0">
           <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
+        <b-tab lazy :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="fieldAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>

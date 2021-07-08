@@ -45,19 +45,19 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="itemCriteria && itemCriteria.Code === 'UK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.itemCriteria')" v-if="itemCriteria && itemCriteria.Code === 'UK'" >
           <NextDetailPanel v-model="itemCriterias" :items="itemCriteriaItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.items')" v-if="itemCriteria && itemCriteria.Code === 'UL'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.items')" v-if="itemCriteria && itemCriteria.Code === 'UL'" >
           <NextDetailPanel v-model="items" :items="itemItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customerCriteria')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="customerCriteriaItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.customers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
           <NextDetailPanel v-model="customerList" :items="customerItems" />
         </b-tab>
-        <b-tab :title="$t('insert.customerSItemCriteria.route')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
+        <b-tab lazy :title="$t('insert.customerSItemCriteria.route')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
       </b-tabs>
@@ -110,7 +110,7 @@ export default {
       this.form = rowData
       this.itemCriteria = this.form.ItemCriteria
       this.customerCriteria = this.form.CustomerCriteria
-      this.sItemType = this.convertLookupValueToSearchValue(this.SItemType)
+      this.sItemType = this.convertLookupValueToSearchValue(this.rowData.SItemType)
       this.itemCriterias = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName !== 'RECORD_ID')
       this.items = this.form.CustomerSItemDetails.filter(i => i.TableName === 'T_ITEM' && i.ColumnName === 'RECORD_ID')
       this.customerCriterias = this.form.CustomerSItemCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')

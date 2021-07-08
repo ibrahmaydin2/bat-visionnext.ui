@@ -11,6 +11,7 @@ export const detailData = {
       visible: true,
       required: true,
       isUnique: true,
+      customOption: true,
       id: 1
     },
     {

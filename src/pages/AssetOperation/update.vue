@@ -28,7 +28,7 @@
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
           </NextFormGroup>
           <NextFormGroup item-key="ServiceDuration" :error="$v.form.ServiceDuration">
-            <NextInput type="text" v-model="form.ServiceDuration" :disabled="insertReadonly.ServiceDuration"/>
+            <NextInput type="number" maxlength="4" :oninput="maxLengthControl" v-model="form.ServiceDuration" :disabled="insertReadonly.ServiceDuration"/>
           </NextFormGroup>
           <NextFormGroup item-key="IsAssetUsed" :error="$v.form.IsAssetUsed">
             <NextCheckBox v-model="form.IsAssetUsed" type="number" :disabled="insertReadonly.IsAssetUsed" toggle/>
@@ -38,7 +38,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AssetOperation.AssetUsage')" v-if="form.IsAssetUsed === 1" >
+        <b-tab lazy :title="$t('insert.AssetOperation.AssetUsage')" v-if="form.IsAssetUsed === 1" >
           <NextDetailPanel v-model="form.AssetOperationDetails" :items="assetOperationDetailsItems" />
         </b-tab>
       </b-tabs>

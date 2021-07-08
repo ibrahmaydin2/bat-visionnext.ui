@@ -1,7 +1,10 @@
 <template>
   <b-row class="asc__insertPage">
-    <b-modal id="detail-modal" ref="DetailModal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
+    <b-modal id="detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.budgetMovements')" no-close-on-backdrop>
       <BudgetDetail :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
+    <b-modal id="monthly-budget-detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.monthlyBudgetDetail')" no-close-on-backdrop>
+      <MonthlyBudgetDetails :budget-detail="selectedBudgetDetail"/>
     </b-modal>
     <b-col cols="12">
       <header>
@@ -44,10 +47,10 @@
               <NextDropdown v-model="budgetGroup" disabled @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnName" :error="$v.form.CustomerColumnName">
-              <NextDropdown v-model="customerColumnName" disabled @input="selectCustomerColumnName($event)" url="VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaDesc" label="Desc" />
+              <NextDropdown v-model="customerColumnName" disabled @input="selectCustomerColumnName($event)" url="VisionNextCommonApi/api/LookupValue/GetValuesBySysParams" label="Label" :dynamic-request="{paramId: 'CUSTOMER_CRITERIA'}" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerColumnValue" :error="$v.form.CustomerColumnValue">
-              <NextDropdown v-model="customerColumnValue" disabled @input="selectedSearchType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
+              <NextDropdown v-model="customerColumnValue" disabled @input="selectedType('CustomerColumnValue', $event)" :source="customerColumnValues" label="Desc"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown v-model="currency" disabled @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
@@ -58,9 +61,9 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail" :detail-buttons="detailButtons"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
@@ -71,10 +74,12 @@
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 import BudgetDetail from './Details.vue'
+import MonthlyBudgetDetails from './MonthlyBudgetDetails.vue'
 export default {
   mixins: [updateMixin],
   components: {
-    BudgetDetail
+    BudgetDetail,
+    MonthlyBudgetDetails
   },
   data () {
     return {
@@ -106,7 +111,16 @@ export default {
       customerColumnName: null,
       budgetItems: detailData.budgetItems,
       selectedBranchItems: detailData.selectedBranchItems,
-      selectedBudgetDetail: null
+      selectedBudgetDetail: null,
+      detailButtons: [
+        {
+          title: this.$t('insert.budgetMaster.monthlyBudgetDetail'),
+          icon: 'fa fa-list',
+          getDetail: (data) => {
+            this.getMonthlyBudgetDetail(data)
+          }
+        }
+      ]
     }
   },
   mounted () {
@@ -146,13 +160,13 @@ export default {
       this.customerColumnValue = null
       this.customerColumnValues = []
       if (customerColumnName) {
-        this.form.CustomerColumnName = customerColumnName.ForeignName
+        this.form.CustomerColumnName = customerColumnName.ForeignField
         let model = {
-          ColumnName: customerColumnName.Desc
+          ParamName: customerColumnName.Label
         }
-        this.$api.postByUrl(model, 'VisionNextBudget/api/BudgetMaster/GetCustomerCriteriaValue').then((response) => {
+        this.$api.postByUrl(model, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((response) => {
           if (response) {
-            this.customerColumnValues = response
+            this.customerColumnValues = response.Values
           }
         })
       } else {
@@ -183,6 +197,10 @@ export default {
     getDetail (data) {
       this.selectedBudgetDetail = data
       this.$bvModal.show('detail-modal')
+    },
+    getMonthlyBudgetDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('monthly-budget-detail-modal')
     }
   }
 }

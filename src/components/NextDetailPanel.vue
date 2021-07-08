@@ -2,14 +2,14 @@
   <div>
     <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item.disabled)" :get-lookup="true" />
-        <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item.disabled)" />
-        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item.disabled)" @input="enterValue(item.id, $event)" />
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle :disabled="isDisabled(item.disabled)" />
-        <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item.disabled)" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'"  />
+        <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
+        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
+        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle :disabled="isDisabled(item)" />
+        <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
       </NextFormGroup>
       <b-col cols="12" md="2">
         <b-form-group>
@@ -18,13 +18,21 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-table :fields="fields" :items="values ? values.filter(i => i.RecordState !== 4) : []" bordered responsive>
+      <b-table
+        :id="id"
+        :fields="fields"
+        :items="values ? values.filter(i => i.RecordState !== 4) : []"
+        bordered
+        responsive
+        :current-page="currentPage"
+        :per-page="10">
         <template #cell()="data">
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
           <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
-          <i v-if="getDetail" @click="getDetail(data.item)" class="ml-3 fa fa-arrow-down text-success"></i>
+          <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
+          <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
         </template>
         <template #cell(show_details)="row">
           <div>
@@ -41,6 +49,12 @@
           </div>
         </template>
       </b-table>
+      <b-pagination
+        :total-rows="values ? values.length : 0"
+        v-model="currentPage"
+        :per-page="10"
+        :aria-controls="id"
+      ></b-pagination>
     </b-row>
   </div>
 </template>
@@ -85,6 +99,9 @@ export default {
     },
     getDetail: {
       type: Function
+    },
+    detailButtons: {
+      type: Array
     }
   },
   model: {
@@ -100,7 +117,9 @@ export default {
       values: [],
       objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
       editable: this.type === 'insert' || this.type === 'update',
-      lineNumber: 1
+      lineNumber: 1,
+      currentPage: 1,
+      id: Math.random().toString(36).substring(2)
     }
   },
   computed: {
@@ -126,7 +145,9 @@ export default {
                 value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
                 if (item.objectKey && obj[item.objectKey]) {
-                  if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
+                  if (item.parentProperty && obj[item.objectKey][item.parentProperty] && obj[item.objectKey][item.parentProperty].Label) {
+                    value = obj[item.objectKey][item.parentProperty].Label
+                  } else if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
                     value = obj[item.objectKey][item.labelProperty]
                   } else if (obj[item.objectKey][item.modelProperty]) {
                     value = obj[item.objectKey][item.modelProperty]
@@ -151,7 +172,7 @@ export default {
         }
       })
 
-      if (this.editable || this.getDetail) {
+      if (this.editable || this.getDetail || this.detailButtons) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')
@@ -312,6 +333,9 @@ export default {
                     } else if (res.Values) {
                       this.source[item.modelProperty] = res.Values
                       this.$forceUpdate()
+                    } else if (res.Model && item.responseProperty) {
+                      this.source[item.modelProperty] = res.Model[item.responseProperty]
+                      this.$forceUpdate()
                     }
                   })
                   this.$forceUpdate()
@@ -354,8 +378,21 @@ export default {
       }
       return item.required
     },
-    isDisabled (disabled) {
-      return (typeof disabled === 'function') ? disabled(this.form) : disabled
+    isDisabled (item) {
+      if ((typeof item.disabled === 'function')) {
+        let isDisabled = item.disabled(this.form)
+        if (isDisabled) {
+          if (this.form[item.modelProperty]) {
+            this.$set(this.form, item.modelProperty, null)
+          }
+          if (this.model[item.modelProperty]) {
+            this.$set(this.model, item.modelProperty, null)
+            delete this.model[item.modelProperty]
+          }
+        }
+        return isDisabled
+      }
+      return item.disabled
     },
     createNewCode (modelProperty) {
       let codes = this.values.map((item) => {

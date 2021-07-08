@@ -31,20 +31,17 @@
       <b-tabs>
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextDropdown :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url=""/>
-            </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <NextDropdown :disabled="true" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}"/>
+              <NextDropdown :disabled="true" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <NextDropdown v-model="customer" :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url="VisionNextCustomer/api/Customer/GetLoyaltyCustomers" :dynamic-request="{LoyaltyId: form.LoyaltyId}" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
               <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ContactId" :error="$v.form.ContactId">
-              <NextDropdown :disabled="insertReadonly.ContactId" @input="selectedSearchType('ContactId', $event)" url="" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -84,12 +81,12 @@ export default {
         EmployeeId: null,
         Description1: null,
         FinanceCode: null,
-        ContactId: null,
         LoyaltyGainDetails: []
       },
       routeName1: 'Loyalty',
       employee: null,
-      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields
+      loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
+      customer: null
     }
   },
   mounted () {

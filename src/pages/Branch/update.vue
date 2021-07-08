@@ -58,8 +58,8 @@
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseNumber">
-              <NextInput v-model="form.LicenseValidDate" type="date" :disabled="insertReadonly.LicenseValidDate" />
+            <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseValidDate">
+              <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
               <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
@@ -211,7 +211,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
+          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
@@ -255,6 +255,7 @@ export default {
         DiscountGroup10Id: null,
         DiscountGroup2Id: null,
         DiscountGroup9Id: null,
+        LicenseValidDate: null,
         Genexp1: null,
         IsDirectDebit: null,
         SalesPriceChangeRate: null,
@@ -342,7 +343,8 @@ export default {
       category2: {},
       category1: {},
       customerRegion5: {},
-      backMarginGroup: {}
+      backMarginGroup: {},
+      branchLocations: []
     }
   },
   computed: {
@@ -350,6 +352,7 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.getBranchLocations()
   },
   methods: {
     setData () {
@@ -400,8 +403,21 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.BranchLocations = this.branchLocations
         this.updateData()
       }
+    },
+    getBranchLocations () {
+      let request = {
+        andConditionModel: {
+          branchIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/BranchLocation/CustomSearch', 1000).then((response) => {
+        if (response && response.ListModel) {
+          this.branchLocations = response.ListModel.BaseModels
+        }
+      })
     }
   },
   validations () {

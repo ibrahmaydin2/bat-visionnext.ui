@@ -2,10 +2,13 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      maxLengthControl: 'javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
+      maxLengthControl: 'javascript: if (this.maxLength > 0 && this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);',
+      postCodeControl: 'javascript: if (this.value.length > 5) this.value = this.value.slice(0, 5); if (this.value === "9") this.value = ""; if (this.value === "00") this.value = "0"; if (this.value > "81" && this.value.length === 2) this.value = "8";',
+      timeControl: 'javascript: if (this.value > "2" && this.value.length === 1) this.value = ""; if (this.value > "23" && this.value.length === 2) this.value = "2"; if (this.value.length === 4 && this.value[3] > "5") this.value = this.value.slice(0, 3);',
       routeName: this.$route.meta.baseLink,
       routeName1: '',
-      routeName2: ''
+      routeName2: '',
+      isSaveAs: false
     }
   },
   computed: {
