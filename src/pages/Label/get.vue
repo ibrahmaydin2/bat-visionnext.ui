@@ -21,7 +21,7 @@
         </b-col>
       </b-row>
       <b-tabs>
-         <b-tab :title="$t('insert.detail')">
+         <b-tab :title="$t('insert.values')">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
