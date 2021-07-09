@@ -49,9 +49,9 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.cuaKey && this.$route.query.hash) {
+    if (this.$route.query.authKey && this.$route.query.hash && this.$route.query.redirectHash) {
       this.loginEnabled = false
-      this.$store.dispatch('loginWithCua', {...this.authData, cuaKey: this.$route.query.cuaKey, hash: this.$route.query.hash})
+      this.$store.dispatch('loginWithCua', {...this.authData, authKey: this.$route.query.authKey, hash: this.$route.query.hash, redirectHash: this.$route.query.redirectHash})
     } else {
       this.loginEnabled = true
     }
