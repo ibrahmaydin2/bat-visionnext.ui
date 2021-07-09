@@ -163,7 +163,7 @@ export default {
         this.$store.commit('setDisabledLoading', false)
         if (response && response.length > 0) {
           this.budgetMasters = response.map(r => {
-            if (r.Approvestate && ((r.Approvestate.Code !== 'ONYBK') && (r.Approvestate.Code !== 'FOB'))) {
+            if (r.Approvestate && (r.Approvestate.Code !== 'ONYBK')) {
               r._rowVariant = 'row-disabled'
             }
             return r

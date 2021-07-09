@@ -1217,7 +1217,7 @@
       "CustomerId": "Müşteri",
       "BrandId": "Yatırım Markası",
       "StatusId": "Durum",
-      "GenExp": "Açıklama",
+      "GenExp": "Aylık Hedeflenen Satış Miktarı",
       "FinanceCode": "ERP Kodu",
       "ApproveStateId": "Onay Durumu",
       "CustomerFinanceCode": "Müşteri ERP Kodu",
