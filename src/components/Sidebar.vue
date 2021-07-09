@@ -6,7 +6,7 @@
     </div>
     <div class="px-3 py-2 asc__sidebar-body text-center">
       <b-card v-for="(app,i) in otherApps" :key="'otherapp' + i" class="mb-3">
-        <a :href="`${app.SuccessReturnUrl}?authKey=${encodeURIComponent(cuaKey)}&redirectHash=${app.Hash}&&ash=${process.env.HASH}`" target="_blank">
+        <a :href="`${app.SuccessReturnUrl}?authKey=${encodeURIComponent(cuaKey)}&redirectHash=${app.Hash}&hash=${hash}`" target="_blank">
           {{app.Name}}
         </a>
       </b-card>
