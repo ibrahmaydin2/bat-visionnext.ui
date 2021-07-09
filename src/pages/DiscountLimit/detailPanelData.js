@@ -174,7 +174,7 @@ export const detailData = {
       orConditionFields: 'Code,Description1',
       parentProperty: 'Description1',
       label: i18n.t('insert.discountLimit.ItemName'),
-      required: true,
+      required: false,
       visible: true,
       disabled: true,
       isUnique: true,
