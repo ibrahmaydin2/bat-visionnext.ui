@@ -13,7 +13,10 @@
       </NextFormGroup>
       <b-col cols="12" md="2">
         <b-form-group>
-          <AddDetailButton @click.native="addItems()" />
+          <AddDetailButton v-if="!isUpdated" @click.native="addItems()" />
+          <b-button v-if="isUpdated" class="mt-4" size="sm" variant="success" @click="addItems()">
+            <i class="fa fa-pencil-alt"></i> {{$t('insert.edit')}}
+          </b-button>
         </b-form-group>
       </b-col>
     </b-row>
@@ -30,14 +33,15 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger"></i>
+          <i v-if="showEdit" @click="editItem(data.item)" class="fa fa-pencil-alt text-warning"></i>
+          <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger ml-3"></i>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
           <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
         </template>
         <template #cell(show_details)="row">
           <div>
             <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">
-              <i class="fa fa-arrow-down"></i> {{detailButtonText}}
+              <i class="fa fa-arrow-down"></i>{{detailButtonText}}
             </b-button>
           </div>
        </template>
@@ -102,6 +106,10 @@ export default {
     },
     detailButtons: {
       type: Array
+    },
+    showEdit: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -119,7 +127,9 @@ export default {
       editable: this.type === 'insert' || this.type === 'update',
       lineNumber: 1,
       currentPage: 1,
-      id: Math.random().toString(36).substring(2)
+      id: Math.random().toString(36).substring(2),
+      selectedIndex: null,
+      isUpdated: false
     }
   },
   computed: {
@@ -144,27 +154,7 @@ export default {
               } else if (item.type === 'Date') {
                 value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
-                if (item.objectKey && obj[item.objectKey]) {
-                  if (item.parentProperty && obj[item.objectKey][item.parentProperty] && obj[item.objectKey][item.parentProperty].Label) {
-                    value = obj[item.objectKey][item.parentProperty].Label
-                  } else if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
-                    value = obj[item.objectKey][item.labelProperty]
-                  } else if (obj[item.objectKey][item.modelProperty]) {
-                    value = obj[item.objectKey][item.modelProperty]
-                  } else if (obj[item.objectKey].Label) {
-                    value = obj[item.objectKey].Label
-                  } else if (obj[item.objectKey].Description1) {
-                    value = obj[item.objectKey].Description1
-                  } else if (item.type === 'Label' && obj[item.modelProperty]) {
-                    value = obj[item.modelProperty]
-                  } else {
-                    value = obj[item.objectKey]
-                  }
-                } else {
-                  if (item.type !== 'Label') {
-                    value = obj[item.modelProperty + 'Desc']
-                  }
-                }
+                value = this.getObjectLabel(item, obj)
               }
               return value
             }
@@ -237,7 +227,7 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i]
         if (item.isUnique) {
-          let filteredList = this.values.filter(i => i[item.modelProperty] === this.form[item.modelProperty] && i.RecordState !== 4)
+          let filteredList = this.values.filter(i => i[item.modelProperty] === this.form[item.modelProperty] && !this.isUpdated && i.RecordState !== 4)
           if (filteredList.length > 0) {
             this.$toasted.show(this.$t('insert.sameRecordError'), {
               type: 'error',
@@ -251,7 +241,7 @@ export default {
 
       this.form.Deleted = 0
       this.form.System = 0
-      this.form.RecordState = 2
+      this.form.RecordState = this.form.RecordId ? 3 : 2
       this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       const model = Object.keys(this.model)
 
@@ -271,7 +261,13 @@ export default {
         this.form.LineNumber = this.lineNumber
         this.lineNumber++
       }
-      this.values.push({...this.form})
+      if (this.isUpdated) {
+        this.values[this.selectedIndex] = {...this.form}
+        this.selectedIndex = null
+        this.isUpdated = false
+      } else {
+        this.values.push({...this.form})
+      }
       this.$emit('valuechange', this.values)
       this.form = {}
       this.items.map(item => {
@@ -296,6 +292,38 @@ export default {
         this.values.splice(index, 1)
       }
       this.$emit('valuechange', this.values)
+    },
+    editItem (data) {
+      this.isUpdated = true
+      this.selectedIndex = this.values.indexOf(data)
+      this.$set(this.form, 'RecordId', data.RecordId)
+      this.items.map(i => {
+        switch (i.type) {
+          case 'AutoComplete':
+          case 'Dropdown':
+            this.$set(this.model, i.modelProperty, {
+              RecordId: data[i.modelProperty],
+              Description1: this.getObjectLabel(i, data)
+            })
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Lookup':
+            this.$set(this.model, i.modelProperty, {
+              DecimalValue: data[i.modelProperty],
+              Label: this.getObjectLabel(i, data)
+            })
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Label':
+            this.$set(this.label, i.modelProperty, data[i.modelProperty])
+            break
+          case 'Text':
+          case 'Check':
+          case 'Date':
+            this.$set(this.form, i.modelProperty, data[i.modelProperty])
+            break
+        }
+      })
     },
     additionalSearchType (id, label, model, valueProperty) {
       if (model) {
@@ -414,6 +442,32 @@ export default {
       filteredList.map(item => {
         this.form[item.modelProperty] = model
       })
+    },
+    getObjectLabel (item, obj) {
+      let value = ''
+      if (item.objectKey && obj[item.objectKey]) {
+        if (item.parentProperty && obj[item.objectKey][item.parentProperty] && obj[item.objectKey][item.parentProperty].Label) {
+          value = obj[item.objectKey][item.parentProperty].Label
+        } else if (obj[item.objectKey] && item.labelProperty && obj[item.objectKey][item.labelProperty]) {
+          value = obj[item.objectKey][item.labelProperty]
+        } else if (obj[item.objectKey][item.modelProperty]) {
+          value = obj[item.objectKey][item.modelProperty]
+        } else if (obj[item.objectKey].Label) {
+          value = obj[item.objectKey].Label
+        } else if (obj[item.objectKey].Description1) {
+          value = obj[item.objectKey].Description1
+        } else if (item.type === 'Label' && obj[item.modelProperty]) {
+          value = obj[item.modelProperty]
+        } else {
+          value = obj[item.objectKey]
+        }
+      } else {
+        if (item.type !== 'Label') {
+          value = obj[item.modelProperty + 'Desc']
+        }
+      }
+
+      return value
     }
   },
   validations () {

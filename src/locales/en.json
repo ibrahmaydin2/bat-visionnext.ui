@@ -513,6 +513,8 @@
     "workflowSuccess": "İşlem Başarılı. Sayfa yenileniyor.",
     "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
     "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
+    "lineNumber": "Sıra No",
+    "systemRecordCanNotUpdate": "Sistem kayıtları güncellenemez!",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
