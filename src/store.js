@@ -320,6 +320,27 @@ export const store = new Vuex.Store({
           commit('setTableData', [])
         })
     },
+    loginWithCua ({ commit }, authData) {
+      localStorage.clear()
+      commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
+      return axios.post('VisionNextAuthentication/api/Authentication/LoginWithCua', {
+        Hash: authData.hash,
+        CuaKey: authData.cuaKey
+      }, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          if (res.data.IsCompleted === true) {
+            commit('login', res.data)
+          } else {
+            commit('showAlert', { type: 'error', msg: res.data.Message })
+            commit('setTableData', [])
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'network', msg: err })
+          commit('setTableData', [])
+        })
+    },
     logout ({ commit }, authData) {
       return axios.post('VisionNextAuthentication/api/Authentication/LogOut', authCompanyAndBranch, authHeader)
         .then(res => {
@@ -574,6 +595,10 @@ export const store = new Vuex.Store({
           switch (res.status) {
             case 200:
               commit('setRowData', res.data.Model)
+              if (res.data.Model && res.data.Model.System !== 0) {
+                commit('showAlert', { type: 'error', msg: i18n.t('insert.systemRecordCanNotUpdate') })
+                document.getElementById('submitButton').disabled = true
+              }
               break
             case 900:
               commit('logout')

@@ -206,7 +206,15 @@ export default {
       })
     },
     getSource () {
-      return this.lookupKey && !this.getLookup ? this.lookup[this.lookupKey] : this.values
+      let values = []
+      if (this.lookupKey && !this.getLookup) {
+        values = this.lookup[this.lookupKey]
+        this.allValues = values
+      } else {
+        values = this.values
+      }
+
+      return values
     }
   }
 }
