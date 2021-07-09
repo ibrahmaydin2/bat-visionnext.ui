@@ -505,8 +505,8 @@ export default {
         me.showDiscounts = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 1)
         me.showFreeItems = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 2)
         me.showPaymentPlans = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 3)
-        me.showEndorsements = me.form.ContractBenefits.some(c => c.BenefitTypeId === 9)
-        me.showCustomPrices = me.form.ContractBenefits.some(c => c.BenefitTypeId === 10)
+        me.showEndorsements = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 9)
+        me.showCustomPrices = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 10)
       })
     }
   }
