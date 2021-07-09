@@ -313,8 +313,15 @@ export default {
                   if (!model[item.parentProperty]) { return }
                   this.$api.postByUrl({RecordId: model[item.parentProperty]}, item.url).then((res) => {
                     if (res && res.Model) {
-                      this.label[item.modelProperty] = item.valueProperty ? res.Model[item.valueProperty] : res.Model.Description1
+                      if (item.valueProperty) {
+                        this.label[item.modelProperty] = res.Model[item.valueProperty]
+                      } else {
+                        this.label[item.modelProperty] = res.Model.Description1 ? res.Model.Description1 : null
+                      }
+                    } else {
+                      this.label[item.modelProperty] = null
                     }
+                    this.$forceUpdate()
                   })
                 } else {
                   this.label[item.modelProperty] = model[item.parentProperty] && model[item.parentProperty].Label
@@ -358,6 +365,7 @@ export default {
             this.model[item.modelProperty] = {}
             this.form[item.modelProperty] = null
             this.source[item.modelProperty] = []
+            this.label[item.modelProperty] = null
           })
         }
       }

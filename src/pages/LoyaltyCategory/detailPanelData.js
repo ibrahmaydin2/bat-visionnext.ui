@@ -49,8 +49,7 @@ export const detailData = {
       id: 4
     },
     {
-      type: 'Text',
-      inputType: 'date',
+      type: 'Date',
       modelProperty: 'BeginDate',
       objectKey: 'BeginDate',
       label: i18n.t('insert.loyaltyCategory.BeginDate'),
@@ -59,8 +58,7 @@ export const detailData = {
       id: 5
     },
     {
-      type: 'Text',
-      inputType: 'date',
+      type: 'Date',
       modelProperty: 'EndDate',
       objectKey: 'EndDate',
       label: i18n.t('insert.loyaltyCategory.EndDate'),
@@ -69,11 +67,10 @@ export const detailData = {
       id: 6
     },
     {
-      type: 'Dropdown',
+      type: 'Lookup',
       modelProperty: 'UnitId',
       objectKey: 'Unit',
-      labelProperty: 'UnitLookupValue.Label',
-      url: 'VisionNextUnit/api/Unit/Search',
+      url: 'UNIT',
       label: i18n.t('insert.loyaltyCategory.UnitId'),
       required: true,
       visible: true,

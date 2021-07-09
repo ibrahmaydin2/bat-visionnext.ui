@@ -21,16 +21,16 @@
           <NextFormGroup item-key="Code" :error="$v.form.Code">
             <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
-          <NextFormGroup item-key="Description1 " :error="$v.form.Description1 ">
-            <NextInput v-model="form.Description1 " type="text" :disabled="insertReadonly.Description1 " />
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
-          <NextFormGroup item-key="MinValue" :error="$v.form.MinValue" :required="CategoryType && CategoryType.Code == 'ARA'">
+          <NextFormGroup item-key="MinValue" :error="$v.form.MinValue">
             <NextInput v-model="form.MinValue" type="number" :disabled="!(CategoryType && CategoryType.Code == 'ARA')" />
           </NextFormGroup>
-          <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue" :required="CategoryType && CategoryType.Code == 'ARA'">
+          <NextFormGroup item-key="MaxValue" :error="$v.form.MaxValue">
             <NextInput v-model="form.MaxValue" type="number"  :disabled="!(CategoryType && CategoryType.Code == 'ARA')" />
           </NextFormGroup>
           <NextFormGroup item-key="CategoryTypeId" :error="$v.form.CategoryTypeId">
@@ -68,7 +68,7 @@
               <NextDropdown v-model="ColumnValueDesc" :disabled="!ColumnNameDesc" :source="columnValues" @input="selectedType('ColumnValue', $event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="UnitId" :error="$v.form.UnitId" v-if="CalcType && CalcType.Code === 'SH'">
-              <NextDropdown v-model="Unit" :disabled="insertReadonly.UnitId" url="VisionNextUnit/api/Unit/Search"  @input="selectedSearchType('UnitId', $event)" label="UnitLookupValue.Label"/>
+              <NextDropdown v-model="Unit" :disabled="insertReadonly.UnitId" lookup-key="UNIT"  :get-lookup="true"  @input="selectedType('UnitId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Quantity" :error="$v.form.Quantity" v-if="CalcType && CalcType.Code === 'SH'">
               <NextInput v-model="form.Quantity" type="number" :disabled="insertReadonly.Quantity" />
@@ -207,6 +207,7 @@ export default {
         MaxValue: null,
         CategoryTypeId: null,
         CalcTypeId: null,
+        TableName: null,
         LoyaltyPoint: null,
         FieldAnalysisId: null,
         ByFrequency: null,
@@ -266,7 +267,7 @@ export default {
         this.CalcType = rowData.CalcType
         this.FieldAnalysis = this.convertLookupValueToSearchValue(rowData.FieldAnalysis)
         this.ColumnNameDesc = this.convertLookupValueToSearchValue(rowData.ColumnNameDesc)
-        this.Unit = this.convertLookupValueToSearchValue(rowData.Unit)
+        this.Unit = rowData.Unit
         this.ColumnValueDesc = rowData.ColumnValueDesc
 
         if (!rowData.LoyaltyCategoryValues) {
@@ -298,6 +299,9 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.CalcType && this.CalcType.Code === 'SH') {
+          this.form.TableName = 'T_ITEM'
+        }
         this.updateData()
       }
     },
@@ -455,6 +459,41 @@ export default {
     }
   },
   validations () {
+    this.insertRules.MinValue = {
+      required: requiredIf(function () {
+        return this.CategoryType && this.CategoryType.Code === 'ARA'
+      })
+    }
+    this.insertRequired.MinValue = this.CategoryType && this.CategoryType.Code === 'ARA'
+
+    this.insertRules.MaxValue = {
+      required: requiredIf(function () {
+        return this.CategoryType && this.CategoryType.Code === 'ARA'
+      })
+    }
+    this.insertRequired.MaxValue = this.CategoryType && this.CategoryType.Code === 'ARA'
+
+    this.insertRules.CalcTypeId = {
+      required: requiredIf(function () {
+        return this.CategoryType && this.CategoryType.Code === 'OTO'
+      })
+    }
+    this.insertRequired.CalcTypeId = this.CategoryType && this.CategoryType.Code === 'OTO'
+
+    this.insertRules.LoyaltyPoint = {
+      required: requiredIf(function () {
+        return (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA')
+      })
+    }
+    this.insertRequired.LoyaltyPoint = (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA')
+
+    this.insertRules.FieldAnalysisId = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'ANS'
+      })
+    }
+    this.insertRequired.FieldAnalysisId = this.CalcType && this.CalcType.Code === 'ANS'
+
     return {
       form: this.insertRules,
       loyaltyCategory: {
