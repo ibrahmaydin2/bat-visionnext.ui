@@ -44,6 +44,10 @@
     "BranchGet": "Şube Görüntüle",
     "BranchUpdate": "Şube Güncelle",
     "BranchInsert": "Yeni Şube",
+    "Bcp": "Müşteri Marka Planı",
+    "BcpGet": "Müşteri Marka Planı Görüntüle",
+    "BcpUpdate": "Müşteri Marka Planı Güncelle",
+    "BcpInsert": "Yeni Müşteri Marka Planı",
     "AnalysisQuestions": "Analiz Soruları",
     "AnalysisQuestionsGet": "Analiz Sorusu Görüntüle",
     "AnalysisQuestionsUpdate": "Analiz Sorusu Güncelle",
@@ -1217,6 +1221,22 @@
       "Statement": "Statement",
       "IsDirectDebit": "Direct Debit",
       "IsBlocked": "Satışa Kapalı"
+    },
+    "bcp": {
+      "DiscountGroup7Id": "BCP Cluster",
+      "Year": "Başlangıç Yıl",
+      "Month": "Başlangıç Ay",
+      "EndYear": "Bitiş Yıl",
+      "EndMonth": "Bitiş Ay",
+      "CustomerRegion3Id": "Bölge",
+      "BranchCriteriaId": "Şube Kriteri",
+      "Bcp": "BCP Detaylar",
+      "items": "Ürünler",
+      "Item": "Ürünler",
+      "ItemName": "Ürün Adı",
+      "InvoiceQuantity": "Fatura Adedi",
+      "MinPurchaseQuantity": "Alış Miktarı",
+      "branchs": "Şubeler"
     },
     "AnalysisQuestions": {
       "QuestionOptions": "Soru Seçenekleri",
