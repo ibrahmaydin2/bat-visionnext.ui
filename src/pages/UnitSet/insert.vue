@@ -40,7 +40,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.unitSet.units')" >
-          <NextDetailPanel type="insert" v-model="form.Units" :items="unitItems" :show-edit="true" />
+          <NextDetailPanel type="insert" v-model="form.Units" :items="unitItems" />
         </b-tab>
       </b-tabs>
     </b-col>
