@@ -450,7 +450,7 @@ export default {
         if (value.Code !== 'SA' && value.Code !== 'ANS') {
           this.form.ByFrequency = null
         } else {
-          this.form.ByFrequency = value.DecimalValue
+          this.form.ByFrequency = this.form.ByFrequency.DecimalValue
         }
       } else {
         this.form.CalcTypeId = null
