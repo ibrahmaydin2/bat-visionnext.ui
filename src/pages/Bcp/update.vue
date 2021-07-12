@@ -50,10 +50,10 @@
               <NextDropdown v-model="endMonth" :disabled="insertReadonly.EndMonth" url="" @input="selectedSearchType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
-              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" url="" @input="selectedSearchType('CustomerRegion3Id', $event)"/>
+              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectedType('CustomerRegion3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" lookup-key="" @input="selectedSearchType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -114,6 +114,8 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
+      this.CustomerRegion3 = rowData.CustomerRegion3
+      this.BranchCriteria = rowData.BranchCriteria
       if (!rowData.BcpDetails) {
         this.form.BcpDetails = []
       }

@@ -1238,7 +1238,10 @@
       "ItemName": "Ürün Adı",
       "InvoiceQuantity": "Fatura Adedi",
       "MinPurchaseQuantity": "Alış Miktarı",
-      "branchs": "Şubeler"
+      "branchs": "Şubeler",
+      "Code": "Kod",
+      "StatusId": "Durum",
+      "Description1": "Açıklama" 
     },
     "AnalysisQuestions": {
       "QuestionOptions": "Soru Seçenekleri",
