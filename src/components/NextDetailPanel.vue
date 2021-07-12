@@ -294,6 +294,8 @@ export default {
       this.$emit('valuechange', this.values)
     },
     editItem (data) {
+      this.form = data
+      debugger
       this.isUpdated = true
       this.selectedIndex = this.values.indexOf(data)
       this.$set(this.form, 'RecordId', data.RecordId)
