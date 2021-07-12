@@ -32,8 +32,8 @@
         <b-tab :title="$t('insert.loyaltyCategory.salesTarget')"  v-if="rowData.CalcType && rowData.CalcType.Code === 'SH'">
           <b-row class="p-4">
              <b-card class="col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ColumnNameDesc, 'object', 'insert.loyaltyCategory.ColumnName')"></div>
-              <div v-html="getFormatDataByType(rowData.ColumnValueDesc, 'object', 'insert.loyaltyCategory.ColumnValue')"></div>
+              <div v-html="getFormatDataByType(rowData.ColumnNameDesc, 'text', 'insert.loyaltyCategory.ColumnName')"></div>
+              <div v-html="getFormatDataByType(rowData.ColumnValueDesc, 'text', 'insert.loyaltyCategory.ColumnValue')"></div>
               <div v-html="getFormatDataByType(rowData.Unit, 'object', 'insert.loyaltyCategory.UnitId')"></div>
               <div v-html="getFormatDataByType(rowData.Quantity, 'text', 'insert.loyaltyCategory.Quantity')"></div>
             </b-card>
@@ -87,7 +87,7 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="LoyaltyCategoryTasks" :items="loyaltyCategoryTasksItems" />
+                <NextDetailPanel type="get" v-model="rowData.LoyaltyCategoryTasks" :items="loyaltyCategoryTasksItems" />
               </b-card>
             </b-col>
           </b-row>

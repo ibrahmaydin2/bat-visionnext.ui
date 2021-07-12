@@ -32,7 +32,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" :active="!developmentMode">
+        <b-tab :title="$t('insert.values')" :active="!developmentMode">
           <b-row>
             <NextFormGroup :title="$t('insert.Label.Code')" :error="$v.LabelDetails.Code" :required="true" md="3" lg="3">
               <b-form-input type="text" v-model="LabelDetails.Code" />

@@ -53,7 +53,7 @@
               <b-form-input type="text" v-model="form.CustomerFinanceCode" :readonly="insertReadonly.CustomerFinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId" md="2" lg="2">
-              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" disabled/>
+              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE" @input="selectedType('ApproveStateId', $event)" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
               <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
@@ -2437,17 +2437,23 @@ export default {
     }
   },
   watch: {
-    lookup (e) {
-      if (e) {
-        if (e.APPROVE_STATE) {
+    lookup: {
+      handler (e) {
+        this.selectedApproveState = null
+        if (e && e.APPROVE_STATE) {
           e.APPROVE_STATE.map(item => {
             if (item.DecimalValue === 2110) {
               this.selectedType('ApproveStateId', item)
-              this.selectedApproveState = item
+              var me = this
+              setTimeout(() => {
+                me.selectedApproveState = item
+              }, 1)
             }
           })
         }
-      }
+      },
+      deep: true,
+      immediate: true
     },
     customerContracts (e) {
       this.customerContractList = e
