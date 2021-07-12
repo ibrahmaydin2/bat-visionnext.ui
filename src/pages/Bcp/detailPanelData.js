@@ -72,16 +72,31 @@ export const detailData = {
       type: 'Autocomplete',
       modelProperty: 'ColumnValue',
       objectKey: 'ColumnNameDesc',
-      labelProperty: 'Code',
+      labelProperty: 'Description1',
       customOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/branch/AutoCompleteSearch',
-      label: i18n.t('insert.discountLimit.customerCode'),
+      url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+      label: i18n.t('insert.bcp.ColumnValue'),
       required: true,
       visible: true,
       isUnique: true,
       id: 3
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'ColumnNameDesc',
+      objectKey: 'ColumnValueDesc',
+      orConditionFields: 'Code,Description1',
+      parentProperty: 'Code',
+      label: i18n.t('insert.bcp.ColumnNameDesc'),
+      required: false,
+      visible: true,
+      disabled: true,
+      isUnique: true,
+      parentId: 3,
+      id: 4
     }
   ]
 

@@ -1241,7 +1241,30 @@
       "branchs": "Şubeler",
       "Code": "Kod",
       "StatusId": "Durum",
-      "Description1": "Açıklama" 
+      "Description1": "Açıklama",
+      "ColumnValue": "Şube Kodu",
+      "ColumnNameDesc": "Şube Adı"
+    },
+    "integrationDataPark": {
+      "Code": "Interface No",
+      "ColumnName":"Alan Açıklaması",
+      "CompanyName": "Organizasyon",
+      "CreatedDateTime": "Oluşturulma Tarihi",
+      "FirstProcessedDateTime": "İlk İşlem Zamanı",
+      "LastProcessedDateTime": "Son İşlem Zamanı",
+      "InterfaceName": "Interface Adı",
+      "StatusId": "Durum",
+      "dataPark": "Entegrasyon Yönetimi",
+      "IntegrationState": "Entegrasyon Durumu",
+      "InterfaceList": "Arayüz Kaldırma",
+      "CreatedUser": "Oluşturan Kullanıcı",
+      "Count": "Log Sayısı",
+      "ClosureDescription": "Kapatma Açıklaması",
+      "RecordTypeName": "Kayıt Tipi",
+      "RecordTypeValue": "Kayıt Değeri",
+      "ClosedBy": "Kapatan Personel",
+      "ErrorDescription": "Hata Açıklaması",
+      "IdocNumber": "Idoc No"
     },
     "AnalysisQuestions": {
       "QuestionOptions": "Soru Seçenekleri",
