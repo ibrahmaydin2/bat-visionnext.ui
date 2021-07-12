@@ -323,9 +323,10 @@ export const store = new Vuex.Store({
     loginWithCua ({ commit }, authData) {
       localStorage.clear()
       commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
-      return axios.post('VisionNextAuthentication/api/Authentication/LoginWithCua', {
-        Hash: authData.hash,
-        CuaKey: authData.cuaKey
+      return axios.post('VisionNextAuthentication/api/Authentication/LoginRedirect', {
+        InstanceHash: authData.hash,
+        RedirectInstanceHash: authData.redirectHash,
+        AuthKey: decodeURIComponent(authData.authKey)
       }, authHeader)
         .then(res => {
           commit('hideAlert')

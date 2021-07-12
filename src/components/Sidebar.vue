@@ -6,7 +6,7 @@
     </div>
     <div class="px-3 py-2 asc__sidebar-body text-center">
       <b-card v-for="(app,i) in otherApps" :key="'otherapp' + i" class="mb-3">
-        <a :href="`${app.SuccessReturnUrl}?cuaKey=${cuaKey}&hash=${app.Hash}`" target="_blank">
+        <a :href="`${app.SuccessReturnUrl}?authKey=${encodeURIComponent(cuaKey)}&redirectHash=${app.Hash}&hash=${hash}`" target="_blank">
           {{app.Name}}
         </a>
       </b-card>
@@ -20,14 +20,16 @@ export default {
   data () {
     return {
       otherApps: [],
-      cuaKey: null
+      cuaKey: null,
+      hash: ''
     }
   },
   mounted () {
     let userModel = JSON.parse(localStorage.getItem('UserModel'))
     this.cuaKey = userModel.CuaKey
+    this.hash = process.env.HASH
     let otherApps = userModel.AuthorizedInstances
-    this.otherApps = otherApps ? otherApps.filter(o => o.Hash !== process.env.HASH) : []
+    this.otherApps = otherApps ? otherApps.filter(o => o.Hash !== this.hash) : []
   }
 }
 </script>
