@@ -115,10 +115,10 @@
                       <NextDropdown v-model="loyaltyQuestion.multipleAnswer"  :source="answers"></NextDropdown>
                    </NextFormGroup>
                    <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerStart')" :error="$v.loyaltyQuestion.AnswerStart" :required="true" >
-                      <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
+                      <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code !== 'SY'"></NextInput>
                    </NextFormGroup>
                    <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerEnd')" :error="$v.loyaltyQuestion.AnswerEnd" :required="true" >
-                      <NextInput v-model="loyaltyQuestion.AnswerEnd" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'SY'"></NextInput>
+                      <NextInput v-model="loyaltyQuestion.AnswerEnd" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code !== 'SY'"></NextInput>
                    </NextFormGroup>
                    <b-col cols="12" md="2" class="text-right">
                      <b-form-group>
@@ -494,6 +494,41 @@ export default {
     }
     this.insertRequired.FieldAnalysisId = this.CalcType && this.CalcType.Code === 'ANS'
 
+    this.insertRules.LoyaltyCatQuotas = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'SH'
+      })
+    }
+    this.insertRequired.LoyaltyCatQuotas = this.CalcType && this.CalcType.Code === 'SH'
+
+    this.insertRules.ColumnName = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'SH'
+      })
+    }
+    this.insertRequired.ColumnName = this.CalcType && this.CalcType.Code === 'SH'
+
+    this.insertRules.ColumnValue = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'SH'
+      })
+    }
+    this.insertRequired.ColumnValue = this.CalcType && this.CalcType.Code === 'SH'
+
+    this.insertRules.UnitId = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'SH'
+      })
+    }
+    this.insertRequired.UnitId = this.CalcType && this.CalcType.Code === 'SH'
+
+    this.insertRules.Quantity = {
+      required: requiredIf(function () {
+        return this.CalcType && this.CalcType.Code === 'SH'
+      })
+    }
+    this.insertRequired.Quantity = this.CalcType && this.CalcType.Code === 'SH'
+
     return {
       form: this.insertRules,
       loyaltyCategory: {
@@ -512,12 +547,12 @@ export default {
         },
         AnswerStart: {
           required: requiredIf(function () {
-            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code !== 'SY'
+            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code === 'SY'
           })
         },
         AnswerEnd: {
           required: requiredIf(function () {
-            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code !== 'SY'
+            return this.loyaltyQuestion.question && this.loyaltyQuestion.question.AnswerType.Code === 'SY'
           })
         }
       }
