@@ -273,7 +273,7 @@ export default {
       if (model) {
         this.documentType = model.Description
         this.form[label] = model.RecordId
-        if (model.RecordId === 3) {
+        if (model.RecordId === 3 || model.CustomerIds === 3) {
           this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/Search'
         } else {
           this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/Search'

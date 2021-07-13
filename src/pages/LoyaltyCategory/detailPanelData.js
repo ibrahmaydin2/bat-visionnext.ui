@@ -242,15 +242,14 @@ export const detailData = {
       id: 1
     },
     {
-      type: 'Text',
+      type: 'Label',
       inputType: 'text',
-      objectKey: 'itemName',
-      modelProperty: 'itemName',
-      orConditionFields: 'Code,Description1',
+      objectKey: 'Item',
+      modelProperty: 'Description1',
       parentProperty: 'Description1',
       label: i18n.t('insert.loyaltyCategory.itemName'),
-      required: true,
-      labelProperty: 'Label',
+      required: false,
+      disabled: true,
       visible: true,
       parentId: 1,
       id: 2

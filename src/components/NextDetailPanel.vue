@@ -452,7 +452,7 @@ export default {
       })
     },
     getObjectLabel (item, obj) {
-      let value = ''
+      let value = obj[item.modelProperty]
       if (item.objectKey && obj[item.objectKey]) {
         if (item.parentProperty && obj[item.objectKey][item.parentProperty] && obj[item.objectKey][item.parentProperty].Label) {
           value = obj[item.objectKey][item.parentProperty].Label
