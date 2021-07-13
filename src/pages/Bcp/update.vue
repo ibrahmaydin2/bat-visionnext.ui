@@ -35,7 +35,7 @@
         <b-tab :title="$t('insert.bcp.Bcp')" active>
           <b-row>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown v-model="DiscountGroup7" :disabled="insertReadonly.DiscountGroup7Id" url="" @input="selectedSearchType('DiscountGroup7Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup7" :disabled="insertReadonly.DiscountGroup7Id" :get-lookup="true" label="Label" lookup-key="DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Year" :error="$v.form.Year">
               <NextDropdown v-model="year" :disabled="insertReadonly.Year" url="" @input="selectedSearchType('Year', $event)"/>
@@ -116,6 +116,8 @@ export default {
       this.form = rowData
       this.CustomerRegion3 = rowData.CustomerRegion3
       this.BranchCriteria = rowData.BranchCriteria
+      this.DiscountGroup7 = rowData.DiscountGroup7
+      this.year = this.convertLookupValueToSearchValue(rowData.year)
       if (!rowData.BcpDetails) {
         this.form.BcpDetails = []
       }

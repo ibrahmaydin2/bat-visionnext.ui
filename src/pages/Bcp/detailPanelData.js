@@ -22,6 +22,7 @@ export const detailData = {
       objectKey: 'ColumnValueDesc',
       orConditionFields: 'Code,Description1',
       parentProperty: 'Description1',
+      labelProperty: 'Description1',
       label: i18n.t('insert.bcp.ItemName'),
       required: false,
       visible: true,
@@ -69,34 +70,29 @@ export const detailData = {
       id: 2
     },
     {
-      type: 'Autocomplete',
+      type: 'Text',
       modelProperty: 'ColumnValue',
       objectKey: 'ColumnNameDesc',
-      labelProperty: 'Description1',
-      customOption: true,
-      isCustomer: true,
-      orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+      labelProperty: 'RecordId',
+      orConditionFields: 'Code,Description1,RecordId',
       label: i18n.t('insert.bcp.ColumnValue'),
-      required: true,
-      visible: true,
-      isUnique: true,
-      id: 3
-    },
-    {
-      type: 'Label',
-      inputType: 'text',
-      modelProperty: 'ColumnNameDesc',
-      objectKey: 'ColumnValueDesc',
-      orConditionFields: 'Code,Description1',
-      parentProperty: 'Code',
-      label: i18n.t('insert.bcp.ColumnNameDesc'),
-      required: false,
-      visible: true,
-      disabled: true,
-      isUnique: true,
+      hideOnTable: true,
       parentId: 3,
       id: 4
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'ColumnNameDesc',
+      labelProperty: 'Description1',
+      objectKey: 'ColumnNameDescDesc',
+      orConditionFields: 'Code,Description1,RecordId',
+      label: i18n.t('insert.bcp.ColumnNameDesc'),
+      url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+      required: false,
+      visible: true,
+      disabled: false,
+      isUnique: true,
+      id: 3
     }
   ]
 

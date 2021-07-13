@@ -46,7 +46,7 @@
             <NextDropdown v-model="CalcType" :disabled="!(CategoryType && CategoryType.Code == 'OTO')" lookup-key="LOYALTY_CATEGORY_CALC_TYPE"  @input="selectCalcType"/>
           </NextFormGroup>
           <NextFormGroup item-key="LoyaltyPoint" :error="$v.form.LoyaltyPoint">
-            <NextInput v-model="form.LoyaltyPoint" type="number" :disabled="!(CalcType && CalcType.Code == 'SH') && !(CalcType && CalcType.Code == 'SA')" />
+            <NextInput v-model="form.LoyaltyPoint" type="number" :disabled="!(CalcType && CalcType.Code !== 'AKS')" />
           </NextFormGroup>
           <NextFormGroup item-key="FieldAnalysisId" :error="$v.form.FieldAnalysisId">
             <NextDropdown v-model="FieldAnalysis" :disabled="!(CalcType && CalcType.Code == 'ANS')" url="VisionNextFieldAnalysis/api/FieldAnalysis/Search"  @input="selectAnalysis($event)"/>
@@ -130,7 +130,7 @@
                     <b-table :items="form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails"  :fields="loyaltyQuestionFields">
                       <template #cell(operations)="row">
                         <div class="text-center">
-                          <b-button size="sm" @click="removeLoyaltyQuestion(row.item)" class="mr-2" variant="danger">
+                          <b-button size="sm" @click="removeLoyaltyQuestion(row.item, index)" class="mr-2" variant="danger">
                             <i class="far fa-trash-alt"></i> {{$t('insert.loyaltyCategory.delete')}}
                           </b-button>
                         </div>
@@ -308,6 +308,7 @@ export default {
       }
 
       this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.push({
+        RecordState: 2,
         QuestionId: this.loyaltyQuestion.question.RecordId,
         QuestionIdDesc: this.loyaltyQuestion.question.Description1,
         QuestionIdCode: this.loyaltyQuestion.question.Code,
@@ -341,12 +342,17 @@ export default {
       this.setDatePlanType()
     },
     removeLoyaltyQuestion (item, index) {
+      let list = this.form.LoyaltyCategoryCrits
+      this.form.LoyaltyCategoryCrits = []
       if (item.RecordId) {
-        this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails = []
-        this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails[this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.indexOf(item, index)].RecordState = 4
+        list[index].LoyaltyCategoryCritDetails[list[index].LoyaltyCategoryCritDetails.indexOf(item)].RecordState = 4
       } else {
-        this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.splice(this.form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.indexOf(item, index), 1)
+        list[index].LoyaltyCategoryCritDetails.splice(list[index].LoyaltyCategoryCritDetails.indexOf(item), 1)
       }
+      setTimeout(() => {
+        this.form.LoyaltyCategoryCrits = list
+      }, 1)
+      this.$forceUpdate()
     },
     setDatePlanType (index) {
       if ((!this.form.LoyaltyCategoryCrits || this.form.LoyaltyCategoryCrits.filter(i => i.RecordState !== 4).length === 0) && this.form.ApplicationTypeId === 654) {
@@ -441,10 +447,10 @@ export default {
 
     this.insertRules.LoyaltyPoint = {
       required: requiredIf(function () {
-        return (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA')
+        return (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA') || (this.CalcType && this.CalcType.Code === 'ANS')
       })
     }
-    this.insertRequired.LoyaltyPoint = (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA')
+    this.insertRequired.LoyaltyPoint = (this.CalcType && this.CalcType.Code === 'SH') || (this.CalcType && this.CalcType.Code === 'SA') || (this.CalcType && this.CalcType.Code === 'ANS')
 
     this.insertRules.FieldAnalysisId = {
       required: requiredIf(function () {

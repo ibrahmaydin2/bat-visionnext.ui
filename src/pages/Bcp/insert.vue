@@ -35,7 +35,7 @@
         <b-tab :title="$t('insert.bcp.Bcp')" active>
           <b-row>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" url="" @input="selectedSearchType('DiscountGroup7Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" :get-lookup="true" label="Label" lookup-key="DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Year" :error="$v.form.Year">
               <NextDropdown :disabled="insertReadonly.Year" url="" @input="selectedSearchType('Year', $event)"/>
