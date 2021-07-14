@@ -18,11 +18,11 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -56,9 +56,6 @@
             <NextFormGroup item-key="LocationId" :error="$v.form.LocationId" md="4" lg="4">
               <NextDropdown url="VisionNextCustomer/api/Customer/Search" @input="selectedSearchType('LocationId', $event)" :disabled="insertReadonly.LocationId" :searchable="true" />
             </NextFormGroup>
-            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" md="4" lg="4">
-              <NextDropdown url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" :disabled="insertReadonly.EmployeeId" :searchable="true" />
-            </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
                 <NextFormGroup item-key="ResponseDate" :error="$v.form.ResponseDate" md="6" lg="6">
@@ -70,7 +67,7 @@
               </b-row>
             </b-col>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId" md="4" lg="4">
-              <NextDropdown lookup-key="ASSET_TYPE" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" />
+              <NextDropdown lookup-key="ASSET_TYPE" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" :get-lookup="true" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetId" :error="$v.form.AssetId" md="4" lg="4">
               <NextDropdown v-model="asset" :source="assets" @input="selectedSearchType('AssetId', $event)" :disabled="!this.form.AssetTypeId" />
@@ -157,6 +154,7 @@ export default {
     }
   },
   mounted () {
+    this.createManualCode('ServiceNumber')
     let customerId = localStorage.getItem('CustomerId')
     this.mainCustomerId = customerId ? parseFloat(customerId) : 0
     let currentDate = new Date()

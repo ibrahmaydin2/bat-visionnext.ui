@@ -241,6 +241,7 @@
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
     <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
     <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -354,7 +355,8 @@ export default {
       firstSearchItem: null,
       showUpdateCreditBudgetModal: false,
       disabledAutoComplete: false,
-      showBudgetMasterApproveModal: false
+      showBudgetMasterApproveModal: false,
+      showAssignEmployeeModal: false
     }
   },
   mounted () {
@@ -424,6 +426,7 @@ export default {
       this.showMultipleLoadingPlanModal = false
       this.showUpdateCreditBudgetModal = false
       this.showBudgetMasterApproveModal = false
+      this.showAssignEmployeeModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -516,6 +519,11 @@ export default {
         this.showBudgetMasterApproveModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'budget-master-approve-modal')
+        })
+      } else if (action.Action === 'AssignEmployee') {
+        this.showAssignEmployeeModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'assign-employee-modal')
         })
       } else {
         this.showConfirmModal = true

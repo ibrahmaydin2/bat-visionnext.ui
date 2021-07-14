@@ -1993,7 +1993,9 @@
       "estimatedResponseTime": "Planlanan Müd. saati",
       "completionDate": "Tamamlama Tarihi",
       "completionTime": "Tamamlama Saati",
-      "fromLocation": "Giriş/Çıkış Lokasyon"
+      "fromLocation": "Giriş/Çıkış Lokasyon",
+      "assignEmployee": "Personel Ata",
+      "successAssignEmployee": "Personel başarılı bir şekilde atanmıştır."
     }
   },
   "get": {
