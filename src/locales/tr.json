@@ -2731,7 +2731,21 @@
     "noRecord": "Uygun kayıt bulunamadı!",
     "changedPasswordMessage": "Şifreniz Değiştirildi.",
     "successFileUpload": "Dosya Yükleme işleminiz gerçekleştirilmiştir.",
-    "actions": "İşlemler"
+    "actions": "İşlemler",
+    "Months": {
+      "january": "Ocak",
+      "february": "Şubat",
+      "march": "Mart",
+      "april": "Nisan",
+      "may": "Mayıs",
+      "june": "Haziran",
+      "july": "Temmuz",
+      "august": "Ağustos",
+      "september": "Eylül",
+      "october": "Ekim",
+      "november": "Kasım",
+      "december": "Aralık"
+    }
   },
   "index": {
     "today": "Bugün",
