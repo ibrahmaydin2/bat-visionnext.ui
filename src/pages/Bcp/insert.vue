@@ -96,18 +96,18 @@ export default {
       bcpBranchsItems: detailData.bcpBranchsItems,
       years: [],
       Months: [
-        {DecimalValue: 1, Label: 'Ocak'},
-        {DecimalValue: 2, Label: 'Şubat'},
-        {DecimalValue: 3, Label: 'Mart'},
-        {DecimalValue: 4, Label: 'Nisan'},
-        {DecimalValue: 5, Label: 'Mayıs'},
-        {DecimalValue: 6, Label: 'Haziran'},
-        {DecimalValue: 7, Label: 'Temmuz'},
-        {DecimalValue: 8, Label: 'Ağustos'},
-        {DecimalValue: 9, Label: 'Eylül'},
-        {DecimalValue: 10, Label: 'Ekim'},
-        {DecimalValue: 11, Label: 'Kasım'},
-        {DecimalValue: 12, Label: 'Aralık'}
+        {DecimalValue: 1, Label: this.$t('general.Months.january')},
+        {DecimalValue: 2, Label: this.$t('general.Months.february')},
+        {DecimalValue: 3, Label: this.$t('general.Months.march')},
+        {DecimalValue: 4, Label: this.$t('general.Months.april')},
+        {DecimalValue: 5, Label: this.$t('general.Months.may')},
+        {DecimalValue: 6, Label: this.$t('general.Months.june')},
+        {DecimalValue: 7, Label: this.$t('general.Months.july')},
+        {DecimalValue: 8, Label: this.$t('general.Months.august')},
+        {DecimalValue: 9, Label: this.$t('general.Months.september')},
+        {DecimalValue: 10, Label: this.$t('general.Months.october')},
+        {DecimalValue: 11, Label: this.$t('general.Months.november')},
+        {DecimalValue: 12, Label: this.$t('general.Months.december')}
       ]
     }
   },
