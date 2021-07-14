@@ -41,7 +41,7 @@
               <NextCheckBox v-model="form.IsAssetMovement" type="number" :disabled="insertReadonly.IsAssetMovement" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="ServiceStateId" :error="$v.form.ServiceStateId" md="4" lg="4">
-              <NextDropdown v-model="serviceState" :all-source="serviceStates" url="VisionNextAsset/api/ServiceState/Search" @input="selectedSearchType('ServiceStateId', $event)" :disabled="insertReadonly.ServiceStateId" />
+              <NextDropdown v-model="serviceState" v-on:all-source="setServiceStates" url="VisionNextAsset/api/ServiceState/Search" @input="selectedSearchType('ServiceStateId', $event)" :disabled="insertReadonly.ServiceStateId" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -77,9 +77,6 @@
             </NextFormGroup>
             <NextFormGroup item-key="ServiceTypeId" :error="$v.form.ServiceTypeId" md="4" lg="4">
               <NextDropdown url="VisionNextAsset/api/ServiceType/Search" @input="selectedSearchType('ServiceTypeId', $event)" :disabled="insertReadonly.ServiceTypeId" />
-            </NextFormGroup>
-            <NextFormGroup item-key="ItemSelectionMethodId" :error="$v.form.ItemSelectionMethodId" md="4" lg="4">
-              <NextDropdown lookup-key="ITEM_SELECTION_METHOD" @input="selectedType('ItemSelectionMethodId', $event)" :disabled="insertReadonly.ItemSelectionMethodId" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -141,7 +138,6 @@ export default {
         AssetTypeId: null,
         AssetId: null,
         ServiceTypeId: null,
-        ItemSelectionMethodId: null,
         EstimatedResponseDate: null,
         EstimatedResponseTime: null,
         CompletionDate: null,
@@ -209,6 +205,14 @@ export default {
       } else {
         this.form.AssetTypeId = null
       }
+    },
+    setServiceStates (values) {
+      this.serviceStates = values
+      if (values && !this.serviceState) {
+        let filteredArr = values.filter(i => i.RecordId === 5)
+        this.serviceState = filteredArr.length > 0 ? filteredArr[0] : null
+        this.selectedSearchType('ServiceStateId', this.serviceState)
+      }
     }
   },
   validations () {
@@ -218,17 +222,6 @@ export default {
     }
     return {
       form: this.insertRules
-    }
-  },
-  watch: {
-    serviceStates: {
-      handler (value) {
-        if (value && !this.serviceState) {
-          this.serviceState = value.filter(i => i.RecordId === 5)
-        }
-      },
-      deep: true,
-      immediate: true
     }
   }
 }
