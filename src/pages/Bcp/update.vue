@@ -38,16 +38,16 @@
               <NextDropdown v-model="DiscountGroup7" :disabled="insertReadonly.DiscountGroup7Id" :get-lookup="true" label="Label" lookup-key="DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Year" :error="$v.form.Year">
-              <NextDropdown v-model="year" :disabled="insertReadonly.Year" url="" @input="selectedSearchType('Year', $event)"/>
+              <NextDropdown v-model="Year" :disabled="insertReadonly.Year"  label="Label" :source="years" @input="selectedType('Year', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Month" :error="$v.form.Month">
-              <NextDropdown v-model="month" :disabled="insertReadonly.Month" url="" @input="selectedSearchType('Month', $event)"/>
+              <NextDropdown v-model="Month" :disabled="insertReadonly.Month" label="Label" :source="Months" @input="selectedType('Month', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EndYear" :error="$v.form.EndYear">
-              <NextDropdown v-model="endyear" :disabled="insertReadonly.EndYear" url="" @input="selectedSearchType('EndYear', $event)"/>
+              <NextDropdown v-model="EndYear" :disabled="insertReadonly.EndYear"  label="Label" :source="years" @input="selectedType('EndYear', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EndMonth" :error="$v.form.EndMonth">
-              <NextDropdown v-model="endMonth" :disabled="insertReadonly.EndMonth" url="" @input="selectedSearchType('EndMonth', $event)"/>
+              <NextDropdown v-model="EndMonth" :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
               <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectedType('CustomerRegion3Id', $event)"/>
@@ -94,14 +94,29 @@ export default {
       },
       routeName1: 'Customer',
       DiscountGroup7: {},
-      year: {},
-      month: {},
-      endyear: {},
-      endMonth: {},
+      Year: {},
+      Month: {},
+      EndYear: {},
+      EndMonth: {},
       CustomerRegion3: {},
       BranchCriteria: {},
       bcpDetailsItems: detailData.bcpDetailsItems,
-      bcpBranchsItems: detailData.bcpBranchsItems
+      bcpBranchsItems: detailData.bcpBranchsItems,
+      years: [],
+      Months: [
+        {DecimalValue: 1, Label: 'Ocak'},
+        {DecimalValue: 2, Label: 'Şubat'},
+        {DecimalValue: 3, Label: 'Mart'},
+        {DecimalValue: 4, Label: 'Nisan'},
+        {DecimalValue: 5, Label: 'Mayıs'},
+        {DecimalValue: 6, Label: 'Haziran'},
+        {DecimalValue: 7, Label: 'Temmuz'},
+        {DecimalValue: 8, Label: 'Ağustos'},
+        {DecimalValue: 9, Label: 'Eylül'},
+        {DecimalValue: 10, Label: 'Ekim'},
+        {DecimalValue: 11, Label: 'Kasım'},
+        {DecimalValue: 12, Label: 'Aralık'}
+      ]
     }
   },
   computed: {
@@ -109,6 +124,7 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.createYears()
   },
   methods: {
     setData () {
@@ -117,7 +133,10 @@ export default {
       this.CustomerRegion3 = rowData.CustomerRegion3
       this.BranchCriteria = rowData.BranchCriteria
       this.DiscountGroup7 = rowData.DiscountGroup7
-      this.year = this.convertLookupValueToSearchValue(rowData.year)
+      this.Year = rowData.Year
+      this.Month = rowData.Month
+      this.EndYear = rowData.EndYear
+      this.EndMonth = rowData.EndMonth
       if (!rowData.BcpDetails) {
         this.form.BcpDetails = []
       }
@@ -136,6 +155,16 @@ export default {
         this.tabValidation()
       } else {
         this.updateData()
+      }
+    },
+    createYears () {
+      let now = new Date()
+      let nowYear = now.getFullYear()
+      this.years = []
+      for (let index = nowYear - 5; index <= nowYear + 5; index++) {
+        this.years.push({
+          DecimalValue: index, Label: index
+        })
       }
     }
   },

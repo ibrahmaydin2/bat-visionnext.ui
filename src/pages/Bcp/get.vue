@@ -25,12 +25,12 @@
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DiscountGroup7, 'object', 'insert.bcp.DiscountGroup7Id')"></div>
-              <div v-html="getFormatDataByType(rowData.year, 'object', 'insert.bcp.Year')"></div>
-              <div v-html="getFormatDataByType(rowData.month, 'object', 'insert.bcp.Month')"></div>
-              <div v-html="getFormatDataByType(rowData.endyear, 'object', 'insert.bcp.EndYear')"></div>
+              <div v-html="getFormatDataByType(rowData.Year, 'text', 'insert.bcp.Year')"></div>
+              <div v-html="getFormatDataByType(rowData.Month, 'text', 'insert.bcp.Month')"></div>
+              <div v-html="getFormatDataByType(rowData.EndYear, 'text', 'insert.bcp.EndYear')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.endMonth, 'object', 'insert.bcp.EndMonth')"></div>
+              <div v-html="getFormatDataByType(rowData.EndMonth, 'text', 'insert.bcp.EndMonth')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion3, 'object', 'insert.bcp.CustomerRegion3Id')"></div>
               <div v-html="getFormatDataByType(rowData.BranchCriteria, 'object', 'insert.bcp.BranchCriteriaId')"></div>
             </b-card>
