@@ -308,7 +308,14 @@ export default {
           duration: '3000'
         })
       } else {
-        this.form.CustomerIds = this.modalItem ? [this.modalItem.RecordId] : null
+        let customerId = 0
+        if (this.modalAction.Action === 'BranchCustomConvert') {
+          customerId = this.modalItem.CustomerId
+        }
+        if (this.modalAction.Action === 'CustomConvert') {
+          customerId = this.modalItem.RecordId
+        }
+        this.form.CustomerIds = customerId > 0 ? [customerId] : null
         let request = {
           'AndConditionModel': {
             ...this.form

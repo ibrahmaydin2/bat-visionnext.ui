@@ -525,6 +525,11 @@ export default {
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'assign-employee-modal')
         })
+      } else if (action.Action === 'BranchCustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
       } else {
         this.showConfirmModal = true
         this.$nextTick(() => {
