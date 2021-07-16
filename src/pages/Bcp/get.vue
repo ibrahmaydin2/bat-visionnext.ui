@@ -82,7 +82,7 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNexCustomer/api/Bcp', record: this.$route.params.url}).then(() => {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Bcp', record: this.$route.params.url}).then(() => {
 
       })
     }
