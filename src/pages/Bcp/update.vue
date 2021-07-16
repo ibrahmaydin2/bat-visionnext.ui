@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+            <NextInput type="text" v-model="form.Description1" :disabled="true"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -35,13 +35,13 @@
         <b-tab :title="$t('insert.bcp.Bcp')" active>
           <b-row>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown v-model="DiscountGroup7" :disabled="insertReadonly.DiscountGroup7Id" :get-lookup="true" label="Label" lookup-key="DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup7" :disabled="true" :get-lookup="true" label="Label" lookup-key="DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Year" :error="$v.form.Year">
-              <NextDropdown v-model="Year" :disabled="insertReadonly.Year"  label="Label" :source="years" @input="selectedType('Year', $event)"/>
+              <NextDropdown v-model="Year" :disabled="true"  label="Label" :source="years" @input="selectedType('Year', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Month" :error="$v.form.Month">
-              <NextDropdown v-model="Month" :disabled="insertReadonly.Month" label="Label" :source="Months" @input="selectedType('Month', $event)"/>
+              <NextDropdown v-model="Month" :disabled="true" label="Label" :source="Months" @input="selectedType('Month', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EndYear" :error="$v.form.EndYear">
               <NextDropdown v-model="EndYear" :disabled="insertReadonly.EndYear"  label="Label" :source="years" @input="selectedType('EndYear', $event)"/>
@@ -50,10 +50,10 @@
               <NextDropdown v-model="EndMonth" :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
-              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectedType('CustomerRegion3Id', $event)"/>
+              <NextDropdown v-model="CustomerRegion3" :disabled="true" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectedType('CustomerRegion3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="true" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
