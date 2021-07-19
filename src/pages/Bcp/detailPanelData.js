@@ -52,6 +52,14 @@ export const detailData = {
       visible: true,
       isUnique: true,
       id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'RecordState',
+      hideOnTable: true,
+      defaultValue: 2,
+      id: 5
     }
   ],
   bcpBranchsItems: [
@@ -66,36 +74,92 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'text',
-      modelProperty: 'ColumnNameDesc',
+      modelProperty: 'ColumnName',
       hideOnTable: true,
       defaultValue: 'RECORD_ID',
       id: 2
     },
     {
-      type: 'Text',
+      type: 'Autocomplete',
       modelProperty: 'ColumnValue',
       objectKey: 'ColumnNameDesc',
-      labelProperty: 'RecordId',
-      orConditionFields: 'Code,Description1,RecordId',
-      label: i18n.t('insert.bcp.ColumnValue'),
-      hideOnTable: true,
-      parentId: 3,
-      id: 4
-    },
-    {
-      type: 'Autocomplete',
-      modelProperty: 'ColumnNameDesc',
-      labelProperty: 'Description1',
-      objectKey: 'ColumnNameDescDesc',
-      orConditionFields: 'Code,Description1,RecordId',
-      label: i18n.t('insert.bcp.ColumnNameDesc'),
+      labelProperty: 'Code',
+      customOption: true,
+      orConditionFields: 'Code,Description1',
       url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+      label: i18n.t('insert.bcp.ColumnValue'),
       required: true,
       visible: true,
-      disabled: false,
       isUnique: true,
       id: 3
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'ColumnNameDesc',
+      objectKey: 'ColumnValueDesc',
+      orConditionFields: 'Code,Description1',
+      parentProperty: 'Description1',
+      label: i18n.t('insert.bcp.ColumnNameDesc'),
+      required: false,
+      visible: true,
+      disabled: true,
+      isUnique: true,
+      parentId: 3,
+      id: 4
     }
+    // {
+    //   type: 'Text',
+    //   modelProperty: 'ColumnValue',
+    //   objectKey: 'ColumnNameDesc',
+    //   labelProperty: 'RecordId',
+    //   orConditionFields: 'Code,Description1,RecordId',
+    //   label: i18n.t('insert.bcp.ColumnValue'),
+    //   hideOnTable: true,
+    //   parentId: 3,
+    //   id: 4
+    // },
+    // {
+    //   type: 'Autocomplete',
+    //   modelProperty: 'ColumnNameDesc',
+    //   labelProperty: 'Description1',
+    //   objectKey: 'ColumnNameDesc',
+    //   orConditionFields: 'Code,Description1,RecordId',
+    //   label: i18n.t('insert.bcp.ColumnNameDesc'),
+    //   url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+    //   required: true,
+    //   visible: true,
+    //   disabled: false,
+    //   isUnique: true,
+    //   id: 3
+    // },
+    // {
+    //   type: 'Autocomplete',
+    //   modelProperty: 'ColumnNameDesc',
+    //   objectKey: 'ColumnName',
+    //   labelProperty: 'Code',
+    //   customOption: true,
+    //   isCustomer: true,
+    //   orConditionFields: 'Code,Description1',
+    //   url: 'VisionNextCustomer/api/BCP/AutoCompleteSearch',
+    //   label: i18n.t('insert.discountLimit.customerCode'),
+    //   required: true,
+    //   visible: true,
+    //   isUnique: true,
+    //   id: 3
+    // },
+    // {
+    //   type: 'Label',
+    //   inputType: 'text',
+    //   modelProperty: 'ColumnValueDesc',
+    //   objectKey: 'ColumnValue',
+    //   parentProperty: 'Description1',
+    //   label: i18n.t('insert.discountLimit.commercialTitle'),
+    //   visible: true,
+    //   disabled: true,
+    //   parentId: 3,
+    //   id: 4
+    // }
   ]
 
 }
