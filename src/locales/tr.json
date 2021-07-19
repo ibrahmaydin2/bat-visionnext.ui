@@ -1234,7 +1234,7 @@
       "BranchCriteriaId": "Şube Kriteri",
       "Bcp": "BCP Detaylar",
       "items": "Ürünler",
-      "Item": "Ürünler",
+      "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "InvoiceQuantity": "Fatura Adedi",
       "MinPurchaseQuantity": "Alış Miktarı",
