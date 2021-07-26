@@ -65,7 +65,7 @@ export default {
     getEmployees () {
       let request = {
         model: {
-          CustomerId: this.modalItem.LocationId
+          CustomerId: this.modalItem.CustomerId
         }
       }
 

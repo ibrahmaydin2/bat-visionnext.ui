@@ -108,6 +108,8 @@ export default {
       handler (newValue) {
         if (newValue && newValue.length > 0) {
           this.values = newValue
+        } else {
+          this.values = []
         }
       },
       deep: true,

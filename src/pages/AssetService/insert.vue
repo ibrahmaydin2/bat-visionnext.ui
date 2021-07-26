@@ -67,7 +67,7 @@
               </b-row>
             </b-col>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId" md="4" lg="4">
-              <NextDropdown lookup-key="ASSET_TYPE" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" :get-lookup="true" />
+              <NextDropdown url="VisionNextAsset/api/AssetType/Search" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" :get-lookup="true" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetId" :error="$v.form.AssetId" md="4" lg="4">
               <NextDropdown v-model="asset" :source="assets" @input="selectedSearchType('AssetId', $event)" :disabled="!this.form.AssetTypeId" />
@@ -188,7 +188,7 @@ export default {
       this.assets = []
 
       if (value) {
-        this.form.AssetTypeId = value.DecimalValue
+        this.form.AssetTypeId = value.RecordId
 
         let request = {
           andConditionModel: {
