@@ -50,7 +50,7 @@
               <NextDropdown :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
-              <NextDropdown :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectedType('CustomerRegion3Id', $event)"/>
+              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectedType('CustomerRegion3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <NextDropdown :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
@@ -58,10 +58,10 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.bcp.items')">
-          <NextDetailPanel v-model="form.BcpDetails" :items="bcpDetailsItems"/>
+          <NextDetailPanel v-model="form.BCPDetails" :items="bcpDetailsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.bcp.branchs')">
-          <NextDetailPanel v-model="form.BcpBranchs" :items="bcpBranchsItems"/>
+        <b-tab :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null">
+          <NextDetailPanel v-model="form.BCPBranchs" :items="bcpBranchsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -88,10 +88,11 @@ export default {
         EndMonth: null,
         CustomerRegion3Id: null,
         BranchCriteriaId: null,
-        BcpDetails: [],
-        BcpBranchs: []
+        BCPDetails: [],
+        BCPBranchs: []
       },
       routeName1: 'Customer',
+      CustomerRegion3: null,
       bcpDetailsItems: detailData.bcpDetailsItems,
       bcpBranchsItems: detailData.bcpBranchsItems,
       years: [],

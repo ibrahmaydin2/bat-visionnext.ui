@@ -153,14 +153,14 @@ export const detailData = {
       key: 'QuestionId',
       label: i18n.t('insert.loyaltyCategory.QuestionId'),
       formatter: (value, key, obj) => {
-        return obj.Question ? obj.Question.label : obj.QuestionIdDesc
+        return obj.Question ? obj.Question.Label : obj.QuestionIdDesc
       }
     },
     {
       key: 'Answer',
       label: i18n.t('insert.loyaltyCategory.Answer'),
       formatter: (value, key, obj) => {
-        return obj.Answer ? obj.Answer.label : obj.AnswerIdDesc
+        return obj.Answer ? obj.Answer.Label : obj.AnswerIdDesc
       }
     },
     {
