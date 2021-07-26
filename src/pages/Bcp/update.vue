@@ -41,13 +41,13 @@
               <NextDropdown v-model="Year" :disabled="true"  label="Label" :source="years" @input="selectedType('Year', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Month" :error="$v.form.Month">
-              <NextDropdown v-model="Month" :disabled="true" label="Label" :source="Months" @input="selectedType('Month', $event)"/>
+              <NextDropdown v-model="LabelMonth" :disabled="true" label="Label" :source="Months" @input="selectedType('Month', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EndYear" :error="$v.form.EndYear">
               <NextDropdown v-model="EndYear" :disabled="insertReadonly.EndYear"  label="Label" :source="years" @input="selectedType('EndYear', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EndMonth" :error="$v.form.EndMonth">
-              <NextDropdown v-model="EndMonth" :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
+              <NextDropdown v-model="LabelEndMonthh" :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
               <NextDropdown v-model="CustomerRegion3" :disabled="true" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectedType('CustomerRegion3Id', $event)"/>
@@ -58,10 +58,10 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.bcp.items')">
-          <NextDetailPanel v-model="form.BcpDetails" :items="bcpDetailsItems"/>
+          <NextDetailPanel v-model="form.BCPDetails" :items="bcpDetailsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.bcp.branchs')">
-          <NextDetailPanel v-model="form.BcpBranchs" :items="bcpBranchsItems"/>
+        <b-tab :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null">
+          <NextDetailPanel v-model="form.BCPBranchs" :items="bcpBranchsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -89,15 +89,15 @@ export default {
         EndMonth: null,
         CustomerRegion3Id: null,
         BranchCriteriaId: null,
-        BcpDetails: [],
-        BcpBranchs: []
+        BCPDetails: [],
+        BCPBranchs: []
       },
       routeName1: 'Customer',
       DiscountGroup7: {},
       Year: {},
-      Month: {},
+      LabelMonth: {},
       EndYear: {},
-      EndMonth: {},
+      LabelEndMonthh: {},
       CustomerRegion3: {},
       BranchCriteria: {},
       bcpDetailsItems: detailData.bcpDetailsItems,
@@ -134,9 +134,9 @@ export default {
       this.BranchCriteria = rowData.BranchCriteria
       this.DiscountGroup7 = rowData.DiscountGroup7
       this.Year = rowData.Year
-      this.Month = rowData.Month
+      this.LabelMonth = rowData.LabelMonth
       this.EndYear = rowData.EndYear
-      this.EndMonth = rowData.EndMonth
+      this.LabelEndMonthh = rowData.LabelEndMonthh
       if (!rowData.BcpDetails) {
         this.form.BcpDetails = []
       }

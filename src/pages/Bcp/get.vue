@@ -26,11 +26,11 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DiscountGroup7, 'object', 'insert.bcp.DiscountGroup7Id')"></div>
               <div v-html="getFormatDataByType(rowData.Year, 'text', 'insert.bcp.Year')"></div>
-              <div v-html="getFormatDataByType(rowData.Month, 'text', 'insert.bcp.Month')"></div>
+              <div v-html="getFormatDataByType(rowData.LabelMonth, 'object', 'insert.bcp.Month')"></div>
               <div v-html="getFormatDataByType(rowData.EndYear, 'text', 'insert.bcp.EndYear')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.EndMonth, 'text', 'insert.bcp.EndMonth')"></div>
+              <div v-html="getFormatDataByType(rowData.LabelEndMonthh, 'object', 'insert.bcp.EndMonth')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion3, 'object', 'insert.bcp.CustomerRegion3Id')"></div>
               <div v-html="getFormatDataByType(rowData.BranchCriteria, 'object', 'insert.bcp.BranchCriteriaId')"></div>
             </b-card>
@@ -40,7 +40,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.BcpDetails" :items="bcpDetailsItems" />
+                <NextDetailPanel type="get" v-model="rowData.BCPDetails" :items="bcpDetailsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -49,7 +49,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.BcpBranchs" :items="bcpBranchsItems" />
+                <NextDetailPanel type="get" v-model="rowData.BCPBranchs" :items="bcpBranchsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -75,7 +75,7 @@ export default {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
