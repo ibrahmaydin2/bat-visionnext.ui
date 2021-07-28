@@ -490,7 +490,7 @@ export const detailData = {
       modelProperty: 'EInvoiceTypeId',
       objectKey: 'EInvoiceType',
       url: 'EFA_SERVICES',
-      label: i18n.t('insert.branch.TerminalOrPcId'),
+      label: i18n.t('insert.branch.EInvoiceTypeId'),
       required: false,
       visible: true,
       id: 3

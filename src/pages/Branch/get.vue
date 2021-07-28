@@ -45,7 +45,7 @@
               <div v-html="getFormatDataByType(rowData.TaxCustomerType, 'object', 'insert.branch.TaxCustomerTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'insert.branch.FinanceCode2')"></div>
               <div v-html="getFormatDataByType(rowData.MersisNumber, 'text', 'insert.branch.MersisNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.UseEDispatch, 'object', 'insert.branch.UseEDispatch')"></div>
+              <div v-html="getFormatDataByType(rowData.UseEDispatch, 'check', 'insert.branch.UseEDispatch')"></div>
               <div v-html="getFormatDataByType(rowData.IsBlocked, 'check', 'insert.branch.IsBlocked')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.branch.UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.UseEArchive, 'check', 'insert.branch.UseEArchive')"></div>
@@ -69,7 +69,7 @@
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DefaultPaymentType, 'object', 'insert.branch.DefaultPaymentTypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.branch.PaymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentPeriodClass, 'object', 'insert.branch.PaymentPeriod')"></div>
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.branch.PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.CreditLimit, 'text', 'insert.branch.CreditLimit')"></div>
               <div v-html="getFormatDataByType(rowData.RiskLimit, 'text', 'insert.branch.RiskLimit')"></div>
