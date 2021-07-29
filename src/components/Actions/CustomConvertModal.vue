@@ -258,7 +258,9 @@ export default {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       this.employee = userModel.Name + ' ' + userModel.Surname
-      this.form.RepresentativeIds = [userModel.UserId]
+      if (this.modalAction.Action === 'CustomConvert') {
+        this.form.RepresentativeIds = [userModel.UserId]
+      }
     })
   },
   methods: {

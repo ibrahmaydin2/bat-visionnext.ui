@@ -50,17 +50,17 @@
               <NextDropdown :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
-              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectedType('CustomerRegion3Id', $event)"/>
+              <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectBranch($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.bcp.items')">
           <NextDetailPanel v-model="form.BCPDetails" :items="bcpDetailsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null">
+        <b-tab lazy :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null && BranchCriteria && BranchCriteria.Code !== null">
           <NextDetailPanel v-model="form.BCPBranchs" :items="bcpBranchsItems"/>
         </b-tab>
       </b-tabs>
@@ -83,6 +83,7 @@ export default {
         Description1: null,
         DiscountGroup7Id: null,
         Year: null,
+        ColumnValue: null,
         Month: null,
         EndYear: null,
         EndMonth: null,
@@ -93,8 +94,11 @@ export default {
       },
       routeName1: 'Customer',
       CustomerRegion3: null,
+      BranchCriteria: null,
+      ColumnValue: null,
       bcpDetailsItems: detailData.bcpDetailsItems,
-      bcpBranchsItems: detailData.bcpBranchsItems,
+      bcpBranchsItems: [],
+      branches: [],
       years: [],
       Months: [
         {DecimalValue: 1, Label: this.$t('general.Months.january')},
@@ -139,6 +143,63 @@ export default {
           DecimalValue: index, Label: index
         })
       }
+    },
+    selectBranch (value) {
+      this.form.BCPBranchs = []
+      if (value) {
+        this.form.CustomerRegion3Id = value.Value
+        this.getCustomDetailItems()
+      } else {
+        this.form.CustomerRegion3Id = null
+      }
+    },
+    getCustomDetailItems () {
+      this.bcpBranchsItems = [
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_BRANCH',
+          id: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          id: 2
+        },
+        {
+          type: 'Dropdown',
+          modelProperty: 'ColumnValue',
+          objectKey: 'ColumnNameDesc',
+          labelProperty: 'Code',
+          customOption: true,
+          url: 'VisionNextBranch/api/Branch/GetBranchListCustomerRegion3Id',
+          label: this.$t('insert.bcp.ColumnValue'),
+          dynamicRequest: {Region3Id: this.form.CustomerRegion3Id},
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 3
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Description1',
+          objectKey: 'ColumnValueDesc',
+          orConditionFields: 'Code,Description1',
+          parentProperty: 'Customer',
+          label: this.$t('insert.bcp.ColumnNameDesc'),
+          required: false,
+          visible: true,
+          disabled: true,
+          parentId: 3,
+          id: 4
+        }
+      ]
     }
   }
 }
