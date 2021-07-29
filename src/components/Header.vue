@@ -178,6 +178,7 @@ export default {
       this.$i18n.locale = lang
       this.toggleLang = toggleLang
       localStorage.setItem('selectedLang', lang)
+      localStorage.setItem('LanguageId', !lang || lang === 'tr' ? 1 : 2)
     }
   },
   watch: {

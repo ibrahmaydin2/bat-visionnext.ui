@@ -72,7 +72,8 @@ let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStora
 let authHeader = {
   headers: {
     'key': localStorage.getItem('Key'),
-    'hash': process.env.HASH
+    'hash': process.env.HASH,
+    'LanguageId': localStorage.getItem('LanguageId')
   }
 }
 
@@ -1697,7 +1698,8 @@ export const store = new Vuex.Store({
       authHeader = {
         headers: {
           'key': localStorage.getItem('Key'),
-          'hash': process.env.HASH
+          'hash': process.env.HASH,
+          'LanguageId': localStorage.getItem('LanguageId')
         }
       }
       let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0]
