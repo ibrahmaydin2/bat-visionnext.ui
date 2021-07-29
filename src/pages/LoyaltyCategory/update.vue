@@ -49,7 +49,7 @@
             <NextInput v-model="form.LoyaltyPoint" type="number"  :disabled="CalcType && CalcType.Code == 'AKS'" />
           </NextFormGroup>
           <NextFormGroup item-key="FieldAnalysisId" :error="$v.form.FieldAnalysisId">
-            <NextDropdown v-model="FieldAnalysis" label="Description1"  :disabled="!(CalcType && CalcType.Code == 'ANS')"  url="VisionNextFieldAnalysis/api/FieldAnalysis/SearchWithValidDate "  @input="selectAnalysis($event)"/>
+            <NextDropdown v-model="FieldAnalysis" label="Description1"   url="VisionNextFieldAnalysis/api/FieldAnalysis/SearchWithValidDate "  @input="selectAnalysis($event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="ByFrequency" :error="$v.form.ByFrequency">
             <NextCheckBox v-model="form.ByFrequency" type="number" :disabled="!(CalcType && CalcType.Code == 'SA') && !(CalcType && CalcType.Code == 'ANS')" toggle/>
@@ -112,7 +112,7 @@
                       <NextDropdown v-model="loyaltyQuestion.question" :source="questions" @input="selectQuestion"></NextDropdown>
                    </NextFormGroup>
                     <NextFormGroup v-if="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'" :title="$t('insert.loyaltyCategory.Answer')" :error="$v.loyaltyQuestion.multipleAnswer" :required="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'">
-                      <NextDropdown v-model="loyaltyQuestion.multipleAnswer"  :source="answers"></NextDropdown>
+                      <NextDropdown v-model="loyaltyQuestion.multipleAnswer"  :source="answers" label="Description1"></NextDropdown>
                    </NextFormGroup>
                    <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerStart')" :error="$v.loyaltyQuestion.AnswerStart" :required="true" >
                       <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code !== 'SY'"></NextInput>
@@ -177,7 +177,7 @@
               <template #row-details="{index}">
                 <div class="p-4 mt-2 nested-detail-panel">
                   <h3>{{$t('insert.loyaltyCategory.salesAnalysis')}}</h3>
-                  <NextDetailPanel v-model="form.LoyaltyCatSales[index].LoyaltyCatSalesDetails" :items="LoyaltyCatSalesDetailsItems" />
+                  <NextDetailPanel lazy v-model="form.LoyaltyCatSales[index].LoyaltyCatSalesDetails" :items="LoyaltyCatSalesDetailsItems" />
                 </div>
               </template>
             </b-table>
@@ -192,6 +192,7 @@ import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 import { required, requiredIf } from 'vuelidate/lib/validators'
+import { items } from '../../components/nav'
 export default {
   mixins: [updateMixin],
   data () {
@@ -226,7 +227,6 @@ export default {
       CalcType: null,
       FieldAnalysis: null,
       CategoryType: null,
-      // showDetails: false,
       ColumnNameDesc: null,
       ColumnValueDesc: null,
       Unit: null,
@@ -265,6 +265,7 @@ export default {
         this.CategoryType = this.convertLookupValueToSearchValue(rowData.CategoryType)
         this.CalcType = rowData.CalcType
         this.FieldAnalysis = this.convertLookupValueToSearchValue(rowData.FieldAnalysis)
+        this.selectAnalysis(this.FieldAnalysis)
         this.ColumnNameDesc = this.convertLookupValueToSearchValue(rowData.ColumnNameDesc)
         this.Unit = rowData.Unit
         this.ColumnValueDesc = rowData.ColumnValueDesc
@@ -279,6 +280,10 @@ export default {
 
         if (rowData.LoyaltyCatSales && rowData.LoyaltyCatSales.length > 0) {
           this.LoyaltyCatSalesDetails = rowData.LoyaltyCatSales[0]
+        }
+
+        if (rowData.LoyaltyCategoryCrits && rowData.LoyaltyCategoryCrits.length > 0) {
+          this.LoyaltyCategoryCritDetails = rowData.LoyaltyCategoryCrits[0]
         }
 
         if (this.form.LoyaltyCustomers && this.form.LoyaltyCustomers.length > 0) {
@@ -391,8 +396,10 @@ export default {
       }
       setTimeout(() => {
         this.form.LoyaltyCategoryCrits = list
+        if (items !== null) {
+          list[index].LoyaltyCategoryCritDetails = items
+        }
       }, 1)
-      this.$forceUpdate()
     },
     setDatePlanType () {
       if ((!this.form.LoyaltyCategoryCrits || this.form.LoyaltyCategoryCrits.filter(i => i.RecordState !== 4).length === 0) && this.form.ApplicationTypeId === 654) {

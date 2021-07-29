@@ -112,7 +112,7 @@
                       <NextDropdown v-model="loyaltyQuestion.question" label="Description1" :source="questions" @input="selectQuestion"></NextDropdown>
                    </NextFormGroup>
                     <NextFormGroup v-if="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'" :title="$t('insert.loyaltyCategory.Answer')" :error="$v.loyaltyQuestion.multipleAnswer" :required="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code === 'CS'">
-                      <NextDropdown v-model="loyaltyQuestion.multipleAnswer" :source="answers" label="Description2"></NextDropdown>
+                      <NextDropdown v-model="loyaltyQuestion.multipleAnswer" :source="answers" label="Description1"></NextDropdown>
                    </NextFormGroup>
                    <NextFormGroup :title="$t('insert.loyaltyCategory.AnswerStart')" :error="$v.loyaltyQuestion.AnswerStart" :required="true" >
                       <NextInput v-model="loyaltyQuestion.AnswerStart" type="number" :disabled="loyaltyQuestion.question && loyaltyQuestion.question.AnswerType.Code !== 'SY'"></NextInput>
