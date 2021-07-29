@@ -124,15 +124,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <b-row>
-            <b-col>
-              <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscounts" :items="customerItemDiscountItems" />
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <b-row>
             <b-col>
@@ -156,7 +147,6 @@ export default {
   data () {
     return {
       customerItemDiscounts: [],
-      customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,

@@ -44,7 +44,8 @@ export class ApiManager {
     request.pagerecordCount = !pagerecordCount ? 50 : pagerecordCount
     let header = {
       'key': localStorage.getItem('Key'),
-      'hash': process.env.HASH
+      'hash': process.env.HASH,
+      'LanguageId': localStorage.getItem('LanguageId')
     }
     let name = btoa(url)
     if (name) {

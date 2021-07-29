@@ -220,17 +220,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.CustomerItemDiscountCrts')}}</h6>
-                <b-table responsive :items="rowData.CustomerItemDiscounts" :fields="discountFields">
-                </b-table>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.customer.tag')">
           <b-row>
             <b-col cols="12" md="12">
@@ -333,15 +322,6 @@ export default {
       ],
       fixedTermFields: [
         {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
-      ],
-      discountFields: [
-        {key: 'Description1', label: 'Açıklama', sortable: true},
-        {key: 'TCIBreak1Id', label: 'TCI 1', sortable: true},
-        {key: 'TCIBreak2Id', label: 'TCI 2', sortable: true},
-        {key: 'StartDate', label: 'Başlangıç Tarihi', sortable: true},
-        {key: 'EndDate', label: 'Bitiş Tarihi', sortable: true},
-        {key: 'DiscountPercent1', label: 'Müşteri İndirimi 1', sortable: true},
-        {key: 'DiscountPercent2', label: 'Müşteri İndirimi 2', sortable: true}
       ],
       customerLabelFields: [
         {key: 'Label', label: 'Etiket Tanımı', sortable: true},

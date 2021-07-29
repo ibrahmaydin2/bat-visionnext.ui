@@ -993,72 +993,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountCode') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.code.$error }">
-                <v-select v-model="customerItemDiscounts.product" :options="items" :filterable="false" @search="onItemsSearch" @input="selectedItem" label="Description1">
-                    <template slot="no-options">
-                      {{$t('insert.min3')}}
-                    </template>
-                    <template v-slot:option="option">
-                      {{option.Code + ' - ' + option.Description1}}
-                    </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountDescription') + ' *'" :class="{ 'form-group--error': $v.customerItemDiscounts.description1.$error }">
-                <b-form-input type="text" v-model="customerItemDiscounts.description1" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_DiscountPercent1')">
-                <b-form-input type="text" v-model="customerItemDiscounts.discountPercent1" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.Model_DiscountPercent2')">
-                <b-form-input type="text" v-model="customerItemDiscounts.discountPercent2" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountTci1')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi1" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.customer.discountTci2')">
-                <v-select :options="lookup.TCI_BREAKDOWN" @input="selectedTCi2" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addItemDiscount" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.customer.discountDescription')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_DiscountPercent1')}}</span></b-th>
-                <b-th><span>{{$t('insert.customer.Model_DiscountPercent2')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(r, i) in form.customerItemDiscounts" :key="i">
-                  <b-td>{{r.description1}}</b-td>
-                  <b-td>{{r.discountPercent1}}</b-td>
-                  <b-td>{{r.discountPercent2}}</b-td>
-                  <b-td class="text-center"><i @click="removeItemDiscount(r)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()"> <!--Ezer-->
           <b-row>
             <b-col cols="12" md="3" lg="2">
@@ -1284,15 +1218,6 @@ export default {
         paymentType: null,
         paymentTypeId: null
       },
-      customerItemDiscounts: {
-        code: null,
-        description1: null,
-        discountPercent1: null,
-        discountPercent2: null,
-        tciBreak1Id: null,
-        tciBreak2Id: null,
-        product: null
-      },
       customerTouchpoints: {
         touchpointPriorityNumber: null,
         touchpointTypeId: null,
@@ -1445,29 +1370,6 @@ export default {
         this.customerPaymentTypes.paymentTypeId = null
       }
     },
-    selectedTCi1 (e) {
-      if (e) {
-        this.customerItemDiscounts.tciBreak1Id = e.DecimalValue
-      } else {
-        this.customerItemDiscounts.tciBreak1Id = null
-      }
-    },
-    selectedTCi2 (e) {
-      if (e) {
-        this.customerItemDiscounts.tciBreak2Id = e.DecimalValue
-      } else {
-        this.customerItemDiscounts.tciBreak2Id = null
-      }
-    },
-    selectedItem (e) {
-      if (e) {
-        this.customerItemDiscounts.code = e.RecordId
-        this.customerItemDiscounts.description1 = e.Description1
-      } else {
-        this.customerItemDiscounts.code = null
-        this.customerItemDiscounts.description1 = null
-      }
-    },
     selectedTouchpointPriority (e) {
       if (e) {
         this.customerTouchpoints.touchpointPriorityNumber = e.DecimalValue
@@ -1537,30 +1439,6 @@ export default {
     },
     removeCustomerLabel (item) {
       this.form.customerLabels.splice(this.form.customerLabels.indexOf(item), 1)
-    },
-    addItemDiscount () {
-      this.$v.customerItemDiscounts.$touch()
-      if (this.$v.customerItemDiscounts.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.form.customerItemDiscounts.push({
-        code: this.customerItemDiscounts.code,
-        description1: this.customerItemDiscounts.description1,
-        discountPercent1: this.customerItemDiscounts.discountPercent1,
-        discountPercent2: this.customerItemDiscounts.discountPercent2,
-        tciBreak1Id: this.customerItemDiscounts.tciBreak1Id,
-        tciBreak2Id: this.customerItemDiscounts.tciBreak2Id
-      })
-      this.customerItemDiscounts = {}
-      this.$v.customerItemDiscounts.$reset()
-    },
-    removeItemDiscount (item) {
-      this.form.customerItemDiscounts.splice(this.form.customerItemDiscounts.indexOf(item), 1)
     },
     addCustomerPaymentType () {
       this.$v.customerPaymentTypes.$touch()
@@ -1795,14 +1673,6 @@ export default {
           required
         },
         tagValue: {
-          required
-        }
-      },
-      customerItemDiscounts: {
-        code: {
-          required
-        },
-        description1: {
           required
         }
       }
