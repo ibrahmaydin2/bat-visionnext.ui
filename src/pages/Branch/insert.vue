@@ -213,7 +213,7 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
