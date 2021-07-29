@@ -216,9 +216,6 @@
         <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerItemDiscountItems"/>
-        </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
@@ -319,7 +316,6 @@ export default {
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
-      customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
       customerItemDiscounts: [],
       distributionType: {},
