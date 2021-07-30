@@ -2448,7 +2448,10 @@
       "type":"Tip",
       "assetClass": "Sınıf",
       "trackType": "İzleme Tipi",
-      "barcode": "Barkod"
+      "barcode": "Barkod",
+      "properties": "Nitelik Değerleri",
+      "propertyName": "Nitelik",
+      "propertyValue": "Değer"
     },
     "RouteDailyRecord": {
       "Code": "Kod",
