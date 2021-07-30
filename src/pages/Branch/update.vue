@@ -162,11 +162,11 @@
             <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
-              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
+            <NextFormGroup item-key="TCIBreak1ID" :error="$v.form.TCIBreak1ID">
+              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TCIBreak1ID" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TCIBreak1ID', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
-              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
+            <NextFormGroup item-key="TCIBreak2ID" :error="$v.form.TCIBreak2ID">
+              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.TCIBreak2ID" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TCIBreak2ID', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
@@ -305,8 +305,8 @@ export default {
         BankInfo: null,
         DebitAccountRemainder: null,
         CreditAccountRemainder: null,
-        TciBreak1Id: null,
-        TciBreak2Id: null,
+        TCIBreak1ID: null,
+        TCIBreak2ID: null,
         SapCustomerId: null,
         category3Id: null,
         category2Id: null,

@@ -83,10 +83,10 @@
               <div v-html="getFormatDataByType(rowData.CreditAccountRemainder, 'text', 'insert.branch.CreditAccountRemainder')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountPercent1, 'text', 'insert.branch.DiscountPercent1')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountPercent2, 'text', 'insert.branch.DiscountPercent2')"></div>
-              <div v-html="getFormatDataByType(rowData.TciBreak1, 'object', 'insert.branch.TciBreak1Id')"></div>
-              <div v-html="getFormatDataByType(rowData.TciBreak2, 'object', 'insert.branch.TciBreak2Id')"></div>
+              <div v-html="getFormatDataByType(rowData.TCIBreak1, 'object', 'insert.branch.TciBreak1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.TCIBreak2, 'object', 'insert.branch.TciBreak2Id')"></div>
               <div v-html="getFormatDataByType(rowData.StatementDay, 'object', 'insert.branch.StatementDay')"></div>
-              <div v-html="getFormatDataByType(rowData.SapCustomer, 'text', 'insert.branch.SapCustomerId')"></div>
+              <div v-html="getFormatDataByType(rowData.SapCustomerId, 'text', 'insert.branch.SapCustomerId')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.branch.DeliveryDayParam')"></div>
               <div v-html="getFormatDataByType(rowData.AllowOverLimit, 'check', 'insert.branch.AllowOverLimit')"></div>
               <div v-html="getFormatDataByType(rowData.IsDirectDebit, 'check', 'insert.branch.IsDirectDebit')"></div>
