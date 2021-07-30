@@ -213,7 +213,7 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="(!this.form.DistributionTypeId !== 5)">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
@@ -322,6 +322,7 @@ export default {
     ...mapState([''])
   },
   mounted () {
+    this.getCurrentBranch()
     this.createManualCode()
   },
   methods: {
@@ -337,6 +338,17 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.form.DistributionTypeId = branch.DistributionTypeId
+        }
+      })
     }
   },
   validations () {
