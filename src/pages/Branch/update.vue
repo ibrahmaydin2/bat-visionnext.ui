@@ -349,6 +349,7 @@ export default {
   mounted () {
     this.getData().then(() => this.setData())
     this.getBranchLocations()
+    this.getCurrentBranch()
   },
   methods: {
     setData () {
@@ -402,6 +403,17 @@ export default {
         this.form.BranchLocations = this.branchLocations
         this.updateData()
       }
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.form.DistributionTypeId = branch.DistributionTypeId
+        }
+      })
     },
     getBranchLocations () {
       let request = {

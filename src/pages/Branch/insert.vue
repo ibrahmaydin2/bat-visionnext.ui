@@ -322,6 +322,7 @@ export default {
     ...mapState([''])
   },
   mounted () {
+    this.getCurrentBranch()
     this.createManualCode()
   },
   methods: {
@@ -337,6 +338,17 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.form.DistributionTypeId = branch.DistributionTypeId
+        }
+      })
     }
   },
   validations () {
