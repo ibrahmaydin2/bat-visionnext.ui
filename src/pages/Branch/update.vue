@@ -162,11 +162,11 @@
             <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
-            <NextFormGroup item-key="TCIBreak1ID" :error="$v.form.TCIBreak1ID">
-              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TCIBreak1ID" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TCIBreak1ID', $event)"/>
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
+              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TCIBreak2ID" :error="$v.form.TCIBreak2ID">
-              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.TCIBreak2ID" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TCIBreak2ID', $event)" />
+            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.TciBreak2Id">
+              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.TciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
@@ -305,8 +305,8 @@ export default {
         BankInfo: null,
         DebitAccountRemainder: null,
         CreditAccountRemainder: null,
-        TCIBreak1ID: null,
-        TCIBreak2ID: null,
+        TciBreak1Id: null,
+        TciBreak2Id: null,
         SapCustomerId: null,
         category3Id: null,
         category2Id: null,
@@ -370,8 +370,8 @@ export default {
       this.discountGroup2 = rowData.DiscountGroup2
       this.discountGroup9 = rowData.DiscountGroup9
       this.priceListCategory = rowData.PriceListCategory
-      this.tciBreak1 = rowData.TciBreak1
-      this.tciBreak2 = rowData.TciBreak2
+      this.tciBreak1 = rowData.TCIBreak1
+      this.tciBreak2 = rowData.TCIBreak2
       this.category3 = rowData.Category3
       this.category2 = rowData.Category2
       this.category1 = rowData.Category1
@@ -408,7 +408,7 @@ export default {
       let request = {
         RecordId: this.$store.state.BranchId
       }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get?v=2').then(response => {
         if (response && response.Model) {
           let branch = response.Model
           this.form.DistributionTypeId = branch.DistributionTypeId

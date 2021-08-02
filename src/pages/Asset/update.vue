@@ -135,7 +135,8 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.form.ClassId = this.form.AssetClass.DecimalValue
+      this.form.AssetClassId = this.form.AssetClass ? this.form.AssetClass.DecimalValue : null
+      this.form.ClassId = this.form.AssetClassId
       this.assetClass = this.convertLookupValueToSearchValue(rowData.AssetClass)
       this.type = this.convertLookupValueToSearchValue(rowData.Type)
       this.trackType = this.convertLookupValueToSearchValue(rowData.TrackType)
