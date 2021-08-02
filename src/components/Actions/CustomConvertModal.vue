@@ -260,6 +260,8 @@ export default {
       this.employee = userModel.Name + ' ' + userModel.Surname
       if (this.modalAction.Action === 'CustomConvert') {
         this.form.RepresentativeIds = [userModel.UserId]
+      } else {
+        this.form.RepresentativeIds = null
       }
     })
   },
@@ -276,9 +278,9 @@ export default {
         this.documentType = model.Description
         this.form[label] = model.RecordId
         if (model.RecordId === 3 || model.CustomerIds === 3) {
-          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/Search'
+          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/ConvertToSearch'
         } else {
-          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/Search'
+          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/ConvertToSearch'
         }
       } else {
         this.form[label] = null
