@@ -35,7 +35,7 @@
         <b-tab :title="$t('insert.detail')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
-              <NextDropdown :disabled="insertReadonly.GroupId" lookup-key="ITEM_GROUP" @input="selectedType('GroupId', $event)"/>
+              <NextDropdown :disabled="false" lookup-key="ITEM_GROUP" @input="selectedType('GroupId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ShortDescription" :error="$v.form.ShortDescription">
               <NextInput v-model="form.ShortDescription" type="text" :disabled="insertReadonly.ShortDescription" />
@@ -47,13 +47,13 @@
               <NextDropdown :disabled="insertReadonly.ProducerCodeId" lookup-key="PRODUCER_CODE" @input="selectedType('ProducerCodeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown :disabled="insertReadonly.TypeId" lookup-key="ITEM_TYPE" @input="selectedType('TypeId', $event)"/>
+              <NextDropdown :disabled="false" lookup-key="ITEM_TYPE" @input="selectedType('TypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
-              <NextDropdown :disabled="insertReadonly.ClassId" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
+              <NextDropdown :disabled="false" lookup-key="ITEM_CLASS" @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PackageTypeId" :error="$v.form.PackageTypeId">
-              <NextDropdown :disabled="insertReadonly.PackageTypeId" lookup-key="ITEM_PACKAGE_TYPE" @input="selectedType('PackageTypeId', $event)"/>
+              <NextDropdown :disabled="false" lookup-key="ITEM_PACKAGE_TYPE" @input="selectedType('PackageTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CategoryId" :error="$v.form.CategoryId">
               <NextDropdown :disabled="insertReadonly.CategoryId" lookup-key="ITEM_CATEGORY" @input="selectedType('CategoryId', $event)"/>
@@ -74,7 +74,7 @@
               <NextDropdown :disabled="insertReadonly.DiameterId" lookup-key="ITEM_DIAMETER" @input="selectedType('DiameterId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BlendId" :error="$v.form.BlendId">
-              <NextDropdown :disabled="insertReadonly.BlendId" lookup-key="ITEM_BLEND" @input="selectedType('BlendId', $event)"/>
+              <NextDropdown :disabled="false" lookup-key="ITEM_BLEND" @input="selectedType('BlendId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ShelfLife" :error="$v.form.ShelfLife">
               <NextInput v-model="form.ShelfLife" type="text" :disabled="insertReadonly.ShelfLife" />
@@ -86,22 +86,22 @@
               <NextDropdown :disabled="insertReadonly.ColorId" url="VisionNextSystem/api/SysColor/AutoCompleteSearch" @input="selectedSearchType('ColorId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Plant" :error="$v.form.Plant">
-              <NextInput v-model="form.Plant" type="text" :disabled="insertReadonly.Plant" />
+              <NextInput v-model="form.Plant" type="text" :disabled="false" />
             </NextFormGroup>
             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
-              <NextCheckBox v-model="form.IsOrderAllowed" type="number" toggle />
+              <NextCheckBox v-model="form.IsOrderAllowed" :disabled="true" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsSaleAllowed" :error="$v.form.IsSaleAllowed">
-              <NextCheckBox v-model="form.IsSaleAllowed" type="number" toggle />
+              <NextCheckBox v-model="form.IsSaleAllowed" :disabled="true" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsBarterAllowed" :error="$v.form.IsBarterAllowed">
-              <NextCheckBox v-model="form.IsBarterAllowed" type="number" toggle />
+              <NextCheckBox v-model="form.IsBarterAllowed" :disabled="true" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="UseSalesAnalysis" :error="$v.form.UseSalesAnalysis">
-              <NextCheckBox v-model="form.UseSalesAnalysis" type="number" toggle />
+              <NextCheckBox v-model="form.UseSalesAnalysis" :disabled="true" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsLaunchItem" :error="$v.form.IsLaunchItem">
               <NextCheckBox v-model="form.IsLaunchItem" type="number" toggle />
