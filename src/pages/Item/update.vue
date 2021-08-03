@@ -19,7 +19,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
