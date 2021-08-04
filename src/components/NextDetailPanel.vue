@@ -165,7 +165,7 @@ export default {
         }
       })
 
-      if (this.editable || this.getDetail || this.detailButtons) {
+      if ((this.editable || this.getDetail || this.detailButtons) && !this.hideOperations) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')
