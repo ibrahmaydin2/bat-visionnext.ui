@@ -409,7 +409,7 @@ export default {
       let request = {
         RecordId: this.$store.state.BranchId
       }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get?v=2').then(response => {
         if (response && response.Model) {
           let branch = response.Model
           this.branchDistributionTypeId = branch.DistributionTypeId
