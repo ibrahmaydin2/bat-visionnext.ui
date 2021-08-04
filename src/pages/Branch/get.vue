@@ -45,7 +45,7 @@
               <div v-html="getFormatDataByType(rowData.TaxCustomerType, 'object', 'insert.branch.TaxCustomerTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'insert.branch.FinanceCode2')"></div>
               <div v-html="getFormatDataByType(rowData.MersisNumber, 'text', 'insert.branch.MersisNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.UseEDispatch, 'check', 'insert.branch.UseEDispatch')"></div>
+              <div v-html="getFormatDataByType(rowData.UseEDispatchType, 'object', 'insert.branch.UseEDispatch')"></div>
               <div v-html="getFormatDataByType(rowData.IsBlocked, 'check', 'insert.branch.IsBlocked')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.branch.UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.UseEArchive, 'check', 'insert.branch.UseEArchive')"></div>
