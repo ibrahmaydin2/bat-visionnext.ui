@@ -53,7 +53,7 @@
               <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectBranch($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" :get-lookup="true" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>

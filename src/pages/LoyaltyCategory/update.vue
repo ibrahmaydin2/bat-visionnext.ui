@@ -49,7 +49,7 @@
             <NextInput v-model="form.LoyaltyPoint" type="number"  :disabled="CalcType && CalcType.Code == 'AKS'" />
           </NextFormGroup>
           <NextFormGroup item-key="FieldAnalysisId" :error="$v.form.FieldAnalysisId">
-            <NextDropdown v-model="FieldAnalysis" label="Description1"   url="VisionNextFieldAnalysis/api/FieldAnalysis/SearchWithValidDate "  @input="selectAnalysis($event)"/>
+            <NextDropdown v-model="FieldAnalysis" label="Description1" :disabled="true" url="VisionNextFieldAnalysis/api/FieldAnalysis/SearchWithValidDate "  @input="selectAnalysis($event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="ByFrequency" :error="$v.form.ByFrequency">
             <NextCheckBox v-model="form.ByFrequency" type="number" :disabled="!(CalcType && CalcType.Code == 'SA') && !(CalcType && CalcType.Code == 'ANS')" toggle/>
