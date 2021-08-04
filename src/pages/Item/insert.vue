@@ -92,16 +92,16 @@
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
-              <NextCheckBox v-model="form.IsOrderAllowed" :disabled="true" type="number" toggle />
+              <NextCheckBox v-model="form.IsOrderAllowed" :disabled="true" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsSaleAllowed" :error="$v.form.IsSaleAllowed">
-              <NextCheckBox v-model="form.IsSaleAllowed" :disabled="true" type="number" toggle />
+              <NextCheckBox v-model="form.IsSaleAllowed" :disabled="true" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsBarterAllowed" :error="$v.form.IsBarterAllowed">
-              <NextCheckBox v-model="form.IsBarterAllowed" :disabled="true" type="number" toggle />
+              <NextCheckBox v-model="form.IsBarterAllowed" :disabled="true" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="UseSalesAnalysis" :error="$v.form.UseSalesAnalysis">
-              <NextCheckBox v-model="form.UseSalesAnalysis" :disabled="true" type="number" toggle />
+              <NextCheckBox v-model="form.UseSalesAnalysis" :disabled="true" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsLaunchItem" :error="$v.form.IsLaunchItem">
               <NextCheckBox v-model="form.IsLaunchItem" type="number" toggle />
@@ -322,8 +322,8 @@ export default {
         StatusId: null,
         ProducerCodeId: null,
         TypeId: null,
-        IsOrderAllowed: null,
-        IsSaleAllowed: null,
+        IsOrderAllowed: 0,
+        IsSaleAllowed: 0,
         ClassId: null,
         PackageTypeId: null,
         CategoryId: null,
@@ -338,8 +338,8 @@ export default {
         ColorId: null,
         Plant: null,
         SortOrder: null,
-        IsBarterAllowed: null,
-        UseSalesAnalysis: null,
+        IsBarterAllowed: 0,
+        UseSalesAnalysis: 0,
         IsLaunchItem: null,
         Vat: null,
         MaxDiscountRate: null,

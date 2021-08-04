@@ -39,7 +39,7 @@
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.discountPackage.campaigns')" >
-          <NextDetailPanel v-model="form.DiscountPackageDetails" :items="discountPackageDetailsItems" />
+          <NextDetailPanel :hideOperations="true" v-model="form.DiscountPackageDetails" :items="discountPackageDetailsItems" />
         </b-tab>
       </b-tabs>
     </b-col>

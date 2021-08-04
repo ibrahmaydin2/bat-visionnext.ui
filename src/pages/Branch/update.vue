@@ -213,7 +213,7 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.branchDistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
@@ -340,7 +340,8 @@ export default {
       category1: {},
       customerRegion5: {},
       backMarginGroup: {},
-      branchLocations: []
+      branchLocations: [],
+      branchDistributionTypeId: 0
     }
   },
   computed: {
@@ -408,10 +409,10 @@ export default {
       let request = {
         RecordId: this.$store.state.BranchId
       }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get?v=2').then(response => {
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
         if (response && response.Model) {
           let branch = response.Model
-          this.form.DistributionTypeId = branch.DistributionTypeId
+          this.branchDistributionTypeId = branch.DistributionTypeId
         }
       })
     },

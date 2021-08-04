@@ -110,6 +110,10 @@ export default {
     showEdit: {
       type: Boolean,
       default: true
+    },
+    hideOperations: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -142,7 +146,6 @@ export default {
           label: this.$t('insert.lineNumber')
         })
       }
-
       this.items.map(item => {
         if (!item.hideOnTable) {
           fields.push({
@@ -162,7 +165,7 @@ export default {
         }
       })
 
-      if (this.editable || this.getDetail || this.detailButtons) {
+      if ((this.editable || this.getDetail || this.detailButtons) && !this.hideOperations) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')
