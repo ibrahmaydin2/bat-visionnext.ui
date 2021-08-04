@@ -32,7 +32,7 @@
         <template #cell()="data">
           <span v-html="data.value"></span>
         </template>
-        <template #cell(operations)="data" v-if="!hideOperations">
+        <template #cell(operations)="data">
           <i v-if="showEdit && editable" @click="editItem(data.item)" class="fa fa-pencil-alt text-warning"></i>
           <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger ml-3"></i>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
