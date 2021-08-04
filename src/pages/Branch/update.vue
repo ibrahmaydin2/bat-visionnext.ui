@@ -358,7 +358,7 @@ export default {
       this.form = rowData
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
-      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatch)
+      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatchType)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)

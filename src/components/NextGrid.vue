@@ -664,7 +664,7 @@ export default {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
     filterDecimal (e, i) {
-      this.searchOnTable(e, {value: parseFloat(i)})
+      this.searchOnTable(e, parseFloat(i))
     },
     selectedValue (label, model, type) {
       if (model) {
@@ -978,7 +978,18 @@ export default {
       if (validCount < this.requiredFields.length) {
         return
       }
-      this.searchOnTable()
+      let sortOpt = {}
+      if (this.$route.query.sort) {
+        this.sort = this.$route.query.sort
+        this.sortField = this.$route.query.field
+        sortOpt = {
+          table: this.sortField,
+          sort: this.sort
+        }
+      } else {
+        sortOpt = null
+      }
+      this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
     },
     tableRows: function (e) {
       this.setRows()
