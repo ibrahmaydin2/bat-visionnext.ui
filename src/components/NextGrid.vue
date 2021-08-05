@@ -6,7 +6,7 @@
         <draggable tag="tr" :list="head" :disabled="disabledDraggable">
           <b-th
             v-for="header in head"
-            :key="header.dataField"
+            :key="header.dataField+header.columnType"
             :style="header.width ? 'width:' + header.width : ''"
             :class="
               header.align == null ?
@@ -107,9 +107,9 @@
 
               <b-form-datepicker
                 v-if="header.columnType === 'DateTime2'"
-                v-model="searchText"
+                v-model="header.defaultValue"
                 placeholder=""
-                @input="filterDate(header.dataField, searchText)"
+                @input="filterDate(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
               />
@@ -118,8 +118,8 @@
                 v-if="header.columnType === 'Time'"
                 v-mask="'##:##:##'"
                 placeholder="00:00:00"
-                v-model="searchText"
-                @keydown.enter="filterTime(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="filterTime(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
               />
