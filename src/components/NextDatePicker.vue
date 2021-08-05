@@ -34,7 +34,7 @@ export default {
     },
     value (newValue, oldValue) {
       if (newValue !== oldValue) {
-        if (!newValue.includes('Z')) {
+        if (newValue && !newValue.includes('Z')) {
           newValue = `${newValue}Z`
         }
         this.selectedValue = newValue

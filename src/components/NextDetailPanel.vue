@@ -110,6 +110,10 @@ export default {
     showEdit: {
       type: Boolean,
       default: true
+    },
+    hideOperations: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -142,7 +146,6 @@ export default {
           label: this.$t('insert.lineNumber')
         })
       }
-
       this.items.map(item => {
         if (!item.hideOnTable) {
           fields.push({
@@ -162,7 +165,7 @@ export default {
         }
       })
 
-      if (this.editable || this.getDetail || this.detailButtons) {
+      if ((this.editable || this.getDetail || this.detailButtons) && !this.hideOperations) {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations')
@@ -295,7 +298,6 @@ export default {
     },
     editItem (data) {
       this.form = data
-      debugger
       this.isUpdated = true
       this.selectedIndex = this.values.indexOf(data)
       this.$set(this.form, 'RecordId', data.RecordId)
@@ -454,7 +456,7 @@ export default {
       })
     },
     getObjectLabel (item, obj) {
-      let value = ''
+      let value = obj[item.modelProperty]
       if (item.objectKey && obj[item.objectKey]) {
         if (item.parentProperty && obj[item.objectKey][item.parentProperty] && obj[item.objectKey][item.parentProperty].Label) {
           value = obj[item.objectKey][item.parentProperty].Label

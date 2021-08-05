@@ -66,6 +66,7 @@ import CreditBudgetExcelModal from './components/Actions/CreditBudgetExcelModal'
 import UpdateCreditBudgetModal from './components/Actions/UpdateCreditBudgetModal'
 import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkApproveModal'
 import BudgetMasterApproveModal from './components/Actions/BudgetMasterApproveModal'
+import AssignEmployeeModal from './components/Actions/AssignEmployeeModal'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -134,6 +135,7 @@ Vue.component('CreditBudgetExcelModal', CreditBudgetExcelModal)
 Vue.component('UpdateCreditBudgetModal', UpdateCreditBudgetModal)
 Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)
 Vue.component('BudgetMasterApproveModal', BudgetMasterApproveModal)
+Vue.component('AssignEmployeeModal', AssignEmployeeModal)
 
 Vue.prototype.$api = new ApiManager()
 

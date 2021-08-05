@@ -18,11 +18,11 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -41,7 +41,7 @@
               <NextCheckBox v-model="form.IsAssetMovement" type="number" :disabled="insertReadonly.IsAssetMovement" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="ServiceStateId" :error="$v.form.ServiceStateId" md="4" lg="4">
-              <NextDropdown v-model="serviceState" :all-source="serviceStates" url="VisionNextAsset/api/ServiceState/Search" @input="selectedSearchType('ServiceStateId', $event)" :disabled="insertReadonly.ServiceStateId" />
+              <NextDropdown v-model="serviceState" v-on:all-source="setServiceStates" url="VisionNextAsset/api/ServiceState/Search" @input="selectedSearchType('ServiceStateId', $event)" :disabled="insertReadonly.ServiceStateId" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -56,9 +56,6 @@
             <NextFormGroup item-key="LocationId" :error="$v.form.LocationId" md="4" lg="4">
               <NextDropdown url="VisionNextCustomer/api/Customer/Search" @input="selectedSearchType('LocationId', $event)" :disabled="insertReadonly.LocationId" :searchable="true" />
             </NextFormGroup>
-            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" md="4" lg="4">
-              <NextDropdown url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" :disabled="insertReadonly.EmployeeId" :searchable="true" />
-            </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
                 <NextFormGroup item-key="ResponseDate" :error="$v.form.ResponseDate" md="6" lg="6">
@@ -70,16 +67,13 @@
               </b-row>
             </b-col>
             <NextFormGroup item-key="AssetTypeId" :error="$v.form.AssetTypeId" md="4" lg="4">
-              <NextDropdown lookup-key="ASSET_TYPE" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" />
+              <NextDropdown url="VisionNextAsset/api/AssetType/Search" @input="selectAssetType" :disabled="insertReadonly.AssetTypeId" :get-lookup="true" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetId" :error="$v.form.AssetId" md="4" lg="4">
               <NextDropdown v-model="asset" :source="assets" @input="selectedSearchType('AssetId', $event)" :disabled="!this.form.AssetTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="ServiceTypeId" :error="$v.form.ServiceTypeId" md="4" lg="4">
               <NextDropdown url="VisionNextAsset/api/ServiceType/Search" @input="selectedSearchType('ServiceTypeId', $event)" :disabled="insertReadonly.ServiceTypeId" />
-            </NextFormGroup>
-            <NextFormGroup item-key="ItemSelectionMethodId" :error="$v.form.ItemSelectionMethodId" md="4" lg="4">
-              <NextDropdown lookup-key="ITEM_SELECTION_METHOD" @input="selectedType('ItemSelectionMethodId', $event)" :disabled="insertReadonly.ItemSelectionMethodId" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -141,7 +135,6 @@ export default {
         AssetTypeId: null,
         AssetId: null,
         ServiceTypeId: null,
-        ItemSelectionMethodId: null,
         EstimatedResponseDate: null,
         EstimatedResponseTime: null,
         CompletionDate: null,
@@ -161,6 +154,7 @@ export default {
     }
   },
   mounted () {
+    this.createManualCode('ServiceNumber')
     let customerId = localStorage.getItem('CustomerId')
     this.mainCustomerId = customerId ? parseFloat(customerId) : 0
     let currentDate = new Date()
@@ -194,7 +188,7 @@ export default {
       this.assets = []
 
       if (value) {
-        this.form.AssetTypeId = value.DecimalValue
+        this.form.AssetTypeId = value.RecordId
 
         let request = {
           andConditionModel: {
@@ -209,6 +203,14 @@ export default {
       } else {
         this.form.AssetTypeId = null
       }
+    },
+    setServiceStates (values) {
+      this.serviceStates = values
+      if (values && !this.serviceState) {
+        let filteredArr = values.filter(i => i.RecordId === 5)
+        this.serviceState = filteredArr.length > 0 ? filteredArr[0] : null
+        this.selectedSearchType('ServiceStateId', this.serviceState)
+      }
     }
   },
   validations () {
@@ -218,17 +220,6 @@ export default {
     }
     return {
       form: this.insertRules
-    }
-  },
-  watch: {
-    serviceStates: {
-      handler (value) {
-        if (value && !this.serviceState) {
-          this.serviceState = value.filter(i => i.RecordId === 5)
-        }
-      },
-      deep: true,
-      immediate: true
     }
   }
 }

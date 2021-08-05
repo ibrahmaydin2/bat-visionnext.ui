@@ -54,7 +54,7 @@
               <b-card class="m-3 asc__showPage-card">
                 <b-table
                   :fields="loyaltyCategoryFields"
-                  :items="this.rowData.LoyaltyCategoryCrits"
+                  :items="rowData.LoyaltyCategoryCrits"
                   bordered responsive >
                   <template #cell(operations)="row">
                     <div class="text-center">
@@ -63,11 +63,9 @@
                       </b-button>
                     </div>
                   </template>
-                  <template #row-details="{}">
-                    <div v-html="getFormatDataByType(rowData.Question, 'object', 'insert.loyaltyCategory.QuestionId')"></div>
-                    <div v-html="getFormatDataByType(rowData.Answer, 'object', 'insert.loyaltyCategory.Answer')"></div>
-                    <div v-html="getFormatDataByType(rowData.AnswerStart, 'text', 'insert.loyaltyCategory.AnswerStart')"></div>
-                    <div v-html="getFormatDataByType(rowData.AnswerEnd, 'text', 'insert.loyaltyCategory.AnswerEnd')"></div>
+                  <template #row-details="{item}">
+                    <b-table :items="item.LoyaltyCategoryCritDetails" :fields="loyaltyQuestionFields.filter(f => f.key !== 'operations')">
+                    </b-table>
                   </template>
                 </b-table>
               </b-card>

@@ -241,6 +241,7 @@
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
     <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
     <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -354,7 +355,8 @@ export default {
       firstSearchItem: null,
       showUpdateCreditBudgetModal: false,
       disabledAutoComplete: false,
-      showBudgetMasterApproveModal: false
+      showBudgetMasterApproveModal: false,
+      showAssignEmployeeModal: false
     }
   },
   mounted () {
@@ -424,6 +426,7 @@ export default {
       this.showMultipleLoadingPlanModal = false
       this.showUpdateCreditBudgetModal = false
       this.showBudgetMasterApproveModal = false
+      this.showAssignEmployeeModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -516,6 +519,16 @@ export default {
         this.showBudgetMasterApproveModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'budget-master-approve-modal')
+        })
+      } else if (action.Action === 'AssignEmployee') {
+        this.showAssignEmployeeModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'assign-employee-modal')
+        })
+      } else if (action.Action === 'BranchCustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
         })
       } else {
         this.showConfirmModal = true
@@ -651,7 +664,7 @@ export default {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
     filterDecimal (e, i) {
-      this.searchOnTable(e, {value: parseFloat(i)})
+      this.searchOnTable(e, parseFloat(i))
     },
     selectedValue (label, model, type) {
       if (model) {
@@ -965,7 +978,18 @@ export default {
       if (validCount < this.requiredFields.length) {
         return
       }
-      this.searchOnTable()
+      let sortOpt = {}
+      if (this.$route.query.sort) {
+        this.sort = this.$route.query.sort
+        this.sortField = this.$route.query.field
+        sortOpt = {
+          table: this.sortField,
+          sort: this.sort
+        }
+      } else {
+        sortOpt = null
+      }
+      this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
     },
     tableRows: function (e) {
       this.setRows()

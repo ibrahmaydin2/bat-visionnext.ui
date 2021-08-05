@@ -157,16 +157,13 @@ export default {
     changeLang () {
       switch (this.$i18n.locale) {
         case 'en':
-          // this.$i18n.locale = 'tr'
-          // this.toggleLang = 'English'
           this.setLang('tr', 'English')
           break
         case 'tr':
-          // this.$i18n.locale = 'en'
-          // this.toggleLang = 'Türkçe'
           this.setLang('en', 'Türkçe')
           break
       }
+      location.reload()
     },
     openModal (title, content) {
       this.modalContent = null
@@ -178,6 +175,7 @@ export default {
       this.$i18n.locale = lang
       this.toggleLang = toggleLang
       localStorage.setItem('selectedLang', lang)
+      localStorage.setItem('LanguageId', !lang || lang === 'tr' ? 1 : 2)
     }
   },
   watch: {

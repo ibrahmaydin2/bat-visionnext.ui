@@ -45,7 +45,7 @@
               <div v-html="getFormatDataByType(rowData.TaxCustomerType, 'object', 'insert.branch.TaxCustomerTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'insert.branch.FinanceCode2')"></div>
               <div v-html="getFormatDataByType(rowData.MersisNumber, 'text', 'insert.branch.MersisNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.UseEDispatch, 'object', 'insert.branch.UseEDispatch')"></div>
+              <div v-html="getFormatDataByType(rowData.UseEDispatchType, 'object', 'insert.branch.UseEDispatch')"></div>
               <div v-html="getFormatDataByType(rowData.IsBlocked, 'check', 'insert.branch.IsBlocked')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.branch.UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.UseEArchive, 'check', 'insert.branch.UseEArchive')"></div>
@@ -69,7 +69,7 @@
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DefaultPaymentType, 'object', 'insert.branch.DefaultPaymentTypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.branch.PaymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentPeriodClass, 'object', 'insert.branch.PaymentPeriod')"></div>
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.branch.PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.CreditLimit, 'text', 'insert.branch.CreditLimit')"></div>
               <div v-html="getFormatDataByType(rowData.RiskLimit, 'text', 'insert.branch.RiskLimit')"></div>
@@ -83,10 +83,10 @@
               <div v-html="getFormatDataByType(rowData.CreditAccountRemainder, 'text', 'insert.branch.CreditAccountRemainder')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountPercent1, 'text', 'insert.branch.DiscountPercent1')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountPercent2, 'text', 'insert.branch.DiscountPercent2')"></div>
-              <div v-html="getFormatDataByType(rowData.TciBreak1, 'object', 'insert.branch.TciBreak1Id')"></div>
-              <div v-html="getFormatDataByType(rowData.TciBreak2, 'object', 'insert.branch.TciBreak2Id')"></div>
+              <div v-html="getFormatDataByType(rowData.TCIBreak1, 'object', 'insert.branch.TciBreak1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.TCIBreak2, 'object', 'insert.branch.TciBreak2Id')"></div>
               <div v-html="getFormatDataByType(rowData.StatementDay, 'object', 'insert.branch.StatementDay')"></div>
-              <div v-html="getFormatDataByType(rowData.SapCustomer, 'text', 'insert.branch.SapCustomerId')"></div>
+              <div v-html="getFormatDataByType(rowData.SapCustomerId, 'text', 'insert.branch.SapCustomerId')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.branch.DeliveryDayParam')"></div>
               <div v-html="getFormatDataByType(rowData.AllowOverLimit, 'check', 'insert.branch.AllowOverLimit')"></div>
               <div v-html="getFormatDataByType(rowData.IsDirectDebit, 'check', 'insert.branch.IsDirectDebit')"></div>
@@ -124,15 +124,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <b-row>
-            <b-col>
-              <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscounts" :items="customerItemDiscountItems" />
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <b-row>
             <b-col>
@@ -156,7 +147,6 @@ export default {
   data () {
     return {
       customerItemDiscounts: [],
-      customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,

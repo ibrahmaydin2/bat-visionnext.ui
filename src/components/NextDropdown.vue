@@ -108,6 +108,8 @@ export default {
       handler (newValue) {
         if (newValue && newValue.length > 0) {
           this.values = newValue
+        } else {
+          this.values = []
         }
       },
       deep: true,
@@ -167,6 +169,8 @@ export default {
             this.values = response.ListModel.BaseModels
           } else if (response.Values) {
             this.values = response.Values
+          } else if (response.Model) {
+            this.values = response.Model
           } else if (response.length > 0) {
             this.values = response
           }

@@ -258,7 +258,11 @@ export default {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       this.employee = userModel.Name + ' ' + userModel.Surname
-      this.form.RepresentativeIds = [userModel.UserId]
+      if (this.modalAction.Action === 'CustomConvert') {
+        this.form.RepresentativeIds = [userModel.UserId]
+      } else {
+        this.form.RepresentativeIds = null
+      }
     })
   },
   methods: {
@@ -273,10 +277,10 @@ export default {
       if (model) {
         this.documentType = model.Description
         this.form[label] = model.RecordId
-        if (model.RecordId === 3) {
-          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/Search'
+        if (model.RecordId === 3 || model.CustomerIds === 3) {
+          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/ConvertToSearch'
         } else {
-          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/Search'
+          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/ConvertToSearch'
         }
       } else {
         this.form[label] = null
@@ -308,7 +312,14 @@ export default {
           duration: '3000'
         })
       } else {
-        this.form.CustomerIds = this.modalItem ? [this.modalItem.RecordId] : null
+        let customerId = 0
+        if (this.modalAction.Action === 'BranchCustomConvert') {
+          customerId = this.modalItem.CustomerId
+        }
+        if (this.modalAction.Action === 'CustomConvert') {
+          customerId = this.modalItem.RecordId
+        }
+        this.form.CustomerIds = customerId > 0 ? [customerId] : null
         let request = {
           'AndConditionModel': {
             ...this.form

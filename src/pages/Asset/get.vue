@@ -38,6 +38,19 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab  :title="$t('get.asset.properties')" v-if="rowData.AssetPropertyValues && rowData.AssetPropertyValues.length > 0">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <b-table responsive :items="rowData.AssetPropertyValues" :fields="assetPropertyValueFields">
+                  <template #cell(Description1)="{item}">
+                    {{item.Property ? item.Property.Label : item.Description1}}
+                  </template>
+                </b-table>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -49,7 +62,18 @@ export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      assetPropertyValueFields: [
+        {
+          key: 'Description1',
+          label: this.$t('get.asset.propertyName')
+        },
+        {
+          key: 'Value',
+          label: this.$t('get.asset.propertyValue')
+        }
+      ]
+    }
   },
   mounted () {
     this.getData()

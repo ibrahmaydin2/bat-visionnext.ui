@@ -14,8 +14,8 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
             <span><i class="far fa-circle" />  <b>{{$t('get.description1')}}:</b> {{ rowData.Description1 }}</span>
+             <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>

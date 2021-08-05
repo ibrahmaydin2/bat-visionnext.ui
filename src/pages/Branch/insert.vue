@@ -162,11 +162,11 @@
             <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
+              <NextDropdown :disabled="insertReadonly.TciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
-              <NextDropdown :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
+            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.TciBreak2Id">
+              <NextDropdown :disabled="insertReadonly.TciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
@@ -213,11 +213,8 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerItemDiscountItems"/>
         </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
@@ -317,7 +314,6 @@ export default {
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
-      customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems
 
     }
@@ -326,6 +322,7 @@ export default {
     ...mapState([''])
   },
   mounted () {
+    this.getCurrentBranch()
     this.createManualCode()
   },
   methods: {
@@ -341,6 +338,17 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.form.DistributionTypeId = branch.DistributionTypeId
+        }
+      })
     }
   },
   validations () {

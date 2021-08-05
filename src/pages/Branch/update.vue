@@ -162,11 +162,11 @@
             <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
               <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.tciBreak1Id">
-              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.tciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak1Id', $event)"/>
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
+              <NextDropdown v-model="tciBreak1" :disabled="insertReadonly.TciBreak1Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.tciBreak2Id">
-              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.tciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('tciBreak2Id', $event)" />
+            <NextFormGroup item-key="TciBreak2Id" :error="$v.form.TciBreak2Id">
+              <NextDropdown v-model="tciBreak2" :disabled="insertReadonly.TciBreak2Id" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown v-model="statementday" :disabled="insertReadonly.statementDay"  url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
@@ -213,11 +213,8 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.branchDistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.branch.ItemDiscountCrts')">
-          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerItemDiscountItems"/>
         </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
@@ -319,7 +316,6 @@ export default {
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
-      customerItemDiscountItems: detailData.customerItemDiscountItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
       customerItemDiscounts: [],
       distributionType: {},
@@ -344,7 +340,8 @@ export default {
       category1: {},
       customerRegion5: {},
       backMarginGroup: {},
-      branchLocations: []
+      branchLocations: [],
+      branchDistributionTypeId: 0
     }
   },
   computed: {
@@ -353,6 +350,7 @@ export default {
   mounted () {
     this.getData().then(() => this.setData())
     this.getBranchLocations()
+    this.getCurrentBranch()
   },
   methods: {
     setData () {
@@ -360,7 +358,7 @@ export default {
       this.form = rowData
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
-      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatch)
+      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatchType)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
@@ -373,8 +371,8 @@ export default {
       this.discountGroup2 = rowData.DiscountGroup2
       this.discountGroup9 = rowData.DiscountGroup9
       this.priceListCategory = rowData.PriceListCategory
-      this.tciBreak1 = rowData.TciBreak1
-      this.tciBreak2 = rowData.TciBreak2
+      this.tciBreak1 = rowData.TCIBreak1
+      this.tciBreak2 = rowData.TCIBreak2
       this.category3 = rowData.Category3
       this.category2 = rowData.Category2
       this.category1 = rowData.Category1
@@ -406,6 +404,17 @@ export default {
         this.form.BranchLocations = this.branchLocations
         this.updateData()
       }
+    },
+    getCurrentBranch () {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get?v=2').then(response => {
+        if (response && response.Model) {
+          let branch = response.Model
+          this.branchDistributionTypeId = branch.DistributionTypeId
+        }
+      })
     },
     getBranchLocations () {
       let request = {
