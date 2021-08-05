@@ -6,7 +6,7 @@
         <draggable tag="tr" :list="head" :disabled="disabledDraggable">
           <b-th
             v-for="header in head"
-            :key="header.dataField"
+            :key="header.dataField+header.columnType"
             :style="header.width ? 'width:' + header.width : ''"
             :class="
               header.align == null ?
