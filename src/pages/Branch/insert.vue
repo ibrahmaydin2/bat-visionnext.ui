@@ -53,7 +53,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="DistributionTypeId" :error="$v.form.DistributionTypeId">
-              <NextDropdown :disabled="insertReadonly.DistributionTypeId" lookup-key="BRANCH_DISTRIBUTION_TYPE"  @input="selectedType('DistributionTypeId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DistributionTypeId" :get-lookup="true" lookup-key="BRANCH_DISTRIBUTION_TYPE"  @input="selectedType('DistributionTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
@@ -130,10 +130,16 @@
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
-              <NextDropdown url="VisionNextCommonApi/api/PaymentType/Search"  @input="selectedSearchType('DefaultPaymentTypeId', $event)" :disabled="insertReadonly.DefaultPaymentTypeId" />
+              <NextDropdown
+                @input="selectedSearchType('DefaultPaymentTypeId', $event)"
+                :disabled="insertReadonly.DefaultPaymentTypeId"
+                v-model="DefaultPaymentType"
+                :source="types"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown :disabled="!(DefaultPaymentType && DefaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
               <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
@@ -213,7 +219,7 @@
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.form.DistributionTypeId === 5">
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="branchDistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
@@ -310,20 +316,26 @@ export default {
         TciBreak2Id: null,
         SapCustomerId: null,
         UseEDispatch: 0
-
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
-      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems
+      customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
+      DefaultPaymentType: null,
+      branchDistributionTypeId: 0,
+      allTypes: []
 
     }
   },
   computed: {
-    ...mapState([''])
+    ...mapState(['']),
+    types: function () {
+      return this.branchDistributionTypeId === 5 ? this.allTypes.filter(l => l.Code === 'BC' || l.Code === 'KK' || l.Code === 'PES') : this.allTypes
+    }
   },
   mounted () {
     this.getCurrentBranch()
     this.createManualCode()
+    this.getPaymentType()
   },
   methods: {
     save () {
@@ -339,6 +351,11 @@ export default {
         this.createData()
       }
     },
+    getPaymentType () {
+      this.$api.postByUrl({}, 'VisionNextCommonApi/api/PaymentType/Search').then((response) => {
+        this.allTypes = response.ListModel.BaseModels
+      })
+    },
     getCurrentBranch () {
       let request = {
         RecordId: this.$store.state.BranchId
@@ -346,7 +363,7 @@ export default {
       this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
         if (response && response.Model) {
           let branch = response.Model
-          this.form.DistributionTypeId = branch.DistributionTypeId
+          this.branchDistributionTypeId = branch.DistributionTypeId
         }
       })
     }
