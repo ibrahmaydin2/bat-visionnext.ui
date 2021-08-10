@@ -528,7 +528,7 @@ export const store = new Vuex.Store({
         'companyId': state.CompanyId,
         'pagerecordCount': query.count,
         'page': query.page,
-        'FormId': state.tableOperations.Id,
+        'UiFormId': state.tableOperations.Id,
         OrderByColumns
       }
       commit('setLastGridModel', {AndConditionModel: AndConditionModel, OrderByColumns: OrderByColumns})
