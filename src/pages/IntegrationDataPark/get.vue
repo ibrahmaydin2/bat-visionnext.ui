@@ -26,21 +26,37 @@
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.CompanyName, 'text', 'insert.integrationDataPark.CompanyName')"></div>
               <div v-html="getFormatDataByType(rowData.CreatedDateTime, 'date', 'insert.integrationDataPark.CreatedDateTime')"></div>
-              <div v-html="getFormatDataByType(rowData.FirstProcessedDateTime, 'date', 'insert.integrationDataPark.FirstProcessedDateTime')"></div>
-              <div v-html="getFormatDataByType(rowData.LastProcessedDateTime, 'date', 'insert.integrationDataPark.LastProcessedDateTime')"></div>
               <div v-html="getFormatDataByType(rowData.InterfaceName, 'text', 'insert.integrationDataPark.InterfaceName')"></div>
-              <div v-html="getFormatDataByType(rowData.IntegrationState, 'object', 'insert.integrationDataPark.IntegrationState')"></div>
               <div v-html="getFormatDataByType(rowData.InterfaceList, 'object', 'insert.integrationDataPark.InterfaceList')"></div>
               <div v-html="getFormatDataByType(rowData.IdocNumber, 'text', 'insert.integrationDataPark.IdocNumber')"></div>
-            </b-card>
-            <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.CreatedUser, 'text', 'insert.integrationDataPark.CreatedUser')"></div>
               <div v-html="getFormatDataByType(rowData.Count, 'text', 'insert.integrationDataPark.Count')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.ClosureDescription, 'text', 'insert.integrationDataPark.ClosureDescription')"></div>
               <div v-html="getFormatDataByType(rowData.RecordTypeName, 'text', 'insert.integrationDataPark.RecordTypeName')"></div>
               <div v-html="getFormatDataByType(rowData.RecordTypeValue, 'text', 'insert.integrationDataPark.RecordTypeValue')"></div>
               <div v-html="getFormatDataByType(rowData.ClosedBy, 'object', 'insert.integrationDataPark.ClosedBy')"></div>
               <div v-html="getFormatDataByType(rowData.ErrorDescription, 'text', 'insert.integrationDataPark.ErrorDescription')"></div>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.integrationDataPark.details')">
+          <b-row class="p-4">
+             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.FirstProcessedDateTime, 'date', 'insert.integrationDataPark.FirstProcessedDateTime')"></div>
+              <div v-html="getFormatDataByType(rowData.LastProcessedDateTime, 'date', 'insert.integrationDataPark.LastProcessedDateTime')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.IntegrationState, 'object', 'insert.integrationDataPark.IntegrationState')"></div>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.integrationDataPark.Xml')">
+          <b-row class="p-4">
+             <b-card class="col-md-6 col-12 asc__showPage-card">
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
             </b-card>
           </b-row>
         </b-tab>
