@@ -127,7 +127,7 @@
                    </b-col>
                  </b-row>
                  <b-row>
-                    <b-table :items="form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails"  :fields="loyaltyQuestionFields">
+                    <b-table :items="form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails ? form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.filter(i => i.RecordState !== 4) : []"  :fields="loyaltyQuestionFields">
                       <template #cell(operations)="row">
                         <div class="text-center">
                           <b-button size="sm" @click="removeLoyaltyQuestion(row.item, index)" class="mr-2" variant="danger">
@@ -192,7 +192,6 @@ import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 import { required, requiredIf } from 'vuelidate/lib/validators'
-import { items } from '../../components/nav'
 export default {
   mixins: [updateMixin],
   data () {
@@ -396,10 +395,8 @@ export default {
       }
       setTimeout(() => {
         this.form.LoyaltyCategoryCrits = list
-        if (items !== null) {
-          list[index].LoyaltyCategoryCritDetails = items
-        }
       }, 1)
+      this.$forceUpdate()
     },
     setDatePlanType () {
       if ((!this.form.LoyaltyCategoryCrits || this.form.LoyaltyCategoryCrits.filter(i => i.RecordState !== 4).length === 0) && this.form.ApplicationTypeId === 654) {

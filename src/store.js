@@ -528,6 +528,7 @@ export const store = new Vuex.Store({
         'companyId': state.CompanyId,
         'pagerecordCount': query.count,
         'page': query.page,
+        'UiFormId': state.tableOperations.Id,
         OrderByColumns
       }
       commit('setLastGridModel', {AndConditionModel: AndConditionModel, OrderByColumns: OrderByColumns})
@@ -620,7 +621,7 @@ export const store = new Vuex.Store({
       let types = query.type.split(',')
       let filteredList = []
       types.forEach(item => {
-        if (!state.lookup[item]) {
+        if (!state.lookup[item] || state.lookup[item].length === 0) {
           filteredList.push(item)
         }
       })

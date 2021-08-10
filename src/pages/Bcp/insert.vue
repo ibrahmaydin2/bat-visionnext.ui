@@ -60,7 +60,7 @@
         <b-tab :title="$t('insert.bcp.items')">
           <NextDetailPanel v-model="form.BCPDetails" :items="bcpDetailsItems"/>
         </b-tab>
-        <b-tab lazy :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null && BranchCriteria && BranchCriteria.Code !== null">
+        <b-tab lazy :title="$t('insert.bcp.branchs')" v-if="CustomerRegion3 && CustomerRegion3.Code !== null && BranchCriteria && BranchCriteria.Code == 'SL'">
           <NextDetailPanel v-model="form.BCPBranchs" :items="bcpBranchsItems"/>
         </b-tab>
       </b-tabs>
