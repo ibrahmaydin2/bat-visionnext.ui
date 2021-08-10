@@ -706,7 +706,7 @@ export default {
       })
     },
     getResultValue (result) {
-      return result.Description1
+      return this.selectedHeader.columnType === 'CodeValue' ? result.Code : result.Description1
     },
     handleSubmit (label, model) {
       if (model) {
