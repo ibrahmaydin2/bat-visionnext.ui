@@ -1335,7 +1335,7 @@
       "InterfaceName": "Interface Adı",
       "StatusId": "Durum",
       "dataPark": "Entegrasyon Yönetimi",
-      "IntegrationState": "Entegrasyon Durumu",
+      "IntegrationState": "İşlem Durumu",
       "InterfaceList": "Arayüz Kaldırma",
       "CreatedUser": "Oluşturan Kullanıcı",
       "Count": "Log Sayısı",
@@ -1344,7 +1344,9 @@
       "RecordTypeValue": "Kayıt Değeri",
       "ClosedBy": "Kapatan Personel",
       "ErrorDescription": "Hata Açıklaması",
-      "IdocNumber": "Idoc No"
+      "IdocNumber": "Idoc No",
+      "details": "İşlem Detayları",
+      "Xml": "XML"
     },
     "AnalysisQuestions": {
       "QuestionOptions": "Soru Seçenekleri",
