@@ -7,7 +7,7 @@
           <b-th
             v-for="header in head"
             :key="header.dataField+header.columnType"
-            :style="header.width ? 'width:' + header.width : ''"
+            :style="header.width ? 'width: ' + header.width : ''"
             :class="
               header.align == null ?
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-left'
@@ -25,7 +25,7 @@
                 <i :class="sort === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
               </b-button>
             </div>
-            <div class="asc__nextgrid-table-header-filter">
+            <div class="asc__nextgrid-table-header-filter" :style="header.width ? 'width: ' + header.width : ''">
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
                   <autocomplete
