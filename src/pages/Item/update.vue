@@ -302,6 +302,27 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.item.SapPrices')">
+          <b-row>
+            <b-table
+              id="sap-prices"
+              :fields="sapPriceFields"
+              :items="sapPrices"
+              bordered
+              small
+              responsive
+              :current-page="currentPage"
+              :per-page="10">
+            </b-table>
+            <b-pagination
+              v-if="sapPrices.length > 0"
+              :total-rows="sapPrices.length"
+              v-model="currentPage"
+              :per-page="10"
+              aria-controls="sap-prices"
+            ></b-pagination>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -434,7 +455,47 @@ export default {
       Category7: {},
       Category8: {},
       Category9: {},
-      Category10: {}
+      Category10: {},
+      currentPage: 1,
+      sapPrices: [],
+      sapPriceFields: [
+        {
+          key: 'Category2',
+          label: this.$t('insert.item.CustomerType'),
+          formatter: (value, key, obj) => {
+            return obj.Category2 ? obj.Category2.Label : ''
+          }
+        },
+        {
+          key: 'Unit',
+          label: this.$t('insert.item.Unit'),
+          formatter: (value, key, obj) => {
+            return obj.Unit ? obj.Unit.Label : ''
+          }
+        },
+        {
+          key: 'Price',
+          label: this.$t('insert.item.SapPrice')
+        },
+        {
+          key: 'StartDate',
+          label: this.$t('insert.item.StartDate'),
+          formatter: (value, key, obj) => {
+            return this.dateConvertFromTimezone(value)
+          }
+        },
+        {
+          key: 'EndDate',
+          label: this.$t('insert.item.EndDate'),
+          formatter: (value, key, obj) => {
+            return this.dateConvertFromTimezone(value)
+          }
+        },
+        {
+          key: 'Condition',
+          label: this.$t('insert.item.Condition')
+        }
+      ]
     }
   },
   mounted () {
@@ -443,6 +504,7 @@ export default {
   methods: {
     setData () {
       this.form = this.rowData
+      this.getSapPrices()
       if (this.form.ItemCustomers) {
         this.form.ItemCustomers.map(item => {
           item.CustomerLabel = item.Customer ? item.Customer.Label : ''
@@ -556,6 +618,18 @@ export default {
       } else {
         this.updateData()
       }
+    },
+    getSapPrices () {
+      let request = {
+        andConditionModel: {
+          ItemIds: [this.form.RecordId]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextItem/api/ItemSapPrice/Search').then((response) => {
+        if (response && response.ListModel) {
+          this.sapPrices = response.ListModel.BaseModels
+        }
+      })
     }
   },
   validations () {

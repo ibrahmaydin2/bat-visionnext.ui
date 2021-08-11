@@ -978,18 +978,22 @@ export default {
       if (validCount < this.requiredFields.length) {
         return
       }
-      let sortOpt = {}
-      if (this.$route.query.sort) {
-        this.sort = this.$route.query.sort
-        this.sortField = this.$route.query.field
-        sortOpt = {
-          table: this.sortField,
-          sort: this.sort
+      if (this.$route.query.code && this.$route.query.code.length > 0) {
+        let sortOpt = {}
+        if (this.$route.query.sort) {
+          this.sort = this.$route.query.sort
+          this.sortField = this.$route.query.field
+          sortOpt = {
+            table: this.sortField,
+            sort: this.sort
+          }
+        } else {
+          sortOpt = null
         }
+        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
       } else {
-        sortOpt = null
+        this.searchOnTable()
       }
-      this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
     },
     tableRows: function (e) {
       this.setRows()
