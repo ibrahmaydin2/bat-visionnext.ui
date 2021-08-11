@@ -158,6 +158,31 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.item.SapPrices')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table
+                  id="sap-prices"
+                  :fields="sapPriceFields"
+                  :items="sapPrices"
+                  bordered
+                  small
+                  responsive
+                  :current-page="currentPage"
+                  :per-page="10">
+                </b-table>
+                <b-pagination
+                  v-if="sapPrices.length > 0"
+                  :total-rows="sapPrices.length"
+                  v-model="currentPage"
+                  :per-page="10"
+                  aria-controls="sap-prices"
+                ></b-pagination>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -170,6 +195,46 @@ export default {
   mixins: [mixin],
   data () {
     return {
+      currentPage: 1,
+      sapPrices: [],
+      sapPriceFields: [
+        {
+          key: 'Category2',
+          label: this.$t('insert.item.CustomerType'),
+          formatter: (value, key, obj) => {
+            return obj.Category2 ? obj.Category2.Label : ''
+          }
+        },
+        {
+          key: 'Unit',
+          label: this.$t('insert.item.Unit'),
+          formatter: (value, key, obj) => {
+            return obj.Unit ? obj.Unit.Label : ''
+          }
+        },
+        {
+          key: 'Price',
+          label: this.$t('insert.item.SapPrice')
+        },
+        {
+          key: 'StartDate',
+          label: this.$t('insert.item.StartDate'),
+          formatter: (value, key, obj) => {
+            return this.dateConvertFromTimezone(value)
+          }
+        },
+        {
+          key: 'EndDate',
+          label: this.$t('insert.item.EndDate'),
+          formatter: (value, key, obj) => {
+            return this.dateConvertFromTimezone(value)
+          }
+        },
+        {
+          key: 'Condition',
+          label: this.$t('insert.item.Condition')
+        }
+      ]
     }
   },
   mounted () {
@@ -184,6 +249,19 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextItem/api/Item', record: this.$route.params.url})
+      this.getSapPrices()
+    },
+    getSapPrices () {
+      let request = {
+        andConditionModel: {
+          ItemIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextItem/api/ItemSapPrice/Search').then((response) => {
+        if (response && response.ListModel) {
+          this.sapPrices = response.ListModel.BaseModels
+        }
+      })
     }
   }
 }
