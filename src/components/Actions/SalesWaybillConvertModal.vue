@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="salesWaybillConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="salesWaybillConvertModal" :title="modalAction.Title" @hide="hideModal" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
@@ -263,6 +263,12 @@ export default {
           })
         }
       })
+    },
+    hideModal () {
+      this.form = {}
+      this.warehouse = null
+      this.invoiceType = null
+      this.$v.form.$reset()
     }
   },
   watch: {

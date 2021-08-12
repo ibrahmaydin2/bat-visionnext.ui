@@ -54,10 +54,7 @@
         </b-tab>
         <b-tab :title="$t('insert.integrationDataPark.Xml')">
           <b-row class="p-4">
-             <b-card class="col-md-6 col-12 asc__showPage-card">
-            </b-card>
-            <b-card class="col-md-6 col-12 asc__showPage-card">
-            </b-card>
+              <div class="xml-schema"><br><p>{{ rowData.XMLString }}</p></div>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -93,3 +90,12 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+  .xml-schema,
+    background-color: #e4e4e4
+    color: gray
+    margin-top: -10px
+    border-radius: 0px
+    height: 500px
+    text-align: left
+</style>

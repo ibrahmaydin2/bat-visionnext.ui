@@ -1082,7 +1082,14 @@
       "ItemCustomersDesc": "Ürün Açıklaması",
       "ItemCustomersCode": "Ürün Kodu",
       "ItemBarcodesBarcode": "Barkod",
-      "ItemBarcodesUnitId": "Birim Tanımları"
+      "ItemBarcodesUnitId": "Birim Tanımları",
+      "SapPrices": "Sap Fiyatları",
+      "CustomerType": "Müşteri Tipi",
+      "Unit": "Birim",
+      "SapPrice": "SAP Fiyatı",
+      "StartDate": "Başlangıç Tarihi",
+      "EndDate": "Bitiş Tarih",
+      "Condition": "Koşul"
     },
     "branch": {
       "Code": "Kodu",

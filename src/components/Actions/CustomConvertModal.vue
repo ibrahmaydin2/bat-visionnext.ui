@@ -376,15 +376,15 @@ export default {
         return
       }
       this.totalCount = this.selected.length
-      await this.selected.map((item, i) => {
+      this.selected.map((item, i) => {
         this.documents[this.documents.indexOf(item)].Status = ''
-        this.$api.postByUrl({recordId: item.RecordId}, 'VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice').then((response) => {
+        this.$api.postByUrl({recordId: item.RecordId}, `VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice?v=${i}`).then((response) => {
           if (response && response.IsCompleted) {
             let request = {
               'recordId': item.RecordId,
               'invoiceConvertModel': response.invoiceConvertModel
             }
-            this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesWaybill/ConvertToInvoice').then((res) => {
+            this.$api.postByUrl(request, `VisionNextInvoice/api/SalesWaybill/ConvertToInvoice?v=${i}`).then((res) => {
               if (res && res.IsCompleted) {
                 this.documents[this.documents.indexOf(item)].Status = this.$t('index.success')
                 this.successfullCount++
