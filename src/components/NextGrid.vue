@@ -202,6 +202,9 @@
             <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text">
               <i>{{ item[h.dataField] }}</i>
             </span>
+            <span v-else-if="h.columnType === 'DescriptionValue'" class="d-block w-100 grid-wrap-text">
+              {{ labelFormat(item['Label' + h.dataField], 'Description1') }}
+            </span>
             <span v-else class="d-block w-100 grid-wrap-text">
               {{ item[h.dataField] }}
             </span>
