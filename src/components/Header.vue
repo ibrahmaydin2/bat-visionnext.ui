@@ -107,8 +107,13 @@ export default {
     }
   },
   created () {
-    const selectedLang = localStorage.getItem('selectedLang')
-    selectedLang === 'tr' ? this.setLang('tr', 'English') : this.setLang('en', 'Türkçe')
+    const languageId = localStorage.getItem('LanguageId')
+    if (!languageId || languageId === '1') {
+      this.setLang('tr', 'English')
+    } else {
+      this.setLang('en', 'Türkçe')
+    }
+
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
     this.UserBranches = JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches
