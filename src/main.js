@@ -84,7 +84,7 @@ Vue.use(BVConfig, {
   BTooltip: {
     delay: {
       show: 700,
-      hide: 700
+      hide: 1
     }
   }
 })
