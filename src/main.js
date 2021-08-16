@@ -6,7 +6,7 @@ import { store } from './store'
 import VueRouter from 'vue-router'
 import router from './router'
 import i18n from './i18n'
-import { BootstrapVue, IconsPlugin, BFormDatepicker, ToastPlugin } from 'bootstrap-vue'
+import { BootstrapVue, IconsPlugin, BFormDatepicker, ToastPlugin, BVConfig } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Toasted from 'vue-toasted'
@@ -80,6 +80,14 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
+Vue.use(BVConfig, {
+  BTooltip: {
+    delay: {
+      show: 700,
+      hide: 700
+    }
+  }
+})
 Vue.use(ToastPlugin)
 Vue.use(Toasted)
 Vue.use(IconsPlugin)
