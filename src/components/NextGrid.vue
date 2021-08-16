@@ -168,44 +168,44 @@
                 <!-- <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" /> -->
               </b-dropdown>
             </span>
-            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Label')">
               {{ labelFormat(item[h.dataField], 'Label') }}
             </span>
-            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Code')">
               {{ labelFormat(item[h.dataField], 'Code') }}
             </span>
-            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="abelFormat(item[h.dataField], 'UpperValue')">
               {{ labelFormat(item[h.dataField], 'UpperValue')}}
             </span>
-            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Value')">
               {{ labelFormat(item[h.dataField], 'Value')}}
             </span>
-            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'DecimalValue')">
               {{ labelFormat(item[h.dataField], 'DecimalValue')}}
             </span>
-            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'OtherProperties')">
               {{ labelFormat(item[h.dataField], 'OtherProperties')}}
             </span>
 
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
-            <span v-else-if="h.columnType === 'Date'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'Date'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateFormat(item[h.dataField])">
               {{ dateFormat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateTimeformat(item[h.dataField])">
               {{ dateTimeformat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               {{ item[h.dataField] }}
             </span>
-            <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               <i>{{ item[h.dataField] }}</i>
             </span>
-            <span v-else-if="h.columnType === 'DescriptionValue'" class="d-block w-100 grid-wrap-text">
+            <span v-else-if="h.columnType === 'DescriptionValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item['Label' + h.dataField], 'Description1')">
               {{ labelFormat(item['Label' + h.dataField], 'Description1') }}
             </span>
-            <span v-else class="d-block w-100 grid-wrap-text">
+            <span v-else class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               {{ item[h.dataField] }}
             </span>
           </b-td>
