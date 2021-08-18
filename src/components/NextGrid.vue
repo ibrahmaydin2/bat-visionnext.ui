@@ -712,6 +712,15 @@ export default {
       return this.selectedHeader.columnType === 'CodeValue' ? result.Code : result.Description1
     },
     handleSubmit (label, model) {
+      if (!model) {
+        this.$bvToast.toast(JSON.stringify(this.$t('insert.autoCompleteClickError')), {
+          title: this.$t('general.errorTitle'),
+          variant: 'danger',
+          toaster: 'b-toaster-top-right',
+          noCloseButton: false
+        })
+        return
+      }
       if (model) {
         this.currentPage = 1
         if (!this.AndConditionalModel) {
