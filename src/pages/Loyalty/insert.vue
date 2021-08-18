@@ -320,7 +320,7 @@ export default {
           customOption: true,
           isCustomer: true,
           orConditionFields: 'Code,Description1',
-          url: 'VisionNextCustomer/api/Customer/GetBranchsCustomerSearch',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.loyalty.customerCode'),
           dynamicAndCondition: this.branchs.length > 0 ? { BranchIds: this.branchs.map(b => b.ColumnValue) } : {},
           required: true,

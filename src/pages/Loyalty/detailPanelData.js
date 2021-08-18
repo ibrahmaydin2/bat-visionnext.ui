@@ -160,7 +160,7 @@ export const detailData = {
       customOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/Customer/GetBranchsCustomerSearch',
+      url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
       label: i18n.t('insert.loyalty.customerCode'),
       required: true,
       visible: true,
