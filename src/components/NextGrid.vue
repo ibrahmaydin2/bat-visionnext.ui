@@ -712,6 +712,15 @@ export default {
       return this.selectedHeader.columnType === 'CodeValue' ? result.Code : result.Description1
     },
     handleSubmit (label, model) {
+      if (!model) {
+        this.$bvToast.toast(JSON.stringify(this.$t('insert.autoCompleteClickError')), {
+          title: this.$t('general.errorTitle'),
+          variant: 'danger',
+          toaster: 'b-toaster-top-right',
+          noCloseButton: false
+        })
+        return
+      }
       if (model) {
         this.currentPage = 1
         if (!this.AndConditionalModel) {
@@ -993,7 +1002,7 @@ export default {
         } else {
           sortOpt = null
         }
-        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
+        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
       } else {
         this.searchOnTable()
       }
@@ -1036,6 +1045,9 @@ export default {
         } else {
           this.searchOnTable()
         }
+        let query = Object.assign({}, this.$route.query)
+        delete query.code
+        this.$router.replace({ query })
         this.$store.commit('changeFiltersCleared', false)
       }
     },
