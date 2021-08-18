@@ -180,7 +180,7 @@ export default {
       this.isLoading = true
       this.$store.commit('setDisabledLoading', true)
       this.searchedCustomerList = []
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search').then((response) => {
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch').then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
         if (response && response.ListModel && response.ListModel.BaseModels) {
