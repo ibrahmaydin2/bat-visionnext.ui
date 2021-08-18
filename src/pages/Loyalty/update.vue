@@ -246,6 +246,7 @@ export default {
           let nowDate = new Date()
 
           this.datePassed = loyaltyBeginDate <= nowDate
+          this.form.TCIBreak1Id = this.form.TciBreak1Id
         }
       }
     },
@@ -260,6 +261,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.LoyaltyCustomers = [...this.customers, ...this.branchs, ...this.customerCriterias]
+        this.form.TciBreak1Id = this.form.TCIBreak1Id
         this.updateData()
       }
     },
