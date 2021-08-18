@@ -1002,7 +1002,7 @@ export default {
         } else {
           sortOpt = null
         }
-        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)()
+        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
       } else {
         this.searchOnTable()
       }
@@ -1045,6 +1045,9 @@ export default {
         } else {
           this.searchOnTable()
         }
+        let query = Object.assign({}, this.$route.query)
+        delete query.code
+        this.$router.replace({ query })
         this.$store.commit('changeFiltersCleared', false)
       }
     },
