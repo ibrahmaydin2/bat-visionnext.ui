@@ -246,6 +246,7 @@ export default {
           let nowDate = new Date()
 
           this.datePassed = loyaltyBeginDate <= nowDate
+          this.form.TCIBreak1Id = this.form.TciBreak1Id
         }
       }
     },
@@ -260,6 +261,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.LoyaltyCustomers = [...this.customers, ...this.branchs, ...this.customerCriterias]
+        this.form.TciBreak1Id = this.form.TCIBreak1Id
         this.updateData()
       }
     },
@@ -354,7 +356,7 @@ export default {
           customOption: true,
           isCustomer: true,
           orConditionFields: 'Code,Description1',
-          url: 'VisionNextCustomer/api/Customer/GetBranchsCustomerSearch',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.loyalty.customerCode'),
           dynamicAndCondition: this.branchs.length > 0 ? { BranchIds: this.branchs.map(b => b.ColumnValue) } : {},
           required: true,

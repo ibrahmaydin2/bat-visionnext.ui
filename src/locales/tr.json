@@ -554,6 +554,7 @@
     "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "lineNumber": "Sıra No",
     "systemRecordCanNotUpdate": "Sistem kayıtları güncellenemez!",
+    "autoCompleteClickError" : "En az 3 karakter arama yaparak çıkan sonuçlar arasından bir değer seçiniz.",
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
