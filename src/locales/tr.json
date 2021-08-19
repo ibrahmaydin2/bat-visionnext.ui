@@ -2018,6 +2018,8 @@
       "customerCriteria":"Müşteri Kriteri",
       "description": "Açıklama",
       "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz.",
+      "sameDiscountError": "Birden fazla dip toplam indirimi girilemez",
+      "sameIsFreeError": "Birden fazla bedelsiz ürün tanımlaması yapılamaz",
       "customerType": "Müşteri Tipi",
       "constantDates": "Sabit Tarihler",
       "orderNumber": "Sıra Numarası",

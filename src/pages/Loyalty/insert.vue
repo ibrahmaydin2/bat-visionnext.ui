@@ -69,8 +69,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails">
-          <NextDetailPanel v-model="form.LoyaltyCatalogues" :items="loyaltyCatalogueItems" />
+        <b-tab lazy :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails" :disabled="this.form.TypeId === null">
+          <NextDetailPanel v-model="form.LoyaltyCatalogues" :items="loyaltyCatalogueItems" :before-add="beforeValidItemsAdd"/>
         </b-tab>
         <b-tab :title="$t('insert.loyalty.pointCriterias')" @click="setDatePlanType">
           <b-row>
@@ -228,6 +228,32 @@ export default {
         this.form.LoyaltyCustomers = [...this.customers, ...this.branchs, ...this.customerCriterias]
         this.createData()
       }
+    },
+    beforeValidItemsAdd (item, list) {
+      let filteredList = list.filter(l =>
+        (l.IsDiscount <= item.IsDiscount && item.IsDiscount <= l.IsDiscount) ||
+        (l.IsFreeItem <= item.IsFreeItem && item.IsFreeItem <= l.IsFreeItem) ||
+        (item.IsFreeItem <= l.IsFreeItem && l.IsFreeItem <= item.IsFreeItem) ||
+        (item.IsDiscount <= l.IsDiscount && l.IsDiscount <= item.IsDiscount))
+
+      if (filteredList && filteredList.length > 0 && item.IsDiscount) {
+        this.$toasted.show(this.$t('insert.loyalty.sameDiscountError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      if (filteredList && filteredList.length > 0 && item.IsFreeItem) {
+        this.$toasted.show(this.$t('insert.loyalty.sameIsFreeError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+
+      return true
     },
     addLoyaltyActiveCategory () {
       this.$v.loyaltyActiveCategory.$touch()
