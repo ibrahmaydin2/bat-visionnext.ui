@@ -555,6 +555,23 @@
     "lineNumber": "Sıra No",
     "systemRecordCanNotUpdate": "Sistem kayıtları güncellenemez!",
     "autoCompleteClickError" : "En az 3 karakter arama yaparak çıkan sonuçlar arasından bir değer seçiniz.",
+    "commonInfo": {
+      "title": "Bilgi",
+      "createdUser": "Oluşturan Personel",
+      "createdDateTime": "Oluşturma Zamanı",
+      "modifiedUser": "Güncelleyen Personel",
+      "modifiedDateTime": "Güncelleme Zamanı",
+      "employee": "Personel",
+      "ip": "IP",
+      "updateSummary": "Güncelleme Özet",
+      "detail": "Detay",
+      "screenName": "Ekran Adı",
+      "oldValue": "Eski Değer",
+      "newValue": "Yeni Değer",
+      "oldString": "Eski Açıklama",
+      "newString": "Yeni Açıklama",
+      "noInfoMessage": "Ekran bilgisi bulunamadı."
+    },
     "Label": {
       "Code":"Kod",
       "Description1": "Açıklama"
@@ -2880,6 +2897,7 @@
     "errorSevk": "Yalnızca Sevk Edilebilir ve Açık durumundaki siparişler dönüştürülebilir.",
     "errorApproveStateModal": "Yalnızca Onay Bekliyor durumundaki kayıtlar onaylanabilir.",
     "errorConfirm": "Sadece onaylandı durumundaki kayıtlar dönüştürülebilir.",
+    "error": "Hata",
     "Convert": {
       "ItemCode":"Ürün Kodu",
       "Item":"Ürün",
