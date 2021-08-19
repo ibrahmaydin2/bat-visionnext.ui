@@ -2,6 +2,7 @@
   <b-container fluid>
     <Navigation/>
     <Header/>
+    <CommonInfoModal :modalAction="modalAction" :modalItem="modalItem" />
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
@@ -15,8 +16,9 @@
               ></b-icon>
             </template>
             <b-card class="asc__getPage" no-body>
-              <!-- <Breadcrumb title="aasdasdas" /> -->
-              <!-- <GetFormField /> -->
+              <div class="info-div">
+                <span class="info-span"><i @click="getInfoModal" class="info-icon fa fa-info-circle"></i></span>
+              </div>
               <router-view/>
               <div class="clearfix" />
             </b-card>
@@ -28,7 +30,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import actionMixin from '../../mixins/action'
 export default {
+  mixins: [actionMixin],
   data () {
     return {
     }
@@ -154,6 +158,17 @@ export default {
       font-size: 1rem
       letter-spacing: -0.7px
       font-weight: bold
+  .info-div
+    height: 30px
+    background-color: #e4e4e4
+  .info-span
+    float: right
+  .info-icon
+    font-size: 26px
+    margin-top: 2px
+    cursor: pointer
+    color: #ff8b4d !important;
+    margin-right: 10px
 </style>
   <style>
   .nav-tabs .nav-link.disabled {
