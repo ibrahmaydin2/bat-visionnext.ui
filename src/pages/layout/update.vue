@@ -2,6 +2,7 @@
   <b-container fluid>
     <Navigation/>
     <Header/>
+    <CommonInfoModal :modalAction="modalAction" :modalItem="modalItem" />
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
@@ -15,6 +16,9 @@
               ></b-icon>
             </template>
             <b-card class="asc__updatePage" no-body>
+              <div class="info-div">
+                <span class="info-span"><i @click="getInfoModal" class="info-icon fa fa-info-circle"></i></span>
+              </div>
               <router-view/>
             </b-card>
           </b-overlay>
@@ -25,7 +29,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import actionMixin from '../../mixins/action'
 export default {
+  mixins: [actionMixin],
   data () {
     return {
     }
@@ -226,6 +232,15 @@ export default {
         font-weight: bold
         font-size: 14px
         font-style: italic
+  .info-div
+    height: 30px
+    background-color: #e4e4e4
+  .info-span
+    float: right
+  .info-icon
+    font-size: 26px
+    margin-top: 2px
+    cursor: pointer
   </style>
   <style>
   .nav-tabs .nav-link.disabled {

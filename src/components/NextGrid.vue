@@ -245,6 +245,7 @@
     <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
     <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CommonInfoModal v-if="showCommonInfoModal" :modalAction="modalAction" :modalItem="modalItem" />
   </div>
 </template>
 <script>
@@ -359,7 +360,8 @@ export default {
       showUpdateCreditBudgetModal: false,
       disabledAutoComplete: false,
       showBudgetMasterApproveModal: false,
-      showAssignEmployeeModal: false
+      showAssignEmployeeModal: false,
+      showCommonInfoModal: false
     }
   },
   mounted () {
@@ -430,6 +432,7 @@ export default {
       this.showUpdateCreditBudgetModal = false
       this.showBudgetMasterApproveModal = false
       this.showAssignEmployeeModal = false
+      this.showCommonInfoModal = false
 
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
@@ -532,6 +535,11 @@ export default {
         this.showCustomConvertModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
+      } else if (action.Action === 'Info') {
+        this.showCommonInfoModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('common-info-modal')
         })
       } else {
         this.showConfirmModal = true
