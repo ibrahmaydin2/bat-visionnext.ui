@@ -121,11 +121,17 @@ export default {
         },
         {
           key: 'Code',
-          label: this.$t('insert.budgetMaster.code')
+          label: this.$t('insert.budgetMaster.code'),
+          formatter (value, key, obj) {
+            return obj.Contract ? obj.Contract.Code : '-'
+          }
         },
         {
           key: 'Description',
-          label: this.$t('insert.budgetMaster.budgetDescription')
+          label: this.$t('insert.budgetMaster.budgetDescription'),
+          formatter (value, key, obj) {
+            return obj.Contract ? obj.Contract.Label : '-'
+          }
         },
         {
           key: 'Customer',

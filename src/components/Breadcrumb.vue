@@ -1,21 +1,27 @@
 <template>
-  <b-breadcrumb>
-    <b-breadcrumb-item :to="{name: 'Dashboard'}">
-      <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
-    </b-breadcrumb-item>
-    <!--<b-breadcrumb-item v-for="(it, i) in breadcrumbList" :key="'brc' + i">
-      {{ it.title }}
-    </b-breadcrumb-item>-->
-    <b-breadcrumb-item :to="{name: baseName}">
-      {{ $t('router.'+baseName) }}
-    </b-breadcrumb-item>
-    <b-breadcrumb-item :active="!title">
-      {{ $t('router.'+routeName) }}
-    </b-breadcrumb-item>
-    <b-breadcrumb-item v-if="title" active>
-      {{ title }}
-    </b-breadcrumb-item>
-  </b-breadcrumb>
+  <div>
+    <CommonInfoModal :modalAction="modalAction" :modalItem="modalItem" />
+    <b-breadcrumb>
+      <b-breadcrumb-item :to="{name: 'Dashboard'}">
+        <b-icon icon="house-fill" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+      </b-breadcrumb-item>
+      <!--<b-breadcrumb-item v-for="(it, i) in breadcrumbList" :key="'brc' + i">
+        {{ it.title }}
+      </b-breadcrumb-item>-->
+      <b-breadcrumb-item :to="{name: baseName}">
+        {{ $t('router.'+baseName) }}
+      </b-breadcrumb-item>
+      <b-breadcrumb-item :active="!title" :class="routeName.includes('Get') ? '' : 'info-breadcrumb-item'">
+        {{ $t('router.'+routeName) }}
+      </b-breadcrumb-item>
+      <b-breadcrumb-item v-if="title" active :class="routeName.includes('Get') ? '' : 'info-breadcrumb-item'">
+        {{ title }}
+      </b-breadcrumb-item>
+      <li v-if="routeName.includes('Update') || routeName.includes('Get')">
+        <span class="ml-3"><i v-b-tooltip.hover :title="$t('insert.commonInfo.recordInfo')" @click="getInfoModal" class="info-icon fa fa-info-circle"></i></span>
+      </li>
+    </b-breadcrumb>
+  </div>
 </template>
 <script>
 import { mapState } from 'vuex'
@@ -24,7 +30,9 @@ export default {
   data () {
     return {
       baseName: this.$route.meta.baseLink,
-      routeName: this.$route.name
+      routeName: this.$route.name,
+      modalItem: {},
+      modalAction: {}
     }
   },
   mounted () {
@@ -33,6 +41,43 @@ export default {
   },
   computed: {
     ...mapState(['breadcrumbList'])
+  },
+  methods: {
+    getInfoModal () {
+      this.$api.getByUrl(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=${this.$route.meta.baseLink}`).then((response) => {
+        if (response && response.UIPageModels && response.UIPageModels.length > 0) {
+          let actions = response.UIPageModels[0].RowActions
+
+          if (actions && actions.length > 0) {
+            let filteredActions = actions.filter(f => f.Action === 'Info')
+
+            if (filteredActions && filteredActions.length > 0) {
+              this.modalAction = filteredActions[0]
+              this.modalItem = {
+                RecordId: this.$route.params.url
+              }
+              this.$nextTick(() => {
+                this.$bvModal.show('common-info-modal')
+              })
+            } else {
+              this.showNoInfoMessage()
+            }
+          } else {
+            this.showNoInfoMessage()
+          }
+        } else {
+          this.showNoInfoMessage()
+        }
+      })
+    },
+    showNoInfoMessage () {
+      this.$bvToast.toast(this.$t('insert.commonInfo.noInfoMessage'), {
+        title: this.$t('index.error'),
+        variant: 'danger',
+        toaster: 'b-toaster-top-right',
+        noCloseButton: false
+      })
+    }
   }
 }
 </script>
@@ -104,10 +149,7 @@ export default {
     content: '';
     color: #959fa5;
   }
-  .breadcrumb-item:last-child::before {
-    display: none;
-  }
-  .breadcrumb-item:last-child::after {
+  .info-breadcrumb-item::after {
     display: none;
   }
 </style>
