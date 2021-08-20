@@ -388,6 +388,12 @@ export const detailData = {
       url: 'VisionNextSystem/api/SysCustomerSql/Search?v=2',
       label: i18n.t('insert.loyalty.customerQuery'),
       required: true,
+      dynamicAndCondition: {
+        StatusId: 1
+      },
+      dynamicRequest: {
+        page: '1'
+      },
       visible: true,
       isUnique: true,
       id: 1

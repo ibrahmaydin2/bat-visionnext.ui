@@ -123,10 +123,6 @@ export default {
           Code: this.LabelDetails.Code,
           Description1: this.LabelDetails.Description1
         })
-        this.LabelDetails = {
-          Code: null,
-          Description1: null
-        }
       }
     },
     removeLabelDetails (r) {
