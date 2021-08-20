@@ -598,7 +598,10 @@ export const store = new Vuex.Store({
           switch (res.status) {
             case 200:
               commit('setRowData', res.data.Model)
-              if (res.data.Model && res.data.Model.System !== 0) {
+              let history = router ? router.history : null
+              let current = history ? history.current : null
+              let routeName = current ? current.name : null
+              if (routeName && routeName.includes('Update') && res.data.Model && res.data.Model.System === 1) {
                 commit('showAlert', { type: 'error', msg: i18n.t('insert.systemRecordCanNotUpdate') })
                 document.getElementById('submitButton').disabled = true
               }
