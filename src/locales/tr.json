@@ -570,7 +570,8 @@
       "newValue": "Yeni Değer",
       "oldString": "Eski Açıklama",
       "newString": "Yeni Açıklama",
-      "noInfoMessage": "Ekran bilgisi bulunamadı."
+      "noInfoMessage": "Kayıt bilgisi bulunamadı.",
+      "recordInfo": "Kayıt Bilgileri"
     },
     "Label": {
       "Code":"Kod",
