@@ -14,7 +14,7 @@
       <b-breadcrumb-item :active="!title" :class="routeName.includes('Get') ? '' : 'info-breadcrumb-item'">
         {{ $t('router.'+routeName) }}
       </b-breadcrumb-item>
-      <b-breadcrumb-item v-if="title" active class="info-breadcrumb-item">
+      <b-breadcrumb-item v-if="title" active :class="routeName.includes('Get') ? '' : 'info-breadcrumb-item'">
         {{ title }}
       </b-breadcrumb-item>
       <li v-if="routeName.includes('Update') || routeName.includes('Get')">
