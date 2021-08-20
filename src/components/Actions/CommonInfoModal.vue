@@ -2,16 +2,16 @@
   <b-modal v-if="modalAction" id="common-info-modal" @show="show" :title="modalAction.Title" size="xl" no-close-on-backdrop hide-footer>
     <section>
       <b-row>
-        <NextFormGroup :title="$t('insert.commonInfo.createdUser')" md="6" lg="6">
+        <NextFormGroup :title="$t('insert.commonInfo.createdUser')" md="3" lg="3">
           <NextInput type="text" v-model="form.CreatedUser" :disabled="true" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.commonInfo.createdDateTime')" md="6" lg="6">
+        <NextFormGroup :title="$t('insert.commonInfo.createdDateTime')" md="3" lg="3">
           <NextInput type="text" v-model="form.CreatedDateTime" :disabled="true" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.commonInfo.modifiedUser')" md="6" lg="6">
+        <NextFormGroup :title="$t('insert.commonInfo.modifiedUser')" md="3" lg="3">
           <NextInput type="text" v-model="form.ModifiedUser" :disabled="true" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.commonInfo.modifiedDateTime')" md="6" lg="6">
+        <NextFormGroup :title="$t('insert.commonInfo.modifiedDateTime')" md="3" lg="3">
           <NextInput type="text" v-model="form.ModifiedDateTime" :disabled="true" />
         </NextFormGroup>
       </b-row>
@@ -21,55 +21,69 @@
              id="info-list"
             :items="form.UpdateLogs"
             :fields="infoFields"
-            bordered
+            striped
             responsive
             :current-page="mainCurrentPage"
-            :per-page="10">
+            :per-page="10"
+            >
           >
+            <template #cell(UpdateSummary)="row">
+              <span v-b-tooltip.hover :title="row.item.UpdateSummary" class="summary-span">{{row.item.UpdateSummary}}</span>
+              <b-link class="detail-button" variant="success" v-b-toggle="`header-collapse-${row.index}`" @click="getFirstDetail(row);">
+                  {{$t('insert.commonInfo.detail')}}
+                </b-link>
+              <b-collapse :id="`header-collapse-${row.index}`" class="mt-2">
+                <b-table
+                  class="small-detail"
+                  :items="row.item.HeaderList"
+                  :fields="firstDetailHeaderFields"
+                  bordered
+                  responsive>
+                ></b-table>
+              </b-collapse>
+            </template>
             <template #cell(show_details)="row">
               <div>
-                <b-link type="link" size="sm" @click="getFirstDetail(row); row.toggleDetails(); " class="mt-2">
+                <b-link class="detail-button" variant="success" @click="getFirstDetail(row); row.toggleDetails();">
                   {{$t('insert.commonInfo.detail')}}
                 </b-link>
               </div>
             </template>
             <template #row-details="row">
-              <b-row>
-                <b-col>
-                  <b-table
-                   :items="row.item.HeaderList"
-                   :fields="firstDetailHeaderFields"
-                   striped
-                   responsive>
-                 ></b-table>
-                 <b-table
-                   :items="row.item.DetailList"
-                   :fields="infoFields"
-                   striped
-                   responsive>
-                 >
-                   <template #cell(show_details)="detailRow">
-                     <div>
-                       <b-link type="link" size="sm" @click="getSecondDetail(detailRow, row.index); detailRow.toggleDetails();" class="mt-2">
-                         {{$t('insert.commonInfo.detail')}}
-                       </b-link>
-                     </div>
-                    </template>
-                    <template #row-details="row">
-                      <b-row>
-                        <b-col>
-                          <b-table
-                           :items="row.item.DetailList"
-                           :fields="firstDetailHeaderFields"
-                           bordered
-                           responsive>
-                         ></b-table>
-                        </b-col>
-                      </b-row>
-                    </template>
-                 </b-table>
-                </b-col>
-              </b-row>
+              <div class="p-4 mt-2 nested-detail-panel">
+                <b-row>
+                  <b-col>
+                   <b-table
+                     :items="row.item.DetailList"
+                     :fields="infoFields"
+                     bordered
+                     responsive>
+                   >
+                     <template #cell(show_details)="detailRow">
+                       <div>
+                         <b-link class="detail-button" variant="success" @click="getSecondDetail(detailRow, row.index); detailRow.toggleDetails();">
+                           {{$t('insert.commonInfo.detail')}}
+                         </b-link>
+                       </div>
+                      </template>
+                      <template #row-details="row">
+                        <div class="p-4 mt-2 nested-detail-panel-2">
+                          <b-row>
+                            <b-col>
+                              <b-table
+                               :items="row.item.DetailList"
+                               :fields="firstDetailHeaderFields"
+                               striped
+                               responsive>
+                             ></b-table>
+                            </b-col>
+                          </b-row>
+                        </div>
+                      </template>
+                   </b-table>
+                  </b-col>
+                </b-row>
+              </div>
             </template>
           </b-table>
           <b-pagination :total-rows="form.UpdateLogs ? form.UpdateLogs.length : 0" v-model="mainCurrentPage" :per-page="10" aria-controls="info-list"
@@ -113,15 +127,18 @@ export default {
             let selectedValue = value && value !== '' ? value : obj.CreatedDatetime
 
             return this.getDateTime(selectedValue)
-          }
+          },
+          thStyle: { width: '150px' }
         },
         {
           key: 'CreatedUser',
-          label: this.$t('insert.commonInfo.employee')
+          label: this.$t('insert.commonInfo.employee'),
+          thStyle: { width: '150px' }
         },
         {
           key: 'IP',
-          label: this.$t('insert.commonInfo.ip')
+          label: this.$t('insert.commonInfo.ip'),
+          thStyle: { width: '150px' }
         },
         {
           key: 'UpdateSummary',
@@ -129,7 +146,8 @@ export default {
         },
         {
           key: 'show_details',
-          label: this.$t('')
+          label: this.$t(''),
+          thStyle: { width: '50px' }
         }
       ],
       firstDetailHeaderFields: [
@@ -216,3 +234,35 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+  .summary-span
+    white-space: nowrap
+    text-overflow: ellipsis
+    overflow: hidden
+    width: 60vh
+    display: inline-block
+  table
+    th
+      padding: 5px !important
+    td
+      padding: 5px !important
+  .detail-button
+    padding-right: 5px
+    float: right
+  .nested-detail-panel
+    background-color: #e4e4e4
+    border-radius: 15px
+    th
+      border-color: #b7b4b4 !important
+    td
+      border-color: #b7b4b4 !important
+  .small-detail td
+    background: white !important
+  .nested-detail-panel-2
+    background-color: white
+    border-radius: 15px
+    th
+      border-color: #b7b4b4 !important
+    td
+      border-color: #b7b4b4 !important
+</style>
