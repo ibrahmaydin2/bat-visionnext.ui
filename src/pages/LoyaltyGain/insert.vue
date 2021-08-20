@@ -105,7 +105,6 @@ export default {
     }
   },
   mounted () {
-    this.createManualCode('FinanceCode')
     this.form.DocumentDate = new Date().toISOString().substr(0, 10)
     this.getUserInfo()
   },
