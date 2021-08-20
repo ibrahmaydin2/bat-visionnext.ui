@@ -50,36 +50,40 @@
               </div>
             </template>
             <template #row-details="row">
-              <b-row class="p-4 mt-2 nested-detail-panel">
-                <b-col>
-                 <b-table
-                   :items="row.item.DetailList"
-                   :fields="infoFields"
-                   bordered
-                   responsive>
-                 >
-                   <template #cell(show_details)="detailRow">
-                     <div>
-                       <b-link class="detail-button" variant="success" @click="getSecondDetail(detailRow, row.index); detailRow.toggleDetails();">
-                         {{$t('insert.commonInfo.detail')}}
-                       </b-link>
-                     </div>
-                    </template>
-                    <template #row-details="row">
-                      <b-row>
-                        <b-col>
-                          <b-table
-                           :items="row.item.DetailList"
-                           :fields="firstDetailHeaderFields"
-                           striped
-                           responsive>
-                         ></b-table>
-                        </b-col>
-                      </b-row>
-                    </template>
-                 </b-table>
-                </b-col>
-              </b-row>
+              <div class="p-4 mt-2 nested-detail-panel">
+                <b-row>
+                  <b-col>
+                   <b-table
+                     :items="row.item.DetailList"
+                     :fields="infoFields"
+                     bordered
+                     responsive>
+                   >
+                     <template #cell(show_details)="detailRow">
+                       <div>
+                         <b-link class="detail-button" variant="success" @click="getSecondDetail(detailRow, row.index); detailRow.toggleDetails();">
+                           {{$t('insert.commonInfo.detail')}}
+                         </b-link>
+                       </div>
+                      </template>
+                      <template #row-details="row">
+                        <div class="p-4 mt-2 nested-detail-panel-2">
+                          <b-row>
+                            <b-col>
+                              <b-table
+                               :items="row.item.DetailList"
+                               :fields="firstDetailHeaderFields"
+                               striped
+                               responsive>
+                             ></b-table>
+                            </b-col>
+                          </b-row>
+                        </div>
+                      </template>
+                   </b-table>
+                  </b-col>
+                </b-row>
+              </div>
             </template>
           </b-table>
           <b-pagination :total-rows="form.UpdateLogs ? form.UpdateLogs.length : 0" v-model="mainCurrentPage" :per-page="10" aria-controls="info-list"
@@ -248,11 +252,17 @@ export default {
   .nested-detail-panel
     background-color: #e4e4e4
     border-radius: 15px
-  .nested-detail-panel
-      th
-        border-color: #b7b4b4 !important
-      td
-        border-color: #b7b4b4 !important
+    th
+      border-color: #b7b4b4 !important
+    td
+      border-color: #b7b4b4 !important
   .small-detail td
     background: white !important
+  .nested-detail-panel-2
+    background-color: white
+    border-radius: 15px
+    th
+      border-color: #b7b4b4 !important
+    td
+      border-color: #b7b4b4 !important
 </style>
