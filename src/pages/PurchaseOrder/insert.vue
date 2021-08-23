@@ -691,7 +691,7 @@ export default {
         price: {
           required
         },
-        grrossTotal: {
+        grossTotal: {
           required
         },
         netTotal: {
