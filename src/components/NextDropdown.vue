@@ -204,8 +204,10 @@ export default {
       this.$api.postByUrl({LookupTableCode: this.lookupKey}, `VisionNextCommonApi/api/LookupValue/GetValues?v=${random}`).then((response) => {
         if (response) {
           this.values = response.Values
+          if (this.filter) {
+            this.values = this.values.filter(i => this.filter(i))
+          }
           this.allValues = this.values
-          this.$store.commit('setSingleLookUp', {key: this.lookupKey, value: this.values})
         }
       })
     },
