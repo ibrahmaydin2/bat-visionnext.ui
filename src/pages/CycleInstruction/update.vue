@@ -127,6 +127,10 @@ export default {
   },
   methods: {
     setData () {
+      let code = null
+      if (this.$route.query.saveAs === 1) {
+        code = this.form.Code
+      }
       this.form = this.rowData
       this.branches = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
       this.customerCriterias = this.form.CycleInstructionDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'BRANCH_ID' && i.ColumnName !== 'BRANCH_ID')
@@ -135,13 +139,8 @@ export default {
       this.BranchCriteria = this.form.BranchCriteria
       this.routeCriteria = this.form.RouteCriteria
       this.customerCriteria = this.form.CustomerCriteria
-      if (this.$route.query.saveAs === 1) {
-        this.Code = this.form.Code
-        this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextFieldManagement/api/CycleInstruction/GetCode'}).then(() => {
-          if (this.createCode) {
-            this.form.Code = this.createCode
-          }
-        })
+      if (code) {
+        this.form.Code = code
       }
     },
     save () {
