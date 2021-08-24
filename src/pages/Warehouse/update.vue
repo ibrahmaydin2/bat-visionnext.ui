@@ -102,11 +102,14 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in warehouseSuppliers" :key="i">
-                    <b-td>{{w.supplierBranch.BranchCommercialTitle}}</b-td>
+                  <b-tr v-for="(w, i) in warehouseSuppliers ? warehouseSuppliers.filter(w => w.RecordState !== 4) : []" :key="i">
+                    <b-td>{{w.supplierBranch.Description1}}</b-td>
                     <b-td>{{w.purchaseWarehouse.Description1}}</b-td>
                     <b-td>{{w.returnWarehouse.Description1}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <i @click="editItem(w)" class="fa fa-pencil-alt text-warning"></i>
+                      <i @click="removeItems(w)" class="far fa-trash-alt text-danger ml-3"></i>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -146,7 +149,8 @@ export default {
       warehouseSupplier: {},
       warehouseSuppliers: [],
       vehicleName: null,
-      address: {}
+      address: {},
+      selectedIndex: false
     }
   },
   computed: {
@@ -232,7 +236,7 @@ export default {
         this.warehouseSuppliers.push({
           supplierBranch: {
             RecordId: item.SupplierBranchId,
-            BranchCommercialTitle: item.SupplierBranch.Label
+            Description1: item.SupplierBranch.Label
           },
           SupplierCustomerId: item.SupplierCustomerId,
           WarehouseId: item.WarehouseId,
@@ -343,22 +347,42 @@ export default {
         })
         return false
       }
-      let filteredArr = this.warehouseSuppliers.filter(i => i.supplierBranch.RecordId === this.warehouseSupplier.supplierBranch.RecordId)
-      if (filteredArr.length > 0) {
+      let filteredArr = this.warehouseSuppliers.filter(i => i.supplierBranch.RecordId === this.warehouseSupplier.supplierBranch.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0 && !this.warehouseSupplier.isUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
 
-      this.warehouseSupplier.Deleted = 0
-      this.warehouseSupplier.System = 0
-      this.warehouseSupplier.RecordState = 2
-      this.warehouseSupplier.StatusId = 1
-      this.warehouseSuppliers.push(this.warehouseSupplier)
+      if (this.warehouseSupplier.isUpdated) {
+        this.warehouseSuppliers[this.selectedIndex] = this.warehouseSupplier
+        this.selectedIndex = -1
+      } else {
+        this.warehouseSupplier.Deleted = 0
+        this.warehouseSupplier.System = 0
+        this.warehouseSupplier.RecordState = 2
+        this.warehouseSupplier.StatusId = 1
+        this.warehouseSuppliers.push(this.warehouseSupplier)
+      }
       this.warehouseSupplier = {}
       this.$v.warehouseSupplier.$reset()
     },
     removeItems (item) {
-      this.warehouseSuppliers.splice(this.warehouseSuppliers.indexOf(item), 1)
+      if (item.RecordId) {
+        this.warehouseSuppliers[this.warehouseSuppliers.indexOf(item)].RecordState = 4
+        this.warehouseSuppliers[this.warehouseSuppliers.indexOf(item)].Deleted = 1
+      } else {
+        this.warehouseSuppliers.splice(this.warehouseSuppliers.indexOf(item), 1)
+      }
+    },
+    editItem (item) {
+      this.warehouseSupplier = {
+        selectedBranch: item.supplierBranch,
+        purchaseWarehouse: item.purchaseWarehouse,
+        returnWarehouse: item.returnWarehouse,
+        isUpdated: true
+      }
+      this.selectedBranch(this.warehouseSupplier.selectedBranch)
+      this.selectedIndex = this.warehouseSuppliers.indexOf(item)
     },
     selectedWarehouseType (e) {
       this.form.WarehouseTypeId = e.DecimalValue
