@@ -113,14 +113,17 @@ export const detailData = {
       id: 12
     },
     {
-      type: 'Dropdown',
+      type: 'Lookup',
       modelProperty: 'VolumeUnitId',
       objectKey: 'VolumeUnit',
-      url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=5',
+      url: 'UNIT',
       label: i18n.t('insert.unitSet.volumeUnit'),
       visible: true,
       id: 13,
-      dynamicAndCondition: { CardTypeIds: [3] }
+      filter (item) {
+        let list = ['HL', 'LT', 'MK', 'CM3']
+        return list.includes(item.Code)
+      }
     },
     {
       type: 'Text',
@@ -131,14 +134,17 @@ export const detailData = {
       id: 14
     },
     {
-      type: 'Dropdown',
+      type: 'Lookup',
       modelProperty: 'WeightUnitId',
       objectKey: 'WeightUnit',
-      url: 'VisionNextUnit/api/UnitSet/AutoCompleteSearch?v=6',
+      url: 'UNIT',
       label: i18n.t('insert.unitSet.weightUnit'),
       visible: true,
       id: 15,
-      dynamicAndCondition: { CardTypeIds: [4] }
+      filter (item) {
+        let list = ['GR', 'KG', 'TN']
+        return list.includes(item.Code)
+      }
     },
     {
       type: 'Check',

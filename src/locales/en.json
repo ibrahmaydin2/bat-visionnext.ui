@@ -1380,7 +1380,8 @@
       "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
       "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!",
       "validBeginDate": "Geçerlilik Başlangıç Tarihi",
-      "validEndDate": "Geçerlilik Bitiş Tarihi"
+      "validEndDate": "Geçerlilik Bitiş Tarihi",
+      "discountAmount": "İndirim Tutarı"
     },
     "loadingplan": {
       "items": "Ürün",
