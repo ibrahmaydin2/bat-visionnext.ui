@@ -1926,12 +1926,13 @@
       "CycleInstructionRoutes": "Rotalar",
       "Route": "Rota Adı",
       "CycleInstructionTaskItems": "Görevler",
-      "TaskCode": "Kodu",
+      "TaskCode": "Aktivite Kodu-1",
       "TaskDescription1": "Tanımı",
       "TaskGenexp1": "Açıklama",
       "CycleInstructionCriterias": "Müşteri Kriteri",
       "AreaDesc": "Alan Açıklaması",
-      "AreaValue": "Değer"
+      "AreaValue": "Değer",
+      "sameTaskError": "Aynı Görevden Birden Fazla Eklenemez"
     },
     "unitSet": {
       "title": "Birim Tanımları",

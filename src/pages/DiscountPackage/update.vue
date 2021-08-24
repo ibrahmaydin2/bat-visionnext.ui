@@ -66,7 +66,6 @@ export default {
       routeName1: 'Discount',
       PackageKind: {},
       discountPackageDetailsItems: detailData.discountPackageDetailsItems
-
     }
   },
   computed: {
@@ -94,6 +93,9 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.StatusId !== 1) {
+          this.form.StatusId = 2
+        }
         this.updateData()
       }
     }
