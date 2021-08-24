@@ -19,7 +19,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
@@ -35,7 +35,13 @@
         <b-tab :title="$t('insert.detail')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <NextDropdown v-model="customerCriteria" :disabled="insertReadonly.CustomerCriteriaId" :get-lookup="true" lookup-key="CUSTOMER_CRITERIA" @input="selectedType('CustomerCriteriaId', $event)"/>
+              <NextDropdown v-model="customerCriteria"
+               :get-lookup="true"
+               :disabled="insertReadonly.CustomerCriteriaId"
+               label="Label"
+               @input="selectedType('CustomerCriteriaId', $event)"
+               :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code == 'MK' || c.Code === 'ML' || c.Code === 'TM'): [])"
+               />
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
               <NextDropdown v-model="routeCriteria" :disabled="insertReadonly.RouteCriteriaId" :get-lookup="true" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
@@ -60,14 +66,14 @@
         <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionBranches')" v-if="BranchCriteria && BranchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="branches" :items="branchItems" />
         </b-tab>
-        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="customerCriteria && customerCriteria.Code === 'ML'" >
+        <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCustomers')" v-if="(customerCriteria && customerCriteria.Code === 'ML') && (BranchCriteria && BranchCriteria.Code === 'SL' || BranchCriteria && BranchCriteria.Code === 'TS')" >
           <NextDetailPanel v-model="customers" :items="customerItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="routeCriteria && routeCriteria.Code === 'RL'" >
           <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
         <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')" >
-          <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" />
+          <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" :before-add="beforeValidTasksAdd"/>
         </b-tab>
         <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="criteriaItems" />
@@ -77,6 +83,7 @@
   </b-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
 export default {
@@ -112,6 +119,9 @@ export default {
       routeCriteria: {}
     }
   },
+  computed: {
+    ...mapState(['createCode', 'lookup'])
+  },
   mounted () {
     this.getData().then(() => this.setData())
   },
@@ -125,6 +135,14 @@ export default {
       this.BranchCriteria = this.form.BranchCriteria
       this.routeCriteria = this.form.RouteCriteria
       this.customerCriteria = this.form.CustomerCriteria
+      if (this.$route.query.saveAs === 1) {
+        this.Code = this.form.Code
+        this.$store.dispatch('getCreateCode', {...this.query, apiUrl: 'VisionNextFieldManagement/api/CycleInstruction/GetCode'}).then(() => {
+          if (this.createCode) {
+            this.form.Code = this.createCode
+          }
+        })
+      }
     },
     save () {
       this.form.CycleInstructionDetails = []
@@ -140,6 +158,25 @@ export default {
       } else {
         this.updateData()
       }
+    },
+    beforeValidTasksAdd (item, list) {
+      let filteredList = list.filter(l =>
+        (l.Code <= item.Code && item.Code <= l.Code) ||
+        (l.Description1 <= item.Description1 && item.Description1 <= l.Description1) ||
+        (item.Description1 <= l.Description1 && l.Description1 <= item.Description1) ||
+        (l.Genexp1 <= item.Genexp1 && item.Genexp1 <= l.Genexp1) ||
+        (item.Genexp1 <= l.Genexp1 && l.Genexp1 <= item.Genexp1) ||
+        (item.Code <= l.Code && l.Code <= item.Code))
+
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('insert.CycleInstruction.sameTaskError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      return true
     }
   },
   validations () {
