@@ -285,11 +285,10 @@
         <b-tab :title="$t('insert.contract.contractPriceDiscounts')" v-if="showPriceDiscount">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
+              <NextDropdown :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
               <b-form-input
-                :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
                 type="number" v-model="contractPriceDiscounts.discountAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
@@ -375,14 +374,14 @@
                 <b-tr v-for="(c, i) in form.ContractPriceDiscounts" :key="i">
                   <b-td>{{c.BenefitConditionName}}</b-td>
                   <b-td>{{c.DiscountAmount}}</b-td>
-                  <b-td>{{c.QuotaAmount}}</b-td>
+                  <b-td>{{c.QuotaQuantity}}</b-td>
                   <b-td>{{c.QuotaUnitName}}</b-td>
                   <b-td>{{c.BudgetAmount}}</b-td>
                   <b-td>{{c.QuotaColumnNameStr}}</b-td>
                   <b-td>{{c.QuotaColumnValueStr}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
-                  <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{c.ItemFormulaName}}</b-td>
                   <b-td>{{c.CurrencyName}}</b-td>
@@ -1535,7 +1534,7 @@ export default {
         DiscountAmount: this.contractPriceDiscounts.discountAmount,
         BenefitConditionId: this.contractPriceDiscounts.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractPriceDiscounts.benefitCondition.Label,
-        QuotaAmount: this.contractPriceDiscounts.quotaAmount,
+        QuotaQuantity: this.contractPriceDiscounts.quotaAmount,
         QuotaUnitId: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.DecimalValue : null,
         QuotaUnitName: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.Label : null,
         BudgetAmount: this.contractPriceDiscounts.budgetAmount,
@@ -1545,7 +1544,7 @@ export default {
         QuotaColumnValueStr: this.contractPriceDiscounts.quotaColumnValue ? this.contractPriceDiscounts.quotaColumnValue.Label : null,
         QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
-        BeginDate: this.contractPriceDiscounts.beginDate,
+        StartDate: this.contractPriceDiscounts.beginDate,
         BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
         ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
@@ -2043,6 +2042,11 @@ export default {
           this.currencies = response.ListModel.BaseModels
         }
       })
+    },
+    selectedBenefitCondition (value) {
+      this.contractPriceDiscounts = {
+        benefitCondition: value
+      }
     }
   },
   validations () {
