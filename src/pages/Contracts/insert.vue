@@ -317,7 +317,7 @@
                 || contractPriceDiscounts.benefitCondition.Code === 'YYM'
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3" v-if="contractPriceDiscounts.quotaColumnName">
               <v-select :disabled="!contractPriceDiscounts.quotaColumnName" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
