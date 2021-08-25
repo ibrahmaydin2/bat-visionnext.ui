@@ -119,7 +119,7 @@
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(w, i) in rmaOrderLines" :key="i">
+                  <b-tr v-for="(w, i) in rmaOrderLines ? rmaOrderLines.filter(i => i.RecordState !== 4) : []" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
@@ -191,7 +191,6 @@ export default {
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
     ...mapState(['customers', 'warehouses', 'employees', 'rmaReasons', 'items'])
   },
   mounted () {
@@ -204,7 +203,6 @@ export default {
     getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
       this.searchWarehouse()
-      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
     },
     searchCustomer (search, loading) {
       if (search.length < 3) {
@@ -308,7 +306,11 @@ export default {
       this.$v.rmaOrderLine.$reset()
     },
     removeItems (item) {
-      this.rmaOrderLines.splice(this.rmaOrderLines.indexOf(item), 1)
+      if (item.RecordId) {
+        this.rmaOrderLines[this.rmaOrderLines.indexOf(item)].RecordState = 4
+      } else {
+        this.rmaOrderLines.splice(this.rmaOrderLines.indexOf(item), 1)
+      }
     },
     initRmaOrderLine (value) {
       this.rmaOrderLine.ItemId = value.RecordId
