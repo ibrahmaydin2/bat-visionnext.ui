@@ -179,14 +179,14 @@
                     <b-tr v-for="(c, i) in rowData.ContractPriceDiscounts" :key="i">
                       <b-td>{{c.BenefitCondition ? c.BenefitCondition.Label : ''}}</b-td>
                       <b-td>{{c.DiscountAmount}}</b-td>
-                      <b-td>{{c.QuotaAmount}}</b-td>
+                      <b-td>{{c.QuotaQuantity}}</b-td>
                       <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : ''}}</b-td>
                       <b-td>{{c.BudgetAmount}}</b-td>
                       <b-td>{{c.QuotaColumnName}}</b-td>
                       <b-td>{{c.QuotaColumnValue}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
-                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
                       <b-td>{{c.BranchSharePercent}}</b-td>
                       <b-td>{{c.ItemFormula ? c.ItemFormula.Label : ''}}</b-td>
                       <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>

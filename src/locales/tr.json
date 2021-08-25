@@ -1486,7 +1486,8 @@
       "datesShouldNotIntersect": "Bütçe Tarihleri kesişmemelidir!",
       "totalBudgetMustGreaterThan0": "Toplam Bütçe 0 dan büyük olmalıdır!",
       "validBeginDate": "Geçerlilik Başlangıç Tarihi",
-      "validEndDate": "Geçerlilik Bitiş Tarihi"
+      "validEndDate": "Geçerlilik Bitiş Tarihi",
+      "discountAmount": "İndirim Tutarı"
     },
     "loadingplan": {
       "items": "Ürün",
@@ -1925,12 +1926,13 @@
       "CycleInstructionRoutes": "Rotalar",
       "Route": "Rota Adı",
       "CycleInstructionTaskItems": "Görevler",
-      "TaskCode": "Kodu",
+      "TaskCode": "Aktivite Kodu-1",
       "TaskDescription1": "Tanımı",
       "TaskGenexp1": "Açıklama",
       "CycleInstructionCriterias": "Müşteri Kriteri",
       "AreaDesc": "Alan Açıklaması",
-      "AreaValue": "Değer"
+      "AreaValue": "Değer",
+      "sameTaskError": "Aynı Görevden Birden Fazla Eklenemez"
     },
     "unitSet": {
       "title": "Birim Tanımları",
@@ -2860,7 +2862,8 @@
       "october": "Ekim",
       "november": "Kasım",
       "december": "Aralık"
-    }
+    },
+    "tokenExpired": "Oturum sonlandırılmıştır."
   },
   "index": {
     "today": "Bugün",

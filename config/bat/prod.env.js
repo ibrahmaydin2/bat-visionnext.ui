@@ -3,7 +3,7 @@ module.exports = {
   NODE_ENV: '"production"',
   VUE_APP_SERVICE_URL_BASE: "'https://batdev.visionnext.com.tr/'",
   VUE_APP_SYSTEM_NAME: "'BAT UI PROD'",
-  VUE_APP_VESION_NO: "'1.0.1.38'",
+  VUE_APP_VESION_NO: "'1.0.1.39'",
   BASE_URL: "'http://batfeuat.visionnext.com.tr/'",
   TENANT: "'BAT'",
   HASH: "'8ced6612-e737-4f10-82be-76db0177e462'"

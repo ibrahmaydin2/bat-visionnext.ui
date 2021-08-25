@@ -285,11 +285,10 @@
         <b-tab :title="$t('insert.contract.contractPriceDiscounts')" v-if="showPriceDiscount">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
+              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
               <b-form-input
-                :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
                 type="number" v-model="contractPriceDiscounts.discountAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
@@ -318,8 +317,8 @@
                 || contractPriceDiscounts.benefitCondition.Code === 'YYM'
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3">
-              <v-select :disabled="!contractPriceDiscounts.quotaColumnName" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3" v-if="contractPriceDiscounts.quotaColumnName">
+              <v-select :disabled="!contractPriceDiscounts.quotaColumnName || !contractPriceDiscounts.quotaColumnName.Code" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
@@ -375,14 +374,14 @@
                 <b-tr v-for="(c, i) in form.ContractPriceDiscounts" :key="i">
                   <b-td>{{c.BenefitConditionName}}</b-td>
                   <b-td>{{c.DiscountAmount}}</b-td>
-                  <b-td>{{c.QuotaAmount}}</b-td>
+                  <b-td>{{c.QuotaQuantity}}</b-td>
                   <b-td>{{c.QuotaUnitName}}</b-td>
                   <b-td>{{c.BudgetAmount}}</b-td>
                   <b-td>{{c.QuotaColumnNameStr}}</b-td>
                   <b-td>{{c.QuotaColumnValueStr}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
-                  <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{c.ItemFormulaName}}</b-td>
                   <b-td>{{c.CurrencyName}}</b-td>
@@ -1411,7 +1410,7 @@ export default {
           break
         case 'discountQuotaItem':
           this.discountQuotaItems = []
-          this.contractDiscounts.quıtaColumnValue = undefined
+          this.contractDiscounts.quotaColumnValue = undefined
           break
         case 'freeItem':
           this.freeItems = []
@@ -1439,7 +1438,7 @@ export default {
           break
       }
       if (value) {
-        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+        return this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
           switch (property) {
             case 'item':
               this.fieldValues = res.Values
@@ -1535,7 +1534,8 @@ export default {
         DiscountAmount: this.contractPriceDiscounts.discountAmount,
         BenefitConditionId: this.contractPriceDiscounts.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractPriceDiscounts.benefitCondition.Label,
-        QuotaAmount: this.contractPriceDiscounts.quotaAmount,
+        BenefitConditionCode: this.contractPriceDiscounts.benefitCondition.Code,
+        QuotaQuantity: this.contractPriceDiscounts.quotaAmount,
         QuotaUnitId: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.DecimalValue : null,
         QuotaUnitName: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.Label : null,
         BudgetAmount: this.contractPriceDiscounts.budgetAmount,
@@ -1545,7 +1545,7 @@ export default {
         QuotaColumnValueStr: this.contractPriceDiscounts.quotaColumnValue ? this.contractPriceDiscounts.quotaColumnValue.Label : null,
         QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
-        BeginDate: this.contractPriceDiscounts.beginDate,
+        StartDate: this.contractPriceDiscounts.beginDate,
         BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
         ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
@@ -1586,6 +1586,7 @@ export default {
         PlannedInvestmentDate: this.contractInvestments.plannedInvestmentDate,
         BenefitConditionId: this.contractInvestments.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractInvestments.benefitCondition.Label,
+        BenefitConditionCode: this.contractInvestments.benefitCondition.Code,
         QuotaColumnName: this.contractInvestments.quotaColumnName ? this.contractInvestments.quotaColumnName.ForeignField : null,
         QuotaColumnNameStr: this.contractInvestments.quotaColumnName ? this.contractInvestments.quotaColumnName.Label : null,
         QuotaColumnValue: this.contractInvestments.quotaColumnValue ? this.contractInvestments.quotaColumnValue.DecimalValue : null,
@@ -1630,6 +1631,7 @@ export default {
         DiscountRate: this.contractDiscounts.discountRate,
         BenefitConditionId: this.contractDiscounts.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractDiscounts.benefitCondition.Label,
+        BenefitConditionCode: this.contractDiscounts.benefitCondition.Code,
         QuotaColumnName: this.contractDiscounts.quotaColumnName ? this.contractDiscounts.quotaColumnName.ForeignField : null,
         QuotaColumnNameStr: this.contractDiscounts.quotaColumnName ? this.contractDiscounts.quotaColumnName.Label : null,
         QuotaColumnValue: this.contractDiscounts.quotaColumnValue ? this.contractDiscounts.quotaColumnValue.DecimalValue : null,
@@ -1727,6 +1729,7 @@ export default {
         QuotaTableName: 'T-ITEM',
         BenefitConditionId: this.contractPaymentPlans.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractPaymentPlans.benefitCondition.Label,
+        BenefitConditionCode: this.contractPaymentPlans.benefitCondition.Code,
         PaymentAmount: this.contractPaymentPlans.paymentAmount,
         PlannedPaymentDate: this.contractPaymentPlans.plannedPaymentDate,
         BranchSharePercent: this.contractPaymentPlans.branchSharePercent,
@@ -1781,6 +1784,7 @@ export default {
         QuotaTableName: 'T-ITEM',
         BenefitConditionId: this.contractEndorsements.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractEndorsements.benefitCondition.Label,
+        BenefitConditionCode: this.contractEndorsements.benefitCondition.Code,
         EndorsementGivenTypeId: this.contractEndorsements.endorsementGivenType.DecimalValue,
         EndorsementGivenTypeName: this.contractEndorsements.endorsementGivenType.Label,
         CalculationTypeId: this.contractEndorsements.calculationType.DecimalValue,
@@ -1839,6 +1843,7 @@ export default {
         MaxUsage: 0,
         BenefitConditionId: this.contractCustomPrices.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractCustomPrices.benefitCondition.Label,
+        BenefitConditionCode: this.contractCustomPrices.benefitCondition.Code,
         ItemId: this.contractCustomPrices.item ? this.contractCustomPrices.item.RecordId : null,
         ItemName: this.contractCustomPrices.item ? this.contractCustomPrices.item.Description1 : null,
         CustomPrice: this.contractCustomPrices.customPrice,
@@ -1869,7 +1874,23 @@ export default {
     },
     editRow (objectKey, list, item) {
       this.selectedIndex = list.indexOf(item)
+      let label = this.getQuotaColumnNameLabel(item.QuotaColumnName)
+      if (label) {
+        this.getItemValues({Code: item.QuotaColumnName, Label: label}, 'quota').then(() => {
+          this.setModel(objectKey, item)
+        })
+      } else {
+        this.setModel(objectKey, item)
+      }
+      this.setContractFocType(objectKey, item.ContractFocTypeId)
+    },
+    setModel (objectKey, item) {
       this[objectKey] = {
+        benefitCondition: item.BenefitCondition ? item.BenefitCondition : {
+          DecimalValue: item.BenefitConditionId,
+          Label: item.BenefitConditionName,
+          Code: item.BenefitConditionCode
+        },
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
@@ -1888,11 +1909,11 @@ export default {
         },
         quotaColumnName: {
           Code: item.QuotaColumnName,
-          Label: item.QuotaColumnNameStr
+          Label: item.QuotaColumnNameStr ? item.QuotaColumnNameStr : this.getQuotaColumnNameLabel(item.QuotaColumnName)
         },
         quotaColumnValue: {
           DecimalValue: item.QuotaColumnValue,
-          Label: item.QuotaColumnValueStr
+          Label: item.QuotaColumnValueStr ? item.QuotaColumnValueStr : this.getQuotaColumnValueLabel(item.QuotaColumnValue)
         },
         quotaQuantity: item.QuotaQuantity,
         unit: {
@@ -1903,7 +1924,7 @@ export default {
           DecimalValue: item.QuotaUnitId,
           Label: item.QuotaUnit ? item.QuotaUnit.Label : item.QuotaUnitName
         },
-        beginDate: item.BeginDate,
+        beginDate: item.BeginDate ? item.BeginDate : item.StartDate,
         endDate: item.EndDate,
         freeItem: {
           RecordId: item.FreeItemId,
@@ -1942,7 +1963,7 @@ export default {
         plannedInvestmentDate: item.PlannedInvestmentDate,
         description1: item.Description1,
         discountAmount: item.DiscountAmount,
-        quotaAmount: item.QuotaAmount,
+        quotaAmount: item.QuotaQuantity,
         itemFormula: {
           RecordId: item.ItemFormulaId,
           Description1: item.ItemFormula ? item.ItemFormula.Label : item.ItemFormulaName
@@ -1964,8 +1985,6 @@ export default {
           Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
         }
       }
-      this.setBenefitCondition(objectKey, item.BenefitConditionId)
-      this.setContractFocType(objectKey, item.ContractFocTypeId)
     },
     setBenefitCondition (objectKey, decimalValue) {
       if (decimalValue) {
@@ -2043,6 +2062,25 @@ export default {
           this.currencies = response.ListModel.BaseModels
         }
       })
+    },
+    selectedBenefitCondition (value) {
+      this.contractPriceDiscounts = {
+        benefitCondition: value
+      }
+    },
+    getQuotaColumnNameLabel (code) {
+      if (!code) { return }
+
+      let filteredArr = this.itemCriterias.filter(a => a.ForeignField === code)
+
+      return filteredArr && filteredArr.length === 1 ? filteredArr[0].Label : ''
+    },
+    getQuotaColumnValueLabel (value) {
+      if (!value) { return }
+
+      let filteredArr = this.quotaValues.filter(a => a.DecimalValue === value)
+
+      return filteredArr && filteredArr.length === 1 ? filteredArr[0].Label : ''
     }
   },
   validations () {
