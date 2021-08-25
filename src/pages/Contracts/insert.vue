@@ -1534,6 +1534,7 @@ export default {
         DiscountAmount: this.contractPriceDiscounts.discountAmount,
         BenefitConditionId: this.contractPriceDiscounts.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractPriceDiscounts.benefitCondition.Label,
+        BenefitConditionCode: this.contractPriceDiscounts.benefitCondition.Code,
         QuotaQuantity: this.contractPriceDiscounts.quotaAmount,
         QuotaUnitId: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.DecimalValue : null,
         QuotaUnitName: this.contractPriceDiscounts.quotaUnit ? this.contractPriceDiscounts.quotaUnit.Label : null,
@@ -1585,6 +1586,7 @@ export default {
         PlannedInvestmentDate: this.contractInvestments.plannedInvestmentDate,
         BenefitConditionId: this.contractInvestments.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractInvestments.benefitCondition.Label,
+        BenefitConditionCode: this.contractInvestments.benefitCondition.Code,
         QuotaColumnName: this.contractInvestments.quotaColumnName ? this.contractInvestments.quotaColumnName.ForeignField : null,
         QuotaColumnNameStr: this.contractInvestments.quotaColumnName ? this.contractInvestments.quotaColumnName.Label : null,
         QuotaColumnValue: this.contractInvestments.quotaColumnValue ? this.contractInvestments.quotaColumnValue.DecimalValue : null,
@@ -1629,6 +1631,7 @@ export default {
         DiscountRate: this.contractDiscounts.discountRate,
         BenefitConditionId: this.contractDiscounts.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractDiscounts.benefitCondition.Label,
+        BenefitConditionCode: this.contractDiscounts.benefitCondition.Code,
         QuotaColumnName: this.contractDiscounts.quotaColumnName ? this.contractDiscounts.quotaColumnName.ForeignField : null,
         QuotaColumnNameStr: this.contractDiscounts.quotaColumnName ? this.contractDiscounts.quotaColumnName.Label : null,
         QuotaColumnValue: this.contractDiscounts.quotaColumnValue ? this.contractDiscounts.quotaColumnValue.DecimalValue : null,
@@ -1726,6 +1729,7 @@ export default {
         QuotaTableName: 'T-ITEM',
         BenefitConditionId: this.contractPaymentPlans.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractPaymentPlans.benefitCondition.Label,
+        BenefitConditionCode: this.contractPaymentPlans.benefitCondition.Code,
         PaymentAmount: this.contractPaymentPlans.paymentAmount,
         PlannedPaymentDate: this.contractPaymentPlans.plannedPaymentDate,
         BranchSharePercent: this.contractPaymentPlans.branchSharePercent,
@@ -1780,6 +1784,7 @@ export default {
         QuotaTableName: 'T-ITEM',
         BenefitConditionId: this.contractEndorsements.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractEndorsements.benefitCondition.Label,
+        BenefitConditionCode: this.contractEndorsements.benefitCondition.Code,
         EndorsementGivenTypeId: this.contractEndorsements.endorsementGivenType.DecimalValue,
         EndorsementGivenTypeName: this.contractEndorsements.endorsementGivenType.Label,
         CalculationTypeId: this.contractEndorsements.calculationType.DecimalValue,
@@ -1838,6 +1843,7 @@ export default {
         MaxUsage: 0,
         BenefitConditionId: this.contractCustomPrices.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractCustomPrices.benefitCondition.Label,
+        BenefitConditionCode: this.contractCustomPrices.benefitCondition.Code,
         ItemId: this.contractCustomPrices.item ? this.contractCustomPrices.item.RecordId : null,
         ItemName: this.contractCustomPrices.item ? this.contractCustomPrices.item.Description1 : null,
         CustomPrice: this.contractCustomPrices.customPrice,
@@ -1880,7 +1886,11 @@ export default {
     },
     setModel (objectKey, item) {
       this[objectKey] = {
-        benefitCondition: item.BenefitCondition,
+        benefitCondition: item.BenefitCondition ? item.BenefitCondition : {
+          DecimalValue: item.BenefitConditionId,
+          Label: item.BenefitConditionName,
+          Code: item.BenefitConditionCode
+        },
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName

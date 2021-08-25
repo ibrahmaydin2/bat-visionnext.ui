@@ -2862,7 +2862,8 @@
       "october": "Ekim",
       "november": "Kasım",
       "december": "Aralık"
-    }
+    },
+    "tokenExpired": "Oturum sonlandırılmıştır."
   },
   "index": {
     "today": "Bugün",

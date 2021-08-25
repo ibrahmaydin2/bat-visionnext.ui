@@ -65,6 +65,10 @@ axios.interceptors.response.use(function (response) {
   if (error && error.code === 'ECONNABORTED') {
     store.commit('showAlert', { type: 'danger', msg: i18n.t('general.timeoutError') })
   }
+  if (error.response && error.response.status === 401) {
+    store.commit('showAlert', { type: 'danger', msg: i18n.t('general.tokenExpired') })
+    store.commit('logout')
+  }
   return Promise.reject(error)
 })
 export default axios
