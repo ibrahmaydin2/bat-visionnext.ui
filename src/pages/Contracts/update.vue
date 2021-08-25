@@ -282,7 +282,7 @@
         <b-tab :title="$t('insert.contract.contractPriceDiscounts')" v-if="showPriceDiscount">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
-              <NextDropdown :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
+              <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
               <b-form-input
@@ -314,8 +314,8 @@
                 || contractPriceDiscounts.benefitCondition.Code === 'YYM'
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3">
-              <v-select :disabled="!contractPriceDiscounts.quotaColumnName" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
+            <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3" v-if="contractPriceDiscounts.quotaColumnName">
+              <v-select :disabled="!contractPriceDiscounts.quotaColumnName || !contractPriceDiscounts.quotaColumnName.Code" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
@@ -1451,7 +1451,7 @@ export default {
           break
         case 'discountQuotaItem':
           this.discountQuotaItems = []
-          this.contractDiscounts.quıtaColumnValue = undefined
+          this.contractDiscounts.quotaColumnValue = undefined
           break
         case 'freeItem':
           this.freeItems = []
@@ -1479,7 +1479,7 @@ export default {
           break
       }
       if (value) {
-        this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+        return this.$api.postByUrl({paramName: value.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
           switch (property) {
             case 'item':
               this.fieldValues = res.Values
@@ -1941,7 +1941,21 @@ export default {
     },
     editRow (objectKey, list, item) {
       this.selectedIndex = list.indexOf(item)
+      if (item.QuotaColumnName) {
+        let label = this.getQuotaColumnNameLabel(item.QuotaColumnName)
+        if (label) {
+          this.getItemValues({Code: item.QuotaColumnName, Label: label}, 'quota').then(() => {
+            this.setModel(objectKey, item)
+          })
+        }
+      } else {
+        this.setModel(objectKey, item)
+      }
+      this.setContractFocType(objectKey, item.ContractFocTypeId)
+    },
+    setModel (objectKey, item) {
       this[objectKey] = {
+        benefitCondition: item.BenefitCondition,
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
@@ -1960,11 +1974,11 @@ export default {
         },
         quotaColumnName: {
           Code: item.QuotaColumnName,
-          Label: item.QuotaColumnNameStr
+          Label: item.QuotaColumnNameStr ? item.QuotaColumnNameStr : this.getQuotaColumnNameLabel(item.QuotaColumnName)
         },
         quotaColumnValue: {
           DecimalValue: item.QuotaColumnValue,
-          Label: item.QuotaColumnValueStr
+          Label: item.QuotaColumnValueStr ? item.QuotaColumnValueStr : this.getQuotaColumnValueLabel(item.QuotaColumnValue)
         },
         quotaQuantity: item.QuotaQuantity,
         unit: {
@@ -1975,7 +1989,7 @@ export default {
           DecimalValue: item.QuotaUnitId,
           Label: item.QuotaUnit ? item.QuotaUnit.Label : item.QuotaUnitName
         },
-        beginDate: item.BeginDate,
+        beginDate: item.BeginDate ? item.BeginDate : item.StartDate,
         endDate: item.EndDate,
         freeItem: {
           RecordId: item.FreeItemId,
@@ -2014,7 +2028,7 @@ export default {
         plannedInvestmentDate: item.PlannedInvestmentDate,
         description1: item.Description1,
         discountAmount: item.DiscountAmount,
-        quotaAmount: item.QuotaAmount,
+        quotaAmount: item.QuotaQuantity,
         itemFormula: {
           RecordId: item.ItemFormulaId,
           Description1: item.ItemFormula ? item.ItemFormula.Label : item.ItemFormulaName
@@ -2036,8 +2050,6 @@ export default {
           Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
         }
       }
-      this.setBenefitCondition(objectKey, item.BenefitConditionId)
-      this.setContractFocType(objectKey, item.ContractFocTypeId)
     },
     setBenefitCondition (objectKey, decimalValue) {
       if (decimalValue) {
@@ -2120,6 +2132,20 @@ export default {
       this.contractPriceDiscounts = {
         benefitCondition: value
       }
+    },
+    getQuotaColumnNameLabel (code) {
+      if (!code) { return }
+
+      let filteredArr = this.itemCriterias.filter(a => a.ForeignField === code)
+
+      return filteredArr && filteredArr.length === 1 ? filteredArr[0].Label : ''
+    },
+    getQuotaColumnValueLabel (value) {
+      if (!value) { return }
+
+      let filteredArr = this.quotaValues.filter(a => a.DecimalValue === value)
+
+      return filteredArr && filteredArr.length === 1 ? filteredArr[0].Label : ''
     }
   },
   validations () {

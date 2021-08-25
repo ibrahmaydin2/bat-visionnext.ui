@@ -256,7 +256,10 @@ export default {
             Description1: item.ReturnWarehouse ? item.ReturnWarehouse.Label : ''
           },
           RecordId: item.RecordId,
-          RecordState: item.RecordState
+          RecordState: item.RecordState,
+          SupplierBranchId: item.SupplierBranchId,
+          PurchaseWarehouseId: item.PurchaseWarehouseId,
+          ReturnWarehouseId: item.ReturnWarehouseId
         })
       })
 
