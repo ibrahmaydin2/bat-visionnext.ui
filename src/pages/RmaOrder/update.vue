@@ -29,7 +29,7 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
+              <v-select v-model="customer" :options="customers" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled='!customerValid'>
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -180,8 +180,10 @@ export default {
         }
       },
       rmaOrderLines: [],
-      customer: null,
-      warehouse: null,
+      customerValid: false,
+      warehouse: {},
+      customers: [],
+      customer: {},
       representative: null,
       approveEmloyee: null,
       rmaStatus: null,
@@ -191,7 +193,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers', 'warehouses', 'employees', 'rmaReasons', 'items'])
+    ...mapState(['warehouses', 'employees', 'rmaReasons', 'items'])
   },
   mounted () {
     this.getData().then(() => {
@@ -204,26 +206,26 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
       this.searchWarehouse()
     },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
+    // searchCustomer (search, loading) {
+    //   if (search.length < 3) {
+    //     return false
+    //   }
+    //   loading(true)
+    //   this.$store.dispatch('getSearchItems', {
+    //     ...this.query,
+    //     api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+    //     name: 'customers',
+    //     orConditionModels: [
+    //       {
+    //         Description1: search,
+    //         Code: search,
+    //         CommercialTitle: search
+    //       }
+    //     ]
+    //   }).then(res => {
+    //     loading(false)
+    //   })
+    // },
     searchEmployee (search, loading) {
       if (search.length < 3) {
         return false
@@ -446,6 +448,33 @@ export default {
           required
         }
       }
+    }
+  },
+  watch: {
+    lookup (e) {
+      if (e.RMA_STATUS) {
+        this.rmaStatusLabel = e.RMA_STATUS[0].Label
+      }
+    },
+    warehouse (e) {
+      this.customerValid = false
+      this.customers = []
+      this.customer = {}
+      this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
+        if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
+          let length = res.Model.WarehouseSuppliers.length
+          for (let a = 0; a < length; a++) {
+            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierCustomer)
+          }
+          this.customerValid = true
+        } else {
+          this.$toasted.show(this.$t('insert.RmaOrder.WarehouseError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     }
   }
 }

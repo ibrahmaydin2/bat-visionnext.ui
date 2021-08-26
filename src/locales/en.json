@@ -2779,7 +2779,8 @@
     "quick": "Hızlı Bakış",
     "downloads": "Dışarı Aktar",
     "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
-    "uploads": "İçeri Aktar"
+    "uploads": "İçeri Aktar",
+    "delete": "Sil"
   },
   "dashboard": {
     "search": "Ara",
