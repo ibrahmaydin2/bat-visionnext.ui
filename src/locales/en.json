@@ -2622,7 +2622,9 @@
       "november": "Kasım",
       "december": "Aralık"
     },
-    "tokenExpired": "Oturum sonlandırılmıştır."
+    "tokenExpired": "Oturum sonlandırılmıştır.",
+    "noResult": "Sonuç bulunamadı",
+    "warningTitle": "Uyarı"
   },
   "index": {
     "today": "Bugün",
