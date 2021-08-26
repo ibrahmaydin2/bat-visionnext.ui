@@ -52,7 +52,7 @@
       </section>
     </b-col>
     <b-col cols="12" class="">
-      <b-tabs>
+      <b-tabs class="disabledTabs">
         <b-tab :title="$t('insert.order.enterWaybill')" active @click.prevent="tabValidation()">
           <b-row>
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
@@ -144,7 +144,10 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" :disabled="form.VehicleId > 0">
+        <b-tab @click.prevent="tabValidation()" :disabled="form.VehicleId > 0">
+          <template #title>
+            <span v-b-tooltip.hover :title="form.VehicleId > 0 ? $t('insert.order.disabledForVehicle') : ''">{{$t('insert.order.logisticCompanyInformation')}}</span>
+          </template>
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
               <b-form-input type="text" v-model="selectedInvoiceLogisticCompany.companyName"/>
@@ -576,3 +579,8 @@ export default {
   }
 }
 </script>
+<style>
+.disabledTabs .nav-link.disabled {
+  pointer-events: all !important
+}
+</style>

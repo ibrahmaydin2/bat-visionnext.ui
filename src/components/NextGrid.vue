@@ -365,6 +365,7 @@ export default {
     }
   },
   mounted () {
+    searchQ = {}
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
@@ -392,9 +393,6 @@ export default {
       sortOpt = null
     }
     this.AndConditionalModel = this.andConditionalModel
-    if (!searchQ) {
-      searchQ = {}
-    }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
@@ -713,6 +711,14 @@ export default {
       ]
       let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
       return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
+        if (!res || res.length === 0) {
+          this.$bvToast.toast(this.$t('general.noResult'), {
+            title: this.$t('general.warningTitle'),
+            variant: 'warning',
+            toaster: 'b-toaster-top-right',
+            noCloseButton: false
+          })
+        }
         return res
       })
     },

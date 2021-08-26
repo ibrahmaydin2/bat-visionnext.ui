@@ -1621,7 +1621,9 @@
       "appliedDiscounts": "Uygulanan İndirimler",
       "givenQuantity": "Bedelsiz Ürün",
       "availableCampaigns": "Uygun Kampanyalar",
-      "noSupplierCustomers": "Seçili depoya ait tedarikçi kaydı bulunamadı."
+      "noSupplierCustomers": "Seçili depoya ait tedarikçi kaydı bulunamadı.",
+      "logisticCompanyInformation": "Lojistik Firma Bilgileri",
+      "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -2620,7 +2622,9 @@
       "november": "Kasım",
       "december": "Aralık"
     },
-    "tokenExpired": "Oturum sonlandırılmıştır."
+    "tokenExpired": "Oturum sonlandırılmıştır.",
+    "noResult": "Sonuç bulunamadı",
+    "warningTitle": "Uyarı"
   },
   "index": {
     "today": "Bugün",
@@ -2775,7 +2779,8 @@
     "quick": "Hızlı Bakış",
     "downloads": "Dışarı Aktar",
     "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
-    "uploads": "İçeri Aktar"
+    "uploads": "İçeri Aktar",
+    "delete": "Sil"
   },
   "dashboard": {
     "search": "Ara",

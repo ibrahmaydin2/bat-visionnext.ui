@@ -137,9 +137,9 @@
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
                <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4 && contractBenefits.benefitType.RecordId !== 5)" md="4" lg="4">
+            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
               <v-select
-                 :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4 || contractBenefits.benefitType.RecordId === 5)"
+                 :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
                  :options="customerBudgets" label="CustomerDesc"  v-model="contractBenefits.budgetMaster"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractBenefits.currency" :required="true" md="4" lg="4">
@@ -1236,6 +1236,9 @@ export default {
         }
       }
       this.getCustomerBudgets()
+      this.contractBenefitTypeSource = this.form.Type.Code === 'RS'
+        ? this.contractBenefitTypes.filter(c => c.Code === 'VAR' || c.Code === 'CI')
+        : this.contractBenefitTypes.filter(c => c.Code !== 'CI')
     },
     save () {
       this.$v.form.$touch()
@@ -2179,9 +2182,6 @@ export default {
     if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 4) {
       contractBenefits.budgetMaster = {}
       contractBenefits.benefitBudget = {}
-    }
-    if (this.contractBenefits.benefitType && this.contractBenefits.benefitType.RecordId === 5) {
-      contractBenefits.budgetMaster = {}
     }
     let contractItems = {
       quotaAmount: {},

@@ -33,8 +33,12 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <i v-if="showEdit && editable" @click="editItem(data.item)" class="fa fa-pencil-alt text-warning"></i>
-          <i v-if="editable" @click="removeItem(data)" class="far fa-trash-alt text-danger ml-3"></i>
+          <button :title="$t('list.edit')" v-b-tooltip.hover v-if="showEdit && editable" @click="editItem(data.item)" class="btn mr-2 btn-warning btn-sm">
+            <i class="fa fa-pencil-alt"></i>
+          </button>
+          <button :title="$t('list.delete')" v-b-tooltip.hover v-if="editable" @click="removeItem(data)" type="button" class="btn mr-2 btn-danger btn-sm">
+            <i class="far fa-trash-alt ml-1"></i>
+          </button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
           <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
         </template>

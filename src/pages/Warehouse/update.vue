@@ -364,6 +364,7 @@ export default {
         this.warehouseSupplier.System = 0
         this.warehouseSupplier.RecordState = 2
         this.warehouseSupplier.StatusId = 1
+        this.warehouseSupplier.WarehouseId = this.form.RecordId
         this.warehouseSuppliers.push(this.warehouseSupplier)
       }
       this.warehouseSupplier = {}
@@ -382,6 +383,9 @@ export default {
         selectedBranch: item.supplierBranch,
         purchaseWarehouse: item.purchaseWarehouse,
         returnWarehouse: item.returnWarehouse,
+        RecordState: 3,
+        RecordId: item.RecordId,
+        WarehouseId: item.WarehouseId,
         isUpdated: true
       }
       this.selectedBranch(this.warehouseSupplier.selectedBranch)
