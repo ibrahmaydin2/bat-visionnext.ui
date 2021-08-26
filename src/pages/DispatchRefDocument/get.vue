@@ -92,7 +92,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')">
+        <b-tab :title="$t('insert.order.logisticCompanyInformation')">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
