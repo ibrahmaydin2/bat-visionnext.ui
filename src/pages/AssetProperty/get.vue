@@ -16,7 +16,6 @@
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.AssetProperty.Code')}}:</b> {{ rowData.Code }}</span>
             <span><i class="far fa-circle" />  <b>{{$t('insert.AssetProperty.Description1')}}:</b> {{ rowData.Description1 }}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.AssetProperty.StatusId')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
       </b-row>
