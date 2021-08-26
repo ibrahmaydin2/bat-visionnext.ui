@@ -365,6 +365,7 @@ export default {
     }
   },
   mounted () {
+    searchQ = {}
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
@@ -392,9 +393,6 @@ export default {
       sortOpt = null
     }
     this.AndConditionalModel = this.andConditionalModel
-    if (!searchQ) {
-      searchQ = {}
-    }
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
