@@ -791,7 +791,7 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountCategory/Search', name: 'discountCategories'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBudget/api/BudgetMaster/Search', name: 'budgets'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCustomerSql/Search', name: 'customerSqls'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextAdmin/api/SysCustomerSql/Search', name: 'customerSqls'})
       this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         this.discountGivensColumnNames = res.Values
         this.discountTakensColumnNames = res.Values
