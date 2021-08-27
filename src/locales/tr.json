@@ -3025,7 +3025,11 @@
     "downloads": "Dışarı Aktar",
     "requiredFieldsMessage": "Zorunlu alanlarının filtrelenmesi gerekmektedir.",
     "uploads": "İçeri Aktar",
-    "delete": "Sil"
+    "delete": "Sil",
+    "deleteConfirm": "Kayıt Silme",
+    "rowDeleteConfirm": "Seçtiğiniz Kayıt Silinecektir! Onaylıyor musunuz?",
+    "editConfirm": "Kayıt Düzenleme",
+    "rowEditConfirm": "Seçtiğiniz kaydı düzenlemek istediğinize emin misiniz?"
   },
   "dashboard": {
     "search": "Ara",
