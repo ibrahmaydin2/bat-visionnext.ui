@@ -200,13 +200,13 @@
         <b-tab :title="$t('insert.branch.customerClassInfo')">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
-              <NextDropdown :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
-              <NextDropdown :disabled="insertReadonly.category2Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+              <NextDropdown v-model="customerCategory2" :disabled="true" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
-              <NextDropdown :disabled="insertReadonly.category1Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+              <NextDropdown v-model="customerCategory1" :disabled="true" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
               <NextDropdown :disabled="insertReadonly.customerRegion5Id" :get-lookup="true" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
@@ -322,8 +322,10 @@ export default {
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
       DefaultPaymentType: null,
       branchDistributionTypeId: 0,
-      allTypes: []
-
+      allTypes: [],
+      customerCategory3: null,
+      customerCategory2: null,
+      customerCategory1: null
     }
   },
   computed: {
@@ -371,6 +373,22 @@ export default {
   validations () {
     return {
       form: this.insertRules
+    }
+  },
+  watch: {
+    customerCategory3 (value) {
+      if (value) {
+        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
+        this.form.Category2Id = this.customerCategory2.DecimalValue
+        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
+        this.form.Category1Id = this.customerCategory1.DecimalValue
+      } else {
+        this.customerCategory1 = null
+        this.customerCategory2 = null
+        this.form.Category1Id = null
+        this.form.Category2Id = null
+        this.form.Category3Id = null
+      }
     }
   }
 }
