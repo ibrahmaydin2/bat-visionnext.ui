@@ -192,7 +192,7 @@ export default {
 
         let request = {
           andConditionModel: {
-            AssetTypeIds: [this.form.AssetTypeId]
+            TypeIds: [this.form.AssetTypeId]
           }
         }
         this.$api.postByUrl(request, 'VisionNextAsset/api/Asset/Search').then((response) => {

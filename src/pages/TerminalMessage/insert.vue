@@ -213,7 +213,7 @@
             <NextFormGroup :title="$t('insert.terminalMessage.customerQuery')" :error="$v.customerQuery" :required="true" md="5" lg="5">
               <NextDropdown
                 v-model="customerQuery"
-                url="VisionNextSystem/api/SysCustomerSql/Search" />
+                url="VisionNextAdmin/api/SysCustomerSql/Search" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>

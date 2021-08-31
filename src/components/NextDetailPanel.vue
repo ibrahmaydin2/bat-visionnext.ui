@@ -138,6 +138,9 @@ export default {
     hideOperations: {
       type: Boolean,
       default: false
+    },
+    mainForm: {
+      type: Object
     }
   },
   model: {
@@ -430,7 +433,7 @@ export default {
     },
     isRequired (item) {
       if ((typeof item.required === 'function')) {
-        let isRequired = item.required(this.form)
+        let isRequired = item.required(this.form, this.mainForm)
         if (!isRequired) {
           if (this.form[item.modelProperty]) {
             this.$set(this.form, item.modelProperty, null)
@@ -446,7 +449,7 @@ export default {
     },
     isDisabled (item) {
       if ((typeof item.disabled === 'function')) {
-        let isDisabled = item.disabled(this.form)
+        let isDisabled = item.disabled(this.form, this.mainForm)
         if (isDisabled) {
           if (this.form[item.modelProperty]) {
             this.$set(this.form, item.modelProperty, null)
