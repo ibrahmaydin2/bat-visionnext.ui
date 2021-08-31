@@ -298,7 +298,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'CustomerSqlId',
       objectKey: 'CustomerSql',
-      url: 'VisionNextSystem/api/SysCustomerSql/Search?v=1',
+      url: 'VisionNextAdmin/api/SysCustomerSql/Search?v=1',
       label: i18n.t('insert.loyalty.customerQuery'),
       required: true,
       visible: true,
@@ -385,7 +385,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'CustomerSqlId',
       objectKey: 'CustomerSql',
-      url: 'VisionNextSystem/api/SysCustomerSql/Search?v=2',
+      url: 'VisionNextAdmin/api/SysCustomerSql/Search?v=2',
       label: i18n.t('insert.loyalty.customerQuery'),
       required: true,
       dynamicAndCondition: {
