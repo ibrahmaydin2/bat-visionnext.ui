@@ -284,9 +284,8 @@
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
-              <b-form-input
-                type="number" v-model="contractPriceDiscounts.discountAmount" />
+            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code !== 'YYM'" md="3" lg="3">
+              <NextInput type="number" v-model="contractPriceDiscounts.discountAmount" :disabled="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
               <b-form-input
@@ -1251,12 +1250,13 @@ export default {
           this.$toasted.show(this.$t('insert.startDateLessEndDate'), { type: 'error', keepOnHover: true, duration: '3000' })
           return false
         }
+
         let contractBenefits = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 3)
         if (contractBenefits && contractBenefits.length > 0) {
           let contractBenefit = contractBenefits[0]
           if (this.form.ContractPaymentPlans && this.form.ContractPaymentPlans.length > 0) {
-            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => x.PaymentAmount).reduce((a, b) => a + b)
-            if (totalPaymentAmount !== contractBenefit.BenefitBudget) {
+            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => x.PaymentAmount).reduce((a, b) => Number.parseFloat(a) + Number.parseFloat(b))
+            if (Number.parseFloat(totalPaymentAmount) !== Number.parseFloat(contractBenefit.BenefitBudget)) {
               this.$toasted.show(this.$t('insert.contract.paymentAmountNotDifferentBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
               return false
             }
@@ -1780,7 +1780,7 @@ export default {
         (this.contractPaymentPlans.budgetEndDate >= c.BudgetBeginDate && this.contractPaymentPlans.budgetEndDate <= c.BudgetEndDate) ||
         (c.BudgetBeginDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetBeginDate <= this.contractPaymentPlans.budgetEndDate) ||
         (c.BudgetEndDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetEndDate <= this.contractPaymentPlans.budgetEndDate))
-      if (filteredArray && filteredArray.length) {
+      if (filteredArray && filteredArray.length && !this.contractPaymentPlans.isUpdated) {
         this.$toasted.show(this.$t('insert.contract.datesShouldNotIntersect'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
@@ -1889,7 +1889,7 @@ export default {
     },
     removeContractEndorsements (item) {
       if (item.RecordId > 0) {
-        this.form.ContractEndorsements[this.form.ContractPaymentPlans.indexOf(item)].RecordState = 4
+        this.form.ContractEndorsements[this.form.ContractEndorsements.indexOf(item)].RecordState = 4
       } else {
         this.form.ContractEndorsements.splice(this.form.ContractEndorsements.indexOf(item), 1)
       }
@@ -2121,7 +2121,7 @@ export default {
       }
     },
     getLookups () {
-      this.$api.postByUrl({LookupTableCode: 'CONTRACT_BENEFIT_TYPE,UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple').then((response) => {
+      this.$api.postByUrl({LookupTableCode: 'CONTRACT_BENEFIT_TYPE,UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
         if (response && response.Values) {
           this.lookupValues = response.Values
         }
@@ -2516,6 +2516,9 @@ export default {
     }
     if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'KOT') {
       contractPriceDiscounts.quotaAmount = {}
+    }
+    if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code === 'YYM') {
+      contractPriceDiscounts.discountAmount = {}
     }
     return {
       form: this.insertRules,
