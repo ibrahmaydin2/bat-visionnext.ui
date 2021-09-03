@@ -685,11 +685,11 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.StatementDay != null ? insertVisible.StatementDay : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.StatementDay + (insertRequired.StatementDay === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDay.$error }">
+            <b-col v-if="insertVisible.StatementDayId != null ? insertVisible.StatementDayId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.StatementDayId + (insertRequired.StatementDayId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDayId.$error }">
                 <v-select
                 :options="statementDays"
-                @input="selectedSearchType('StatementDay', $event)"
+                @input="selectedSearchType('StatementDayId', $event)"
                 label="Description1"
                 :disabled="!form.Statement"></v-select>
               </b-form-group>

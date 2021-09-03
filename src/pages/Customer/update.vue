@@ -733,11 +733,11 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.StatementDay != null ? insertVisible.StatementDay : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.StatementDay + (insertRequired.StatementDay === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDay.$error }">
+            <b-col v-if="insertVisible.StatementDayId != null ? insertVisible.StatementDayId : developmentMode" cols="12" md="2">
+              <b-form-group :label="insertTitle.StatementDayId + (insertRequired.StatementDayId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatementDayId.$error }">
                 <v-select
                   :options="statementDays"
-                  @input="selectedSearchType('StatementDay', $event)"
+                  @input="selectedSearchType('StatementDayId', $event)"
                   label="Description1"
                   :disabled="!form.Statement"></v-select>
               </b-form-group>
@@ -1073,9 +1073,9 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(r, i) in CustomerLabels" :key="i">
-                  <b-td>{{r.Label && r.Label.Label ? r.Label.Label : r.Label}}</b-td>
-                  <b-td>{{r.LabelValue && r.LabelValue.Label ? r.LabelValue.Label : r.LabelValue}}</b-td>
+                <b-tr v-for="(r, i) in customerLabelsGrid" :key="i">
+                  <b-td>{{r.label}}</b-td>
+                  <b-td>{{r.labelValue}}</b-td>
                   <b-td class="text-center"><i @click="removeCustomerLabel(r)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
@@ -1252,6 +1252,7 @@ export default {
         tagValue: null
       },
       CustomerLabels: [],
+      customerLabelsGrid: [],
       locationEditableIndex: null,
       addressInit: null,
       paymentTypes: [],
@@ -1477,12 +1478,12 @@ export default {
         })
         return false
       }
-      let filteredArr = this.CustomerLabels.filter(i => i.LabelId === this.customerTag.tagDefinition.RecordId && i.LabelValueId === this.customerTag.tagValue.RecordId)
+      let filteredArr = this.customerLabelsGrid.filter(i => i.LabelId === this.customerTag.tagDefinition.RecordId && i.LabelValueId === this.customerTag.tagValue.RecordId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
         return false
       }
-      this.CustomerLabels.push({
+      this.customerLabelsGrid.push({
         label: this.customerTag.tagDefinition.Description1,
         labelId: this.customerTag.tagDefinition.RecordId,
         labelValue: this.customerTag.tagValue.Description1,
@@ -1492,7 +1493,7 @@ export default {
       this.$v.customerTag.$reset()
     },
     removeCustomerLabel (item) {
-      this.CustomerLabels.splice(this.CustomerLabels.indexOf(item), 1)
+      this.customerLabelsGrid.splice(this.customerLabelsGrid.indexOf(item), 1)
     },
     addCustomerPaymentType () {
       this.$v.customerPaymentTypes.$touch()
