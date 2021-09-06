@@ -38,10 +38,10 @@
               <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
-              <NextDropdown lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)"/>
+              <NextDropdown :source="lookupValues.CONTRACT_CLASS" label="Label" @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId" md="2" lg="2">
-              <NextDropdown lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)"/>
+              <NextDropdown :source="lookupValues.ITEM_TYPE" label="Label" @input="selectedType('BrandId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1" md="2" lg="2">
               <b-form-input type="number" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
@@ -53,7 +53,7 @@
               <b-form-input type="text" v-model="form.CustomerFinanceCode" :readonly="insertReadonly.CustomerFinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId" md="2" lg="2">
-              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE" @input="selectedType('ApproveStateId', $event)" disabled/>
+              <NextDropdown v-model="selectedApproveState" :source="lookupValues.APPROVE_STATE" label="Label" @input="selectedType('ApproveStateId', $event)" disabled/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
               <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
@@ -1222,8 +1222,8 @@ export default {
         if (contractBenefits && contractBenefits.length > 0) {
           let contractBenefit = contractBenefits[0]
           if (this.form.ContractPaymentPlans && this.form.ContractPaymentPlans.length > 0) {
-            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => parseFloat(x.PaymentAmount)).reduce((a, b) => a + b)
-            if (totalPaymentAmount !== parseFloat(contractBenefit.BenefitBudget)) {
+            let totalPaymentAmount = this.form.ContractPaymentPlans.map(x => x.PaymentAmount).reduce((a, b) => Number.parseFloat(a) + Number.parseFloat(b))
+            if (Number.parseFloat(totalPaymentAmount) !== Number.parseFloat(contractBenefit.BenefitBudget)) {
               this.$toasted.show(this.$t('insert.contract.paymentAmountNotDifferentBudgetError'), { type: 'error', keepOnHover: true, duration: '3000' })
               return false
             }
@@ -2050,7 +2050,7 @@ export default {
       })
     },
     getLookups () {
-      this.$api.postByUrl({LookupTableCode: 'CONTRACT_BENEFIT_TYPE,UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple').then((response) => {
+      this.$api.postByUrl({LookupTableCode: 'CONTRACT_BENEFIT_TYPE,UNIT,CONTRACT_CLASS,ITEM_TYPE,APPROVE_STATE'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
         if (response && response.Values) {
           this.lookupValues = response.Values
         }

@@ -19,14 +19,11 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
-          <!-- <NextFormGroup item-key="Description2" :error="$v.form.Description2">
-            <b-form-input type="text" v-model="form.Description2" :readonly="insertReadonly.Description2" />
-          </NextFormGroup> -->
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
@@ -38,7 +35,11 @@
         <b-tab :title="$t('get.DiscountReason.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="DiscountClassId" :error="$v.form.DiscountClassId">
-              <v-select v-model="discountClass" :options="discountClasses" @input="selectedSearchType('DiscountClassId', $event)" label="Description1"></v-select>
+              <NextDropdown
+                v-model="discountClass"
+                @input="selectedSearchType('DiscountClassId', $event)"
+                url="VisionNextDiscount/api/DiscountClass/Search"
+              ></NextDropdown>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -47,7 +48,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -60,30 +60,18 @@ export default {
         StatusId: 1,
         Code: null,
         Description1: null,
-        Description2: null,
-        DiscountClassId: null,
-        IsCustomerDiscount: null
+        DiscountClassId: null
       },
       discountClass: null,
       routeName1: 'Discount'
     }
   },
-  computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
-    ...mapState(['discountClasses'])
-  },
   mounted () {
     this.getData().then(() => {
       this.setModel()
-      this.getInsertPage()
     })
   },
   methods: {
-    getInsertPage () {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountClass/Search', name: 'discountClasses'})
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
-    },
     setModel () {
       this.form = this.rowData
       this.discountClass = this.convertLookupValueToSearchValue(this.form.DiscountClass)
@@ -103,12 +91,6 @@ export default {
         }
         this.updateData()
       }
-    }
-  },
-  validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
-    return {
-      form: this.insertRules
     }
   }
 }

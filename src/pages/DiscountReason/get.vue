@@ -48,7 +48,7 @@ export default {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style', 'lookup'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {

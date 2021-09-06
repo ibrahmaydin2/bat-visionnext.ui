@@ -1,5 +1,5 @@
 <template>
-  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"/>
+  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"  :maxLength="maxLength"/>
 </template>
 <script>
 export default {
@@ -15,7 +15,8 @@ export default {
       type: String,
       default: 'text'
     },
-    oninput: null
+    oninput: null,
+    maxLength: ''
   },
   data () {
     return {
@@ -36,10 +37,14 @@ export default {
         this.$emit('valuechange', newValue)
       }
     },
-    value (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        this.selectedValue = newValue
-      }
+    value: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.selectedValue = newValue
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

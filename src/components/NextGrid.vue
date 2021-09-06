@@ -872,19 +872,31 @@ export default {
               if (row.defaultValue && typeof row.defaultValue !== 'object') {
                 let model = {}
                 let today = new Date()
-                let lastDayOfMonth = me.dateConvertToISo(new Date(today.getFullYear(), today.getMonth() + 1, 0))
+                let todayDate = new Date(today)
+                let firstDayOfMonth = new Date(todayDate.setDate(1))
+                let firstDate = new Date(firstDayOfMonth)
+                let nextMonth = new Date(firstDate.setMonth(firstDate.getMonth() + 1))
+                let lastDayOfMonth = new Date(nextMonth.setDate(0))
                 switch (row.defaultValue) {
                   case 'first':
-                    model.BeginValue = me.dateConvertToISo(today.setDate(1))
-                    model.EndValue = lastDayOfMonth
+                    model.BeginValue = me.dateConvertToISo(firstDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
                     break
                   case 'last':
-                    model.BeginValue = lastDayOfMonth
-                    model.EndValue = lastDayOfMonth
+                    model.BeginValue = me.dateConvertToISo(lastDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
                     break
                   case 'today':
                     model.BeginValue = me.dateConvertToISo(today)
                     model.EndValue = me.dateConvertToISo(today)
+                    break
+                  case 'firsttoday':
+                    model.BeginValue = me.dateConvertToISo(firstDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(today)
+                    break
+                  case 'todaylast':
+                    model.BeginValue = me.dateConvertToISo(today)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
                     break
                 }
                 if (row.columnType === 'Date') {

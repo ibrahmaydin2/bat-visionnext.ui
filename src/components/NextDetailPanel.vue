@@ -33,12 +33,32 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <button :title="$t('list.edit')" v-b-tooltip.hover v-if="showEdit && editable" @click="editItem(data.item)" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show('confirm-edit-modal')" class="btn mr-2 btn-warning btn-sm">
             <i class="fa fa-pencil-alt"></i>
-          </button>
-          <button :title="$t('list.delete')" v-b-tooltip.hover v-if="editable" @click="removeItem(data)" type="button" class="btn mr-2 btn-danger btn-sm">
+            <b-modal id="confirm-edit-modal">
+              <template #modal-title>
+                {{$t('list.editConfirm')}}
+              </template>
+              {{$t('list.rowEditConfirm')}}
+              <template #modal-footer>
+                <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-edit-modal')">{{$t('insert.cancel')}}</b-button>
+                <b-button size="sm" class="float-right ml-2" variant="success" @click="editItem(data.item)">{{$t('insert.okay')}}</b-button>
+              </template>
+            </b-modal>
+          </b-button>
+          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show('confirm-delete-modal')" type="button" class="btn mr-2 btn-danger btn-sm">
             <i class="far fa-trash-alt ml-1"></i>
-          </button>
+            <b-modal id="confirm-delete-modal">
+              <template #modal-title>
+                {{$t('list.deleteConfirm')}}
+              </template>
+              {{$t('list.rowDeleteConfirm')}}
+              <template #modal-footer>
+                <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-delete-modal')">{{$t('insert.cancel')}}</b-button>
+                <b-button size="sm" class="float-right ml-2" variant="success" @click="removeItem(data)">{{$t('insert.okay')}}</b-button>
+              </template>
+            </b-modal>
+          </b-button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
           <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
         </template>
@@ -118,6 +138,9 @@ export default {
     hideOperations: {
       type: Boolean,
       default: false
+    },
+    mainForm: {
+      type: Object
     }
   },
   model: {
@@ -291,6 +314,7 @@ export default {
       this.$v.form.$reset()
     },
     removeItem (data) {
+      this.$bvModal.hide('confirm-delete-modal')
       const item = data.item
       const index = this.values.indexOf(data.item)
       if (item.RecordId) {
@@ -301,6 +325,7 @@ export default {
       this.$emit('valuechange', this.values)
     },
     editItem (data) {
+      this.$bvModal.hide('confirm-edit-modal')
       this.form = data
       this.isUpdated = true
       this.selectedIndex = this.values.indexOf(data)
@@ -408,7 +433,7 @@ export default {
     },
     isRequired (item) {
       if ((typeof item.required === 'function')) {
-        let isRequired = item.required(this.form)
+        let isRequired = item.required(this.form, this.mainForm)
         if (!isRequired) {
           if (this.form[item.modelProperty]) {
             this.$set(this.form, item.modelProperty, null)
@@ -424,7 +449,7 @@ export default {
     },
     isDisabled (item) {
       if ((typeof item.disabled === 'function')) {
-        let isDisabled = item.disabled(this.form)
+        let isDisabled = item.disabled(this.form, this.mainForm)
         if (isDisabled) {
           if (this.form[item.modelProperty]) {
             this.$set(this.form, item.modelProperty, null)

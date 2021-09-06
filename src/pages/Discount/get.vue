@@ -57,188 +57,81 @@
         </b-tab>
         <b-tab :title="$t('insert.discount.discountTakens')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.takenQuantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.minTakenAmount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.endTakenQuantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.maxTakenAmount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.minTakenQuantity')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountTakens" :key="i">
-                      <b-td>{{w.ColumnName}}</b-td>
-                      <b-td>{{w.ColumnValue}}</b-td>
-                      <b-td>{{w.TakenQuantity}}</b-td>
-                      <b-td>{{w.MinTakenAmount}}</b-td>
-                      <b-td>{{w.EndTakenQuantity}}</b-td>
-                      <b-td>{{w.MaxTakenAmount}}</b-td>
-                      <b-td>{{w.MinTakenQuantity}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.DiscountTakens" :items="discountTakenItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountGivens')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.givenQuantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.discountRate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.discountTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.startValue')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.finishValue')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountGivens" :key="i">
-                      <b-td>{{w.ColumnName}}</b-td>
-                      <b-td>{{w.ColumnValue}}</b-td>
-                      <b-td>{{w.GivenQuantity}}</b-td>
-                      <b-td>{{w.DiscountRate}}</b-td>
-                      <b-td>{{w.DiscountTotal}}</b-td>
-                      <b-td>{{w.StartValue}}</b-td>
-                      <b-td>{{w.FinishValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+         <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.DiscountGivens" :items="discountGivenItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomers')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.customerName')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountCustomers" :key="i">
-                      <b-td>{{w.Customer ? w.Customer.Label : ''}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.DiscountCustomers" :items="discountCustomerItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountExcludedCustomers')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.customerName')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountExcludedCustomers" :key="i">
-                      <b-td>{{w.Customer ? w.Customer.Label : ''}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.DiscountExcludedCustomers" :items="discountExcludedCustomerItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.customerCriterias')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.columnName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.discount.columnValue')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.DiscountDetails ? rowData.DiscountDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID') : [])" :key="i">
-                      <b-td>{{f.ColumnName}}</b-td>
-                      <b-td>{{f.ColumnValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get"  v-model="discountDetailsCustomerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.branchs')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.branchId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.DiscountDetails ? rowData.DiscountDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID') : [])" :key="i">
-                      <b-td>{{f.ColumnValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get"  v-model="discountDetailsBranchs" :items="discountDetailsBranchItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.routes')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.routeId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.DiscountDetails ? rowData.DiscountDetails.filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID') : [])" :key="i">
-                    <b-td>{{f.ColumnValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="discountDetailsRoutes" :items="discountDetailsRouteItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.payments')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.paymentTypeId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(f, i) in (rowData.DiscountDetails ? rowData.DiscountDetails.filter(f => f.TableName === 'T_PAYMENT_TYPE' && f.ColumnName === 'PAYMENTTYPE_ID') : [])" :key="i">
-                    <b-td>{{f.ColumnValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="discountDetailsPaymentTypes" :items="discountDetailsPaymentTypeItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.discount.discountCustomerSqls')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.discount.customerSql')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(w, i) in rowData.DiscountCustomerSqls" :key="i">
-                      <b-td>{{w.CustomerSql ? w.CustomerSql.Label : ''}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.DiscountCustomerSqls" :items="discountCustomerSqlItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -250,24 +143,44 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      discountTakenItems: detailData.discountTakenItems,
+      discountGivenItems: detailData.discountGivenItems,
+      discountCustomerItems: detailData.discountCustomerItems,
+      discountExcludedCustomerItems: detailData.discountExcludedCustomerItems,
+      discountDetailsCustomerCriteriaItems: detailData.discountDetailsCustomerCriteriaItems,
+      discountDetailsRouteItems: detailData.discountDetailsRouteItems,
+      discountDetailsPaymentTypeItems: detailData.discountDetailsPaymentTypeItems,
+      discountCustomerSqlItems: detailData.discountCustomerSqlItems,
+      discountDetailsBranchItems: detailData.discountDetailsBranchItems,
+      discountDetailsCustomerCriterias: [],
+      discountDetailsBranchs: [],
+      discountDetailsRoutes: [],
+      discountDetailsPaymentTypes: []
+    }
   },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextDiscount/api/Discount', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextDiscount/api/Discount', record: this.$route.params.url}).then(() => {
+        this.discountDetailsCustomerCriterias = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECOR_ID' && d.ColumnName !== 'BRANCH_ID')
+        this.discountDetailsBranchs = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
+        this.discountDetailsRoutes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECOR_ID')
+        this.discountDetailsPaymentTypes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECOR_ID')
+      })
     }
   }
 }
