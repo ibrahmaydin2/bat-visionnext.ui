@@ -2309,7 +2309,13 @@
       "completionTime": "Tamamlama Saati",
       "fromLocation": "Giriş/Çıkış Lokasyon",
       "assignEmployee": "Personel Ata",
-      "successAssignEmployee": "Personel başarılı bir şekilde atanmıştır."
+      "successAssignEmployee": "Personel başarılı bir şekilde atanmıştır.",
+      "operations": "Operasyonlar",
+      "ServiceTime": "Servis Zamanı",
+      "StartTime": "Başlangıç Zamanı",
+      "EndTime": "Bitiş Zamanı",
+      "Genexp1": "Açıklama",
+      "Operation": "Operasyon Tipi"
     }
   },
   "get": {

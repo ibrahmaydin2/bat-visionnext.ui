@@ -399,6 +399,11 @@
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractInvestments.benefitCondition" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractInvestments.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractInvestments.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
+                 <v-select
+                 :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
+                 :options="customerBudgets" label="CustomerDesc"  v-model="contractInvestments.budgetMaster"/>
+            </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.plannedInvestedAmount')" :error="$v.contractInvestments.investedAmount" :required="true" md="3" lg="3">
               <b-form-input type="number" v-model="contractInvestments.investedAmount" />
             </NextFormGroup>
@@ -441,6 +446,7 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.contract.benefitCondition')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.BudgetMasterId')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.plannedInvestedAmount')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.plannedInvestmentDate')}}</span></b-th>
                 <b-th><span>{{$t('insert.contract.quotaColumnName')}}</span></b-th>
@@ -455,6 +461,7 @@
               <b-tbody>
                 <b-tr v-for="(c, i) in form.ContractInvestments" :key="i">
                   <b-td>{{c.BenefitConditionName}}</b-td>
+                  <b-td>{{c.BudgetMasterName}}</b-td>
                   <b-td>{{c.InvestedAmount}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.PlannedInvestmentDate)}}</b-td>
                   <b-td>{{c.QuotaColumnNameStr}}</b-td>
@@ -1584,6 +1591,8 @@ export default {
         QuotaTableName: 'T-ITEM',
         InvestedAmount: this.contractInvestments.investedAmount,
         PlannedInvestmentDate: this.contractInvestments.plannedInvestmentDate,
+        BudgetMasterId: this.contractInvestments.budgetMaster ? this.contractInvestments.budgetMaster.BudgetMasterId : undefined,
+        BudgetMasterName: this.contractInvestments.budgetMaster ? this.contractInvestments.budgetMaster.CustomerDesc : '',
         BenefitConditionId: this.contractInvestments.benefitCondition.DecimalValue,
         BenefitConditionName: this.contractInvestments.benefitCondition.Label,
         BenefitConditionCode: this.contractInvestments.benefitCondition.Code,
@@ -1891,6 +1900,10 @@ export default {
           Label: item.BenefitConditionName,
           Code: item.BenefitConditionCode
         },
+        budgetMaster: {
+          BudgetId: item.BudgetMasterId,
+          CustomerDesc: item.BudgetMaster ? item.BudgetMaster.Label : item.BudgetMasterName
+        },
         endorsementGivenType: {
           DecimalValue: item.EndorsementGivenTypeId,
           Label: item.EndorsementGivenType ? item.EndorsementGivenType.Label : item.EndorsementGivenTypeName
@@ -2136,6 +2149,9 @@ export default {
     }
     let contractInvestments = {
       benefitCondition: {
+        required
+      },
+      budgetMaster: {
         required
       },
       investedAmount: {

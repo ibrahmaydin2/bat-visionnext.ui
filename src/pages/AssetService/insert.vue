@@ -35,7 +35,7 @@
               <NextInput type="text" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1"/>
             </NextFormGroup>
             <NextFormGroup item-key="ServiceNumber" :error="$v.form.ServiceNumber" md="4" lg="4">
-              <NextInput type="text" v-model="form.ServiceNumber" :disabled="insertReadonly.ServiceNumber"/>
+              <NextInput type="text" v-model="form.ServiceNumber" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsAssetMovement" :error="$v.form.IsAssetMovement">
               <NextCheckBox v-model="form.IsAssetMovement" type="number" :disabled="insertReadonly.IsAssetMovement" toggle/>
@@ -73,7 +73,7 @@
               <NextDropdown v-model="asset" :source="assets" @input="selectedSearchType('AssetId', $event)" :disabled="!this.form.AssetTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="ServiceTypeId" :error="$v.form.ServiceTypeId" md="4" lg="4">
-              <NextDropdown url="VisionNextAsset/api/ServiceType/Search" @input="selectedSearchType('ServiceTypeId', $event)" :disabled="insertReadonly.ServiceTypeId" />
+              <NextDropdown :Options="serviceTypes" :source="(serviceTypes ? serviceTypes.filter(c => c.Code == 'KRL' || c.Code == 'GRA'): [])" @input="selectedSearchType('ServiceTypeId', $event)" :disabled="insertReadonly.ServiceTypeId" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -150,11 +150,13 @@ export default {
       assets: [],
       mainCustomerId: null,
       serviceState: null,
-      serviceStates: []
+      serviceStates: [],
+      serviceTypes: []
     }
   },
   mounted () {
     this.createManualCode('ServiceNumber')
+    this.getServiceTypes()
     let customerId = localStorage.getItem('CustomerId')
     this.mainCustomerId = customerId ? parseFloat(customerId) : 0
     let currentDate = new Date()
@@ -181,6 +183,13 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getServiceTypes (request) {
+      this.$api.postByUrl(request, 'VisionNextAsset/api/ServiceType/Search').then((response) => {
+        if (response && response.ListModel) {
+          this.serviceTypes = response.ListModel.BaseModels
+        }
+      })
     },
     selectAssetType (value) {
       this.form.AssetId = null
