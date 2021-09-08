@@ -554,6 +554,7 @@
     "selectedRowsWillbeReset": "Seçilen kolonlar sıfırlanacaktır. Onaylıyor musunuz?",
     "lineNumber": "Sıra No",
     "systemRecordCanNotUpdate": "Sistem kayıtları güncellenemez!",
+    "rejectRecordNotSaveAs": "Reddedilen analiz farklı kaydedilemez!",
     "autoCompleteClickError" : "En az 3 karakter arama yaparak çıkan sonuçlar arasından bir değer seçiniz.",
     "commonInfo": {
       "title": "Bilgi",

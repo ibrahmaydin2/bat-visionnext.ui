@@ -192,6 +192,23 @@ export default {
 
       return true
     },
+    getData () {
+      if (!this.routeName1) {
+        this.routeName1 = this.routeName
+      }
+      if (!this.routeName2) {
+        this.routeName2 = this.routeName
+      }
+      return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}/Get`).then((res) => {
+        if (res.IsCompleted) {
+          this.$store.commit('setRowData', res.Model)
+          if (res.Model && res.Model.ApproveStateId === 2101 && this.$route.query.saveAs === 1) {
+            this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.rejectRecordNotSaveAs') })
+            document.getElementById('submitButton').disabled = true
+          }
+        }
+      })
+    },
     setData () {
       let rowData = this.rowData
       this.form = rowData
