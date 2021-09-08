@@ -194,6 +194,10 @@ export default {
     },
     setData () {
       let rowData = this.rowData
+      if (rowData && rowData.ApproveStateId === 2101 && this.$route.query.saveAs === 1) {
+        this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.rejectRecordNotSaveAs') })
+        document.getElementById('submitButton').disabled = true
+      }
       this.form = rowData
       this.validityType = rowData.ValidityType
       this.analysisType = rowData.AnalysisType
