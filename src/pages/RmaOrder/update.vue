@@ -459,7 +459,6 @@ export default {
     warehouse (e) {
       this.customerValid = false
       this.customers = []
-      this.customer = {}
       this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
           let length = res.Model.WarehouseSuppliers.length

@@ -246,7 +246,7 @@ export default {
       this.warehouseSupplier.supplierBranch = e
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextWarehouse/api/Warehouse/Search',
+        api: 'VisionNextWarehouse/api/Warehouse/SearchWithSelectedBranch',
         name: 'warehouses',
         andConditionModel: {
           branchId: e.RecordId

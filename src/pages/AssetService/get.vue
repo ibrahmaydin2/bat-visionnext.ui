@@ -48,6 +48,15 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.assetService.operations')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ServiceOperations" :items="serviceOperationsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -55,11 +64,13 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
   data () {
     return {
+      serviceOperationsItems: detailData.serviceOperationsItems
     }
   },
   mounted () {
