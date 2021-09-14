@@ -85,8 +85,8 @@
             <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
-              <NextDropdown v-model="useEDispatch" :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+            <NextFormGroup item-key="UseEWaybill" :error="$v.form.UseEWaybill">
+              <NextDropdown v-model="useEWaybill" :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
               <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
@@ -325,7 +325,7 @@ export default {
       blockReason: {},
       salesDocumentType: {},
       taxCustomerType: {},
-      useEDispatch: {},
+      useEWaybill: {},
       discountGroup10: {},
       discountGroup2: {},
       discountGroup9: {},
@@ -361,7 +361,7 @@ export default {
       this.form = rowData
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
-      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatchType)
+      this.useEWaybill = this.convertLookupValueToSearchValue(rowData.UseEWaybill)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)

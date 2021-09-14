@@ -85,8 +85,8 @@
             <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
-              <NextDropdown :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+            <NextFormGroup item-key="UseEWaybill" :error="$v.form.UseEWaybill">
+              <NextDropdown :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
               <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
@@ -314,8 +314,7 @@ export default {
         CreditAccountRemainder: null,
         TciBreak1Id: null,
         TciBreak2Id: null,
-        SapCustomerId: null,
-        UseEDispatch: 0
+        SapCustomerId: null
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
