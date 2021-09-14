@@ -62,7 +62,7 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
-              <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
+              <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId" :get-lookup="true" lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BlockReasonId" :error="$v.form.BlockReasonId">
               <NextDropdown v-model="blockReason" :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
@@ -85,8 +85,11 @@
             <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
-              <NextDropdown v-model="useEDispatch" :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+            <NextFormGroup item-key="CustomerPrefixCode" :error="$v.form.CustomerPrefixCode">
+              <NextInput v-model="form.CustomerPrefixCode" type="text" :disabled="insertReadonly.CustomerPrefixCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UseEWaybill" :error="$v.form.UseEWaybill">
+              <NextDropdown v-model="useEWaybill" :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
               <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
@@ -176,6 +179,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
+            </NextFormGroup>
+            <NextFormGroup item-key="MaxBonusRate" :error="$v.form.MaxBonusRate">
+              <NextInput v-model="form.MaxBonusRate" type="number" :disabled="insertReadonly.MaxBonusRate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.SalesPriceChangeRate">
+              <NextInput v-model="form.SalesPriceChangeRate" type="number" :disabled="insertReadonly.SalesPriceChangeRate" />
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
               <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
@@ -325,7 +334,7 @@ export default {
       blockReason: {},
       salesDocumentType: {},
       taxCustomerType: {},
-      useEDispatch: {},
+      useEWaybill: {},
       discountGroup10: {},
       discountGroup2: {},
       discountGroup9: {},
@@ -361,7 +370,7 @@ export default {
       this.form = rowData
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
-      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatchType)
+      this.useEWaybill = this.convertLookupValueToSearchValue(rowData.UseEWaybill)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)

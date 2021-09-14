@@ -232,7 +232,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import updateMixin from '../../mixins/update'
+import updateMixin from '../../../mixins/update'
 export default {
   mixins: [updateMixin],
   data () {
@@ -375,7 +375,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/SearchSapCustomer',
+        api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
         andConditionModel: {
           SalesDocumentTypeIds: [45, 46],

@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Item' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -261,7 +261,7 @@
               <b-tbody>
                 <b-tr v-for="(c, i) in (form.ItemBarcodes ? form.ItemBarcodes.filter(c => c.RecordState !== 4) : [])" :key="i">
                   <b-td>{{c.Barcode}}</b-td>
-                  <b-td>{{c.UnitSetLabel}}</b-td>
+                  <b-td>{{c.UnitSet.Label}}</b-td>
                   <b-td class="text-center"><i @click="removeItemBarcodes(c)" class="far fa-trash-alt text-danger"></i></b-td>
                 </b-tr>
               </b-tbody>
