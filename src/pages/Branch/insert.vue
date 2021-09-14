@@ -147,12 +147,6 @@
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
               <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
             </NextFormGroup>
-            <NextFormGroup item-key="MaxBonusRate" :error="$v.form.maxBonusRate">
-              <NextInput v-model="form.MaxBonusRate" type="text" :disabled="insertReadonly.maxBonusRate" />
-            </NextFormGroup>
-            <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.salesPriceChangeRate">
-              <NextInput v-model="form.SalesPriceChangeRate" type="text" :disabled="insertReadonly.salesPriceChangeRate" />
-            </NextFormGroup>
             <NextFormGroup item-key="RiskLimit" :error="$v.form.riskLimit">
               <NextInput v-model="form.RiskLimit" type="text" :disabled="insertReadonly.riskLimit" />
             </NextFormGroup>
