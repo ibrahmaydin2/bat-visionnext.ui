@@ -197,7 +197,7 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getInsertRules', {...this.query, api: 'CsCard'})
+      this.$store.dispatch('getInsertRules', {...this.query, api: 'CSCard'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
     },
     selectedSearchType (label, model) {

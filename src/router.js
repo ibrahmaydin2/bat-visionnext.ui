@@ -87,8 +87,6 @@ import BranchStockTransferInsert from '@/pages/BranchStockTransfer/insert'
 
 import OrderIndex from '@/pages/Order/'
 import OrderGet from '@/pages/Order/get'
-import OrderInsert from '@/pages/Order/insert'
-import OrderUpdate from '@/pages/Order/update'
 
 import ContractsIndex from '@/pages/Contracts/'
 import ContractsGet from '@/pages/Contracts/get'
@@ -259,8 +257,6 @@ import DeliveryDispatchUpdate from '@/pages/DeliveryDispatch/update'
 
 import SalesInvoiceIndex from '@/pages/SalesInvoice/'
 import SalesInvoiceGet from '@/pages/SalesInvoice/get'
-import SalesInvoiceInsert from '@/pages/SalesInvoice/insert'
-import SalesInvoiceUpdate from '@/pages/SalesInvoice/update'
 
 import PurchaseOrderIndex from '@/pages/PurchaseOrder/'
 import PurchaseOrderGet from '@/pages/PurchaseOrder/get'
@@ -567,8 +563,6 @@ import ResetPassword from '@/views/Auth/reset-password'
 
 import SalesWaybillIndex from '@/pages/SalesWaybill/'
 import SalesWaybillGet from '@/pages/SalesWaybill/get'
-import SalesWaybillInsert from '@/pages/SalesWaybill/insert'
-import SalesWaybillUpdate from '@/pages/SalesWaybill/update'
 import SalesWaybillCopy from '@/pages/SalesWaybill/copy'
 
 import ServicePurchaseInvoiceIndex from '@/pages/ServicePurchaseInvoice/'
@@ -966,7 +960,7 @@ const listUpdate = [
   { path: '/Update/SalesOrder/:url', name: 'SalesOrderUpdate', component: SalesOrderUpdate, meta: { title: i18n.t('router.SalesOrderUpdate'), baseLink: 'SalesOrder' } },
   { path: '/Update/AcceptGoodsDispatch/:url', name: 'AcceptGoodsDispatchUpdate', component: AcceptGoodsDispatchUpdate, meta: { title: i18n.t('router.AcceptGoodsDispatchUpdate'), baseLink: 'AcceptGoodsDispatch' } },
   { path: '/Update/DeliveryDispatch/:url', name: 'DeliveryDispatchUpdate', component: DeliveryDispatchUpdate, meta: { title: i18n.t('router.DeliveryDispatchUpdate'), baseLink: 'DeliveryDispatch' } },
-  { path: '/Update/SalesInvoice/:url', name: 'SalesInvoiceUpdate', component: SalesInvoiceUpdate, meta: { title: i18n.t('router.SalesInvoiceUpdate'), baseLink: 'SalesInvoice' } },
+  { path: '/Update/SalesInvoice/:url', name: 'SalesInvoiceUpdate', component: getTenantPage('SalesInvoice', 'update'), meta: { title: i18n.t('router.SalesInvoiceUpdate'), baseLink: 'SalesInvoice' } },
   { path: '/Update/PurchaseOrder/:url', name: 'PurchaseOrderUpdate', component: PurchaseOrderUpdate, meta: { title: i18n.t('router.PurchaseOrderUpdate'), baseLink: 'PurchaseOrder' } },
   { path: '/Update/PurchaseInvoice/:url', name: 'PurchaseInvoiceUpdate', component: PurchaseInvoiceUpdate, meta: { title: i18n.t('router.PurchaseInvoiceUpdate'), baseLink: 'PurchaseInvoice' } },
   { path: '/Update/Finance/:url', name: 'FinanceUpdate', component: FinanceUpdate, meta: { title: i18n.t('router.FinanceUpdate'), baseLink: 'Finance' } },
@@ -999,7 +993,7 @@ const listUpdate = [
   { path: '/Update/StockTransfer/:url', name: 'StockTransferUpdate', component: StockTransferUpdate, meta: { title: i18n.t('router.StockTransferUpdate'), baseLink: 'StockTransfer' } },
   { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
   { path: '/Update/WarehouseStock/:url', name: 'WarehouseStockUpdate', component: WarehouseStockUpdate, meta: { title: i18n.t('router.WarehouseStockUpdate'), baseLink: 'WarehouseStock' } },
-  { path: '/Update/Order/:url', name: 'OrderUpdate', component: OrderUpdate, meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
+  { path: '/Update/Order/:url', name: 'OrderUpdate', component: getTenantPage('Order', 'update'), meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
   { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldAnalysisResult/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResult' } },
   { path: '/Update/ItemAnalysisResult/:url', name: 'ItemAnalysisResultUpdate', component: ItemAnalysisResultUpdate, meta: { title: i18n.t('router.ItemAnalysisResultUpdate'), baseLink: 'ItemAnalysisResul' } },
@@ -1028,7 +1022,7 @@ const listUpdate = [
   { path: '/Update/AssetLocation/:url', name: 'AssetLocationUpdate', component: AssetLocationUpdate, meta: { title: i18n.t('router.AssetLocationUpdate'), baseLink: 'AssetLocation' } },
   { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
   { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } },
-  { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: SalesWaybillUpdate, meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } },
+  { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: getTenantPage('SalesWaybill', 'update'), meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } },
   { path: '/Copy/SalesWaybill/:url', name: 'SalesWaybillCopy', component: SalesWaybillCopy, meta: { title: i18n.t('router.SalesWaybillCopy'), baseLink: 'SalesWaybill' } },
   { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } },
@@ -1089,7 +1083,7 @@ const listInsert = [
   { path: '/Insert/SalesOrder', name: 'SalesOrderInsert', component: SalesOrderInsert, meta: { title: i18n.t('router.SalesOrderInsert'), baseLink: 'SalesOrder' } },
   { path: '/Insert/AcceptGoodsDispatch', name: 'AcceptGoodsDispatchInsert', component: AcceptGoodsDispatchInsert, meta: { title: i18n.t('router.AcceptGoodsDispatchInsert'), baseLink: 'AcceptGoodsDispatch' } },
   { path: '/Insert/DeliveryDispatch', name: 'DeliveryDispatchInsert', component: DeliveryDispatchInsert, meta: { title: i18n.t('router.DeliveryDispatchInsert'), baseLink: 'DeliveryDispatch' } },
-  { path: '/Insert/SalesInvoice', name: 'SalesInvoiceInsert', component: SalesInvoiceInsert, meta: { title: i18n.t('router.SalesInvoiceInsert'), baseLink: 'SalesInvoice' } },
+  { path: '/Insert/SalesInvoice', name: 'SalesInvoiceInsert', component: getTenantPage('SalesInvoice', 'insert'), meta: { title: i18n.t('router.SalesInvoiceInsert'), baseLink: 'SalesInvoice' } },
   { path: '/Insert/PurchaseOrder', name: 'PurchaseOrderInsert', component: PurchaseOrderInsert, meta: { title: i18n.t('router.PurchaseOrderInsert'), baseLink: 'PurchaseOrder' } },
   { path: '/Insert/PurchaseInvoice', name: 'PurchaseInvoiceInsert', component: PurchaseInvoiceInsert, meta: { title: i18n.t('router.PurchaseInvoiceInsert'), baseLink: 'PurchaseInvoice' } },
   { path: '/Insert/Finance', name: 'FinanceInsert', component: FinanceInsert, meta: { title: i18n.t('router.FinanceInsert'), baseLink: 'Finance' } },
@@ -1123,7 +1117,7 @@ const listInsert = [
   { path: '/Insert/WarehouseStockHistory', name: 'WarehouseStockHistoryInsert', component: WarehouseStockHistoryInsert, meta: { title: i18n.t('router.WarehouseStockHistoryInsert'), baseLink: 'WarehouseStockHistory' } },
   { path: '/Insert/WarehouseStock', name: 'WarehouseStockInsert', component: WarehouseStockInsert, meta: { title: i18n.t('router.WarehouseStockInsert'), baseLink: 'WarehouseStock' } },
   { path: '/Insert/BranchStockTransfer', name: 'BranchStockTransferInsert', component: BranchStockTransferInsert, meta: { title: i18n.t('router.BranchStockTransferInsert'), baseLink: 'BranchStockTransfer' } },
-  { path: '/Insert/Order', name: 'OrderInsert', component: OrderInsert, meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
+  { path: '/Insert/Order', name: 'OrderInsert', component: getTenantPage('Order', 'insert'), meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
   { path: '/Insert/Contracts', name: 'ContractsInsert', component: ContractsInsert, meta: { title: i18n.t('router.ContractsInsert'), baseLink: 'Contracts' } },
   { path: '/Insert/FieldAnalysisResult', name: 'FieldAnalysisResultInsert', component: FieldAnalysisResultInsert, meta: { title: i18n.t('router.FieldAnalysisResultInsert'), baseLink: 'FieldAnalysisResult' } },
   { path: '/Insert/ItemAnalysisResult', name: 'ItemAnalysisResultInsert', component: ItemAnalysisResultInsert, meta: { title: i18n.t('router.ItemAnalysisResultInsert'), baseLink: 'ItemAnalysisResult' } },
@@ -1152,7 +1146,7 @@ const listInsert = [
   { path: '/Insert/AssetLocation', name: 'AssetLocationInsert', component: AssetLocationInsert, meta: { title: i18n.t('router.AssetLocationInsert'), baseLink: 'AssetLocation' } },
   { path: '/Insert/AssetMovementCard', name: 'AssetMovementCardInsert', component: AssetMovementCardInsert, meta: { title: i18n.t('router.AssetMovementCardInsert'), baseLink: 'AssetMovementCard' } },
   { path: '/Insert/OverDueDebitSearch', name: 'OverDueDebitSearchInsert', component: OverDueDebitSearchInsert, meta: { title: i18n.t('router.OverDueDebitSearchInsert'), baseLink: 'OverDueDebitSearch' } },
-  { path: '/Insert/SalesWaybill', name: 'SalesWaybillInsert', component: SalesWaybillInsert, meta: { title: i18n.t('router.SalesWaybillInsert'), baseLink: 'SalesWaybill' } },
+  { path: '/Insert/SalesWaybill', name: 'SalesWaybillInsert', component: getTenantPage('SalesWaybill', 'insert'), meta: { title: i18n.t('router.SalesWaybillInsert'), baseLink: 'SalesWaybill' } },
   { path: '/Insert/ServicePurchaseInvoice', name: 'ServicePurchaseInvoiceInsert', component: ServicePurchaseInvoiceInsert, meta: { title: i18n.t('router.ServicePurchaseInvoiceInsert'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Insert/CreditBudget', name: 'CreditBudgetInsert', component: CreditBudgetInsert, meta: { title: i18n.t('router.CreditBudgetInsert'), baseLink: 'CreditBudget' } },
   { path: '/Insert/TerminalMessage', name: 'TerminalMessageInsert', component: TerminalMessageInsert, meta: { title: i18n.t('router.TerminalMessageInsert'), baseLink: 'TerminalMessage' } },
