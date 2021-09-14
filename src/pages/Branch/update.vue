@@ -62,7 +62,7 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceCombineRuleId" :error="$v.form.InvoiceCombineRuleId">
-              <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId"  lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
+              <NextDropdown v-model="invoiceCombineRule" :disabled="insertReadonly.InvoiceCombineRuleId" :get-lookup="true" lookup-key="INVOICE_COMBINE_RULE" @input="selectedType('InvoiceCombineRuleId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BlockReasonId" :error="$v.form.BlockReasonId">
               <NextDropdown v-model="blockReason" :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
@@ -140,6 +140,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
               <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
+            </NextFormGroup>
+            <NextFormGroup item-key="MaxBonusRate" :error="$v.form.maxBonusRate">
+              <NextInput v-model="form.MaxBonusRate" type="text" :disabled="insertReadonly.maxBonusRate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.salesPriceChangeRate">
+              <NextInput v-model="form.SalesPriceChangeRate" type="text" :disabled="insertReadonly.salesPriceChangeRate" />
             </NextFormGroup>
             <NextFormGroup item-key="RiskLimit" :error="$v.form.riskLimit">
               <NextInput v-model="form.RiskLimit" type="text" :disabled="insertReadonly.riskLimit" />

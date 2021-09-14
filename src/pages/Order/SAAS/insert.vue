@@ -20,6 +20,7 @@
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
+        MUTLU
         <b-row>
           <b-col cols="8">
             <b-row>
@@ -297,7 +298,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
+import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
   data () {
@@ -409,7 +410,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextCustomer/api/Customer/SearchSapCustomer',
+        api: 'VisionNextCustomer/api/Customer/Search',
         name: 'customers',
         andConditionModel: {
           StatusIds: [1],
