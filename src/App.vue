@@ -12,7 +12,7 @@ export default {
     }
   },
   created () {
-    document.title = process.env.TENANT
+    document.title = process.env.SITE_NAME
   },
   computed: {
     ...mapState(['modalLoad'])

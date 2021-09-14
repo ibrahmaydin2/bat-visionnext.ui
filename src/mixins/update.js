@@ -3,7 +3,7 @@ import mixin from './index'
 export default {
   mixins: [mixin],
   computed: {
-    ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup'])
+    ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'insertColumnType'])
   },
   methods: {
     createManualCode (parameter = 'Code') {

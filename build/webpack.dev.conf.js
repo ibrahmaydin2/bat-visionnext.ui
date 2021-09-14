@@ -12,9 +12,9 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 let mode = process.argv.length <= 2 ? 'dev' : process.argv[2]
-let tenant = process.argv.length <= 3 ? 'bat' : process.argv[3]
+let provider = process.argv.length <= 3 ? 'bat' : process.argv[3]
 
-const env = require(`../config/${tenant}/${mode}.env`)
+const env = require(`../config/${provider}/${mode}.env`)
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
