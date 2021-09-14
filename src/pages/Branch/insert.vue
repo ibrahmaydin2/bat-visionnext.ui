@@ -85,6 +85,9 @@
             <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
+            <NextFormGroup item-key="CustomerPrefixCode" :error="$v.form.CustomerPrefixCode">
+              <NextInput v-model="form.CustomerPrefixCode" type="text" :disabled="insertReadonly.CustomerPrefixCode" />
+            </NextFormGroup>
             <NextFormGroup item-key="UseEWaybill" :error="$v.form.UseEWaybill">
               <NextDropdown :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
@@ -182,6 +185,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
+            </NextFormGroup>
+            <NextFormGroup item-key="MaxBonusRate" :error="$v.form.MaxBonusRate">
+              <NextInput v-model="form.MaxBonusRate" type="number" :disabled="insertReadonly.MaxBonusRate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.SalesPriceChangeRate">
+              <NextInput v-model="form.SalesPriceChangeRate" type="number" :disabled="insertReadonly.SalesPriceChangeRate" />
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
               <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
@@ -302,6 +311,7 @@ export default {
         TaxNumber: null,
         BranchRegionId: null,
         CustomerPrefixCode: null,
+        MaxBonusRate: null,
         CustomerItemDiscountCrts: [],
         CustomerItemDiscounts: [],
         CustomerBranchs: [],
