@@ -5,9 +5,10 @@ const prodEnv = require('./prod.env')
 module.exports = merge(prodEnv, {
   NODE_ENV: '"qa"',
   VUE_APP_SERVICE_URL_BASE: "'https://mutluvnapiuat.visionnext.com.tr/'",
-  VUE_APP_SYSTEM_NAME: "'MUTLU UI DEVELOPMENT'",
-  VUE_APP_VESION_NO: "'1.0.1.42'",
-  BASE_URL: "'https://mutluat.visionnext.com.tr/'",
-  TENANT: "'MUTLU'",
+  VUE_APP_SYSTEM_NAME: "'MUTLU UI QA'",
+  VUE_APP_VESION_NO: "'1.0.1.43'",
+  BASE_URL: "'https://mutluqa.visionnext.com.tr/'",
+  TENANT: "'SAAS'",
+  SITE_NAME: "'MUTLU'",
   HASH: "'8ced6612-e737-4f10-82be-76db0177e462'"
 })

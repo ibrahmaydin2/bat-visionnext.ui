@@ -28,7 +28,7 @@
             <NextInput v-model="form.BranchCommercialTitle" type="text" :disabled="insertReadonly.BranchCommercialTitle" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :input-type="insertColumnType.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -85,23 +85,23 @@
             <NextFormGroup item-key="MersisNumber" :error="$v.form.MersisNumber">
               <NextInput v-model="form.MersisNumber" type="text" maxLength="50" :oninput="maxLengthControl" :disabled="insertReadonly.MersisNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="UseEDispatch" :error="$v.form.UseEDispatch">
-              <NextDropdown v-model="useEDispatch" :disabled="insertReadonly.UseEDispatch" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEDispatch', $event)"/>
+            <NextFormGroup item-key="UseEWaybill" :error="$v.form.UseEWaybill">
+              <NextDropdown v-model="useEWaybill" :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
-              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
-              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle :input-type="insertColumnType.IsWarehouseSale"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :input-type="insertColumnType.IsBlocked"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
-              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle :input-type="insertColumnType.UseEInvoice"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEArchive" :error="$v.form.UseEArchive">
-              <NextCheckBox v-model="form.UseEArchive" type="number" toggle/>
+              <NextCheckBox v-model="form.UseEArchive" type="number" toggle :input-type="insertColumnType.UseEArchive"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -331,7 +331,7 @@ export default {
       blockReason: {},
       salesDocumentType: {},
       taxCustomerType: {},
-      useEDispatch: {},
+      useEWaybill: {},
       discountGroup10: {},
       discountGroup2: {},
       discountGroup9: {},
@@ -367,7 +367,7 @@ export default {
       this.form = rowData
       this.branchRegion = this.convertLookupValueToSearchValue(rowData.BranchRegion)
       this.upperBranch = this.convertLookupValueToSearchValue(rowData.UpperBranch)
-      this.useEDispatch = this.convertLookupValueToSearchValue(rowData.UseEDispatchType)
+      this.useEWaybill = this.convertLookupValueToSearchValue(rowData.UseEWaybill)
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)

@@ -1,5 +1,25 @@
 <template>
   <div>
+    <b-modal :id="`confirm-edit-modal${unique}`">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.rowEditConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`confirm-edit-modal${unique}`)">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="editItem()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal :id="`confirm-delete-modal${unique}`">
+      <template #modal-title>
+        {{$t('list.deleteConfirm')}}
+      </template>
+      {{$t('list.rowDeleteConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`confirm-delete-modal${unique}`)">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="removeItem()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
@@ -33,31 +53,11 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show('confirm-edit-modal')" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
             <i class="fa fa-pencil-alt"></i>
-            <b-modal id="confirm-edit-modal">
-              <template #modal-title>
-                {{$t('list.editConfirm')}}
-              </template>
-              {{$t('list.rowEditConfirm')}}
-              <template #modal-footer>
-                <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-edit-modal')">{{$t('insert.cancel')}}</b-button>
-                <b-button size="sm" class="float-right ml-2" variant="success" @click="editItem(data.item)">{{$t('insert.okay')}}</b-button>
-              </template>
-            </b-modal>
           </b-button>
-          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show('confirm-delete-modal')" type="button" class="btn mr-2 btn-danger btn-sm">
+          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
             <i class="far fa-trash-alt ml-1"></i>
-            <b-modal id="confirm-delete-modal">
-              <template #modal-title>
-                {{$t('list.deleteConfirm')}}
-              </template>
-              {{$t('list.rowDeleteConfirm')}}
-              <template #modal-footer>
-                <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-delete-modal')">{{$t('insert.cancel')}}</b-button>
-                <b-button size="sm" class="float-right ml-2" variant="success" @click="removeItem(data)">{{$t('insert.okay')}}</b-button>
-              </template>
-            </b-modal>
           </b-button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
           <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
@@ -160,7 +160,9 @@ export default {
       currentPage: 1,
       id: Math.random().toString(36).substring(2),
       selectedIndex: null,
-      isUpdated: false
+      isUpdated: false,
+      selectedItem: null,
+      unique: Math.random().toString(16).slice(2)
     }
   },
   computed: {
@@ -313,8 +315,9 @@ export default {
       this.label = {}
       this.$v.form.$reset()
     },
-    removeItem (data) {
-      this.$bvModal.hide('confirm-delete-modal')
+    removeItem () {
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
       const item = data.item
       const index = this.values.indexOf(data.item)
       if (item.RecordId) {
@@ -324,27 +327,33 @@ export default {
       }
       this.$emit('valuechange', this.values)
     },
-    editItem (data) {
-      this.$bvModal.hide('confirm-edit-modal')
+    editItem () {
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
       this.form = data
       this.isUpdated = true
       this.selectedIndex = this.values.indexOf(data)
       this.$set(this.form, 'RecordId', data.RecordId)
       this.items.map(i => {
+        let labelProperty = ''
+        let valueProperty = ''
+        let model = {}
         switch (i.type) {
-          case 'AutoComplete':
+          case 'Autocomplete':
           case 'Dropdown':
-            this.$set(this.model, i.modelProperty, {
-              RecordId: data[i.modelProperty],
-              Description1: this.getObjectLabel(i, data)
-            })
+            valueProperty = i.valueProperty ? i.valueProperty : 'RecordId'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            this.$set(this.model, i.modelProperty, model)
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Lookup':
-            this.$set(this.model, i.modelProperty, {
-              DecimalValue: data[i.modelProperty],
-              Label: this.getObjectLabel(i, data)
-            })
+            valueProperty = i.valueProperty ? i.valueProperty : 'DecimalValue'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Label'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            this.$set(this.model, i.modelProperty, model)
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Label':
