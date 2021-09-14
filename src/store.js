@@ -944,6 +944,7 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
+          debugger
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
