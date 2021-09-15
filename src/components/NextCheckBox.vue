@@ -7,6 +7,7 @@
         v-if="inputType === 'Radio'"
         v-model="model"
         :options="options"
+        :disabled="disabled"
       ></b-form-radio-group>
   </div>
 </template>

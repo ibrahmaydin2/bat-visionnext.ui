@@ -200,7 +200,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customerClassInfo')">
+        <b-tab :title="$t('insert.branch.customerClassInfo')" v-if="showCustomerClassInfo">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
               <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
@@ -353,7 +353,8 @@ export default {
       customerCategory3: {},
       customerCategory2: {},
       customerCategory1: {},
-      branchDistributionTypeId: 0
+      branchDistributionTypeId: 0,
+      showCustomerClassInfo: false
     }
   },
   computed: {
@@ -363,6 +364,7 @@ export default {
     this.getData().then(() => this.setData())
     this.getBranchLocations()
     this.getCurrentBranch()
+    this.showCustomerClassInfo = process.env.TENANT === 'BAT'
   },
   methods: {
     setData () {
