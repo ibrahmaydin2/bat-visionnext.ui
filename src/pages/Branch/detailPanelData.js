@@ -98,7 +98,7 @@ export const detailData = {
       url: 'CITY',
       label: i18n.t('insert.branch.cityId'),
       required: true,
-      visible: false,
+      visible: true,
       id: 10
     },
     {
@@ -226,7 +226,7 @@ export const detailData = {
       url: 'VisionNextSystem/api/SysCurrency/Search',
       label: i18n.t('insert.branch.currencyId'),
       required: true,
-      visible: false,
+      visible: true,
       id: 3
     },
     {
