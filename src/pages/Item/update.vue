@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="true" />
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -155,118 +155,13 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemTree')">
-          <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemBomsId')" md="2" lg="2" :required="true" :error="$v.ItemBoms.BomItemId">
-              <NextDropdown url="VisionNextItem/api/Item/AutoCompleteSearch" @input="additionalSearchType('ItemBoms', 'BomItemId', $event)" :searchable="true" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemBomsUnitId')" md="2" lg="2">
-              <NextDropdown v-model="ItemBoms.UnitLabel" :disabled="true" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemBomsLineNumber')" md="2" lg="2">
-              <NextInput v-model="ItemBoms.LineNumber" type="text" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemBomsQuantity')" md="2" lg="2">
-              <NextInput v-model="ItemBoms.Quantity" type="text" />
-            </NextFormGroup>
-            <b-col cols="12" md="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addItemBoms()" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.item.ItemBomsId')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemBomsUnitId')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemBomsLineNumber')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemBomsQuantity')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.ItemBoms ? form.ItemBoms.filter(c => c.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.BomItemLabel}}</b-td>
-                  <b-td>{{c.UnitLabel}}</b-td>
-                  <b-td>{{c.LineNumber}}</b-td>
-                  <b-td>{{c.Quantity}}</b-td>
-                  <b-td class="text-center"><i @click="removeItemBoms(c)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.ItemBoms" :items="itemBomItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.CustomerCode')">
-          <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemCustomersId')" md="2" lg="2" :required="true" :error="$v.ItemCustomers.CustomerId">
-              <NextDropdown
-                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
-                @input="additionalSearchType('ItemCustomers', 'CustomerId', $event)" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
-                :dynamic-and-condition="{RECORD_TYPE_ID: 3}"
-                :is-customer="true"
-              />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemCustomersDesc')" md="2" lg="2">
-              <NextInput v-model="ItemCustomers.CustomerItemDescription" type="text" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemCustomersCode')" md="2" lg="2">
-              <NextInput v-model="ItemCustomers.CustomerItemCode" type="text" />
-            </NextFormGroup>
-            <b-col cols="12" md="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addItemCustomers()" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.item.ItemCustomersId')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemCustomersDesc')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemCustomersCode')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.ItemCustomers ? form.ItemCustomers.filter(c => c.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.CustomerLabel}}</b-td>
-                  <b-td>{{c.CustomerItemDescription}}</b-td>
-                  <b-td>{{c.CustomerItemCode}}</b-td>
-                  <b-td class="text-center"><i @click="removeItemCustomers(c)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.ItemCustomers" :items="itemCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemCode')">
-          <b-row>
-            <NextFormGroup :title="$t('insert.item.ItemBarcodesBarcode')" md="2" lg="2" :required="true" :error="$v.ItemBarcodes.Barcode">
-              <NextInput v-model="ItemBarcodes.Barcode" type="text" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.item.ItemBarcodesUnitId')" md="2" lg="2">
-              <NextDropdown url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="additionalSearchType('ItemBarcodes', 'UnitSetId', $event)" :searchable="true" />
-            </NextFormGroup>
-            <b-col cols="12" md="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addItemBarcodes()" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.item.ItemBarcodesBarcode')}}</span></b-th>
-                <b-th><span>{{$t('insert.item.ItemBarcodesUnitId')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.ItemBarcodes ? form.ItemBarcodes.filter(c => c.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.Barcode}}</b-td>
-                  <b-td>{{c.UnitSet.Label}}</b-td>
-                  <b-td class="text-center"><i @click="removeItemBarcodes(c)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
@@ -328,8 +223,8 @@
   </b-row>
 </template>
 <script>
-import { required } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/update'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -390,37 +285,6 @@ export default {
         ItemCustomers: [],
         ItemBarcodes: []
       },
-      ItemBoms: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        BomItemId: null,
-        UnitId: null,
-        UnitLabel: null,
-        BomItemLabel: null,
-        LineNumber: null,
-        Quantity: null
-      },
-      ItemCustomers: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CustomerId: null,
-        CustomerLabel: null,
-        CustomerItemDescription: null,
-        CustomerItemCode: null
-      },
-      ItemBarcodes: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        Barcode: null,
-        UnitSetId: null,
-        UnitSetLabel: null
-      },
       Type: {},
       Class: {},
       PackageType: {},
@@ -458,44 +322,10 @@ export default {
       Category10: {},
       currentPage: 1,
       sapPrices: [],
-      sapPriceFields: [
-        {
-          key: 'Category2',
-          label: this.$t('insert.item.CustomerType'),
-          formatter: (value, key, obj) => {
-            return obj.Category2 ? obj.Category2.Label : ''
-          }
-        },
-        {
-          key: 'Unit',
-          label: this.$t('insert.item.Unit'),
-          formatter: (value, key, obj) => {
-            return obj.Unit ? obj.Unit.Label : ''
-          }
-        },
-        {
-          key: 'Price',
-          label: this.$t('insert.item.SapPrice')
-        },
-        {
-          key: 'StartDate',
-          label: this.$t('insert.item.StartDate'),
-          formatter: (value, key, obj) => {
-            return this.dateConvertFromTimezone(value)
-          }
-        },
-        {
-          key: 'EndDate',
-          label: this.$t('insert.item.EndDate'),
-          formatter: (value, key, obj) => {
-            return this.dateConvertFromTimezone(value)
-          }
-        },
-        {
-          key: 'Condition',
-          label: this.$t('insert.item.Condition')
-        }
-      ]
+      itemBomItems: detailData.itemBomItems,
+      itemCustomerItems: detailData.itemCustomerItems,
+      itemBarcodeItems: detailData.itemBarcodeItems,
+      sapPriceFields: detailData.sapPriceFields
     }
   },
   mounted () {
@@ -505,17 +335,7 @@ export default {
     setData () {
       this.form = this.rowData
       this.getSapPrices()
-      if (this.form.ItemCustomers) {
-        this.form.ItemCustomers.map(item => {
-          item.CustomerLabel = item.Customer ? item.Customer.Label : ''
-        })
-      }
-      if (this.form.ItemBoms) {
-        this.form.ItemBoms.map(item => {
-          item.UnitLabel = item.Unit ? item.Unit.Label : ''
-          item.BomItemLabel = item.BomItem ? item.BomItem.Label : ''
-        })
-      }
+
       for (const property in this.rowData) {
         if (this.rowData[property]) {
           if (typeof this.rowData[property].Label !== 'undefined') {
@@ -526,84 +346,6 @@ export default {
             }
           }
         }
-      }
-    },
-    additionalSearchType (title, label, model) {
-      if (title === 'ItemBoms' && label === 'BomItemId') {
-        this.ItemBoms.UnitId = model.UnitId
-        this.ItemBoms.UnitLabel = model.Unit ? model.Unit.Label : ''
-        this.ItemBoms.BomItemLabel = model.Description1
-      }
-      if (title === 'ItemCustomers' && label === 'CustomerId') {
-        this.ItemCustomers.CustomerLabel = model.Description1
-      }
-      if (title === 'ItemBarcodes' && label === 'UnitSetId') {
-        this.ItemBarcodes.UnitSetLabel = model.Description1
-      }
-      if (model) {
-        this[title][label] = model.RecordId
-      } else {
-        this[title][label] = null
-      }
-    },
-    addItemBoms () {
-      this.$v.ItemBoms.$touch()
-      if (this.$v.ItemBoms.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.form.ItemBoms.push({ ...this.ItemBoms })
-      this.$v.ItemBoms.$reset()
-    },
-    removeItemBoms (item) {
-      if (item.RecordId) {
-        this.form.ItemBoms[this.form.ItemBoms.indexOf(item)].RecordState = 4
-      } else {
-        this.form.ItemBoms.splice(this.form.ItemBoms.indexOf(item), 1)
-      }
-    },
-    addItemCustomers () {
-      this.$v.ItemCustomers.$touch()
-      if (this.$v.ItemCustomers.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.form.ItemCustomers.push({ ...this.ItemCustomers })
-      this.$v.ItemCustomers.$reset()
-    },
-    removeItemCustomers (item) {
-      if (item.RecordId) {
-        this.form.ItemCustomers[this.form.ItemCustomers.indexOf(item)].RecordState = 4
-      } else {
-        this.form.ItemCustomers.splice(this.form.ItemCustomers.indexOf(item), 1)
-      }
-    },
-    addItemBarcodes () {
-      this.$v.ItemBarcodes.$touch()
-      if (this.$v.ItemBarcodes.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
-      this.form.ItemBarcodes.push({ ...this.ItemBarcodes })
-      this.$v.ItemBarcodes.$reset()
-    },
-    removeItemBarcodes (item) {
-      if (item.RecordId) {
-        this.form.ItemBarcodes[this.form.ItemBarcodes.indexOf(item)].RecordState = 4
-      } else {
-        this.form.ItemBarcodes.splice(this.form.ItemBarcodes.indexOf(item), 1)
       }
     },
     save () {
@@ -630,29 +372,6 @@ export default {
           this.sapPrices = response.ListModel.BaseModels
         }
       })
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules,
-      ItemBoms: {
-        BomItemId: {
-          required
-        },
-        UnitId: {
-          required
-        }
-      },
-      ItemCustomers: {
-        CustomerId: {
-          required
-        }
-      },
-      ItemBarcodes: {
-        Barcode: {
-          required
-        }
-      }
     }
   }
 }

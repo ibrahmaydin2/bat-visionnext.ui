@@ -130,7 +130,7 @@
               <NextCheckBox v-model="form.Printed" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDbsOffline" :error="$v.form.IsDbsOffline" md="2" lg="2">
-              <NextCheckBox v-model="form.IsDbsOffline" type="number" toggle :input-type="insertColumnType.IsDbsOffline" :disabled="!selectedPaymentType || (selectedPaymentType.PaymentType && selectedPaymentType.PaymentType.Code === 'AH')"/>
+              <NextCheckBox v-model="form.IsDbsOffline" type="number" toggle :disabled="!selectedPaymentType || (selectedPaymentType.PaymentType && selectedPaymentType.PaymentType.Code === 'AH')"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
               <NextCheckBox @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbsOffline"/>

@@ -688,6 +688,17 @@ export const store = new Vuex.Store({
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
+    GetUpdateRules ({ state, commit }, query) {
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormUpdateInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err })
+        })
+    },
     getCreateCode ({ commit }, query) {
       return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
@@ -944,7 +955,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          debugger
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1557,6 +1567,7 @@ export const store = new Vuex.Store({
         let fieldLabel = rule.Label
         let fieldRequired = rule.Required
         let fieldDefaultValue = rule.DefaultValue
+        let modelControlUtil = rule.ModelControlUtil
         let fieldVisible = rule.Visible
         rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
         star[fieldName] = fieldRequired // validasyon yıldızını göster.
@@ -1589,22 +1600,24 @@ export const store = new Vuex.Store({
             break
 
           case 'Select':
-            if (fieldDefaultValue != null) {
+            if (modelControlUtil && modelControlUtil.code) {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${fieldDefaultValue}" @input="selectedType('${fieldName}', $event)"/>
+                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${modelControlUtil.code}" @input="selectedType('${fieldName}', $event)"/>
               </NextFormGroup>`
 
-              valueForAutoLookup += fieldDefaultValue + ','
+              valueForAutoLookup += modelControlUtil.code + ','
             } else {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
                 <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)"/>
               </NextFormGroup>`
             }
+            dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
           case 'SelectSearch':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
             </NextFormGroup>`
+            dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
           case 'Radio':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">

@@ -44,7 +44,7 @@ export default {
       return this.insertRequired !== null && this.insertRequired[this.itemKey] != null ? this.insertRequired[this.itemKey] : this.required
     },
     itemError () {
-      return this.error !== null && this.error !== undefined ? this.error.$error : false
+      return this.error && this.error.$error ? this.error.$error : false
     }
   }
 }

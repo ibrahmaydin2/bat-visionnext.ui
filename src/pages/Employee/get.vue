@@ -8,7 +8,6 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <div class="clearfix"></div>
           </header>
         </b-col>
       </b-row>
@@ -87,35 +86,21 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.employee.Model_Team')">
-          <b-row class="p-4">
-            <b-card class="col-12 asc__showPage-card">
-              <b-table-simple responsive bordered small>
-                <b-thead>
-                  <b-th><span>{{$t('insert.employee.TeamPersonalName')}}</span></b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(e, i) in rowData.EmployeeTeams" :key="i">
-                    <b-td>{{e.Description1}}</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-card>
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.EmployeeTeams" :items="teamItems" />
+              </b-card>
+            </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.employee.EmployeePrefix')">
-           <b-row class="p-4">
-            <b-card class="col-12 asc__showPage-card">
-              <b-table-simple responsive bordered small>
-                <b-thead>
-                   <b-th><span>{{$t('insert.employee.EmployeePrefix')}}</span></b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(e, i) in rowData.EInvoiceSeqs" :key="i">
-                     <b-td>{{`${e.Prefix} ${e.Year ? e.Year : ''} ${e.EInvoiceType.Label}`}}</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-card>
+           <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.EInvoiceSeqs" :items="prefixItems" />
+              </b-card>
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -125,23 +110,25 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
   data () {
     return {
+      teamItems: detailData.teamItems,
+      prefixItems: detailData.prefixItems
     }
   },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
-      this.$router.push({name: this.$route.meta.base})
+      this.$router.push({name: this.routeName})
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextEmployee/api/Employee', record: this.$route.params.url})
