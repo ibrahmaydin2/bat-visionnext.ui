@@ -58,19 +58,19 @@
               <div v-html="getFormatDataByType(rowData.Vat, 'text', 'get.Item.Vat')"></div>
               <div v-html="getFormatDataByType(rowData.MaxDiscountRate, 'text', 'get.Item.MaxDiscountRate')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode, 'text', 'get.Item.FinanceCode')"></div>
-              <div v-html="getFormatDataByType(rowData.UnitSetId, 'object', 'get.Item.UnitSetId')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup1Id, 'object', 'get.Item.DiscountGroup1Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup2Id, 'object', 'get.Item.DiscountGroup2Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup3Id, 'object', 'get.Item.DiscountGroup3Id')"></div>
+              <div v-html="getFormatDataByType(rowData.UnitSet, 'object', 'get.Item.UnitSetId')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup1, 'object', 'get.Item.DiscountGroup1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup2, 'object', 'get.Item.DiscountGroup2Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup3, 'object', 'get.Item.DiscountGroup3Id')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.DiscountGroup4Id, 'object', 'get.Item.DiscountGroup4Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup5Id, 'object', 'get.Item.DiscountGroup5Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup6Id, 'object', 'get.Item.DiscountGroup6Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup7Id, 'object', 'get.Item.DiscountGroup7Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup8Id, 'object', 'get.Item.DiscountGroup8Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup9Id, 'object', 'get.Item.DiscountGroup9Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup10Id, 'object', 'get.Item.DiscountGroup10Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup4, 'object', 'get.Item.DiscountGroup4Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup5, 'object', 'get.Item.DiscountGroup5Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup6, 'object', 'get.Item.DiscountGroup6Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup7, 'object', 'get.Item.DiscountGroup7Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup8, 'object', 'get.Item.DiscountGroup8Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'object', 'get.Item.DiscountGroup9Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'get.Item.DiscountGroup10Id')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -78,22 +78,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.item.ItemBomsId')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemBomsUnitId')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemBomsLineNumber')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemBomsQuantity')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.ItemBoms" :key="i">
-                      <b-td>{{c.BomItem ? c.BomItem.Label : ''}}</b-td>
-                      <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
-                      <b-td>{{c.LineNumber}}</b-td>
-                      <b-td>{{c.Quantity}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.ItemBoms" :items="itemBomItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -102,20 +87,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.item.ItemCustomersId')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemCustomersDesc')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemCustomersCode')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.ItemCustomers" :key="i">
-                      <b-td>{{c.Customer ? c.Customer.Label : ''}}</b-td>
-                      <b-td>{{c.CustomerItemDescription}}</b-td>
-                      <b-td>{{c.CustomerItemCode}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.ItemCustomers" :items="itemCustomerItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -124,18 +96,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.item.ItemBarcodesBarcode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.item.ItemBarcodesUnitId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.ItemBarcodes" :key="i">
-                      <b-td>{{c.Barcode}}</b-td>
-                      <b-td>{{c.UnitSet ? c.UnitSet.Label : ''}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -190,6 +151,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
@@ -197,55 +159,21 @@ export default {
     return {
       currentPage: 1,
       sapPrices: [],
-      sapPriceFields: [
-        {
-          key: 'Category2',
-          label: this.$t('insert.item.CustomerType'),
-          formatter: (value, key, obj) => {
-            return obj.Category2 ? obj.Category2.Label : ''
-          }
-        },
-        {
-          key: 'Unit',
-          label: this.$t('insert.item.Unit'),
-          formatter: (value, key, obj) => {
-            return obj.Unit ? obj.Unit.Label : ''
-          }
-        },
-        {
-          key: 'Price',
-          label: this.$t('insert.item.SapPrice')
-        },
-        {
-          key: 'StartDate',
-          label: this.$t('insert.item.StartDate'),
-          formatter: (value, key, obj) => {
-            return this.dateConvertFromTimezone(value)
-          }
-        },
-        {
-          key: 'EndDate',
-          label: this.$t('insert.item.EndDate'),
-          formatter: (value, key, obj) => {
-            return this.dateConvertFromTimezone(value)
-          }
-        },
-        {
-          key: 'Condition',
-          label: this.$t('insert.item.Condition')
-        }
-      ]
+      itemBomItems: detailData.itemBomItems,
+      itemCustomerItems: detailData.itemCustomerItems,
+      itemBarcodeItems: detailData.itemBarcodeItems,
+      sapPriceFields: detailData.sapPriceFields
     }
   },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
-      this.$router.push({name: this.$route.meta.base})
+      this.$router.push({name: this.routeName})
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextItem/api/Item', record: this.$route.params.url})
