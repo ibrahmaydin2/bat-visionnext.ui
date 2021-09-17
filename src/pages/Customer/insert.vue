@@ -221,7 +221,7 @@
               <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.debitAccountRemainder" />
             </NextFormGroup>
             <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.SalesPriceChangeRate">
-              <NextInput v-model="form.SalesPriceChangeRate" type="text" :disabled="insertReadonly.SalesPriceChangeRate" />
+              <NextInput v-model="form.SalesPriceChangeRate" type="number" :disabled="insertReadonly.SalesPriceChangeRate" />
             </NextFormGroup>
             <NextFormGroup item-key="CreditAccountRemainder" :error="$v.form.creditAccountRemainder">
               <NextInput v-model="form.CreditAccountRemainder" type="text" :disabled="insertReadonly.creditAccountRemainder" />
@@ -316,12 +316,12 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()">
+        <!-- <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerLabels" :items="customerLabelsItems" />
         </b-tab>
         <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerTouchpoints" :items="customerTouchpointsItems" />
-        </b-tab>
+        </b-tab> -->
       </b-tabs>
     </b-col>
   </b-row>

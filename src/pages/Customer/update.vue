@@ -597,6 +597,7 @@ export default {
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.statementDay = this.convertLookupValueToSearchValue(rowData.statementDay)
       this.paymentType = this.convertLookupValueToSearchValue(rowData.paymentType)
+      this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
