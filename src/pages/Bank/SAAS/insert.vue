@@ -36,15 +36,15 @@
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.detail')">
-          <NextDetailPanel v-model="form.BankBranches" :items="bankBranchesItems"/>
+          <NextDetailPanel v-model="form.BankBranches" :items="saasBankBranchesItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/insert'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -59,7 +59,7 @@ export default {
         FinanceCode: null,
         StatusId: 1
       },
-      bankBranchesItems: detailData.bankBranchesItems
+      saasBankBranchesItems: detailData.saasBankBranchesItems
     }
   },
   mounted () {
