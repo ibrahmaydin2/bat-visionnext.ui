@@ -3,7 +3,7 @@
     <b-form-timepicker
       v-if="type === 'dropdown'"
       :placeholder="$t('insert.chooseTime')"
-      locale="tr-Tr"
+      :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
       :label-no-time-selected="$t('insert.chooseTime')"
       :label-close-button="$t('insert.close')"
       close-button-variant="outline-danger"
@@ -75,10 +75,14 @@ export default {
         this.$emit('valuechange', newValue)
       }
     },
-    value (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        this.selectedValue = newValue
-      }
+    value: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.selectedValue = newValue
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

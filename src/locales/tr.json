@@ -1732,7 +1732,9 @@
       "availableCampaigns": "Uygun Kampanyalar",
       "noSupplierCustomers": "Seçili depoya ait tedarikçi kaydı bulunamadı.",
       "logisticCompanyInformation": "Lojistik Firma Bilgileri",
-      "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır"
+      "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır",
+      "freeReason": "Bedelsiz Sebebi",
+      "isFreeItem": "Bedelsiz Ürün"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
