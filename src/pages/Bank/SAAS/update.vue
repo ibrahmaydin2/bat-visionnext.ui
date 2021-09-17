@@ -21,14 +21,14 @@
           <NextFormGroup item-key="Code" :error="$v.form.Code">
             <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
-            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
-              <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
-            </NextFormGroup>
+          <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
+            <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
+          </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle />
           </NextFormGroup>
         </b-row>
       </section>
