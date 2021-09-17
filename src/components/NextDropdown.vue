@@ -123,6 +123,16 @@ export default {
     },
     allValues (newValue) {
       this.$emit('all-source', newValue)
+    },
+    lookup: {
+      handler (newValue) {
+        if (newValue) {
+          let source = this.getSource()
+          this.setDefaultValue(source)
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -232,7 +242,7 @@ export default {
       return values
     },
     setDefaultValue (source) {
-      if (this.itemKey && this.insertDefaultValue[this.itemKey]) {
+      if (this.itemKey && this.insertDefaultValue[this.itemKey] && !this.selectedValue && source) {
         let defaultValue = this.insertDefaultValue[this.itemKey]
         let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
         if (filteredList && filteredList.length > 0) {
