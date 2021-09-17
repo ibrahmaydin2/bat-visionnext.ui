@@ -49,47 +49,9 @@
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerLocations')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card>
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('list.location')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
-                    <b-th><span>{{$t('insert.warehouse.Address')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_XPosition')}} - {{$t('insert.customer.Model_YPosition')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_ContactName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_PhoneNumber1')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_FaxNumber')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_Alias')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.isRouteNode')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerLocations" :key="i">
-                      <b-td class="text-center">
-                        <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
-                      </b-td>
-                      <b-td>{{r.Code}}</b-td>
-                      <b-td>{{r.Description1}}</b-td>
-                      <b-td>{{r.AddressDetail}}</b-td>
-                      <b-td>{{r.XPosition}} - {{r.YPosition}}</b-td>
-                      <b-td>{{r.ContactName}}</b-td>
-                      <b-td>{{r.PhoneNumber1}}</b-td>
-                      <b-td>{{r.FaxNumber}}</b-td>
-                      <b-td>{{r.Alias}}</b-td>
-                      <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                    </b-tr>
-                    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-                      <NextLocation :Location='Location' />
-                    </b-modal>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomerLocations" :items="locationItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -172,96 +134,25 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
-                <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
-                  <template #cell(CreditDescription)="data">
-                    {{data.value.Label}}
-                  </template>
-                  <template #cell(Currency)="data">
-                    {{data.value.Label}}
-                  </template>
-                  <template #cell(CreditStartDate)="data">
-                    {{dateConvertFromTimezone(data.value)}}
-                  </template>
-                  <template #cell(CreditEndDate)="data">
-                    {{dateConvertFromTimezone(data.value)}}
-                  </template>
-                  <template #cell(Bank)="data">
-                    {{data.value ? data.value.Label : ''}}
-                  </template>
-                  <template #cell(DBS_PRIORITY)="data" >
-                    <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
-                  </template>
-                  <template #cell(AllowOverLimit)="data" >
-                    <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
-                  </template>
-                </b-table>
+                <NextDetailPanel type="get" v-model="rowData.CustomerCreditHistories" :items="customerCreditHistoriesItems" />
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')">
           <b-row>
-            <b-col cols="12" md="6">
+            <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
-                <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields">
-                   <template #cell(PaymentType)="data">
-                    {{data.value.Label}}
-                  </template>
-                </b-table>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="6">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
-                <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields">
-                </b-table>
+                <NextDetailPanel type="get" v-model="rowData.CustomerPaymentTypes" :items="paymentTypesItems" />
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')">
           <b-row>
-            <b-col cols="12" md="12">
+            <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.CustomerItemDiscountCrts')}}</h6>
-                <b-table responsive :items="rowData.CustomerItemDiscounts" :fields="discountFields">
-                </b-table>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.customer.tag')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.tag')}}</h6>
-                <b-table responsive :items="rowData.CustomerLabels" :fields="customerLabelFields">
-                  <template #cell(Label)="data">
-                    {{data.value.Label}}
-                  </template>
-                  <template #cell(LabelValue)="data">
-                    {{data.value.Label}}
-                  </template>
-                </b-table>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.customer.customerTouchpoints')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('insert.customer.customerTouchpoints')}}</h6>
-                <b-table responsive :items="rowData.CustomerTouchpoints" :fields="customerTouchpointsFields">
-                  <template #cell(TouchpointPriority)="data">
-                    {{data.value.Label}}
-                  </template>
-                  <template #cell(TouchpointType)="data">
-                    {{data.value.Label}}
-                  </template>
-                </b-table>
+                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscounts" :items="customerDiscountsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -283,6 +174,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../../mixins/index'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
@@ -293,45 +185,10 @@ export default {
         ClassName: 'Customer',
         PageName: 'pg_Customer'
       },
-      locationFields: [
-        {key: 'Code', label: this.$t('insert.customer.Model_Code'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.customer.Model_Description1Lokasyon'), sortable: true},
-        {key: 'AddressDetail', label: this.$t('insert.customer.Model_AddressDetail'), sortable: true},
-        {key: 'City', label: this.$t('insert.customer.Model_CityId'), sortable: true},
-        {key: 'Distirict', label: this.$t('insert.customer.Model_DistrictId'), sortable: true},
-        {key: 'Avenue', label: this.$t('insert.customer.Model_AvenueId'), sortable: true},
-        {key: 'Street', label: this.$t('insert.customer.Model_StreetId'), sortable: true},
-        {key: 'PostCode', label: this.$t('insert.customer.Model_PostCode'), sortable: true},
-        {key: 'XPosition', label: this.$t('insert.customer.Model_XPosition'), sortable: true},
-        {key: 'YPosition', label: this.$t('insert.customer.Model_YPosition'), sortable: true},
-        {key: 'AddressDescription', label: this.$t('insert.customer.Model_AddressDescription'), sortable: true},
-        {key: 'ContactName', label: this.$t('insert.customer.Model_GsmNumber'), sortable: true},
-        {key: 'PhoneNumber1', label: this.$t('insert.customer.Model_PhoneNumber1'), sortable: true},
-        {key: 'PhoneNumber2', label: this.$t('insert.customer.Model_PhoneNumber2'), sortable: true},
-        {key: 'IsDefaultLocation', label: this.$t('insert.customer.Model_IsDefaultLocation'), sortable: true},
-        {key: 'IsInvoiceAddress', label: this.$t('insert.customer.Model_IsInvoiceAddress'), sortable: true},
-        {key: 'IsDeliveryAddress', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
-        {key: 'IsRouteNode', label: this.$t('insert.customer.isRouteNode'), sortable: true},
-        {key: 'IsVehicleLocation', label: this.$t('insert.customer.Model_IsDeliveryAddress'), sortable: true},
-        {key: 'Genexp1', label: this.$t('insert.customer.Model_Genexp1'), sortable: true},
-        {key: 'Alias', label: this.$t('insert.customer.Model_Alias'), sortable: true}
-      ],
-      creditHistoriesFields: [
-        {key: 'CreditDescription', label: this.$t('insert.customer.Model_CreditDescriptionId'), sortable: true},
-        {key: 'CreditAmount', label: this.$t('insert.customer.Model_CreditAmount'), sortable: true},
-        {key: 'Currency', label: this.$t('insert.customer.Model_CurrencyId'), sortable: true},
-        {key: 'CreditLimit', label: this.$t('insert.customer.CreditLimit'), sortable: true},
-        {key: 'RiskLimit', label: this.$t('insert.customer.Model_RiskLimit'), sortable: true},
-        {key: 'AllowOverLimit', label: this.$t('insert.customer.Model_AllowOverLimit'), sortable: true},
-        {key: 'CreditStartDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
-        {key: 'CreditEndDate', label: this.$t('insert.customer.Model_CreditEndDate'), sortable: true},
-        {key: 'Bank', label: this.$t('insert.customer.bank'), sortable: true},
-        {key: 'DBS_PRIORITY', label: this.$t('insert.customer.dbsPriority'), sortable: true},
-        {key: 'CurrentCredit', label: this.$t('insert.customer.Model_CurrentCredit'), sortable: true}
-      ],
-      paymentTypeFields: [
-        {key: 'PaymentType', label: this.$t('insert.customer.Model_PaymentTypeId'), sortable: true}
-      ],
+      locationItems: detailData.locationItems,
+      customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
+      paymentTypesItems: detailData.paymentTypesItems,
+      customerDiscountsItems: detailData.customerDiscountsItems,
       fixedTermFields: [
         {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
       ],
@@ -343,14 +200,6 @@ export default {
         {key: 'EndDate', label: 'Bitiş Tarihi', sortable: true},
         {key: 'DiscountPercent1', label: 'Müşteri İndirimi 1', sortable: true},
         {key: 'DiscountPercent2', label: 'Müşteri İndirimi 2', sortable: true}
-      ],
-      customerLabelFields: [
-        {key: 'Label', label: 'Etiket Tanımı', sortable: true},
-        {key: 'LabelValue', label: 'Etiket Değeri', sortable: true}
-      ],
-      customerTouchpointsFields: [
-        {key: 'TouchpointPriority', label: 'İletişim Fırsatı Seviyesi', sortable: true},
-        {key: 'TouchpointType', label: 'İletişim Fırsatı Tipi', sortable: true}
       ],
       Location: {}
     }

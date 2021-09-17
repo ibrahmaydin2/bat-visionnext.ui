@@ -5,6 +5,7 @@ export const detailData = {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'Code',
+      createCode: true,
       label: i18n.t('insert.customer.Model_Code'),
       required: true,
       visible: true,
@@ -209,17 +210,13 @@ export const detailData = {
       id: 1
     },
     {
-      type: 'Autocomplete',
-      modelProperty: 'BankId',
-      objectKey: 'bank',
-      url: 'VisionNextBank/api/Bank/Search',
-      label: i18n.t('insert.customer.bank'),
-      required: false,
+      type: 'Lookup',
+      modelProperty: 'CreditDescriptionId',
+      objectKey: 'CreditDescription',
+      url: 'CREDIT_DESCRIPTION',
+      label: i18n.t('insert.customer.Model_CreditDescriptionId'),
+      required: true,
       visible: true,
-      isUnique: false,
-      disabled: (form) => {
-        return !form.CreditDescriptionId
-      },
       id: 2
     },
     {
@@ -234,93 +231,13 @@ export const detailData = {
     },
     {
       type: 'Text',
-      inputType: 'text',
-      modelProperty: 'Debtor',
-      label: i18n.t('insert.customer.debtor'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 4
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'Bail',
-      label: i18n.t('insert.customer.bail'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 5
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'LandOffice',
-      label: i18n.t('insert.customer.landOffice'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 6
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'Plate',
-      label: i18n.t('insert.customer.plate'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 7
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'TraficRegistry',
-      label: i18n.t('insert.customer.traficRegistry'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 8
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'TextNo',
-      label: i18n.t('insert.customer.textNo'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 9
-    },
-    {
-      type: 'Text',
       inputType: 'number',
       modelProperty: 'CreditLimit',
       label: i18n.t('insert.customer.Model_CreditLimit'),
       required: true,
       visible: true,
       isUnique: false,
-      id: 10
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'NotaryNo',
-      label: i18n.t('insert.branch.notaryNo'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 11
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'PlateNumber',
-      label: i18n.t('insert.branch.plateNumber'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 12
+      id: 4
     },
     {
       type: 'Text',
@@ -330,17 +247,25 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
-      id: 13
+      id: 5
     },
     {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'MortgageValue',
-      label: i18n.t('insert.customer.mortgageValue'),
-      required: false,
+      type: 'Date',
+      modelProperty: 'CreditStartDate',
+      label: i18n.t('insert.customer.Model_CreditStartDate'),
+      required: true,
       visible: true,
       isUnique: false,
-      id: 14
+      id: 6
+    },
+    {
+      type: 'Date',
+      modelProperty: 'CreditEndDate',
+      label: i18n.t('insert.customer.Model_CreditEndDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 7
     },
     {
       type: 'Check',
@@ -350,62 +275,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 15
-    },
-    {
-      type: 'Date',
-      modelProperty: 'CreditStartDate',
-      label: i18n.t('insert.customer.Model_CreditStartDate'),
-      required: true,
-      visible: true,
-      isUnique: false,
-      id: 16
-    },
-    {
-      type: 'Date',
-      modelProperty: 'CreditEndDate',
-      label: i18n.t('insert.customer.Model_CreditEndDate'),
-      required: true,
-      visible: true,
-      isUnique: false,
-      id: 17
-    },
-    {
-      type: 'Date',
-      modelProperty: 'TextDate',
-      label: i18n.t('iinsert.customer.textDate'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 18
-    },
-    {
-      type: 'Date',
-      modelProperty: 'NotaryDate',
-      label: i18n.t('insert.customer.notaryDate'),
-      required: false,
-      visible: true,
-      isUnique: false,
-      id: 19
-    },
-    {
-      type: 'Lookup',
-      modelProperty: 'CreditDescriptionId',
-      objectKey: 'CreditDescription',
-      url: 'CREDIT_DESCRIPTION',
-      label: i18n.t('insert.customer.Model_CreditDescriptionId'),
-      required: true,
-      visible: true,
-      id: 20
-    },
-    {
-      type: 'Text',
-      modelProperty: 'DBS_PRIORITY',
-      objectKey: 'DBS_PRIORITY',
-      label: i18n.t('insert.customer.dbsPriority'),
-      required: false,
-      visible: true,
-      id: 21
+      id: 8
     }
   ],
   paymentTypesItems: [
@@ -422,49 +292,44 @@ export const detailData = {
       id: 1
     }
   ],
-  customerLabelsItems: [
+  customerDiscountsItems: [
     {
-      type: 'Dropdown',
-      modelProperty: 'TagDefinition',
-      objectKey: 'TagDefinition',
-      url: 'VisionNextCommonApi/api/Label/Search',
-      label: i18n.t('insert.customer.labelId'),
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'discountPercent1',
+      label: i18n.t('insert.customer.DiscountPercent1'),
       required: true,
       visible: true,
+      isUnique: false,
       id: 1
     },
     {
-      type: 'Dropdown',
-      modelProperty: 'TagValue',
-      objectKey: 'TagValue',
-      url: 'VisionNextCommonApi/api/LabelDetail/Search',
-      label: i18n.t('insert.customer.labelValueId'),
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'discountPercent2',
+      label: i18n.t('insert.customer.DiscountPercent2'),
       required: true,
       visible: true,
+      isUnique: false,
       id: 2
-    }
-  ],
-  customerTouchpointsItems: [
-    {
-      type: 'Lookup',
-      modelProperty: 'TouchpointPriorityNumber',
-      objectKey: 'TouchpointPriorityNumber',
-      url: 'CUSTOMER_TOUCHPOINT_PRIORITY',
-      label: i18n.t('insert.customer.touchpointPriority'),
-      required: true,
-      visible: true,
-      id: 1
     },
     {
-      type: 'Lookup',
-      modelProperty: 'TouchpointTypeId',
-      objectKey: 'TouchpointType',
-      url: 'CUSTOMER_TOUCHPOINT_TYPE',
-      label: i18n.t('insert.customer.touchpointTypeId'),
+      type: 'Date',
+      modelProperty: 'startDate',
+      label: i18n.t('insert.customer.StartDate'),
       required: true,
       visible: true,
-      id: 2
+      isUnique: false,
+      id: 3
+    },
+    {
+      type: 'Date',
+      modelProperty: 'endDate',
+      label: i18n.t('insert.customer.EndDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 4
     }
   ]
-
 }

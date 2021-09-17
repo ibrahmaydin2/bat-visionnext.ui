@@ -1393,7 +1393,8 @@
       "branchCode": "Şube Kodu",
       "defaultAccountNumber": "Varsayılan Hesap No",
       "isDefaultBranch": "Varsayılan Şube",
-      "title": "Banka"
+      "title": "Banka",
+      "isCsBank": "Çek Bankası"
     },
     "contract": {
       "management": "Kontrat Yönetimi",
