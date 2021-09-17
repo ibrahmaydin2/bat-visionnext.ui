@@ -27,7 +27,7 @@
             </div>
             <div class="asc__nextgrid-table-header-filter" :style="header.width ? 'width: ' + header.width : ''">
               <div v-if="header.modelControlUtil != null">
-                <div v-if="header.modelControlUtil.inputType === 'AutoComplete'">
+                <div v-if="header.modelControlUtil.InputType === 'AutoComplete'">
                   <autocomplete
                     @click="onClickAutoComplete(header.modelControlUtil)"
                     :search="onAutoCompleteSearch"
@@ -35,7 +35,7 @@
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
                     :get-result-value="getResultValue"
-                    @submit="handleSubmit(header.modelControlUtil.modelProperty, $event)"
+                    @submit="handleSubmit(header.modelControlUtil.ModelProperty, $event)"
                     ref="AutoCompleteDropdown"
                     :disabled="disabledAutoComplete"
                   >
@@ -49,10 +49,10 @@
                 </div>
                 <div v-else>
                   <v-select
-                    v-if="header.modelControlUtil.isLookupTable"
+                    v-if="header.modelControlUtil.IsLookupTable"
                     label="Label"
-                    :options="lookup[header.modelControlUtil.code]"
-                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'lookup')"
+                    :options="lookup[header.modelControlUtil.Code]"
+                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, 'lookup')"
                     v-model="header.defaultValue"
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
@@ -61,8 +61,8 @@
                   <v-select
                     v-else
                     label="Description1"
-                    :options="gridField[header.modelControlUtil.modelProperty]"
-                    @input="selectedValue(header.modelControlUtil.modelProperty, $event, 'search')"
+                    :options="gridField[header.modelControlUtil.ModelProperty]"
+                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, 'search')"
                     v-model="header.defaultValue"
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
@@ -694,12 +694,12 @@ export default {
     },
     onAutoCompleteSearch (input) {
       if (input === '') { return [] }
-      if (this.selectedHeader && this.selectedHeader.modelProperty) {
-        if (input === '' || this.autoSearchInput[this.selectedHeader.modelProperty] === input) {
-          this.autoSearchInput[this.selectedHeader.modelProperty] = input
+      if (this.selectedHeader && this.selectedHeader.ModelProperty) {
+        if (input === '' || this.autoSearchInput[this.selectedHeader.ModelProperty] === input) {
+          this.autoSearchInput[this.selectedHeader.ModelProperty] = input
           return []
         }
-        this.autoSearchInput[this.selectedHeader.modelProperty] = input
+        this.autoSearchInput[this.selectedHeader.ModelProperty] = input
       }
       if (input.length < 3) { return [] }
       let pagerecordCount = 10
@@ -710,7 +710,7 @@ export default {
         }
       ]
       let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
-      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.serviceUrl, val: this.selectedHeader.modelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.ServiceUrl, val: this.selectedHeader.ModelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
         if (res && res.length === 0) {
           this.$bvToast.toast(this.$t('general.noResult'), {
             title: this.$t('general.warningTitle'),
@@ -847,15 +847,15 @@ export default {
             continue
           }
           let value = parseInt(row.defaultValue)
-          if (row.modelControlUtil.inputType === 'AutoComplete') {
-            me.AndConditionalModel[row.modelControlUtil.modelProperty] = [value]
+          if (row.modelControlUtil.InputType === 'AutoComplete') {
+            me.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
           } else {
-            this.AndConditionalModel[row.modelControlUtil.modelProperty] = [value]
-            if (row.modelControlUtil.inputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.modelProperty]) {
-              row.defaultValue = me.gridField[row.modelControlUtil.modelProperty].find(l => l.RecordId === value)
+            this.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
+            if (row.modelControlUtil.InputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.ModelProperty]) {
+              row.defaultValue = me.gridField[row.modelControlUtil.ModelProperty].find(l => l.RecordId === value)
             }
-            if (row.modelControlUtil.isLookupTable && me.lookup && me.lookup[row.modelControlUtil.code]) {
-              row.defaultValue = me.lookup[row.modelControlUtil.code].find(l => l.DecimalValue === value)
+            if (row.modelControlUtil.IsLookupTable && me.lookup && me.lookup[row.modelControlUtil.Code]) {
+              row.defaultValue = me.lookup[row.modelControlUtil.Code].find(l => l.DecimalValue === value)
             }
           }
         } else {
@@ -923,13 +923,13 @@ export default {
       let hasAnyDropdown = false
       this.tableRows.forEach(c => {
         let control = c.modelControlUtil
-        if (control != null && control.inputType === 'DropDown') {
-          if (control.isLookupTable) {
-            lookups += control.code + ','
+        if (control != null && control.InputType === 'DropDown') {
+          if (control.IsLookupTable) {
+            lookups += control.Code + ','
           } else {
             hasAnyDropdown = true
             let andConditions = this.getAndConditionModel(c.AndConditions)
-            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty, model: andConditions}).then(() => {
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.ServiceUrl, val: control.ModelProperty, model: andConditions}).then(() => {
               this.isGridFieldsReady = true
             })
           }
