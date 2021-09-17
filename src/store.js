@@ -1567,7 +1567,7 @@ export const store = new Vuex.Store({
         let fieldLabel = rule.Label
         let fieldRequired = rule.Required
         let fieldDefaultValue = rule.DefaultValue
-        let modelControlUtil = rule.ModelControlUtil
+        let modelControlUtil = rule.modelControlUtil
         let fieldVisible = rule.Visible
         rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
         star[fieldName] = fieldRequired // validasyon yıldızını göster.
@@ -1600,12 +1600,12 @@ export const store = new Vuex.Store({
             break
 
           case 'Select':
-            if (modelControlUtil && modelControlUtil.code) {
+            if (modelControlUtil && modelControlUtil.Code) {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
-                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${modelControlUtil.code}" @input="selectedType('${fieldName}', $event)"/>
+                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${modelControlUtil.Code}" @input="selectedType('${fieldName}', $event)"/>
               </NextFormGroup>`
 
-              valueForAutoLookup += modelControlUtil.code + ','
+              valueForAutoLookup += modelControlUtil.Code + ','
             } else {
               inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
                 <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)"/>
