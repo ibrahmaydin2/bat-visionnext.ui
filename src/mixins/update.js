@@ -52,6 +52,6 @@ export default {
     if (this.isSaveAs) {
       this.createManualCode()
     }
-    this.$store.dispatch('getInsertRules', {...this.query, api: this.routeName})
+    this.$store.dispatch('GetUpdateRules', {...this.query, api: this.routeName})
   }
 }

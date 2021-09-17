@@ -69,15 +69,21 @@ export default {
       allValues: [],
       selectedValue: undefined,
       labelKey: '',
-      labelObjectKey: null
+      labelObjectKey: null,
+      itemKey: null
     }
   },
   mounted () {
+    if (this.$parent && this.$parent.$parent && this.$parent.$parent.itemKey) {
+      this.itemKey = this.$parent.$parent.itemKey
+    }
     this.labelKey = this.label
     if (this.lookupKey) {
       this.labelKey = 'Label'
       if (this.getLookup) {
         this.getLookupValues()
+      } else if (this.lookup[this.lookupKey]) {
+        this.setDefaultValue(this.lookup[this.lookupKey])
       }
     } else if (!this.searchable) {
       if (this.labelKey.includes('.')) {
@@ -187,6 +193,7 @@ export default {
           }
 
           this.allValues = this.values
+          this.setDefaultValue(this.allValues)
         }
       })
     },
@@ -198,6 +205,7 @@ export default {
       if (lookupValue && lookupValue.length > 0) {
         this.values = lookupValue
         this.allValues = this.values
+        this.setDefaultValue(this.values)
         return
       }
       let random = Math.random()
@@ -206,6 +214,7 @@ export default {
           this.values = response.Values
           if (this.filter) {
             this.values = this.values.filter(i => this.filter(i))
+            this.setDefaultValue(this.values)
           }
           this.allValues = this.values
         }
@@ -221,6 +230,15 @@ export default {
       }
 
       return values
+    },
+    setDefaultValue (source) {
+      if (this.itemKey && this.insertDefaultValue[this.itemKey]) {
+        let defaultValue = this.insertDefaultValue[this.itemKey]
+        let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
+        if (filteredList && filteredList.length > 0) {
+          this.selectedValue = filteredList[0]
+        }
+      }
     }
   }
 }

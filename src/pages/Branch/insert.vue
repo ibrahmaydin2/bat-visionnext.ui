@@ -28,7 +28,7 @@
             <NextInput v-model="form.BranchCommercialTitle" type="text" :disabled="insertReadonly.BranchCommercialTitle" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle :input-type="insertColumnType.StatusId"/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -92,19 +92,19 @@
               <NextDropdown :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
-              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
-              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle :input-type="insertColumnType.IsWarehouseSale"/>
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :input-type="insertColumnType.IsBlocked"/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
-              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle :input-type="insertColumnType.UseEInvoice"/>
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEArchive" :error="$v.form.UseEArchive">
-              <NextCheckBox v-model="form.UseEArchive" type="number" toggle :input-type="insertColumnType.UseEArchive"/>
+              <NextCheckBox v-model="form.UseEArchive" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>

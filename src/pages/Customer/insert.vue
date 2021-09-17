@@ -565,31 +565,6 @@ export default {
         this.form.Category3Id = null
       }
     },
-    lookup: {
-      handler (val) {
-        if (val) {
-          if (val.CUSTOMER_GROUP) {
-            this.selectedCustomerGroup = val.CUSTOMER_GROUP.find(g => g.DecimalValue === 5009)
-          }
-          if (val.CUSTOMER_CLASS) {
-            this.selectedCustomerClass = val.CUSTOMER_CLASS.find(c => c.DecimalValue === 5021)
-          }
-          if (val.OWNER_TYPE) {
-            this.selectedOwnerType = val.OWNER_TYPE.find(o => o.DecimalValue === 5003)
-          }
-          if (val.CUSTOMER_SALES_METHOD) {
-            this.selectedSalesMethod = val.CUSTOMER_SALES_METHOD.find(s => s.DecimalValue === 5036)
-          }
-          if (val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT) {
-            this.selectedGeographicEnvironment = val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT.find(g => g.DecimalValue === 5032)
-          }
-          if (val.CUSTOMER_TRADE_FOCUS) {
-            this.selectedTradeFocus = val.CUSTOMER_TRADE_FOCUS.find(t => t.DecimalValue === 5087)
-          }
-        }
-      },
-      deep: true
-    },
     customerType (value) {
       if (value && value.DecimalValue === 5006) {
         this.paymentTypes = this.allPaymentTypes.filter(p => p.RecordId !== 2)
