@@ -8,6 +8,7 @@
         v-model="model"
         :options="options"
         :disabled="disabled"
+        @input="input($event)"
       ></b-form-radio-group>
   </div>
 </template>
@@ -33,7 +34,8 @@ export default {
     showText: {
       type: Boolean,
       default: true
-    }
+    },
+    radio: Boolean
   },
   model: {
     prop: 'value',
@@ -56,6 +58,9 @@ export default {
       if (insertColumnType && insertColumnType[itemKey]) {
         this.inputType = insertColumnType[itemKey]
       }
+    }
+    if (this.radio) {
+      this.inputType = 'Radio'
     }
     this.textActive = this.activeText ? this.activeText : this.$t('insert.active')
     this.textPassive = this.passiveText ? this.passiveText : this.$t('insert.passive')

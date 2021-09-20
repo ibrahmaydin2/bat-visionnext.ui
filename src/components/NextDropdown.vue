@@ -57,6 +57,9 @@ export default {
     },
     filter: {
       type: Function
+    },
+    search: {
+      type: Function
     }
   },
   model: {
@@ -94,6 +97,8 @@ export default {
         }
       }
       this.getValues()
+    } else if (this.source && this.source.length > 0) {
+      this.setDefaultValue(this.source)
     }
   },
   computed: {
@@ -137,7 +142,7 @@ export default {
   },
   methods: {
     searchValue (search, loading) {
-      if (!this.searchable || search.length < 3 || !this.url) {
+      if (!this.searchable || search.length < 3 || (!this.url && !this.search)) {
         return false
       }
       let pagerecordCount = 10
@@ -145,6 +150,15 @@ export default {
         search = undefined
       } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
         search = search.replaceAll('%', '')
+      }
+      if (this.search) {
+        loading(true)
+        this.search(search).then((list) => {
+          loading(false)
+          this.values = list
+          this.allValues = this.values
+        })
+        return
       }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
       let orConditionModels = []
