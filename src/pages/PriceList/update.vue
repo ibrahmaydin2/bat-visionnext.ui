@@ -153,7 +153,6 @@ export default {
     }
   },
   mounted () {
-    this.createManualCode()
     this.getLists()
     this.getData()
   },
