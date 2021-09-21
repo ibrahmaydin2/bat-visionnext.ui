@@ -265,11 +265,6 @@ export default {
     }
   },
   validations () {
-    // form.PriceListCategoryId = {
-    //   required: requiredIf(function (nestedModel) {
-    //     return this.form.CreateCustomerRecord === 1
-    //   })
-    // }
     this.insertRules.PriceListCategoryId = {
       required: requiredIf(function () {
         return this.form.CreateCustomerRecord === 1
