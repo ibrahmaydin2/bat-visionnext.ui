@@ -78,7 +78,7 @@
       <b-tab :title="$t('insert.employee.groupInfo')" @click.prevent="tabValidation()">
         <b-row>
           <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-            <NextDropdown lookup-key="EMPLOYEE_TYPE" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
+            <NextDropdown lookup-key="EMPLOYEE_TYPE" :get-lookup="true" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
           </NextFormGroup>
           <NextFormGroup item-key="UserGroupId" :error="$v.form.UserGroupId">
             <NextDropdown url="VisionNextSystem/api/SysUserGroup/Search" @input="selectedSearchType('UserGroupId', $event)" label="Description1" :disabled="insertReadonly.UserGroupId" />

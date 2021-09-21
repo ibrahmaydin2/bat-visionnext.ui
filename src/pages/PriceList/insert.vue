@@ -18,21 +18,15 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" md="3" lg="3">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" md="3" lg="3">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="3" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -40,41 +34,23 @@
       <b-tabs>
         <b-tab :title="$t('insert.PriceList.PriceList')">
           <b-row>
-            <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" md="3" lg="3">
-              <b-form-group :label="insertTitle.PriceListCategoryId + (insertRequired.PriceListCategoryId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
-                <v-select
-                  :options="lookup.PRICE_LIST_CATEGORY_TYPE"
-                  @input="selectedType('PriceListCategoryId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CurrencyId != null ? insertVisible.CurrencyId : developmentMode" md="3" lg="3">
-              <b-form-group :label="insertTitle.CurrencyId + (insertRequired.CurrencyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CurrencyId.$error }">
-                <v-select
-                  :options="currencies"
-                  @input="selectedSearchType('CurrencyId', $event)"
-                  label="Description1"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.BeginDate != null ? insertVisible.BeginDate : developmentMode" :start-weekday="1" md="3" lg="3">
-              <b-form-group :label="insertTitle.BeginDate + (insertRequired.BeginDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BeginDate.$error }">
-                <b-form-datepicker v-model="form.BeginDate" />
-              </b-form-group>
-            </b-col>
-             <b-col v-if="insertVisible.EndDate != null ? insertVisible.EndDate : developmentMode" :start-weekday="1" md="3" lg="3">
-              <b-form-group :label="insertTitle.EndDate + (insertRequired.EndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EndDate.$error }">
-                <b-form-datepicker v-model="form.EndDate" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" label="Label" @input="selectedType('PriceListCategoryId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+              <NextDropdown :disabled="insertReadonly.CurrencyId" url="VisionNextSystem/api/SysCurrency/Search" label="Description1" @input="selectedSearchType('CurrencyId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+              <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
+              <NextDatePicker v-model="form.EndDate" :disabled="insertReadonly.EndDate" />
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col md="4" lg="3">
-              <b-form-group :label="$t('insert.PriceList.Product')">
-                <b-form-input type="text" @input="onProductSearch($event)"/>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup :title="$t('insert.PriceList.Product')">
+              <NextInput @input="onProductSearch($event)" type="text" ></NextInput>
+            </NextFormGroup>
         </b-row>
         <b-row>
           <b-col cols="12">
@@ -86,10 +62,10 @@
                 <NextCheckBox v-model="data.item.UseConsumerPrice" :disabled="!data.item.IsVatIncluded" type="number" toggle/>
               </template>
               <template #cell(SalesPrice)="data">
-                <b-form-input type="number" v-model="data.item.SalesPrice"/>
+                <NextInput v-model="data.item.SalesPrice" type="number" :disabled="insertReadonly.SalesPrice"  toggle/>
               </template>
               <template #cell(ConsumerPrice)="data">
-                <b-form-input type="number" v-model="data.item.ConsumerPrice"/>
+                <NextInput v-model="data.item.ConsumerPrice" type="number" :disabled="insertReadonly.ConsumerPrice"  toggle/>
               </template>
             </b-table>
             <b-pagination
@@ -166,7 +142,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'currencies', 'allProducts'])
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'allProducts'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -178,22 +154,6 @@ export default {
       this.$store.dispatch('getInsertRules', {...this.query, api: e})
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/${e}/GetCode`})
       this.getLists()
-    },
-    selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
-      if (model) {
-        this.form[label] = model.DecimalValue
-      } else {
-        this.form[label] = null
-      }
-    },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
     },
     // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
     tabValidation () {
@@ -243,9 +203,6 @@ export default {
       }
     },
     getLists () {
-      let allLookups = 'PRICE_LIST_CATEGORY_TYPE'
-      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextItem/api/Item/Search', name: 'allProducts'})
     },
     onProductSearch (value) {
