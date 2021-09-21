@@ -28,7 +28,7 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -86,7 +86,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 import PriceListExcelModal from '../../components/Actions/PriceListExcelModal'
 export default {
@@ -104,17 +103,18 @@ export default {
         BeginDate: null,
         EndDate: null,
         PriceListCategoryId: null,
-        StatusId: null,
+        StatusId: 1,
         RecordId: null,
         EncryptedKey: null,
         Code: null,
         Description1: null,
         PriceListItems: null
       },
-      routeName: this.$route.meta.baseLink,
+      routeName1: 'Finance',
       products: [],
       userProducts: [],
       allUserProducts: [],
+      allProducts: [],
       currentPage: 1,
       priceListCategory: null,
       currency: null,
@@ -152,29 +152,12 @@ export default {
       ]
     }
   },
-  computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'createCode', 'currencies', 'allProducts', 'rowData'])
-  },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
+    this.getLists()
+    this.getData()
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextFinance/api/${e}/GetCode`})
-      this.getLists()
-      this.$store.dispatch('getData', {...this.query, api: `VisionNextFinance/api/${e}`, record: this.$route.params.url})
-    },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -203,17 +186,15 @@ export default {
           return item
         })
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFinance/api/${this.routeName}`, formdata: model, return: this.$route.meta.baseLink})
+        this.updateData()
       }
     },
     getLists () {
-      let allLookups = 'PRICE_LIST_CATEGORY_TYPE'
-      this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextItem/api/Item/Search', name: 'allProducts'})
+      this.$api.postByUrl({}, 'VisionNextItem/api/Item/Search').then(response => {
+        if (response.ListModel) {
+          this.allProducts = response.ListModel.BaseModels
+        }
+      })
     },
     onProductSearch (value) {
       if (!value || value === '') {
@@ -255,30 +236,7 @@ export default {
       this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
     }
   },
-  validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    return {
-      form: this.insertRules
-    }
-  },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
     allProducts (value) {
       if (value) {
         var filteredValue = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)

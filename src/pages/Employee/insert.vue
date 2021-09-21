@@ -53,7 +53,7 @@
               <NextCheckBox v-model="form.IsTeam" type="number" toggle :disabled="insertReadonly.IsTeam" />
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
-              <NextDropdown v-model="priceListCategory" lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)" :disabled="!form.CreateCustomerRecord" />
+              <NextDropdown v-model="priceListCategory" :get-lookup="true" lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)" :disabled="!form.CreateCustomerRecord" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode1" :error="$v.form.FinanceCode1">
               <NextInput v-model="form.FinanceCode1" type="text" :disabled="insertReadonly.FinanceCode1" />
@@ -265,15 +265,20 @@ export default {
     }
   },
   validations () {
-    let form = this.insertRules
-    form.PriceListCategoryId = {
-      required: requiredIf(function (nestedModel) {
+    // form.PriceListCategoryId = {
+    //   required: requiredIf(function (nestedModel) {
+    //     return this.form.CreateCustomerRecord === 1
+    //   })
+    // }
+    this.insertRules.PriceListCategoryId = {
+      required: requiredIf(function () {
         return this.form.CreateCustomerRecord === 1
       })
     }
+    this.insertRequired.PriceListCategoryId = this.form.CreateCustomerRecord === 1
 
     return {
-      form: form
+      form: this.insertRules
     }
   },
   watch: {
