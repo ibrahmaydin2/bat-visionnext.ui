@@ -25,16 +25,9 @@
       <b-tabs>
         <b-tab :title="$t('insert.bank.title')" active>
           <b-row>
-            <b-col cols="12" md="12">
+            <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <b-table responsive :items="rowData.BankBranches" :fields="fields">
-                  <template #cell(BankId)="data">
-                    {{data.item.Bank.Label}}
-                  </template>
-                   <template #cell(IsDefaultBranch)="data">
-                    <i :class="data.item.IsDefaultBranch === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'" />
-                  </template>
-                </b-table>
+                <NextDetailPanel type="get" v-model="rowData.BankBranches" :items="saasBankBranchesItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -45,18 +38,14 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../../mixins/index'
+import { detailData } from './../detailPanelData'
 export default {
   props: ['dataKey'],
+  mixins: [mixin],
   data () {
     return {
-      // fields: ['Müşteri', 'Lokasyon', 'Ziyaret Başlama Kontrolü Yapılmayacak'],
-      fields: [
-        {key: 'BankId', label: this.$t('insert.bank.title'), sortable: true},
-        {key: 'Code', label: this.$t('insert.bank.code'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.bank.description1'), sortable: true},
-        {key: 'FinanceCode', label: this.$t('insert.bank.financeCode'), sortable: true},
-        {key: 'IsDefaultBranch', label: this.$t('insert.bank.isDefaultBranch'), sortable: true}
-      ]
+      saasBankBranchesItems: detailData.saasBankBranchesItems
     }
   },
   mounted () {

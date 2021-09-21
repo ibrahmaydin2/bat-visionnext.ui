@@ -59,7 +59,7 @@
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
-              <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
+              <div v-if="rowData.DocumentNumber" v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
@@ -87,6 +87,8 @@
                     <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.isFreeItem')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.freeReason')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(o, i) in rowData.OrderLines" :key="i">
@@ -98,6 +100,11 @@
                       <b-td>{{o.NetTotal}}</b-td>
                       <b-td>{{o.TotalVat}}</b-td>
                       <b-td>{{o.GrossTotal}}</b-td>
+                      <b-td>
+                        <i v-if="o.IsFreeItem === 1" class="fa fa-check text-success"></i>
+                        <i v-else class="fa fa-times text-danger"></i>
+                      </b-td>
+                      <b-td>{{o.FreeReason ? o.FreeReason.Label : '-' }}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -135,10 +142,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
   data () {
     return {
       paymentPeriod: 0
@@ -148,11 +154,11 @@ export default {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
-      this.$router.push({name: this.$route.meta.base})
+      this.$router.push({name: this.routeName})
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextOrder/api/Order', record: this.$route.params.url}).then(() => {

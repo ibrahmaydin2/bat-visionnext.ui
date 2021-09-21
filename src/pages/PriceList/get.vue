@@ -25,12 +25,12 @@
         <b-tab :title="$t('insert.PriceList.PriceList')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('insert.PriceList.PriceListCategoryId')}}</span><p>{{rowData.PriceListCategory.Label}}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.PriceList.CurrencyId')}}</span><p>{{rowData.Currency.Label}}</p>
+              <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.PriceList.PriceListCategoryId')"></div>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'insert.PriceList.CurrencyId')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-             <span><i class="far fa-circle" /> {{$t('insert.PriceList.BeginDate')}}</span><p>{{dateConvertFromTimezone(rowData.BeginDate)}}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.PriceList.EndDate')}}</span><p>{{dateConvertFromTimezone(rowData.EndDate)}}</p>
+              <div v-html="getFormatDataByType(rowData.BeginDate, 'date', 'insert.PriceList.BeginDate')"></div>
+              <div v-html="getFormatDataByType(rowData.EndDate, 'date', 'insert.PriceList.EndDate')"></div>
             </b-card>
           </b-row>
           <b-row class="p-4">

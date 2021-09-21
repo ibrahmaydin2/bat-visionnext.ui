@@ -50,10 +50,10 @@
               <NextDropdown :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
-              <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 0" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerEmail" :error="$v.form.CustomerEmail">
               <NextInput v-model="form.CustomerEmail" :disabled="insertReadonly.CustomerEmail" />
@@ -102,6 +102,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
               <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
+              <NextCheckBox v-model="form.IsDutyFree" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -158,6 +161,24 @@
             <NextFormGroup item-key="IsTaxExemption" :error="$v.form.IsTaxExemption">
               <NextCheckBox v-model="form.IsTaxExemption" type="number" toggle/>
             </NextFormGroup>
+            <NextFormGroup item-key="Field1" :error="$v.form.Field1">
+              <NextDropdown :disabled="insertReadonly.Field1" :get-lookup="true" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field2" :error="$v.form.Field2">
+              <NextDropdown :disabled="insertReadonly.Field2" :get-lookup="true" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field3" :error="$v.form.Field3">
+              <NextDropdown :disabled="insertReadonly.Field3" :get-lookup="true" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field4" :error="$v.form.Field4">
+              <NextDropdown :disabled="insertReadonly.Field4" :get-lookup="true" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field5" :error="$v.form.Field5">
+              <NextDropdown :disabled="insertReadonly.Field5" :get-lookup="true" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField6" :error="$v.form.TextField6">
+              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.AdditionalClassInformation')" @click.prevent="tabValidation()">
@@ -199,6 +220,9 @@
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
               <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="BankPaymentSystemId" :error="$v.form.bankPaymentSystemId">
+              <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" :get-lookup="true" @input="selectedType('BankPaymentSystemId', $event)"/>
+            </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
               <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
             </NextFormGroup>
@@ -221,7 +245,7 @@
               <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.debitAccountRemainder" />
             </NextFormGroup>
             <NextFormGroup item-key="SalesPriceChangeRate" :error="$v.form.SalesPriceChangeRate">
-              <NextInput v-model="form.SalesPriceChangeRate" type="text" :disabled="insertReadonly.SalesPriceChangeRate" />
+              <NextInput v-model="form.SalesPriceChangeRate" type="number" :disabled="insertReadonly.SalesPriceChangeRate" />
             </NextFormGroup>
             <NextFormGroup item-key="CreditAccountRemainder" :error="$v.form.creditAccountRemainder">
               <NextInput v-model="form.CreditAccountRemainder" type="text" :disabled="insertReadonly.creditAccountRemainder" />
@@ -274,6 +298,9 @@
             <NextFormGroup item-key="StatemeIsBlackListednt" :error="$v.form.IsBlackListed">
               <NextCheckBox v-model="form.IsBlackListed" type="number" toggle/>
             </NextFormGroup>
+            <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
+              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
@@ -316,11 +343,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.tag')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerLabels" :items="customerLabelsItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerTouchpoints" :items="customerTouchpointsItems" />
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerDiscountsItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -341,8 +365,6 @@ export default {
         customerCreditHistories: [],
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
-        CustomerLabels: [],
-        CustomerTouchpoints: [],
         RecordTypeId: 1,
         Deleted: 0,
         RecordState: 2,
@@ -382,6 +404,15 @@ export default {
         LicenseValidDate: null,
         StatusReasonId: null,
         TypeId: null,
+        IsDutyFree: null,
+        IsAutoBlockingOff: null,
+        BankPaymentSystemId: null,
+        Field1: null,
+        Field2: null,
+        Field3: null,
+        Field4: null,
+        Field5: null,
+        TextField6: null,
         SalesVisitFrequency: null,
         BlockReasonId: null,
         TaxCustomerTypeId: null,
@@ -433,9 +464,8 @@ export default {
       },
       locationItems: detailData.locationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
+      customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
-      customerLabelsItems: detailData.customerLabelsItems,
-      customerTouchpointsItems: detailData.customerTouchpointsItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -564,31 +594,6 @@ export default {
         this.form.Category2Id = null
         this.form.Category3Id = null
       }
-    },
-    lookup: {
-      handler (val) {
-        if (val) {
-          if (val.CUSTOMER_GROUP) {
-            this.selectedCustomerGroup = val.CUSTOMER_GROUP.find(g => g.DecimalValue === 5009)
-          }
-          if (val.CUSTOMER_CLASS) {
-            this.selectedCustomerClass = val.CUSTOMER_CLASS.find(c => c.DecimalValue === 5021)
-          }
-          if (val.OWNER_TYPE) {
-            this.selectedOwnerType = val.OWNER_TYPE.find(o => o.DecimalValue === 5003)
-          }
-          if (val.CUSTOMER_SALES_METHOD) {
-            this.selectedSalesMethod = val.CUSTOMER_SALES_METHOD.find(s => s.DecimalValue === 5036)
-          }
-          if (val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT) {
-            this.selectedGeographicEnvironment = val.CUSTOMER_GEOGRAPHIC_ENVIRONMENT.find(g => g.DecimalValue === 5032)
-          }
-          if (val.CUSTOMER_TRADE_FOCUS) {
-            this.selectedTradeFocus = val.CUSTOMER_TRADE_FOCUS.find(t => t.DecimalValue === 5087)
-          }
-        }
-      },
-      deep: true
     },
     customerType (value) {
       if (value && value.DecimalValue === 5006) {

@@ -1393,7 +1393,8 @@
       "branchCode": "Şube Kodu",
       "defaultAccountNumber": "Varsayılan Hesap No",
       "isDefaultBranch": "Varsayılan Şube",
-      "title": "Banka"
+      "title": "Banka",
+      "isCsBank": "Çek Bankası"
     },
     "contract": {
       "management": "Kontrat Yönetimi",
@@ -1732,7 +1733,9 @@
       "availableCampaigns": "Uygun Kampanyalar",
       "noSupplierCustomers": "Seçili depoya ait tedarikçi kaydı bulunamadı.",
       "logisticCompanyInformation": "Lojistik Firma Bilgileri",
-      "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır"
+      "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır",
+      "freeReason": "Bedelsiz Sebebi",
+      "isFreeItem": "Bedelsiz Ürün"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

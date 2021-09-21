@@ -28,7 +28,7 @@
             <NextInput v-model="form.BranchCommercialTitle" type="text" :disabled="insertReadonly.BranchCommercialTitle" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle :input-type="insertColumnType.StatusId"/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -92,19 +92,19 @@
               <NextDropdown v-model="useEWaybill" :disabled="insertReadonly.UseEWaybill" url="VisionNextCommonApi/api/EDocumentUseType/Search" @input="selectedSearchType('UseEWaybill', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
-              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :input-type="insertColumnType.IsOrderChangeUnitary"/>
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
-              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle :input-type="insertColumnType.IsWarehouseSale"/>
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :input-type="insertColumnType.IsBlocked"/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
-              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle :input-type="insertColumnType.UseEInvoice"/>
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="UseEArchive" :error="$v.form.UseEArchive">
-              <NextCheckBox v-model="form.UseEArchive" type="number" toggle :input-type="insertColumnType.UseEArchive"/>
+              <NextCheckBox v-model="form.UseEArchive" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -200,7 +200,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customerClassInfo')">
+        <b-tab :title="$t('insert.branch.customerClassInfo')" v-if="showCustomerClassInfo">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
               <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
@@ -353,7 +353,8 @@ export default {
       customerCategory3: {},
       customerCategory2: {},
       customerCategory1: {},
-      branchDistributionTypeId: 0
+      branchDistributionTypeId: 0,
+      showCustomerClassInfo: false
     }
   },
   computed: {
@@ -363,6 +364,7 @@ export default {
     this.getData().then(() => this.setData())
     this.getBranchLocations()
     this.getCurrentBranch()
+    this.showCustomerClassInfo = process.env.TENANT === 'BAT'
   },
   methods: {
     setData () {

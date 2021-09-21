@@ -32,13 +32,17 @@ export default {
         this.$emit('valuechange', newValue)
       }
     },
-    value (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        if (newValue && !newValue.includes('Z')) {
-          newValue = `${newValue}Z`
+    value: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          if (newValue && !newValue.includes('Z')) {
+            newValue = `${newValue}Z`
+          }
+          this.selectedValue = newValue
         }
-        this.selectedValue = newValue
-      }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

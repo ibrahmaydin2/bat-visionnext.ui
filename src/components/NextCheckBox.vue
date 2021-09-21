@@ -7,6 +7,8 @@
         v-if="inputType === 'Radio'"
         v-model="model"
         :options="options"
+        :disabled="disabled"
+        @input="input($event)"
       ></b-form-radio-group>
   </div>
 </template>
@@ -33,14 +35,7 @@ export default {
       type: Boolean,
       default: true
     },
-    inputType: {
-      type: String,
-      validator: (prop) => [
-        'Boolean',
-        'Radio'
-      ].includes(prop),
-      default: 'Boolean'
-    }
+    radio: Boolean
   },
   model: {
     prop: 'value',
@@ -52,10 +47,21 @@ export default {
       textPassive: '',
       model: false,
       selectedValue: null,
-      options: []
+      options: [],
+      inputType: 'Boolean'
     }
   },
   mounted () {
+    if (this.$parent && this.$parent.$parent && this.$parent.$parent.itemKey) {
+      let itemKey = this.$parent.$parent.itemKey
+      let insertColumnType = this.$store.state.insertColumnType
+      if (insertColumnType && insertColumnType[itemKey]) {
+        this.inputType = insertColumnType[itemKey]
+      }
+    }
+    if (this.radio) {
+      this.inputType = 'Radio'
+    }
     this.textActive = this.activeText ? this.activeText : this.$t('insert.active')
     this.textPassive = this.passiveText ? this.passiveText : this.$t('insert.passive')
     this.options = [

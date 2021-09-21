@@ -1,5 +1,5 @@
 <template>
-  <b-row class="asc__updatePage">
+  <b-row class="asc__insertPage">
     <b-col cols="12">
       <header>
         <b-row>
@@ -15,24 +15,18 @@
         </b-row>
       </header>
     </b-col>
-    <b-col cols="12" class="asc__updatePage-content-head">
+    <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId" />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -40,306 +34,130 @@
       <b-tabs>
       <b-tab :title="$t('insert.employee.EmployeeInfo')" @click.prevent="tabValidation()" :active="true">
           <b-row>
-            <b-col v-if="insertVisible.Name != null ? insertVisible.Name : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.Name + (insertRequired.Name === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Name.$error }">
-                <b-form-input type="text" v-model="form.Name" :readonly="insertReadonly.Name" @keypress="isString($event)"/>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.Surname != null ? insertVisible.Surname : developmentMode"  md="4" lg="3">
-              <b-form-group :label="insertTitle.Surname + (insertRequired.Surname === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Surname.$error }">
-                <b-form-input type="text" v-model="form.Surname" :readonly="insertReadonly.Surname" @keypress="isString($event)"/>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.GroupId != null ? insertVisible.GroupId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.GroupId + (insertRequired.GroupId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GroupId.$error }">
-                <v-select
-                  :options="lookup.EMPLOYEE_GROUP"
-                  @input="selectedType('GroupId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.Category1 != null ? insertVisible.Category1 : developmentMode" md="4" lg="3">
-              <b-form-group :label="$t('insert.employee.category') + (insertRequired.Category1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Category1.$error }">
-                <v-select
-                  :options="lookup.EMPLOYEE_CATEGORY_1"
-                  @input="selectedType('Category1Id', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.Other1 != null ? insertVisible.Other1 : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.Other1 + (insertRequired.Other1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Other1.$error }">
-                <b-form-input type="text" v-model="form.Other1" :readonly="insertReadonly.Other1" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.IsTeam != null ? insertVisible.IsTeam : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.IsTeam + (insertRequired.IsTeam === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsTeam.$error }">
-                <NextCheckBox v-model="form.IsTeam" type="number" toggle />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.PriceListCategoryId != null ? insertVisible.PriceListCategoryId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.PriceListCategoryId + (form.CreateCustomerRecord ? ' *' : '')" :class="{ 'form-group--error': $v.form.PriceListCategoryId.$error }">
-                <v-select
-                  v-model="PriceListCategoryType"
-                  :options="lookup.PRICE_LIST_CATEGORY_TYPE"
-                  @input="selectedType('PriceListCategoryId', $event)"
-                  label="Label"
-                  :disabled="!form.CreateCustomerRecord"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.FinanceCode1 != null ? insertVisible.FinanceCode1 : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.FinanceCode1 + (insertRequired.FinanceCode1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode1.$error }">
-                <b-form-input type="text" v-model="form.FinanceCode1" :readonly="insertReadonly.FinanceCode1" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.CreateCustomerRecord != null ? insertVisible.CreateCustomerRecord : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.CreateCustomerRecord + (insertRequired.CreateCustomerRecord === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CreateCustomerRecord.$error }">
-                <NextCheckBox v-model="form.CreateCustomerRecord" type="number" toggle/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.FinanceCode2 != null ? insertVisible.FinanceCode2 : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.FinanceCode2 + (insertRequired.FinanceCode2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode2.$error }">
-                <b-form-input type="text" v-model="form.FinanceCode2" :readonly="insertReadonly.FinanceCode2" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ScoreCardClassId != null ? insertVisible.ScoreCardClassId : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.ScoreCardClassId + (insertRequired.ScoreCardClassId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ScoreCardClassId.$error }">
-                 <v-select
-                  :options="lookup.SCORE_CARD_CLASS"
-                  @input="selectedType('ScoreCardClassId', $event)"
-                  label="Label"
-                />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.SapHrCode != null ? insertVisible.SapHrCode : developmentMode" md="4" lg="3">
-              <b-form-group :label="insertTitle.SapHrCode + (insertRequired.SapHrCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.SapHrCode.$error }">
-                <b-form-input type="text" v-model="form.SapHrCode" :readonly="insertReadonly.SapHrCode" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.IsRepresentative != null ? insertVisible.IsRepresentative : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.IsRepresentative + (insertRequired.IsRepresentative === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.IsRepresentative.$error }">
-                <NextCheckBox v-model="form.IsRepresentative" type="number" toggle />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="Name" :error="$v.form.Name">
+              <NextInput v-model="form.Name" type="text" :disabled="insertReadonly.Name" @keypress="isString($event)" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Surname" :error="$v.form.Surname">
+              <NextInput v-model="form.Surname" type="text" :disabled="insertReadonly.Surname" @keypress="isString($event)" />
+            </NextFormGroup>
+            <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
+              <NextDropdown lookup-key="EMPLOYEE_GROUP" @input="selectedType('GroupId', $event)" :disabled="insertReadonly.GroupId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Category1" :error="$v.form.Category1">
+              <NextDropdown lookup-key="EMPLOYEE_CATEGORY_1" @input="selectedType('Category1Id', $event)" :disabled="insertReadonly.Category1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Other1" :error="$v.form.Other1">
+              <NextInput v-model="form.Other1" type="text" :disabled="insertReadonly.Other1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="IsTeam" :error="$v.form.IsTeam">
+              <NextCheckBox v-model="form.IsTeam" type="number" toggle :disabled="insertReadonly.IsTeam" />
+            </NextFormGroup>
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
+              <NextDropdown v-model="priceListCategory" :get-lookup="true" lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)" :disabled="!form.CreateCustomerRecord" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode1" :error="$v.form.FinanceCode1">
+              <NextInput v-model="form.FinanceCode1" type="text" :disabled="insertReadonly.FinanceCode1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CreateCustomerRecord" :error="$v.form.CreateCustomerRecord">
+              <NextCheckBox v-model="form.CreateCustomerRecord" type="number" toggle :disabled="insertReadonly.CreateCustomerRecord" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2">
+              <NextInput v-model="form.FinanceCode2" type="text" :disabled="insertReadonly.FinanceCode2" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ScoreCardClassId" :error="$v.form.ScoreCardClassId">
+              <NextDropdown lookup-key="SCORE_CARD_CLASS" @input="selectedType('ScoreCardClassId', $event)" :disabled="insertReadonly.ScoreCardClassId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="SapHrCode" :error="$v.form.SapHrCode">
+              <NextInput v-model="form.SapHrCode" type="text" :disabled="insertReadonly.SapHrCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="IsRepresentative" :error="$v.form.IsRepresentative">
+              <NextCheckBox v-model="form.IsRepresentative" type="number" toggle :disabled="insertReadonly.IsRepresentative" />
+            </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.groupInfo')" @click.prevent="tabValidation()">
         <b-row>
-          <b-col v-if="insertVisible.TypeId != null ? insertVisible.TypeId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.TypeId + (insertRequired.TypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TypeId.$error }">
-              <v-select
-                  :options="lookup.EMPLOYEE_TYPE"
-                  @input="selectedType('TypeId', $event)"
-                  label="Label"
-                />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.UserGroupId != null ? insertVisible.UserGroupId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.UserGroupId + (insertRequired.UserGroupId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.UserGroupId.$error }">
-              <v-select
-                  :options="userGroups"
-                  @input="selectedSearchType('UserGroupId', $event)"
-                  label="Description1"
-                />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
+            <NextDropdown lookup-key="EMPLOYEE_TYPE" :get-lookup="true" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
+          </NextFormGroup>
+          <NextFormGroup item-key="UserGroupId" :error="$v.form.UserGroupId">
+            <NextDropdown url="VisionNextSystem/api/SysUserGroup/Search" @input="selectedSearchType('UserGroupId', $event)" label="Description1" :disabled="insertReadonly.UserGroupId" />
+          </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.Model_Personal')" @click.prevent="tabValidation()">
         <b-row>
-          <b-col v-if="insertVisible.EmploymentStartDate != null ? insertVisible.EmploymentStartDate : developmentMode" :start-weekday="1" md="4" lg="3">
-            <b-form-group :label="insertTitle.EmploymentStartDate + (insertRequired.EmploymentStartDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EmploymentStartDate.$error }">
-              <b-form-datepicker v-model="form.EmploymentStartDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.EmploymentEndDate != null ? insertVisible.EmploymentEndDate : developmentMode" :start-weekday="1" md="4" lg="3">
-            <b-form-group :label="insertTitle.EmploymentEndDate + (insertRequired.EmploymentEndDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EmploymentEndDate.$error }">
-              <b-form-datepicker v-model="form.EmploymentEndDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.TaxNumber != null ? insertVisible.TaxNumber : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.TaxNumber + (insertRequired.TaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TaxNumber.$error }">
-              <b-form-input type="text" v-model="form.TaxNumber" :readonly="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col v-if="insertVisible.BirthDate != null ? insertVisible.BirthDate : developmentMode" :start-weekday="1" md="4" lg="3">
-            <b-form-group :label="insertTitle.BirthDate + (insertRequired.BirthDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BirthDate.$error }">
-              <b-form-datepicker v-model="form.BirthDate" :placeholder="$t('insert.employee.chooseDate')" locale="tr" class="mb-2"></b-form-datepicker>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.TShirtSize != null ? insertVisible.TShirtSize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.TShirtSize + (insertRequired.TShirtSize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TShirtSize.$error }">
-              <b-form-input type="text" v-model="form.TShirtSize" :readonly="insertReadonly.TShirtSize" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.MontSize != null ? insertVisible.MontSize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.MontSize + (insertRequired.MontSize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MontSize.$error }">
-              <b-form-input type="text" v-model="form.MontSize" :readonly="insertReadonly.MontSize" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col v-if="insertVisible.OvercoatSize != null ? insertVisible.OvercoatSize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.OvercoatSize + (insertRequired.OvercoatSize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.OvercoatSize.$error }">
-              <b-form-input type="text" v-model="form.OvercoatSize" :readonly="insertReadonly.OvercoatSize" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.ShoeSize != null ? insertVisible.ShoeSize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.ShoeSize + (insertRequired.ShoeSize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ShoeSize.$error }">
-              <b-form-input type="text" v-model="form.ShoeSize" :readonly="insertReadonly.ShoeSize" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.EducationId != null ? insertVisible.EducationId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.EducationId + (insertRequired.EducationId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.EducationId.$error }">
-             <v-select
-                  :options="lookup.EDUCATION"
-                  @input="selectedType('EducationId', $event)"
-                  label="Label"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col v-if="insertVisible.DenimSize != null ? insertVisible.DenimSize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.DenimSize + (insertRequired.DenimSize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.DenimSize.$error }">
-              <b-form-input type="text" v-model="form.DenimSize" :readonly="insertReadonly.DenimSize" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.CorduroySize != null ? insertVisible.CorduroySize : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.CorduroySize + (insertRequired.CorduroySize === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CorduroySize.$error }">
-              <b-form-input type="text" v-model="form.CorduroySize" :readonly="insertReadonly.CorduroySize" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.BloodTypeId != null ? insertVisible.BloodTypeId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.BloodTypeId + (insertRequired.BloodTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.BloodTypeId.$error }">
-             <v-select
-                  :options="lookup.BLOOD_TYPE"
-                  @input="selectedType('BloodTypeId', $event)"
-                  label="Label"
-              />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="EmploymentStartDate" :error="$v.form.EmploymentStartDate">
+            <NextDatePicker v-model="form.EmploymentStartDate" :disabled="insertReadonly.EmploymentStartDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="EmploymentEndDate" :error="$v.form.EmploymentEndDate">
+            <NextDatePicker v-model="form.EmploymentEndDate" :disabled="insertReadonly.EmploymentEndDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
+            <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="BirthDate" :error="$v.form.BirthDate">
+            <NextDatePicker v-model="form.BirthDate" :disabled="insertReadonly.BirthDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="TShirtSize" :error="$v.form.TShirtSize">
+            <NextInput v-model="form.TShirtSize" type="text" :disabled="insertReadonly.TShirtSize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="MontSize" :error="$v.form.MontSize">
+            <NextInput v-model="form.MontSize" type="text" :disabled="insertReadonly.MontSize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="OvercoatSize" :error="$v.form.OvercoatSize">
+            <NextInput v-model="form.OvercoatSize" type="text" :disabled="insertReadonly.OvercoatSize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="ShoeSize" :error="$v.form.ShoeSize">
+            <NextInput v-model="form.ShoeSize" type="text" :disabled="insertReadonly.ShoeSize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="EducationId" :error="$v.form.EducationId">
+            <NextDropdown lookup-key="EDUCATION" @input="selectedType('EducationId', $event)" :disabled="insertReadonly.EducationId" />
+          </NextFormGroup>
+          <NextFormGroup item-key="DenimSize" :error="$v.form.DenimSize">
+            <NextInput v-model="form.DenimSize" type="text" :disabled="insertReadonly.DenimSize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="CorduroySize" :error="$v.form.CorduroySize">
+            <NextInput v-model="form.CorduroySize" type="text" :disabled="insertReadonly.CorduroySize" />
+          </NextFormGroup>
+          <NextFormGroup item-key="BloodTypeId" :error="$v.form.BloodTypeId">
+            <NextDropdown lookup-key="BLOOD_TYPE" @input="selectedType('BloodTypeId', $event)" :disabled="insertReadonly.BloodTypeId" />
+          </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.EmployeeContact')" @click.prevent="tabValidation()">
         <b-row>
-          <b-col v-if="insertVisible.Telephone1 != null ? insertVisible.Telephone1 : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.Telephone1 + (insertRequired.Telephone1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone1.$error }">
-              <b-form-input type="number" v-model="form.Telephone1" :readonly="insertReadonly.Telephone1" maxLength="10" :oninput="maxLengthControl" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Telephone2 != null ? insertVisible.Telephone2 : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.Telephone2 + (insertRequired.Telephone2 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Telephone2.$error }">
-              <b-form-input type="number" v-model="form.Telephone2" :readonly="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.GsmNumber != null ? insertVisible.GsmNumber : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.GsmNumber + (insertRequired.GsmNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.GsmNumber.$error }" >
-              <b-form-input type="number" v-model="form.GsmNumber" :readonly="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col v-if="insertVisible.FaxNumber != null ? insertVisible.FaxNumber : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.FaxNumber + (insertRequired.FaxNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FaxNumber.$error }">
-              <b-form-input type="number" v-model="form.FaxNumber" :readonly="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Email != null ? insertVisible.Email : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.Email + (insertRequired.Email === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Email.$error }">
-              <b-form-input class="lowercase" type="email" v-model="form.Email" @input="emailEntered" :readonly="insertReadonly.Email" />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Telephone1" :error="$v.form.Telephone1">
+            <NextInput v-model="form.Telephone1" type="number" :disabled="insertReadonly.Telephone1" maxLength="10" :oninput="maxLengthControl"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="Telephone2" :error="$v.form.Telephone2">
+            <NextInput v-model="form.Telephone2" type="number" :disabled="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="GsmNumber" :error="$v.form.GsmNumber">
+            <NextInput v-model="form.GsmNumber" type="number" :disabled="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="FaxNumber" :error="$v.form.FaxNumber">
+            <NextInput v-model="form.FaxNumber" type="number" :disabled="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="Email" :error="$v.form.Email">
+            <NextInput v-model="form.Email" type="email" class="lowercase" :disabled="insertReadonly.Email" @input="emailEntered"/>
+          </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.Model_Team')" @click.prevent="tabValidation()" v-if="form.IsTeam">
-        <b-row>
-          <b-col md="4" lg="3">
-            <b-form-group :label="$t('insert.employee.TeamPersonalName')" :class="{ 'form-group--error': $v.employeeTeam.$error }">
-              <v-select v-model="employeeTeam" label="Description1" :filterable="false" :options="employees" @search="onEmployeeSearch">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col md="2" class="ml-auto">
-            <b-form-group>
-              <AddDetailButton @click.native="addPersonalTeam" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="12">
-            <b-table-simple responsive bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.employee.TeamPersonalName')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                  <b-tr v-for="(w, i) in employeeTeams" :key="i">
-                    <b-td>{{w.Description1}}</b-td>
-                    <b-td class="text-center"><i @click="removePersonalTeam(w)" class="far fa-trash-alt text-danger"></i></b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-col>
-          </b-row>
+        <NextDetailPanel v-model="form.EmployeeTeams" :items="teamItems"></NextDetailPanel>
       </b-tab>
-      <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()">
-        <b-row>
-          <b-col md="4" lg="3">
-            <b-form-group :label="$t('insert.employee.EmployeePrefix')" :class="{ 'form-group--error': $v.selectedEInvoice.$error }">
-              <v-select v-model="selectedEInvoice" :options="eInvoiceSeqsList" label="Label"></v-select>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col md="2" class="ml-auto">
-            <b-form-group>
-              <AddDetailButton @click.native="addPrefix" />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="12">
-            <b-table-simple responsive bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.employee.EmployeePrefix')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                  <b-tr v-for="(w, i) in selectedEInvoices" :key="i">
-                    <b-td>{{w.Label}}</b-td>
-                    <b-td class="text-center"><i @click="removePrefix(w)" class="far fa-trash-alt text-danger"></i></b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-col>
-        </b-row>
+      <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
+        <NextDetailPanel v-model="form.EInvoiceSeqs" :items="prefixItems"></NextDetailPanel>
       </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
-import { required, minLength, maxLength, email, requiredIf } from 'vuelidate/lib/validators'
+import { requiredIf } from 'vuelidate/lib/validators'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -370,42 +188,59 @@ export default {
         MontSize: null,
         OvercoatSize: null,
         ShoeSize: null,
-        IsTeam: 0,
+        IsTeam: null,
         PriceListCategoryId: null,
-        CreateCustomerRecord: 0,
+        CreateCustomerRecord: null,
         UserGroupId: null,
         EducationId: null,
         DenimSize: null,
         CorduroySize: null,
         BloodTypeId: null,
         ScoreCardClassId: null,
-        IsRepresentative: 0,
+        IsRepresentative: null,
         EmployeeTeams: [],
         EInvoiceSeqs: []
       },
-      routeName: this.$route.meta.baseLink,
-      employeeTeam: null,
-      employeeTeams: [],
-      selectedEInvoice: null,
-      selectedEInvoices: [],
-      eInvoiceSeqsList: [],
-      PriceListCategoryType: {}
+      priceListCategory: null,
+      teamItems: detailData.teamItems,
+      prefixItems: [],
+      prefixItem: {
+        type: 'Dropdown',
+        modelProperty: 'RecordId',
+        objectKey: 'EmployeePrefix',
+        labelProperty: 'Code',
+        source: [],
+        label: this.$t('insert.employee.EmployeePrefix'),
+        required: true,
+        visible: true,
+        isUnique: true,
+        id: 1
+      }
     }
   },
   computed: {
-    ...mapState(['employees', 'userGroups', 'rowData']),
     returnCustomerRecord () {
       return this.form.CreateCustomerRecord
     }
   },
   mounted () {
-    this.getInsertPage(this.routeName)
-    this.$store.dispatch('getData', {...this.query, api: 'VisionNextBranch/api/Branch', record: 1})
+    this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       this.createManualCode()
       this.getLists()
+      this.$api.postByUrl({RecordId: 1}, 'VisionNextBranch/api/Branch/Get').then(response => {
+        if (response && response.Model) {
+          let eInvoiceSeqs = response.Model.EInvoiceSeqs
+          if (eInvoiceSeqs) {
+            this.prefixItem.source = eInvoiceSeqs.map(item => {
+              item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
+            })
+            this.prefixItems.push(this.prefixItem)
+          }
+        }
+      })
     },
     save () {
       this.$v.form.$touch()
@@ -418,184 +253,34 @@ export default {
         this.tabValidation()
       } else {
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
-        this.form.EmployeeTeams = this.employeeTeams.map((item) => {
-          var newItem = {
-            Deleted: 0,
-            System: 0,
-            RecordState: 2,
-            EmployeeId: item.RecordId
-          }
-          return newItem
-        })
-        this.form.EInvoiceSeqs = this.selectedEInvoices.map((item) => {
-          var newItem = {
-            Deleted: 0,
-            System: 0,
-            RecordState: 2,
-            RecordId: item.RecordId
-          }
-          return newItem
-        })
-        let model = {
-          'model': this.form
-        }
-        if (!this.form.GroupId || this.form.GroupId === '') {
-          delete this.form.GroupId
-        }
-        if (!this.form.BloodTypeId || this.form.BloodTypeId === '') {
-          delete this.form.BloodTypeId
-        }
-        if (!this.form.ScoreCardClassId || this.form.ScoreCardClassId === '') {
-          delete this.form.ScoreCardClassId
-        }
-        if (!this.form.TypeId || this.form.TypeId === '') {
-          delete this.form.TypeId
-        }
-        if (!this.form.PriceListCategoryId || this.form.PriceListCategoryId === '') {
-          delete this.form.PriceListCategoryId
-        }
-        if (!this.form.UserGroupId || this.form.UserGroupId === '') {
-          delete this.form.UserGroupId
-        }
-        if (!this.form.EducationId || this.form.EducationId === '') {
-          delete this.form.EducationId
-        }
-        if (!this.form.EmployeeId || this.form.EmployeeId === '') {
-          delete this.form.EmployeeId
-        }
-
-        this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName}/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     },
     getLists () {
       let allLookups = 'EMPLOYEE_GROUP,EMPLOYEE_CATEGORY_1,PRICE_LIST_CATEGORY_TYPE,SCORE_CARD_CLASS,EMPLOYEE_TYPE,EDUCATION,BLOOD_TYPE'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysUserGroup/Search', name: 'userGroups'})
-    },
-    onEmployeeSearch (search, loading) {
-      if (search.length >= 3) {
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
-          name: 'employees',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
-    },
-    addPersonalTeam () {
-      this.$v.employeeTeam.$touch()
-      if (this.$v.employeeTeam.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-
-      let filteredArr = this.employeeTeams.filter(i => i.RecordId === this.employeeTeam.RecordId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-
-      this.employeeTeams.push(this.employeeTeam)
-      this.employeeTeam = {}
-      this.$v.employeeTeam.$reset()
-    },
-    removePersonalTeam (item) {
-      this.employeeTeams.splice(this.employeeTeams.indexOf(item), 1)
-    },
-    addPrefix () {
-      this.$v.selectedEInvoice.$touch()
-      if (this.$v.selectedEInvoice.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-
-      let filteredArr = this.selectedEInvoices.filter(i => i.RecordId === this.selectedEInvoice.RecordId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-
-      this.selectedEInvoices.push(this.selectedEInvoice)
-      this.selectedEInvoice = {}
-      this.$v.selectedEInvoice.$reset()
-    },
-    removePrefix (item) {
-      this.selectedEInvoices.splice(this.selectedEInvoices.indexOf(item), 1)
     },
     emailEntered (value) {
       this.form.Email = value ? value.toLowerCase() : ''
     }
   },
   validations () {
-    let form = this.insertRules
-    form.PriceListCategoryId = {
-      required: requiredIf(function (nestedModel) {
+    this.insertRules.PriceListCategoryId = {
+      required: requiredIf(function () {
         return this.form.CreateCustomerRecord === 1
       })
     }
-    form.TaxNumber = {
-      required,
-      minLength: minLength(11),
-      maxLength: maxLength(11)
-    }
-    form.Telephone1 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.Telephone2 = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.GsmNumber = {
-      required,
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.FaxNumber = {
-      minLength: minLength(10),
-      maxLength: maxLength(10)
-    }
-    form.Email = {
-      required,
-      email
-    }
+    this.insertRequired.PriceListCategoryId = this.form.CreateCustomerRecord === 1
+
     return {
-      form: form,
-      employeeTeam: {
-        required
-      },
-      selectedEInvoice: {
-        required
-      }
+      form: this.insertRules
     }
   },
   watch: {
-    rowData (e) {
-      if (e) {
-        this.eInvoiceSeqsList = e.EInvoiceSeqs
-        if (this.eInvoiceSeqsList) {
-          this.eInvoiceSeqsList.map(item => {
-            item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
-          })
-        }
-      }
-    },
     returnCustomerRecord (e) {
       if (e !== null) {
         if (e !== 1) {
-          this.PriceListCategoryType = {}
+          this.priceListCategory = null
           this.form.PriceListCategoryId = null
         }
       }

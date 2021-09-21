@@ -57,6 +57,9 @@ export default {
     },
     filter: {
       type: Function
+    },
+    search: {
+      type: Function
     }
   },
   model: {
@@ -69,15 +72,21 @@ export default {
       allValues: [],
       selectedValue: undefined,
       labelKey: '',
-      labelObjectKey: null
+      labelObjectKey: null,
+      itemKey: null
     }
   },
   mounted () {
+    if (this.$parent && this.$parent.$parent && this.$parent.$parent.itemKey) {
+      this.itemKey = this.$parent.$parent.itemKey
+    }
     this.labelKey = this.label
     if (this.lookupKey) {
       this.labelKey = 'Label'
       if (this.getLookup) {
         this.getLookupValues()
+      } else if (this.lookup[this.lookupKey]) {
+        this.setDefaultValue(this.lookup[this.lookupKey])
       }
     } else if (!this.searchable) {
       if (this.labelKey.includes('.')) {
@@ -88,6 +97,8 @@ export default {
         }
       }
       this.getValues()
+    } else if (this.source && this.source.length > 0) {
+      this.setDefaultValue(this.source)
     }
   },
   computed: {
@@ -117,11 +128,21 @@ export default {
     },
     allValues (newValue) {
       this.$emit('all-source', newValue)
+    },
+    lookup: {
+      handler (newValue) {
+        if (newValue) {
+          let source = this.getSource()
+          this.setDefaultValue(source)
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
     searchValue (search, loading) {
-      if (!this.searchable || search.length < 3 || !this.url) {
+      if (!this.searchable || search.length < 3 || (!this.url && !this.search)) {
         return false
       }
       let pagerecordCount = 10
@@ -129,6 +150,15 @@ export default {
         search = undefined
       } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
         search = search.replaceAll('%', '')
+      }
+      if (this.search) {
+        loading(true)
+        this.search(search).then((list) => {
+          loading(false)
+          this.values = list
+          this.allValues = this.values
+        })
+        return
       }
       let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
       let orConditionModels = []
@@ -187,6 +217,7 @@ export default {
           }
 
           this.allValues = this.values
+          this.setDefaultValue(this.allValues)
         }
       })
     },
@@ -198,6 +229,7 @@ export default {
       if (lookupValue && lookupValue.length > 0) {
         this.values = lookupValue
         this.allValues = this.values
+        this.setDefaultValue(this.values)
         return
       }
       let random = Math.random()
@@ -206,6 +238,7 @@ export default {
           this.values = response.Values
           if (this.filter) {
             this.values = this.values.filter(i => this.filter(i))
+            this.setDefaultValue(this.values)
           }
           this.allValues = this.values
         }
@@ -221,6 +254,15 @@ export default {
       }
 
       return values
+    },
+    setDefaultValue (source) {
+      if (this.itemKey && this.insertDefaultValue[this.itemKey] && !this.selectedValue && source) {
+        let defaultValue = this.insertDefaultValue[this.itemKey]
+        let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
+        if (filteredList && filteredList.length > 0) {
+          this.selectedValue = filteredList[0]
+        }
+      }
     }
   }
 }
