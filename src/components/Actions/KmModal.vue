@@ -80,7 +80,7 @@ export default {
         return
       }
       let request = {
-        'recordIds': [this.recordId],
+        'recordIds': [this.modalItem.RecordId],
         'model': {
           'EndKm': +this.newKm
         }
