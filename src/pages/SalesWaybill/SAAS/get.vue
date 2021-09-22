@@ -93,6 +93,8 @@
                     <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.totalItemDiscount')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.totalOtherDiscount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.isFreeItem')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.freeReason')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
@@ -107,6 +109,11 @@
                       <b-td>{{o.GrossTotal}}</b-td>
                       <b-td>{{o.TotalItemDiscount}}</b-td>
                       <b-td>{{o.TotalOtherDiscount}}</b-td>
+                      <b-td>
+                        <i v-if="o.IsFreeItem === 1" class="fa fa-check text-success"></i>
+                        <i v-else class="fa fa-times text-danger"></i>
+                      </b-td>
+                      <b-td>{{o.FreeReason ? o.FreeReason.Label : '-' }}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -192,7 +199,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
   props: ['dataKey'],

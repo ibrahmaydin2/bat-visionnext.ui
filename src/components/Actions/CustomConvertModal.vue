@@ -5,8 +5,8 @@
         <NextFormGroup :title="$t('index.Convert.branchId')" md="4" lg="4">
           <v-select :options="branchList" label="Desciption" @input="selectedBranch('BranchIds', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.documentTypeId" :required="false" md="4" lg="4">
-          <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeId', $event)"></v-select>
+        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.documentTypeIds" :required="false" md="4" lg="4">
+          <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeIds', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.documentDate')" md="4" lg="4">
           <date-picker
@@ -134,7 +134,7 @@ export default {
     return {
       form: {
         BranchIds: null,
-        documentTypeId: null,
+        documentTypeIds: null,
         DocumentDate: null,
         CustomerIds: null,
         RepresentativeIds: null
@@ -230,7 +230,7 @@ export default {
   validations () {
     return {
       form: {
-        documentTypeId: {
+        documentTypeIds: {
           required
         }
       }
@@ -243,7 +243,7 @@ export default {
       this.selected = []
       this.form = {
         BranchIds: null,
-        documentTypeId: null,
+        documentTypeIds: null,
         DocumentDate: null,
         CustomerIds: null,
         RepresentativeIds: null
@@ -276,14 +276,14 @@ export default {
     selectedType (label, model) {
       if (model) {
         this.documentType = model.Description
-        this.form[label] = model.RecordId
+        this.form[label] = [model.RecordId]
         if (model.RecordId === 3 || model.CustomerIds === 3) {
           this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/ConvertToSearch'
         } else {
           this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/ConvertToSearch'
         }
       } else {
-        this.form[label] = null
+        this.form[label] = []
         this.documentType = null
       }
     },
@@ -321,7 +321,7 @@ export default {
         }
         this.form.CustomerIds = customerId > 0 ? [customerId] : null
         let request = {
-          'AndConditionModel': {
+          'andConditionModel': {
             ...this.form
           }
         }
