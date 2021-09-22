@@ -558,8 +558,6 @@ import ForgotPassword from '@/views/Auth/forgot-password'
 import ResetPassword from '@/views/Auth/reset-password'
 
 import SalesWaybillIndex from '@/pages/SalesWaybill/'
-import SalesWaybillGet from '@/pages/SalesWaybill/get'
-import SalesWaybillCopy from '@/pages/SalesWaybill/copy'
 
 import ServicePurchaseInvoiceIndex from '@/pages/ServicePurchaseInvoice/'
 import ServicePurchaseInvoiceGet from '@/pages/ServicePurchaseInvoice/get'
@@ -893,7 +891,7 @@ const listGet = [
   { path: '/AssetLocation/:url', name: 'AssetLocationGet', component: AssetLocationGet, meta: { title: i18n.t('router.AssetLocationGet'), baseLink: 'AssetLocation' } },
   { path: '/AssetMovementCard/:url', name: 'AssetMovementCardGet', component: AssetMovementCardGet, meta: { title: i18n.t('router.AssetMovementCardGet'), baseLink: 'AssetMovementCard' } },
   { path: '/OverDueDebitSearch/:url', name: 'OverDueDebitSearchGet', component: OverDueDebitSearchGet, meta: { title: i18n.t('router.OverDueDebitSearchGet'), baseLink: 'OverDueDebitSearch' } },
-  { path: '/SalesWaybill/:url', name: 'SalesWaybillGet', component: SalesWaybillGet, meta: { title: i18n.t('router.SalesWaybillGet'), baseLink: 'SalesWaybill' } },
+  { path: '/SalesWaybill/:url', name: 'SalesWaybillGet', component: getTenantPage('SalesWaybill', 'get'), meta: { title: i18n.t('router.SalesWaybillGet'), baseLink: 'SalesWaybill' } },
   { path: '/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceGet', component: ServicePurchaseInvoiceGet, meta: { title: i18n.t('router.ServicePurchaseInvoiceGet'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/DispatchRefDocument/:url', name: 'DispatchRefDocumentGet', component: DispatchRefDocumentGet, meta: { title: i18n.t('router.DispatchRefDocumentGet'), baseLink: 'DispatchRefDocument' } },
   { path: '/CreditBudget/:url', name: 'CreditBudgetGet', component: CreditBudgetGet, meta: { title: i18n.t('router.CreditBudgetGet'), baseLink: 'CreditBudget' } },
@@ -1019,7 +1017,6 @@ const listUpdate = [
   { path: '/Update/AssetMovementCard/:url', name: 'AssetMovementCardUpdate', component: AssetMovementCardUpdate, meta: { title: i18n.t('router.AssetMovementCardUpdate'), baseLink: 'AssetMovementCard' } },
   { path: '/Update/OverDueDebitSearch/:url', name: 'OverDueDebitSearchUpdate', component: OverDueDebitSearchUpdate, meta: { title: i18n.t('router.OverDueDebitSearchUpdate'), baseLink: 'OverDueDebitSearch' } },
   { path: '/Update/SalesWaybill/:url', name: 'SalesWaybillUpdate', component: getTenantPage('SalesWaybill', 'update'), meta: { title: i18n.t('router.SalesWaybillUpdate'), baseLink: 'SalesWaybill' } },
-  { path: '/Copy/SalesWaybill/:url', name: 'SalesWaybillCopy', component: SalesWaybillCopy, meta: { title: i18n.t('router.SalesWaybillCopy'), baseLink: 'SalesWaybill' } },
   { path: '/Update/ServicePurchaseInvoice/:url', name: 'ServicePurchaseInvoiceUpdate', component: ServicePurchaseInvoiceUpdate, meta: { title: i18n.t('router.ServicePurchaseInvoiceUpdate'), baseLink: 'ServicePurchaseInvoice' } },
   { path: '/Update/DispatchRefDocument/:url', name: 'DispatchRefDocumentUpdate', component: DispatchRefDocumentUpdate, meta: { title: i18n.t('router.DispatchRefDocumentUpdate'), baseLink: 'DispatchRefDocument' } },
   { path: '/Update/CreditBudget/:url', name: 'CreditBudgetUpdate', component: CreditBudgetUpdate, meta: { title: i18n.t('router.CreditBudgetUpdate'), baseLink: 'CreditBudget' } },
