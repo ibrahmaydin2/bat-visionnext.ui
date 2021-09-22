@@ -252,7 +252,6 @@ import DeliveryDispatchInsert from '@/pages/DeliveryDispatch/insert'
 import DeliveryDispatchUpdate from '@/pages/DeliveryDispatch/update'
 
 import SalesInvoiceIndex from '@/pages/SalesInvoice/'
-import SalesInvoiceGet from '@/pages/SalesInvoice/get'
 
 import PurchaseOrderIndex from '@/pages/PurchaseOrder/'
 import PurchaseOrderGet from '@/pages/PurchaseOrder/get'
@@ -825,7 +824,7 @@ const listGet = [
   { path: '/SalesOrder/:url', name: 'SalesOrderGet', component: SalesOrderGet, meta: { title: i18n.t('router.SalesOrderGet'), baseLink: 'SalesOrder' } },
   { path: '/AcceptGoodsDispatch/:url', name: 'AcceptGoodsDispatchGet', component: AcceptGoodsDispatchGet, meta: { title: i18n.t('router.AcceptGoodsDispatchGet'), baseLink: 'AcceptGoodsDispatch' } },
   { path: '/DeliveryDispatch/:url', name: 'DeliveryDispatchGet', component: DeliveryDispatchGet, meta: { title: i18n.t('router.DeliveryDispatchGet'), baseLink: 'DeliveryDispatch' } },
-  { path: '/SalesInvoice/:url', name: 'SalesInvoiceGet', component: SalesInvoiceGet, meta: { title: i18n.t('router.SalesInvoiceGet'), baseLink: 'SalesInvoice' } },
+  { path: '/SalesInvoice/:url', name: 'SalesInvoiceGet', component: getTenantPage('SalesInvoice', 'get'), meta: { title: i18n.t('router.SalesInvoiceGet'), baseLink: 'SalesInvoice' } },
   { path: '/PurchaseOrder/:url', name: 'PurchaseOrderGet', component: PurchaseOrderGet, meta: { title: i18n.t('router.PurchaseOrderGet'), baseLink: 'PurchaseOrder' } },
   { path: '/PurchaseInvoice/:url', name: 'PurchaseInvoiceGet', component: PurchaseInvoiceGet, meta: { title: i18n.t('router.PurchaseInvoiceGet'), baseLink: 'PurchaseInvoice' } },
   { path: '/Finance/:url', name: 'FinanceGet', component: FinanceGet, meta: { title: i18n.t('router.FinanceGet'), baseLink: 'Finance' } },

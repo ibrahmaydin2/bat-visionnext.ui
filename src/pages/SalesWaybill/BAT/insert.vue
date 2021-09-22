@@ -70,7 +70,7 @@
         </b-row>
       </section>
     </b-col>
-    <b-col cols="12" class="">
+    <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
           <b-row>

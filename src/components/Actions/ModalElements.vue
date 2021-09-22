@@ -3,26 +3,26 @@
     <b-row v-if="formElements">
       <b-col cols="6" v-for="(element, i) in formElements" :key="i">
         <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-          <div v-if="element.modelControlUtil.inputType === 'AutoComplete'">
+          <div v-if="element.modelControlUtil.InputType === 'AutoComplete'">
             <!-- <autocomplete
               @click="onClickAutoComplete(element.modelControlUtil)"
               :search="onAutoCompleteSearch"
               class="autocomplete-search"
               :get-result-value="getResultValue"
-              @submit="handleSubmit(element.modelControlUtil.modelProperty, $event)"
+              @submit="handleSubmit(element.modelControlUtil.ModelProperty, $event)"
             /> -->
             <NextDropdown
-              @input="selectedValue(element.modelControlUtil.modelProperty, $event, 'search')"
-              :url="element.modelControlUtil.serviceUrl"
+              @input="selectedValue(element.modelControlUtil.ModelProperty, $event, 'search')"
+              :url="element.modelControlUtil.ServiceUrl"
               :searchable="true" :custom-option="true"
               or-condition-fields="Code,Description1,CommercialTitle"
               :dynamic-and-condition="getAndConditionModel(element.AndConditions)"/>
           </div>
           <div v-else>
             <v-select
-              v-if="element.modelControlUtil.isLookupTable"
+              v-if="element.modelControlUtil.IsLookupTable"
               label="Label"
-              :options="lookup[element.modelControlUtil.code]"
+              :options="lookup[element.modelControlUtil.Code]"
               @input="selectedValue(element.EntityProperty, $event, 'lookup')"
             >
             </v-select>
@@ -121,12 +121,12 @@ export default {
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
 
-        if (item.modelControlUtil && item.modelControlUtil.inputType !== 'AutoComplete') {
-          if (item.modelControlUtil.isLookupTable) {
+        if (item.modelControlUtil && item.modelControlUtil.InputType !== 'AutoComplete') {
+          if (item.modelControlUtil.IsLookupTable) {
             autoLookups += item.DefaultValue + ','
           } else {
             let model = this.getAndConditionModel(item.AndConditions)
-            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.serviceUrl, val: fieldName, model: model}).then(() => {
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: item.modelControlUtil.ServiceUrl, val: fieldName, model: model}).then(() => {
               vm.$forceUpdate()
             })
           }
