@@ -1627,7 +1627,8 @@
       "logisticCompanyInformation": "Lojistik Firma Bilgileri",
       "disabledForVehicle": "Araç bilgisi dolu olduğu için kapalıdır",
       "freeReason": "Bedelsiz Sebebi",
-      "isFreeItem": "Bedelsiz Ürün"
+      "isFreeItem": "Bedelsiz Ürün",
+      "isCashCollection": "Nakit Tahsilat Yapılsın"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
