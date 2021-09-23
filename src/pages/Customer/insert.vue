@@ -355,7 +355,6 @@ import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
 import { detailData } from './detailPanelData'
-// import AddButton from '../../components/AddButton'
 export default {
   mixins: [insertMixin],
   data () {
@@ -431,15 +430,15 @@ export default {
         Category3Id: null,
         Category2Id: null,
         Category1Id: null,
-        GroupId: 5021,
-        ClassId: 5009,
+        GroupId: null,
+        ClassId: null,
         SalesDocumentTypeId: null,
-        OwnerTypeId: 5003,
+        OwnerTypeId: null,
         ClassProposalId: null,
         ClassProposalReasonId: null,
-        SalesMethodId: 5036,
-        GeographicEnvironmentId: 5032,
-        TradeFocusId: 5087,
+        SalesMethodId: null,
+        GeographicEnvironmentId: null,
+        TradeFocusId: null,
         InvoiceCombineRuleId: null,
         BackMarginGroupId: null,
         DiscountGroup3Id: null,

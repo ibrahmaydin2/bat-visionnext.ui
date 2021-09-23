@@ -3,7 +3,7 @@
     <b-row v-if="formElements">
       <b-col cols="6" v-for="(element, i) in formElements" :key="i">
         <b-form-group v-if="element.ColumnType === 'Select' && element.Visible" :label="element.Label + (element.Required === true ? ' *' : '')" :class="{ 'form-group--error': $v.form[element.EntityProperty].$error }" >
-          <div v-if="element.modelControlUtil.inputType === 'AutoComplete'">
+          <div v-if="element.modelControlUtil.InputType === 'AutoComplete'">
              <b-form-input
               type="text"
               @keyup.enter="onAutoCompleteSearch(element, $event)"
@@ -82,7 +82,7 @@ export default {
       this.formActions = res.RowActions
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
-        if (item.modelControlUtil && item.modelControlUtil.inputType === 'AutoComplete') {
+        if (item.modelControlUtil && item.modelControlUtil.InputType === 'AutoComplete') {
           this.$set(this.form, fieldName, null)
         } else {
           this.$set(this.model, fieldName, null)
@@ -113,7 +113,7 @@ export default {
       const andConditionModel = {
         Description1: this.form[element.EntityProperty]
       }
-      this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: element.modelControlUtil.serviceUrl, val: element.modelControlUtil.modelProperty, model: andConditionModel}).then((res) => {
+      this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: element.modelControlUtil.ServiceUrl, val: element.modelControlUtil.ModelProperty, model: andConditionModel}).then((res) => {
         this.searchItems = res
       })
     },

@@ -61,9 +61,9 @@
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
@@ -72,6 +72,7 @@
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(rowData.IsCashCollection , 'check', 'insert.order.isCashCollection')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -89,6 +90,8 @@
                     <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.isFreeItem')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.freeReason')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
@@ -100,6 +103,11 @@
                       <b-td>{{o.NetTotal}}</b-td>
                       <b-td>{{o.TotalVat}}</b-td>
                       <b-td>{{o.GrossTotal}}</b-td>
+                      <b-td>
+                        <i v-if="o.IsFreeItem === 1" class="fa fa-check text-success"></i>
+                        <i v-else class="fa fa-times text-danger"></i>
+                      </b-td>
+                      <b-td>{{o.FreeReason ? o.FreeReason.Label : '-' }}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -161,7 +169,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
   props: ['dataKey'],

@@ -160,11 +160,11 @@
                     v-model="selectedOrderLine.selectedItem"
                     searchable
                     :custom-option="true"
-                    @input="selectItem"
+                    @input="selectItem($event)"
                     :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity" @keypress="onlyForCurrency($event, selectedOrderLine.quantity)" min=1></NextInput>
+              <NextInput type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event, selectedOrderLine.quantity)" min=1></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -184,7 +184,7 @@
             <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedOrderLine.grossTotal" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.grossTotal" :disabled="true"></NextInput>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.order.isFreeItem')" md="2" lg="2" :required="true" :error="$v.selectedOrderLine.isFreeItem">
+            <NextFormGroup :title="$t('insert.order.isFreeItem')" md="2" lg="2" :required="true" :error="$v.selectedOrderLine.isFreeItem">
               <NextCheckBox v-model="selectedOrderLine.isFreeItem" type="number" @input="checkIsFree" radio />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.freeReason')" md="2" lg="2" :required="selectedOrderLine.isFreeItem === 1" :error="$v.selectedOrderLine.freeReason">
@@ -530,11 +530,16 @@ export default {
         this.setTotalPrice()
       })
     },
-    selectItem () {
+    selectItem (value) {
+      if (value) {
+        this.selectedOrderLine.selectedItem = value
+        this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? value.Vat : 0
+      }
       this.searchPriceListItem()
       this.setStock()
     },
-    selectQuantity () {
+    selectQuantity (model) {
+      this.selectedOrderLine.quantity = model
       this.setTotalPrice()
     },
     setTotalPrice () {
