@@ -48,9 +48,7 @@ import EmployeeInsert from '@/pages/Employee/insert' // yeni kayıt
 import EmployeeUpdate from '@/pages/Employee/update' // güncelleme
 
 import ItemIndex from '@/pages/Item/' // liste ekranı
-import ItemGet from '@/pages/Item/get' // fullpage görünümü
 import ItemInsert from '@/pages/Item/insert' // yeni kayıt
-import ItemUpdate from '@/pages/Item/update' // güncelleme
 
 import BranchIndex from '@/pages/Branch/' // liste ekranı
 import BranchGet from '@/pages/Branch/get' // fullpage görünümü
@@ -340,9 +338,6 @@ import AccountTransactionInsert from '@/pages/AccountTransaction/insert'
 import AccountTransactionUpdate from '@/pages/AccountTransaction/update'
 
 import CreditCardIndex from '@/pages/CreditCard/'
-import CreditCardGet from '@/pages/CreditCard/get'
-import CreditCardInsert from '@/pages/CreditCard/insert'
-import CreditCardUpdate from '@/pages/CreditCard/update'
 
 import CashTransactionsIndex from '@/pages/CashTransactions/'
 import CashTransactionsGet from '@/pages/CashTransactions/get'
@@ -792,7 +787,7 @@ const listGet = [
   { path: '/Route/:url', name: 'RouteGet', component: RouteGet, meta: { title: i18n.t('router.RouteGet'), baseLink: 'Route' } },
   { path: '/Vehicle/:url', name: 'VehicleGet', component: VehicleGet, meta: { title: i18n.t('router.VehicleGet'), baseLink: 'Vehicle' } },
   { path: '/Employee/:url', name: 'EmployeeGet', component: EmployeeGet, meta: { title: i18n.t('router.EmployeeGet'), baseLink: 'Employee' } },
-  { path: '/Item/:url', name: 'ItemGet', component: ItemGet, meta: { title: i18n.t('router.ItemGet'), baseLink: 'Item' } },
+  { path: '/Item/:url', name: 'ItemGet', component: getTenantPage('Item', 'get'), meta: { title: i18n.t('router.ItemGet'), baseLink: 'Item' } },
   { path: '/Branch/:url', name: 'BranchGet', component: BranchGet, meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
   { path: '/Bcp/:url', name: 'BcpGet', component: BcpGet, meta: { title: i18n.t('router.BcpGet'), baseLink: 'Bcp' } },
   { path: '/AnalysisQuestions/:url', name: 'AnalysisQuestionsGet', component: AnalysisQuestionsGet, meta: { title: i18n.t('router.AnalysisQuestionsGet'), baseLink: 'AnalysisQuestions' } },
@@ -845,7 +840,7 @@ const listGet = [
   { path: '/CSCard/:url', name: 'CSCardGet', component: CSCardGet, meta: { title: i18n.t('router.CSCardGet'), baseLink: 'CSCard' } },
   { path: '/Voucher/:url', name: 'VoucherGet', component: VoucherGet, meta: { title: i18n.t('router.VoucherGet'), baseLink: 'Voucher' } },
   { path: '/AccountTransaction/:url', name: 'AccountTransactionGet', component: AccountTransactionGet, meta: { title: i18n.t('router.AccountTransactionGet'), baseLink: 'AccountTransaction' } },
-  { path: '/CreditCard/:url', name: 'CreditCardGet', component: CreditCardGet, meta: { title: i18n.t('router.CreditCardGet'), baseLink: 'CreditCard' } },
+  { path: '/CreditCard/:url', name: 'CreditCardGet', component: getTenantPage('CreditCard', 'get'), meta: { title: i18n.t('router.CreditCardGet'), baseLink: 'CreditCard' } },
   { path: '/CashTransactions/:url', name: 'CashTransactionsGet', component: CashTransactionsGet, meta: { title: i18n.t('router.CashTransactionsGet'), baseLink: 'CashTransactions' } },
   { path: '/Accounting/:url', name: 'AccountingGet', component: AccountingGet, meta: { title: i18n.t('router.AccountingGet'), baseLink: 'Accounting' } },
   { path: '/AccountCodeDescription/:url', name: 'AccountCodeDescriptionGet', component: AccountCodeDescriptionGet, meta: { title: i18n.t('router.AccountCodeDescriptionGet'), baseLink: 'AccountCodeDescription' } },
@@ -921,7 +916,7 @@ const listUpdate = [
   { path: '/Update/Route/:url', name: 'RouteUpdate', component: RouteUpdate, meta: { title: i18n.t('router.RouteUpdate'), baseLink: 'Route' } },
   { path: '/Update/Vehicle/:url', name: 'VehicleUpdate', component: VehicleUpdate, meta: { title: i18n.t('router.VehicleUpdate'), baseLink: 'Vehicle' } },
   { path: '/Update/Employee/:url', name: 'EmployeeUpdate', component: EmployeeUpdate, meta: { title: i18n.t('router.EmployeeUpdate'), baseLink: 'Employee' } },
-  { path: '/Update/Item/:url', name: 'ItemUpdate', component: ItemUpdate, meta: { title: i18n.t('router.ItemUpdate'), baseLink: 'Item' } },
+  { path: '/Update/Item/:url', name: 'ItemUpdate', component: getTenantPage('Item', 'update'), meta: { title: i18n.t('router.ItemUpdate'), baseLink: 'Item' } },
   { path: '/Update/Branch/:url', name: 'BranchUpdate', component: BranchUpdate, meta: { title: i18n.t('router.BranchUpdate'), baseLink: 'Branch' } },
   { path: '/Update/Bcp/:url', name: 'BcpUpdate', component: BcpUpdate, meta: { title: i18n.t('router.BcpUpdate'), baseLink: 'Bcp' } },
   { path: '/Update/AnalysisQuestions/:url', name: 'AnalysisQuestionsUpdate', component: AnalysisQuestionsUpdate, meta: { title: i18n.t('router.AnalysisQuestionsUpdate'), baseLink: 'AnalysisQuestions' } },
@@ -974,7 +969,7 @@ const listUpdate = [
   { path: '/Update/CSCard/:url', name: 'CSCardUpdate', component: CSCardUpdate, meta: { title: i18n.t('router.CSCardUpdate'), baseLink: 'CSCard' } },
   { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
   { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
-  { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: CreditCardUpdate, meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
+  { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: getTenantPage('CreditCard', 'update'), meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
   { path: '/Update/CashTransactions/:url', name: 'CashTransactionsUpdate', component: CashTransactionsUpdate, meta: { title: i18n.t('router.CashTransactionsUpdate'), baseLink: 'CashTransactions' } },
   { path: '/Update/Accounting/:url', name: 'AccountingUpdate', component: AccountingUpdate, meta: { title: i18n.t('router.AccountingUpdate'), baseLink: 'Accounting' } },
   { path: '/Update/AccountCodeDescription/:url', name: 'AccountCodeDescriptionUpdate', component: AccountCodeDescriptionUpdate, meta: { title: i18n.t('router.AccountCodeDescriptionUpdate'), baseLink: 'AccountCodeDescription' } },
@@ -1097,7 +1092,7 @@ const listInsert = [
   { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
   { path: '/Insert/Voucher', name: 'VoucherInsert', component: VoucherInsert, meta: { title: i18n.t('router.VoucherInsert'), baseLink: 'Voucher' } },
   { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
-  { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: CreditCardInsert, meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
+  { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: getTenantPage('CreditCard', 'insert'), meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/CashTransactions', name: 'CashTransactionsInsert', component: CashTransactionsInsert, meta: { title: i18n.t('router.CashTransactionsInsert'), baseLink: 'CashTransactions' } },
   { path: '/Insert/Accounting', name: 'AccountingInsert', component: AccountingInsert, meta: { title: i18n.t('router.AccountingInsert'), baseLink: 'Accounting' } },
   { path: '/Insert/AccountCodeDescription', name: 'AccountCodeDescriptionInsert', component: AccountCodeDescriptionInsert, meta: { title: i18n.t('router.AccountCodeDescriptionInsert'), baseLink: 'AccountCodeDescription' } },

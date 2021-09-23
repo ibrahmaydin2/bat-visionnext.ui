@@ -223,8 +223,8 @@
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/update'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/update'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {

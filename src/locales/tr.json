@@ -1054,7 +1054,13 @@
       "CreditCard": "Kredi Kartı Ana Kayıtları",
       "status": "Durum",
       "code": "Sistem Kodu",
-      "reminder": "Müşteri Bakiyesi"
+      "reminder": "Müşteri Bakiyesi",
+      "SaasCreditCard": "Kredi Kartı İşlemleri",
+      "CurrencyRate": "Döviz Kuru",
+      "SystemCurrencyRate": "Sistem Döviz Kuru",
+      "CardOwner": "Kart Sahibi",
+      "IsManuelClosure": "Manuel Fatura Kapatma",
+      "BankBranchId": "Banka Şubesi"
     },
     "cscard": {
       "Code": "Çek İşlem Kodu",
@@ -2489,7 +2495,12 @@
       "RepresentativeId": "Saha Personeli",
       "RouteId": "Rota",
       "IsBatcardTransaction": "BATCard Tahsilatı",
-      "CashCardTypeId": "İşlem Tipi"
+      "CashCardTypeId": "İşlem Tipi",
+      "CurrencyRate": "Döviz Kuru",
+      "SystemCurrencyRate": "Sistem Döviz Kuru",
+      "CardOwner": "Kart Sahibi",
+      "IsManuelClosure": "Manuel Fatura Kapatma",
+      "BankBranchId": "Banka Şubesi"
     },
     "CsCard": {
       "title":"Çek İşlem Ana Kayıtları",
