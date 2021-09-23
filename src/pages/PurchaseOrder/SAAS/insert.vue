@@ -119,7 +119,7 @@
                 :source="paymentTypes"
                 label="Label"
                 @input="selectedType('PaymentTypeId', $event); checkPaymentPeriod($event)"
-                :disabled="insertReadonly.PaymentTypeId || !paymentTypes || paymentTypes.length == 0"/>
+                :disabled="insertReadonly.PaymentTypeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
               <NextDropdown
