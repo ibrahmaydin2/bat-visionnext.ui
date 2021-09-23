@@ -41,6 +41,9 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="Customer"
                 label="Description1"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveNumber" :error="$v.form.ApproveNumber">
