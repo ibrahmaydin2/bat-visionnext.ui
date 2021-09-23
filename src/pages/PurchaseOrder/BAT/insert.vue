@@ -7,13 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <b-button size="sm" variant="primary" @click="showAvailableCampaigns()" :title="$t('insert.order.availableCampaigns')">
-              <i class="fa fa-asterisk"></i>
-            </b-button>
             <b-button size="sm" variant="warning" @click="$bvModal.show('confirm-products-modal')" :title="$t('insert.order.getLastOrderProducts')">
               <i class="fa fa-list-alt"></i>
             </b-button>
-            <router-link :to="{name: 'Order' }">
+            <router-link :to="{name: 'PurchaseOrder' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -27,7 +24,7 @@
           <b-col cols="8">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="4" lg="4">
-                <NextDatePicker v-model="documentDate" :disabled="form.CustomerId > 0 || insertReadonly.DocumentDate" />
+                <NextDatePicker v-model="documentDate" :disabled="selectedCustomer !== null || insertReadonly.DocumentDate" />
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="4" lg="4">
                 <NextTimePicker v-model="form.DocumentTime" :disabled="insertReadonly.DocumentTime" />
@@ -35,20 +32,15 @@
               <NextFormGroup item-key="DueDate" :error="$v.form.DueDate" md="4" lg="4">
                 <NextDatePicker v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
               </NextFormGroup>
-              <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
-                <NextDropdown v-model="selectedStatus" url="VisionNextOrder/api/OrderStatus/Search" @input="selectedSearchType('StatusId', $event)" :disabled="insertReadonly.StatusId"/>
+              <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="4" lg="4">
+                <NextDropdown @input="selectWarehouse($event)" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable :disabled="insertReadonly.WarehouseId" />
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
                 <NextDropdown
                   v-model="selectedCustomer"
-                  :searchable="true"
-                  url="VisionNextCustomer/api/Customer/Search"
-                  :custom-option="true"
-                  :is-customer="true"
-                  or-condition-fields="Code,Description1,CommercialTitle"
+                  :source="customers"
                   @input="selectedSearchType('CustomerId', $event)"
-                  :disabled="insertReadonly.CustomerId"
-                  :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
+                  :disabled="form.WarehouseId == null || customers.length === 0 || insertReadonly.CustomerId"></NextDropdown>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
                 <NextDropdown
@@ -73,18 +65,6 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
-                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
-                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
-                <div class="clearfix"></div>
-                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -104,74 +84,34 @@
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.DocumentNumber" :disabled="insertReadonly.DocumentNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
-            </NextFormGroup>
-            <NextFormGroup item-key="StateId" :error="$v.form.StateId" md="2" lg="2">
-              <NextDropdown
-                v-model="selectedState"
-                @input="selectedSearchType('StateId', $event)"
-                url="VisionNextOrder/api/OrderState/Search"
-                :disabled="insertReadonly.StateId"/>
-            </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown
-                  v-model="selectedRepresentative"
-                  url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
-                  @input="selectedSearchType('RepresentativeId', $event)" searchable
-                  :disabled="insertReadonly.RepresentativeId"/>
-              </NextFormGroup>
+              <NextDropdown @input="selectedSearchType('RepresentativeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable :disabled="insertReadonly.RepresentativeId" />
+            </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <NextDropdown
-                v-model="selectedCurrency"
                 @input="selectedSearchType('CurrencyId', $event)"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <NextDropdown
-                v-model="selectedRoute"
                 searchable
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 :disabled="insertReadonly.RouteId"/>
             </NextFormGroup>
-            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <NextDropdown
-                v-model="selectedWarehouse"
-                @input="selectedSearchType('WarehouseId', $event)"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :disabled="insertReadonly.WarehouseId"/>
-            </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown
-                v-model="selectedVehicle"
+                searchable
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable
-                :disabled="insertReadonly.VehicleId"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
-              <NextDropdown
-                    v-model="selectedPaymentType"
-                    :source="paymentTypes"
-                    label="Label"
-                    @input="selectedType('PaymentTypeId', $event)"
-                    :disabled="insertReadonly.PaymentTypeId"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <NextInput type="number" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :disabled="insertReadonly.VehicleId" />
             </NextFormGroup>
             <NextFormGroup v-if="false" item-key="Canceled" :error="$v.form.Canceled" md="2" lg="2">
-              <NextCheckBox v-model="form.Canceled" type="number" toggle/>
+              <NextCheckBox v-model="form.Canceled" type="number" toggle :disabled="insertReadonly.Canceled"/>
             </NextFormGroup>
             <NextFormGroup v-if="false" item-key="Printed" :error="$v.form.Printed" md="2" lg="2">
-              <NextCheckBox v-model="form.Printed" type="number" toggle/>
-            </NextFormGroup>
-            <NextFormGroup item-key="IsDbsOffline" :error="$v.form.IsDbsOffline" md="2" lg="2">
-              <NextCheckBox v-model="form.IsDbsOffline" type="number" toggle :disabled="!selectedPaymentType || (selectedPaymentType.PaymentType && selectedPaymentType.PaymentType.Code === 'AH')"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
-              <NextDropdown v-model="selectedBank" @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbsOffline"/>
+              <NextCheckBox v-model="form.Printed" type="number" toggle :disabled="insertReadonly.Printed"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -206,16 +146,6 @@
             <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedOrderLine.grossTotal" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.grossTotal" :disabled="true"></NextInput>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.isFreeItem')" md="2" lg="2" :required="true" :error="$v.selectedOrderLine.isFreeItem">
-              <NextCheckBox v-model="selectedOrderLine.isFreeItem" type="number" @input="checkIsFree" radio />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.order.freeReason')" md="2" lg="2" :required="selectedOrderLine.isFreeItem === 1" :error="$v.selectedOrderLine.freeReason">
-              <NextDropdown
-                v-model="selectedOrderLine.freeReason"
-                url="VisionNextDiscount/api/DiscountReason/Search"
-                :disabled="selectedOrderLine.isFreeItem !== 1"
-                :filter="filterFreeReason"/>
-            </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
                 <AddDetailButton @click.native="addOrderLine" />
@@ -229,33 +159,22 @@
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.isFreeItem')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.freeReason')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(o, i) in (form.OrderLines ? form.OrderLines.filter(x => x.RecordState != 4) : [])" :key="i">
-                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
-                  <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
+                <b-tr v-for="(o, i) in form.OrderLines" :key="i">
+                  <b-td>{{o.Description1}}</b-td>
+                  <b-td>{{o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
-                  <b-td>{{o.DiscountPercent}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td>
-                    <i v-if="o.IsFreeItem === 1" class="fa fa-check text-success"></i>
-                    <i v-else class="fa fa-times text-danger"></i>
-                  </b-td>
-                  <b-td>{{o.FreeReason ? o.FreeReason.Description1 ? o.FreeReason.Description1 : o.FreeReason.Label : '-' }}</b-td>
                   <b-td class="text-center">
                     <i @click="editOrderLine(o)" class="fa fa-edit text-warning"></i>
                     <i @click="removeOrderLine(o)" class="far fa-trash-alt text-danger"></i>
@@ -265,119 +184,17 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.discounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.OrderDiscounts)" :key="i">
-                  <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
-                  <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
-                  <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
-                  <b-td>{{o.TotalDiscount}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.appliedDiscounts')">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.product')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountRate') + ' %'}}</span></b-th>
-                <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.givenQuantity')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.OrderDiscountItemDetails)" :key="i">
-                  <b-td>{{o.Discount ? o.Discount.Code : ''}}</b-td>
-                  <b-td>{{o.Discount ? o.Discount.Label : ''}}</b-td>
-                  <b-td>{{o.Item ? o.Item.Code : ''}}</b-td>
-                  <b-td>{{o.Item ? o.Item.Label : ''}}</b-td>
-                  <b-td>{{o.DiscountRate }}</b-td>
-                  <b-td>{{o.DiscountTotal}}</b-td>
-                  <b-td>{{o.GivenQuantity}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
-        <b-tab v-if="showDiscounts" :title="$t('insert.order.suitableCampaigns')" @click.prevent="tabValidation()">
-          <b-table-simple bordered small responsive>
-            <b-thead>
-              <b-tr>
-                <b-th>{{$t('insert.order.discountType')}}</b-th>
-                <b-th>{{$t('insert.order.discountName')}}</b-th>
-                <b-th>{{$t('insert.order.discountBeginDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountEndDate')}}</b-th>
-                <b-th>{{$t('insert.order.discountQuantity')}}</b-th>
-              </b-tr>
-            </b-thead>
-            <b-tbody>
-              <b-tr v-for="(c, i) in customerCampaigns.Campaigns" :key="i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Campaigns.length">{{$t('insert.order.campaigns')}}</b-td>
-                <b-td>{{c.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(c.DiscountEndDate)}}</b-td>
-                <b-td></b-td>
-              </b-tr>
-              <b-tr v-for="(f, i) in customerCampaigns.FreeItems" :key="'A' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.FreeItems.length">{{$t('insert.order.freeItems')}}</b-td>
-                <b-td>{{f.Value}}</b-td>
-                <b-td></b-td>
-                <b-td></b-td>
-                <b-td>{{f.FreeItemQuantity}}</b-td>
-              </b-tr>
-              <b-tr v-for="(l, i) in customerCampaigns.Loyalties" :key="'B' + i">
-                <b-td v-if="i === 0" :rowspan="customerCampaigns.Loyalties.length">{{$t('insert.order.loyaltyApplications')}}</b-td>
-                <b-td>{{l.Description}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyBeginDate)}}</b-td>
-                <b-td>{{dateConvertFromTimezone(l.LoyaltyEndDate)}}</b-td>
-                <b-td>{{l.CurrentScore}}</b-td>
-              </b-tr>
-            </b-tbody>
-          </b-table-simple>
-        </b-tab>
       </b-tabs>
     </b-col>
-    <b-modal id="campaign-modal" hide-footer>
+    <b-modal id="confirm-modal">
       <template #modal-title>
-        {{$t('insert.order.campaignSelection')}}
+        {{$t('insert.order.doYouConfirm')}}
       </template>
-      <b-table
-          :items="campaigns"
-          :fields="campaignFields"
-          select-mode="multi"
-          responsive
-          id="campaign-list"
-          :selectable="campaignSelectable"
-          bordered
-          tbody-tr-class="bg-white"
-          @row-selected="onCampaignSelected"
-        >
-        <template #cell(selection)="row" v-if="campaignSelectable">
-          <span>
-            <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-          </span>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="campaigns ? campaigns.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        aria-controls="campaign-list"
-      ></b-pagination>
-      <CancelButton v-if="!campaignSelectable" class="float-right" @click.native="($bvModal.hide('campaign-modal'))" />
-      <AddButton v-if="campaignSelectable" class="float-right" @click.native="addCampaign()" />
+      {{$t('insert.order.orderLinesRemoved')}}
+      <template #modal-footer>
+        <CancelButton class="float-right ml-2" @click.native="cancelSelectedCustomer" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedCustomer">{{$t('insert.okay')}}</b-button>
+      </template>
     </b-modal>
     <b-modal id="confirm-products-modal">
       <template #modal-title>
@@ -392,56 +209,50 @@
   </b-row>
 </template>
 <script>
-import { required, minValue, requiredIf } from 'vuelidate/lib/validators'
-import updateMixin from '../../../mixins/update'
+import { required, minValue } from 'vuelidate/lib/validators'
+import insertMixin from '../../../mixins/insert'
 export default {
-  mixins: [updateMixin],
+  mixins: [insertMixin],
   data () {
     return {
       form: {
-        StateId: 1,
-        GrossTotal: 0,
-        Genexp2: null,
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        OrderNumber: null,
         DocumentNumber: null,
-        RepresentativeId: null,
-        Description1: null,
-        RouteId: null,
-        WarehouseId: null,
+        Genexp2: null,
+        OrderTypeId: 2,
         CustomerId: null,
-        PriceListId: null,
         DocumentDate: null,
         DocumentTime: null,
+        RecvLocationId: null,
+        WarehouseId: null,
+        RepresentativeId: null,
         DueDate: null,
-        StatusId: 1,
-        VehicleId: null,
-        Printed: null,
-        PaymentTypeId: null,
-        Canceled: null,
-        PaymentPeriodId: null,
+        RouteId: null,
         CurrencyId: null,
+        PriceListId: null,
+        VehicleId: null,
         NetTotal: 0,
         TotalVat: 0,
         TotalItemDiscount: 0,
         TotalOtherDiscount: 0,
         TotalDiscount: 0,
-        OrderNumber: null,
+        GrossTotal: 0,
+        TotalUserDiscount: 0,
+        Printed: 0,
+        PrintCount: 0,
         TerminalOrPc: 'P',
-        RecvLocationId: null,
-        OrderLines: [],
-        OrderTypeId: 1,
-        IsDbsOffline: 0,
-        BankId: null
+        PaymentPeriodId: null,
+        Description1: null,
+        OrderLines: []
       },
-      campaignFields: [
-        {key: 'selection', label: '', sortable: false, visible: false},
-        {key: 'Discount.Label', label: this.$t('insert.order.campaignName'), sortable: false},
-        {key: 'Discount.Code', label: this.$t('insert.order.campaignCode'), sortable: false}
-      ],
-      SelectedDiscounts: [],
+      routeName1: 'Order',
       selectedCustomer: null,
       documentDate: null,
       selectedPrice: {},
-      selectedCurrency: {},
       priceListItem: {},
       selectedOrderLine: {
         selectedItem: null,
@@ -452,46 +263,33 @@ export default {
         stock: null,
         vatRate: null,
         vatTotal: null,
-        isUpdated: false,
-        totalDiscount: null,
-        discountPercent: null,
-        orderId: null,
-        isFreeItem: null,
-        freeReason: null
+        isUpdated: false
       },
-      campaigns: [],
       selectedIndex: null,
-      selectedRepresentative: null,
-      selectedRoute: null,
-      selectedWarehouse: null,
-      selectedVehicle: null,
-      selectedPaymentType: null,
-      selectedCampaigns: [],
-      currentPage: 1,
-      campaignSelectable: false,
-      showDiscounts: false,
-      customerCampaigns: {},
-      paymentTypes: [],
-      selectedStatus: null,
-      selectedState: null,
+      customerFirstSet: true,
+      documentDateFirstSet: true,
+      currentCustomer: {},
+      customerSelectCancelled: false,
+      customers: [],
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: [],
-      selectedBank: null
+      stocks: []
     }
   },
   mounted () {
+    this.createManualCode('OrderNumber')
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
-      this.getData().then(() => {
-        this.setData()
-      })
+      let currentDate = new Date()
+      this.documentDate = currentDate.toISOString().slice(0, 10)
+      this.form.DocumentTime = currentDate.toLocaleTimeString()
+      this.form.DueDate = currentDate.toISOString().slice(0, 10)
     },
     searchPriceList () {
-      if (!this.selectedCustomer || !this.form.DocumentDate || !this.selectedCustomer.PriceListCategoryId) {
+      if (!this.selectedCustomer || !this.form.DocumentDate) {
         return false
       }
       let model = {
@@ -514,7 +312,7 @@ export default {
         }
       })
     },
-    async searchItems (search, loading) {
+    searchItems (search, loading) {
       if (!this.form.WarehouseId) {
         this.$toasted.show(this.$t('insert.order.chooseWarehouse'), {
           type: 'error',
@@ -573,13 +371,18 @@ export default {
         ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
       }
       var me = this
+
       me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
         if (response && response.ListModel) {
           me.priceListItems = response.ListModel.BaseModels
         }
         if (me.priceListItems && me.priceListItems.length > 0) {
           me.priceListItem = me.priceListItems[0]
-          me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
+          if (me.priceListItem.UseConsumerPrice === 1) {
+            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
+          } else {
+            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
+          }
         } else {
           me.priceListItem = null
           me.selectedOrderLine.price = null
@@ -607,14 +410,14 @@ export default {
       this.setTotalPrice()
     },
     setTotalPrice () {
-      if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price) {
+      if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price || !this.priceListItem) {
         return false
       }
       let vatRate = this.selectedOrderLine.selectedItem.Vat
-      this.selectedOrderLine.vatRate = vatRate
-      this.selectedOrderLine.grossTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
-      this.selectedOrderLine.vatTotal = this.roundNumber(this.selectedOrderLine.grossTotal * vatRate / 100)
-      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.grossTotal - this.selectedOrderLine.vatTotal)
+      this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? vatRate : 0
+      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
+      this.selectedOrderLine.vatTotal = this.priceListItem.IsVatIncluded === 1 ? 0 : this.roundNumber(this.selectedOrderLine.netTotal * vatRate / 100)
+      this.selectedOrderLine.grossTotal = this.roundNumber(parseFloat(this.selectedOrderLine.netTotal) + parseFloat(this.selectedOrderLine.vatTotal))
     },
     setStock () {
       if (!this.selectedOrderLine.selectedItem || !this.selectedOrderLine.selectedItem.RecordId) {
@@ -644,11 +447,11 @@ export default {
       this.form.TotalItemDiscount = 0
       this.form.TotalOtherDiscount = 0
       this.form.TotalDiscount = 0
-      for (let index = 0; index < this.form.OrderLines.filter(o => o.RecordState !== 4).length; index++) {
+      for (let index = 0; index < this.form.OrderLines.length; index++) {
         this.form.OrderLines[index].LineNumber = index
-        this.form.NetTotal += this.form.OrderLines[index].NetTotal
-        this.form.TotalVat += this.form.OrderLines[index].TotalVat
-        this.form.GrossTotal += this.form.OrderLines[index].GrossTotal
+        this.form.NetTotal += parseFloat(this.form.OrderLines[index].NetTotal)
+        this.form.TotalVat += parseFloat(this.form.OrderLines[index].TotalVat)
+        this.form.GrossTotal += parseFloat(this.form.OrderLines[index].GrossTotal)
       }
 
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)
@@ -665,7 +468,7 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.OrderLines.filter(i => i.ItemId === this.selectedOrderLine.selectedItem.RecordId && i.RecordState !== 4)
+      let filteredArr = this.form.OrderLines.filter(i => i.ItemId === this.selectedOrderLine.selectedItem.RecordId)
       if (filteredArr.length > 0 && !this.selectedOrderLine.isUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
@@ -677,7 +480,7 @@ export default {
         Description1: selectedItem.Description1,
         Deleted: 0,
         System: 0,
-        RecordState: this.selectedOrderLine.recordState ? this.selectedOrderLine.recordState : 2,
+        RecordState: 2,
         StatusId: 1,
         LineNumber: length,
         ItemId: selectedItem.RecordId,
@@ -687,7 +490,7 @@ export default {
         ConvFact1: 1,
         ConvFact2: 1,
         Quantity: quantity,
-        ShippedQuantity: quantity,
+        ShippedQuantity: 0,
         Stock: this.selectedOrderLine.stock,
         VatRate: this.selectedOrderLine.vatRate,
         TotalVat: this.selectedOrderLine.vatTotal,
@@ -696,19 +499,14 @@ export default {
         Price: this.selectedOrderLine.price,
         GrossTotal: this.selectedOrderLine.grossTotal,
         NetTotal: this.selectedOrderLine.netTotal,
+        IsFreeItem: 0,
         IsCanceled: 0,
         PriceListPrice: this.selectedOrderLine.price,
         SalesQuantity1: this.selectedOrderLine.quantity,
+        SalesQuantity2: 0,
         SalesUnit1Id: selectedItem.UnitId,
-        TempDiscountQuantity: this.selectedOrderLine.quantity,
-        TempDiscountNetTotal: this.selectedOrderLine.netTotal,
-        RecordId: this.selectedOrderLine.recordId ? this.selectedOrderLine.recordId : null,
-        DiscountPercent: this.selectedOrderLine.discountPercent,
-        TotalDiscount: this.selectedOrderLine.totalDiscount,
-        OrderId: this.selectedOrderLine.orderId,
-        IsFreeItem: this.selectedOrderLine.isFreeItem,
-        FreeReason: this.selectedOrderLine.freeReason,
-        FreeReasonId: this.selectedOrderLine.freeReason ? this.selectedOrderLine.freeReason.RecordId : null
+        TempDiscountQuantity: 0,
+        TempDiscountNetTotal: 0
       }
       if (this.selectedOrderLine.isUpdated) {
         this.form.OrderLines[this.selectedIndex] = order
@@ -722,7 +520,7 @@ export default {
       this.$v.selectedOrderLine.$reset()
     },
     removeOrderLine (item) {
-      this.form.OrderLines[this.form.OrderLines.indexOf(item)].RecordState = 4
+      this.form.OrderLines.splice(this.form.OrderLines.indexOf(item), 1)
       this.calculateTotalPrices()
       this.selectedIndex = null
       this.selectedOrderLine = {}
@@ -730,14 +528,6 @@ export default {
     },
     editOrderLine (item) {
       this.selectedIndex = this.form.OrderLines.indexOf(item)
-      let freeReason = null
-      if (item.FreeReason) {
-        if (item.FreeReason.Label) {
-          freeReason = this.convertLookupValueToSearchValue(item.FreeReason)
-        } else {
-          freeReason = item.FreeReason
-        }
-      }
       this.selectedOrderLine = {
         quantity: item.Quantity,
         price: item.Price,
@@ -746,92 +536,21 @@ export default {
         vatTotal: item.TotalVat,
         grossTotal: item.GrossTotal,
         stock: item.Stock,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        orderId: item.OrderId,
-        isFreeItem: item.IsFreeItem,
-        freeReason: freeReason,
         isUpdated: true
       }
       this.getItem(item.ItemId)
     },
-    addCampaign () {
-      let model = {
-        SelectedDiscounts: this.selectedCampaigns ? this.selectedCampaigns : [],
-        Order: this.form
-      }
-      this.$bvModal.hide('campaign-modal')
-      this.$api.post(model, 'Order', 'Order/ApplyUpdateDiscounts').then((res) => {
-        if (!res.IsCompleted) {
-          this.$toasted.show(this.$t('insert.order.campaignListError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (res && res.Order) {
-          this.form = res.Order
-        }
-        this.updateData()
-      })
+    confirmSelectedCustomer () {
+      this.$bvModal.hide('confirm-modal')
+      this.customerFirstSet = false
+      this.searchPriceList()
+      this.form.OrderLines = []
+      this.form.RecvLocationId = this.selectedCustomer ? this.selectedCustomer.DefaultLocationId : null
     },
-    onCampaignSelected (items) {
-      this.selectedCampaigns = items
-    },
-    setData () {
-      let rowData = this.rowData
-      if (rowData.StatusId !== 1) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.orderStatusException') })
-        setTimeout(() => {
-          this.$router.push({ name: 'Order' })
-        }, 2000)
-      }
-      if (rowData) {
-        this.form = rowData
-        this.documentDate = rowData.DocumentDate
-        this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
-        this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
-          this.selectedCustomer = response.Model
-          this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
-        })
-        this.selectedStatus = this.convertLookupValueToSearchValue(rowData.Status)
-        this.selectedState = this.convertLookupValueToSearchValue(rowData.State)
-        this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
-        this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
-        this.selectedWarehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
-        this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
-        this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
-        this.selectedPrice = this.convertLookupValueToSearchValue(rowData.PriceList)
-        this.selectedBank = this.convertLookupValueToSearchValue(rowData.Bank)
-        this.selectedPaymentType = rowData.PaymentType
-        if (this.form.OrderLines) {
-          this.form.OrderLines.map(item => {
-            item.RecordState = 3
-            return item
-          })
-        }
-      }
-    },
-    getCustomerCampaigns (customerId) {
-      let model = {
-        customerId: customerId
-      }
-      this.$api.post(model, 'Discount', 'Discount/CampaignList').then((res) => {
-        if (res) {
-          this.customerCampaigns = res
-          this.showDiscounts = true
-        }
-      })
-    },
-    showAvailableCampaigns () {
-      this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderUpdateDiscounts').then((res) => {
-        this.campaigns = res.Models
-        if (this.campaigns && this.campaigns.length > 0) {
-          this.campaignSelectable = false
-          this.$bvModal.show('campaign-modal')
-        }
-      })
+    cancelSelectedCustomer () {
+      this.$bvModal.hide('confirm-modal')
+      this.customerSelectCancelled = true
+      this.selectedCustomer = this.currentCustomer
     },
     save () {
       this.$v.form.$touch()
@@ -851,24 +570,7 @@ export default {
           })
           return
         }
-        if (this.form.DueDate < this.form.DocumentDate) {
-          this.$toasted.show(this.$t('insert.order.dueDatelessDocumentDate'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        this.$api.post({order: this.form}, 'Discount', 'Discount/ApplyOrderUpdateDiscounts').then((res) => {
-          this.campaigns = res.Models
-          if (this.campaigns && this.campaigns.length > 0) {
-            this.campaignSelectable = true
-            this.$bvModal.show('campaign-modal')
-          } else {
-            this.campaigns = []
-            this.updateData()
-          }
-        })
+        this.createData()
       }
     },
     getLastProducts () {
@@ -882,7 +584,7 @@ export default {
         warehouseId: this.form.WarehouseId,
         priceListId: this.form.PriceListId
       }
-      this.$api.postByUrl(request, 'VisionNextOrder/api/Order/GetLastOrderProducts').then((response) => {
+      this.$api.postByUrl(request, 'VisionNextOrder/api/PurchaseOrder/GetLastOrderProducts').then((response) => {
         if (response && response.length > 0) {
           let count = 0
           this.form.OrderLines = []
@@ -926,13 +628,48 @@ export default {
         }
       })
     },
-    checkIsFree (value) {
-      if (value !== 1) {
-        this.selectedOrderLine.freeReason = null
+    selectWarehouse (warehouse) {
+      this.form.CustomerId = null
+      this.selectedCustomer = null
+      this.customers = []
+      if (warehouse) {
+        this.form.WarehouseId = warehouse.RecordId
+        let model = {
+          RecordId: warehouse.RecordId
+        }
+        this.$api.postByUrl(model, 'VisionNextWarehouse/api/Warehouse/Get').then((response) => {
+          if (response && response.Model && response.Model.WarehouseSuppliers) {
+            let recordIds = response.Model.WarehouseSuppliers.map(w => w.SupplierCustomerId)
+            this.getSupplierCustomers(recordIds)
+          } else {
+            this.$toasted.show(this.$t('insert.order.noSupplierCustomers'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+        })
+      } else {
+        this.form.WarehouseId = null
       }
     },
-    filterFreeReason (item) {
-      return item.Code === 'BD' || item.Code === 'ERN'
+    getSupplierCustomers (recordIds) {
+      let model = {
+        andConditionModel: {
+          RecordIds: recordIds
+        }
+      }
+      this.$api.postByUrl(model, 'VisionNextCustomer/api/Customer/SupplierCustomerSearch').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.customers = response.ListModel.BaseModels
+        } else {
+          this.$toasted.show(this.$t('insert.order.noSupplierCustomers'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
     }
   },
   validations () {
@@ -960,38 +697,38 @@ export default {
         },
         vatTotal: {
           required
-        },
-        isFreeItem: {
-          required
-        },
-        freeReason: {
-          required: requiredIf(function (nestedModel) {
-            return this.selectedOrderLine.isFreeItem === 1
-          })
         }
       }
     }
   },
   watch: {
-    selectedCustomer (e) {
-      if (e) {
-        this.form.PaymentPeriodId = e.PaymentPeriod ? e.PaymentPeriod : 0
-        this.searchPriceList()
-        this.getCustomerCampaigns(e.RecordId)
-        if (e.DefaultLocationId) {
-          this.form.RecvLocationId = e.DefaultLocationId
-        }
-        if (e.DeliveryDayParam) {
-          let currentDate = new Date()
-          currentDate.setDate(currentDate.getDate() + e.DeliveryDayParam)
-          this.form.DueDate = currentDate.toISOString().slice(0, 10)
-        }
+    selectedCustomer (newValue, oldValue) {
+      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
+      if (this.customerFirstSet) {
+        this.confirmSelectedCustomer()
+        return
       }
+      if (newValue !== oldValue && !this.customerSelectCancelled) {
+        this.currentCustomer = oldValue
+        this.$bvModal.show('confirm-modal')
+      }
+      this.customerSelectCancelled = false
     },
     documentDate (e) {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
+        if (this.documentDateFirstSet) {
+          this.documentDateFirstSet = false
+          return false
+        } else {
+          this.form.OrderLines = []
+          this.$toasted.show(this.$t('insert.order.orderLinesRemoved'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
       }
     }
   }
@@ -1001,6 +738,7 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
+  height: 90px;
 }
 .card-body  {
   padding: none !important;
