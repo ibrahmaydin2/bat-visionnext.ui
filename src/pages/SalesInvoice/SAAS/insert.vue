@@ -150,7 +150,7 @@
                 v-model="selectedInvoiceLine.selectedItem"
                 searchable
                 :custom-option="true"
-                @input="selectItem"
+                @input="selectItem($event)"
                 :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
@@ -549,7 +549,11 @@ export default {
         this.setTotalPrice()
       })
     },
-    selectItem () {
+    selectItem (value) {
+      if (value) {
+        this.selectedInvoiceLine.selectedItem = value
+        this.selectedInvoiceLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? value.Vat : 0
+      }
       this.searchPriceListItem()
       this.setStock()
     },
