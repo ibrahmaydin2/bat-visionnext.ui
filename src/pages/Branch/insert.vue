@@ -47,7 +47,7 @@
               <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
-              <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
