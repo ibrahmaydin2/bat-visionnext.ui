@@ -141,6 +141,9 @@ export default {
     },
     mainForm: {
       type: Object
+    },
+    editForm: {
+      type: Function
     }
   },
   model: {
@@ -293,6 +296,9 @@ export default {
       if (this.hasLineNumber) {
         this.form.LineNumber = this.lineNumber
         this.lineNumber++
+      }
+      if (this.editForm) {
+        this.form = this.editForm(this.form)
       }
       if (this.isUpdated) {
         this.values[this.selectedIndex] = {...this.form}

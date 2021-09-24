@@ -1,5 +1,5 @@
 <template>
-  <v-select :disabled="disabled" v-model="selectedValue" :options="getSource()" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey">
+  <v-select :disabled="disabled" v-model="selectedValue" :options="getSource()" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey" :multiple="multiple">
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
@@ -60,6 +60,10 @@ export default {
     },
     search: {
       type: Function
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
