@@ -5,8 +5,6 @@
         <NextFormGroup :title="$t('insert.vehicles.oldKm')">
           <b-form-input type="text" v-model="oldKm" readonly />
         </NextFormGroup>
-      </b-row>
-      <b-row>
         <NextFormGroup :title="$t('insert.vehicles.newKm')" :error="$v.newKm">
           <b-form-input type="text" v-model="newKm" />
         </NextFormGroup>
@@ -24,6 +22,7 @@
             variant="primary"
             size="sm"
             @click="save()"
+            :disabled="disabled"
           >
             {{$t('list.save')}}
           </b-button>
@@ -34,16 +33,10 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
   name: 'KmModal',
   mixins: [mixin],
-  components: {
-  },
-  computed: {
-    ...mapState([''])
-  },
   props: {
     modalAction: {
       type: Object,
@@ -58,7 +51,8 @@ export default {
     return {
       oldKm: 0,
       newKm: 0,
-      recordId: null
+      recordId: null,
+      disabled: false
     }
   },
   validations () {
@@ -80,7 +74,7 @@ export default {
         return
       }
       let request = {
-        'recordIds': [this.modalItem.RecordId],
+        'recordIds': [this.recordId],
         'model': {
           'EndKm': +this.newKm
         }
@@ -106,12 +100,12 @@ export default {
     },
     show () {
       let request = {
-        'AndConditionModel': {
+        'andConditionModel': {
           'VehicleIds': [this.modalItem.RecordId]
         },
         'pagerecordCount': 1,
         'page': 1,
-        'OrderByColumns': [
+        'orderByColumns': [
           {
             'column': 'OperationDate',
             'nestedColumn': 'OperationDate',
@@ -120,9 +114,16 @@ export default {
         ]
       }
       this.$api.postByUrl(request, 'VisionNextVehicle/api/VehicleKM/Search').then((res) => {
-        if (res.ListModel.BaseModels[0]) {
+        if (res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
           this.oldKm = res.ListModel.BaseModels[0].EndKm
           this.recordId = res.ListModel.BaseModels[0].RecordId
+        } else {
+          this.disabled = true
+          this.$toasted.show(this.$t('insert.vehicles.noVehicleKmInfo'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
         }
       })
     },

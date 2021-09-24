@@ -156,14 +156,6 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.allUserProducts.filter(p => !p.SalesPrice || p.SalesPrice === '' || !p.ConsumerPrice || p.ConsumerPrice === '').length > 0) {
-          this.$toasted.show(this.$t('insert.PriceList.PricesRequired'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
         this.form.PriceListItems = this.allUserProducts.map((item) => {
           var newItem = {
             Deleted: 0,
@@ -185,7 +177,12 @@ export default {
     getLists () {
       this.$api.postByUrl({}, 'VisionNextItem/api/Item/Search').then(response => {
         if (response.ListModel) {
-          this.allProducts = response.ListModel.BaseModels
+          this.allProducts = response.ListModel.BaseModels.map(item => {
+            item.SalesPrice = 0
+            item.ConsumerPrice = 0
+
+            return item
+          })
         }
       })
     },

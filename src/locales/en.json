@@ -672,7 +672,8 @@
       "driverCode": "Kod",
       "replacementDriver": "Yedek Sürücü",
       "oldKm": "Önceki KM",
-      "newKm": "Yeni KM"
+      "newKm": "Yeni KM",
+      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!"
     },
     "employee": {
       "Model_Code": "Personel Kodu",

@@ -141,6 +141,9 @@ export default {
     },
     mainForm: {
       type: Object
+    },
+    editForm: {
+      type: Function
     }
   },
   model: {
@@ -294,6 +297,9 @@ export default {
         this.form.LineNumber = this.lineNumber
         this.lineNumber++
       }
+      if (this.editForm) {
+        this.form = this.editForm(this.form)
+      }
       if (this.isUpdated) {
         this.values[this.selectedIndex] = {...this.form}
         this.selectedIndex = null
@@ -319,9 +325,8 @@ export default {
     removeItem () {
       let data = this.selectedItem
       this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-      const item = data.item
-      const index = this.values.indexOf(data.item)
-      if (item.RecordId) {
+      const index = this.values.indexOf(data)
+      if (data.RecordId) {
         this.values[index].RecordState = 4
       } else {
         this.values.splice(index, 1)
