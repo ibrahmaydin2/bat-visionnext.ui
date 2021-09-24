@@ -35,7 +35,7 @@
         <b-tab :title="$t('insert.bcp.Bcp')" active>
           <b-row>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown v-model="DiscountGroup7" :disabled="true" :get-lookup="true" label="Label" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
+              <NextDropdown v-model="DiscountGroup7" :disabled="true" label="Label" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Year" :error="$v.form.Year">
               <NextDropdown v-model="Year" :disabled="true"  label="Label" :source="years" @input="selectedType('Year', $event)"/>
@@ -50,7 +50,7 @@
               <NextDropdown v-model="LabelEndMonthh" :disabled="insertReadonly.EndMonth" label="Label" :source="Months" @input="selectedType('EndMonth', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
-              <NextDropdown v-model="CustomerRegion3" :disabled="true" label="Label" lookup-key="CUSTOMER_REGION_3" :get-lookup="true" @input="selectBranch($event)"/>
+              <NextDropdown v-model="CustomerRegion3" :disabled="true" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectBranch($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <NextDropdown v-model="BranchCriteria" :disabled="true" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>

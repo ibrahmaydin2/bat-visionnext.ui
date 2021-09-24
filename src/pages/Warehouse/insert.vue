@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code"/>
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code"></NextInput>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId" />
           </NextFormGroup>
         </b-row>
       </section>
@@ -34,93 +34,45 @@
       <b-tabs>
         <b-tab :title="$t('insert.warehouse.Warehouse')" :active="true" @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="NonSapWarehouse" :error="$v.form.NonSapWarehouse">
-              <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle />
+            <NextFormGroup item-key="NonSapWarehouse" :error="$v.form.NonSapWarehouse" md="3" lg="3">
+              <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle :disabled="insertReadonly.NonSapWarehouse" />
             </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="4" lg="3">
-              <v-select :disabled="!form.IsVehicle" label="VehiclePlateNumber" :options="vehicles" :filterable="false" @search="onVehicleSearch" @input="selectedVehicle">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.VehiclePlateNumber }}
-                </template>
-              </v-select>
+            <NextFormGroup item-key="IsVehicle" :error="$v.form.IsVehicle" md="3" lg="3">
+              <NextCheckBox v-model="form.IsVehicle" type="number" toggle :disabled="insertReadonly.IsVehicle" @input="checkVehicle($event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="IsVehicle" :error="$v.form.IsVehicle" md="4" lg="3">
-              <NextCheckBox v-model="form.IsVehicle" type="number" toggle />
+            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="3" lg="3">
+              <NextDropdown
+                v-model="selectedVehicle"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                label="VehiclePlateNumber" :searchable="true"
+                @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle"/>
             </NextFormGroup>
-            <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse" md="4" lg="3">
-              <NextCheckBox :disabled="form.IsVehicle ? true : false" v-model="form.IsVirtualWarehouse" type="number" toggle />
+            <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse" md="3" lg="3">
+              <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle :disabled="insertReadonly.IsVirtualWarehouse || form.IsVehicle === 1" />
             </NextFormGroup>
-          </b-row>
-          <b-row>
-            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber" md="4" lg="3">
-              <b-form-input type="text" v-model="form.LicenseNumber" :readonly="insertReadonly.LicenseNumber" />
+            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber" md="3" lg="3">
+              <NextInput type="text" v-model="form.LicenseNumber" :disabled="insertReadonly.LicenseNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="4" lg="3">
-              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="3" lg="3">
+              <NextInput type="text" v-model="form.FinanceCode" :disabled="insertReadonly.FinanceCode"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2" md="4" lg="3">
-              <b-form-input type="text" v-model="form.FinanceCode2" :readonly="insertReadonly.FinanceCode2" />
+            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2" md="3" lg="3">
+              <NextInput type="text" v-model="form.FinanceCode2" :disabled="insertReadonly.FinanceCode2"></NextInput>
             </NextFormGroup>
           </b-row>
           <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address"/>
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
-          <b-row>
-          <NextFormGroup :title="$t('insert.warehouse.SupplierBranchId')" :error="$v.warehouseSupplier.supplierBranch" :required="true">
-            <v-select v-model="warehouseSupplier.selectedBranch" label="Description1" :filterable="false" :options="branchs" @search="onBranchSearch" @input="selectedBranch">
-              <template slot="no-options">
-                {{$t('insert.min3')}}
-              </template>
-            </v-select>
-          </NextFormGroup>
-           <NextFormGroup :title="$t('insert.warehouse.PurchaseWarehouseId')" :error="$v.warehouseSupplier.purchaseWarehouse" :required="true">
-              <v-select v-model="warehouseSupplier.purchaseWarehouse" :options="warehouses" label="Description1"></v-select>
-           </NextFormGroup>
-           <NextFormGroup :title="$t('insert.warehouse.ReturnWarehouseId')" :error="$v.warehouseSupplier.returnWarehouse" :required="true">
-              <v-select v-model="warehouseSupplier.returnWarehouse" :options="warehouses" label="Description1"></v-select>
-            </NextFormGroup>
-          </b-row>
-          <b-row>
-            <b-col md="2" class="ml-auto">
-              <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <b-table-simple responsive bordered small>
-                <b-thead>
-                  <b-th><span>{{$t('insert.warehouse.SupplierBranchId')}}</span></b-th>
-                  <b-th><span>{{$t('insert.warehouse.PurchaseWarehouseId')}}</span></b-th>
-                  <b-th><span>{{$t('insert.warehouse.ReturnWarehouseId')}}</span></b-th>
-                  <b-th><span>{{$t('list.operations')}}</span></b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(w, i) in warehouseSuppliers" :key="i">
-                    <b-td>{{w.supplierBranch.BranchCommercialTitle}}</b-td>
-                    <b-td>{{w.purchaseWarehouse.Description1}}</b-td>
-                    <b-td>{{w.returnWarehouse.Description1}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-col>
-          </b-row>
+          <NextDetailPanel v-model="form.WarehouseSuppliers" :items="locationItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/insert'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -144,26 +96,15 @@ export default {
         NonSapWarehouse: Number,
         WarehouseSuppliers: []
       },
-      routeName: this.$route.meta.baseLink,
-      warehouseSupplier: {
-        supplierBranch: null,
-        purchaseWarehouse: null,
-        returnWarehouse: null
-      },
-      warehouseSuppliers: [],
-      address: {}
+      address: {},
+      selectedVehicle: null,
+      locationItems: detailData.locationItems
     }
   },
-  computed: {
-    ...mapState(['vehicles', 'branchs', 'warehouses'])
-  },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
   },
   methods: {
-    getInsertPage (e) {
-      this.createManualCode()
-    },
     save () {
       this.$v.form.$touch()
 
@@ -179,108 +120,28 @@ export default {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.warehouse.vehicleRequired') })
           return
         }
-
-        if (!this.form.IsVehicle) {
-          this.form.WarehouseSuppliers = this.warehouseSuppliers.map((item) => {
-            var newItem = {
-              Deleted: 0,
-              System: 0,
-              RecordState: 2,
-              StatusId: 1,
-              SupplierBranchId: item.supplierBranch.RecordId,
-              PurchaseWarehouseId: item.purchaseWarehouse.RecordId,
-              ReturnWarehouseId: item.returnWarehouse.RecordId
-            }
-            return newItem
-          })
-
-          if (this.form.IsVehicle) {
-            this.form.Address = null
-            this.form.CityId = null
-            this.form.DistrictId = null
-            this.form.IsVirtualWarehouse = null
-          } else {
-            this.form.CityId = this.address.CityId
-            this.form.DistrictId = this.address.DistrictId
-            this.form.AddressDetail = this.address.Address
-          }
+        this.form.IsVirtualWareHouse = this.form.IsVirtualWarehouse
+        if (this.form.IsVehicle) {
+          this.form.Address = null
+          this.form.CityId = null
+          this.form.DistrictId = null
+          this.form.IsVirtualWarehouse = null
+        } else {
+          this.form.CityId = this.address.CityId
+          this.form.DistrictId = this.address.DistrictId
+          this.form.AddressDetail = this.address.Address
         }
-
         this.createData()
       }
     },
-    selectedVehicle (e) {
-      this.form.VehicleId = e.RecordId
-    },
-    onVehicleSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextVehicle/api/Vehicle/AutoCompleteSearch',
-          name: 'vehicles',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
+    checkVehicle (value) {
+      if (value !== 1) {
+        this.form.VehicleId = null
+        this.selectedVehicle = null
       }
-    },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
-          name: 'branchs',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
-    },
-    selectedBranch (e) {
-      this.warehouseSupplier.supplierBranch = e
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextWarehouse/api/Warehouse/SearchWithSelectedBranch',
-        name: 'warehouses',
-        andConditionModel: {
-          branchId: e.RecordId
-        }
-      })
-    },
-    addItems () {
-      this.$v.warehouseSupplier.$touch()
-      if (this.$v.warehouseSupplier.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-
-      let filteredArr = this.warehouseSuppliers.filter(i => i.supplierBranch.RecordId === this.warehouseSupplier.supplierBranch.RecordId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
-        return false
-      }
-
-      this.warehouseSuppliers.push(this.warehouseSupplier)
-      this.warehouseSupplier = {}
-      this.$v.warehouseSupplier.$reset()
-    },
-    removeItems (item) {
-      this.warehouseSuppliers.splice(this.warehouseSuppliers.indexOf(item), 1)
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     if (this.form.IsVehicle === 0 && this.form.IsVirtualWarehouse === 0) {
       this.insertRequired.LicenseNumber = true
       this.insertRules.LicenseNumber = {
@@ -301,23 +162,8 @@ export default {
       this.insertRequired.VehicleId = true
     }
     return {
-      form: this.insertRules,
-      warehouseSupplier: {
-        supplierBranch: {
-          required
-        },
-        purchaseWarehouse: {
-          required
-        },
-        returnWarehouse: {
-          required
-        }
-      }
+      form: this.insertRules
     }
-  },
-  watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
   }
 }
 </script>

@@ -162,7 +162,8 @@ export default {
       selectedIndex: null,
       isUpdated: false,
       selectedItem: null,
-      unique: Math.random().toString(16).slice(2)
+      unique: Math.random().toString(16).slice(2),
+      additionalSearchTypeFirst: false
     }
   },
   computed: {
@@ -346,6 +347,7 @@ export default {
             model[valueProperty] = data[i.modelProperty]
             model[labelProperty] = this.getObjectLabel(i, data)
             this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Lookup':
@@ -354,6 +356,7 @@ export default {
             model[valueProperty] = data[i.modelProperty]
             model[labelProperty] = this.getObjectLabel(i, data)
             this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Label':
@@ -404,13 +407,18 @@ export default {
                 }
                 break
               case 'Dropdown':
-                this.model[item.modelProperty] = {}
-                this.form[item.modelProperty] = null
+                if (this.additionalSearchTypeFirst) {
+                  this.additionalSearchTypeFirst = false
+                } else {
+                  this.model[item.modelProperty] = {}
+                  this.form[item.modelProperty] = null
+                }
                 if (item.url && item.request) {
                   let request = JSON.parse(item.request.replace('val', model[item.parentProperty]))
                   this.$api.postByUrl(request, item.url).then((res) => {
                     if (typeof res.ListModel !== 'undefined') {
                       this.source[item.modelProperty] = res.ListModel.BaseModels
+                      this.$forceUpdate()
                     } else if (res.Values) {
                       this.source[item.modelProperty] = res.Values
                       this.$forceUpdate()

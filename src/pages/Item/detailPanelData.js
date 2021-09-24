@@ -81,7 +81,7 @@ export const detailData = {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'CustomerItemDescription',
-      label: i18n.t('insert.item.ItemCustomersCode'),
+      label: i18n.t('insert.item.ItemCustomersDesc'),
       visible: true,
       md: '2',
       lg: '2',
@@ -95,6 +95,15 @@ export const detailData = {
       visible: true,
       md: '2',
       lg: '2',
+      id: 3
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'EntegrationFactor',
+      visible: false,
+      hideOnTable: true,
+      defaultValue: 1,
       id: 3
     }
   ],
