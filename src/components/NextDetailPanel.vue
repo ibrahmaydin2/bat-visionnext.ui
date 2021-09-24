@@ -319,9 +319,8 @@ export default {
     removeItem () {
       let data = this.selectedItem
       this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-      const item = data.item
-      const index = this.values.indexOf(data.item)
-      if (item.RecordId) {
+      const index = this.values.indexOf(data)
+      if (data.RecordId) {
         this.values[index].RecordState = 4
       } else {
         this.values.splice(index, 1)

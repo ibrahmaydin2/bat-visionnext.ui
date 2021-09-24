@@ -5,8 +5,6 @@
         <NextFormGroup :title="$t('insert.vehicles.oldKm')">
           <b-form-input type="text" v-model="oldKm" readonly />
         </NextFormGroup>
-      </b-row>
-      <b-row>
         <NextFormGroup :title="$t('insert.vehicles.newKm')" :error="$v.newKm">
           <b-form-input type="text" v-model="newKm" />
         </NextFormGroup>
@@ -80,7 +78,7 @@ export default {
         return
       }
       let request = {
-        'recordIds': [this.modalItem.RecordId],
+        'recordIds': [this.recordId],
         'model': {
           'EndKm': +this.newKm
         }
@@ -106,12 +104,12 @@ export default {
     },
     show () {
       let request = {
-        'AndConditionModel': {
+        'andConditionModel': {
           'VehicleIds': [this.modalItem.RecordId]
         },
         'pagerecordCount': 1,
         'page': 1,
-        'OrderByColumns': [
+        'orderByColumns': [
           {
             'column': 'OperationDate',
             'nestedColumn': 'OperationDate',
