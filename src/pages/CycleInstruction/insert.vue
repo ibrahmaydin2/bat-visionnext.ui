@@ -36,7 +36,6 @@
           <b-row>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
               <NextDropdown v-model="customerCriteria"
-               :get-lookup="true"
                :disabled="insertReadonly.CustomerCriteriaId"
                label="Label"
                @input="selectedType('CustomerCriteriaId', $event)"
@@ -44,10 +43,10 @@
                />
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
-              <NextDropdown v-model="routeCriteria" :disabled="insertReadonly.RouteCriteriaId" :get-lookup="true" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
+              <NextDropdown v-model="routeCriteria" :disabled="insertReadonly.RouteCriteriaId" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="branchCriteria" :disabled="insertReadonly.BranchCriteriaId" :get-lookup="true" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="branchCriteria" :disabled="insertReadonly.BranchCriteriaId" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
               <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
