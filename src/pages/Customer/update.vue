@@ -481,8 +481,6 @@ export default {
   },
   methods: {
     selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
       this.form[label] = model.DecimalValue
 
       if (label === 'TaxCustomerTypeId') {
@@ -625,13 +623,13 @@ export default {
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
-      this.statementDay = this.convertLookupValueToSearchValue(rowData.statementDay)
-      this.paymentType = this.convertLookupValueToSearchValue(rowData.paymentType)
+      this.statementDay = this.convertLookupValueToSearchValue(rowData.StatementDay)
+      this.paymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
-      this.customerInvoiceType = rowData.customerInvoiceType
+      this.customerInvoiceType = rowData.CustomerInvoiceType
       this.type = rowData.Type
       this.salesDocumentType = rowData.SalesDocumentType
       this.taxCustomerType = rowData.TaxCustomerType
@@ -678,11 +676,18 @@ export default {
       if (!rowData.CustomerItemDiscounts) {
         this.form.CustomerItemDiscounts = []
       }
+
+      if (rowData.Code === 'TZK') {
+        this.taxNumberReq = 10
+      } else {
+        this.taxNumberReq = 11
+      }
+      this.insertRules.TaxNumber = {
+        required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+      }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     let validation = {
       form: this.insertRules
     }
