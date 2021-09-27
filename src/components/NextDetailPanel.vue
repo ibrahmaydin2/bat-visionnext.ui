@@ -496,7 +496,8 @@ export default {
       return this.createUniqueCode(codes, 1)
     },
     createUniqueCode (codes, index) {
-      let newCode = `${this.createCode}-${index}`
+      let code = this.mainForm && this.mainForm.Code ? this.mainForm.Code : this.createCode
+      let newCode = `${code}-${index}`
 
       if (codes.includes(newCode)) {
         return this.createUniqueCode(codes, (index + 1))

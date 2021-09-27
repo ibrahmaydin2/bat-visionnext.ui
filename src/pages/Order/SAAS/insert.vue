@@ -420,7 +420,7 @@ export default {
     getInsertPage (e) {
       let currentDate = new Date()
       this.documentDate = currentDate.toISOString().slice(0, 10)
-      this.form.DocumentTime = currentDate.toLocaleTimeString()
+      this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
     },
     searchPriceList () {
       if (!this.selectedCustomer || !this.form.DocumentDate) {
