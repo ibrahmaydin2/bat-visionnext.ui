@@ -19,184 +19,95 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput  type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput  type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" :active="!developmentMode">
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select label="Description1" :filterable="false" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                searchable
+                @input="selectedSearchType('RepresentativeId', $event)"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                :disabled="insertReadonly.RepresentativeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
-              <v-select label="VehiclePlateNumber" :filterable="false" :options="vehicles" @search="onVehicleSearch" @input="selectedSearchType('VehicleId', $event)">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                searchable
+                label="VehiclePlateNumber"
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :disabled="insertReadonly.VehicleId"
+                or-condition-fields="VehiclePlateNumber,Code"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
-              <v-select label="Description1" :filterable="false" :options="routeTypes" @input="selectedSearchType('RouteTypeId', $event)"></v-select>
+              <NextDropdown
+                @input="selectedSearchType('RouteTypeId', $event)"
+                url="VisionNextRoute/api/RouteType/Search"
+                :disabled="insertReadonly.RouteTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
-              <v-select
-                :options="lookup.VISIT_START_CONTROL"
+              <NextDropdown
                 @input="selectedType('VisitStartControlId', $event)"
-                label="Label"
-              />
+                lookup-key="VISIT_START_CONTROL"
+                :disabled="insertReadonly.VisitStartControlId" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
-              <v-select
-                :disabled="!showCustomerRegion"
+              <NextDropdown
                 v-model="CustomerRegion5Id"
-                :options="lookup.CUSTOMER_REGION_5"
                 @input="selectedLabelType('CustomerRegion5Id', $event)"
-                label="Label"
-              />
+                lookup-key="CUSTOMER_REGION_5"
+                :disabled="!showCustomerRegion || insertReadonly.CustomerRegion5Id" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.route.marketingArea')" :required="!!showMarketingRegion" :error="$v.form.MarketingRegion5Id">
-              <v-select
-                :disabled="!showMarketingRegion"
+              <NextDropdown
                 v-model="MarketingRegion5Id"
-                :options="lookup.MARKETING_REGION_5"
                 @input="selectedLabelType('MarketingRegion5Id', $event)"
-                label="Label"
-              />
+                lookup-key="MARKETING_REGION_5"
+                :disabled="!showMarketingRegion || insertReadonly.CustomerRegion5Id" />
             </NextFormGroup>
-            <NextFormGroup item-key="CityId">
-              <v-select
-                :options="lookup.CITY"
+            <NextFormGroup item-key="CityId" :error="$v.form.CityId">
+              <NextDropdown
                 @input="selectedCity"
-                label="Label"
-              />
+                lookup-key="CITY"
+                :disabled="insertReadonly.CityId" />
             </NextFormGroup>
-            <NextFormGroup item-key="DistrictId">
-              <v-select
+            <NextFormGroup item-key="DistrictId" :error="$v.form.DistrictId">
+              <NextDropdown
                 v-model="district"
-                :options="distiricts"
                 @input="selectedDistirict"
-                label="Label"
-              />
+                :source="distiricts"
+                :disabled="insertReadonly.DistrictId"
+                label="Label" />
             </NextFormGroup>
-            <NextFormGroup item-key="ParishIds">
-              <v-select
+            <NextFormGroup item-key="ParishIds" :error="$v.form.ParishIds">
+              <NextDropdown
                 multiple
                 @input="selectedParish"
-                :options="avenues"
-                label="Label"
-              />
+                :source="avenues"
+                :disabled="insertReadonly.ParishIds"
+                label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="IsSuperRoute" :error="$v.form.IsSuperRoute">
-              <NextCheckBox v-model="form.IsSuperRoute" type="number" toggle />
+              <NextCheckBox v-model="form.IsSuperRoute" type="number" toggle :disabled="insertReadonly.IsSuperRoute"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsMultidayRoute" :error="$v.form.IsMultidayRoute">
-              <NextCheckBox v-model="form.IsMultidayRoute" type="number" toggle />
+              <NextCheckBox v-model="form.IsMultidayRoute" type="number" toggle :disabled="insertReadonly.IsMultidayRoute" />
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.route.locations')">
-          <b-row>
-            <NextFormGroup :title="$t('insert.route.CustomerId')" :error="$v.routeDetails.CustomerId" :required="true" md="2" lg="2">
-              <v-select v-model="routeDetails.Customer" label="Description1" :filterable="false" :options="customers" @search="onCustomerSearch" @input="selectedCustomer">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.LocationId')" :error="$v.routeDetails.LocationId" :required="true" md="2" lg="2">
-              <v-select v-model="routeDetails.Location" :disabled="!showCustomerLocation" label="Description1" :filterable="false" :options="customerLocationsList" @input="selectedCustomerLocation" ></v-select>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day1VisitOrder')" :error="$v.routeDetails.Day1VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day1VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day2VisitOrder')" :error="$v.routeDetails.Day2VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day2VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day3VisitOrder')" :error="$v.routeDetails.Day3VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day3VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day4VisitOrder')" :error="$v.routeDetails.Day4VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day4VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day5VisitOrder')" :error="$v.routeDetails.Day5VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day5VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day6VisitOrder')" :error="$v.routeDetails.Day6VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day6VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.Day7VisitOrder')" :error="$v.routeDetails.Day7VisitOrder" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.Day7VisitOrder" />
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFreStartDate')" md="2" lg="2">
-              <b-form-datepicker
-                v-model="routeDetails.DayFreStartDate"
-                :locale="$i18n.locale"
-                class="mb-2"
-                :value-as-date="true"
-                label-no-date-selected
-                :placeholder="$t('insert.chooseDate')"
-              >
-              </b-form-datepicker>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.DayFrequency')" md="2" lg="2">
-              <b-form-input type="number" :min="0" v-model="routeDetails.DayFrequency" />
-            </NextFormGroup>
-            <b-col cols="12" md="2" lg="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addCustomerLocation()" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row v-if="form.RouteDetails.length > 0">
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.route.Customer')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Location')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day4VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.DayFreStartDate')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.DayFrequency')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(r, i) in form.RouteDetails" :key="'dl' + i">
-                  <b-td>{{r.CustomerCode}} - {{r.Customer}}</b-td>
-                  <b-td>{{r.LocationCode}} - {{r.Location}}</b-td>
-                  <b-td>{{r.Day1VisitOrder}}</b-td>
-                  <b-td>{{r.Day2VisitOrder}}</b-td>
-                  <b-td>{{r.Day3VisitOrder}}</b-td>
-                  <b-td>{{r.Day4VisitOrder}}</b-td>
-                  <b-td>{{r.Day5VisitOrder}}</b-td>
-                  <b-td>{{r.Day6VisitOrder}}</b-td>
-                  <b-td>{{r.Day7VisitOrder}}</b-td>
-                  <b-td>{{dateConvertFromTimezone(r.Day1FreStartDate)}}</b-td>
-                  <b-td>{{r.Day1Frequency}}</b-td>
-                  <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -204,8 +115,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { required, minValue } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
+import { detailData } from './detailPanelData'
+
 export default {
   mixins: [insertMixin],
   data () {
@@ -222,7 +135,7 @@ export default {
         RouteTypeId: null,
         RouteClassId: null,
         RouteGroupId: null,
-        StatusId: null,
+        StatusId: 1,
         CustomerRegion5Id: null,
         MarketingRegion5Id: null,
         IsMultidayRoute: null,
@@ -230,6 +143,7 @@ export default {
         RouteDetails: []
       },
       avenues: [],
+      locationItems: detailData.locationItems,
       routeDetails: {
         Deleted: 0,
         System: 0,
@@ -271,44 +185,14 @@ export default {
   },
   validations () {
     return {
-      form: this.insertRules,
-      routeDetails: {
-        CustomerId: {
-          required
-        },
-        LocationId: {
-          required
-        },
-        Day1VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day2VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day3VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day4VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day5VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day6VisitOrder: {
-          minValue: minValue(0)
-        },
-        Day7VisitOrder: {
-          minValue: minValue(0)
-        }
-      }
+      form: this.insertRules
     }
   },
   computed: {
-    ...mapState(['distiricts', 'vehicles', 'employees', 'routeTypes', 'customers', 'customerLocationsList'])
+    ...mapState(['distiricts'])
   },
   mounted () {
     this.createManualCode()
-    this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/RouteType/Search', name: 'routeTypes'})
   },
   methods: {
     selectedCity (e) {
@@ -345,46 +229,6 @@ export default {
         e.map(parish => {
           this.form.ParishIds.push(parish.DecimalValue)
         })
-      }
-    },
-    selectedCustomer (e) {
-      this.routeDetails.LocationId = null
-      this.routeDetails.LocationCode = null
-      this.routeDetails.Location = null
-
-      if (e) {
-        this.showCustomerLocation = true
-        this.routeDetails.CustomerId = e.RecordId
-        this.routeDetails.CustomerCode = e.Code
-        this.routeDetails.Customer = e.Description1
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextCustomer/api/CustomerLocation/Search',
-          name: 'customerLocationsList',
-          andConditionModel: {
-            customerIds: [e.RecordId]
-          }
-        })
-      } else {
-        this.showCustomerLocation = false
-        this.routeDetails.CustomerId = null
-        this.routeDetails.Customer = null
-      }
-    },
-    selectedLabelType (label, model) {
-      if (label === 'CustomerRegion5Id') {
-        this.form.MarketingRegion5Id = null
-        this.CustomerRegion5Id = null
-      } else {
-        this.form.CustomerRegion5Id = null
-        this.MarketingRegion5Id = null
-      }
-      if (model) {
-        this.form[label] = model.DecimalValue
-        this[label] = model.Label
-      } else {
-        this.form[label] = null
-        this[label] = null
       }
     },
     selectedSearchType (label, model) {
@@ -424,164 +268,47 @@ export default {
         this.insertRules.CustomerRegion5Id = {}
       }
     },
-    selectedCustomerLocation (e) {
-      if (e) {
-        this.routeDetails.LocationId = e.RecordId
-        this.routeDetails.LocationCode = e.Code
-        this.routeDetails.Location = e.Description1
+    selectedLabelType (label, model) {
+      if (label === 'CustomerRegion5Id') {
+        this.form.MarketingRegion5Id = null
+        this.CustomerRegion5Id = null
       } else {
-        this.routeDetails.LocationId = null
-        this.routeDetails.Location = null
+        this.form.CustomerRegion5Id = null
+        this.MarketingRegion5Id = null
       }
-    },
-    onVehicleSearch (search, loading) {
-      if (search.length < 3) {
-        return
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextVehicle/api/Vehicle/AutoCompleteSearch',
-        name: 'vehicles',
-        orConditionModels: [
-          {
-            VehiclePlateNumber: search,
-            Code: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    onEmployeeSearch (search, loading) {
-      if (search.length < 3) {
-        return
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
-        name: 'employees',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    onCustomerSearch (search, loading) {
-      if (search.length < 3) {
-        return
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    addCustomerLocation () {
-      this.$v.routeDetails.$touch()
-      if (this.$v.routeDetails.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        this.tabValidation()
+      if (model) {
+        this.form[label] = model.DecimalValue
+        this[label] = model.Label
       } else {
-        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day1Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day2Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day3Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day4Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day5Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
-        this.routeDetails = this.setDayValues(this.routeDetails)
-        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
-        if (control) {
-          this.$toasted.show(this.$t('insert.sameLocationField'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        this.form.RouteDetails.push({...this.routeDetails})
-        this.clearRouteDetails()
-        this.$v.routeDetails.$reset()
+        this.form[label] = null
+        this[label] = null
       }
     },
-    removeRouteDetails (r) {
-      this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(r), 1)
-    },
-    clearRouteDetails () {
-      this.routeDetails = {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        CustomerId: null,
-        Customer: null,
-        LocationId: null,
-        Location: null,
-        Day1Frequency: null,
-        Day1FreStartDate: null,
-        Day1VisitOrder: null,
-        Day2Frequency: null,
-        Day2FreStartDate: null,
-        Day2VisitOrder: null,
-        Day3Frequency: null,
-        Day3FreStartDate: null,
-        Day3VisitOrder: null,
-        Day4Frequency: null,
-        Day4FreStartDate: null,
-        Day4VisitOrder: null,
-        Day5Frequency: null,
-        Day5FreStartDate: null,
-        Day5VisitOrder: null,
-        Day6Frequency: null,
-        Day6FreStartDate: null,
-        Day6VisitOrder: null,
-        Day7Frequency: null,
-        Day7FreStartDate: null,
-        Day7VisitOrder: null,
-        StatusId: null,
-        AnnualVisitCount: null,
-        CompanyId: null,
-        BranchId: null,
-        Code: null,
-        Description1: null
-      }
-    },
-    setDayValues (item) {
-      item.Day1Value = !item.Day1VisitOrder || item.Day1VisitOrder === '0' ? 0 : 1
-      item.Day2Value = !item.Day2VisitOrder || item.Day2VisitOrder === '0' ? 0 : 1
-      item.Day3Value = !item.Day3VisitOrder || item.Day3VisitOrder === '0' ? 0 : 1
-      item.Day4Value = !item.Day4VisitOrder || item.Day4VisitOrder === '0' ? 0 : 1
-      item.Day5Value = !item.Day5VisitOrder || item.Day5VisitOrder === '0' ? 0 : 1
-      item.Day6Value = !item.Day6VisitOrder || item.Day6VisitOrder === '0' ? 0 : 1
-      item.Day7Value = !item.Day7VisitOrder || item.Day7VisitOrder === '0' ? 0 : 1
+    editForm (form) {
+      form.Day1FreStartDate = form.DayFreStartDate
+      form.Day2FreStartDate = form.DayFreStartDate
+      form.Day3FreStartDate = form.DayFreStartDate
+      form.Day4FreStartDate = form.DayFreStartDate
+      form.Day5FreStartDate = form.DayFreStartDate
+      form.Day6FreStartDate = form.DayFreStartDate
+      form.Day7FreStartDate = form.DayFreStartDate
+      form.Day1Frequency = form.DayFrequency
+      form.Day2Frequency = form.DayFrequency
+      form.Day3Frequency = form.DayFrequency
+      form.Day4Frequency = form.DayFrequency
+      form.Day5Frequency = form.DayFrequency
+      form.Day6Frequency = form.DayFrequency
+      form.Day7Frequency = form.DayFrequency
 
-      return item
+      form.Day1Value = !form.Day1VisitOrder || form.Day1VisitOrder === '0' ? 0 : 1
+      form.Day2Value = !form.Day2VisitOrder || form.Day2VisitOrder === '0' ? 0 : 1
+      form.Day3Value = !form.Day3VisitOrder || form.Day3VisitOrder === '0' ? 0 : 1
+      form.Day4Value = !form.Day4VisitOrder || form.Day4VisitOrder === '0' ? 0 : 1
+      form.Day5Value = !form.Day5VisitOrder || form.Day5VisitOrder === '0' ? 0 : 1
+      form.Day6Value = !form.Day6VisitOrder || form.Day6VisitOrder === '0' ? 0 : 1
+      form.Day7Value = !form.Day7VisitOrder || form.Day7VisitOrder === '0' ? 0 : 1
+
+      return form
     },
     save () {
       this.$v.form.$touch()

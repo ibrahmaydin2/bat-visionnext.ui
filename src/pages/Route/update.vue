@@ -378,7 +378,10 @@ export default {
         this.representative = e.Representative.Label
       }
       if (e.Vehicle) {
-        this.vehicle = e.Vehicle.Label
+        this.vehicle = {
+          RecordId: e.Vehicle.DecimalValue,
+          VehiclePlateNumber: e.Vehicle.Label
+        }
       }
       if (e.RouteClass) {
         this.routeClass = e.RouteClass.Label
@@ -804,9 +807,6 @@ export default {
 
         if (e.Representative) {
           this.representative = e.Representative.Label
-        }
-        if (e.Vehicle) {
-          this.vehicle = e.Vehicle.Label
         }
         if (e.RouteClass) {
           this.routeClass = e.RouteClass.Label

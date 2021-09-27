@@ -25,39 +25,28 @@
         <b-tab :title="$t('get.Warehouse.title')" :active="true">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.Warehouse.NonSapWarehouse')}}</span> <p><i :class="rowData.NonSapWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-              <span><i class="far fa-circle" /> {{$t('get.Warehouse.IsVehicle')}}</span><p><i :class="rowData.IsVehicle === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-              <span><i class="far fa-circle" /> {{$t('get.Warehouse.VehicleId')}}</span><p>{{rowData.Vehicle ? rowData.Vehicle.Label : ''}}</p>
-              <span><i class="far fa-circle" /> {{$t('get.Warehouse.IsVirtualWarehouse')}}</span> <p><i :class="rowData.IsVirtualWarehouse === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
-              <span><i class="far fa-circle" /> {{$t('get.Warehouse.LicenseNumber')}}</span> <p>{{rowData.LicenseNumber}}</p>
+              <div v-html="getFormatDataByType(rowData.NonSapWarehouse, 'check', 'get.Warehouse.NonSapWarehouse')"></div>
+              <div v-html="getFormatDataByType(rowData.IsVehicle, 'check', 'get.Warehouse.IsVehicle')"></div>
+              <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'get.Warehouse.VehicleId')"></div>
+              <div v-html="getFormatDataByType(rowData.IsVirtualWareHouse, 'check', 'get.Warehouse.IsVirtualWarehouse')"></div>
+              <div v-html="getFormatDataByType(rowData.LicenseNumber, 'text', 'get.Warehouse.LicenseNumber')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode')}}</span> <p>{{rowData.FinanceCode}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.FinanceCode2')}}</span> <p>{{rowData.FinanceCode2}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.Address')}}</span> <p>{{rowData.Address}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.CityId')}}</span><p>{{city.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.Warehouse.DistrictId')}}</span><p>{{district.Label}}</p>
+              <div v-html="getFormatDataByType(rowData.FinanceCode, 'text', 'get.Warehouse.FinanceCode')"></div>
+              <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'get.Warehouse.FinanceCode2')"></div>
+              <div v-html="getFormatDataByType(rowData.AddressDetail, 'text', 'get.Warehouse.Address')"></div>
+              <div v-html="getFormatDataByType(city.Label, 'text', 'get.Warehouse.CityId')"></div>
+              <div v-html="getFormatDataByType(district.Label, 'text', 'get.Warehouse.DistrictId')"></div>
             </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')">
-          <b-row class="p-4">
-            <b-card class="col-12 asc__showPage-card">
-              <b-table-simple responsive bordered small>
-                <b-thead>
-                  <b-th><span>{{$t('insert.warehouse.SupplierBranchId')}}</span></b-th>
-                  <b-th><span>{{$t('insert.warehouse.PurchaseWarehouseId')}}</span></b-th>
-                  <b-th><span>{{$t('insert.warehouse.ReturnWarehouseId')}}</span></b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(w, i) in rowData.WarehouseSuppliers" :key="i">
-                    <b-td>{{w.SupplierBranch ? w.SupplierBranch.Label : ''}}</b-td>
-                    <b-td>{{w.PurchaseWarehouse ? w.PurchaseWarehouse.Label : ''}}</b-td>
-                    <b-td>{{w.ReturnWarehouse ? w.ReturnWarehouse.Label : ''}}</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-card>
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.WarehouseSuppliers" :items="locationItems"/>
+              </b-card>
+            </b-col>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -66,12 +55,15 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { detailData } from './detailPanelData'
+import mixin from '../../mixins/index'
 export default {
-  props: ['dataKey'],
+  mixins: [mixin],
   data () {
     return {
       city: {},
-      district: {}
+      district: {},
+      locationItems: detailData.locationItems
     }
   },
   mounted () {
@@ -80,7 +72,7 @@ export default {
     this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },
   computed: {
-    ...mapState(['rowData', 'style', 'lookup'])
+    ...mapState(['rowData', 'lookup'])
   },
   methods: {
     closeQuick () {
@@ -105,5 +97,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>

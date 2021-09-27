@@ -626,18 +626,8 @@ export const store = new Vuex.Store({
     // tüm INSERT ekranlarının kontrolleri sağlanır.
     getAllLookups ({ state, commit }, query) {
       let types = query.type.split(',')
-      let filteredList = []
-      types.forEach(item => {
-        if (!state.lookup[item] || state.lookup[item].length === 0) {
-          filteredList.push(item)
-        }
-      })
 
-      if (filteredList.length === 0) {
-        return
-      }
-
-      const queryType = filteredList.filter(function (item, i, allItems) {
+      const queryType = types.filter(function (item, i, allItems) {
         return i === allItems.indexOf(item)
       }).join(',')
 

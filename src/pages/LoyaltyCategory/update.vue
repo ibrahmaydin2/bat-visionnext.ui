@@ -68,7 +68,7 @@
               <NextDropdown v-model="ColumnValueDesc" :disabled="!ColumnNameDesc" :source="columnValues" @input="selectedType('ColumnValue', $event)" label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="UnitId" :error="$v.form.UnitId" v-if="CalcType && CalcType.Code === 'SH'">
-              <NextDropdown v-model="Unit" :disabled="insertReadonly.UnitId" lookup-key="UNIT"  :get-lookup="true"  @input="selectedType('UnitId', $event)"/>
+              <NextDropdown v-model="Unit" :disabled="insertReadonly.UnitId" lookup-key="UNIT" @input="selectedType('UnitId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Quantity" :error="$v.form.Quantity" v-if="CalcType && CalcType.Code === 'SH'">
               <NextInput v-model="form.Quantity" type="number" :disabled="insertReadonly.Quantity" />

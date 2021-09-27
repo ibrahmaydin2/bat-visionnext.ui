@@ -129,7 +129,7 @@
                 v-model="selectedPaymentPeriod"
                 url="VisionNextCommonApi/api/FixedTerm/Search"
                 @input="selectedType('PaymentPeriodId', $event)"
-                :disabled="insertReadonly.PaymentPeriodId || (selectedPaymentType && selectedPaymentType.Code !== 'AH')"/>
+                :disabled="insertReadonly.PaymentPeriodId"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -585,7 +585,6 @@ export default {
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
-        this.selectedPaymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
         this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
         this.selectedPaymentType = rowData.PaymentType
         this.selectedPaymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
@@ -721,8 +720,6 @@ export default {
       let me = this
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
         me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
-        me.selectedPaymentType = res.Model.DefaultPaymentType
-        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
       })
     },
     checkPaymentPeriod (value) {
