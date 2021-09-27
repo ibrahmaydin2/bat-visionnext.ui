@@ -18,6 +18,7 @@
             <span><i class="fas fa-code" />  <b>{{$t('get.Stock.MovementNumber')}}:</b> {{rowData.MovementNumber}}</span>
             <span><i class="fas fa-calendar-alt" />  <b>{{$t('get.Stock.DocumentDate')}}:</b> {{dateConvertFromTimezone(rowData.MovementDate)}}</span>
             <span><i class="fas fa-clock" />  <b>{{$t('get.Stock.MovementTime')}}:</b> {{rowData.MovementTime}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.description1')}}:</b> {{rowData.Description1}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
           </section>
         </b-col>
@@ -26,19 +27,14 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.Stock.ToWarehouseId')}}</span><p>{{rowData.ToWarehouse && rowData.ToWarehouse.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.Stock.MovementTypeId')}}</span><p>{{rowData.MovementType && rowData.MovementType.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.ToWarehouse, 'object', 'get.Stock.ToWarehouseId')"></div>
+              <div v-html="getFormatDataByType(rowData.MovementType, 'object', 'get.Stock.MovementTypeId')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.Stock.ToStatusId')}}</span><p>{{rowData.ToStatus && rowData.ToStatus.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.Stock.RepresentativeId')}}</span><p>{{rowData.Representative && rowData.Representative.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.ToStatus, 'object', 'get.Stock.ToStatusId')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.Stock.RepresentativeId')"></div>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
-              <!-- <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
-                <template #cell(Item)="data">
-                  {{data.value.Label}}
-                </template>
-              </b-table> -->
               <b-table-simple responsive hover small>
                 <b-thead>
                   <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
@@ -52,7 +48,7 @@
                     <b-td>{{r.Item && r.Item.Code}}</b-td>
                     <b-td>{{r.Item && r.Item.Label}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
-                    <b-td>{{r.Item && r.Unit.Label}}</b-td>
+                    <b-td>{{r.Unit && r.Unit.Label}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
                   </b-tr>
                 </b-tbody>
@@ -69,27 +65,15 @@ import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
-  data () {
-    return {
-      fields: [
-        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
-        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
-        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
-        {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
-      ]
-    }
-  },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
-      this.$router.push({name: this.$route.meta.base})
+      this.$router.push({name: this.routeName})
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: `VisionNextStockManagement/api/${this.$route.meta.baseLink}`, record: this.$route.params.url})
@@ -97,5 +81,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>
