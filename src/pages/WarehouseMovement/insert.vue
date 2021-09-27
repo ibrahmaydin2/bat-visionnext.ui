@@ -223,7 +223,7 @@ export default {
     this.form.MovementNumber = this.createCode
     let currentDate = new Date()
     this.form.MovementDate = currentDate.toISOString().slice(0, 10)
-    this.form.MovementTime = currentDate.toLocaleTimeString()
+    this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
   },
   methods: {
     getInsertPage (e) {

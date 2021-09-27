@@ -336,7 +336,7 @@ export default {
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10)
       this.documentDate = date
-      let time = currentDate.toLocaleTimeString()
+      let time = currentDate.toTimeString().slice(0, 5)
       this.form.DocumentTime = time
     },
     searchCustomer (search, loading) {

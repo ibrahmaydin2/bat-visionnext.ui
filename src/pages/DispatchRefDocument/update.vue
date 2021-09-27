@@ -420,7 +420,7 @@ export default {
           this.form.InvoiceLogisticCompanies = []
         }
         if (!this.form.ActualyDeliveryTime) {
-          let time = new Date().toLocaleTimeString()
+          let time = new Date().toTimeString().slice(0, 5)
           this.form.ActualyDeliveryTime = time
         }
       }
