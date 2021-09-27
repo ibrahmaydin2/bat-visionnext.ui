@@ -777,7 +777,13 @@
       "PersonalDesciption": "Personel Açıklaması",
       "CreateCustomerRecord": "Müşteri Kaydı Oluştur",
       "Model_UserPersonalGroup": "Personel Grubu",
-      "chooseDate": "Tarih Seçiniz"
+      "chooseDate": "Tarih Seçiniz",
+      "bankBranch": "Banka Şubesi",
+      "employeeBanks": "POS Bankası",
+      "employeeDevices": "Uygun Cihazlar",
+      "serialNumber": "Seri No",
+      "model": "Model",
+      "deviceUseAraeId": "Cihaz Kullanım Alanı"
     },
     "customer": {
       "modalCode": "Müşteri Kodu",
