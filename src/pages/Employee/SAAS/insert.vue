@@ -53,7 +53,7 @@
               <NextCheckBox v-model="form.IsTeam" type="number" toggle :disabled="insertReadonly.IsTeam" />
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
-              <NextDropdown v-model="priceListCategory" :get-lookup="true" lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)" :disabled="!form.CreateCustomerRecord" />
+              <NextDropdown v-model="priceListCategory" lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)" :disabled="!form.CreateCustomerRecord" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode1" :error="$v.form.FinanceCode1">
               <NextInput v-model="form.FinanceCode1" type="text" :disabled="insertReadonly.FinanceCode1" />
@@ -78,7 +78,7 @@
       <b-tab :title="$t('insert.employee.groupInfo')" @click.prevent="tabValidation()">
         <b-row>
           <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-            <NextDropdown lookup-key="EMPLOYEE_TYPE" :get-lookup="true" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
+            <NextDropdown lookup-key="EMPLOYEE_TYPE" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
           </NextFormGroup>
           <NextFormGroup item-key="UserGroupId" :error="$v.form.UserGroupId">
             <NextDropdown url="VisionNextSystem/api/SysUserGroup/Search" @input="selectedSearchType('UserGroupId', $event)" label="Description1" :disabled="insertReadonly.UserGroupId" />
@@ -150,14 +150,20 @@
       <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
         <NextDetailPanel v-model="form.EInvoiceSeqs" :items="prefixItems"></NextDetailPanel>
       </b-tab>
+      <b-tab :title="$t('insert.employee.employeeBanks')" @click.prevent="tabValidation()">
+        <NextDetailPanel v-model="form.EmployeeBanks" :items="employeeBankItems"></NextDetailPanel>
+      </b-tab>
+      <b-tab :title="$t('insert.employee.employeeDevices')" @click.prevent="tabValidation()">
+        <NextDetailPanel v-model="form.EmployeeDevices" :items="employeeDeviceItems"></NextDetailPanel>
+      </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import mixin from '../../mixins/insert'
+import mixin from '../../../mixins/insert'
 import { requiredIf } from 'vuelidate/lib/validators'
-import { detailData } from './detailPanelData'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -203,6 +209,8 @@ export default {
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
+      employeeBankItems: detailData.employeeBankItems,
+      employeeDeviceItems: detailData.employeeDeviceItems,
       prefixItems: [],
       prefixItem: {
         type: 'Dropdown',

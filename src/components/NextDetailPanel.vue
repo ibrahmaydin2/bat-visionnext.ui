@@ -141,6 +141,9 @@ export default {
     },
     mainForm: {
       type: Object
+    },
+    editForm: {
+      type: Function
     }
   },
   model: {
@@ -162,7 +165,8 @@ export default {
       selectedIndex: null,
       isUpdated: false,
       selectedItem: null,
-      unique: Math.random().toString(16).slice(2)
+      unique: Math.random().toString(16).slice(2),
+      additionalSearchTypeFirst: false
     }
   },
   computed: {
@@ -293,6 +297,9 @@ export default {
         this.form.LineNumber = this.lineNumber
         this.lineNumber++
       }
+      if (this.editForm) {
+        this.form = this.editForm(this.form)
+      }
       if (this.isUpdated) {
         this.values[this.selectedIndex] = {...this.form}
         this.selectedIndex = null
@@ -318,9 +325,8 @@ export default {
     removeItem () {
       let data = this.selectedItem
       this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-      const item = data.item
-      const index = this.values.indexOf(data.item)
-      if (item.RecordId) {
+      const index = this.values.indexOf(data)
+      if (data.RecordId) {
         this.values[index].RecordState = 4
       } else {
         this.values.splice(index, 1)
@@ -346,6 +352,7 @@ export default {
             model[valueProperty] = data[i.modelProperty]
             model[labelProperty] = this.getObjectLabel(i, data)
             this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Lookup':
@@ -354,6 +361,7 @@ export default {
             model[valueProperty] = data[i.modelProperty]
             model[labelProperty] = this.getObjectLabel(i, data)
             this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
             break
           case 'Label':
@@ -404,13 +412,18 @@ export default {
                 }
                 break
               case 'Dropdown':
-                this.model[item.modelProperty] = {}
-                this.form[item.modelProperty] = null
+                if (this.additionalSearchTypeFirst) {
+                  this.additionalSearchTypeFirst = false
+                } else {
+                  this.model[item.modelProperty] = {}
+                  this.form[item.modelProperty] = null
+                }
                 if (item.url && item.request) {
                   let request = JSON.parse(item.request.replace('val', model[item.parentProperty]))
                   this.$api.postByUrl(request, item.url).then((res) => {
                     if (typeof res.ListModel !== 'undefined') {
                       this.source[item.modelProperty] = res.ListModel.BaseModels
+                      this.$forceUpdate()
                     } else if (res.Values) {
                       this.source[item.modelProperty] = res.Values
                       this.$forceUpdate()
@@ -483,7 +496,8 @@ export default {
       return this.createUniqueCode(codes, 1)
     },
     createUniqueCode (codes, index) {
-      let newCode = `${this.createCode}-${index}`
+      let code = this.mainForm && this.mainForm.Code ? this.mainForm.Code : this.createCode
+      let newCode = `${code}-${index}`
 
       if (codes.includes(newCode)) {
         return this.createUniqueCode(codes, (index + 1))

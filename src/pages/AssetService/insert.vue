@@ -161,7 +161,7 @@ export default {
     this.mainCustomerId = customerId ? parseFloat(customerId) : 0
     let currentDate = new Date()
     let currentDateStr = currentDate.toISOString().slice(0, 10)
-    let currentTimeStr = currentDate.toLocaleTimeString()
+    let currentTimeStr = currentDate.toTimeString().slice(0, 5)
     this.form.RequestDate = currentDateStr
     this.form.RequestTime = currentTimeStr
     this.form.ResponseDate = currentDateStr

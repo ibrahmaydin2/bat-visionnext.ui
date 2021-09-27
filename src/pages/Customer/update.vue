@@ -74,10 +74,10 @@
               <NextDropdown :disabled="insertReadonly.CustomerInvoiceTypeId" v-model="customerInvoiceType"  lookup-key="CUSTOMER_INVOICE_TYPE" @input="selectedType('CustomerInvoiceTypeId', $event)"/>
             </NextFormGroup>
              <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" v-model="customerRegion5" :get-lookup="true" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" v-model="customerRegion5" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
-              <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" v-model="marketingRegion5" :get-lookup="true" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" v-model="marketingRegion5" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteCode" :error="$v.form.RouteCode">
               <NextInput v-model="form.RouteCode" :disabled="insertReadonly.RouteCode" />
@@ -114,19 +114,19 @@
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
-              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
-              <NextDropdown v-model="customerCategory2" :disabled="true" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+              <NextDropdown v-model="customerCategory2" :disabled="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
-              <NextDropdown v-model="customerCategory1" :disabled="true" :get-lookup="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+              <NextDropdown v-model="customerCategory1" :disabled="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="GroupId" :error="$v.form.groupId">
-              <NextDropdown v-model="selectedCustomerGroup" :get-lookup="true" lookup-key="CUSTOMER_GROUP" @input="selectedType('GroupId', $event)"/>
+              <NextDropdown v-model="selectedCustomerGroup" lookup-key="CUSTOMER_GROUP" @input="selectedType('GroupId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.classId">
-              <NextDropdown v-model="selectedCustomerClass" label="Label" :get-lookup="true" lookup-key="CUSTOMER_CLASS" @input="selectedType('ClassId', $event)"/>
+              <NextDropdown v-model="selectedCustomerClass" label="Label" lookup-key="CUSTOMER_CLASS" @input="selectedType('ClassId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SalesDocumentTypeId" :error="$v.form.SalesDocumentTypeId">
               <NextDropdown :disabled="insertReadonly.SalesDocumentTypeId" v-model="salesDocumentType" lookup-key="SALES_DOCUMENT_TYPE" @input="selectedType('SalesDocumentTypeId', $event)"/>
@@ -156,25 +156,25 @@
               <NextDropdown :disabled="insertReadonly.ClassProposalReasonId" v-model="classProposalReason"  lookup-key="CUSTOMER_CLASS_PROPOSAL_REASON" @input="selectedType('ClassProposalReasonId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
-              <NextDropdown :disabled="insertReadonly.BackMarginGroupId" v-model="backMarginGroup" :get-lookup="true" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.BackMarginGroupId" v-model="backMarginGroup" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsTaxExemption" :error="$v.form.IsTaxExemption">
               <NextCheckBox v-model="form.IsTaxExemption" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="Field1" :error="$v.form.Field1">
-              <NextDropdown :disabled="insertReadonly.Field1" :get-lookup="true" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Field1" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field2" :error="$v.form.Field2">
-              <NextDropdown :disabled="insertReadonly.Field2" :get-lookup="true" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Field2" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field3" :error="$v.form.Field3">
-              <NextDropdown :disabled="insertReadonly.Field3" :get-lookup="true" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Field3" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field4" :error="$v.form.Field4">
-              <NextDropdown :disabled="insertReadonly.Field4" :get-lookup="true" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Field4" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field5" :error="$v.form.Field5">
-              <NextDropdown :disabled="insertReadonly.Field5" :get-lookup="true" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TextField6" :error="$v.form.TextField6">
               <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" />
@@ -184,44 +184,44 @@
         <b-tab :title="$t('insert.customer.AdditionalClassInformation')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup3Id" :error="$v.form.DiscountGroup3Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup3Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup3Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup4Id" :error="$v.form.DiscountGroup4Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup4Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup4Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup5Id" :error="$v.form.DiscountGroup5Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup5Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup5Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup6Id" :error="$v.form.DiscountGroup6Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup6Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup6Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup8Id" :error="$v.form.DiscountGroup8Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup8Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup8Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="KindId" :error="$v.form.KindId">
-              <NextDropdown :disabled="insertReadonly.KindId" :get-lookup="true" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.KindId" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Activity1Id" :error="$v.form.Activity1Id">
-              <NextDropdown :disabled="insertReadonly.Activity1Id" :get-lookup="true" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="OutSourceOrderId" :error="$v.form.OutSourceOrderId">
-              <NextDropdown :disabled="insertReadonly.OutSourceOrderId" :get-lookup="true" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
-              <NextDropdown :disabled="insertReadonly.PriceListCategoryId" v-model="priceListCategory"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" @input="selectedType('PriceListCategoryId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.PriceListCategoryId" v-model="priceListCategory"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankPaymentSystemId" :error="$v.form.bankPaymentSystemId">
-              <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" :get-lookup="true" @input="selectedType('BankPaymentSystemId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" @input="selectedType('BankPaymentSystemId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
               <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
@@ -266,10 +266,10 @@
               <NextDropdown v-model="paymentPeriod" :disabled="!(paymentType && paymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
-              <NextDropdown :disabled="insertReadonly.TciBreak1Id" v-model="tciBreak1" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.TciBreak1Id" v-model="tciBreak1" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak2Id" :error="$v.form.TciBreak2Id">
-              <NextDropdown :disabled="insertReadonly.TciBreak2Id" v-model="tciBreak2" :get-lookup="true" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
+              <NextDropdown :disabled="insertReadonly.TciBreak2Id" v-model="tciBreak2" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown :disabled="insertReadonly.StatementDay" v-model="statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
@@ -321,22 +321,22 @@
               <NextInput v-model="form.Barcode" type="text" :disabled="insertReadonly.Barcode" />
             </NextFormGroup>
             <NextFormGroup item-key="HoldsAsset" :error="$v.form.HoldsAsset">
-              <NextDropdown :disabled="insertReadonly.HoldsAsset" :get-lookup="true" lookup-key="CUSTOMER_HOLD_ASSET" @input="selectedType('HoldsAsset', $event)"/>
+              <NextDropdown :disabled="insertReadonly.HoldsAsset" lookup-key="CUSTOMER_HOLD_ASSET" @input="selectedType('HoldsAsset', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Contracted" :error="$v.form.Contracted">
-              <NextDropdown :disabled="insertReadonly.Contracted" :get-lookup="true" lookup-key="CUSTOMER_CONTRACTED" @input="selectedType('Contracted', $event)"/>
+              <NextDropdown :disabled="insertReadonly.Contracted" lookup-key="CUSTOMER_CONTRACTED" @input="selectedType('Contracted', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup10Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup10Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup2Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup2Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup9Id" :get-lookup="true" lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
+              <NextDropdown :disabled="insertReadonly.DiscountGroup9Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SignNameId" :error="$v.form.SignNameId">
-              <NextDropdown :disabled="insertReadonly.SignNameId" :get-lookup="true" lookup-key="SIGN_NAME" @input="selectedType('SignNameId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.SignNameId" lookup-key="SIGN_NAME" @input="selectedType('SignNameId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOpportunitySpot" :error="$v.form.IsOpportunitySpot">
               <NextCheckBox v-model="form.IsOpportunitySpot" type="number" toggle/>
@@ -481,8 +481,6 @@ export default {
   },
   methods: {
     selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
       this.form[label] = model.DecimalValue
 
       if (label === 'TaxCustomerTypeId') {
@@ -625,13 +623,13 @@ export default {
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
-      this.statementDay = this.convertLookupValueToSearchValue(rowData.statementDay)
-      this.paymentType = this.convertLookupValueToSearchValue(rowData.paymentType)
+      this.statementDay = this.convertLookupValueToSearchValue(rowData.StatementDay)
+      this.paymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
-      this.customerInvoiceType = rowData.customerInvoiceType
+      this.customerInvoiceType = rowData.CustomerInvoiceType
       this.type = rowData.Type
       this.salesDocumentType = rowData.SalesDocumentType
       this.taxCustomerType = rowData.TaxCustomerType
@@ -678,11 +676,18 @@ export default {
       if (!rowData.CustomerItemDiscounts) {
         this.form.CustomerItemDiscounts = []
       }
+
+      if (rowData.Code === 'TZK') {
+        this.taxNumberReq = 10
+      } else {
+        this.taxNumberReq = 11
+      }
+      this.insertRules.TaxNumber = {
+        required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+      }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
     let validation = {
       form: this.insertRules
     }
