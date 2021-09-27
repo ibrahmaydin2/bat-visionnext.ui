@@ -57,13 +57,7 @@
                 :disabled="insertReadonly.RouteTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
-<<<<<<< HEAD
-              <v-select
-                :options="lookup.VISIT_START_CONTROL"
-                :get-lookup="true"
-=======
               <NextDropdown
->>>>>>> development
                 @input="selectedType('VisitStartControlId', $event)"
                 lookup-key="VISIT_START_CONTROL"
                 :disabled="insertReadonly.VisitStartControlId" />
@@ -149,7 +143,6 @@ export default {
         RouteDetails: []
       },
       avenues: [],
-<<<<<<< HEAD
       routeDetails: {
         Deleted: 0,
         System: 0,
@@ -181,9 +174,7 @@ export default {
         Day6Value: 0,
         Day7Value: 0
       },
-=======
       locationItems: detailData.locationItems,
->>>>>>> development
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
@@ -284,79 +275,8 @@ export default {
         this.form[label] = model.DecimalValue
         this[label] = model.Label
       } else {
-<<<<<<< HEAD
-        this.routeDetails.Day1FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day2FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day3FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day4FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day5FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day6FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day7FreStartDate = this.dateConvertToISo(this.routeDetails.DayFreStartDate)
-        this.routeDetails.Day1Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day2Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day3Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day4Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day5Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day6Frequency = this.routeDetails.DayFrequency
-        this.routeDetails.Day7Frequency = this.routeDetails.DayFrequency
-        this.routeDetails = this.setDayValues(this.routeDetails)
-        const control = this.form.RouteDetails.find(i => i.LocationId === this.routeDetails.LocationId)
-        if (control) {
-          this.$toasted.show(this.$t('insert.sameLocationField'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        this.form.RouteDetails.push({...this.routeDetails})
-        this.clearRouteDetails()
-        this.$v.routeDetails.$reset()
-      }
-    },
-    removeRouteDetails (r) {
-      this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(r), 1)
-    },
-    clearRouteDetails () {
-      this.routeDetails = {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        CustomerId: null,
-        Customer: null,
-        LocationId: null,
-        Location: null,
-        Day1Frequency: null,
-        Day1FreStartDate: null,
-        Day1VisitOrder: null,
-        Day2Frequency: null,
-        Day2FreStartDate: null,
-        Day2VisitOrder: null,
-        Day3Frequency: null,
-        Day3FreStartDate: null,
-        Day3VisitOrder: null,
-        Day4Frequency: null,
-        Day4FreStartDate: null,
-        Day4VisitOrder: null,
-        Day5Frequency: null,
-        Day5FreStartDate: null,
-        Day5VisitOrder: null,
-        Day6Frequency: null,
-        Day6FreStartDate: null,
-        Day6VisitOrder: null,
-        Day7Frequency: null,
-        Day7FreStartDate: null,
-        Day7VisitOrder: null,
-        StatusId: 1,
-        AnnualVisitCount: null,
-        CompanyId: null,
-        BranchId: null,
-        Code: null,
-        Description1: null
-=======
         this.form[label] = null
         this[label] = null
->>>>>>> development
       }
     },
     editForm (form) {

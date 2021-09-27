@@ -30,7 +30,6 @@
           </NextFormGroup>
             <b-col md="2" lg="2">
               <b-form-group :label="$t('insert.cashcard.IsMultiple')">
-                <!-- <NextCheckBox v-model="isMultiple" type="number" toggle /> -->
                 <b-form-checkbox @change="changeMultiple" v-model="isMultiple" name="check-button" switch>
                 </b-form-checkbox>
               </b-form-group>
@@ -151,7 +150,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -191,9 +189,6 @@ export default {
       cashCards: [],
       isEditable: false
     }
-  },
-  computed: {
-    ...mapState([''])
   },
   mounted () {
     this.createManualCode()
@@ -327,15 +322,6 @@ export default {
             status = false
           }
         })
-        // this.$api.postByUrl(request, 'VisionNextFinance/api/CashCard/Insert').then((res) => {
-        //   if (res.IsCompleted === true) {
-        //     item.Status = this.$t('insert.success')
-        //     this.removeCashCard(item)
-        //   } else {
-        //     item.Status = res.Message
-        //     status = false
-        //   }
-        // })
       })
       if (status) {
         this.$toasted.show(this.$t('index.success'), {

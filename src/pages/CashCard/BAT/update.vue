@@ -109,7 +109,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -146,9 +145,6 @@ export default {
       route: {},
       cashCardType: {}
     }
-  },
-  computed: {
-    ...mapState([''])
   },
   mounted () {
     this.getData().then(() => this.setData())

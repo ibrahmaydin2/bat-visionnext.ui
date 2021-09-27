@@ -30,7 +30,6 @@
           </NextFormGroup>
             <b-col md="2" lg="2">
               <b-form-group :label="$t('insert.cashcard.IsMultiple')">
-                <!-- <NextCheckBox v-model="isMultiple" type="number" toggle /> -->
                 <b-form-checkbox @change="changeMultiple" v-model="isMultiple" name="check-button" switch>
                 </b-form-checkbox>
               </b-form-group>
@@ -60,10 +59,10 @@
               <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyRate" :error="$v.form.CurrencyRate">
-              <NextInput v-model="Customer.CurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="Customer.CurrencyRate" type="number" :disabled="insertReadonly.CurrencyRate" />
             </NextFormGroup>
             <NextFormGroup item-key="SystemCurrencyRate" :error="$v.form.SystemCurrencyRate">
-              <NextInput v-model="Customer.SystemCurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="Customer.SystemCurrencyRate" type="number" :disabled="insertReadonly.SystemCurrencyRate" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentDate" :start-weekday="1" :error="$v.form.PaymentDate">
               <NextDatePicker v-model="form.PaymentDate" :disabled="insertReadonly.PaymentDate" />
@@ -117,7 +116,7 @@
               <NextInput v-model="customerReminder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
-              <NextCheckBox v-model="form.IsManuelClosure" :disabled="true" type="number" toggle/>
+              <NextCheckBox v-model="form.IsManuelClosure" :disabled="insertReadonly.IsManuelClosure" type="number" toggle/>
             </NextFormGroup>
             <b-col v-if="showMultiple" cols="12" md="2" lg="2">
               <b-form-group>
@@ -160,7 +159,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -203,9 +201,6 @@ export default {
       cashCards: [],
       isEditable: false
     }
-  },
-  computed: {
-    ...mapState([''])
   },
   mounted () {
     this.createManualCode()
@@ -323,15 +318,6 @@ export default {
       }
       let status = true
       this.cashCards.map(item => {
-        // this.$store.dispatch('cashCardMultipleInsert', {...this.query, item: item}).then((res) => {
-        //   if (res.IsCompleted === true) {
-        //     item.Status = this.$t('insert.success')
-        //     this.removeCashCard(item)
-        //   } else {
-        //     item.Status = res.Message
-        //     status = false
-        //   }
-        // })
         this.$api.postByUrl({}, 'VisionNextFinance/api/CashCard/Insert').then((res) => {
           if (res.IsCompleted === true) {
             item.Status = this.$t('insert.success')
