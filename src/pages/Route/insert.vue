@@ -144,48 +144,12 @@ export default {
       },
       avenues: [],
       locationItems: detailData.locationItems,
-      routeDetails: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        CustomerId: null,
-        Customer: null,
-        LocationId: null,
-        Location: null,
-        Day1VisitOrder: null,
-        Day2VisitOrder: null,
-        Day3VisitOrder: null,
-        Day4VisitOrder: null,
-        Day5VisitOrder: null,
-        Day6VisitOrder: null,
-        Day7VisitOrder: null,
-        DayFreStartDate: null,
-        DayFrequency: null,
-        StatusId: null,
-        AnnualVisitCount: null,
-        CompanyId: null,
-        BranchId: null,
-        Code: null,
-        Description1: null,
-        Day1Value: 0,
-        Day2Value: 0,
-        Day3Value: 0,
-        Day4Value: 0,
-        Day5Value: 0,
-        Day6Value: 0,
-        Day7Value: 0
-      },
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
       district: null,
       CustomerRegion5Id: null,
       MarketingRegion5Id: null
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   },
   computed: {
@@ -328,8 +292,14 @@ export default {
           })
           return
         }
+        this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.createData()
       }
+    }
+  },
+  validations () {
+    return {
+      form: this.insertRules
     }
   }
 }
