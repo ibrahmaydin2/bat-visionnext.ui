@@ -380,7 +380,6 @@ import StocksUpdate from '@/pages/Stocks/update'
 import StockAdjustmentIndex from '@/pages/StockAdjustment/'
 import StockAdjustmentGet from '@/pages/StockAdjustment/get'
 import StockAdjustmentInsert from '@/pages/StockAdjustment/insert'
-import StockAdjustmentUpdate from '@/pages/StockAdjustment/update'
 
 import InventoryTransactionViewIndex from '@/pages/InventoryTransactionView/'
 import InventoryTransactionViewGet from '@/pages/InventoryTransactionView/get'
@@ -970,7 +969,6 @@ const listUpdate = [
   { path: '/Update/GeneralLedgerMatching/:url', name: 'GeneralLedgerMatchingUpdate', component: GeneralLedgerMatchingUpdate, meta: { title: i18n.t('router.GeneralLedgerMatchingUpdate'), baseLink: 'GeneralLedgerMatching' } },
   { path: '/Update/BankAccountingMatching/:url', name: 'BankAccountingMatchingUpdate', component: BankAccountingMatchingUpdate, meta: { title: i18n.t('router.BankAccountingMatchingUpdate'), baseLink: 'BankAccountingMatching' } },
   { path: '/Update/Stocks/:url', name: 'StocksUpdate', component: StocksUpdate, meta: { title: i18n.t('router.StocksUpdate'), baseLink: 'Stocks' } },
-  { path: '/Update/StockAdjustment/:url', name: 'StockAdjustmentUpdate', component: StockAdjustmentUpdate, meta: { title: i18n.t('router.StockAdjustmentUpdate'), baseLink: 'StockAdjustment' } },
   { path: '/Update/InventoryTransactionView/:url', name: 'InventoryTransactionViewUpdate', component: InventoryTransactionViewUpdate, meta: { title: i18n.t('router.InventoryTransactionViewUpdate'), baseLink: 'InventoryTransactionView' } },
   { path: '/Update/StockTransfer/:url', name: 'StockTransferUpdate', component: StockTransferUpdate, meta: { title: i18n.t('router.StockTransferUpdate'), baseLink: 'StockTransfer' } },
   { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
