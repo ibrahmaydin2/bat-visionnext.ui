@@ -155,9 +155,9 @@
   </b-row>
 </template>
 <script>
-import mixin from '../../mixins/update'
+import mixin from '../../../mixins/update'
 import { requiredIf } from 'vuelidate/lib/validators'
-import { detailData } from './detailPanelData'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {

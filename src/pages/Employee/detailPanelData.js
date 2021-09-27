@@ -26,5 +26,49 @@ export const detailData = {
       isUnique: true,
       id: 1
     }
+  ],
+  employeeBankItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'BankBranchId',
+      objectKey: 'BankBranch',
+      url: 'VisionNextBank/api/BankBranch/Search',
+      label: i18n.t('insert.employee.bankBranch'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    }
+  ],
+  employeeDeviceItems: [
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'SerialNumber',
+      label: i18n.t('insert.employee.serialNumber'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'DeviceModelId',
+      objectKey: 'DeviceModel',
+      url: 'DEVICE_MODEL',
+      label: i18n.t('insert.employee.model'),
+      required: true,
+      visible: true,
+      id: 2
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'DeviceUseAraeId',
+      objectKey: 'DeviceUseArae',
+      url: 'DEVICE_USE_AREA',
+      label: i18n.t('insert.employee.deviceUseAraeId'),
+      required: true,
+      visible: true,
+      id: 3
+    }
   ]
 }

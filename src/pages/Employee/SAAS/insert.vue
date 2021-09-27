@@ -150,14 +150,20 @@
       <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
         <NextDetailPanel v-model="form.EInvoiceSeqs" :items="prefixItems"></NextDetailPanel>
       </b-tab>
+      <b-tab :title="$t('insert.employee.employeeBanks')" @click.prevent="tabValidation()">
+        <NextDetailPanel v-model="form.EmployeeBanks" :items="employeeBankItems"></NextDetailPanel>
+      </b-tab>
+      <b-tab :title="$t('insert.employee.employeeDevices')" @click.prevent="tabValidation()">
+        <NextDetailPanel v-model="form.EmployeeDevices" :items="employeeDeviceItems"></NextDetailPanel>
+      </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import mixin from '../../mixins/insert'
+import mixin from '../../../mixins/insert'
 import { requiredIf } from 'vuelidate/lib/validators'
-import { detailData } from './detailPanelData'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -203,6 +209,8 @@ export default {
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
+      employeeBankItems: detailData.employeeBankItems,
+      employeeDeviceItems: detailData.employeeDeviceItems,
       prefixItems: [],
       prefixItem: {
         type: 'Dropdown',
