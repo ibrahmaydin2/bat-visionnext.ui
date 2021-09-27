@@ -25,7 +25,7 @@
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -54,6 +54,7 @@
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
               <v-select
                 :options="lookup.VISIT_START_CONTROL"
+                :get-lookup="true"
                 @input="selectedType('VisitStartControlId', $event)"
                 label="Label"
               />
@@ -222,7 +223,7 @@ export default {
         RouteTypeId: null,
         RouteClassId: null,
         RouteGroupId: null,
-        StatusId: null,
+        StatusId: 1,
         CustomerRegion5Id: null,
         MarketingRegion5Id: null,
         IsMultidayRoute: null,
@@ -247,7 +248,7 @@ export default {
         Day7VisitOrder: null,
         DayFreStartDate: null,
         DayFrequency: null,
-        StatusId: null,
+        StatusId: 1,
         AnnualVisitCount: null,
         CompanyId: null,
         BranchId: null,
@@ -564,7 +565,7 @@ export default {
         Day7Frequency: null,
         Day7FreStartDate: null,
         Day7VisitOrder: null,
-        StatusId: null,
+        StatusId: 1,
         AnnualVisitCount: null,
         CompanyId: null,
         BranchId: null,
