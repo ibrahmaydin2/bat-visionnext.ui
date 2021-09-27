@@ -480,9 +480,9 @@ export default {
       let date = currentDate.toISOString().slice(0, 10)
       this.form.ActualDeliveryDate = date
       this.documentDate = date
-      this.form.DocumentTime = currentDate.toLocaleTimeString()
+      this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
       currentDate.setMinutes(currentDate.getMinutes() + 15)
-      this.form.ActualDeliveryTime = currentDate.toLocaleTimeString()
+      this.form.ActualDeliveryTime = currentDate.toTimeString().slice(0, 5)
     },
     searchPriceList () {
       if (!this.selectedCustomer || !this.form.DocumentDate) {

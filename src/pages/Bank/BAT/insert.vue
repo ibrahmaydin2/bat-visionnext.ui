@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')">
+        <b-tab :title="$t('insert.detail')" v-if="createCode">
           <NextDetailPanel v-model="form.BankBranches" :items="batBankBranchesItems"/>
         </b-tab>
       </b-tabs>
@@ -43,6 +43,7 @@
   </b-row>
 </template>
 <script>
+import { mapState } from 'vuex'
 import insertMixin from '../../../mixins/insert'
 import { detailData } from './../detailPanelData'
 export default {
@@ -61,6 +62,9 @@ export default {
       },
       batBankBranchesItems: detailData.batBankBranchesItems
     }
+  },
+  computed: {
+    ...mapState(['createCode'])
   },
   mounted () {
     this.createManualCode().then(() => {

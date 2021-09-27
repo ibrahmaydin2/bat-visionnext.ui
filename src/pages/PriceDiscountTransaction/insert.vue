@@ -183,7 +183,7 @@ export default {
       this.form.TransactionDate = currentDate.toISOString().slice(0, 10)
       this.form.ExpirationDate = currentDate.toISOString().slice(0, 10)
       this.form.BeginDate = currentDate.toISOString().slice(0, 10)
-      this.form.TransactionTime = currentDate.toLocaleTimeString()
+      this.form.TransactionTime = currentDate.toTimeString().slice(0, 5)
     },
     selectedSearchType (label, model) {
       if (model) {

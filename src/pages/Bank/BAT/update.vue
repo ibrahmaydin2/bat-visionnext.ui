@@ -35,8 +35,8 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')">
-          <NextDetailPanel v-model="form.BankBranches" :items="batBankBranchesItems"/>
+        <b-tab :title="$t('insert.detail')" v-if="form.Code">
+          <NextDetailPanel v-model="form.BankBranches" :items="batBankBranchesItems" :main-form="form"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -50,8 +50,8 @@ export default {
   data () {
     return {
       form: {
-        Code: '',
-        Description1: '',
+        Code: null,
+        Description1: null,
         RecordState: 2,
         StatusId: null,
         FinanceCode: null,

@@ -164,10 +164,11 @@ export default {
     },
     beforeValidDatesAdd (item, list) {
       let filteredList = list.filter(l =>
-        (l.StartDate <= item.StartDate && item.StartDate <= l.EndDate) ||
+        l.RecordState !== 4 &&
+        ((l.StartDate <= item.StartDate && item.StartDate <= l.EndDate) ||
         (l.StartDate <= item.EndDate && item.EndDate <= l.EndDate) ||
         (item.StartDate <= l.StartDate && l.StartDate <= item.EndDate) ||
-        (item.StartDate <= l.EndDate && l.EndDate <= item.EndDate))
+        (item.StartDate <= l.EndDate && l.EndDate <= item.EndDate)))
 
       if (filteredList && filteredList.length > 0) {
         this.$toasted.show(this.$t('insert.fieldAnalysis.validDatesError'), {
@@ -192,6 +193,14 @@ export default {
       if (this.form.FieldAnalysisDetails) {
         this.customerCriterias = this.form.FieldAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         this.customers = this.form.FieldAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+      }
+      if (this.$route.query.saveAs === 1) {
+        this.form.FieldAnalysisValidDates.map(f => {
+          f.RecordState = 2
+          f.RecordId = null
+
+          return f
+        })
       }
     }
   },

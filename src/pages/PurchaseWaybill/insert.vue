@@ -319,7 +319,7 @@ export default {
       let date = currentDate.toISOString().slice(0, 10)
       this.form.ActualDeliveryDate = date
       this.documentDate = date
-      let time = currentDate.toLocaleTimeString()
+      let time = currentDate.toTimeString().slice(0, 5)
       this.form.DocumentTime = time
       this.form.ActualDeliveryTime = time
     },
