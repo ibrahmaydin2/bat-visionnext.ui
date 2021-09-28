@@ -63,7 +63,7 @@
           <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
         <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.WarehouseSuppliers" :items="locationItems"/>
+          <NextDetailPanel v-model="form.WarehouseSuppliers" :items="locationItems" :before-add="beforeAdd"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -153,6 +153,17 @@ export default {
         DistrictId: rowData.DistrictId,
         Address: rowData.AddressDetail
       }
+    },
+    beforeAdd (form) {
+      if (!form.PurchaseWarehouseId && !form.ReturnWarehouseId) {
+        this.$toasted.show(this.$t('insert.warehouse.warehousesAreRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      return true
     }
   },
   validations () {

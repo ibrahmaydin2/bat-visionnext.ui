@@ -999,7 +999,8 @@
       "ErpCode": "ERP Kodu",
       "Address" : "Adres",
       "CityId" : "İl",
-      "DistrictId" : "İlçe"
+      "DistrictId" : "İlçe",
+      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz."
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
