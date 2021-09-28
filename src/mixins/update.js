@@ -5,14 +5,21 @@ export default {
   computed: {
     ...mapState(['rowData', 'developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertFormdata', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'insertColumnType'])
   },
+  data () {
+    return {
+      code: null,
+      codeLabel: 'Code',
+      rowDataReceipt: false
+    }
+  },
   methods: {
     createManualCode (parameter = 'Code') {
       this.setRouteNames()
       return this.$api.postByUrl({}, `VisionNext${this.routeName1}/api/${this.routeName2}/GetCode`).then((response) => {
         if (response && response.Model) {
-          let code = response.Model.Code
-          this.form[parameter] = code
-          this.$store.commit('setGetCreateCode', code)
+          this.code = response.Model.Code
+          this.form[parameter] = this.code
+          this.$store.commit('setGetCreateCode', this.code)
         }
       })
     },
@@ -53,5 +60,18 @@ export default {
       this.createManualCode()
     }
     this.$store.dispatch('GetUpdateRules', {...this.query, api: this.routeName})
+  },
+  watch: {
+    rowData (newValue) {
+      if (newValue) {
+        this.rowDataReceipt = true
+      }
+    },
+    form (newValue) {
+      if (newValue && this.rowDataReceipt && this.isSaveAs) {
+        this.rowDataReceipt = false
+        this.form[this.codeLabel] = this.code
+      }
+    }
   }
 }
