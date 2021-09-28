@@ -83,8 +83,7 @@ export default {
       staffType: null,
       bcpClusterCrteria: null,
       regionCriteria: null,
-      soaDetailItems: detailData.soaDetailItems,
-      currentForm: {}
+      soaDetailItems: detailData.soaDetailItems
     }
   },
   mounted () {
@@ -94,7 +93,6 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.currentForm = {...rowData}
       this.staffType = rowData.StaffType
       this.bcpClusterCrteria = rowData.BcpClusterCrteria
       this.regionCriteria = rowData.RegionCriteria
@@ -123,12 +121,8 @@ export default {
           })
           return
         }
-        this.updateData().then((response) => {
-          if (response && response.IsCompleted === true) {
-            this.currentForm.StatusId = 2
-            this.$api.postByUrl({model: this.currentForm}, `VisionNext${this.routeName1}/api/${this.routeName2}/Update`)
-          }
-        })
+        this.form.StatusId = this.form.StatusId === 1 ? 1 : 2
+        this.updateData()
       }
     }
   }

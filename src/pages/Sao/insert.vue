@@ -105,6 +105,7 @@ export default {
           })
           return
         }
+        this.form.StatusId = this.form.StatusId === 1 ? 1 : 2
         this.createData()
       }
     }

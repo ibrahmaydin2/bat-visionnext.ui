@@ -30,13 +30,15 @@
               <div v-html="getFormatDataByType(rowData.BranchCriteria, 'object', 'insert.loyalty.branchCriteria')"></div>
               <div v-html="getFormatDataByType(rowData.ApplicationType, 'object', 'insert.loyalty.loyaltyApplicationType')"></div>
               <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.loyalty.loyaltyGroup')"></div>
+              <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.loyalty.loyaltyType')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.loyalty.loyaltyType')"></div>
               <div v-html="getFormatDataByType(rowData.LoyaltyBeginDate, 'date', 'insert.loyalty.beginDate')"></div>
               <div v-html="getFormatDataByType(rowData.LoyaltyEndDate, 'date', 'insert.loyalty.endDate')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode, 'text', 'insert.loyalty.financeCode')"></div>
               <div v-html="getFormatDataByType(rowData.TCIBreak1, 'object', 'insert.loyalty.tci')"></div>
+              <div v-html="getFormatDataByType(rowData.Class, 'object', 'insert.loyalty.class')"></div>
+              <div v-html="getFormatDataByType(rowData.Kind, 'object', 'insert.loyalty.kind')"></div>
             </b-card>
           </b-row>
         </b-tab>

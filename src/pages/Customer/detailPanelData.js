@@ -281,10 +281,8 @@ export const detailData = {
   paymentTypesItems: [
     {
       type: 'Dropdown',
-      modelProperty: 'PaymentType',
+      modelProperty: 'PaymentTypeId',
       objectKey: 'PaymentType',
-      labelProperty: 'Description1',
-      valueProperty: 'Description1',
       url: 'VisionNextCommonApi/api/PaymentType/Search',
       label: i18n.t('insert.customer.Model_PaymentTypeId'),
       required: true,

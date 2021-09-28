@@ -999,7 +999,8 @@
       "ErpCode": "ERP Kodu",
       "Address" : "Adres",
       "CityId" : "İl",
-      "DistrictId" : "İlçe"
+      "DistrictId" : "İlçe",
+      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz."
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
@@ -1919,7 +1920,9 @@
       "customerClass": "Kalite Sınıfı",
       "customerKind": "Satış Hacim Sınıfı",
       "pleaseFirstSelectBranch": "Lütfen önce şubeleri seçiniz.",
-      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz."
+      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz.",
+      "class": "Program Sınıfı",
+      "kind": "Program Çeşidi"
     },
     "itemAnalysis": {
       "title": "Ürün Analizi Tanımı",
