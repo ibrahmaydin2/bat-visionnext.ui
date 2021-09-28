@@ -61,20 +61,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <b-table-simple responsive hover small>
-                  <b-thead head-variant="light">
-                    <b-tr>
-                      <b-th><span>{{$t('insert.vehicles.driverName')}}</span></b-th>
-                      <b-th><span>{{$t('insert.vehicles.driverCode')}}</span></b-th>
-                    </b-tr>
-                  </b-thead>
-                  <b-tbody>
-                    <tr v-for="(driver, i) in rowData.VehicleReplacementDrivers" :key="i">
-                      <b-td>{{driver.DriverEmployee.Label}}</b-td>
-                      <b-td>{{driver.Code}}</b-td>
-                    </tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.VehicleReplacementDrivers" :items="vehicleReplacementDriverItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -114,12 +101,14 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
     return {
-      vehicleKms: []
+      vehicleKms: [],
+      vehicleReplacementDriverItems: detailData.vehicleReplacementDriverItems
     }
   },
   mounted () {
@@ -143,7 +132,7 @@ export default {
     })
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
