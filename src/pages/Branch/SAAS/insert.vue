@@ -206,25 +206,6 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customerClassInfo')" v-if="showCustomerClassInfo">
-          <b-row>
-            <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
-              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
-              <NextDropdown v-model="customerCategory2" :disabled="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
-              <NextDropdown v-model="customerCategory1" :disabled="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.customerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
-              <NextDropdown :disabled="insertReadonly.backMarginGroupId" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
-            </NextFormGroup>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
           <NextDetailPanel v-model="form.BranchLocations" :items="customerLocationItems" />
         </b-tab>
@@ -234,14 +215,23 @@
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
+        <b-tab :title="$t('insert.branch.customFixedTerms')">
+          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
+          <NextDetailPanel v-model="form.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.branchPaymentTypes')">
+          <NextDetailPanel v-model="form.BranchPaymentTypes" :items="branchPaymentTypeItems"/>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
 import { mapState } from 'vuex'
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/insert'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -285,8 +275,8 @@ export default {
         BranchLocations: [],
         BranchCreditHistories: [],
         EInvoiceSeqs: [],
-        BranchPaymentTypes: null,
-        CustomFixedTerms: null,
+        BranchPaymentTypes: [],
+        CustomFixedTerms: [],
         CurrentCredit: null,
         CurrentRisk: null,
         LicenseNumber: null,
@@ -329,13 +319,12 @@ export default {
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
+      customFixedTermItems: detailData.customFixedTermItems,
+      customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
+      branchPaymentTypeItems: detailData.branchPaymentTypeItems,
       DefaultPaymentType: null,
       branchDistributionTypeId: 0,
-      allTypes: [],
-      customerCategory3: null,
-      customerCategory2: null,
-      customerCategory1: null,
-      showCustomerClassInfo: false
+      allTypes: []
     }
   },
   computed: {
@@ -348,7 +337,6 @@ export default {
     this.getCurrentBranch()
     this.createManualCode()
     this.getPaymentType()
-    this.showCustomerClassInfo = process.env.TENANT === 'BAT'
   },
   methods: {
     save () {
@@ -361,6 +349,15 @@ export default {
         })
         this.tabValidation()
       } else {
+        let filteredList = this.form.BranchPaymentTypes.filter(b => b.RecordState !== 4)
+        if (!filteredList || filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.branch.branchPaymentTypesRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.createData()
       }
     },
@@ -384,22 +381,6 @@ export default {
   validations () {
     return {
       form: this.insertRules
-    }
-  },
-  watch: {
-    customerCategory3 (value) {
-      if (value) {
-        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
-        this.form.Category2Id = this.customerCategory2.DecimalValue
-        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
-        this.form.Category1Id = this.customerCategory1.DecimalValue
-      } else {
-        this.customerCategory1 = null
-        this.customerCategory2 = null
-        this.form.Category1Id = null
-        this.form.Category2Id = null
-        this.form.Category3Id = null
-      }
     }
   }
 }

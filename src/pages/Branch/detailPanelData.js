@@ -545,5 +545,103 @@ export const detailData = {
       isUnique: false,
       id: 8
     }
+  ],
+  customFixedTermItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'FixedTermId',
+      objectKey: 'FixedTerm',
+      url: 'VisionNextCommonApi/api/FixedTerm/Search',
+      label: i18n.t('insert.branch.fixedTerm'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    }
+  ],
+  customerItemDiscountCrtItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'ColumnName',
+      labelProperty: 'Label',
+      valueProperty: 'ForeignField',
+      objectKey: 'ColumnNameDesc',
+      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
+      label: i18n.t('insert.branch.ColumnName'),
+      required: true,
+      visible: true,
+      dynamicRequest: {paramId: 'ITEM_CRITERIA'},
+      id: 1
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'ColumnValue',
+      parentProperty: 'Label',
+      labelProperty: 'Label',
+      objectKey: 'ColumnValueDesc',
+      request: JSON.stringify({ParamName: 'val'}),
+      url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
+      label: i18n.t('insert.branch.ColumnValue'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      parentId: 1,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_ITEM',
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'DiscountPercent1',
+      label: i18n.t('insert.branch.discountPercent1'),
+      required: true,
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'DiscountPercent2',
+      label: i18n.t('insert.branch.discountPercent2'),
+      required: true,
+      visible: true,
+      id: 5
+    },
+    {
+      type: 'Date',
+      modelProperty: 'StartDate',
+      label: i18n.t('insert.branch.StartDate'),
+      required: true,
+      visible: true,
+      id: 6
+    },
+    {
+      type: 'Date',
+      modelProperty: 'EndDate',
+      label: i18n.t('insert.branch.EndDate'),
+      required: true,
+      visible: true,
+      id: 7
+    }
+  ],
+  branchPaymentTypeItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'PaymentTypeId',
+      objectKey: 'PaymentType',
+      url: 'VisionNextCommonApi/api/PaymentType/Search?v=2',
+      label: i18n.t('insert.branch.PaymentType'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    }
   ]
 }

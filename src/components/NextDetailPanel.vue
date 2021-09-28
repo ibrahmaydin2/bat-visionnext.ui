@@ -256,7 +256,7 @@ export default {
         this.values = []
       }
 
-      if (this.beforeAdd && !this.beforeAdd(this.form, this.values)) {
+      if (this.beforeAdd && !this.beforeAdd(this.form, this.values, this.isUpdated)) {
         return
       }
 
