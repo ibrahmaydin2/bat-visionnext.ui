@@ -366,6 +366,7 @@ export default {
   },
   mounted () {
     searchQ = {}
+    this.$store.commit('setLastGridItem', null)
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
@@ -1073,7 +1074,9 @@ export default {
         }
         let query = Object.assign({}, this.$route.query)
         delete query.code
-        this.$router.replace({ query })
+        if (this.$router.history && this.$router.history.current && JSON.stringify(this.$router.history.current.query) !== JSON.stringify(query)) {
+          this.$router.replace({ query })
+        }
         this.$store.commit('changeFiltersCleared', false)
       }
     },
