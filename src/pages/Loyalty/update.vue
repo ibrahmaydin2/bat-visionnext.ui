@@ -242,7 +242,10 @@ export default {
         this.applicationType = rowData.ApplicationType
         this.group = rowData.Group
         this.type = rowData.Type
-        this.tciBreak1 = rowData.TCIBreak1
+        if (rowData.TCIBreak1) {
+          this.tciBreak1 = rowData.TCIBreak1
+          this.form.TCIBreak1Id = rowData.TCIBreak1.DecimalValue
+        }
         this.selectedClass = rowData.Class
         this.selectedKind = rowData.Kind
 
