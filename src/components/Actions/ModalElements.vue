@@ -215,6 +215,7 @@ export default {
               duration: '3000'
             })
             this.$root.$emit('bv::hide::modal', 'confirmModal')
+            this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
             setTimeout(() => {
               this.$store.commit('setReloadGrid', true)
             }, 1000)

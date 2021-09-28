@@ -297,7 +297,6 @@ export default {
       this.showItemFormulaModal = false
       this.showPurchaseReturnInvoiceRmaApproveModal = false
       this.showUpdateCreditBudgetModal = false
-
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
           type: 'error',
