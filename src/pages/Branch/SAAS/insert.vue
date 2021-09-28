@@ -342,7 +342,6 @@ export default {
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
-        debugger
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
