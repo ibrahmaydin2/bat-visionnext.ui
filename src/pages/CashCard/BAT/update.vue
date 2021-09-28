@@ -32,7 +32,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.creditcard.CreditCard')" :active="!developmentMode">
+        <b-tab :title="$t('insert.cashcard.CashCard')" active>
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
@@ -45,35 +45,17 @@
                 :is-customer="true"
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="ApproveNumber" :error="$v.form.ApproveNumber">
-              <NextInput v-model="form.ApproveNumber" type="number" :disabled="insertReadonly.ApproveNumber" />
-            </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber">
               <NextInput v-model="form.DocumentNumber" type="number" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :start-weekday="1" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="BankId" :error="$v.form.BankId">
-              <NextDropdown
-                @input="selectedSearchType('BankId', $event)"
-                :disabled="insertReadonly.BankId"
-                url="VisionNextBank/api/Bank/AutoCompleteSearch"
-                v-model="bank"
-                label="Description1"
-                />
+            <NextFormGroup item-key="PaymentDate" :start-weekday="1" :error="$v.form.PaymentDate">
+              <NextDatePicker v-model="form.PaymentDate" :disabled="insertReadonly.PaymentDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="BankBranchId" :error="$v.form.BankBranchId" md="3" lg="3">
-              <NextDropdown v-model="bankBranch" @input="selectedSearchType('BankBranchId', $event)" :source="bankBranches"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="CreditCardTotal" :error="$v.form.CreditCardTotal">
-              <NextInput v-model="form.CreditCardTotal" type="number" :disabled="insertReadonly.CreditCardTotal" />
-            </NextFormGroup>
-            <NextFormGroup item-key="CurrencyRate" :error="$v.form.CurrencyRate">
-              <NextInput v-model="customer.CurrencyRate" type="number" :disabled="true" />
-            </NextFormGroup>
-            <NextFormGroup item-key="SystemCurrencyRate" :error="$v.form.SystemCurrencyRate">
-              <NextInput v-model="customer.SystemCurrencyRate" type="number" :disabled="true" />
+            <NextFormGroup item-key="CashTotal" :error="$v.form.CashTotal">
+              <NextInput v-model="form.CashTotal" type="number" :disabled="insertReadonly.CashTotal" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown
@@ -84,9 +66,6 @@
                 label="Description1"
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
-              <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
-            </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
                 @input="selectedSearchType('RepresentativeId', $event)"
@@ -94,6 +73,9 @@
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 v-model="representative"
                 label="Description1"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
@@ -103,22 +85,22 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="route"
                 label="Description1"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextInput v-model="form.CustomerId" type="number" :disabled="insertReadonly.CustomerId" />
+            <NextFormGroup item-key="CashCardTypeId" :error="$v.form.CashCardTypeId">
+              <NextDropdown
+                @input="selectedSearchType('CashCardTypeId', $event)"
+                :disabled="insertReadonly.CashCardTypeId"
+                url="VisionNextFinance/api/CashCardType/Search"
+                v-model="cashCardType"
+                label="Description1"
+                />
             </NextFormGroup>
-            <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
-              <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="CardOwner" :error="$v.form.CardOwner">
-              <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
-            </NextFormGroup>
-            <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
-              <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
-            </NextFormGroup>
-            <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
-              <NextCheckBox v-model="form.IsManuelClosure" :disabled="true" type="number" toggle/>
+            <NextFormGroup :title="$t('insert.creditcard.reminder')">
+              <NextInput v-model="customerReminder" type="number" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -127,54 +109,42 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../../mixins/update'
 export default {
   mixins: [updateMixin],
   data () {
     return {
       form: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
+        Deleted: null,
+        System: null,
+        RecordState: null,
+        StatusId: null,
         Code: null,
         Description1: null,
         CustomerId: null,
-        ApproveNumber: null,
-        CurrencyRate: null,
         DocumentNumber: null,
-        DocumentDate: new Date(),
-        BankId: null,
-        CreditCardTotal: null,
+        DocumentDate: null,
+        PaymentDate: null,
+        CashTotal: null,
         CurrencyId: null,
-        CardNumber: null,
         RepresentativeId: null,
         RouteId: null,
-        IsBatcardTransaction: 0,
-        SystemCurrencyRate: null,
-        IsManuelClosure: 0
+        CashCardTypeId: null,
+        SystemCurrencyRate: null
       },
       customerReminder: null,
-      routeName1: 'Finance',
+      routeName: this.$route.meta.baseLink,
       customerLabel: null,
-      bankLabel: null,
       currencyLabel: null,
       representativeLabel: null,
       routeLabel: null,
       cashCardTypeLabel: null,
-      selectedCustomer: null,
       customer: {},
-      bank: {},
-      bankBranches: [],
-      bankBranch: {},
       currency: {},
       representative: {},
-      route: {}
+      route: {},
+      cashCardType: {}
     }
-  },
-  computed: {
-    ...mapState([''])
   },
   mounted () {
     this.getData().then(() => this.setData())
@@ -184,10 +154,10 @@ export default {
       let rowData = this.rowData
       this.form = rowData
       this.customer = this.convertLookupValueToSearchValue(rowData.Customer)
-      this.bank = this.convertLookupValueToSearchValue(rowData.Bank)
       this.currency = this.convertLookupValueToSearchValue(rowData.Currency)
       this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
       this.route = this.convertLookupValueToSearchValue(rowData.Route)
+      this.cashCardType = this.convertLookupValueToSearchValue(rowData.CashCardType)
     },
     save () {
       this.$v.$touch()
@@ -197,30 +167,9 @@ export default {
       } else {
         this.updateData()
       }
-    },
-    selectBankBranches (value) {
-      this.form.BankBranchId = null
-      this.bankBranch = null
-      this.bankBranches = []
-
-      if (value) {
-        this.form.BankId = value.RecordId
-
-        let request = {
-          andConditionModel: {
-            TypeIds: [this.form.BankBranchId]
-          }
-        }
-        this.$api.postByUrl(request, 'VisionNextBank/api/BankBranch/Search').then((response) => {
-          if (response && response.ListModel) {
-            this.bankBranches = response.ListModel.BaseModels
-          }
-        })
-      } else {
-        this.form.BankBranchId = null
-      }
     }
   }
+
 }
 </script>
 <style lang="sass">

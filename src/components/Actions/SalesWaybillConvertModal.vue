@@ -148,17 +148,32 @@ export default {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       this.tableBusy = true
       this.orderLines = []
-      let userModel = JSON.parse(localStorage.getItem('UserModel'))
-      this.employee = userModel.Name + ' ' + userModel.Surname
-      this.form.RepresentativeId = userModel.UserId
-      this.warehouse = this.modalItem.Warehouse.Label
+      this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
       this.form.DocumentNumber = this.modalItem.DocumentNumber
+      this.getUserInfo()
       this.getCustomer()
       this.getCode()
       this.getConvert()
     })
   },
   methods: {
+    getUserInfo () {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      if (userModel) {
+        let request = {
+          andConditionModel: {
+            RecordIds: [userModel.UserId]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
+          if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+            let user = response.ListModel.BaseModels[0]
+            this.employee = userModel.Name + ' ' + userModel.Surname
+            this.form.RepresentativeId = user.EmployeeId
+          }
+        })
+      }
+    },
     getCustomer () {
       this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
         if (res.Model) {

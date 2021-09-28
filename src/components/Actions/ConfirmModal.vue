@@ -8,7 +8,6 @@
       </b-row>
     </b-container>
     <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" />
-    <!-- <UpdateModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" /> -->
   </b-modal>
 </template>
 <script>

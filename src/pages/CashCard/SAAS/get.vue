@@ -15,7 +15,7 @@
       <b-row>
         <b-col cols="12">
           <section>
-            <span><i class="fas fa-check" />  <b>{{$t('insert.cashcard.status')}}:</b> {{rowData.StatusId}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.cashcard.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.cashcard.code')}}:</b> {{rowData.Code}}</span>
           </section>
         </b-col>
@@ -24,18 +24,22 @@
         <b-tab :title="$t('insert.cashcard.CashCard')" active>
            <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.CustomerId')}}</span><p>{{rowData.CustomerId && rowData.Customer.Label }}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.DocumentNumber')}}</span> <p>{{rowData.DocumentNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.DocumentDate')}}</span> <p>{{rowData.DocumentDate}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.PaymentDate')}}</span> <p>{{rowData.PaymentDate}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.CashTotal')}}</span> <p>{{rowData.CashTotal}}</p>
+              <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'get.CashCard.DocumentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'get.CashCard.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.CashTotal, 'text', 'get.CashCard.CashTotal')"></div>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
+
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.CurrencyId')}}</span> <p>{{rowData.Currency && rowData.Currency.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.RepresentativeId')}}</span> <p>{{rowData.Representative && rowData.Representative.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CashCard.CashCardTypeId')}}</span> <p>{{rowData.CashCardType && rowData.CashCardType.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.cashcard.reminder')}}</span> <p>{{customerReminder}}</p>
+              <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CashCard.RouteId')"></div>
+              <div v-html="getFormatDataByType(rowData.CashCardType, 'object', 'get.CashCard.CashCardTypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.reminder, 'text', 'get.CashCard.reminder')"></div>
+              <div v-html="getFormatDataByType(rowData.CurrencyRate, 'text', 'get.CreditCard.CurrencyRate')"></div>
+              <div v-html="getFormatDataByType(rowData.SystemCurrencyRate, 'text', 'get.CreditCard.SystemCurrencyRate')"></div>
+              <div v-html="getFormatDataByType(rowData.IsManuelClosure, 'check', 'get.CreditCard.IsManuelClosure')"></div>
+
             </b-card>
           </b-row>
         </b-tab>
@@ -45,8 +49,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../../mixins/index'
 export default {
   props: ['dataKey'],
+  mixins: [mixin],
   data () {
     return {
       customerReminder: null
