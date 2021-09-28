@@ -93,19 +93,6 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customerClassInfo')">
-          <b-row class="p-4">
-            <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Category3, 'object', 'insert.branch.Category3Id')"></div>
-              <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.branch.Category2Id')"></div>
-              <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.branch.Category1Id')"></div>
-            </b-card>
-            <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.branch.CustomerRegion5Id')"></div>
-              <div v-html="getFormatDataByType(rowData.BackMarginGroup, 'object', 'insert.branch.BackMarginGroupId')"></div>
-            </b-card>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.branch.locations')">
           <b-row>
             <b-col>
@@ -133,14 +120,41 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.customFixedTerms')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomFixedTerms" :items="customFixedTermItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.branchPaymentTypes')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.BranchPaymentTypes" :items="branchPaymentTypeItems"/>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/index'
+import { detailData } from '../detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
@@ -150,6 +164,9 @@ export default {
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
+      customFixedTermItems: detailData.customFixedTermItems,
+      customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
+      branchPaymentTypeItems: detailData.branchPaymentTypeItems,
       branchLocations: []
     }
   },

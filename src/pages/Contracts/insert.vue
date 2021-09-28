@@ -1250,6 +1250,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.CustomerId = e.RecordId
+        this.form.CustomerFinanceCode = e.FinanceCode
         this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
       } else {
         this.form.CustomerId = null
