@@ -67,6 +67,12 @@
             <NextFormGroup item-key="TCIBreak1Id" :error="$v.form.TCIBreak1Id">
               <NextDropdown :disabled="insertReadonly.TCIBreak1Id" @input="selectedType('TCIBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
             </NextFormGroup>
+            <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
+              <NextDropdown :disabled="insertReadonly.ClassId" @input="selectedType('ClassId', $event)" lookup-key="LOYALTY_CLASS"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="KindId" :error="$v.form.KindId">
+              <NextDropdown :disabled="insertReadonly.KindId" @input="selectedType('KindId', $event)" lookup-key="LOYALTY_KIND"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails" :disabled="this.form.TypeId === null">
@@ -186,6 +192,8 @@ export default {
         FinanceCode: null,
         Genexp1: null,
         TCIBreak1Id: null,
+        ClassId: null,
+        KindId: null,
         LoyaltyActiveCategories: [],
         LoyaltyCustomers: [],
         LoyaltyCustomerSqls: []

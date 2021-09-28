@@ -2090,7 +2090,9 @@
       "customerClass": "Kalite Sınıfı",
       "customerKind": "Satış Hacim Sınıfı",
       "pleaseFirstSelectBranch": "Lütfen önce şubeleri seçiniz.",
-      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz."
+      "pleaseFirstSelectBranchCriteria":  "Lütfen önce şube kriterini seçiniz.",
+      "class": "Program Sınıfı",
+      "kind": "Program Çeşidi"
     },
     "loyaltyCategory": {
       "Description1": "Tanım",

@@ -67,6 +67,12 @@
             <NextFormGroup item-key="TCIBreak1Id" :error="$v.form.TCIBreak1Id">
               <NextDropdown v-model="tciBreak1" :disabled="datePassed" @input="selectedType('TCIBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
             </NextFormGroup>
+            <NextFormGroup item-key="ClassId" :error="$v.form.ClassId">
+              <NextDropdown v-model="selectedClass" :disabled="insertReadonly.ClassId" @input="selectedType('ClassId', $event)" lookup-key="LOYALTY_CLASS"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="KindId" :error="$v.form.KindId">
+              <NextDropdown v-model="selectedKind" :disabled="insertReadonly.KindId" @input="selectedType('KindId', $event)" lookup-key="LOYALTY_KIND"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.loyalty.loyaltyCatalogue')" v-if="showDetails">
@@ -186,6 +192,8 @@ export default {
         FinanceCode: null,
         Genexp1: null,
         TCIBreak1Id: null,
+        ClassId: null,
+        KindId: null,
         LoyaltyCatalogues: [],
         LoyaltyActiveCategories: [],
         LoyaltyCustomers: [],
@@ -212,7 +220,9 @@ export default {
       type: null,
       tciBreak1: null,
       datePassed: false,
-      activeTabIndex: 0
+      activeTabIndex: 0,
+      selectedClass: null,
+      selectedKind: null
     }
   },
   mounted () {
@@ -233,6 +243,8 @@ export default {
         this.group = rowData.Group
         this.type = rowData.Type
         this.tciBreak1 = rowData.TCIBreak1
+        this.selectedClass = rowData.Class
+        this.selectedKind = rowData.Kind
 
         if (this.form.LoyaltyCustomers && this.form.LoyaltyCustomers.length > 0) {
           this.customers = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
