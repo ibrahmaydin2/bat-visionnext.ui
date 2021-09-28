@@ -1343,7 +1343,13 @@
       "EndDate" : "Bitiş Tarih",
       "ColumnName" : "Alan Açıklaması",
       "ColumnValue" : "Değer",
-      "chooseDate": "Tarih Seçiniz"
+      "chooseDate": "Tarih Seçiniz",
+      "customFixedTerms": "Ödeme Vadeleri",
+      "fixedTerm": "Ödeme Vadesi",
+      "discountPercent1" : "Ürün indirimi 1",
+      "discountPercent2" : "Ürün indirimi 2",
+      "branchPaymentTypes": "Ödeme Tipleri",
+      "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir."
     },
     "bcp": {
       "DiscountGroup7Id": "BCP Cluster",
