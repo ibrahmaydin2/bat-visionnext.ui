@@ -41,10 +41,10 @@
               <NextDropdown v-model="analysisType" :disabled="insertReadonly.AnalysisTypeId" @input="selectedType('AnalysisTypeId', $event); setUseOnce($event)" lookup-key="ITEM_ANALYSIS_TYPE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisPeriodId" :error="$v.form.AnalysisPeriodId">
-              <NextDropdown :disabled="insertReadonly.AnalysisPeriodId" @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD"/>
+              <NextDropdown  @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD" :disabled="insertReadonly.AnalysisPeriodId"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <NextDropdown v-model="approveState" :disabled="true" @input="selectedType('ApproveStateId', $event)" label="Label" />
+              <NextDropdown @input="selectedType('ApproveStateId', $event)" label="Label" :disabled="insertReadonly.ApproveStateId" />
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisVisitCount" :error="$v.form.AnalysisVisitCount">
               <NextInput v-model="form.AnalysisVisitCount" type="number" :disabled="insertReadonly.AnalysisVisitCount" />
@@ -64,7 +64,7 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
-              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="true"/>
+              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="insertReadonly.IsNecessary"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseOnce" :error="$v.form.UseOnce">
               <NextCheckBox v-model="form.UseOnce" type="number" toggle :disabled="!analysisType || analysisType.Code !== 'KLN'"/>
@@ -154,7 +154,6 @@ export default {
   },
   mounted () {
     this.createManualCode()
-    this.setApproveState()
   },
   methods: {
     save () {
@@ -189,26 +188,11 @@ export default {
 
       return true
     },
-    setApproveState () {
-      if (!this.approveState) {
-        let filteredArr = this.lookup.APPROVE_STATE ? this.lookup.APPROVE_STATE.filter(a => a.Code === 'ONYBK') : []
-        this.approveState = filteredArr && filteredArr.length > 0 ? filteredArr[0] : null
-        this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
-        this.$forceUpdate()
-      }
-    },
     setUseOnce (model) {
       this.form.UseOnce = !model || model.Code !== 'KLN' ? 0 : this.form.UseOnce
     }
   },
   watch: {
-    lookup: {
-      handler (value) {
-        this.setApproveState()
-      },
-      deep: true,
-      immediate: true
-    },
     form: {
       handler (value) {
         if (value && value.ItemAnalysisQuestions && value.ItemAnalysisQuestions.length > 0) {
