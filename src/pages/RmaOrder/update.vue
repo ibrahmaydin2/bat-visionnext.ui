@@ -30,13 +30,13 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <v-select v-model="customer" :options="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Label + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="true">
+              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
@@ -198,28 +198,7 @@ export default {
   methods: {
     getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
-      this.searchWarehouse()
     },
-    // searchCustomer (search, loading) {
-    //   if (search.length < 3) {
-    //     return false
-    //   }
-    //   loading(true)
-    //   this.$store.dispatch('getSearchItems', {
-    //     ...this.query,
-    //     api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-    //     name: 'customers',
-    //     orConditionModels: [
-    //       {
-    //         Description1: search,
-    //         Code: search,
-    //         CommercialTitle: search
-    //       }
-    //     ]
-    //   }).then(res => {
-    //     loading(false)
-    //   })
-    // },
     searchEmployee (search, loading) {
       if (search.length < 3) {
         return false
@@ -244,7 +223,11 @@ export default {
         loading(false)
       })
     },
-    searchWarehouse () {
+    searchWarehouse (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: 'VisionNextWarehouse/api/Warehouse/Search',
@@ -254,6 +237,8 @@ export default {
           IsVirtualWarehouse: 0,
           StatusId: 1
         }
+      }).then(res => {
+        loading(false)
       })
     },
     searchItem (search, loading) {
