@@ -29,20 +29,14 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled='!customerValid'>
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
+              <v-select v-model="customer" :options="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
                 <template v-slot:option="option">
                   {{option.Code + ' - ' + option.Label + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
+              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="true">
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
@@ -430,7 +424,7 @@ export default {
         return a.LineNumber - b.LineNumber
       })
       this.form = e
-      this.customer = this.convertLookupValueToSearchValue(e.Customer)
+      this.customer = e.Customer
       this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
       this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
@@ -472,6 +466,8 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+          this.customer = null
+          this.form.CustomerId = null
         }
       })
     }
