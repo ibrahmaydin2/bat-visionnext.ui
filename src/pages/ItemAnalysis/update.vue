@@ -25,7 +25,7 @@
             <NextInput type="text" v-model="form.Description1" :disabled="isDisabled"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId" />
           </NextFormGroup>
         </b-row>
       </section>
@@ -44,7 +44,7 @@
               <NextDropdown v-model="analysisPeriod" :disabled="isDisabled" @input="selectedType('AnalysisPeriodId', $event)" lookup-key="ANALYSIS_PERIOD"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <NextDropdown v-model="approveState" :disabled="true" @input="selectedType('ApproveStateId', $event)" lookup-key="APPROVE_STATE"/>
+              <NextDropdown v-model="approveState" :disabled="insertReadonly.ApproveStateId" @input="selectedType('ApproveStateId', $event)" lookup-key="APPROVE_STATE"/>
             </NextFormGroup>
             <NextFormGroup item-key="AnalysisVisitCount" :error="$v.form.AnalysisVisitCount">
               <NextInput v-model="form.AnalysisVisitCount" type="number" :disabled="isDisabled" />
@@ -64,7 +64,7 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
-              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="true"/>
+              <NextCheckBox v-model="form.IsNecessary" type="number" toggle :disabled="insertReadonly.IsNecessary"/>
             </NextFormGroup>
             <NextFormGroup item-key="UseOnce" :error="$v.form.UseOnce">
               <NextCheckBox v-model="form.UseOnce" type="number" toggle :disabled="!analysisType || analysisType.Code !== 'KLN' || isDisabled"/>

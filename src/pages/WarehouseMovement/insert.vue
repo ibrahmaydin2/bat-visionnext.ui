@@ -18,118 +18,112 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.MovementNumber != null ? insertVisible.MovementNumber : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.MovementNumber + (insertRequired.MovementNumber === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementNumber.$error }">
-              <b-form-input :disabled="isItemAdded" type="text" v-model="form.MovementNumber" :readonly="insertReadonly.MovementNumber" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.MovementDate != null ? insertVisible.MovementDate : developmentMode" :start-weekday="1" cols="12" md="2">
-            <b-form-group :label="insertTitle.MovementDate + (insertRequired.MovementDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementDate.$error }">
-              <b-form-datepicker v-model="form.MovementDate" disabled/>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.MovementTime != null ? insertVisible.MovementTime : developmentMode" :start-weekday="1" cols="12" md="2">
-            <b-form-group :label="insertTitle.MovementTime + (insertRequired.MovementTime === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTime.$error }">
-              <b-form-timepicker v-model="form.MovementTime"></b-form-timepicker>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-              <v-select :disabled="isItemAdded" :options="employees" @search="onEmployeeSearch" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.MovementTypeId != null ? insertVisible.MovementTypeId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.MovementTypeId + (insertRequired.MovementTypeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.MovementTypeId.$error }">
-              <v-select :disabled="isItemAdded" v-model="movementType" :options="filteredMovementTypes" @input="selectedSearchType('MovementTypeId', $event); selectStockStatus($event)" label="Description1"></v-select>
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <b-form-checkbox :disabled="isItemAdded" v-model="dataStatus" name="check-button" switch>
-                {{(dataStatus) ? $t('insert.active'): $t('insert.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="MovementNumber" :error="$v.form.MovementNumber" md="2" lg="2">
+            <NextInput v-model="form.MovementNumber" type="text" :disabled="insertReadonly.MovementNumber || isItemAdded" />
+          </NextFormGroup>
+          <NextFormGroup item-key="MovementDate" :error="$v.form.MovementDate" md="2" lg="2">
+            <NextDatePicker v-model="form.MovementDate" :disabled="insertReadonly.MovementDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="MovementTime" :error="$v.form.MovementTime" md="2" lg="2">
+            <NextTimePicker v-model="form.MovementTime" :disabled="insertReadonly.MovementTime" />
+          </NextFormGroup>
+          <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
+            <NextDropdown
+              url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
+              @input="selectedSearchType('RepresentativeId', $event)"
+              :disabled="isItemAdded || insertReadonly.RepresentativeId" />
+          </NextFormGroup>
+          <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId" md="2" lg="2">
+            <NextDropdown
+              v-model="movementType"
+              url="VisionNextWarehouse/api/WarehouseMovementType/Search"
+              :filter="item => filteredMovementTypes.includes(item.Code)"
+              @input="selectedSearchType('MovementTypeId', $event); selectStockStatus($event);"
+              :disabled="isItemAdded || insertReadonly.MovementTypeId" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="2" lg="2">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="isItemAdded || insertReadonly.StatusId"/>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.BranchStockTransfer.Items')" :active="!developmentMode">
+        <b-tab :title="$t('insert.BranchStockTransfer.Items')" active>
           <b-row>
-            <b-col v-if="insertVisible.RouteId != null ? insertVisible.RouteId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.RouteId + (insertRequired.RouteId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RouteId.$error }">
-                <v-select v-model="route" :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded" :options="routes" @input="selectRoute" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.FromWarehouseId != null ? insertVisible.FromWarehouseId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.FromWarehouseId + (insertRequired.FromWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromWarehouseId.$error }">
-                <NextDropdown :disabled="(movementType && movementType.Code === '04') || isItemAdded" v-model="fromWarehouse" :dynamic-and-condition="getFromWarehouseAndCondition()" @input="selectFromWarehouse($event) " label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.FromStatusId != null ? insertVisible.FromStatusId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.FromStatusId + (insertRequired.FromStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FromStatusId.$error }">
-                <v-select :disabled="(movementType && movementType.Code === '04') || isItemAdded || disabledStatus" v-model="fromStatus" :options="stockStatus" @input="selectFromStatus" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="3" lg="3">
+              <NextDropdown
+                v-model="route"
+                url="VisionNextRoute/api/Route/Search"
+                @input="selectRoute"
+                :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.RouteId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="3" lg="3">
+              <NextDropdown
+                v-model="fromWarehouse"
+                :dynamic-and-condition="getFromWarehouseAndCondition()"
+                @input="selectFromWarehouse($event)"
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
+                :disabled="(movementType && movementType.Code === '04') || isItemAdded || insertReadonly.FromWarehouseId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FromStatusId" :error="$v.form.FromStatusId" md="3" lg="3">
+              <NextDropdown
+                v-model="fromStatus"
+                @input="selectFromStatus($event)"
+                url="VisionNextStockManagement/api/StockStatus/Search?v=1"
+                :disabled="(movementType && movementType.Code === '04') || isItemAdded || disabledStatus || insertReadonly.FromStatusId"
+                v-on:all-source="setStockStatus" />
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.VehicleId != null ? insertVisible.VehicleId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.VehicleId + (insertRequired.VehicleId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.VehicleId.$error }">
-                <v-select v-model="selectedVehicle" :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded" :options="vehicles" @input="selectedSearchType('VehicleId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ToWarehouseId != null ? insertVisible.ToWarehouseId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.ToWarehouseId + (insertRequired.ToWarehouseId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToWarehouseId.$error }">
-                <NextDropdown :disabled="(movementType && movementType.Code === '05') || isItemAdded" :dynamic-and-condition="getToWarehouseAndCondition()" v-model="toWarehouse" @input="selectToWarehouse($event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ToStatusId != null ? insertVisible.ToStatusId : developmentMode" cols="12" md="3">
-              <b-form-group :label="insertTitle.ToStatusId + (insertRequired.ToStatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ToStatusId.$error }">
-                <v-select :disabled="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')) || isItemAdded || disabledStatus" v-model="toStatus" :options="stockStatus" @input="selectedSearchType('ToStatusId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="3" lg="3">
+              <NextDropdown
+                v-model="selectedVehicle"
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/Search"
+                :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.VehicleId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" md="3" lg="3">
+              <NextDropdown
+                v-model="toWarehouse"
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
+                :dynamic-and-condition="getToWarehouseAndCondition()"
+                @input="selectToWarehouse($event)"
+                :disabled="(movementType && movementType.Code === '05') || isItemAdded || insertReadonly.ToWarehouseId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
+              <NextDropdown
+                v-model="toStatus"
+                @input="selectedSearchType('ToStatusId', $event)"
+                url="VisionNextStockManagement/api/StockStatus/Search?v=2"
+                :disabled="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')) || isItemAdded || disabledStatus" />
+            </NextFormGroup>
           </b-row>
           <hr>
           <b-row>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.BranchStockTransfer.ItemCode')">
-                <v-select v-model="item" :options="items" @search="onItemsSearch" @input="selectedItem" label="Description1" :filterable="false">
-                  <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.BranchStockTransfer.FromWhStockQuantity')">
-                <b-form-input type="text" v-model="WarehouseMovementItems.FromWhStockQuantity" readonly/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.BranchStockTransfer.ToWhStockQuantity')">
-                <b-form-input type="text" v-model="WarehouseMovementItems.ToWhStockQuantity" readonly/>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.BranchStockTransfer.PlanQuantity')">
-                <b-form-input type="number" min="0" :max="maxPlanQuantity" v-model="WarehouseMovementItems.Quantity" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="2" class="ml-auto">
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ItemCode')" :required="true" :error="$v.warehouseMovementItems.item" md="3" lg="3">
+              <NextDropdown
+                searchable
+                :search="searchItem"
+                v-model="warehouseMovementItems.item"
+                @input="selectedItem"
+                :custom-option="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.FromWhStockQuantity')" md="3" lg="3">
+              <NextInput type="number" v-model="warehouseMovementItems.fromWhStockQuantity" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" md="3" lg="3">
+              <NextInput type="number" v-model="warehouseMovementItems.toWhStockQuantity" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.warehouseMovementItems.quantity" md="3" lg="3">
+              <NextInput type="number" v-model="warehouseMovementItems.quantity"/>
+            </NextFormGroup>
+            <b-col cols="12" md="3" lg="3" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <AddDetailButton @click.native="addItem()" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -151,7 +145,14 @@
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <b-button :title="$t('list.edit')" @click="editItem(r)" class="btn mr-2 btn-warning btn-sm">
+                        <i class="fa fa-pencil-alt"></i>
+                      </b-button>
+                      <b-button :title="$t('list.delete')" @click="removeItem(r)" type="button" class="btn mr-2 btn-danger btn-sm">
+                        <i class="far fa-trash-alt ml-1"></i>
+                      </b-button>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -163,8 +164,7 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
@@ -190,15 +190,14 @@ export default {
         RecordState: 2,
         WarehouseMovementItems: []
       },
-      routeName: this.$route.meta.baseLink,
-      dataStatus: true,
-      WarehouseMovementItems: {
-        FromWhStockQuantity: null,
-        ToWhStockQuantity: null,
-        Quantity: null
+      routeName1: 'Warehouse',
+      filteredMovementTypes: ['01', '04', '05', '07', '10', '12'],
+      warehouseMovementItems: {
+        item: null,
+        fromWhStockQuantity: null,
+        toWhStockQuantity: null,
+        quantity: null
       },
-      item: null,
-      tmpSelectedItem: [],
       maxPlanQuantity: null,
       fromStatus: null,
       toStatus: null,
@@ -208,72 +207,20 @@ export default {
       route: null,
       fromWarehouse: null,
       isItemAdded: false,
-      disabledStatus: false
-    }
-  },
-  computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'employees', 'movementTypes', 'stockStatus', 'vehicles', 'routes', 'items', 'fromWarehouseStocks', 'toWarehouseStocks']),
-    filteredMovementTypes () {
-      let filteredCodes = ['01', '04', '05', '07', '10', '12']
-      return this.movementTypes ? this.movementTypes.filter(m => filteredCodes.includes(m.Code)) : []
+      disabledStatus: false,
+      stockStatus: [],
+      selectedIndex: null
     }
   },
   mounted () {
-    this.getInsertPage(this.routeName)
-    this.form.MovementNumber = this.createCode
+    this.createManualCode('MovementNumber')
     let currentDate = new Date()
     this.form.MovementDate = currentDate.toISOString().slice(0, 10)
     this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextWarehouse/api/${e}/GetCode`})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextStockManagement/api/StockStatus/Search', name: 'stockStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextVehicle/api/Vehicle/Search', name: 'vehicles'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/WarehouseMovementType/Search', name: 'movementTypes'})
-    },
-    onItemsSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchItems(loading, search, this)
-      }
-    },
-    searchItems (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
-        name: 'items',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    onEmployeeSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchEmployee(loading, search, this)
-      }
-    },
-    searchEmployee (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
-        name: 'employees',
-        andConditionModel: {
-          Description1: search
-        }
-      }).then(res => {
-        loading(false)
-      })
+    setStockStatus (value) {
+      this.stockStatus = value
     },
     selectedSearchType (label, model) {
       if (model) {
@@ -290,6 +237,28 @@ export default {
         this.form[label] = null
       }
     },
+    async searchItem (search) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+        this.cleanItem()
+        Promise.resolve([])
+      }
+      let model = {
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search
+          }
+        ]
+      }
+
+      return this.$api.postByUrl(model, 'VisionNextItem/api/Item/AutoCompleteSearch').then((response) => {
+        if (response && response.ListModel) {
+          return response.ListModel.BaseModels
+        }
+      })
+    },
     selectedItem (e) {
       if (e) {
         this.$v.form.$touch()
@@ -297,109 +266,127 @@ export default {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
           this.cleanItem()
           return false
-        } else {
-          this.tmpSelectedItem = e
-          this.$store.dispatch('getSearchItems', {
-            ...this.query,
-            api: 'VisionNextWarehouse/api/WarehouseStock/Search',
-            name: 'fromWarehouseStocks',
+        }
+        if (this.form.FromWarehouseId && this.form.FromStatusId) {
+          let request = {
             andConditionModel: {
               BranchIds: [localStorage.getItem('BranchId')],
               WarehouseIds: [this.form.FromWarehouseId],
               ItemIds: [e.RecordId],
               StatusIds: [this.form.FromStatusId]
             }
+          }
+          this.$api.postByUrl(request, 'VisionNextWarehouse/api/WarehouseStock/Search?v=1').then((response) => {
+            let fromWarehouseStocks = response.ListModel.BaseModels
+            if (fromWarehouseStocks.length > 0) {
+              this.maxPlanQuantity = fromWarehouseStocks[0].Quantity
+              this.warehouseMovementItems.fromWhStockQuantity = fromWarehouseStocks[0].Quantity
+            } else {
+              this.maxPlanQuantity = 0
+              this.warehouseMovementItems.fromWhStockQuantity = 0
+            }
           })
-          this.$store.dispatch('getSearchItems', {
-            ...this.query,
-            api: 'VisionNextWarehouse/api/WarehouseStock/Search',
-            name: 'toWarehouseStocks',
+        } else {
+          this.maxPlanQuantity = 0
+          this.warehouseMovementItems.fromWhStockQuantity = 0
+        }
+
+        if (this.form.ToWarehouseId && this.form.ToStatusId) {
+          let request = {
             andConditionModel: {
               BranchIds: [localStorage.getItem('BranchId')],
               WarehouseIds: [this.form.ToWarehouseId],
               ItemIds: [e.RecordId],
               StatusIds: [this.form.ToStatusId]
             }
+          }
+          this.$api.postByUrl(request, 'VisionNextWarehouse/api/WarehouseStock/Search?v=2').then((response) => {
+            let toWarehouseStocks = response.ListModel.BaseModels
+            if (toWarehouseStocks.length > 0) {
+              this.warehouseMovementItems.toWhStockQuantity = toWarehouseStocks[0].Quantity
+            } else {
+              this.warehouseMovementItems.toWhStockQuantity = 0
+            }
           })
+        } else {
+          this.warehouseMovementItems.toWhStockQuantity = 0
         }
-      } else {
-        this.tmpSelectedItem = null
-        this.cleanItem()
+
+        this.$forceUpdate()
       }
     },
-    addItems () {
-      if (!this.form.ToWarehouseId || !this.form.ToStatusId) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.WarehouseMovement.toError') })
-        return false
-      }
-      if (!this.form.FromWarehouseId || !this.form.FromStatusId) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.WarehouseMovement.fromError') })
-        return false
-      }
-      if (this.tmpSelectedItem.length < 1 || !this.WarehouseMovementItems.Quantity) {
+    addItem () {
+      this.$v.warehouseMovementItems.$touch()
+      if (this.$v.warehouseMovementItems.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        return false
+        return
       }
-      const filteredArr = this.form.WarehouseMovementItems.filter(i => i.ItemId === this.tmpSelectedItem.RecordId)
+      const filteredArr = this.form.WarehouseMovementItems.filter(i => i.ItemId === this.warehouseMovementItems.item.RecordId && !this.warehouseMovementItems.isUpdated)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.WarehouseMovementItems.Quantity > this.maxPlanQuantity) {
+      if (this.warehouseMovementItems.quantity > this.maxPlanQuantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.WarehouseMovementItems.Quantity = this.maxPlanQuantity
+        this.warehouseMovementItems.quantity = this.maxPlanQuantity
         return false
       }
-      this.form.WarehouseMovementItems.push({
+      let item = {
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        Code: this.tmpSelectedItem.Code,
-        ItemId: this.tmpSelectedItem.RecordId,
-        UnitSetId: this.tmpSelectedItem.UnitSetId,
-        UnitId: this.tmpSelectedItem.UnitId,
+        Code: this.warehouseMovementItems.item.Code,
+        ItemId: this.warehouseMovementItems.item.RecordId,
+        UnitSetId: this.warehouseMovementItems.item.UnitSetId,
+        UnitId: this.warehouseMovementItems.item.UnitId,
         ConvFact1: 1,
         ConvFact2: 1,
-        RecordId: this.tmpSelectedItem.RecordId,
-        Description1: this.tmpSelectedItem.Description1,
+        RecordId: this.warehouseMovementItems.item.RecordId,
+        Description1: this.warehouseMovementItems.item.Description1,
         LineNumber: 0,
-        FromWhStockQuantity: this.WarehouseMovementItems.FromWhStockQuantity,
-        FromWhUnitId: this.tmpSelectedItem.UnitId,
-        ToWhStockQuantity: this.WarehouseMovementItems.ToWhStockQuantity,
-        ToWhUnitId: this.tmpSelectedItem.UnitId,
-        Quantity: this.WarehouseMovementItems.Quantity
-      })
+        FromWhStockQuantity: this.warehouseMovementItems.fromWhStockQuantity,
+        FromWhUnitId: this.warehouseMovementItems.item.UnitId,
+        ToWhStockQuantity: this.warehouseMovementItems.toWhStockQuantity,
+        ToWhUnitId: this.warehouseMovementItems.item.UnitId,
+        Quantity: this.warehouseMovementItems.quantity
+      }
+      if (this.warehouseMovementItems.isUpdated) {
+        this.form.WarehouseMovementItems[this.selectedIndex] = item
+        this.selectedIndex = null
+      } else {
+        this.form.WarehouseMovementItems.push(item)
+      }
       this.cleanItem()
       this.isItemAdded = this.form.WarehouseMovementItems.length > 0
     },
-    removeItems (item) {
+    removeItem (item) {
       this.form.WarehouseMovementItems.splice(this.form.WarehouseMovementItems.indexOf(item), 1)
       this.isItemAdded = this.form.WarehouseMovementItems.length > 0
     },
-    cleanItem () {
-      const payload = {
-        name: 'items',
-        data: []
+    editItem (item) {
+      this.selectedIndex = this.form.WarehouseMovementItems.indexOf(item)
+      this.warehouseMovementItems = {
+        item: {
+          Code: item.Code,
+          RecordId: item.ItemId,
+          Description1: item.Description1,
+          UnitSetId: item.UnitSetId,
+          UnitId: item.UnitId
+        },
+        fromWhStockQuantity: item.FromWhStockQuantity,
+        toWhStockQuantity: item.ToWhStockQuantity,
+        quantity: item.Quantity,
+        isUpdated: true
       }
-      this.$store.commit('setSearchItems', payload)
-      this.tmpSelectedItem = null
-      this.item = null
-      this.WarehouseMovementItems.FromWhStockQuantity = 0
-      this.WarehouseMovementItems.ToWhStockQuantity = 0
-      this.WarehouseMovementItems.Quantity = 0
     },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
+    cleanItem () {
+      this.warehouseMovementItems = {}
+      this.$v.warehouseMovementItems.$reset()
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
@@ -409,10 +396,7 @@ export default {
             return
           }
         }
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextWarehouse/api/${this.routeName}`, formdata: model, return: this.routeName})
+        this.createData()
       }
     },
     selectStockStatus (item) {
@@ -561,6 +545,7 @@ export default {
 
       switch (this.movementType.Code) {
         case '01':
+        case '10':
           form.ToStatusId = {}
           this.insertRequired.ToStatusId = false
           break
@@ -580,40 +565,16 @@ export default {
     }
 
     return {
-      form: form
-    }
-  },
-  watch: {
-    createCode (e) {
-      if (e) {
-        this.form.MovementNumber = e
-      }
-    },
-    dataStatus: function (e) {
-      if (e === true) {
-        this.form.StatusId = 1
-      } else {
-        this.form.StatusId = 0
-      }
-    },
-    fromWarehouseStocks (e) {
-      if (e.length > 0) {
-        this.maxPlanQuantity = e[0].Quantity
-        this.WarehouseMovementItems.FromWhStockQuantity = e[0].Quantity
-      } else {
-        this.maxPlanQuantity = 0
-        this.WarehouseMovementItems.FromWhStockQuantity = 0
-      }
-    },
-    toWarehouseStocks (e) {
-      if (e.length > 0) {
-        this.WarehouseMovementItems.ToWhStockQuantity = e[0].Quantity
-      } else {
-        this.WarehouseMovementItems.ToWhStockQuantity = 0
+      form: form,
+      warehouseMovementItems: {
+        item: {
+          required
+        },
+        quantity: {
+          required
+        }
       }
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
