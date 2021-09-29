@@ -353,8 +353,8 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
-import updateMixin from '../../mixins/update'
-import { detailData } from './detailPanelData'
+import updateMixin from '../../../mixins/update'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [updateMixin],
   data () {
