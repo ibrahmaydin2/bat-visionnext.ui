@@ -397,6 +397,18 @@ export default {
       if (!rowData.EInvoiceSeqs) {
         this.form.EInvoiceSeqs = []
       }
+
+      if (!rowData.BranchPaymentTypes) {
+        this.form.BranchPaymentTypes = []
+      }
+
+      if (!rowData.CustomFixedTerms) {
+        this.form.CustomFixedTerms = []
+      }
+
+      if (!rowData.CustomerItemDiscountCrts) {
+        this.form.CustomerItemDiscountCrts = []
+      }
     },
     save () {
       this.$v.form.$touch()
