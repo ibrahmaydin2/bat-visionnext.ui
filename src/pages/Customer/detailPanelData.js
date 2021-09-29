@@ -333,7 +333,7 @@ export const detailData = {
   routeDetailsItems: [
     {
       type: 'Dropdown',
-      modelProperty: 'RouteType',
+      modelProperty: 'RouteTypeId',
       objectKey: 'RouteType',
       labelProperty: 'Description1',
       url: 'VisionNextRoute/api/RouteType/Search',
