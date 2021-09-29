@@ -366,6 +366,7 @@ export default {
   },
   mounted () {
     searchQ = {}
+    this.$store.commit('setIsMultipleGrid', this.selectionMode === 'multi')
     this.$store.commit('setLastGridItem', null)
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
