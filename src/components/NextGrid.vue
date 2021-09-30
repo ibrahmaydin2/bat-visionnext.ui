@@ -165,7 +165,7 @@
                   <i class="fas fa-th" />
                 </template>
                 <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <!-- <Workflow :items="workFlowList" :RecordId="item.RecordId" v-model="workFlowModel" /> -->
+                <Workflow :items="workFlowList" :RecordId="item.RecordId" />
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Label')">
@@ -366,6 +366,7 @@ export default {
   },
   mounted () {
     searchQ = {}
+    this.$store.commit('setIsMultipleGrid', this.selectionMode === 'multi')
     this.$store.commit('setLastGridItem', null)
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
@@ -403,14 +404,11 @@ export default {
   },
   methods: {
     getWorkflowData () {
-      let request = {
-        ControllerName: 'Customer',
-        ClassName: 'Customer',
-        PageName: 'pg_Customer'
+      if (this.workFlowModel && this.workFlowModel.ControllerName && this.workFlowModel.ClassName && this.workFlowModel.PageName) {
+        this.$api.post(this.workFlowModel, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
+          this.workFlowList = res.ListModel.BaseModels
+        })
       }
-      this.$api.post(request, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
-        this.workFlowList = res.ListModel.BaseModels
-      })
     },
     showModal (action, row) {
       this.modalAction = action

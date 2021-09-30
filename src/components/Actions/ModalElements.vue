@@ -70,6 +70,9 @@
       </b-col>
     </b-row>
     <div class="element-modal-footer text-right" v-if="formActions">
+      <b-button size="md" variant="warning" @click="closeModal">
+        {{$t('header.cancel')}}
+      </b-button>
       <b-button v-for="(action, i) in formActions" :key="i" size="md" :variant="action.Action === 'Approve' ? 'success': 'danger'" @click="save(action)">
         {{action.Title}}
       </b-button>
@@ -236,6 +239,10 @@ export default {
         model = JSON.parse(`{${decodeURI(andConditionModels)}}`)
       }
       return model
+    },
+    closeModal () {
+      this.$root.$emit('bv::hide::modal', 'confirmModal')
+      this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
     }
   }
 }

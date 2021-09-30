@@ -182,22 +182,15 @@ export default {
     }
   },
   computed: {
-    // search items gibi yapılarda state e maplemek için kullanılır. İhtiyaç yoksa silinebilir.
     ...mapState(['warehouses', 'employees', 'rmaReasons', 'items'])
   },
   mounted () {
     this.createManualCode()
-    // update işlemiyse
-    // this.getData().then(() => {})
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
-      // this.searchWarehouse()
-      // this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextWarehouse/api/Warehouse/Search', name: 'warehouses'})
-      // Sayfa açılışında yüklenmesi gereken search items için kullanılır.
-      // lookup harici dataya ihtiyaç yoksa silinebilir
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -359,7 +352,6 @@ export default {
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules,
       rmaOrderLine: {
@@ -392,6 +384,8 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+          this.customer = null
+          this.form.CustomerId = null
         }
       })
     }

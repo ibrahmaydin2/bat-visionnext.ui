@@ -1,6 +1,12 @@
 <template>
   <b-modal v-if="modalAction" id="multipleConfirmModal" :title="modalAction.Title" hide-footer no-close-on-backdrop>
-    <p class="my-4"></p>
+    <b-container>
+      <b-row>
+        <b-col>
+          <h6 class="my-4">{{modalAction.QueryMessage}}</h6>
+        </b-col>
+      </b-row>
+    </b-container>
     <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="recordIds" />
   </b-modal>
 </template>
