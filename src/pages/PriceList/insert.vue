@@ -7,6 +7,9 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
+            <b-button size="sm" variant="warning" @click="$bvModal.show('price-list-excel-modal')" :title="$t('insert.PriceList.importExcel')">
+              <i class="fa fa-upload"></i>
+            </b-button>
             <router-link :to="{name: 'PriceList' }">
               <CancelButton />
             </router-link>
@@ -79,12 +82,17 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    <PriceListExcelModal @update="updatePriceListFromExcel" />
   </b-row>
 </template>
 <script>
 import insertMixin from '../../mixins/insert'
+import PriceListExcelModal from '../../components/Actions/PriceListExcelModal'
 export default {
   mixins: [insertMixin],
+  components: {
+    PriceListExcelModal
+  },
   data () {
     return {
       form: {
@@ -175,7 +183,7 @@ export default {
       }
     },
     getLists () {
-      this.$api.postByUrl({}, 'VisionNextItem/api/Item/Search').then(response => {
+      this.$api.postByUrl({}, 'VisionNextItem/api/Item/ItemForNewPriceList').then(response => {
         if (response.ListModel) {
           this.allProducts = response.ListModel.BaseModels.map(item => {
             item.SalesPrice = 0
@@ -192,6 +200,24 @@ export default {
       } else {
         this.products = this.allUserProducts.filter(p => p.Description1 ? p.Description1.toLocaleLowerCase().includes(value.toLocaleLowerCase()) : false)
       }
+    },
+    updatePriceListFromExcel (excelProducts) {
+      for (const property in excelProducts) {
+        let item = excelProducts[property]
+        this.allUserProducts.map(product => {
+          if (Number(item.ItemCode) === Number(product.Item.Code)) {
+            product.ConsumerPrice = item.ConsPrice
+            product.SalesPrice = item.Price
+          }
+        })
+      }
+      this.products = this.allUserProducts
+      this.$toasted.show(this.$t('index.success'), {
+        type: 'success',
+        keepOnHover: true,
+        duration: '3000'
+      })
+      this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
     }
   },
   watch: {

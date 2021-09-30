@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="price-list-excel-modal" :title="modalAction && modalAction.Title" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal id="price-list-excel-modal" :title="$t('insert.PriceList.uploadExcel')" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>

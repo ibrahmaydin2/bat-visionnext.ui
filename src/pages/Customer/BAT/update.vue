@@ -344,7 +344,10 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="rowData.CustomerItemDiscounts" :items="customerDiscountsItems" />
+          <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerDiscountsItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.customer.RouteDetails')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.RouteDetails" :items="routeDetailsItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -364,6 +367,7 @@ export default {
         CustomerCreditHistories: [],
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
+        RouteDetails: [],
         CardType: null,
         Group: null,
         Kind: null,
@@ -422,6 +426,7 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
+      routeDetailsItems: detailData.routeDetailsItems,
       cardType: {},
       taxCustomerType: {},
       blockReason: {},
@@ -675,6 +680,9 @@ export default {
       }
       if (!rowData.CustomerItemDiscounts) {
         this.form.CustomerItemDiscounts = []
+      }
+      if (!rowData.RouteDetails) {
+        this.form.RouteDetails = []
       }
 
       if (rowData.Code === 'TZK') {
