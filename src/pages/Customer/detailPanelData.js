@@ -210,13 +210,14 @@ export const detailData = {
       id: 1
     },
     {
-      type: 'Lookup',
-      modelProperty: 'CreditDescriptionId',
-      objectKey: 'CreditDescription',
-      url: 'CREDIT_DESCRIPTION',
-      label: i18n.t('insert.customer.Model_CreditDescriptionId'),
-      required: true,
+      type: 'Autocomplete',
+      modelProperty: 'BankId',
+      objectKey: 'bank',
+      url: 'VisionNextBank/api/Bank/Search',
+      label: i18n.t('insert.customer.bank'),
+      required: false,
       visible: true,
+      isUnique: false,
       id: 2
     },
     {
@@ -231,13 +232,93 @@ export const detailData = {
     },
     {
       type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Debtor',
+      label: i18n.t('insert.customer.debtor'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Bail',
+      label: i18n.t('insert.customer.bail'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'LandOffice',
+      label: i18n.t('insert.customer.landOffice'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 6
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Plate',
+      label: i18n.t('insert.customer.plate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 7
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TraficRegistry',
+      label: i18n.t('insert.customer.traficRegistry'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 8
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TextNo',
+      label: i18n.t('insert.customer.textNo'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 9
+    },
+    {
+      type: 'Text',
       inputType: 'number',
       modelProperty: 'CreditLimit',
       label: i18n.t('insert.customer.Model_CreditLimit'),
       required: true,
       visible: true,
       isUnique: false,
-      id: 4
+      id: 10
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'NotaryNo',
+      label: i18n.t('insert.customer.notaryNo'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 11
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'PlateNumber',
+      label: i18n.t('insert.customer.plateNumber'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 12
     },
     {
       type: 'Text',
@@ -247,25 +328,17 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
-      id: 5
+      id: 13
     },
     {
-      type: 'Date',
-      modelProperty: 'CreditStartDate',
-      label: i18n.t('insert.customer.Model_CreditStartDate'),
-      required: true,
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'MortgageValue',
+      label: i18n.t('insert.customer.mortgageValue'),
+      required: false,
       visible: true,
       isUnique: false,
-      id: 6
-    },
-    {
-      type: 'Date',
-      modelProperty: 'CreditEndDate',
-      label: i18n.t('insert.customer.Model_CreditEndDate'),
-      required: true,
-      visible: true,
-      isUnique: false,
-      id: 7
+      id: 14
     },
     {
       type: 'Check',
@@ -275,7 +348,53 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 8
+      id: 15
+    },
+    {
+      type: 'Date',
+      modelProperty: 'CreditStartDate',
+      label: i18n.t('insert.customer.Model_CreditStartDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 16
+    },
+    {
+      type: 'Date',
+      modelProperty: 'CreditEndDate',
+      label: i18n.t('insert.customer.Model_CreditEndDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 17
+    },
+    {
+      type: 'Date',
+      modelProperty: 'TextDate',
+      label: i18n.t('insert.customer.textDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 18
+    },
+    {
+      type: 'Date',
+      modelProperty: 'NotaryDate',
+      label: i18n.t('insert.customer.notaryDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 19
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'CreditDescriptionId',
+      objectKey: 'CreditDescription',
+      url: 'CREDIT_DESCRIPTION',
+      label: i18n.t('insert.customer.Model_CreditDescriptionId'),
+      required: true,
+      visible: true,
+      id: 20
     }
   ],
   paymentTypesItems: [
@@ -328,6 +447,34 @@ export const detailData = {
       visible: true,
       isUnique: false,
       id: 4
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'ColumnName',
+      labelProperty: 'Label',
+      valueProperty: 'ForeignField',
+      objectKey: 'ColumnNameDesc',
+      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
+      label: i18n.t('insert.branch.ColumnName'),
+      required: true,
+      visible: true,
+      dynamicRequest: {paramId: 'ITEM_CRITERIA'},
+      id: 5
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'ColumnValue',
+      parentProperty: 'Label',
+      labelProperty: 'Label',
+      objectKey: 'ColumnValueDesc',
+      request: JSON.stringify({ParamName: 'val'}),
+      url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
+      label: i18n.t('insert.branch.ColumnValue'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      parentId: 5,
+      id: 6
     }
   ],
   routeDetailsItems: [
@@ -411,6 +558,19 @@ export const detailData = {
       visible: true,
       isUnique: false,
       id: 8
+    }
+  ],
+  customFixedTermItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'FixedTermId',
+      objectKey: 'FixedTerm',
+      url: 'VisionNextCommonApi/api/FixedTerm/Search',
+      label: i18n.t('insert.customer.fixedTerm'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
     }
   ]
 }
