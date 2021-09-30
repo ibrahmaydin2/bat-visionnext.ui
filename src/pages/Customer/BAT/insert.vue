@@ -346,6 +346,9 @@
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerDiscountsItems" />
         </b-tab>
+        <b-tab :title="$t('insert.customer.RouteDetails')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.RouteDetails" :items="routeDetailsItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -364,6 +367,7 @@ export default {
         customerCreditHistories: [],
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
+        RouteDetails: [],
         RecordTypeId: 1,
         Deleted: 0,
         RecordState: 2,
@@ -465,6 +469,7 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
+      routeDetailsItems: detailData.routeDetailsItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
