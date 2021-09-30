@@ -108,27 +108,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.Detail')">
-          <b-row>
-            <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
-              <NextDropdown v-model="discountGroup10" :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
-              <NextDropdown v-model="discountGroup2" :disabled="insertReadonly.DiscountGroup2Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
-            </NextFormGroup>
-            <NextFormGroup item-key="BankIban" :error="$v.form.BankIban">
-              <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
-            </NextFormGroup>
-            <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
-              <NextDropdown v-model="discountGroup9" :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
-              <NextInput v-model="form.BankInfo" type="text" :disabled="insertReadonly.BankInfo" />
-            </NextFormGroup>
-          </b-row>
+        <b-tab :title="$t('insert.branch.locations')">
+          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
@@ -200,6 +181,37 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.Detail')">
+          <b-row>
+            <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
+              <NextDropdown v-model="discountGroup10" :disabled="insertReadonly.DiscountGroup10Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountGroup2Id" :error="$v.form.DiscountGroup2Id">
+              <NextDropdown v-model="discountGroup2" :disabled="insertReadonly.DiscountGroup2Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_2" @input="selectedType('DiscountGroup2Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
+              <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BankIban" :error="$v.form.BankIban">
+              <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
+              <NextDropdown v-model="discountGroup9" :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
+              <NextInput v-model="form.BankInfo" type="text" :disabled="insertReadonly.BankInfo" />
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.branchDistributionTypeId === 5">
+          <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
+          <NextDetailPanel v-model="form.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.InvoiceSeqs')">
+          <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
+        </b-tab>
         <b-tab :title="$t('insert.branch.customerClassInfo')">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
@@ -218,15 +230,6 @@
               <NextDropdown v-model="backMarginGroup" :disabled="insertReadonly.backMarginGroupId" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
             </NextFormGroup>
           </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.branchDistributionTypeId === 5">
-          <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
-        </b-tab>
-        <b-tab :title="$t('insert.branch.InvoiceSeqs')">
-          <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -326,7 +329,7 @@ export default {
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
-      customerItemDiscounts: [],
+      customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
       distributionType: {},
       branchRegion: {},
       upperBranch: {},

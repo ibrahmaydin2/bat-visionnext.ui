@@ -52,17 +52,13 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.Detail')">
-          <b-row class="p-4">
-            <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'insert.branch.DiscountGroup10Id')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup2, 'object', 'insert.branch.DiscountGroup2Id')"></div>
-              <div v-html="getFormatDataByType(rowData.Genexp1, 'text', 'insert.branch.Genexp1')"></div>
-            </b-card>
-            <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.BankIban, 'text', 'insert.branch.BankIban')"></div>
-              <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'object', 'insert.branch.DiscountGroup9Id')"></div>
-              <div v-html="getFormatDataByType(rowData.BankInfo, 'text', 'insert.branch.BankInfo')"></div>            </b-card>
+        <b-tab :title="$t('insert.branch.locations')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="branchLocations" :items="customerLocationItems" />
+              </b-card>
+            </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
@@ -93,26 +89,17 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customerClassInfo')">
+        <b-tab :title="$t('insert.branch.Detail')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Category3, 'object', 'insert.branch.Category3Id')"></div>
-              <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.branch.Category2Id')"></div>
-              <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.branch.Category1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'insert.branch.DiscountGroup10Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup2, 'object', 'insert.branch.DiscountGroup2Id')"></div>
+              <div v-html="getFormatDataByType(rowData.Genexp1, 'text', 'insert.branch.Genexp1')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.branch.CustomerRegion5Id')"></div>
-              <div v-html="getFormatDataByType(rowData.BackMarginGroup, 'object', 'insert.branch.BackMarginGroupId')"></div>
-            </b-card>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.branch.locations')">
-          <b-row>
-            <b-col>
-              <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="branchLocations" :items="customerLocationItems" />
-              </b-card>
-            </b-col>
+              <div v-html="getFormatDataByType(rowData.BankIban, 'text', 'insert.branch.BankIban')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'object', 'insert.branch.DiscountGroup9Id')"></div>
+              <div v-html="getFormatDataByType(rowData.BankInfo, 'text', 'insert.branch.BankInfo')"></div>            </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')">
@@ -124,6 +111,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems"/>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <b-row>
             <b-col>
@@ -131,6 +127,19 @@
                 <NextDetailPanel type="get" v-model="rowData.EInvoiceSeqs" :items="customerEInvoiceSeqsItems" />
               </b-card>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.customerClassInfo')">
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Category3, 'object', 'insert.branch.Category3Id')"></div>
+              <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.branch.Category2Id')"></div>
+              <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.branch.Category1Id')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.branch.CustomerRegion5Id')"></div>
+              <div v-html="getFormatDataByType(rowData.BackMarginGroup, 'object', 'insert.branch.BackMarginGroupId')"></div>
+            </b-card>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -150,6 +159,7 @@ export default {
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
+      customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
       branchLocations: []
     }
   },
