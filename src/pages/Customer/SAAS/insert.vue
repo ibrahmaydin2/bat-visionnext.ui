@@ -239,7 +239,7 @@
               <NextInput v-model="form.ReservedLimit" type="text" :disabled="insertReadonly.ReservedLimit" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
-              <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
+              <NextInput v-model="form.FinanceCode" type="number" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="DebitAccountRemainder" :error="$v.form.debitAccountRemainder">
               <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.debitAccountRemainder" />
@@ -350,6 +350,9 @@
         <b-tab :title="$t('insert.customer.RouteDetails')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.RouteDetails" :items="routeDetailsItems" />
         </b-tab>
+        <b-tab :title="$t('insert.customer.FixedTerms')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -368,6 +371,7 @@ export default {
         customerCreditHistories: [],
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
+        CustomFixedTerms: [],
         RouteDetails: [],
         RecordTypeId: 1,
         Deleted: 0,
@@ -471,6 +475,7 @@ export default {
       customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
       routeDetailsItems: detailData.routeDetailsItems,
+      customFixedTermItems: detailData.customFixedTermItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -536,6 +541,14 @@ export default {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
+      }
+      if (this.paymentType && this.paymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
+        this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
