@@ -1631,7 +1631,8 @@
       "EndDate": "Geçerlilik Başlangıcı",
       "Active" : "Aktif",
       "Passive" : "Pasif",
-      "importExcel": "İçeri Aktar"
+      "importExcel": "İçeri Aktar",
+      "uploadExcel": "Excel Yükle"
     },
     "RMA": {
       "Item": "Ürün Kodu",
