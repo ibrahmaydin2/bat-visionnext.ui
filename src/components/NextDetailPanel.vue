@@ -560,6 +560,15 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    createCode (newValue) {
+      if (newValue) {
+        this.items.map(item => {
+          if (item.createCode) {
+            this.form[item.modelProperty] = this.createNewCode(item.modelProperty)
+          }
+        })
+      }
     }
   }
 }
