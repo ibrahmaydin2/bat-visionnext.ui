@@ -43,7 +43,7 @@
                     :custom-option="true"
                     :is-customer="true"
                     or-condition-fields="Code,Description1,CommercialTitle"
-                    @input="selectedSearchType('CustomerId', $event)"
+                    @input="selectedSearchType('CustomerId', $event); setDisabledItems()"
                     :disabled="insertReadonly.CustomerId"
                     :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
               </NextFormGroup>
@@ -51,7 +51,8 @@
                 <NextDropdown
                     v-model="selectedPrice"
                     :source="priceList"
-                    :disabled="insertReadonly.PriceListId"/>
+                    :disabled="insertReadonly.PriceListId"
+                    @input="setDisabledItems()"/>
               </NextFormGroup>
             </b-row>
           </b-col>
@@ -103,7 +104,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <NextDropdown
-                @input="selectedSearchType('CurrencyId', $event)"
+                @input="selectedSearchType('CurrencyId', $event); setDisabledItems()"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
@@ -117,7 +118,7 @@
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
                 searchable
-                @input="selectedSearchType('WarehouseId', $event)"
+                @input="selectedSearchType('WarehouseId', $event); setDisabledItems()"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
                 :disabled="insertReadonly.WarehouseId"/>
             </NextFormGroup>
@@ -161,10 +162,11 @@
                     searchable
                     :custom-option="true"
                     @input="selectItem($event)"
-                    :search="searchItems"/>
+                    :search="searchItems"
+                    :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event, selectedOrderLine.quantity)" min=1></NextInput>
+              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event, selectedOrderLine.quantity)" min=1></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -409,7 +411,8 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: []
+      stocks: [],
+      disabledItems: true
     }
   },
   mounted () {
@@ -847,6 +850,16 @@ export default {
     },
     filterFreeReason (item) {
       return item.Code === 'BD' || item.Code === 'ERN'
+    },
+    setDisabledItems () {
+      if (!this.form.CustomerId || !this.form.PriceListId || !this.form.WarehouseId || !this.form.CurrencyId) {
+        this.disabledItems = true
+        this.selectedOrderLine = {}
+        this.$v.selectedOrderLine.$reset()
+        this.$forceUpdate()
+      } else {
+        this.disabledItems = false
+      }
     }
   },
   validations () {

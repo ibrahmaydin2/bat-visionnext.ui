@@ -61,10 +61,10 @@
             <NextFormGroup :title="$t('insert.creditBudget.customer')" :required="true" :error="$v.customerGuarantees.CustomerId" md="2" lg="2">
               <NextDropdown
                 v-model="selectedCustomer"
-                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
                 @input="selectCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
-                :dynamic-and-condition="{BranchId: form.CreditBranchId}"
+                :dynamic-and-condition="{BranchIds: [form.CreditBranchId]}"
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
