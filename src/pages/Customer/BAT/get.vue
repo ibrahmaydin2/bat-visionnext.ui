@@ -25,16 +25,11 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <!-- <h6>{{$t('insert.route.title')}}</h6> -->
               <div v-html="getFormatDataByType(rowData.CommercialTitle, 'text', 'insert.customer.Model_CommercialTitle')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.customer.Model_Description1')"></div>
               <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.customer.Model_TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
-              <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_TaxCustomerTypeId')}}</span><p>{{rowData.TaxCustomerTypeId}}</p> -->
-              <!-- <div v-html="getFormatDataByType(rowData.IsDutyFree, 'check', 'insert.customer.Model_IsDutyFree')"></div> -->
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
-              <!-- <div v-html="getFormatDataByType(rowData.IsTaxExemption, 'check', 'insert.customer.Model_IsTaxExemption')"></div> -->
-              <!-- <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CustomerInvoiceTypeId')}}</span><p>{{rowData.CustomerInvoiceTypeId}}</p> -->
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
@@ -264,6 +259,24 @@
               </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscounts" :items="customerDiscountsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.RouteDetails')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.RouteDetails" :items="routeDetailsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -271,6 +284,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../../mixins/index'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
@@ -331,7 +345,9 @@ export default {
         {key: 'TouchpointPriority', label: 'İletişim Fırsatı Seviyesi', sortable: true},
         {key: 'TouchpointType', label: 'İletişim Fırsatı Tipi', sortable: true}
       ],
-      Location: {}
+      Location: {},
+      customerDiscountsItems: detailData.customerDiscountsItems,
+      routeDetailsItems: detailData.routeDetailsItems
     }
   },
   mounted () {
