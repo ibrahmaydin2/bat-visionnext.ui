@@ -96,7 +96,7 @@
                 v-model="paymentPeriod"
                 url="VisionNextCommonApi/api/FixedTerm/Search"
                 @input="selectPaymentPeriod"
-                searchable/>
+                v-on:all-source="setPaymentPeriods"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -134,9 +134,12 @@
                 </span>
               </template>
               <template #cell(operations)="row">
-                <span>
-                  <i @click="removeCustomerGuarantee(row)" class="far fa-trash-alt text-danger"></i>
-                </span>
+                <b-button :title="$t('list.edit')" @click="editCustomerGuarantee(row.item)" class="btn mr-2 btn-warning btn-sm">
+                  <i class="fa fa-pencil-alt"></i>
+                </b-button>
+                <b-button :title="$t('list.delete')" @click="removeCustomerGuarantee(row.item)" type="button" class="btn mr-2 btn-danger btn-sm">
+                  <i class="far fa-trash-alt ml-1"></i>
+                </b-button>
               </template>
             </b-table>
           </b-row>
@@ -192,7 +195,14 @@ export default {
       customerGuaranteeFields: [
         {key: 'selection', label: '', sortable: false},
         {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
-        {key: 'CustomerDesc', label: this.$t('insert.creditBudget.customer'), sortable: false},
+        {
+          key: 'CustomerDesc',
+          label: this.$t('insert.creditBudget.customer'),
+          sortable: false,
+          formatter (value, key, obj) {
+            return `${obj.CustomerCode} - ${obj.CustomerDesc}`
+          }
+        },
         {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
         {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
         {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
@@ -203,7 +213,9 @@ export default {
         {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
         {key: 'PaymentPeriod', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false},
         {key: 'operations', label: this.$t('list.operations'), sortable: false}
-      ]
+      ],
+      selectedIndex: 0,
+      paymentPeriods: []
     }
   },
   mounted () {
@@ -220,6 +232,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.CreditBudgetDetails = this.form.CustomerGuarantees
         this.updateData()
       }
     },
@@ -235,6 +248,8 @@ export default {
     selectCustomer (customer) {
       this.customerGuarantees = {}
       if (customer) {
+        this.customerGuarantees.CustomerCode = customer.Code
+        this.customerGuarantees.CustomerDesc = customer.Description
         this.$api.getByUrl(`VisionNextBudget/api/CreditBudget/GetCustomerInfo?customerId=${customer.RecordId}`).then((res) => {
           if (res) {
             this.customerGuarantees = res
@@ -258,7 +273,13 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      this.form.CustomerGuarantees.push(this.customerGuarantees)
+      if (this.customerGuarantees.isUpdated) {
+        this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
+        this.selectedIndex = null
+      } else {
+        this.customerGuarantees.CreditBudgetId = this.form.RecordId
+        this.form.CustomerGuarantees.push(this.customerGuarantees)
+      }
       this.customerGuarantees = {}
       this.selectedCustomer = {}
       this.paymentPeriod = null
@@ -271,6 +292,25 @@ export default {
         this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
       }
     },
+    editCustomerGuarantee (item) {
+      this.customerGuarantees = item
+      this.selectedCustomer = null
+      this.paymentPeriod = null
+      this.customerGuarantees.isUpdated = true
+      if (item.RecordId > 0) {
+        this.customerGuarantees.RecordState = 3
+      }
+      this.customerGuarantees.CreditAmountCentral = item.CreditAmount
+      let paymentPeriods = this.paymentPeriods.filter(p => p.RecordId === item.PaymentPeriod)
+      if (paymentPeriods.length > 0) {
+        this.paymentPeriod = paymentPeriods[0]
+      }
+      this.selectedCustomer = {
+        RecordId: item.CustomerId,
+        Description1: item.CustomerDesc,
+        Code: item.CustomerCode
+      }
+    },
     setData () {
       this.form = this.rowData
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
@@ -279,10 +319,34 @@ export default {
         : 0
     },
     successExcelImport (data) {
-      this.form.CustomerGuarantees = data
+      if (data) {
+        let list = []
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          obj.RecordState = 2
+          obj.StatusId = 1
+          obj.Deleted = 0
+          obj.System = 0
+          if (obj.Period) {
+            obj.PaymentPeriod = d.Period
+          }
+          obj.CreditBudgetId = this.form.RecordId
+          list.push(obj)
+        })
+        if (this.form.CustomerGuarantees && this.form.CustomerGuarantees.length > 0) {
+          this.form.CustomerGuarantees.map(c => {
+            c.RecordState = 4
+            return c
+          })
+        }
+        this.form.CustomerGuarantees = [...this.form.CustomerGuarantees, ...list]
+      }
     },
     onRowSelected (items) {
       this.selectedItems = items
+    },
+    setPaymentPeriods (value) {
+      this.paymentPeriods = value
     }
   },
   validations () {

@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="credit-budget-excel-modal" @hide="hide" :title="$t('insert.creditBudget.excelImport')" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal id="credit-budget-excel-modal" :title="$t('insert.creditBudget.excelImport')" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
