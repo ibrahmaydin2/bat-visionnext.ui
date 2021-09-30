@@ -18,28 +18,26 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="2">
-            <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('FromWarehouseId', $event)" label="Description1">
-              <template slot="no-options">
-                {{$t('insert.min3')}}
-              </template>
-            </v-select>
+          <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId">
+            <NextDropdown v-model="warehouse" :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)"
+              :searchable="true" :custom-option="true"
+              or-condition-fields="Code,Description1,CommercialTitle"
+              :is-customer="true"/>
           </NextFormGroup>
-          <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2">
-            <v-select v-model="route" :options="routes" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1">
-              <template slot="no-options">
-                {{$t('insert.min3')}}
-              </template>
-            </v-select>
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
+              <NextDropdown v-model="route" :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
+            </NextFormGroup>
+          <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
+            <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"  @input="selectedSearchType('IsDone', $event)"/>
           </NextFormGroup>
-          <NextFormGroup item-key="IsDone" :error="$v.form.IsDone" md="2">
-              <v-select disabled v-model="selectedDone" :options="vanLoadingStatus" label="Description1"></v-select>
-          </NextFormGroup>
-          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2">
-              <b-form-datepicker v-model="form.LoadingDate" />
+          <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
+            <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
           </NextFormGroup>
           <NextFormGroup item-key="Canceled" :error="$v.form.Canceled" md="2">
-            <NextCheckBox v-model="form.Canceled" type="number" toggle/>
+            <NextCheckBox v-model="form.Canceled" :disabled="insertReadonly.Canceled" type="number" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -58,38 +56,29 @@
                   </template>
                 </v-select>
              </NextFormGroup>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.FromWhStockQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.FromWhStockQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.ToWhStockQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.ToWhStockQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.AverageSalesQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.AverageSalesQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.LastSalesQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.LastSalesQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.LastdaySalesQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.LastdaySalesQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3">
-              <b-form-group :label="$t('insert.vanLoading.SuggestedQuantity')">
-                <b-form-input type="text" v-model="vanLoadingItems.SuggestedQuantity" readonly />
-              </b-form-group>
-            </b-col>
-            <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItems.LoadingQuantity" md="3">
-              <b-form-input type="number" v-model="vanLoadingItems.LoadingQuantity" />
+            <NextFormGroup :title="$t('insert.vanLoading.items')" :error="$v.vanLoadingItem.Item">
+              <NextDropdown v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" url="VisionNextItem/api/Item/AutoCompleteSearch" @input="selectedItem" label="Description1" searchable/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.FromWhStockQuantity')">
+              <NextInput v-model="vanLoadingItem.FromWhStockQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.ToWhStockQuantity')">
+              <NextInput v-model="vanLoadingItem.ToWhStockQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.AverageSalesQuantity')">
+              <NextInput v-model="vanLoadingItem.AverageSalesQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.LastSalesQuantity')">
+              <NextInput v-model="vanLoadingItem.LastSalesQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.LastdaySalesQuantity')">
+              <NextInput v-model="vanLoadingItem.LastdaySalesQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.SuggestedQuantity')">
+              <NextInput v-model="vanLoadingItem.SuggestedQuantity" type="text" readonly />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity">
+              <NextInput v-model="vanLoadingItem.LoadingQuantity" type="number"/>
             </NextFormGroup>
             <b-col cols="12" md="3" class="text-right ml-auto">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
@@ -137,10 +126,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/update'
+import updateMixin from '../../mixins/update'
 import { required } from 'vuelidate/lib/validators'
 export default {
-  mixins: [mixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
@@ -183,83 +172,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(['warehouses', 'routes', 'vanLoadingStatus', 'items', 'itemForVanLoading'])
+    ...mapState(['vanLoadingStatus', 'itemForVanLoading'])
   },
   mounted () {
     this.getData().then(() => this.setData())
   },
   methods: {
-    searchRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
-          name: 'routes',
-          andConditionModel: {
-            Description1: search,
-            RouteTypeIds: [1, 6],
-            StatusIds: [1]
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
-    },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch',
-        name: 'warehouses',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ],
-        andConditionModel: {
-          'IsVehicle': 0,
-          'StatusIds': [1]
-        }
-      }).then(res => {
-        loading(false)
-      })
-    },
     selectedSearchType (label, model) {
       if (model) {
         this.form[label] = model.RecordId
       } else {
         this.form[label] = null
       }
-    },
-    onItemSearch (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.searchItem(loading, search, this)
-      }
-    },
-    searchItem (loading, search, vm) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
-        name: 'items',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ],
-        andConditionModel: {
-          StatusId: 1,
-          IsSaleAllowed: 1
-        }
-      }).then(res => {
-        loading(false)
-      })
     },
     selectedItem (e, loadingQuantity) {
       if (e) {
