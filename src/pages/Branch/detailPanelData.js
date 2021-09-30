@@ -5,6 +5,7 @@ export const detailData = {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'Code',
+      createCode: true,
       label: i18n.t('insert.branch.locationCode'),
       required: true,
       visible: true,

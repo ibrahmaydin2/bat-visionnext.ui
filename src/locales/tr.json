@@ -2570,7 +2570,8 @@
       "RepresentativeId": "Saha Personeli",
       "RouteId": "Rota",
       "CsCard": "Genel",
-      "reminder": "Müşteri Bakiyesi"
+      "reminder": "Müşteri Bakiyesi",
+      "dateError": "Senet tarihi ileri bir tarih olamaz"
     },
     "BankTransaction": {
       "Customer": "Müşteri",
