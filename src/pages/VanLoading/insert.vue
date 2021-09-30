@@ -19,16 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId">
-            <NextDropdown :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)"
-              :searchable="true" :custom-option="true"
-              or-condition-fields="Code,Description1,CommercialTitle"
-              :is-customer="true"/>
+            <NextDropdown :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)" searchable/>
           </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)"
-                :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"/>
+              <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" searchable/>
             </NextFormGroup>
           <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
             <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"  @input="selectedSearchType('IsDone', $event)"/>
@@ -163,13 +157,6 @@ export default {
     }
   },
   methods: {
-    selectedSearchType (label, model) {
-      if (model) {
-        this.form[label] = model.RecordId
-      } else {
-        this.form[label] = null
-      }
-    },
     selectedItem (e, loadingQuantity) {
       if (e) {
         const datas = {
