@@ -458,6 +458,7 @@
     "AssetServiceInsert": "Yeni Servis Ana Kayıtları"
   },
   "insert": {
+    "paymentPeriodrequired": "Açık Hesap seçiliyken ödeme vadesi girilmesi zorunludur",
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
@@ -965,7 +966,9 @@
       "Day5VisitOrder": "Cuma",
       "Day6VisitOrder": "Cumartesi",
       "Day7VisitOrder": "Pazar",
-      "RouteDetails": "Rota Tanımları"
+      "RouteDetails": "Rota Tanımları",
+      "FixedTerms": "Ödeme Vadeleri",
+      "fixedTerm": "Ödeme Vadesi"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
