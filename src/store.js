@@ -289,7 +289,8 @@ export const store = new Vuex.Store({
     lastGridItem: null,
     lastGridModel: null,
     reloadGrid: false,
-    cancelToken: {}
+    cancelToken: {},
+    isMultipleGrid: false
   },
   actions: {
     // sistem gereksinimleri
@@ -1859,6 +1860,9 @@ export const store = new Vuex.Store({
     },
     setLastGridModel (state, payload) {
       state.lastGridModel = payload
+    },
+    setIsMultipleGrid (state, payload) {
+      state.isMultipleGrid = payload
     }
   }
 })

@@ -157,6 +157,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.RouteDetails')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.RouteDetails" :items="routeDetailsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.customer.customerRegion')">
          <b-row class="p-4">
           <b-card class="col-md-6 col-12 asc__showPage-card">
@@ -189,6 +198,7 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
+      routeDetailsItems: detailData.routeDetailsItems,
       fixedTermFields: [
         {key: 'FixedTermId', label: this.$t('insert.customer.Model_FixedTermId'), sortable: true}
       ],

@@ -329,5 +329,88 @@ export const detailData = {
       isUnique: false,
       id: 4
     }
+  ],
+  routeDetailsItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'RouteTypeId',
+      objectKey: 'RouteType',
+      labelProperty: 'Description1',
+      url: 'VisionNextRoute/api/RouteType/Search',
+      label: i18n.t('insert.customer.routeType'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day1VisitOrder',
+      label: i18n.t('insert.customer.Day1VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day2VisitOrder',
+      label: i18n.t('insert.customer.Day2VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day3VisitOrder',
+      label: i18n.t('insert.customer.Day3VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day4VisitOrder',
+      label: i18n.t('insert.customer.Day4VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day5VisitOrder',
+      label: i18n.t('insert.customer.Day5VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 6
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day6VisitOrder',
+      label: i18n.t('insert.customer.Day6VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 7
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day7VisitOrder',
+      label: i18n.t('insert.customer.Day7VisitOrder'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 8
+    }
   ]
 }

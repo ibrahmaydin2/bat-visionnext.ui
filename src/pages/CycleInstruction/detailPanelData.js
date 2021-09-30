@@ -227,7 +227,7 @@ export const detailData = {
       disabled: false,
       visible: true,
       hideOnTable: false,
-      isUnique: false,
+      isUnique: true,
       parentId: null,
       id: 2
     },

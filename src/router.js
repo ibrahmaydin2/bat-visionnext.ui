@@ -65,8 +65,6 @@ import WarehouseInsert from '@/pages/Warehouse/insert' // yeni kayıt
 import WarehouseUpdate from '@/pages/Warehouse/update' // güncelleme
 
 import CustomerIndex from '@/pages/Customer/' // liste ekranı
-import CustomerInsert from '@/pages/Customer/insert' // yeni kayıt
-import CustomerUpdate from '@/pages/Customer/update' // güncelleme
 
 import KeyAccountIndex from '@/pages/KeyAccount/' // liste ekranı
 import KeyAccountGet from '@/pages/KeyAccount/get' // fullpage görünümü
@@ -905,7 +903,7 @@ const listUpdate = [
   { path: '/Update/Bcp/:url', name: 'BcpUpdate', component: BcpUpdate, meta: { title: i18n.t('router.BcpUpdate'), baseLink: 'Bcp' } },
   { path: '/Update/AnalysisQuestions/:url', name: 'AnalysisQuestionsUpdate', component: AnalysisQuestionsUpdate, meta: { title: i18n.t('router.AnalysisQuestionsUpdate'), baseLink: 'AnalysisQuestions' } },
   { path: '/Update/Warehouse/:url', name: 'WarehouseUpdate', component: WarehouseUpdate, meta: { title: i18n.t('router.WarehouseUpdate'), baseLink: 'Warehouse' } },
-  { path: '/Update/Customer/:url', name: 'CustomerUpdate', component: CustomerUpdate, meta: { title: i18n.t('router.CustomerUpdate'), baseLink: 'Customer' } },
+  { path: '/Update/Customer/:url', name: 'CustomerUpdate', component: getTenantPage('Customer', 'update'), meta: { title: i18n.t('router.CustomerUpdate'), baseLink: 'Customer' } },
   { path: '/Update/KeyAccount/:url', name: 'KeyAccountUpdate', component: KeyAccountUpdate, meta: { title: i18n.t('router.KeyAccountUpdate'), baseLink: 'KeyAccount' } },
   { path: '/Update/Service/:url', name: 'ServiceUpdate', component: ServiceUpdate, meta: { title: i18n.t('router.ServiceUpdate'), baseLink: 'Service' } },
   { path: '/Update/EDocumentErrorManagement/:url', name: 'EDocumentErrorManagementUpdate', component: EDocumentErrorManagementUpdate, meta: { title: i18n.t('router.EDocumentErrorManagementUpdate'), baseLink: 'EDocumentErrorManagement' } },
@@ -1027,7 +1025,7 @@ const listInsert = [
   { path: '/Insert/Bcp', name: 'BcpInsert', component: BcpInsert, meta: { title: i18n.t('router.BcpInsert'), baseLink: 'Bcp' } },
   { path: '/Insert/AnalysisQuestions', name: 'AnalysisQuestionsInsert', component: AnalysisQuestionsInsert, meta: { title: i18n.t('router.AnalysisQuestionsInsert'), baseLink: 'AnalysisQuestions' } },
   { path: '/Insert/Warehouse', name: 'WarehouseInsert', component: WarehouseInsert, meta: { title: i18n.t('router.WarehouseInsert'), baseLink: 'Warehouse' } },
-  { path: '/Insert/Customer', name: 'CustomerInsert', component: CustomerInsert, meta: { title: i18n.t('router.CustomerInsert'), baseLink: 'Customer' } },
+  { path: '/Insert/Customer', name: 'CustomerInsert', component: getTenantPage('Customer', 'insert'), meta: { title: i18n.t('router.CustomerInsert'), baseLink: 'Customer' } },
   { path: '/Insert/KeyAccount', name: 'KeyAccountInsert', component: KeyAccountInsert, meta: { title: i18n.t('router.KeyAccountInsert'), baseLink: 'KeyAccount' } },
   { path: '/Insert/Service', name: 'ServiceInsert', component: ServiceInsert, meta: { title: i18n.t('router.ServiceInsert'), baseLink: 'Service' } },
   { path: '/Insert/EDocumentErrorManagement', name: 'EDocumentErrorManagementInsert', component: EDocumentErrorManagementInsert, meta: { title: i18n.t('router.EDocumentErrorManagementInsert'), baseLink: 'EDocumentErrorManagement' } },

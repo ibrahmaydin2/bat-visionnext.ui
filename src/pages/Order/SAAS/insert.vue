@@ -427,9 +427,11 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        andConditionModel: {
+          PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
+          EndDate: {
+            BeginValue: this.form.DocumentDate
+          }
         }
       }
       this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/Search').then((response) => {
@@ -501,8 +503,10 @@ export default {
         return false
       }
       let model = {
-        PriceListIds: [this.selectedPrice.RecordId],
-        ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        andConditionModel: {
+          PriceListIds: [this.selectedPrice.RecordId],
+          ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        }
       }
       var me = this
       me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
@@ -511,6 +515,7 @@ export default {
         }
         if (me.priceListItems && me.priceListItems.length > 0) {
           me.priceListItem = me.priceListItems[0]
+          me.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? me.priceListItem.Vat : 0
           if (me.priceListItem.UseConsumerPrice === 1) {
             me.selectedOrderLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
           } else {
@@ -533,7 +538,6 @@ export default {
     selectItem (value) {
       if (value) {
         this.selectedOrderLine.selectedItem = value
-        this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? value.Vat : 0
       }
       this.searchPriceListItem()
       this.setStock()

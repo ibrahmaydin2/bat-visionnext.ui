@@ -955,7 +955,17 @@
       "potentialAnalysis": "Potansiyel Analiz",
       "question": "Soru",
       "answer": "Cevap",
-      "keyAccountNotValidToUpdate": "Zincir Mağaza güncellemeye uygun değildir."
+      "DiscountPercent2": "Ürün İndirimi 2",
+      "keyAccountNotValidToUpdate": "Zincir Mağaza güncellemeye uygun değildir.",
+      "routeType": "Rota Tipi",
+      "Day1VisitOrder": "Pazartesi",
+      "Day2VisitOrder": "Salı",
+      "Day3VisitOrder": "Çarşamba",
+      "Day4VisitOrder": "Perşembe",
+      "Day5VisitOrder": "Cuma",
+      "Day6VisitOrder": "Cumartesi",
+      "Day7VisitOrder": "Pazar",
+      "RouteDetails": "Rota Tanımları"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

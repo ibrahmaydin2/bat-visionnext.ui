@@ -126,10 +126,10 @@
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
-                  <div v-if="showActions || showManualActions" style="display: inline-grid">
+                  <div v-if="isMultipleGrid || showManualActions" style="display: inline-grid">
                     <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
                       <template #button-content>
-                        <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
+                        <span class=" text-dark font-weight-bold">{{$t('general.actions')}} <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
                       </template>
                       <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" :RecordIds="recordIds" />
                     </b-dropdown>
@@ -199,7 +199,6 @@ export default {
       filterTitle: '',
       modalAction: null,
       recordIds: [],
-      showActions: false,
       showManualActions: false,
       showPurchaseWaybillConvertModal: false,
       showPurchaseInvoiceConvertModal: false,
@@ -216,7 +215,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows', 'isMultipleGrid'])
   },
   watch: {
     $route (to, from) {
@@ -228,12 +227,10 @@ export default {
     selectedTableRows (e) {
       this.recordIds = []
       if (e && e.length > 0) {
-        this.showActions = true
         e.map(item => {
           this.recordIds.push(item.RecordId)
         })
       } else {
-        this.showActions = false
         this.recordIds = []
       }
     }
