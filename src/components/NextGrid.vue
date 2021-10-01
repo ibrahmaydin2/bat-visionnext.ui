@@ -37,7 +37,7 @@
                     :get-result-value="getResultValue"
                     @submit="handleSubmit(header.modelControlUtil.ModelProperty, $event)"
                     ref="AutoCompleteDropdown"
-                    :disabled="disabledAutoComplete"
+                    :disabled="disabledAutoComplete || header.disabled"
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
@@ -56,6 +56,7 @@
                     v-model="header.defaultValue"
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
+                    :disabled="header.disabled"
                   >
                   </v-select>
                   <v-select
@@ -66,6 +67,7 @@
                     v-model="header.defaultValue"
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
+                    :disabled="header.disabled"
                   >
                   </v-select>
                 </div>
@@ -78,6 +80,7 @@
                 label="title"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
               <date-picker
                 v-if="header.columnType === 'Date'"
@@ -90,6 +93,7 @@
                 @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               ></date-picker>
 
               <date-picker
@@ -103,6 +107,7 @@
                 @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               ></date-picker>
 
               <b-form-datepicker
@@ -112,6 +117,7 @@
                 @input="filterDate(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
@@ -122,6 +128,7 @@
                 @keydown.enter="filterTime(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
@@ -131,6 +138,7 @@
                 @input="setSearchQ(header.dataField, $event)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
@@ -140,6 +148,7 @@
                 @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
@@ -148,6 +157,7 @@
                 @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
                 @focus="disabledDraggable = true"
                 @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
             </div>
           </b-th>
@@ -400,7 +410,7 @@ export default {
     this.$store.commit('setSelectedTableRows', [])
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'tableRowsAll', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid'])
   },
   methods: {
     getWorkflowData () {
@@ -921,13 +931,14 @@ export default {
       let lookups = ''
       let hasAnyDropdown = false
       this.tableRows.forEach(c => {
-        let control = c.modelControlUtil
+        let row = this.tableRowsAll.find(t => t.dataField === c.dataField)
+        let control = row.modelControlUtil
         if (control != null && control.InputType === 'DropDown') {
           if (control.IsLookupTable) {
             lookups += control.Code + ','
           } else {
             hasAnyDropdown = true
-            let andConditions = this.getAndConditionModel(c.AndConditions)
+            let andConditions = this.getAndConditionModel(row.AndConditions)
             this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.ServiceUrl, val: control.ModelProperty, model: andConditions}).then(() => {
               this.isGridFieldsReady = true
             })
