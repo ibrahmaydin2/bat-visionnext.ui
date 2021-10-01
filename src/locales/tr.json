@@ -2149,8 +2149,8 @@
       "ItemId": "Ürün Kodu",
       "itemName": "Ürün Adı",
       "sameCategoryError": "Aynı Kategori tanımı birden fazla tanımlanamaz.",
-      "LoyaltyCategory": "Sadakat Kategori Tanımları"
-
+      "LoyaltyCategory": "Sadakat Kategori Tanımları",
+      "quotaDateError": "Kota bitiş tarihi, kota başlangıç tarihinden küçük olamaz"
     },
 
     "itemAnalysis": {
@@ -2355,7 +2355,8 @@
       "StartTime": "Başlangıç Zamanı",
       "EndTime": "Bitiş Zamanı",
       "Genexp1": "Açıklama",
-      "Operation": "Operasyon Tipi"
+      "Operation": "Operasyon Tipi",
+      "customer": "Nokta"
     }
   },
   "get": {

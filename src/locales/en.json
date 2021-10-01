@@ -2146,7 +2146,8 @@
       "StartTime": "Başlangıç Zamanı",
       "EndTime": "Bitiş Zamanı",
       "Genexp1": "Açıklama",
-      "Operation": "Operasyon Tipi"
+      "Operation": "Operasyon Tipi",
+      "customer": "Nokta"
     }
   },
   "get": {

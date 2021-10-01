@@ -165,7 +165,7 @@
          :modalAction="modalAction"
          v-if="showSalesReturnInvoiceConvertModal" />
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
-        <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" />
+        <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
         <CreditBudgetBulkApproveModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :recordIds="recordIds" size="xl"/>
   </b-container>
 </template>
@@ -205,11 +205,12 @@ export default {
       showSalesReturnInvoiceConvertModal: false,
       showItemFormulaModal: false,
       showPurchaseReturnInvoiceRmaApproveModal: false,
-      showUpdateCreditBudgetModal: false
+      showUpdateCreditBudgetModal: false,
+      purchaseReturnRmaType: 'Invoice'
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -333,6 +334,14 @@ export default {
         })
         return
       } else if (action.Action === 'PurchaseReturnInvoiceRmaApprove') {
+        this.purchaseReturnRmaType = 'Invoice'
+        this.showPurchaseReturnInvoiceRmaApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseReturnWaybillRmaApprove') {
+        this.purchaseReturnRmaType = 'Waybill'
         this.showPurchaseReturnInvoiceRmaApproveModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')

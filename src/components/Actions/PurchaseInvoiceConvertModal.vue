@@ -15,6 +15,7 @@
       <b-row>
         <b-col>
           <b-table
+            id="convert-list"
             :items="list"
             :fields="fields"
             sticky-header
@@ -22,6 +23,8 @@
             @row-selected="onRowSelected"
             selectable
             :busy="tableBusy"
+            :current-page="currentPage"
+            :per-page="10"
           >
             <template #table-busy>
               <div class="text-center text-danger my-2">
@@ -29,6 +32,12 @@
               </div>
             </template>
           </b-table>
+          <b-pagination
+            :total-rows="list ? list.length : 0"
+            v-model="currentPage"
+            :per-page="10"
+            aria-controls="convert-list"
+          ></b-pagination>
         </b-col>
       </b-row>
     </section>
@@ -142,7 +151,8 @@ export default {
           label: this.$t('index.Convert.grossTotal'),
           sortable: true
         }
-      ]
+      ],
+      currentPage: 1
     }
   },
   mounted () {
@@ -163,9 +173,11 @@ export default {
       this.form = {}
       this.list = []
       let request = {
-        documentNumber: this.documentNumber ? this.documentNumber : '',
-        invoiceNumber: this.invoiceNumber ? this.invoiceNumber : '',
-        selectedBranchId: this.supplier ? this.supplier.RecordId : null
+        andConditionModel: {
+          documentNumber: this.documentNumber ? this.documentNumber : '',
+          invoiceNumber: this.invoiceNumber ? this.invoiceNumber : '',
+          selectedBranchId: this.supplier ? this.supplier.RecordId : null
+        }
       }
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
