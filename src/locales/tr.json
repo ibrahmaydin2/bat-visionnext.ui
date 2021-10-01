@@ -1644,7 +1644,9 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır."
+      "WarehouseError": "Tedarikçinin Müşteri kaydı bulunmamaktadır.",
+      "cancelError": "İptal durumdaki belge onaylanamaz.",
+      "completeError": "Onaylandı durumundaki belge tekrar onaylanamaz."
     },
     "order": {
       "title": "Sipariş Girişi",
