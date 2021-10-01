@@ -847,7 +847,7 @@ export default {
       }
       var me = this
       for (let i = 0; i < visibleRows.length; i++) {
-        let row = visibleRows[i]
+        let row = this.tableRowsAll.find(c => c.dataField === visibleRows[i].dataField)
         if (!row.defaultValue) {
           continue
         }
