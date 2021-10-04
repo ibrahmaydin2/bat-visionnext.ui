@@ -8,6 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
+            <GetFormField v-model="workFlowModel" />
           </header>
         </b-col>
       </b-row>
@@ -70,7 +71,12 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      serviceOperationsItems: detailData.serviceOperationsItems
+      serviceOperationsItems: detailData.serviceOperationsItems,
+      workFlowModel: {
+        ControllerName: 'AssetService',
+        ClassName: 'Service',
+        PageName: 'pg_Service'
+      }
     }
   },
   mounted () {

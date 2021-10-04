@@ -1632,7 +1632,10 @@
       "Active" : "Aktif",
       "Passive" : "Pasif",
       "importExcel": "İçeri Aktar",
-      "uploadExcel": "Excel Yükle"
+      "uploadExcel": "Excel Yükle",
+      "getLastProduct": "Son Listeden Fiyat Getir",
+      "get": "Getir",
+      "getLastProductError": "Fiyat Listesi Kategori Tipi ve Para Birimi zorunludur."
     },
     "RMA": {
       "Item": "Ürün Kodu",

@@ -8,7 +8,7 @@
         <span class="ml-1">{{workFlow.Description1}}</span>
       </b-dropdown-item>
     </b-dropdown-group>
-    <b-modal id="processModal" class="mr-5" refs="processModal" :title="modalTitle" hide-footer @hide="closeModal" no-close-on-backdrop>
+    <b-modal v-if="modalOptions.length > 0" class="processModal" :id="`processModal${id}`" :title="modalTitle" hide-footer @hide="closeModal" no-close-on-backdrop>
       <div class="p-2" v-if="modalOptions.length > 0">
         <v-select :options="modalOptions" @input="selectedType" label="Label" />
       </div>
@@ -18,7 +18,8 @@
             {{$t('insert.cancel')}}
           </b-button>
           <b-button id="submitButton" type="button" size="md" @click="save()" variant="success" >
-            {{$t('insert.confirm')}}
+            <span v-if="isLoading"><b-spinner small></b-spinner></span>
+            <span v-else>{{$t('insert.confirm')}}</span>
           </b-button>
         </div>
       </div>
@@ -48,7 +49,9 @@ export default {
       modalTitle: '',
       modalOptions: [],
       selectedProcess: null,
-      baseLink: this.$route.meta.baseLink
+      baseLink: this.$route.meta.baseLink,
+      id: Math.random().toString(36).substring(2),
+      isLoading: false
     }
   },
   mounted () {
@@ -94,7 +97,9 @@ export default {
             Label: process.ToValue.Label
           })
         })
-        this.$root.$emit('bv::show::modal', 'processModal')
+        setTimeout(() => {
+          this.$root.$emit('bv::show::modal', `processModal${this.id}`)
+        }, 1)
       })
     },
     selectedType (e) {
@@ -115,13 +120,17 @@ export default {
       }
       let request = {
         'WorkflowOperationId': this.selectedProcess, // OperationProcessModel ID'si
-        'InfoText': 'Ahmet Test.',
+        'InfoText': 'WorkFlow',
         'WorkflowId': this.workFlowId, // Workflow ID
         'RecordId': this.recordId // Get ID (İlgili Kaydın ID'si)
 
       }
+      this.isLoading = true
+      this.$store.commit('setDisabledLoading', true)
       this.$api.post(request, 'Workflow', 'Workflow/ProcessWorkflow').then((res) => {
-        if (!res.Iscomleted) {
+        this.isLoading = false
+        this.$store.commit('setDisabledLoading', false)
+        if (!res.IsCompleted) {
           this.$toasted.show(res.Message, {
             type: 'error',
             keepOnHover: true,
@@ -137,18 +146,19 @@ export default {
         setTimeout(() => {
           this.$store.commit('setReloadGrid', true)
         }, 1000)
+        this.closeModal()
       })
     },
     closeModal () {
       this.selectedProcess = null
       this.modalOptions = []
-      this.$root.$emit('bv::hide::modal', 'processModal')
+      this.$root.$emit('bv::hide::modal', `processModal${this.id}`)
     }
   }
 }
 </script>
 <style lang="sass">
-  #processModal .modal-dialog
+  .processModal .modal-dialog
     margin-right: 5rem !important
 
   .bg-orange
