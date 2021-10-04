@@ -53,8 +53,8 @@
                 </NextFormGroup>
               </b-row>
             </b-col>
-            <NextFormGroup item-key="LocationId" :error="$v.form.LocationId" md="4" lg="4">
-              <NextDropdown url="VisionNextCustomer/api/Customer/Search" @input="selectedSearchType('LocationId', $event)" :disabled="insertReadonly.LocationId" :searchable="true" />
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
+              <NextDropdown url="VisionNextCustomer/api/Customer/Search" @input="selectCustomer" :disabled="insertReadonly.CustomerId" :searchable="true" />
             </NextFormGroup>
             <b-col cols="12" md="4" lg="4">
               <b-row>
@@ -129,6 +129,7 @@ export default {
         RequestDate: null,
         RequestTime: null,
         LocationId: null,
+        CustomerId: null,
         EmployeeId: null,
         ResponseDate: null,
         ResponseTime: null,
@@ -219,6 +220,15 @@ export default {
         let filteredArr = values.filter(i => i.RecordId === 5)
         this.serviceState = filteredArr.length > 0 ? filteredArr[0] : null
         this.selectedSearchType('ServiceStateId', this.serviceState)
+      }
+    },
+    selectCustomer (value) {
+      if (value) {
+        this.form.CustomerId = value.RecordId
+        this.form.LocationId = value.DefaultLocationId
+      } else {
+        this.form.CustomerId = null
+        this.form.LocationId = null
       }
     }
   },

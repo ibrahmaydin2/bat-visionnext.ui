@@ -21,7 +21,7 @@ export const detailData = {
       objectKey: 'Location',
       parentProperty: 'RecordId',
       url: 'VisionNextCustomer/api/CustomerLocation/Search',
-      request: JSON.stringify({andConditionModel: { customerIds: ['val'] }}),
+      request: JSON.stringify({andConditionModel: { CustomerIds: ['val'], IsRouteNode: 1 }}),
       label: i18n.t('insert.route.LocationId'),
       required: true,
       visible: true,
