@@ -54,7 +54,7 @@
                     <b-th><span>{{$t('insert.creditBudget.paymentPeriod')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.CustomerGuarantees" :key="i">
+                    <b-tr v-for="(c, i) in customerGuarantees" :key="i">
                       <b-td>{{c.CustomerDesc}}</b-td>
                       <b-td>{{c.CreditLimit}}</b-td>
                       <b-td>{{c.RiskLimit}}</b-td>
@@ -88,7 +88,8 @@ export default {
         ControllerName: '',
         ClassName: 'CreditBudget',
         PageName: 'pg_CreditBudget'
-      }
+      },
+      customerGuarantees: []
     }
   },
   mounted () {
@@ -102,7 +103,9 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/CreditBudget', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/CreditBudget', record: this.$route.params.url}).then(() => {
+        this.customerGuarantees = this.form.CreditBudgetDetails.map(item => item.CustomerGuarantees)
+      })
     }
   }
 }
