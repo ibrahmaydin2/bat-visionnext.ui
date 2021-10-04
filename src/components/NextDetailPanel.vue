@@ -336,7 +336,7 @@ export default {
     editItem () {
       let data = this.selectedItem
       this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
-      this.form = data
+      this.form = {...data}
       this.isUpdated = true
       this.selectedIndex = this.values.indexOf(data)
       this.$set(this.form, 'RecordId', data.RecordId)

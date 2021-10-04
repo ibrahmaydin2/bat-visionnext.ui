@@ -232,7 +232,24 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.CreditBudgetDetails = this.form.CustomerGuarantees
+        this.form.CreditBudgetDetails = this.form.CustomerGuarantees.map((item) => {
+          let creditBudgetDetail = {
+            CreditBudgetId: item.CreditBudgetId,
+            ApprovestateId: item.ApproveStateId,
+            Amount: item.Amount,
+            CustomerId: item.CustomerId,
+            CustomerCreditHistory: item.CustomerCreditHistoryId,
+            PaymentPeriod: item.PaymentPeriod,
+            RecordState: item.RecordId > 0 ? 3 : 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            RecordId: item.RecordId,
+            CustomerGuarantees: item
+          }
+
+          return creditBudgetDetail
+        })
         this.updateData()
       }
     },
@@ -293,7 +310,7 @@ export default {
       }
     },
     editCustomerGuarantee (item) {
-      this.customerGuarantees = item
+      this.customerGuarantees = {...item}
       this.selectedCustomer = null
       this.paymentPeriod = null
       this.customerGuarantees.isUpdated = true
@@ -313,6 +330,13 @@ export default {
     },
     setData () {
       this.form = this.rowData
+      this.form.CustomerGuarantees = this.form.CreditBudgetDetails.map(item => {
+        let customerGuarantees = item.CustomerGuarantees
+        customerGuarantees.RecordId = item.RecordId
+        customerGuarantees.CreditBudgetId = item.CreditBudgetId
+
+        return customerGuarantees
+      })
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
       this.form.LeftAmount = this.form.BudgetAmount > 0
         ? (parseFloat(this.form.BudgetAmount) - (this.form.UsedAmount + this.form.ReservedAmount))
