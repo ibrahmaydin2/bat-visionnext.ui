@@ -213,7 +213,22 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.CreditBudgetDetails = this.form.CustomerGuarantees
+        this.form.CreditBudgetDetails = this.form.CustomerGuarantees.map((item) => {
+          let creditBudgetDetail = {
+            ApprovestateId: item.ApproveStateId,
+            Amount: item.Amount,
+            CustomerId: item.CustomerId,
+            CustomerCreditHistory: item.CustomerCreditHistoryId,
+            PaymentPeriod: item.PaymentPeriod,
+            RecordState: 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            CustomerGuarantees: item
+          }
+
+          return creditBudgetDetail
+        })
         this.createData()
       }
     },

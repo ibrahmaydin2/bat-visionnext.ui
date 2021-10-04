@@ -37,16 +37,19 @@
       <b-tabs>
         <b-tab :title="$t('insert.PriceList.PriceList')">
           <b-row>
-            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId" md="4" lg="4">
               <NextDropdown v-model="priceListCategory" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" label="Label" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="4" lg="4">
               <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" url="VisionNextSystem/api/SysCurrency/Search" label="Description1" @input="selectedSearchType('CurrencyId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+            <NextFormGroup :title="$t('insert.PriceList.getLastProduct')" md="4" lg="4">
+              <b-button variant="success" size="sm" @click="getLists('button')">{{$t('insert.PriceList.get')}}</b-button>
+            </NextFormGroup>
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate" md="4" lg="4">
               <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
+            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate" md="4" lg="4">
               <NextDatePicker v-model="form.EndDate" :disabled="insertReadonly.EndDate" />
             </NextFormGroup>
           </b-row>
@@ -120,12 +123,12 @@ export default {
       currency: null,
       fields: [
         {
-          key: 'Item.Code',
+          key: 'Code',
           label: this.$t('insert.PriceList.ProductCode'),
           thClass: 'list-textbox-width'
         },
         {
-          key: 'Item.Label',
+          key: 'Description1',
           label: this.$t('insert.PriceList.ProductName'),
           thClass: 'list-textbox-width'
         },
@@ -153,8 +156,9 @@ export default {
     }
   },
   mounted () {
-    this.getLists()
-    this.getData()
+    this.getData().then(() => {
+      this.getLists()
+    })
   },
   methods: {
     save () {
@@ -167,31 +171,44 @@ export default {
         })
         this.tabValidation()
       } else {
-        if (this.allUserProducts.filter(p => !p.SalesPrice || p.SalesPrice === '' || !p.ConsumerPrice || p.ConsumerPrice === '').length > 0) {
-          this.$toasted.show(this.$t('insert.PriceList.PricesRequired'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-
         this.form.PriceListItems = this.allUserProducts.map((item) => {
-          item.RecordState = 3
-          item.IsVatIncluded = item.IsVatIncluded ? item.IsVatIncluded : 0
-          item.UseConsumerPrice = item.UseConsumerPrice ? item.UseConsumerPrice : 0
-          item.ConsumerPrice = parseFloat(item.ConsumerPrice)
-          item.SalesPrice = parseFloat(item.SalesPrice)
-          return item
+          var newItem = {
+            Deleted: 0,
+            System: 0,
+            RecordState: item.RecordId > 0 ? 3 : 2,
+            RecordId: item.RecordId,
+            StatusId: 1,
+            ItemId: item.ItemRecordId,
+            IsVatIncluded: item.IsVatIncluded ? item.IsVatIncluded : 0,
+            UseConsumerPrice: item.UseConsumerPrice ? item.UseConsumerPrice : 0,
+            SalesPrice: item.SalesPrice,
+            ConsumerPrice: item.ConsumerPrice
+          }
+          return newItem
         })
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
         this.updateData()
       }
     },
-    getLists () {
-      this.$api.postByUrl({}, 'VisionNextItem/api/Item/Search').then(response => {
-        if (response.ListModel) {
-          this.allProducts = response.ListModel.BaseModels
+    getLists (type) {
+      if (type === 'button' && (!this.form.CurrencyId || !this.form.PriceListCategoryId)) {
+        this.$toasted.show(this.$t('insert.PriceList.getLastProductError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      let request = {
+        Model: {
+          CurrencyId: this.form.CurrencyId,
+          PriceListCategoryId: this.form.PriceListCategoryId
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextItem/api/Item/ItemForNewPriceList').then(response => {
+        if (response.Model) {
+          this.allProducts = response.Model
+          this.mergeLists(this.allProducts)
         }
       })
     },
@@ -202,15 +219,15 @@ export default {
         this.products = this.allUserProducts.filter(p => p.Description1 ? p.Description1.toLocaleLowerCase().includes(value.toLocaleLowerCase()) : false)
       }
     },
-    mergeLists (allProducts) {
-      if (!allProducts || allProducts.length === 0 || !this.userProducts || this.userProducts.length === 0 || !this.allUserProducts || this.allUserProducts.length > 0) {
-        return
-      }
-      this.allUserProducts = this.userProducts.map((product) => {
-        var selectedProduct = this.allProducts.find(p => p.RecordId === product.ItemId)
+    mergeLists () {
+      this.allUserProducts = this.allProducts.map((product) => {
+        var selectedProduct = this.userProducts.find(p => p.ItemId === product.ItemRecordId)
         if (selectedProduct) {
-          product.Description1 = selectedProduct.Description1
-          product.Code = selectedProduct.Code
+          product.SalesPrice = selectedProduct.SalesPrice
+          product.ConsumerPrice = selectedProduct.ConsumerPrice
+          product.UseConsumerPrice = selectedProduct.UseConsumerPrice
+          product.IsVatIncluded = selectedProduct.IsVatIncluded
+          product.RecordId = selectedProduct.RecordId
         }
         return product
       })
@@ -236,12 +253,6 @@ export default {
     }
   },
   watch: {
-    allProducts (value) {
-      if (value) {
-        var filteredValue = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)
-        this.mergeLists(filteredValue)
-      }
-    },
     rowData (e) {
       if (e) {
         this.form.Deleted = e.Deleted
@@ -257,14 +268,8 @@ export default {
         this.form.Code = e.Code
         this.form.Description1 = e.Description1
         this.priceListCategory = e.PriceListCategory
-        this.currency = e.Currency
+        this.currency = this.convertLookupValueToSearchValue(e.Currency)
         this.userProducts = e.PriceListItems
-        if (this.allProducts) {
-          this.mergeLists(this.allProducts.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8))
-        }
-        if (this.currencies) {
-          this.currency = this.currencies.find(c => c.RecordId === e.CurrencyId)
-        }
       }
     },
     currencies (value) {

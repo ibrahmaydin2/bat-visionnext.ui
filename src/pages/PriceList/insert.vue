@@ -37,16 +37,19 @@
       <b-tabs>
         <b-tab :title="$t('insert.PriceList.PriceList')">
           <b-row>
-            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId" md="4" lg="4">
               <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" :get-lookup="true" label="Label" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="4" lg="4">
               <NextDropdown :disabled="insertReadonly.CurrencyId" url="VisionNextSystem/api/SysCurrency/Search" label="Description1" @input="selectedSearchType('CurrencyId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+            <NextFormGroup :title="$t('insert.PriceList.getLastProduct')" md="4" lg="4">
+              <b-button variant="success" size="sm" @click="getLists('button')">{{$t('insert.PriceList.get')}}</b-button>
+            </NextFormGroup>
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate" md="4" lg="4">
               <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
+            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate" md="4" lg="4">
               <NextDatePicker v-model="form.EndDate" :disabled="insertReadonly.EndDate" />
             </NextFormGroup>
           </b-row>
@@ -145,8 +148,7 @@ export default {
           label: this.$t('insert.PriceList.ConsumerPrice'),
           thClass: 'list-textbox-width'
         }
-      ],
-      allProducts: []
+      ]
     }
   },
   mounted () {
@@ -170,7 +172,7 @@ export default {
             System: 0,
             RecordState: 2,
             StatusId: 1,
-            ItemId: item.RecordId,
+            ItemId: item.ItemRecordId,
             IsVatIncluded: item.IsVatIncluded ? item.IsVatIncluded : 0,
             UseConsumerPrice: item.UseConsumerPrice ? item.UseConsumerPrice : 0,
             SalesPrice: item.SalesPrice,
@@ -182,15 +184,26 @@ export default {
         this.createData()
       }
     },
-    getLists () {
-      this.$api.postByUrl({}, 'VisionNextItem/api/Item/ItemForNewPriceList').then(response => {
-        if (response.ListModel) {
-          this.allProducts = response.ListModel.BaseModels.map(item => {
-            item.SalesPrice = 0
-            item.ConsumerPrice = 0
-
-            return item
-          })
+    getLists (type) {
+      if (type === 'button' && (!this.form.CurrencyId || !this.form.PriceListCategoryId)) {
+        this.$toasted.show(this.$t('insert.PriceList.getLastProductError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      let request = {
+        Model: {
+          CurrencyId: this.form.CurrencyId,
+          PriceListCategoryId: this.form.PriceListCategoryId
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextItem/api/Item/ItemForNewPriceList').then(response => {
+        if (response.Model) {
+          let products = response.Model
+          this.allUserProducts = products
+          this.products = products
         }
       })
     },
@@ -218,12 +231,6 @@ export default {
         duration: '3000'
       })
       this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
-    }
-  },
-  watch: {
-    allProducts (value) {
-      this.allUserProducts = value.filter(v => v.CardTypeId >= 1 && v.CardTypeId <= 8)
-      this.products = this.allUserProducts
     }
   }
 }

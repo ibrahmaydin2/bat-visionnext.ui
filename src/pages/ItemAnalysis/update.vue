@@ -174,12 +174,14 @@ export default {
         this.updateData()
       }
     },
-    beforeValidDatesAdd (item, list) {
+    beforeValidDatesAdd (item, list, isUpdated) {
       let filteredList = list.filter(l =>
-        (l.StartDate <= item.StartDate && item.StartDate <= l.EndDate) ||
+        l.RecordState !== 4 &&
+        !isUpdated &&
+        ((l.StartDate <= item.StartDate && item.StartDate <= l.EndDate) ||
         (l.StartDate <= item.EndDate && item.EndDate <= l.EndDate) ||
         (item.StartDate <= l.StartDate && l.StartDate <= item.EndDate) ||
-        (item.StartDate <= l.EndDate && l.EndDate <= item.EndDate))
+        (item.StartDate <= l.EndDate && l.EndDate <= item.EndDate)))
 
       if (filteredList && filteredList.length > 0) {
         this.$toasted.show(this.$t('insert.itemAnalysis.validDatesError'), {

@@ -165,7 +165,7 @@
       </b-thead>
       <b-tbody>
         <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''">
-          <b-td v-for="h in head" :key="h.dataField">
+          <b-td v-for="h in head" :key="h.dataField+h.columnType">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
               <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
             </span>
@@ -637,7 +637,6 @@ export default {
       let model = {
         Value: this.dateConvertToISo(date)
       }
-      this.searchOnTable()
       this.AndConditionalModel[e] = model
       this.searchOnTable()
     },
