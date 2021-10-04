@@ -37,7 +37,7 @@
             <NextDropdown
               v-model="CategoryType"
               :disabled="insertReadonly.CategoryTypeId"
-              @input="selectedSearchType('CategoryTypeId', $event)"
+              @input="selectCategoryType"
               :options="types"
               :source="(types ? types.filter(c => c.Code == 'DEG' || c.Code == 'ARA' || c.Code == 'OTO' ): [])"
               label="Description1"/>
@@ -76,7 +76,7 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.loyaltyCategory.salesTargetQuota')" v-if="CalcType && CalcType.Code === 'SH'">
-          <NextDetailPanel v-model="form.LoyaltyCatQuotas" :items="loyaltyCatQuotasItems" />
+          <NextDetailPanel v-model="form.LoyaltyCatQuotas" :items="loyaltyCatQuotasItems" :before-add="beforeAddLoyaltyCatQuota" />
         </b-tab>
         <b-tab lazy :title="$t('insert.loyaltyCategory.analysisResult')"  @click="setDatePlanType" v-if="CalcType && CalcType.Code === 'ANS' && FieldAnalysis && FieldAnalysis.Code !== ''">
           <b-row>
@@ -356,7 +356,7 @@ export default {
         QuestionIdDesc: this.loyaltyQuestion.question.Description1,
         QuestionIdCode: this.loyaltyQuestion.question.Code,
         AnswerId: this.loyaltyQuestion.multipleAnswer ? this.loyaltyQuestion.multipleAnswer.RecordId : null,
-        AnswerIdDesc: this.loyaltyQuestion.multipleAnswer ? this.loyaltyQuestion.multipleAnswer.Description2 : null,
+        AnswerIdDesc: this.loyaltyQuestion.multipleAnswer ? this.loyaltyQuestion.multipleAnswer.Description1 : null,
         AnswerStart: this.loyaltyQuestion.AnswerStart,
         AnswerEnd: this.loyaltyQuestion.AnswerEnd
       })
@@ -453,18 +453,50 @@ export default {
         this.form.ColumnName = null
       }
     },
+    selectCategoryType (value) {
+      if (value) {
+        this.form.CategoryTypeId = value.RecordId
+        if (value.Code !== 'OTO') {
+          this.CalcType = null
+          this.CalcTypeId = null
+          this.FieldAnalysis = null
+          this.form.FieldAnalysisId = null
+          this.form.LoyaltyPoint = null
+        }
+      } else {
+        this.form.CategoryTypeId = null
+      }
+    },
     selectCalcType (value) {
       if (value) {
         this.form.CalcTypeId = value.DecimalValue
+        if (value.Code !== 'ANS') {
+          this.FieldAnalysis = null
+          this.form.FieldAnalysisId = null
+        }
+        if (value.Code === 'AKS') {
+          this.form.LoyaltyPoint = null
+        }
         if (value.Code !== 'SA' && value.Code !== 'ANS') {
           this.form.ByFrequency = null
         } else {
-          this.form.ByFrequency = this.form.ByFrequency.DecimalValue
+          this.form.ByFrequency = 1
         }
       } else {
         this.form.CalcTypeId = null
         this.form.ByFrequency = 0
       }
+    },
+    beforeAddLoyaltyCatQuota (form) {
+      if (form.BeginDate > form.EndDate) {
+        this.$toasted.show(this.$t('insert.loyaltyCategory.quotaDateError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      return true
     }
   },
   validations () {

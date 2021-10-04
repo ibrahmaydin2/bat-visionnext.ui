@@ -29,7 +29,7 @@
               <div v-html="getFormatDataByType(rowData.ServiceState, 'object', 'insert.assetService.serviceState')"></div>
               <div v-html="getFormatDataByType(rowData.RequestDate, 'date', 'insert.assetService.requestDate')"></div>
               <div v-html="getFormatDataByType(rowData.RequestTime, 'text', 'insert.assetService.requestTime')"></div>
-              <div v-html="getFormatDataByType(rowData.Location, 'object', 'insert.assetService.location')"></div>
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.assetService.customer')"></div>
               <div v-html="getFormatDataByType(rowData.Employee, 'object', 'insert.assetService.employee')"></div>
               <div v-html="getFormatDataByType(rowData.ResponseDate, 'date', 'insert.assetService.responseDate')"></div>
               <div v-html="getFormatDataByType(rowData.ResponseTime, 'text', 'insert.assetService.responseTime')"></div>
