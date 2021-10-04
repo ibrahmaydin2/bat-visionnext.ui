@@ -29,28 +29,27 @@
         <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid'>
-              </v-select>
+              <NextDropdown v-model="customer" :source="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid || disabledFields'></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
+              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false" :disabled="disabledFields">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
+              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false" :disabled="disabledFields">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" :disabled="disabledFields" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaOrderDate" :error="$v.form.RmaOrderDate">
-              <b-form-datepicker v-model="form.RmaOrderDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="form.RmaOrderDate" :placeholder="$t('insert.chooseDate')" :disabled="disabledFields"/>
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
               <v-select
@@ -58,13 +57,14 @@
                 v-model="rmaType"
                 @input="selectedType('RmaTypeId', $event)"
                 label="Label"
+                :disabled="disabledFields"
               />
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
-              <b-form-datepicker v-model="form.PriceDate" :placeholder="$t('insert.chooseDate')"/>
+              <b-form-datepicker v-model="form.PriceDate" :placeholder="$t('insert.chooseDate')" :disabled="disabledFields"/>
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select v-model="rmaReason" :options="rmaReasons" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
+              <v-select v-model="rmaReason" :options="rmaReasons" @input="selectedSearchType('RmaReasonId', $event)" label="Description1" :disabled="disabledFields">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -76,13 +76,14 @@
                 v-model="rmaStatus"
                 @input="selectedType('RmaStatusId', $event)"
                 label="Label"
+                :disabled="disabledFields"
               />
             </NextFormGroup>
           </b-row>
           <hr />
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
+              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false" :disabled="disabledFields">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -95,11 +96,11 @@
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="text" v-model="rmaOrderLine.Quantity"/>
+              <b-form-input type="text" v-model="rmaOrderLine.Quantity" :disabled="disabledFields"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                <b-button @click="addItems()" class="mt-4" variant="success" size="sm" :disabled="disabledFields"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
@@ -110,14 +111,14 @@
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
-                  <b-th><span>{{$t('list.operations')}}</span></b-th>
+                  <b-th v-if="!disabledFields"><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaOrderLines ? rmaOrderLines.filter(i => i.RecordState !== 4) : []" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td v-if="!disabledFields" class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -183,7 +184,9 @@ export default {
       rmaStatus: null,
       rmaType: null,
       rmaReason: null,
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      disabledFields: false,
+      firstSet: true
     }
   },
   computed: {
@@ -377,6 +380,10 @@ export default {
     },
     setModel () {
       let e = this.rowData
+      if (e.RmaStatus && (e.RmaStatus.Code === 'TMM' || e.RmaStatus.Code === 'IPT')) {
+        this.disabledFields = true
+        document.getElementById('submitButton').disabled = true
+      }
       e.RmaOrderLine.map(item => {
         if (item.Item) {
           this.rmaOrderLines.push({
@@ -409,17 +416,16 @@ export default {
         return a.LineNumber - b.LineNumber
       })
       this.form = e
-      this.customer = e.Customer
       this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
       this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
       this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
       this.rmaStatus = e.RmaStatus
       this.rmaType = e.RmaType
+      this.customer = e.Customer
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules,
       rmaOrderLine: {
@@ -438,6 +444,15 @@ export default {
     warehouse (e) {
       this.customerValid = false
       this.customers = []
+      if (this.firstSet) {
+        if (this.rowData && this.rowData.Customer) {
+          this.customer = this.rowData.Customer
+          this.firstSet = false
+        }
+      } else {
+        this.customer = null
+        this.form.CustomerId = null
+      }
       this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
           let length = res.Model.WarehouseSuppliers.length
@@ -451,8 +466,6 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
-          this.customer = null
-          this.form.CustomerId = null
         }
       })
     }

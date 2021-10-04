@@ -119,6 +119,10 @@ export default {
     modalItem: {
       type: Object,
       default: () => {}
+    },
+    type: {
+      type: String,
+      default: 'Invoice'
     }
   },
   data () {
@@ -248,7 +252,7 @@ export default {
           approveNumber: this.approveNumber
         }
       }
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnInvoice/ReceiveRma').then((res) => {
+      this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRma`).then((res) => {
         this.tableBusy = false
         if (res.IsCompleted) {
           this.invoiceLines = res.ListModel.BaseModels
@@ -267,9 +271,9 @@ export default {
       let request = {
         'recordId': item[0].RecordId
       }
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnInvoice/ReceiveRmaDetail').then((res) => {
+      this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRmaDetail`).then((res) => {
         if (res.IsCompleted) {
-          this.$api.postByUrl({}, 'VisionNextInvoice/api/PurchaseReturnInvoice/GetCode').then((res) => {
+          this.$api.postByUrl({}, `VisionNextInvoice/api/PurchaseReturn${this.type}/GetCode`).then((res) => {
             this.form.InvoiceNumber = res.Model.Code
           })
           this.invoiceTypes = this.getInvoiceClassTypes()
@@ -317,7 +321,7 @@ export default {
       let request = {
         model: this.rmaDetail
       }
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseReturnWaybill/ReceiveRmaAprrove').then((res) => {
+      this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRmaAprrove`).then((res) => {
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',

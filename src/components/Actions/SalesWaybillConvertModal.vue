@@ -9,7 +9,7 @@
           <b-form-input type="text" v-model="warehouse" readonly />
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.InvoiceKindId" :required="false" md="4" lg="4">
-          <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('InvoiceKindId', $event)"></v-select>
+          <v-select v-model="invoiceType" :options="invoiceTypes" label="Label" @input="selectedType('InvoiceKindId', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
           <b-form-input type="text" v-model="form.DocumentNumber" />
@@ -54,7 +54,8 @@
           size="sm"
           @click="submitModal()"
         >
-          {{$t('index.approve')}}
+        <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
+        <span v-else>{{$t('index.approve')}}</span>
         </b-button>
       </div>
     </template>
@@ -99,6 +100,7 @@ export default {
       tableBusy: true,
       getConvertData: null,
       routeName: this.$route.name,
+      isLoading: false,
       fields: [
         {
           key: 'ItemCode',
@@ -147,11 +149,11 @@ export default {
     })
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       this.tableBusy = true
+      this.isLoading = false
       this.orderLines = []
       this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
       this.form.DocumentNumber = this.modalItem.DocumentNumber
       this.getUserInfo()
-      this.getCustomer()
       this.getCode()
       this.getConvert()
     })
@@ -174,13 +176,6 @@ export default {
         })
       }
     },
-    getCustomer () {
-      this.$api.postByUrl({RecordId: this.modalItem.CustomerId}, 'VisionNextCustomer/api/Customer/Get').then((res) => {
-        if (res.Model) {
-          this.invoiceTypes = this.getOrderDocumentTypes(res.Model.SalesDocumentTypeId, 'Waybill')
-        }
-      })
-    },
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextInvoice/api/InvoiceBase/GetCode`})
     },
@@ -189,24 +184,23 @@ export default {
         if (response.IsCompleted === true) {
           this.orderLines = response.invoiceConvertModel.InvoiceLines
           this.getConvertData = response.invoiceConvertModel
+          this.invoiceTypes = response.invoiceConvertModel.InvoiceKinds
         } else {
           this.$toasted.show(this.$t(response.Message), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
           })
-          this.close()
+          this.closeModal()
         }
         this.tableBusy = false
       })
     },
     selectedType (label, model) {
       if (model) {
-        this.invoiceType = model.label
-        this.form[label] = model.id
+        this.form[label] = model.DecimalValue
       } else {
         this.form[label] = null
-        this.invoiceType = null
       }
     },
     selectedSearchType (label, model) {
@@ -219,9 +213,6 @@ export default {
       }
     },
     closeModal () {
-      this.close()
-    },
-    close () {
       this.$root.$emit('bv::hide::modal', 'salesWaybillConvertModal')
     },
     onEmployeeSearch (search, loading) {
@@ -260,7 +251,11 @@ export default {
         'recordId': this.modalItem.RecordId,
         'invoiceConvertModel': this.getConvertData
       }
+      this.isLoading = true
+      this.$store.commit('setDisabledLoading', true)
       this.$api.postByUrl(request, `VisionNextInvoice/api/${this.routeName}/ConvertToInvoice`).then((res) => {
+        this.isLoading = false
+        this.$store.commit('setDisabledLoading', false)
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
@@ -270,6 +265,7 @@ export default {
           setTimeout(() => {
             this.$store.commit('setReloadGrid', true)
           }, 1000)
+          this.closeModal()
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',

@@ -77,7 +77,8 @@ let authHeader = {
   headers: {
     'key': localStorage.getItem('Key'),
     'hash': process.env.HASH,
-    'LanguageId': localStorage.getItem('LanguageId')
+    'LanguageId': localStorage.getItem('LanguageId'),
+    'VersionNo': process.env.VUE_APP_VESION_NO
   }
 }
 

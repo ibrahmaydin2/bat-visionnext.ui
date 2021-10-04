@@ -370,7 +370,8 @@ export default {
     warehouse (e) {
       this.customerValid = false
       this.customers = []
-      this.customer = {}
+      this.customer = null
+      this.form.CustomerId = null
       this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
           let length = res.Model.WarehouseSuppliers.length
@@ -384,8 +385,6 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
-          this.customer = null
-          this.form.CustomerId = null
         }
       })
     }

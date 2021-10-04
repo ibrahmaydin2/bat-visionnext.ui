@@ -110,6 +110,26 @@ export default {
   },
   methods: {
     showModal (action, row) {
+      if (action && action.ActionUrl === 'ApproveRmaOrder') {
+        if (row && row.RmaStatus) {
+          if (row.RmaStatus.Code === 'TMM') {
+            this.$toasted.show(this.$t('insert.RmaOrder.completeError'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          if (row.RmaStatus.Code === 'IPT') {
+            this.$toasted.show(this.$t('insert.RmaOrder.cancelError'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+        }
+      }
       if (row && typeof row.Canceled !== 'undefined' && row.Canceled) {
         this.$toasted.show(this.$t('index.errorCanceled'), {
           type: 'error',

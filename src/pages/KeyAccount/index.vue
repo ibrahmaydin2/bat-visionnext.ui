@@ -6,7 +6,7 @@ export default {
   data () {
     return {
       model: {
-        recordTypeIds: [3, 4]
+        recordTypeIds: [3]
       },
       workFlowModel: {
         ControllerName: 'Customer',
