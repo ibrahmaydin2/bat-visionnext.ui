@@ -180,7 +180,7 @@ export default {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextInvoice/api/InvoiceBase/GetCode`})
     },
     getConvert () {
-      this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, RecordId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, `VisionNextInvoice/api/${this.routeName}/GetConvertToInvoice`).then((response) => {
+      this.$api.postByUrl({invoiceNumber: this.modalItem.Code, RecordId: this.modalItem.RecordId, WarehouseId: this.modalItem.WarehouseId}, `VisionNextInvoice/api/${this.routeName}/GetConvertToInvoice`).then((response) => {
         if (response.IsCompleted === true) {
           this.orderLines = response.invoiceConvertModel.InvoiceLines
           this.getConvertData = response.invoiceConvertModel
