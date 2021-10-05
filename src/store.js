@@ -295,18 +295,29 @@ export const store = new Vuex.Store({
   },
   actions: {
     // sistem gereksinimleri
-    login ({ commit }, authData) {
+    async login ({ commit }, authData) {
       localStorage.clear()
       document.getElementById('loginButton').disabled = true
       document.getElementById('loginLoaderText').style.display = 'none'
       document.getElementById('loginLoader').style.display = 'block'
       commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
-      return axios.post('VisionNextAuthentication/api/Authentication/Login', {
+      let browserInfo = await this.dispatch('getBrowserInfo')
+      let os = await this.dispatch('getOSInfo')
+
+      let request = {
         SessionId: authData.SessionId,
         UserName: authData.UserName,
         Password: authData.Password,
-        InstanceHash: process.env.HASH
-      }, authHeader)
+        InstanceHash: process.env.HASH,
+        Info: {
+          Browser: browserInfo.name,
+          BrowserVersion: browserInfo.version,
+          UserHost: process.env.BASE_URL,
+          OperatingSystem: os
+        }
+      }
+
+      return axios.post('VisionNextAuthentication/api/Authentication/Login', request, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('loginButton').disabled = false
@@ -1403,6 +1414,77 @@ export const store = new Vuex.Store({
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
+    },
+    getBrowserInfo () {
+      var nAgt = navigator.userAgent
+      var browserName = navigator.appName
+      var fullVersion = '' + parseFloat(navigator.appVersion)
+      var nameOffset, verOffset, ix
+
+      // In Opera 15+, the true version is after "OPR/"
+      if ((verOffset = nAgt.indexOf('OPR/')) !== -1) {
+        browserName = 'Opera'
+        fullVersion = nAgt.substring(verOffset + 4)
+      } else if ((verOffset = nAgt.indexOf('Opera')) !== -1) { // In older Opera, the true version is after "Opera" or after "Version"
+        browserName = 'Opera'
+        fullVersion = nAgt.substring(verOffset + 6)
+        if ((verOffset = nAgt.indexOf('Version')) !== -1) {
+          fullVersion = nAgt.substring(verOffset + 8)
+        }
+      } else if ((verOffset = nAgt.indexOf('MSIE')) !== -1) { // In MSIE, the true version is after "MSIE" in userAgent
+        browserName = 'Microsoft Internet Explorer'
+        fullVersion = nAgt.substring(verOffset + 5)
+      } else if ((verOffset = nAgt.indexOf('Chrome')) !== -1) { // In Chrome, the true version is after "Chrome"
+        browserName = 'Chrome'
+        fullVersion = nAgt.substring(verOffset + 7)
+      } else if ((verOffset = nAgt.indexOf('Safari')) !== -1) { // In Safari, the true version is after "Safari" or after "Version"
+        browserName = 'Safari'
+        fullVersion = nAgt.substring(verOffset + 7)
+        if ((verOffset = nAgt.indexOf('Version')) !== -1) {
+          fullVersion = nAgt.substring(verOffset + 8)
+        }
+      } else if ((verOffset = nAgt.indexOf('Firefox')) !== -1) { // In Firefox, the true version is after "Firefox"
+        browserName = 'Firefox'
+        fullVersion = nAgt.substring(verOffset + 8)
+      } else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) < (verOffset = nAgt.lastIndexOf('/'))) { // In most other browsers, "name/version" is at the end of userAgent
+        browserName = nAgt.substring(nameOffset, verOffset)
+        fullVersion = nAgt.substring(verOffset + 1)
+        if (browserName.toLowerCase() === browserName.toUpperCase()) {
+          browserName = navigator.appName
+        }
+      }
+      if ((ix = fullVersion.indexOf(';')) !== -1) { // trim the fullVersion string at semicolon/space if present
+        fullVersion = fullVersion.substring(0, ix)
+      }
+      if ((ix = fullVersion.indexOf(' ')) !== -1) {
+        fullVersion = fullVersion.substring(0, ix)
+      }
+
+      let majorVersion = parseInt('' + fullVersion, 10)
+      if (isNaN(majorVersion)) {
+        fullVersion = '' + parseFloat(navigator.appVersion)
+      }
+
+      return {
+        name: browserName,
+        version: fullVersion
+      }
+    },
+    getOSInfo () {
+      let list = [
+        { subString: 'Win', identity: 'Windows' },
+        { subString: 'Mac', identity: 'macOS' },
+        { subString: 'iPhone', identity: 'iOS' },
+        { subString: 'iPad', identity: 'iOS' },
+        { subString: 'iPod', identity: 'iOS' },
+        { subString: 'Android', identity: 'Android' },
+        { subString: 'Linux', identity: 'Linux' }
+      ]
+
+      let platform = navigator.platform
+      let filteredList = list.filter(l => platform.includes(l.subString))
+
+      return filteredList.length > 0 ? filteredList[0].identity : '-'
     }
   },
   mutations: {
