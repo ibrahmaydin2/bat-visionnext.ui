@@ -36,7 +36,8 @@
                   url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                   :searchable="true" :custom-option="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
-                  :is-customer="true"/>
+                  :is-customer="true"
+                  :dynamic-and-condition="{SalesDocumentTypeIds: [45, 46]}"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
                 <NextDropdown
@@ -620,12 +621,12 @@ export default {
         warehouseId: this.form.WarehouseId,
         priceListId: this.form.PriceListId
       }
-      this.$api.postByUrl(request, 'VisionNextOrder/api/PurchaseOrder/GetLastOrderProducts').then((response) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/PurchaseInvoice/GetLastOrderProducts').then((response) => {
         if (response && response.length > 0) {
           let count = 0
-          this.form.OrderLines = []
+          this.form.InvoiceLines = []
           response.map(product => {
-            this.form.OrderLines.push({
+            this.form.InvoiceLines.push({
               Description1: product.ItemDescription,
               Deleted: 0,
               System: 0,
@@ -660,7 +661,7 @@ export default {
           })
           this.calculateTotalPrices()
         } else {
-          this.$toasted.show(this.$t('insert.order.noLastOrderProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
+          this.$toasted.show(this.$t('insert.order.noLastInvoiceProducts'), { type: 'error', keepOnHover: true, duration: '3000' })
         }
       })
     }
