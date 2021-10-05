@@ -36,7 +36,8 @@
                   url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                   :searchable="true" :custom-option="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
-                  :is-customer="true"/>
+                  :is-customer="true"
+                  :dynamic-and-condition="{SalesDocumentTypeIds: [45, 46]}"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
                 <NextDropdown

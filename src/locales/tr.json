@@ -322,8 +322,8 @@
     "LoyaltyExpense": "Sadakat Puan Harcama",
     "LoyaltyExpenseInsert": "Sadakat Puan Harcama Oluştur",
     "LoyaltyExpenseGet": "Sadakat Puan Harcama Görüntüle",
-    "LoyaltyConsumption": "Müşteri Güncel Puanları",
-    "LoyaltyConsumptionGet": "Müşteri Güncel Puanları Görüntüle",
+    "LoyaltySummary": "Müşteri Güncel Puanları",
+    "LoyaltySummaryGet": "Müşteri Güncel Puanları Görüntüle",
     "PotentialCustomer": "Potansiyel Müşteri",
     "PotentialCustomerGet": "Potansiyel Müşteri Görüntüle",
     "PotentialCustomerUpdate": "Potansiyel Müşteri Onayla",
@@ -2470,7 +2470,7 @@
       "RepresentativeId": "Personel",
       "SpentPoint": "Harcanan Puan"
     },
-    "LoyaltyConsumption": {
+    "LoyaltySummary": {
       "title": "Müşteri Güncel Puanları",
       "StatusId": "Durum",
       "Description": "Açıklama",
@@ -2481,7 +2481,7 @@
       "ConsumptionScore": "Güncel Puan",
       "TransactionDate": "İşlem Tarihi",
       "RepresentativeId": "Personel",
-      "ToplamKazanılanPuan": "Toplam Kazanılan Puan",
+      "ToplamKazanilanPuan": "Toplam Kazanılan Puan",
       "ToplamHarcananPuan": "Toplam Harcanan Puan"
     },
     "Warehouse": {

@@ -163,7 +163,7 @@
           <NextDetailPanel v-model="form.DiscountGivens" :items="discountGivenItems" :main-form="form" :show-edit="false" :before-add="beforeAddDiscountGivens"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountCustomers')" v-if="customerTabValid" @click="DiscountCustomersValid()">
-          <NextDetailPanel v-model="form.DiscountCustomers" :items="discountCustomerItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+          <NextDetailPanel v-model="form.DiscountCustomers" :items="getDiscountCustomerItems()" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountExcludedCustomers')">
           <NextDetailPanel v-model="form.DiscountExcludedCustomers" :items="discountExcludedCustomerItems" :main-form="form" :show-edit="false"></NextDetailPanel>
@@ -172,7 +172,7 @@
           <NextDetailPanel v-model="discountDetailsCustomerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.branchs')" v-if="branchTabValid">
-          <NextDetailPanel v-model="discountDetailsBranchs" :items="discountDetailsBranchItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+          <NextDetailPanel v-model="form.discountDetailsBranchs" :items="discountDetailsBranchItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.routes')" v-if="routeTabValid">
           <NextDetailPanel v-model="discountDetailsRoutes" :items="discountDetailsRouteItems" :main-form="form" :show-edit="false"></NextDetailPanel>
@@ -236,10 +236,9 @@ export default {
         DiscountCustomers: [],
         DiscountExcludedCustomers: [],
         DiscountDetails: [],
-        DiscountCustomerSqls: []
+        discountDetailsBranchs: []
       },
       discountDetailsCustomerCriterias: [],
-      discountDetailsBranchs: [],
       discountDetailsRoutes: [],
       discountDetailsPaymentTypes: [],
       discountCustomerSqls: [],
@@ -269,62 +268,12 @@ export default {
       tciBreak1: null,
       discountTakenItems: detailData.discountTakenItems,
       discountGivenItems: detailData.discountGivenItems,
-      discountCustomerItems: detailData.discountCustomerItems,
       discountExcludedCustomerItems: detailData.discountExcludedCustomerItems,
       discountDetailsCustomerCriteriaItems: detailData.discountDetailsCustomerCriteriaItems,
       discountDetailsRouteItems: detailData.discountDetailsRouteItems,
       discountDetailsPaymentTypeItems: detailData.discountDetailsPaymentTypeItems,
       discountCustomerSqlItems: detailData.discountCustomerSqlItems,
-      discountDetailsBranchItems: [
-        {
-          type: 'Autocomplete',
-          modelProperty: 'ColumnValue',
-          objectKey: 'ColumnNameDesc',
-          labelProperty: 'Code',
-          customOption: true,
-          orConditionFields: 'Code,Description1',
-          url: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
-          dynamicAndCondition: {
-            BranchIds: this.discountDetailsBranchs.map(a => a.ColumnValue)
-          },
-          label: this.$t('insert.discount.branchCode'),
-          required: true,
-          disabled (form, mainForm) {
-            return form.BranchCriteriaId === null || this.discountDetailsBranchs.length === 0
-          },
-          visible: true,
-          isUnique: true,
-          id: 1
-        },
-        {
-          type: 'Label',
-          inputType: 'text',
-          modelProperty: 'BranchName',
-          objectKey: 'ColumnValueDesc',
-          parentProperty: 'Description1',
-          label: this.$t('insert.discount.branchName'),
-          visible: true,
-          disabled: true,
-          parentId: 1,
-          id: 2
-        },
-        {
-          type: 'Text',
-          inputType: 'text',
-          modelProperty: 'ColumnName',
-          hideOnTable: true,
-          defaultValue: 'BRANCH_ID',
-          id: 4
-        },
-        {
-          type: 'Text',
-          inputType: 'text',
-          modelProperty: 'TableName',
-          hideOnTable: true,
-          defaultValue: 'T_CUSTOMER',
-          id: 5
-        }
-      ]
+      discountDetailsBranchItems: detailData.discountDetailsBranchItems
     }
   },
   mounted () {
@@ -354,7 +303,7 @@ export default {
         this.customerValid = false
         return
       }
-      if (this.form.BranchCriteriaId === null || this.discountDetailsBranchs.length === 0) {
+      if (this.form.BranchCriteriaId === null || this.form.discountDetailsBranchs.length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
@@ -363,7 +312,7 @@ export default {
         })
         this.form.DiscountCustomers = []
         this.form.DiscountExcludedCustomers = []
-        this.discountDetailsBranchs = []
+        this.form.discountDetailsBranchs = []
         this.customerValid = true
       } else {
         this.customerValid = false
@@ -379,7 +328,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.DiscountDetails = [...this.discountDetailsCustomerCriterias, ...this.discountDetailsBranchs, ...this.discountDetailsRoutes, ...this.discountDetailsPaymentTypes]
+        this.form.DiscountDetails = [...this.discountDetailsCustomerCriterias, ...this.form.discountDetailsBranchs, ...this.discountDetailsRoutes, ...this.discountDetailsPaymentTypes]
         this.createData()
       }
     },
@@ -445,7 +394,7 @@ export default {
       this.budget = this.convertLookupValueToSearchValue(rowData.Budget)
 
       this.discountDetailsCustomerCriterias = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECOR_ID' && d.ColumnName !== 'BRANCH_ID')
-      this.discountDetailsBranchs = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
+      this.form.discountDetailsBranchs = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
       this.discountDetailsRoutes = this.form.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECOR_ID')
       this.discountDetailsPaymentTypes = this.form.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECOR_ID')
       let request = {
@@ -459,6 +408,57 @@ export default {
           }
         }
       })
+    },
+    getDiscountCustomerItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'CustomerId',
+          objectKey: 'Customer',
+          labelProperty: 'Code',
+          customOption: true,
+          isCustomer: true,
+          orConditionFields: 'Code,Description1',
+          url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+          label: this.$t('insert.discount.customerCode'),
+          dynamicAndCondition: {
+            BranchIds: this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).map(a => a.ColumnValue)
+          },
+          disabled (form, mainForm) {
+            return form.BranchCriteriaId === null || mainForm.discountDetailsBranchs.length === 0
+          },
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'CommercialTitle',
+          objectKey: 'Customer',
+          parentProperty: 'Description1',
+          label: this.$t('insert.discount.customerName'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 2
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Location',
+          valueProperty: 'AddressDetail',
+          objectKey: 'Customer',
+          parentProperty: 'DefaultLocationId',
+          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          label: this.$t('insert.discount.location'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 3
+        }
+      ]
     }
   },
   watch: {

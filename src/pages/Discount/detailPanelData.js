@@ -356,9 +356,6 @@ export const detailData = {
       url: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
       label: i18n.t('insert.discount.branchCode'),
       required: true,
-      disabled (form, mainForm) {
-        return form.BranchCriteriaId === null || this.discountDetailsBranchs.length === 0
-      },
       visible: true,
       isUnique: true,
       id: 1
