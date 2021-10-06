@@ -47,13 +47,13 @@
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
-              <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
+              <NextDropdown v-model="taxCustomerType" :disabled="form.IsDutyFree === 1" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
-              <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 0" />
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 1" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 1" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerEmail" :error="$v.form.CustomerEmail">
               <NextInput v-model="form.CustomerEmail" :disabled="insertReadonly.CustomerEmail" />
@@ -86,25 +86,25 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlocked" :disabled="insertReadonly.IsBlocked" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+              <NextCheckBox v-model="form.ManualInvoiceClosure" :disabled="insertReadonly.ManualInvoiceClosure" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsRouteRegion" :error="$v.form.IsRouteRegion">
-              <NextCheckBox v-model="form.IsRouteRegion" type="number" toggle/>
+              <NextCheckBox v-model="form.IsRouteRegion" :disabled="insertReadonly.IsRouteRegion" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
-              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" :disabled="insertReadonly.IsOrderChangeUnitary" type="number" toggle/>
             </NextFormGroup>
              <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
-              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
+              <NextCheckBox v-model="form.UseEInvoice" :disabled="insertReadonly.UseEInvoice" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
-              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+              <NextCheckBox v-model="form.IsWarehouseSale" :disabled="insertReadonly.IsWarehouseSale" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
-              <NextCheckBox v-model="form.IsDutyFree" type="number" toggle/>
+              <NextCheckBox v-model="form.IsDutyFree" :disabled="insertReadonly.IsDutyFree" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -284,22 +284,22 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="AllowOverLimit" :error="$v.form.AllowOverLimit">
-              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle/>
+              <NextCheckBox v-model="form.AllowOverLimit" :disabled="insertReadonly.AllowOverLimit" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDirectDebit" :error="$v.form.IsDirectDebit">
-              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle/>
+              <NextCheckBox v-model="form.IsDirectDebit" :disabled="insertReadonly.IsDirectDebit" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+              <NextCheckBox v-model="form.ManualInvoiceClosure" :disabled="insertReadonly.ManualInvoiceClosure" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="Statement" :error="$v.form.Statement">
-              <NextCheckBox v-model="form.Statement" type="number" toggle/>
+              <NextCheckBox v-model="form.Statement" :disabled="insertReadonly.Statement" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="StatemeIsBlackListednt" :error="$v.form.IsBlackListed">
-              <NextCheckBox v-model="form.IsBlackListed" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlackListed" :disabled="insertReadonly.StatemeIsBlackListednt" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
-              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle/>
+              <NextCheckBox v-model="form.IsAutoBlockingOff" :disabled="insertReadonly.IsAutoBlockingOff" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -339,7 +339,7 @@
               <NextDropdown :disabled="insertReadonly.SignNameId" lookup-key="SIGN_NAME" @input="selectedType('SignNameId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOpportunitySpot" :error="$v.form.IsOpportunitySpot">
-              <NextCheckBox v-model="form.IsOpportunitySpot" type="number" toggle/>
+              <NextCheckBox v-model="form.IsOpportunitySpot" :disabled="insertReadonly.IsOpportunitySpot" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -414,7 +414,7 @@ export default {
         StatusReason: null,
         SignName: null,
         MarketingRegion5: null,
-        TaxCustomerType: null,
+        TaxCustomerTypeId: null,
         InvoiceCombineRule: null,
         SalesDocumentType: null,
         BlockReason: null,
@@ -642,7 +642,7 @@ export default {
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.statementDay = this.convertLookupValueToSearchValue(rowData.StatementDay)
-      this.paymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
+      this.paymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
@@ -721,6 +721,27 @@ export default {
       })
     }
     this.insertRequired.PaymentPeriod = this.paymentType && this.paymentType.Code === 'AH'
+
+    this.insertRules.TaxCustomerTypeId = {
+      required: requiredIf(function () {
+        return this.form.IsDutyFree === 0
+      })
+    }
+    this.insertRequired.TaxCustomerTypeId = this.form.IsDutyFree === 0
+
+    this.insertRules.TaxNumber = {
+      required: requiredIf(function () {
+        return this.form.IsDutyFree === 0
+      })
+    }
+    this.insertRequired.TaxNumber = this.form.IsDutyFree === 0
+
+    this.insertRules.TaxOffice = {
+      required: requiredIf(function () {
+        return this.form.IsDutyFree === 0
+      })
+    }
+    this.insertRequired.TaxOffice = this.form.IsDutyFree === 0
     validation.form.TaxNumber = {
       required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
     }
