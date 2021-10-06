@@ -10,12 +10,16 @@
             <Breadcrumb :title="rowData && rowData.Description1" />
             <GetFormField v-model="workFlowModel"/>
           </header>
+          <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+            <NextLocation :Location='Location' />
+          </b-modal>
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData && rowData.Code}}</span>
+            <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_CardTypeId')}}:</b> {{rowData && rowData.CardType ? rowData.CardType.Label : ''}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_StatusReasonId')}}:</b> {{rowData && rowData.StatusReason ? rowData.StatusReason.Label : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.customer.status')}}:</b> {{(rowData && rowData.Status) ? rowData.Status.Label : ''}}</span>
           </section>
@@ -34,9 +38,10 @@
               <div v-html="getFormatDataByType(rowData.Alias, 'text', 'insert.customer.Model_Alias')"></div>
               <div v-html="getFormatDataByType(rowData.TradeLicenseNumber, 'text', 'insert.customer.TradeLicenseNumber')"></div>
               <div v-html="getFormatDataByType(rowData.BlockReason, 'object', 'insert.customer.Model_BlockReasonId')"></div>
-              <div v-html="getFormatDataByType(rowData.CustomerInvoiceType, 'object', 'insert.customer.Model_CustomerInvoiceTypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.customer.Model_TypeId')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.CustomerInvoiceType, 'object', 'insert.customer.Model_CustomerInvoiceTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.customer.Model_CustomerRegion5Id')"></div>
               <div v-html="getFormatDataByType(rowData.MarketingRegion5, 'object', 'insert.customer.MarketingRegion5Id')"></div>
               <div v-html="getFormatDataByType(rowData.RouteCode, 'text', 'insert.customer.RouteCode')"></div>
@@ -54,33 +59,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('list.location')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_Code')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_Location_Description1')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsInvoiceAddress')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_IsDeliveryAddress')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.isRouteNode')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerLocations" :key="i">
-                      <b-td class="text-center">
-                        <i @click="showMap(r)" class="fa fa-map-marker-alt text-primary"></i>
-                      </b-td>
-                      <b-td>{{r.Code}}</b-td>
-                      <b-td>{{r.Description1}}</b-td>
-                      <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsInvoiceAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsDeliveryAddress == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                      <b-td>{{r.IsRouteNode == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
-                    </b-tr>
-                    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
-                      <NextLocation :Location='Location' />
-                    </b-modal>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.CustomerLocations" :items="locationItems" :detail-buttons="detailButtons"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -88,9 +67,9 @@
         <b-tab :title="$t('insert.customer.CustomerClass')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.customer.Model_Category1Id')"></div>
-                <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.customer.Model_Category2Id')"></div>
                 <div v-html="getFormatDataByType(rowData.Category3, 'object', 'insert.customer.Model_Category3Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Category2, 'object', 'insert.customer.Model_Category2Id')"></div>
+                <div v-html="getFormatDataByType(rowData.Category1, 'object', 'insert.customer.Model_Category1Id')"></div>
                 <div v-html="getFormatDataByType(rowData.Group, 'object', 'insert.customer.Model_GroupId')"></div>
                 <div v-html="getFormatDataByType(rowData.Class, 'object', 'insert.customer.Model_ClassId')"></div>
                 <div v-html="getFormatDataByType(rowData.SalesDocumentType, 'object', 'insert.customer.Model_SalesDocumentTypeId')"></div>
@@ -168,20 +147,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.customer.Model_CreditAmount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_CreditLimit')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_RiskLimit')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerCreditHistories" :key="i">
-                      <b-td>{{r.CreditAmount}}</b-td>
-                      <b-td>{{r.CreditLimit}}</b-td>
-                      <b-td>{{r.RiskLimit}}</b-td>
-                   </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.CustomerCreditHistories" :items="customerCreditHistoriesItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -190,16 +156,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.customer.Model_PaymentTypeId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerPaymentTypes" :key="i">
-                       <b-td>{{r.PaymentType.Label ? r.PaymentType.Label : ''}}</b-td>
-                   </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.CustomerPaymentTypes" :items="paymentTypesItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -221,20 +178,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.customer.discountDescription')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_DiscountPercent1')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.Model_DiscountPercent2')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerItemDiscounts" :key="i">
-                      <b-td>{{r.Description1}}</b-td>
-                      <b-td>{{r.DiscountPercent1}}</b-td>
-                      <b-td>{{r.DiscountPercent2}}</b-td>
-                   </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.CustomerItemDiscounts" :items="customerDiscountsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -243,18 +187,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.customer.labelId')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.labelValueId')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(r, i) in rowData.CustomerLabels" :key="i">
-                      <b-td>{{r.Label && r.Label.Label ? r.Label.Label : ''}}</b-td>
-                      <b-td>{{r.LabelValue && r.LabelValue.Label ? r.LabelValue.Label : ''}}</b-td>
-                   </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextDetailPanel type="get" v-model="rowData.CustomerLabels" :items="customerLabelItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -266,6 +199,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
@@ -276,29 +210,48 @@ export default {
         ClassName: 'Customer',
         PageName: 'pg_KeyAccount'
       },
-      Location: {}
+      Location: {},
+      detailButtons: [
+        {
+          icon: 'fa fa-map-marker-alt text-primary mr-1',
+          getDetail: (data) => {
+            this.showMap(data)
+          }
+        }
+      ],
+      branchs: [],
+      allBranchs: [],
+      locationItems: detailData.locationItems,
+      customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
+      paymentTypesItems: detailData.paymentTypesItems,
+      customerDiscountsItems: detailData.customerDiscountsItems,
+      customerLabelItems: detailData.customerLabelItems
     }
   },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style', 'branchs', 'allBranchs'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
-      this.$router.push({name: this.$route.meta.base})
+      this.$router.push({name: this.routeName})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url}).then(() => {
+        this.getBranchs(this.rowData.RecordId)
+      })
     },
     getBranchs (customerId) {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
-        name: 'branchs',
+      let request = {
         andConditionModel: {
           UpperCustomerIds: [customerId]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search').then((response) => {
+        if (response && response.ListModel) {
+          this.branchs = response.ListModel.BaseModels
         }
       })
     },
@@ -318,19 +271,16 @@ export default {
     }
   },
   watch: {
-    rowData (e) {
-      if (e) {
-        this.getBranchs(e.RecordId)
-      }
-    },
     branchs (e) {
       if (e && e.length > 0) {
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextBranch/api/Branch/Search',
-          name: 'allBranchs',
+        let request = {
           andConditionModel: {
             RecordIds: [...new Set(e.map(x => x.BranchId))]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then((response) => {
+          if (response && response.ListModel) {
+            this.allBranchs = response.ListModel.BaseModels
           }
         })
       }
@@ -338,5 +288,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>
