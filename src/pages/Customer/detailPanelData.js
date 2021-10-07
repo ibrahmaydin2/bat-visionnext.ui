@@ -215,6 +215,9 @@ export const detailData = {
       objectKey: 'bank',
       url: 'VisionNextBank/api/Bank/Search',
       label: i18n.t('insert.customer.bank'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 94
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -245,6 +248,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Bail',
       label: i18n.t('insert.customer.bail'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 97 && form.CreditDescriptionId !== 98
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -255,6 +261,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'LandOffice',
       label: i18n.t('insert.customer.landOffice'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 95
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -265,6 +274,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Plate',
       label: i18n.t('insert.customer.plate'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 95
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -275,6 +287,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'TraficRegistry',
       label: i18n.t('insert.customer.traficRegistry'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 96
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -285,6 +300,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'TextNo',
       label: i18n.t('insert.customer.textNo'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 95
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -305,6 +323,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'NotaryNo',
       label: i18n.t('insert.customer.notaryNo'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 96
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -315,6 +336,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'PlateNumber',
       label: i18n.t('insert.customer.plateNumber'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 96
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -335,6 +359,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'MortgageValue',
       label: i18n.t('insert.customer.mortgageValue'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId !== 95
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -345,6 +372,9 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'AllowOverLimit',
       label: i18n.t('insert.customer.allowOverLimit'),
+      disabled: (form, mainForm) => {
+        return !form.BankId || form.BankId === 0
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -372,6 +402,9 @@ export const detailData = {
       type: 'Date',
       modelProperty: 'TextDate',
       label: i18n.t('insert.customer.textDate'),
+      disabled: (form, mainForm) => {
+        return !form.BankId || form.BankId === 0
+      },
       required: false,
       visible: true,
       isUnique: false,
@@ -381,6 +414,9 @@ export const detailData = {
       type: 'Date',
       modelProperty: 'NotaryDate',
       label: i18n.t('insert.customer.notaryDate'),
+      disabled: (form, mainForm) => {
+        return !form.BankId || form.BankId === 0
+      },
       required: false,
       visible: true,
       isUnique: false,

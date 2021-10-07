@@ -135,7 +135,7 @@
                   <b-td>{{c.DebitAccountRemainder}}</b-td>
                   <b-td>{{c.CreditAmount }}</b-td>
                   <b-td>{{c.Amount}}</b-td>
-                  <b-td>{{c.PaymentPeriod}}</b-td>
+                  <b-td>{{c.paymentPeriodO ? c.paymentPeriodO.Description1 : '-'}}</b-td>
                   <b-td class="text-center">
                     <b-button :title="$t('list.edit')" @click="editCustomerGuarantee(c)" class="btn mr-2 btn-warning btn-sm">
                       <i class="fa fa-pencil-alt"></i>
@@ -265,6 +265,7 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      this.customerGuarantees.paymentPeriodO = this.paymentPeriod
       if (this.customerGuarantees.isUpdated) {
         this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
         this.selectedIndex = null
@@ -285,10 +286,7 @@ export default {
       this.paymentPeriod = null
       this.customerGuarantees.isUpdated = true
       this.customerGuarantees.CreditAmountCentral = item.CreditAmount
-      let paymentPeriods = this.paymentPeriods.filter(p => p.RecordId === item.PaymentPeriod)
-      if (paymentPeriods.length > 0) {
-        this.paymentPeriod = paymentPeriods[0]
-      }
+      this.paymentPeriod = this.getPaymentPeriodById(item.PaymentPeriod)
       this.selectedCustomer = {
         RecordId: item.CustomerId,
         Description1: item.CustomerDesc,
@@ -306,8 +304,9 @@ export default {
           obj.System = 0
           obj.CreditAmount = obj.CreditAmountCentral
           if (obj.Period) {
-            obj.PaymentPeriod = d.Period
+            obj.PaymentPeriod = obj.Period
           }
+          obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
           list.push(obj)
         })
         this.form.CustomerGuarantees = list
@@ -315,6 +314,12 @@ export default {
     },
     setPaymentPeriods (value) {
       this.paymentPeriods = value
+    },
+    getPaymentPeriodById (paymentPeriod) {
+      let paymentPeriods = this.paymentPeriods.filter(p => p.Period === paymentPeriod)
+      if (paymentPeriods.length > 0) {
+        return paymentPeriods.length > 0 ? paymentPeriods[0] : { RecordId: paymentPeriod }
+      }
     }
   },
   validations () {

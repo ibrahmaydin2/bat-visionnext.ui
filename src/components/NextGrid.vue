@@ -574,7 +574,7 @@ export default {
       if (e != null) {
         calendar = e.split('T')
         date = calendar[0].split('-')
-        return date[2] + '-' + date[1] + '-' + date[0] + ' ' + calendar[1]
+        return date[2] + '/' + date[1] + '/' + date[0] + ' ' + calendar[1]
       }
     },
     dateFormat (e) {

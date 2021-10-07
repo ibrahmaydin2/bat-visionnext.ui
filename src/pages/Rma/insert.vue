@@ -118,7 +118,7 @@
               <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
-              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event, rmaLine.Quantity)" min=1 />
+              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event)" min=1 />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>

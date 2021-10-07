@@ -153,9 +153,14 @@ export default {
       }
       return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
     },
-    onlyForCurrency ($event, model) {
+    onlyForCurrency ($event) {
+      let model = $event.currentTarget.value
       let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
-      if ((keyCode < 48 || keyCode > 57) && (keyCode !== 44 || model.indexOf('.') !== -1)) {
+      if (keyCode === 46 && !model.includes(',')) {
+        model += ','
+        debugger
+        $event.preventDefault()
+      } else if ((keyCode < 48 || keyCode > 57) && (keyCode !== 44 || model.indexOf('.') !== -1)) {
         $event.preventDefault()
       }
       if (model != null && model.indexOf('.') > -1 && (model.split('.')[1].length > 0)) {
