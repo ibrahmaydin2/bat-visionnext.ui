@@ -113,7 +113,7 @@
                   :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="setTotalPrice" @keypress="onlyForCurrency($event, selectedInvoiceLine.quantity)" min=1 />
+              <b-form-input type="number" v-model="selectedInvoiceLine.quantity" @input="setTotalPrice" @keypress="onlyForCurrency($event)" min=1 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <b-form-input type="number" v-model="selectedInvoiceLine.price" @input="setTotalPrice"/>
