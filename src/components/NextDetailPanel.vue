@@ -28,7 +28,8 @@
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'" :filter="item.filter" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number" toggle :disabled="isDisabled(item)" />
+        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number"  toggle :disabled="isDisabled(item)" />
+        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
         <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
       </NextFormGroup>
       <b-col cols="12" md="2">

@@ -97,10 +97,10 @@
           <b-row class="p-4">
            <b-card class="col-md-6 col-12 asc__showPage-card">
                 <div v-html="getFormatDataByType(rowData.DefaultPaymentType, 'object', 'insert.customer.Model_DefaultPaymentTypeId')"></div>
-                <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'object', 'insert.customer.Model_PaymentPeriod')"></div>
+                <div v-html="getFormatDataByType(rowData.PaymentPeriod, 'text', 'insert.customer.Model_PaymentPeriod')"></div>
                 <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
-                <div v-html="getFormatDataByType(rowData.CreditLimit, 'object', 'insert.customer.Model_CreditLimit')"></div>
-                <div v-html="getFormatDataByType(rowData.RiskLimit, 'object', 'insert.customer.Model_RiskLimit')"></div>
+                <div v-html="getFormatDataByType(rowData.CreditLimit, 'text', 'insert.customer.Model_CreditLimit')"></div>
+                <div v-html="getFormatDataByType(rowData.RiskLimit, 'text', 'insert.customer.Model_RiskLimit')"></div>
                 <div v-html="getFormatDataByType(rowData.ReservedLimit, 'object', 'insert.customer.reservedLimit')"></div>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentCredit')}}</span><p>{{rowData.CurrentCredit}}</p>
                 <span><i class="far fa-circle" /> {{$t('insert.customer.Model_CurrentRisk')}}</span><p>{{rowData.CurrentRisk}}</p>
@@ -110,8 +110,8 @@
                 <span><i class="far fa-circle" /> {{$t('insert.customer.isDirectDebit')}}</span><p><i :class="rowData.isDirectDebit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i></p>
             </b-card>
           <b-card class="col-md-6 col-12 asc__showPage-card">
-                <div v-html="getFormatDataByType(rowData.DiscountPercent1, 'object', 'insert.customer.Model_DiscountPercent1')"></div>
-                <div v-html="getFormatDataByType(rowData.DiscountPercent2, 'object', 'insert.customer.Model_DiscountPercent2')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountPercent1, 'text', 'insert.customer.Model_DiscountPercent1')"></div>
+                <div v-html="getFormatDataByType(rowData.DiscountPercent2, 'text', 'insert.customer.Model_DiscountPercent2')"></div>
                 <div v-html="getFormatDataByType(rowData.MainOfBranch, 'object', 'insert.customer.mainOfBranch')"></div>
                 <div v-html="getFormatDataByType(rowData.TciBreak1Id, 'object', 'insert.customer.TciBreak1')"></div>
                 <div v-html="getFormatDataByType(rowData.TciBreak2Id, 'object', 'insert.customer.TciBreak2')"></div>

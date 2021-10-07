@@ -104,7 +104,7 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/CreditBudget', record: this.$route.params.url}).then(() => {
-        this.customerGuarantees = this.form.CreditBudgetDetails.map(item => item.CustomerGuarantees)
+        this.customerGuarantees = this.rowData.CreditBudgetDetails.map(item => item.CustomerGuarantees)
       })
     }
   }

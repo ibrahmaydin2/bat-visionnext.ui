@@ -576,10 +576,6 @@ export default {
     return validation
   },
   watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
     customerBlackReason (value) {
       if (value != null) {
         this.form.BlockReasonId = value.DecimalValue
