@@ -218,10 +218,12 @@ export default {
       for (const property in excelProducts) {
         let item = excelProducts[property]
         this.allUserProducts.map(product => {
-          if (Number(item.ItemCode) === Number(product.Item.Code)) {
+          if (Number(item.ItemCode) === Number(product.Code)) {
             product.ConsumerPrice = item.ConsPrice
             product.SalesPrice = item.Price
           }
+
+          return product
         })
       }
       this.products = this.allUserProducts
