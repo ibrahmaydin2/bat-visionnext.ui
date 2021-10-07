@@ -211,7 +211,13 @@ export default {
         {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
         {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
         {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
-        {key: 'PaymentPeriod', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false},
+        {
+          key: 'PaymentPeriod',
+          label: this.$t('insert.creditBudget.paymentPeriod'),
+          sortable: false,
+          formatter (value, key, obj) {
+            return obj.paymentPeriodO ? obj.paymentPeriodO.Description1 : '-'
+          }},
         {key: 'operations', label: this.$t('list.operations'), sortable: false}
       ],
       selectedIndex: 0,
@@ -290,6 +296,7 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      this.customerGuarantees.paymentPeriodO = this.paymentPeriod
       if (this.customerGuarantees.isUpdated) {
         this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
         this.selectedIndex = null
@@ -318,10 +325,7 @@ export default {
         this.customerGuarantees.RecordState = 3
       }
       this.customerGuarantees.CreditAmountCentral = item.CreditAmount
-      let paymentPeriods = this.paymentPeriods.filter(p => p.RecordId === item.PaymentPeriod)
-      if (paymentPeriods.length > 0) {
-        this.paymentPeriod = paymentPeriods[0]
-      }
+      this.paymentPeriod = this.getPaymentPeriodById(item.PaymentPeriod)
       this.selectedCustomer = {
         RecordId: item.CustomerId,
         Description1: item.CustomerDesc,
@@ -330,11 +334,12 @@ export default {
     },
     setData () {
       this.form = this.rowData
+
       this.form.CustomerGuarantees = this.form.CreditBudgetDetails.map(item => {
         let customerGuarantees = item.CustomerGuarantees
         customerGuarantees.RecordId = item.RecordId
         customerGuarantees.CreditBudgetId = item.CreditBudgetId
-
+        customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
         return customerGuarantees
       })
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
@@ -352,8 +357,9 @@ export default {
           obj.Deleted = 0
           obj.System = 0
           if (obj.Period) {
-            obj.PaymentPeriod = d.Period
+            obj.PaymentPeriod = obj.Period
           }
+          obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
           obj.CreditBudgetId = this.form.RecordId
           list.push(obj)
         })
@@ -371,6 +377,12 @@ export default {
     },
     setPaymentPeriods (value) {
       this.paymentPeriods = value
+    },
+    getPaymentPeriodById (paymentPeriod) {
+      let paymentPeriods = this.paymentPeriods.filter(p => p.Period === paymentPeriod)
+      if (paymentPeriods.length > 0) {
+        return paymentPeriods.length > 0 ? paymentPeriods[0] : { RecordId: paymentPeriod }
+      }
     }
   },
   validations () {
