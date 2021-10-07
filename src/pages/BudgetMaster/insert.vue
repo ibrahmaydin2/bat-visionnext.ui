@@ -55,7 +55,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
@@ -121,6 +121,26 @@ export default {
         this.fillBudgets()
         this.createData()
       }
+    },
+    beforeValidDatesAdd (item, list, isUpdated) {
+      let filteredList = list.filter(l =>
+        l.RecordState !== 4 &&
+        !isUpdated &&
+        ((l.BeginDate <= item.BeginDate && item.BeginDate <= l.EndDate) ||
+        (l.BeginDate <= item.EndDate && item.EndDate <= l.EndDate) ||
+        (item.BeginDate <= l.BeginDate && l.BeginDate <= item.EndDate) ||
+        (item.BeginDate <= l.EndDate && l.EndDate <= item.EndDate)))
+
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('insert.budgetMaster.timeControl'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+
+      return true
     },
     getUserInfo () {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))

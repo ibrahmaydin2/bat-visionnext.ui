@@ -2276,7 +2276,8 @@
       "search": "Ara",
       "noBudgetMasterList": "Uygun bütçe bulunamadı.",
       "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
-      "transactionDate": "İşlem Tarihi"
+      "transactionDate": "İşlem Tarihi",
+      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
