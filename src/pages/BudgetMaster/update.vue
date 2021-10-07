@@ -61,7 +61,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.budgetMaster.budgetDetail')">
-          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail" :detail-buttons="detailButtons"></NextDetailPanel>
+          <NextDetailPanel v-model="form.Budgets" :items="budgetItems" :get-detail="getDetail" :before-add="beforeValidDatesAdd" :detail-buttons="detailButtons"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
@@ -154,6 +154,26 @@ export default {
         this.fillBudgets()
         this.updateData()
       }
+    },
+    beforeValidDatesAdd (item, list, isUpdated) {
+      let filteredList = list.filter(l =>
+        l.RecordState !== 4 &&
+        !isUpdated &&
+        ((l.BeginDate <= item.BeginDate && item.BeginDate <= l.EndDate) ||
+        (l.BeginDate <= item.EndDate && item.EndDate <= l.EndDate) ||
+        (item.BeginDate <= l.BeginDate && l.BeginDate <= item.EndDate) ||
+        (item.BeginDate <= l.EndDate && l.EndDate <= item.EndDate)))
+
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('insert.budgetMaster.timeControl'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+
+      return true
     },
     selectCustomerColumnName (customerColumnName) {
       this.form.CustomerColumnValue = null
