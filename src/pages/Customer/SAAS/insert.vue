@@ -263,7 +263,7 @@
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown :disabled="!(form.DefaultPaymentTypeId === 2)"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown :disabled="!(paymentType && paymentType.Code === 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search?v=2" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <NextDropdown :disabled="insertReadonly.TciBreak1Id" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
@@ -304,7 +304,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()" ::main-form="form">
           <NextDetailPanel v-model="form.CustomerCreditHistories" :items="customerCreditHistoriesItems" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
@@ -589,10 +589,10 @@ export default {
     }
     this.insertRules.PaymentPeriod = {
       required: requiredIf(function () {
-        return this.form.DefaultPaymentTypeId === 2
+        return this.paymentType && this.paymentType.Code === 'AH'
       })
     }
-    this.insertRequired.PaymentPeriod = this.form.DefaultPaymentTypeId === 2
+    this.insertRequired.PaymentPeriod = this.paymentType && this.paymentType.Code === 'AH'
 
     this.insertRules.TaxCustomerTypeId = {
       required: requiredIf(function () {
