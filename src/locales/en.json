@@ -2273,7 +2273,17 @@
       "TransactionDate": "İşlem Tarihi",
       "RepresentativeId": "Personel",
       "ToplamKazanilanPuan": "Toplam Kazanılan Puan",
-      "ToplamHarcananPuan": "Toplam Harcanan Puan"
+      "ToplamHarcananPuan": "Toplam Harcanan Puan",
+      "PointGains": "Puan Kazanımları",
+      "LoyaltyCategory": "Sadakat Kataloğu",
+      "Description1": "Açıklama",
+      "TransactionScore": "Kazanılan Puan",
+      "Representative": "Personel",
+      "PointGainsTransactionDate": "Tarih",
+      "PointExpenditures": "Puan Harcamaları",
+      "PointExpendituresCategory": "Kategori",
+      "PointExpendituresTransactionDate": "Harcama Tarihi",
+      "PointExpendituresConsumptionScore": "Harcanan Puan"
     },
     "Warehouse": {
       "title":"Depo Ana Kayıtları",
