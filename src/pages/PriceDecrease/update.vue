@@ -68,7 +68,7 @@
               <NextInput disabled v-model="priceDecreaseItem.currentSalesPrice"></NextInput>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.priceDecrease.newSalesPrice')" :error="$v.priceDecreaseItem.newSalesPrice" :required="true">
-              <NextInput type="number" v-model="priceDecreaseItem.newSalesPrice" @input="enterNewPrice" @keypress="onlyForCurrency($event, priceDecreaseItem.newSalesPrice)" min=1></NextInput>
+              <NextInput type="number" v-model="priceDecreaseItem.newSalesPrice" @input="enterNewPrice" @keypress="onlyForCurrency($event)" min=1></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.priceDecrease.decreasePrice')" :error="$v.priceDecreaseItem.decrease" :required="true">
               <NextInput disabled v-model="priceDecreaseItem.decrease"></NextInput>

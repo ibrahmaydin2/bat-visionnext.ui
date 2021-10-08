@@ -68,7 +68,7 @@
               <NextInput disabled v-model="priceDecreaseItem.currentSalesPrice"></NextInput>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.priceDecrease.newSalesPrice')" :error="$v.priceDecreaseItem.newSalesPrice" :required="true">
-              <NextInput type="number" v-model="priceDecreaseItem.newSalesPrice" @input="enterNewPrice" @keypress="onlyForCurrency($event, priceDecreaseItem.newSalesPrice)" min=1></NextInput>
+              <NextInput type="number" v-model="priceDecreaseItem.newSalesPrice" @input="enterNewPrice" @keypress="onlyForCurrency($event)" min=1></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.priceDecrease.decreasePrice')" :error="$v.priceDecreaseItem.decrease" :required="true">
               <NextInput disabled v-model="priceDecreaseItem.decrease"></NextInput>
@@ -86,7 +86,9 @@
               bordered responsive >
               <template #cell(operations)="{item}">
                 <div class="text-center">
-                  <i @click="removePriceDecreaseItem(item)" class="far fa-trash-alt text-danger"></i>
+                  <b-button :title="$t('list.delete')" @click="removePriceDecreaseItem(item)" type="button" class="btn mr-2 btn-danger btn-sm">
+                    <i class="far fa-trash-alt"></i>
+                  </b-button>
                 </div>
               </template>
             </b-table>

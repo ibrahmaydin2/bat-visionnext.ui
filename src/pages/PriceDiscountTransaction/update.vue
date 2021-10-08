@@ -298,7 +298,7 @@ export default {
       } else {
         if (this.form.CustomerId) {
           var me = this
-          me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+          me.$api.get('Budget', `BudgetMaster/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
             if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
               me.budgets = res.ListModel.BaseModels
               me.$forceUpdate()
