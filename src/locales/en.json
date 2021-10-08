@@ -459,6 +459,7 @@
   },
   "insert": {
     "paymentPeriodrequired": "Açık Hesap seçiliyken ödeme vadesi girilmesi zorunludur",
+    "tabPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir",
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
@@ -1311,7 +1312,8 @@
       "discountPercent1" : "Ürün indirimi 1",
       "discountPercent2" : "Ürün indirimi 2",
       "branchPaymentTypes": "Ödeme Tipleri",
-      "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir."
+      "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir.",
+      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir"
     },
     "bank": {
       "code":"Banka Kodu",
