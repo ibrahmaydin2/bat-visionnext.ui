@@ -548,6 +548,15 @@ export default {
         this.tabValidation()
       }
       if (this.paymentType && this.paymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
+        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+        if (!filteredList || filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
           type: 'error',
           keepOnHover: true,

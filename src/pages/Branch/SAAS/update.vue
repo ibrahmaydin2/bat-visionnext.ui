@@ -133,10 +133,10 @@
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
             <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
-              <NextDropdown v-model="defaultPaymentType" url="VisionNextCommonApi/api/PaymentType/Search"  @input="selectedSearchType('DefaultPaymentTypeId', $event)" :disabled="insertReadonly.DefaultPaymentTypeId" />
+              <NextDropdown v-model="defaultPaymentType" url="VisionNextCommonApi/api/PaymentType/Search?v=1"  @input="selectedSearchType('DefaultPaymentTypeId', $event)" :disabled="insertReadonly.DefaultPaymentTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown v-model="paymentPeriod" :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown v-model="paymentPeriod" :disabled="insertReadonly.paymentPeriod"  url="VisionNextCommonApi/api/FixedTerm/Search?v=2" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
               <NextDropdown v-model="priceListCategory" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
@@ -209,8 +209,8 @@
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customFixedTerms')">
-          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems"/>
+        <b-tab :title="$t('insert.branch.customFixedTerms')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems" :main-form="form"/>
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
           <NextDetailPanel v-model="form.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems"/>
@@ -225,6 +225,7 @@
 <script>
 import { mapState } from 'vuex'
 import updateMixin from '../../../mixins/update'
+import { requiredIf } from 'vuelidate/lib/validators'
 import { detailData } from '../detailPanelData'
 export default {
   mixins: [updateMixin],
@@ -419,6 +420,22 @@ export default {
           duration: '3000'
         })
         this.tabValidation()
+      } if (this.defaultPaymentType && this.defaultPaymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
+        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+        if (!filteredList || filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.branch.branchPaymentPeriodRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
       } else {
         this.form.BranchLocations = this.branchLocations
         let filteredList = this.form.BranchPaymentTypes.filter(b => b.RecordState !== 4)
@@ -458,9 +475,16 @@ export default {
     }
   },
   validations () {
-    return {
+    let validation = {
       form: this.insertRules
     }
+    this.insertRules.PaymentPeriod = {
+      required: requiredIf(function () {
+        return this.defaultPaymentType && this.defaultPaymentType.Code === 'AH'
+      })
+    }
+    this.insertRequired.PaymentPeriod = this.defaultPaymentType && this.defaultPaymentType.Code === 'AH'
+    return validation
   },
   watch: {
     customerCategory3 (value) {

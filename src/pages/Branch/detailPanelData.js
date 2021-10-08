@@ -554,7 +554,9 @@ export const detailData = {
       objectKey: 'FixedTerm',
       url: 'VisionNextCommonApi/api/FixedTerm/Search',
       label: i18n.t('insert.branch.fixedTerm'),
-      required: true,
+      required (form, mainForm) {
+        return mainForm.DefaultPaymentTypeId === 2
+      },
       visible: true,
       isUnique: true,
       id: 1
