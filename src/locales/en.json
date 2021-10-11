@@ -459,6 +459,7 @@
   },
   "insert": {
     "paymentPeriodrequired": "Açık Hesap seçiliyken ödeme vadesi girilmesi zorunludur",
+    "tabPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir",
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
@@ -1311,7 +1312,8 @@
       "discountPercent1" : "Ürün indirimi 1",
       "discountPercent2" : "Ürün indirimi 2",
       "branchPaymentTypes": "Ödeme Tipleri",
-      "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir."
+      "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir.",
+      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir"
     },
     "bank": {
       "code":"Banka Kodu",
@@ -2154,6 +2156,20 @@
       "Genexp1": "Açıklama",
       "Operation": "Operasyon Tipi",
       "customer": "Nokta"
+    },
+    "ediOrder": {
+      "customer": "Müşteri",
+      "orderNumber": "Sipariş No",
+      "description1": "Açıklama",
+      "documentNumber": "Belge Numarası",
+      "documentDate": "Belge Tarihi",
+      "representative": "Personel",
+      "state": "Durum",
+      "status": "Sevkiyat Durumu",
+      "successApprove": "Onaylama işleminiz başarıyla tamamlanmıştır.",
+      "successCancel": "İptal işleminiz başarıyla tamamlanmıştır.",
+      "cancelType": "İptal Tipi",
+      "cancelDate": "İptal Zamanı"
     }
   },
   "get": {
@@ -2711,6 +2727,7 @@
     "print": "Yazdır",
     "close": "Kapat",
     "approve": "Onayla",
+    "cancel": "İptal",
     "search": "Ara",
     "success": "Başarılı",
     "upload": "Yükle",

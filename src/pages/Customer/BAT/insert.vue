@@ -217,8 +217,8 @@
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
-              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
+              <NextDropdown v-model="form.PriceListCategoryId" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankPaymentSystemId" :error="$v.form.bankPaymentSystemId">
               <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" @input="selectedType('BankPaymentSystemId', $event)"/>
@@ -262,8 +262,8 @@
             <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
             </NextFormGroup>
-            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown :disabled="!(paymentType && paymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.PaymentPeriod">
+              <NextDropdown v-model="form.PaymentPeriod" :disabled="!(paymentType && paymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <NextDropdown :disabled="insertReadonly.TciBreak1Id" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
@@ -274,7 +274,7 @@
             <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
               <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
+            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.DefaultPaymentTypeId">
               <NextDropdown
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"

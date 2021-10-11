@@ -113,7 +113,7 @@
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
-            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
+            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.DefaultPaymentTypeId">
               <NextDropdown
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
@@ -122,10 +122,10 @@
                 label="Description1"
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
+            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.PaymentPeriod">
               <NextDropdown :disabled="!(DefaultPaymentType && DefaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
               <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">

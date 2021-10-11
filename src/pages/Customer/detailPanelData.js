@@ -229,6 +229,9 @@ export const detailData = {
       objectKey: 'currency',
       url: 'VisionNextSystem/api/SysCurrency/Search',
       label: i18n.t('insert.customer.Model_CurrencyId'),
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId === 98
+      },
       required: true,
       visible: true,
       id: 3
@@ -239,6 +242,9 @@ export const detailData = {
       modelProperty: 'Debtor',
       label: i18n.t('insert.customer.debtor'),
       required: false,
+      disabled: (form, mainForm) => {
+        return form.CreditDescriptionId === 94 || form.CreditDescriptionId === 95 || form.CreditDescriptionId === 98 || form.CreditDescriptionId === 96 || form.CreditDescriptionId === 99
+      },
       visible: true,
       isUnique: false,
       id: 4
@@ -372,9 +378,6 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'AllowOverLimit',
       label: i18n.t('insert.customer.allowOverLimit'),
-      disabled: (form, mainForm) => {
-        return !form.BankId || form.BankId === 0
-      },
       required: false,
       visible: true,
       isUnique: false,
@@ -403,7 +406,7 @@ export const detailData = {
       modelProperty: 'TextDate',
       label: i18n.t('insert.customer.textDate'),
       disabled: (form, mainForm) => {
-        return !form.BankId || form.BankId === 0
+        return form.CreditDescriptionId !== 95
       },
       required: false,
       visible: true,
@@ -415,7 +418,7 @@ export const detailData = {
       modelProperty: 'NotaryDate',
       label: i18n.t('insert.customer.notaryDate'),
       disabled: (form, mainForm) => {
-        return !form.BankId || form.BankId === 0
+        return form.CreditDescriptionId !== 96
       },
       required: false,
       visible: true,
@@ -603,7 +606,9 @@ export const detailData = {
       objectKey: 'FixedTerm',
       url: 'VisionNextCommonApi/api/FixedTerm/Search',
       label: i18n.t('insert.customer.fixedTerm'),
-      required: true,
+      required (form, mainForm) {
+        return mainForm.DefaultPaymentTypeId === 2
+      },
       visible: true,
       isUnique: true,
       id: 1

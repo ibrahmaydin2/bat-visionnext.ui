@@ -132,7 +132,7 @@
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
-            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.defaultPaymentTypeId">
+            <NextFormGroup item-key="DefaultPaymentTypeId" :error="$v.form.DefaultPaymentTypeId">
               <NextDropdown
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
@@ -141,10 +141,10 @@
                 label="Description1"
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.paymentPeriod">
-              <NextDropdown :disabled="!(DefaultPaymentType && DefaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+            <NextFormGroup item-key="PaymentPeriod" :error="$v.form.PaymentPeriod">
+              <NextDropdown :disabled="!(DefaultPaymentType && DefaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search?v=1" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.priceListCategoryId">
+            <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
               <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
@@ -215,8 +215,8 @@
         <b-tab :title="$t('insert.branch.InvoiceSeqs')">
           <NextDetailPanel v-model="form.EInvoiceSeqs" :items="customerEInvoiceSeqsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.branch.customFixedTerms')">
-          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems"/>
+        <b-tab :title="$t('insert.branch.customFixedTerms')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems" :main-form="form"/>
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerItemDiscountCrts')">
           <NextDetailPanel v-model="form.CustomerItemDiscountCrts" :items="customerItemDiscountCrtItems"/>
@@ -231,6 +231,7 @@
 <script>
 import { mapState } from 'vuex'
 import insertMixin from '../../../mixins/insert'
+import { requiredIf } from 'vuelidate/lib/validators'
 import { detailData } from '../detailPanelData'
 export default {
   mixins: [insertMixin],
@@ -348,6 +349,22 @@ export default {
           duration: '3000'
         })
         this.tabValidation()
+      } if (this.DefaultPaymentType && this.DefaultPaymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
+        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+        if (!filteredList || filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.branch.branchPaymentPeriodRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
       } else {
         let filteredList = this.form.BranchPaymentTypes.filter(b => b.RecordState !== 4)
         if (!filteredList || filteredList.length === 0) {
@@ -379,9 +396,16 @@ export default {
     }
   },
   validations () {
-    return {
+    let validation = {
       form: this.insertRules
     }
+    this.insertRules.PaymentPeriod = {
+      required: requiredIf(function () {
+        return this.DefaultPaymentType && this.DefaultPaymentType.Code === 'AH'
+      })
+    }
+    this.insertRequired.PaymentPeriod = this.DefaultPaymentType && this.DefaultPaymentType.Code === 'AH'
+    return validation
   }
 }
 </script>

@@ -158,7 +158,6 @@ export default {
       let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
       if (keyCode === 46 && !model.includes(',')) {
         model += ','
-        debugger
         $event.preventDefault()
       } else if ((keyCode < 48 || keyCode > 57) && (keyCode !== 44 || model.indexOf('.') !== -1)) {
         $event.preventDefault()
