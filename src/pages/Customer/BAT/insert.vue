@@ -53,7 +53,7 @@
               <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 0" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerEmail" :error="$v.form.CustomerEmail">
               <NextInput v-model="form.CustomerEmail" :disabled="insertReadonly.CustomerEmail" />
@@ -65,7 +65,7 @@
               <NextDropdown :disabled="insertReadonly.BlockReasonId"  lookup-key="CUSTOMER_BLOCK_REASON" @input="selectedType('BlockReasonId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
-              <NextDropdown :disabled="insertReadonly.TypeId"  lookup-key="CUSTOMER_TYPE" @input="selectedType('TypeId', $event)"/>
+              <NextDropdown v-model="customerType" :disabled="insertReadonly.TypeId"  lookup-key="CUSTOMER_TYPE" @input="selectedType('TypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="ServiceVisitFrequency" :error="$v.form.ServiceVisitFrequency">
               <NextInput v-model="form.ServiceVisitFrequency" :disabled="insertReadonly.ServiceVisitFrequency" />
@@ -279,7 +279,7 @@
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
                 v-model="paymentType"
-                :options="paymentTypes"
+                :source="paymentTypes"
                 label="Description1"
                 />
             </NextFormGroup>
@@ -496,17 +496,19 @@ export default {
       selectedGeographicEnvironment: null,
       selectedTradeFocus: null,
       customerType: null,
-      paymentTypes: []
+      paymentTypes: [],
+      allPaymentTypes: []
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'distiricts', 'banks', 'currency', 'allPaymentTypes', 'items', 'customerLabels', 'credits', 'touchpoints', 'touchpoint_types']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'distiricts', 'banks', 'currency', 'items', 'customerLabels', 'credits', 'touchpoints', 'touchpoint_types']),
     customerBlackReason: function () {
       return this.lookup && this.lookup.CUSTOMER_BLOCK_REASON ? this.lookup.CUSTOMER_BLOCK_REASON[0] : {}
     }
   },
   mounted () {
     this.createManualCode()
+    this.getPaymentTypes()
   },
   methods: {
     selectedType (label, model) {
@@ -564,6 +566,14 @@ export default {
         this.customerPaymentTypes.paymentType = null
         this.customerPaymentTypes.paymentTypeId = null
       }
+    },
+    getPaymentTypes () {
+      this.$api.postByUrl({}, 'VisionNextCommonApi/api/PaymentType/AutoCompleteSearch').then((response) => {
+        if (response.ListModel) {
+          this.allPaymentTypes = response.ListModel.BaseModels
+          this.paymentTypes = this.allPaymentTypes
+        }
+      })
     }
   },
   validations () {
@@ -601,9 +611,6 @@ export default {
       } else {
         this.paymentTypes = this.allPaymentTypes
       }
-    },
-    allPaymentTypes (value) {
-      this.paymentTypes = value
     }
   }
 }

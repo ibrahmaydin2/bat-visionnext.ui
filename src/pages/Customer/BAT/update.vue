@@ -53,7 +53,7 @@
               <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 0" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerEmail" :error="$v.form.CustomerEmail">
               <NextInput v-model="form.CustomerEmail" :disabled="insertReadonly.CustomerEmail" />
@@ -279,7 +279,7 @@
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
                 v-model="paymentType"
-                url="VisionNextCommonApi/api/PaymentType/Search"
+                :source="paymentTypes"
                 label="Description1"
                 />
             </NextFormGroup>
@@ -470,11 +470,12 @@ export default {
       locationEditableIndex: null,
       addressInit: null,
       paymentTypes: [],
-      Location: {}
+      Location: {},
+      allPaymentTypes: []
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'allPaymentTypes', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'cities', 'credits', 'touchpoints', 'touchpoint_types']),
+    ...mapState(['developmentMode', 'insertHTML', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'insertColumnType', 'lookup', 'createCode', 'statementDays', 'distiricts', 'banks', 'currency', 'items', 'customerLabels', 'customerLabelValues', 'rowData', 'customerCardTypes', 'cancelReasons', 'paymentPeriods', 'cities', 'credits', 'touchpoints', 'touchpoint_types']),
     filteredCustomerPaymentType () {
       return this.CustomerPaymentTypesArr.filter(item => {
         return item.RecordState !== 4
@@ -483,6 +484,7 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.getPaymentTypes()
   },
   methods: {
     selectedType (label, model) {
@@ -638,6 +640,7 @@ export default {
       this.type = rowData.Type
       this.salesDocumentType = rowData.SalesDocumentType
       this.taxCustomerType = rowData.TaxCustomerType
+      this.selectedType('TaxCustomerTypeId', rowData.TaxCustomerType)
       this.discountGroup10 = rowData.DiscountGroup10
       this.discountGroup2 = rowData.DiscountGroup2
       this.discountGroup9 = rowData.DiscountGroup9
@@ -684,25 +687,15 @@ export default {
       if (!rowData.RouteDetails) {
         this.form.RouteDetails = []
       }
-
-      if (rowData.Code === 'TZK') {
-        this.taxNumberReq = 10
-      } else {
-        this.taxNumberReq = 11
-      }
-      this.insertRules.TaxNumber = {
-        required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
-      }
+    },
+    getPaymentTypes () {
+      this.$api.postByUrl({}, 'VisionNextCommonApi/api/PaymentType/AutoCompleteSearch').then((response) => {
+        if (response.ListModel) {
+          this.allPaymentTypes = response.ListModel.BaseModels
+          this.paymentTypes = this.allPaymentTypes
+        }
+      })
     }
-  },
-  validations () {
-    let validation = {
-      form: this.insertRules
-    }
-    validation.form.TaxNumber = {
-      required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
-    }
-    return validation
   },
   watch: {
     statementDays (e) {
@@ -744,6 +737,13 @@ export default {
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
+      }
+    },
+    type (value) {
+      if (value && value.DecimalValue === 5006) {
+        this.paymentTypes = this.allPaymentTypes.filter(p => p.RecordId !== 2)
+      } else {
+        this.paymentTypes = this.allPaymentTypes
       }
     }
   }
