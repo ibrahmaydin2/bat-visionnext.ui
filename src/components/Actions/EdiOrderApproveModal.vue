@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="edi-order-approve-modal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="edi-order-approve-modal" @show="show" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('insert.ediOrder.customer')" md="3" lg="3">
@@ -26,8 +26,8 @@
         <NextFormGroup :title="$t('insert.ediOrder.status')" md="3" lg="3">
           <NextDropdown url="VisionNextOrder/api/OrderStatus/AutoCompleteSearch" @input="selectedSarchType('StatusId', $event)"/>
         </NextFormGroup>
-        <b-col class="pull-right" md="12" lg="12">
-          <b-button size="sm" variant="success" @click="getList"> <i class="fa fa-search"></i>{{$t('index.Convert.find')}}</b-button>
+        <b-col md="12" lg="12">
+          <b-button class="float-right mb-2" size="sm" variant="success" @click="getList"> <i class="fa fa-search"></i>{{$t('index.Convert.find')}}</b-button>
         </b-col>
       </b-row>
       <b-row>
@@ -37,10 +37,10 @@
             :items="list"
             :fields="fields"
             sticky-header
-            selection-mode="multi"
+            select-mode="multi"
+            :busy="tableBusy"
             @row-selected="onRowSelected"
             selectable
-            :busy="tableBusy"
             :current-page="currentPage"
             :per-page="10"
           >
@@ -48,6 +48,11 @@
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
               </div>
+            </template>
+            <template #cell(selection)="row">
+              <span>
+                <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+              </span>
             </template>
           </b-table>
           <b-pagination
@@ -60,6 +65,14 @@
       </b-row>
     </section>
     <template #modal-footer>
+      <b-row v-if="showCancel" class="footer-input">
+        <NextFormGroup :title="$t('insert.ediOrder.cancelType')" :required="true" :error="$v.cancelForm.cancelType" md="6" lg="6">
+          <NextDropdown v-model="cancelForm.cancelType" url="VisionNextCommonApi/api/CancelReason/Search" />
+        </NextFormGroup>
+        <NextFormGroup :title="$t('insert.ediOrder.cancelDate')" :required="true" :error="$v.cancelForm.cancelDate" md="6" lg="6">
+          <NextDatePicker v-model="cancelForm.cancelDate"/>
+        </NextFormGroup>
+      </b-row>
       <div class="w-100 text-right">
         <b-button
           variant="danger"
@@ -69,13 +82,22 @@
           {{$t('index.close')}}
         </b-button>
         <b-button
-          :disabled="!form || !form.RecordId  || form.RecordId === 0"
+          :disabled="selectedList.length === 0 || showLoadingCancel"
+          variant="warning"
+          size="sm"
+          @click="cancel()"
+        >
+          <span v-if="!showLoadingCancel">{{$t('index.cancel')}}</span>
+          <b-spinner v-else small variant="default"></b-spinner>
+        </b-button>
+        <b-button
+          :disabled="selectedList.length === 0 || showLoadingApprove"
           variant="primary"
           size="sm"
-          @click="submitModal()"
+          @click="approve()"
         >
-          {{$t('index.approve')}}
-          <b-spinner v-if="showLoading" small variant="primary"></b-spinner>
+          <span v-if="!showLoadingApprove">{{$t('index.approve')}}</span>
+          <b-spinner v-else small variant="default"></b-spinner>
         </b-button>
       </div>
     </template>
@@ -83,6 +105,7 @@
 </template>
 <script>
 import mixin from '../../mixins/index'
+import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'EdiOrderApproveModal',
   mixins: [mixin],
@@ -101,9 +124,14 @@ export default {
     return {
       list: [],
       form: {},
+      selectedList: [],
+      showLoadingCancel: false,
+      showLoadingApprove: false,
+      showCancel: false,
+      cancelForm: {},
       tableBusy: false,
-      showLoading: false,
       fields: [
+        {key: 'selection', label: '', sortable: false},
         {
           key: 'Customer.Label',
           label: this.$t('insert.ediOrder.customer')
@@ -150,13 +178,23 @@ export default {
       currentPage: 1
     }
   },
-  mounted () {
-    debugger
-    this.form.DocumentDate = this.documentDate
-  },
   methods: {
+    show () {
+      this.form = {
+        DocumentDate: this.documentDate
+      }
+      this.cancelForm = {}
+      this.$v.cancelForm.$reset()
+      this.list = []
+      this.selectedList = []
+      this.showLoadingCancel = false
+      this.showLoadingApprove = false
+      this.showCancel = false
+      this.tableBusy = false
+    },
     getList () {
       let documentDate = null
+      this.selectedList = []
       if (this.form.DocumentDate && this.form.DocumentDate.length === 2) {
         documentDate = {
           BeginValue: this.form.DocumentDate[0],
@@ -188,12 +226,81 @@ export default {
         }
       })
     },
-    onRowSelected (data) {
-
+    onRowSelected (list) {
+      this.selectedList = list
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'edi-order-approve-modal')
+    },
+    approve () {
+      this.$store.commit('setDisabledLoading', true)
+      this.showLoadingApprove = true
+      let request = {
+        RecordIds: this.selectedList.map(s => s.RecordId)
+      }
+      this.$api.postByUrl(request, 'VisionNextOrder/api/EdiOrder/ApproveEdiOrder').then((response) => {
+        this.showLoadingApprove = false
+        this.$store.commit('setDisabledLoading', false)
+        this.closeModal()
+        if (response.IsCompleted) {
+          this.$toasted.show(this.$t('insert.ediOrder.successApprove'), { type: 'success', keepOnHover: true, duration: '3000' })
+        }
+      })
+    },
+    cancel () {
+      this.showCancel = true
+      this.$v.cancelForm.$touch()
+      if (this.$v.cancelForm.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.$store.commit('setDisabledLoading', true)
+      this.showLoadingCancel = true
+      let request = {
+        RecordIds: this.selectedList.map(s => s.RecordId),
+        Model: {
+          CancelReasonId: this.cancelForm.cancelType.RecordId,
+          CanceledDatetime: this.cancelForm.cancelDate
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextOrder/api/EdiOrder/Cancel').then((response) => {
+        this.showLoadingCancel = false
+        this.$store.commit('setDisabledLoading', false)
+        this.showCancel = false
+        this.$v.cancelForm.$reset()
+        this.closeModal()
+        if (response.IsCompleted) {
+          this.$toasted.show(this.$t('insert.ediOrder.successCancel'), { type: 'success', keepOnHover: true, duration: '3000' })
+        }
+      })
+    }
+  },
+  validations: {
+    cancelForm: {
+      cancelType: {
+        required
+      },
+      cancelDate: {
+        required
+      }
     }
   }
 }
 </script>
+<style scoped>
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
+}
+.footer-input {
+  width: 100%;
+}
+</style>

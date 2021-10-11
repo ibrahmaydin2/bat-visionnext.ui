@@ -2163,7 +2163,11 @@
       "documentDate": "Belge Tarihi",
       "representative": "Personel",
       "state": "Durum",
-      "status": "Sevkiyat Durumu"
+      "status": "Sevkiyat Durumu",
+      "successApprove": "Onaylama işleminiz başarıyla tamamlanmıştır.",
+      "successCancel": "İptal işleminiz başarıyla tamamlanmıştır.",
+      "cancelType": "İptal Tipi",
+      "cancelDate": "İptal Zamanı"
     }
   },
   "get": {
@@ -2721,6 +2725,7 @@
     "print": "Yazdır",
     "close": "Kapat",
     "approve": "Onayla",
+    "cancel": "İptal",
     "search": "Ara",
     "success": "Başarılı",
     "upload": "Yükle",
