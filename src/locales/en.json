@@ -2751,6 +2751,7 @@
     "error": "Hata",
     "Convert": {
       "ItemCode":"Ürün Kodu",
+      "ItemName":"Ürün Adı",
       "Item":"Ürün",
       "Quantity":"Sipariş Miktarı",
       "Stock":"Stok Miktarı",
