@@ -2154,6 +2154,16 @@
       "Genexp1": "Açıklama",
       "Operation": "Operasyon Tipi",
       "customer": "Nokta"
+    },
+    "ediOrder": {
+      "customer": "Müşteri",
+      "orderNumber": "Sipariş No",
+      "description1": "Açıklama",
+      "documentNumber": "Belge Numarası",
+      "documentDate": "Belge Tarihi",
+      "representative": "Personel",
+      "state": "Durum",
+      "status": "Sevkiyat Durumu"
     }
   },
   "get": {

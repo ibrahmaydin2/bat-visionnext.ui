@@ -167,6 +167,7 @@
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
         <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
         <CreditBudgetBulkApproveModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :recordIds="recordIds" size="xl"/>
+        <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :recordIds="recordIds" :documentDate="additionalValue"/>
   </b-container>
 </template>
 <script>
@@ -179,6 +180,7 @@ import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoic
 import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturnInvoiceConvertModal'
 import ItemFormulaModal from '../../components/Actions/ItemFormulaModal'
 import PurchaseReturnInvoiceRmaApproveModal from '../../components/Actions/PurchaseReturnInvoiceRmaApproveModal'
+import EdiOrderApproveModal from '../../components/Actions/EdiOrderApproveModal'
 
 export default {
   components: {
@@ -189,7 +191,8 @@ export default {
     PurchaseInvoiceConvertModal,
     SalesReturnInvoiceConvertModal,
     ItemFormulaModal,
-    PurchaseReturnInvoiceRmaApproveModal
+    PurchaseReturnInvoiceRmaApproveModal,
+    EdiOrderApproveModal
   },
   data () {
     return {
@@ -206,7 +209,9 @@ export default {
       showItemFormulaModal: false,
       showPurchaseReturnInvoiceRmaApproveModal: false,
       showUpdateCreditBudgetModal: false,
-      purchaseReturnRmaType: 'Invoice'
+      showEdiOrderApproveModal: false,
+      purchaseReturnRmaType: 'Invoice',
+      additionalValue: null
     }
   },
   mounted () {
@@ -216,7 +221,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows', 'isMultipleGrid'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows', 'isMultipleGrid', 'tableRows'])
   },
   watch: {
     $route (to, from) {
@@ -295,6 +300,7 @@ export default {
       this.showItemFormulaModal = false
       this.showPurchaseReturnInvoiceRmaApproveModal = false
       this.showUpdateCreditBudgetModal = false
+      this.showEdiOrderApproveModal = false
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
           type: 'error',
@@ -353,8 +359,21 @@ export default {
           this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
         })
         return
+      } else if (action.Action === 'ApproveEdiOrder') {
+        this.showEdiOrderApproveModal = true
+        this.additionalValue = this.getValueFromGrid('DocumentDate')
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'edi-order-approve-modal')
+        })
+        return
       }
+
       this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
+    },
+    getValueFromGrid (dataField) {
+      let filteredList = this.tableRows.filter(item => item.visible === true && item.dataField === dataField)
+
+      return filteredList && filteredList.length > 0 ? filteredList[0].defaultValue : null
     }
   }
 }

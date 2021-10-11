@@ -1,5 +1,18 @@
 <template>
-  <b-form-datepicker @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
+  <div>
+    <date-picker
+      v-if="range"
+      class="range-date"
+      range
+      type="date"
+      @input="input($event)"
+      v-model="selectedValue"
+      :placeholder="$t('insert.chooseDate')"
+      format="YYYY-MM-DD"
+      value-type="format"
+      :disabled="disabled" ></date-picker>
+      <b-form-datepicker v-else @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
+  </div>
 </template>
 <script>
 import mixin from '../mixins/index'
@@ -12,7 +25,8 @@ export default {
   },
   props: {
     value: null,
-    disabled: null
+    disabled: null,
+    range: false
   },
   data () {
     return {
@@ -28,14 +42,16 @@ export default {
   watch: {
     selectedValue (newValue, oldValue) {
       if (newValue !== oldValue) {
-        newValue = this.dateConvertToISo(newValue)
+        if (!this.range) {
+          newValue = this.dateConvertToISo(newValue)
+        }
         this.$emit('valuechange', newValue)
       }
     },
     value: {
       handler (newValue, oldValue) {
         if (newValue !== oldValue) {
-          if (newValue && !newValue.includes('Z')) {
+          if (!this.range && newValue && !newValue.includes('Z')) {
             newValue = `${newValue}Z`
           }
           this.selectedValue = newValue
@@ -48,3 +64,8 @@ export default {
 }
 
 </script>
+<style>
+.range-date {
+  width: auto !important;
+}
+</style>
