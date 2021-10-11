@@ -287,8 +287,17 @@ export default {
         if (this.model[item]) {
           let key = item + 'Desc'
           let properties = this.items.filter(i => i.modelProperty === item)
-          if (properties && properties.length === 1 && properties[0].labelProperty) {
-            this.form[key] = this.model[item][properties[0].labelProperty]
+          if (properties && properties.length === 1) {
+            let property = properties[0]
+            if (property.labelProperty) {
+              this.form[key] = this.model[item][properties[0].labelProperty]
+            } else {
+              this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
+            }
+            if (property.gridCustomOption) {
+              let codeKey = item + 'Code'
+              this.form[codeKey] = this.model[item]['Code']
+            }
           } else {
             this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
           }
@@ -521,6 +530,8 @@ export default {
           value = obj[item.objectKey][item.labelProperty]
         } else if (obj[item.objectKey][item.modelProperty]) {
           value = obj[item.objectKey][item.modelProperty]
+        } else if (item.gridCustomOption) {
+          value = obj[item.objectKey].Code + ' - ' + obj[item.objectKey].Label
         } else if (obj[item.objectKey].Label) {
           value = obj[item.objectKey].Label
         } else if (obj[item.objectKey].Description1) {
@@ -531,11 +542,16 @@ export default {
           value = obj[item.objectKey]
         }
       } else {
+        let descKey = item.modelProperty + 'Desc'
+        let codeKey = item.modelProperty + 'Code'
         if (item.type !== 'Label') {
-          value = obj[item.modelProperty + 'Desc']
+          if (item.gridCustomOption) {
+            value = obj[descKey] + ' - ' + obj[codeKey]
+          } else {
+            value = obj[descKey]
+          }
         }
       }
-
       return value
     }
   },
