@@ -48,7 +48,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card" >
-                <NextDetailPanel type="get"  v-model="rowData.RouteDetails" :items="locationItems" :detail-buttons="detailButtons" />
+                <NextDetailPanel type="get"  v-model="rowData.RouteDetails" :items="getLocationItems" :detail-buttons="detailButtons" />
               </b-card>
             </b-col>
           </b-row>
@@ -76,7 +76,7 @@ export default {
           }
         }
       ],
-      locationItems: detailData.locationItems
+      getLocationItems: detailData.getLocationItems
     }
   },
   mounted () {

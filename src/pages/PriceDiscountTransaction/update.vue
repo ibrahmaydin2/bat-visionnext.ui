@@ -248,7 +248,10 @@ export default {
         if (this.form.CustomerId > 0 && this.useBudget) {
           var me = this
           me.budgets = []
-          me.$api.get('Budget', `BudgetMaster/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+          let request = {
+            customerId: this.form.CustomerId
+          }
+          me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
             if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
               me.budgets = res.ListModel.BaseModels
               me.$forceUpdate()
@@ -298,7 +301,10 @@ export default {
       } else {
         if (this.form.CustomerId) {
           var me = this
-          me.$api.get('Budget', `BudgetMaster/GetCustomerBudget?customerId=${this.form.CustomerId}`).then((res) => {
+          let request = {
+            customerId: this.form.CustomerId
+          }
+          me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
             if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
               me.budgets = res.ListModel.BaseModels
               me.$forceUpdate()

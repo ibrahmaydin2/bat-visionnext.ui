@@ -19,7 +19,7 @@
             :items="list"
             :fields="fields"
             sticky-header
-            selection-mode="single"
+            select-mode="single"
             @row-selected="onRowSelected"
             selectable
             :busy="tableBusy"
@@ -30,6 +30,18 @@
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
               </div>
+            </template>
+            <template #row-details>
+              <b-table
+                id="convert-detail-list"
+                :items="form.InvoiceLines"
+                :fields="detailFields"
+                sticky-header
+              >
+                <template #cell(RejectedQuantity)="data">
+                  <NextInput type="number" v-model="data.item.RejectedQuantity" />
+                </template>
+              </b-table>
             </template>
           </b-table>
           <b-pagination
@@ -55,7 +67,7 @@
           size="sm"
           variant="success"
           @click="getList">
-          <i class="fa fa-search"></i>{{$t('index.Convert.find')}}</b-button>
+          <i class="fa fa-search mr-1"></i>{{$t('index.Convert.find')}}</b-button>
         <b-button
           :disabled="!form || !form.RecordId  || form.RecordId === 0"
           variant="primary"
@@ -152,7 +164,25 @@ export default {
           sortable: true
         }
       ],
-      currentPage: 1
+      currentPage: 1,
+      detailFields: [
+        {
+          key: 'Item.Code',
+          label: this.$t('index.Convert.ItemCode')
+        },
+        {
+          key: 'Item.Label',
+          label: this.$t('index.Convert.ItemName')
+        },
+        {
+          key: 'Quantity',
+          label: this.$t('index.Convert.InvoiceLineQuantity')
+        },
+        {
+          key: 'RejectedQuantity',
+          label: this.$t('index.Convert.RejectedQuantity')
+        }
+      ]
     }
   },
   mounted () {
@@ -199,8 +229,17 @@ export default {
       this.selectedItem = {}
       if (items && items.length > 0) {
         this.selectedItem = items[0]
+        for (const listItem of this.list) {
+          this.$set(listItem, '_showDetails', false)
+        }
+        this.$set(this.selectedItem, '_showDetails', !this.selectedItem._showDetails)
+
         this.$api.postByUrl({recordId: this.selectedItem.RecordId}, this.detailUrl).then((response) => {
           this.form = response.InvoiceLiteModel
+          this.form.InvoiceLines = this.form.InvoiceLines.map(item => {
+            item.RejectedQuantity = 0
+            return item
+          })
         })
       }
     },
