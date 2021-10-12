@@ -206,6 +206,9 @@
             <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateTimeformat(item[h.dataField])">
               {{ dateTimeformat(item[h.dataField]) }}
             </span>
+            <span v-else-if="h.columnType === 'DateTime2'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateTimeformat(item[h.dataField])">
+              {{ dateTimeformat(item[h.dataField]) }}
+            </span>
             <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               {{ item[h.dataField] }}
             </span>

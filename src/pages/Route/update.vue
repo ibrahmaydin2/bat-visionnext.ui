@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" :active="!developmentMode">
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
@@ -192,6 +192,11 @@ export default {
     setData () {
       const e = this.rowData
       this.form = e
+      this.form.RouteDetails = e.RouteDetails.map((item) => {
+        item.DayFrequency = item.AnnualVisitCount
+
+        return item
+      })
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
       this.visitStartControl = e.VisitStartControl
       this.CustomerRegion5Id = e.CustomerRegion5
