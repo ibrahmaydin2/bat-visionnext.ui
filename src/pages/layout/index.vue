@@ -167,7 +167,7 @@
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
         <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
         <CreditBudgetBulkApproveModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :recordIds="recordIds" size="xl"/>
-        <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :recordIds="recordIds" :documentDate="additionalValue"/>
+        <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :documentDate="additionalValue"/>
   </b-container>
 </template>
 <script>
@@ -215,7 +215,7 @@ export default {
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
