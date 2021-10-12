@@ -2,14 +2,14 @@
   <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="'purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
-        <NextFormGroup :title="$t('index.Convert.SupplierId')" md="4" lg="4">
+        <NextFormGroup :title="$t('index.Convert.SupplierId')" md="3" lg="3">
           <NextDropdown v-model="supplier" url="VisionNextBranch/api/Branch/AutoCompleteSearch" searchable/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.InvoiceNumber')" md="4" lg="4">
-          <b-form-input type="text" v-model="invoiceNumber" />
+        <NextFormGroup :title="$t('index.Convert.InvoiceNumber')" md="3" lg="3">
+          <NextInput type="text" v-model="invoiceNumber" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
-          <b-form-input type="text" v-model="documentNumber" />
+        <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="3" lg="3">
+          <NextInput type="text" v-model="documentNumber" />
         </NextFormGroup>
       </b-row>
       <b-row>
@@ -32,6 +32,11 @@
               </div>
             </template>
             <template #row-details>
+              <b-row>
+                <NextFormGroup :title="$t('index.Convert.WarehouseId')" md="3" lg="3">
+                  <NextDropdown v-model="warehouse" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :dynamic-and-condition="{IsVehicle: 0}"/>
+                </NextFormGroup>
+              </b-row>
               <b-table
                 id="convert-detail-list"
                 :items="form.InvoiceLines"
@@ -116,9 +121,11 @@ export default {
       selectedItem: {},
       showLoading: false,
       supplier: null,
+      warehouse: null,
       invoiceNumber: null,
       documentNumber: null,
       tableBusy: false,
+      representativeId: null,
       fields: [
         {
           key: 'Customer.Label',
@@ -193,8 +200,11 @@ export default {
         this.selectedItem = {}
         this.showLoading = false
         this.supplier = null
+        this.warehouse = null
         this.documentNumber = null
         this.invoiceNumber = null
+        this.representativeId = null
+        this.getUserInfo()
       }
     })
   },
@@ -244,9 +254,15 @@ export default {
       }
     },
     submitModal () {
+      if (!this.warehouse) {
+        this.$toasted.show(this.$t('index.Convert.warehouseRequired'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
+
       let request = {
-        warehouseId: this.selectedItem.WarehouseId,
+        warehouseId: this.warehouse.RecordId,
         recordId: this.selectedItem.RecordId,
+        representativeId: this.representativeId,
         invoiceLiteModel: this.form
       }
       this.showLoading = true
@@ -276,6 +292,22 @@ export default {
           }
         }
       })
+    },
+    getUserInfo () {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      if (userModel) {
+        let request = {
+          andConditionModel: {
+            RecordIds: [userModel.UserId]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
+          if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+            let user = response.ListModel.BaseModels[0]
+            this.representativeId = user.EmployeeId
+          }
+        })
+      }
     }
   }
 }
