@@ -624,6 +624,7 @@ export default {
         ItemCode: selectedItem.Code,
         UnitSetId: selectedItem.UnitSetId,
         UnitId: selectedItem.UnitId,
+        CardTypeId: selectedItem.CardTypeId,
         ConvFact1: 1,
         ConvFact2: 1,
         Quantity: quantity,
@@ -697,7 +698,7 @@ export default {
         if (res && res.Invoice) {
           this.form = res.Invoice
         }
-        this.createData()
+        this.savePage()
       })
     },
     onCampaignSelected (items) {
@@ -760,9 +761,29 @@ export default {
             this.$bvModal.show('campaign-modal')
           } else {
             this.campaigns = []
-            this.createData()
+            this.savePage()
           }
         })
+      }
+    },
+    savePage () {
+      if (this.form.InvoiceLines.some(item => item.CardTypeId === 3) && this.selectedPaymentType.Code === 'PES') {
+        this.$bvModal.msgBoxConfirm(this.$t('insert.order.returnInvoiceMessage'), {
+          title: this.$t('insert.order.pleaseConfirm'),
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: this.$t('insert.order.yes'),
+          cancelTitle: this.$t('insert.order.no'),
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+          .then(value => {
+            this.form.IsSalesReturnInvoice = value === true ? 1 : 0
+            this.createData()
+          })
+      } else {
+        this.createData()
       }
     },
     getLastProducts () {
