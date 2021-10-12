@@ -114,10 +114,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    recordIds: {
-      type: Array,
-      default: () => []
-    },
     documentDate: null
   },
   data () {
@@ -204,7 +200,6 @@ export default {
       let request = {
         andConditionModel: {
           DocumentDate: documentDate,
-          RecordIds: this.recordIds,
           CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null,
           OrderNumber: this.form.OrderNumber,
           Description1: this.form.Description1,
