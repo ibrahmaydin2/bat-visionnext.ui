@@ -3038,7 +3038,9 @@
       "loadingBeginDate": "Yükleme Başlangıç Tarihi",
       "loadingEndDate": "Yükleme Bitiş Tarihi",
       "route" : "Rota",
-      "day" : "Gün"
+      "day" : "Gün",
+      "WarehouseId": "Depo",
+      "warehouseRequired": "Depo seçimi zorunludur."
     },
     "ItemFormula": {
       "Code": "Kod",
