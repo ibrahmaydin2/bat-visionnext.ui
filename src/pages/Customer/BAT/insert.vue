@@ -50,10 +50,10 @@
               <NextDropdown :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
-              <NextInput v-model="form.TaxOffice" type="text" :disabled="form.IsDutyFree === 0" />
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="form.IsDutyFree === 0" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerEmail" :error="$v.form.CustomerEmail">
               <NextInput v-model="form.CustomerEmail" :disabled="insertReadonly.CustomerEmail" />
@@ -86,25 +86,22 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :disabled="insertReadonly.IsBlocked"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsRouteRegion" :error="$v.form.IsRouteRegion">
-              <NextCheckBox v-model="form.IsRouteRegion" type="number" toggle/>
+              <NextCheckBox v-model="form.IsRouteRegion" type="number" toggle :disabled="insertReadonly.IsRouteRegion"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary">
-              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
+              <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle :disabled="insertReadonly.IsOrderChangeUnitary"/>
             </NextFormGroup>
              <NextFormGroup item-key="UseEInvoice" :error="$v.form.UseEInvoice">
-              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle/>
+              <NextCheckBox v-model="form.UseEInvoice" type="number" toggle :disabled="insertReadonly.UseEInvoice"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsWarehouseSale" :error="$v.form.IsWarehouseSale">
-              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle/>
+              <NextCheckBox v-model="form.IsWarehouseSale" type="number" toggle :disabled="insertReadonly.IsWarehouseSale"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
-              <NextCheckBox v-model="form.IsDutyFree" type="number" toggle/>
+              <NextCheckBox v-model="form.IsDutyFree" type="number" toggle :disabled="insertReadonly.IsDutyFree"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -284,22 +281,22 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="AllowOverLimit" :error="$v.form.AllowOverLimit">
-              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle/>
+              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle :disabled="insertReadonly.AllowOverLimit"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDirectDebit" :error="$v.form.IsDirectDebit">
-              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle/>
+              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle :disabled="insertReadonly.IsDirectDebit"/>
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle :disabled="insertReadonly.ManualInvoiceClosure"/>
             </NextFormGroup>
             <NextFormGroup item-key="Statement" :error="$v.form.Statement">
-              <NextCheckBox v-model="form.Statement" type="number" toggle/>
+              <NextCheckBox v-model="form.Statement" type="number" toggle :disabled="insertReadonly.Statement"/>
             </NextFormGroup>
-            <NextFormGroup item-key="StatemeIsBlackListednt" :error="$v.form.IsBlackListed">
-              <NextCheckBox v-model="form.IsBlackListed" type="number" toggle/>
+            <NextFormGroup item-key="IsBlackListed" :error="$v.form.IsBlackListed">
+              <NextCheckBox v-model="form.IsBlackListed" type="number" toggle :disabled="insertReadonly.IsBlackListed"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
-              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle/>
+              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle :disabled="insertReadonly.IsAutoBlockingOff"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
