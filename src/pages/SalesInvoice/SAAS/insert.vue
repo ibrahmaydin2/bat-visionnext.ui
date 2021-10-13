@@ -446,9 +446,11 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        andConditionModel: {
+          PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
+          EndDate: {
+            BeginValue: this.form.DocumentDate
+          }
         }
       }
       this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/Search').then((response) => {
@@ -520,8 +522,10 @@ export default {
         return false
       }
       let model = {
-        PriceListIds: [this.selectedPrice.RecordId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        andConditionModel: {
+          PriceListIds: [this.selectedPrice.RecordId],
+          ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        }
       }
       var me = this
       me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
@@ -530,6 +534,7 @@ export default {
         }
         if (me.priceListItems && me.priceListItems.length > 0) {
           me.priceListItem = me.priceListItems[0]
+          me.selectedInvoiceLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? me.priceListItem.Vat : 0
           if (me.priceListItem.UseConsumerPrice === 1) {
             me.selectedInvoiceLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
           } else {
@@ -552,7 +557,6 @@ export default {
     selectItem (value) {
       if (value) {
         this.selectedInvoiceLine.selectedItem = value
-        this.selectedInvoiceLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? value.Vat : 0
       }
       this.searchPriceListItem()
       this.setStock()
@@ -651,6 +655,7 @@ export default {
         ItemCode: selectedItem.Code,
         UnitSetId: selectedItem.UnitSetId,
         UnitId: selectedItem.UnitId,
+        CardTypeId: selectedItem.CardTypeId,
         ConvFact1: 1,
         ConvFact2: 1,
         Quantity: quantity,
@@ -736,7 +741,7 @@ export default {
         if (res && res.Invoice) {
           this.form = res.Invoice
         }
-        this.createData()
+        this.savePage()
       })
     },
     onCampaignSelected (items) {
@@ -800,9 +805,46 @@ export default {
             this.$bvModal.show('campaign-modal')
           } else {
             this.campaigns = []
-            this.createData()
+            this.savePage()
           }
         })
+      }
+    },
+    savePage () {
+      if (this.form.InvoiceLines.some(item => item.CardTypeId === 3)) {
+        this.$bvModal.msgBoxConfirm(this.$t('insert.order.returnInvoiceMessage'), {
+          title: this.$t('insert.order.pleaseConfirm'),
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: this.$t('insert.order.yes'),
+          cancelTitle: this.$t('insert.order.no'),
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+          .then(value => {
+            this.form.IsSalesReturnInvoice = value === true ? 1 : 0
+            if ((this.form.IsSalesReturnInvoice === 0) && (this.selectedPaymentType.Code === 'PES')) {
+              this.$bvModal.msgBoxConfirm(this.$t('insert.order.cashCardMessage'), {
+                title: this.$t('insert.order.pleaseConfirm'),
+                size: 'sm',
+                buttonSize: 'sm',
+                okTitle: this.$t('insert.order.yes'),
+                cancelTitle: this.$t('insert.order.no'),
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+              })
+                .then(value => {
+                  this.form.IsCashCard = value === true ? 1 : 0
+                  this.createData()
+                })
+            } else {
+              this.createData()
+            }
+          })
+      } else {
+        this.createData()
       }
     },
     getLastProducts () {
