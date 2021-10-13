@@ -34,6 +34,7 @@
         <b-col>
           <b-table
             id="order-list"
+            ref="orderList"
             :items="list"
             :fields="fields"
             sticky-header
@@ -48,6 +49,13 @@
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
               </div>
+            </template>
+            <template v-slot:head(selection)>
+              <b-link variant="white" size="sm" @click="selectAll">
+                <span>
+                  <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+              </span>
+              </b-link>
             </template>
             <template #cell(selection)="row">
               <span>
@@ -127,51 +135,45 @@ export default {
       cancelForm: {},
       tableBusy: false,
       fields: [
-        {key: 'selection', label: '', sortable: false},
+        {key: 'selection', label: ''},
         {
           key: 'Customer.Label',
           label: this.$t('insert.ediOrder.customer')
         },
         {
           key: 'OrderNumber',
-          label: this.$t('insert.ediOrder.orderNumber'),
-          sortable: true
+          label: this.$t('insert.ediOrder.orderNumber')
         },
         {
           key: 'Description1',
-          label: this.$t('insert.ediOrder.description1'),
-          sortable: true
+          label: this.$t('insert.ediOrder.description1')
         },
         {
           key: 'DocumentNumber',
-          label: this.$t('insert.ediOrder.documentNumber'),
-          sortable: true
+          label: this.$t('insert.ediOrder.documentNumber')
         },
         {
           key: 'DocumentDate',
           label: this.$t('insert.ediOrder.documentDate'),
-          sortable: true,
           formatter: (value, key, item) => {
             return this.dateConvertFromTimezone(item.DocumentDate)
           }
         },
         {
           key: 'Representative.Label',
-          label: this.$t('insert.ediOrder.representative'),
-          sortable: true
+          label: this.$t('insert.ediOrder.representative')
         },
         {
           key: 'State.Label',
-          label: this.$t('insert.ediOrder.state'),
-          sortable: true
+          label: this.$t('insert.ediOrder.state')
         },
         {
           key: 'Status.Label',
-          label: this.$t('insert.ediOrder.status'),
-          sortable: true
+          label: this.$t('insert.ediOrder.status')
         }
       ],
-      currentPage: 1
+      currentPage: 1,
+      allSelected: false
     }
   },
   methods: {
@@ -190,6 +192,8 @@ export default {
     },
     getList () {
       let documentDate = null
+      this.allSelected = false
+      this.$refs.orderList.clearSelected()
       this.selectedList = []
       if (this.form.DocumentDate && this.form.DocumentDate.length === 2) {
         documentDate = {
@@ -272,6 +276,15 @@ export default {
           this.$toasted.show(this.$t('insert.ediOrder.successCancel'), { type: 'success', keepOnHover: true, duration: '3000' })
         }
       })
+    },
+    selectAll () {
+      if (this.allSelected) {
+        this.$refs.orderList.clearSelected()
+      } else {
+        this.$refs.orderList.selectAllRows()
+      }
+
+      this.allSelected = !this.allSelected
     }
   },
   validations: {
