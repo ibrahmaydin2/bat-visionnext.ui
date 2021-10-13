@@ -5,8 +5,8 @@ export const detailData = {
       type: 'Autocomplete',
       modelProperty: 'CustomerId',
       objectKey: 'Customer',
+      labelProperty: 'Code',
       customOption: true,
-      gridCustomOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
@@ -16,10 +16,21 @@ export const detailData = {
       id: 1
     },
     {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'CustomerName',
+      parentProperty: 'Description1',
+      objectKey: 'Customer',
+      disabled: true,
+      label: i18n.t('insert.route.CustomerName'),
+      id: 2,
+      parentId: 1
+    },
+    {
       type: 'Dropdown',
       inputType: 'text',
       modelProperty: 'LocationId',
-      gridCustomOption: true,
+      labelProperty: 'Code',
       objectKey: 'Location',
       parentProperty: 'RecordId',
       url: 'VisionNextCustomer/api/CustomerLocation/Search',
@@ -31,7 +42,18 @@ export const detailData = {
         return !form.CustomerId
       },
       parentId: 1,
-      id: 2
+      id: 3
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'LocationName',
+      parentProperty: 'Description1',
+      objectKey: 'Location',
+      disabled: true,
+      label: i18n.t('insert.route.LocationName'),
+      id: 4,
+      parentId: 3
     },
     {
       type: 'Text',
@@ -39,7 +61,15 @@ export const detailData = {
       modelProperty: 'Day1VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day1VisitOrder'),
-      id: 3
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day1VisitOrder',
+      visible: true,
+      label: i18n.t('insert.route.Day1VisitOrder'),
+      id: 6
     },
     {
       type: 'Text',
@@ -47,7 +77,7 @@ export const detailData = {
       modelProperty: 'Day2VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day2VisitOrder'),
-      id: 4
+      id: 7
     },
     {
       type: 'Text',
@@ -55,7 +85,7 @@ export const detailData = {
       modelProperty: 'Day3VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day3VisitOrder'),
-      id: 5
+      id: 8
     },
     {
       type: 'Text',
@@ -63,7 +93,7 @@ export const detailData = {
       modelProperty: 'Day4VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day4VisitOrder'),
-      id: 6
+      id: 9
     },
     {
       type: 'Text',
@@ -71,7 +101,7 @@ export const detailData = {
       modelProperty: 'Day5VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day5VisitOrder'),
-      id: 7
+      id: 10
     },
     {
       type: 'Text',
@@ -79,7 +109,7 @@ export const detailData = {
       modelProperty: 'Day6VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day6VisitOrder'),
-      id: 8
+      id: 11
     },
     {
       type: 'Text',
@@ -87,14 +117,14 @@ export const detailData = {
       modelProperty: 'Day7VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day7VisitOrder'),
-      id: 9
+      id: 12
     },
     {
       type: 'Date',
       modelProperty: 'DayFreStartDate',
       visible: true,
       label: i18n.t('insert.route.DayFreStartDate'),
-      id: 10
+      id: 13
     },
     {
       type: 'Text',
@@ -102,7 +132,7 @@ export const detailData = {
       modelProperty: 'DayFrequency',
       visible: true,
       label: i18n.t('insert.route.DayFrequency'),
-      id: 11
+      id: 14
     }
   ],
   getLocationItems: [
@@ -110,8 +140,8 @@ export const detailData = {
       type: 'Autocomplete',
       modelProperty: 'CustomerId',
       objectKey: 'Customer',
+      labelProperty: 'Code',
       customOption: true,
-      gridCustomOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
@@ -121,10 +151,21 @@ export const detailData = {
       id: 1
     },
     {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'CustomerName',
+      parentProperty: 'Description1',
+      objectKey: 'Customer',
+      disabled: true,
+      label: i18n.t('insert.route.CustomerName'),
+      id: 2,
+      parentId: 1
+    },
+    {
       type: 'Dropdown',
       inputType: 'text',
       modelProperty: 'LocationId',
-      gridCustomOption: true,
+      labelProperty: 'Code',
       objectKey: 'Location',
       parentProperty: 'RecordId',
       url: 'VisionNextCustomer/api/CustomerLocation/Search',
@@ -136,7 +177,18 @@ export const detailData = {
         return !form.CustomerId
       },
       parentId: 1,
-      id: 2
+      id: 3
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'LocationName',
+      parentProperty: 'Description1',
+      objectKey: 'Location',
+      disabled: true,
+      label: i18n.t('insert.route.LocationName'),
+      id: 4,
+      parentId: 3
     },
     {
       type: 'Text',
@@ -144,7 +196,15 @@ export const detailData = {
       modelProperty: 'Day1VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day1VisitOrder'),
-      id: 3
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Day1VisitOrder',
+      visible: true,
+      label: i18n.t('insert.route.Day1VisitOrder'),
+      id: 6
     },
     {
       type: 'Text',
@@ -152,7 +212,7 @@ export const detailData = {
       modelProperty: 'Day2VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day2VisitOrder'),
-      id: 4
+      id: 7
     },
     {
       type: 'Text',
@@ -160,7 +220,7 @@ export const detailData = {
       modelProperty: 'Day3VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day3VisitOrder'),
-      id: 5
+      id: 8
     },
     {
       type: 'Text',
@@ -168,7 +228,7 @@ export const detailData = {
       modelProperty: 'Day4VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day4VisitOrder'),
-      id: 6
+      id: 9
     },
     {
       type: 'Text',
@@ -176,7 +236,7 @@ export const detailData = {
       modelProperty: 'Day5VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day5VisitOrder'),
-      id: 7
+      id: 10
     },
     {
       type: 'Text',
@@ -184,7 +244,7 @@ export const detailData = {
       modelProperty: 'Day6VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day6VisitOrder'),
-      id: 8
+      id: 11
     },
     {
       type: 'Text',
@@ -192,14 +252,14 @@ export const detailData = {
       modelProperty: 'Day7VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day7VisitOrder'),
-      id: 9
+      id: 12
     },
     {
       type: 'Date',
       modelProperty: 'DayFreStartDate',
       visible: true,
       label: i18n.t('insert.route.DayFreStartDate'),
-      id: 10
+      id: 13
     },
     {
       type: 'Text',

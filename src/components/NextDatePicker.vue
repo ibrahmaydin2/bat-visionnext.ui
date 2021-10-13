@@ -51,7 +51,7 @@ export default {
     value: {
       handler (newValue, oldValue) {
         if (newValue !== oldValue) {
-          if (!this.range && newValue && !newValue.includes('Z')) {
+          if (!this.range && newValue && newValue.includes && !newValue.includes('Z')) {
             newValue = `${newValue}Z`
           }
           this.selectedValue = newValue
