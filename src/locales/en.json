@@ -458,8 +458,8 @@
     "AssetServiceInsert": "Yeni Servis Ana Kayıtları"
   },
   "insert": {
-    "paymentPeriodrequired": "Açık Hesap seçiliyken ödeme vadesi girilmesi zorunludur",
-    "tabPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir",
+    "paymentPeriodrequired": "Varsayılan Ödeme Tipi Açık Hesap Seçiliyken Satış Ödeme Vadesi Girilmesi Zorunludur",
+    "tabPaymentPeriodRequired": "Ödeme Tipleri Tabında veya Varsayılan Ödeme Tipinde Açık Hesap Seçili İse Ödeme Vadeleri Tabında En Az 1 Ödeme Vadesi Girilmelidir",
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
@@ -1671,6 +1671,7 @@
       "isFreeItem": "Bedelsiz Ürün",
       "isCashCollection": "Nakit Tahsilat Yapılsın",
       "returnInvoiceMessage": "İade ürün alınacak mı?",
+      "cashCardMessage": "Nakit Tahsilatı Yapılsın Mı",
       "yes": "Evet",
       "no": "Hayır",
       "pleaseConfirm": "Lütfen Onaylayın"

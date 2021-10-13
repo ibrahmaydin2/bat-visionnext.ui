@@ -421,19 +421,19 @@ export default {
         })
         this.tabValidation()
       } if (this.defaultPaymentType && this.defaultPaymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
-        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
-        if (!filteredList || filteredList.length === 0) {
-          this.$toasted.show(this.$t('insert.branch.branchPaymentPeriodRequired'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
         this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
           type: 'error',
           keepOnHover: true,
-          duration: '3000'
+          duration: '5000'
+        })
+        this.tabValidation()
+      }
+      let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+      if ((this.defaultPaymentType && this.defaultPaymentType.Code === 'AH') && (!filteredList || filteredList.length === 0)) {
+        this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '6000'
         })
         this.tabValidation()
       } else {
