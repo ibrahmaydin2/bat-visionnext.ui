@@ -627,7 +627,9 @@
       "town": "Mahalle",
       "parish": "Mahalle",
       "Customer": "Müşteri",
-      "Location": "Lokasyon"
+      "Location": "Lokasyon",
+      "CustomerName": "Müşteri Adı",
+      "LocationName": "Lokasyon Adı"
     },
     "vehicles": {
       "code": "Araç Kodu",
