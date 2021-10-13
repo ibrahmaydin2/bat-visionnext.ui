@@ -22,7 +22,7 @@
           </v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.TransactionDate')" md="4" lg="4">
-          <b-form-datepicker v-model="form.documentDate" locale="tr" />
+          <NextDatePicker v-model="form.documentDate" />
         </NextFormGroup>
       </b-row>
       <b-row>
@@ -181,7 +181,7 @@ export default {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       this.employee = userModel.Name + ' ' + userModel.Surname
       this.form.RepresentativeId = userModel.UserId
-      this.warehouse = this.modalItem.Warehouse.Label
+      this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
       this.form.DocumentNumber = this.modalItem.DocumentNumber
       this.getCode()
       this.getConvert()
@@ -195,7 +195,7 @@ export default {
       this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, id: this.modalItem.RecordId}, 'VisionNextOrder/api/Order/GetConvert').then((response) => {
         if (Object.keys(response).length > 0) {
           this.orderLines = response.OrderLines
-          this.form.documentDate = response.DocumentDate
+          this.form.documentDate = response.DocumentDate.substr(0, 10)
           this.invoiceTypes = response.InvoiceKinds
           this.getConvertData = response
         } else {
