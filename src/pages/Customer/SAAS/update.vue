@@ -88,9 +88,6 @@
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
               <NextCheckBox v-model="form.IsBlocked" :disabled="insertReadonly.IsBlocked" type="number" toggle/>
             </NextFormGroup>
-            <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" :disabled="insertReadonly.ManualInvoiceClosure" type="number" toggle/>
-            </NextFormGroup>
             <NextFormGroup item-key="IsRouteRegion" :error="$v.form.IsRouteRegion">
               <NextCheckBox v-model="form.IsRouteRegion" :disabled="insertReadonly.IsRouteRegion" type="number" toggle/>
             </NextFormGroup>
@@ -295,8 +292,8 @@
             <NextFormGroup item-key="Statement" :error="$v.form.Statement">
               <NextCheckBox v-model="form.Statement" :disabled="insertReadonly.Statement" type="number" toggle/>
             </NextFormGroup>
-            <NextFormGroup item-key="StatemeIsBlackListednt" :error="$v.form.IsBlackListed">
-              <NextCheckBox v-model="form.IsBlackListed" :disabled="insertReadonly.StatemeIsBlackListednt" type="number" toggle/>
+            <NextFormGroup item-key="IsBlackListed" :error="$v.form.IsBlackListed">
+              <NextCheckBox v-model="form.IsBlackListed" :disabled="insertReadonly.IsBlackListed" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
               <NextCheckBox v-model="form.IsAutoBlockingOff" :disabled="insertReadonly.IsAutoBlockingOff" type="number" toggle/>
@@ -516,20 +513,20 @@ export default {
           duration: '3000'
         })
       }
-      if (this.paymentType && this.paymentType.Code === 'AH' && this.form.PaymentPeriod === null) {
-        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
-        if (!filteredList || filteredList.length === 0) {
-          this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
+      if (this.paymentType && this.paymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
         this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
           type: 'error',
           keepOnHover: true,
-          duration: '3000'
+          duration: '5000'
+        })
+        this.tabValidation()
+      }
+      let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+      if ((this.paymentType && this.paymentType.Code === 'AH') && (!filteredList || filteredList.length === 0)) {
+        this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '6000'
         })
         this.tabValidation()
       } else {

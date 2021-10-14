@@ -88,9 +88,6 @@
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
               <NextCheckBox v-model="form.IsBlocked" :disabled="insertReadonly.IsBlocked" type="number" toggle/>
             </NextFormGroup>
-            <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" :disabled="insertReadonly.ManualInvoiceClosure" type="number" toggle/>
-            </NextFormGroup>
             <NextFormGroup item-key="IsRouteRegion" :error="$v.form.IsRouteRegion">
               <NextCheckBox v-model="form.IsRouteRegion" :disabled="insertReadonly.IsRouteRegion" type="number" toggle/>
             </NextFormGroup>
@@ -218,7 +215,7 @@
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
-              <NextDropdown v-model="form.PriceListCategoryId" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankPaymentSystemId" :error="$v.form.bankPaymentSystemId">
               <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" @input="selectedType('BankPaymentSystemId', $event)"/>
@@ -285,22 +282,22 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="AllowOverLimit" :error="$v.form.AllowOverLimit">
-              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle/>
+              <NextCheckBox v-model="form.AllowOverLimit" type="number" toggle :disabled="insertReadonly.AllowOverLimit"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDirectDebit" :error="$v.form.IsDirectDebit">
-              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle/>
+              <NextCheckBox v-model="form.IsDirectDebit" type="number" toggle :disabled="insertReadonly.IsDirectDebit"/>
             </NextFormGroup>
             <NextFormGroup item-key="ManualInvoiceClosure" :error="$v.form.ManualInvoiceClosure">
-              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle/>
+              <NextCheckBox v-model="form.ManualInvoiceClosure" type="number" toggle :disabled="insertReadonly.ManualInvoiceClosure"/>
             </NextFormGroup>
             <NextFormGroup item-key="Statement" :error="$v.form.Statement">
-              <NextCheckBox v-model="form.Statement" type="number" toggle/>
+              <NextCheckBox v-model="form.Statement" type="number" toggle :disabled="insertReadonly.Statement"/>
             </NextFormGroup>
-            <NextFormGroup item-key="StatemeIsBlackListednt" :error="$v.form.IsBlackListed">
-              <NextCheckBox v-model="form.IsBlackListed" type="number" toggle/>
+            <NextFormGroup item-key="IsBlackListed" :error="$v.form.IsBlackListed">
+              <NextCheckBox v-model="form.IsBlackListed" type="number" toggle :disabled="insertReadonly.IsBlackListed"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
-              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle/>
+              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle :disabled="insertReadonly.IsAutoBlockingOff"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -548,28 +545,25 @@ export default {
         this.tabValidation()
       }
       if (this.paymentType && this.paymentType.Code === 'AH' && (this.form.PaymentPeriod === null || this.form.PaymentPeriod === '')) {
-        let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
-        if (!filteredList || filteredList.length === 0) {
-          this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
         this.$toasted.show(this.$t('insert.paymentPeriodrequired'), {
           type: 'error',
           keepOnHover: true,
-          duration: '3000'
+          duration: '5000'
+        })
+        this.tabValidation()
+      }
+      let filteredList = this.form.CustomFixedTerms.filter(b => b.RecordState !== 4)
+      if ((this.paymentType && this.paymentType.Code === 'AH') && (!filteredList || filteredList.length === 0)) {
+        this.$toasted.show(this.$t('insert.tabPaymentPeriodRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '6000'
         })
         this.tabValidation()
       } else {
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+        this.createData()
       }
     },
     tabValidation () {
