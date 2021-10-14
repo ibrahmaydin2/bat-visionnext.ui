@@ -139,11 +139,11 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in cashCards" :key="'dl' + i">
                   <b-td>{{r.Code}}</b-td>
-                  <b-td>{{r.Customer}}</b-td>
-                  <b-td>{{r.Currency}}</b-td>
-                  <b-td>{{r.Representative}}</b-td>
-                  <b-td>{{r.Route}}</b-td>
-                  <b-td>{{r.CashCardType}}</b-td>
+                  <b-td>{{r.Customer.Description1}}</b-td>
+                  <b-td>{{r.Currency.Description1}}</b-td>
+                  <b-td>{{r.Representative.Description1}}</b-td>
+                  <b-td>{{r.Route.Description1}}</b-td>
+                  <b-td>{{r.CashCardType.Description1}}</b-td>
                   <b-td>{{r.CashTotal}}</b-td>
                   <b-td class="text-center">
                     <i @click="editCashCard(r)" class="fa fa-pencil-alt text-warning mr-1"></i>
@@ -226,19 +226,14 @@ export default {
         this.form.CurrencyCashTotal = this.form.CashTotal
         this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
         this.form.PaymentDate = this.dateConvertToISo(this.form.PaymentDate)
-        const Customer = this.CustomerId
-        const Currency = this.CurrencyId
-        const Representative = this.RepresentativeId
-        const Route = this.RouteId
-        const CashCardType = this.CashCardTypeId
         const Status = ''
         this.cashCards.push({
           ...this.form,
-          Customer,
-          Currency,
-          Representative,
-          Route,
-          CashCardType,
+          Customer: this.Customer,
+          Currency: this.Currency,
+          Representative: this.Representative,
+          Route: this.Route,
+          CashCardType: this.CashCardType,
           Status
         })
         this.clearForm()
@@ -270,11 +265,11 @@ export default {
         SystemCurrencyRate: filteredArr.SystemCurrencyRate,
         IsManuelClosure: filteredArr.IsManuelClosure
       }
-      this.CustomerId = filteredArr.Customer
-      this.CurrencyId = filteredArr.Currency
-      this.RepresentativeId = filteredArr.Representative
-      this.RouteId = filteredArr.Route
-      this.CashCardTypeId = filteredArr.CashCardType
+      this.Customer = filteredArr.Customer
+      this.Currency = filteredArr.Currency
+      this.Representative = filteredArr.Representative
+      this.Route = filteredArr.Route
+      this.CashCardType = filteredArr.CashCardType
       this.Status = filteredArr.Status
     },
     removeCashCard (item) {
@@ -282,7 +277,6 @@ export default {
     },
     clearForm () {
       this.$v.form.$reset()
-      this.getCreateCode(this.routeName)
       this.isEditable = false
       this.form = {
         Deleted: 0,
@@ -306,11 +300,11 @@ export default {
         SystemCurrencyRate: 0,
         IsManuelClosure: 0
       }
-      this.CustomerId = null
-      this.CurrencyId = null
-      this.RepresentativeId = null
-      this.RouteId = null
-      this.CashCardTypeId = null
+      this.Customer = null
+      this.Currency = null
+      this.Representative = null
+      this.Route = null
+      this.CashCardType = null
     },
     multipleSave () {
       if (this.cashCards.length < 1) {
