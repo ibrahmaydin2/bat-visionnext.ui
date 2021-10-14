@@ -2992,7 +2992,7 @@
     "remove": "Çıkar",
     "notContentFound": "Görüntülenecek içerik bulunamadı.",
     "pleaseSearchForTable": "Tablo içeriği için arama yapınız.",
-    "errorCanceled": "İptal durumundaki belge dönüştürülemez.",
+    "errorCanceled": "Döküman zaten iptal edilmiş.",
     "errorClosed": "Kapalı durumdaki belge dönüştürülemez.",
     "errorLocation": "Boylam - Enlem Bilgisi Eksik",
     "errorSevk": "Yalnızca Sevk Edilebilir ve Açık durumundaki siparişler dönüştürülebilir.",

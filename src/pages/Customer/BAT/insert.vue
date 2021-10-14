@@ -215,7 +215,7 @@
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
-              <NextDropdown v-model="form.PriceListCategoryId" :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankPaymentSystemId" :error="$v.form.bankPaymentSystemId">
               <NextDropdown :disabled="insertReadonly.BankPaymentSystemId"  lookup-key="BANK_PAYMENT_SYSTEM" @input="selectedType('BankPaymentSystemId', $event)"/>
