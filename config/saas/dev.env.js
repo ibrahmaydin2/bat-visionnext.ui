@@ -10,5 +10,5 @@ module.exports = merge(prodEnv, {
   BASE_URL: "'https://saasfedev.visionnext.com.tr/'",
   TENANT: "'SAAS'",
   SITE_NAME: "'SAAS'",
-  HASH: "'7aaa7777-e737-4f10-82be-76db0177e462'"
+  HASH: "'2a3e24c0-ce45-50b0-3ff9-8b9523611a2b'"
 })

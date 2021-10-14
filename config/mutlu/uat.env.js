@@ -10,5 +10,5 @@ module.exports = merge(prodEnv, {
   BASE_URL: "'https://mutluat.visionnext.com.tr/'",
   TENANT: "'SAAS'",
   SITE_NAME: "'MUTLU'",
-  HASH: "'8ced6612-e737-4f10-82be-76db0177e462'"
+  HASH: "'13ebeefd-fe04-bbac-778a-0a56e996c363'"
 })
