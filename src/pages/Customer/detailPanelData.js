@@ -613,5 +613,52 @@ export const detailData = {
       isUnique: true,
       id: 1
     }
+  ],
+  customerTouchpointsItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'TouchpointTypeId',
+      objectKey: 'TouchpointType',
+      url: 'CUSTOMER_TOUCHPOINT_TYPE',
+      label: i18n.t('insert.customer.touchpointTypeId'),
+      required: false,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'TouchpointPriorityNumber',
+      objectKey: 'TouchpointPriorityNumber',
+      valueProperty: 'Label',
+      url: 'CUSTOMER_TOUCHPOINT_PRIORITY',
+      label: i18n.t('insert.customer.touchpointPriority'),
+      required: false,
+      visible: true,
+      id: 2
+    }
+  ],
+  customerLabelsItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'LabelId',
+      objectKey: 'Label',
+      url: 'VisionNextCommonApi/api/Label/Search',
+      label: i18n.t('insert.customer.labelId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 1
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'LabelValueId',
+      objectKey: 'LabelValue',
+      url: 'VisionNextCommonApi/api/LabelDetail/Search',
+      label: i18n.t('insert.customer.labelValueId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 2
+    }
   ]
 }

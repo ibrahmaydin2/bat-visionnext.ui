@@ -971,7 +971,10 @@
       "Day7VisitOrder": "Pazar",
       "RouteDetails": "Rota Tanımları",
       "FixedTerms": "Ödeme Vadeleri",
-      "fixedTerm": "Ödeme Vadesi"
+      "fixedTerm": "Ödeme Vadesi",
+      "regions": "Bölgeler",
+      "licenseInfo": "Lisans Bilgileri",
+      "customerLabel": "Müşteri Etiketi"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
