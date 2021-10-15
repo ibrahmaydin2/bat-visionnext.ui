@@ -43,9 +43,6 @@
             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
               <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
             </NextFormGroup>
-            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
-              <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
-            </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
               <NextDropdown v-model="taxCustomerType" :disabled="form.IsDutyFree === 1" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
             </NextFormGroup>
@@ -73,20 +70,11 @@
             <NextFormGroup item-key="CustomerInvoiceTypeId" :error="$v.form.CustomerInvoiceTypeId">
               <NextDropdown :disabled="insertReadonly.CustomerInvoiceTypeId" v-model="customerInvoiceType"  lookup-key="CUSTOMER_INVOICE_TYPE" @input="selectedType('CustomerInvoiceTypeId', $event)"/>
             </NextFormGroup>
-             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" v-model="customerRegion5" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
-              <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" v-model="marketingRegion5" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="RouteCode" :error="$v.form.RouteCode">
               <NextInput v-model="form.RouteCode" :disabled="insertReadonly.RouteCode" />
             </NextFormGroup>
             <NextFormGroup item-key="LicenseValidDate" :error="$v.form.LicenseValidDate">
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
-            </NextFormGroup>
-            <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
-              <NextCheckBox v-model="form.IsBlocked" :disabled="insertReadonly.IsBlocked" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsRouteRegion" :error="$v.form.IsRouteRegion">
               <NextCheckBox v-model="form.IsRouteRegion" :disabled="insertReadonly.IsRouteRegion" type="number" toggle/>
@@ -102,6 +90,21 @@
             </NextFormGroup>
             <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
               <NextCheckBox v-model="form.IsDutyFree" :disabled="insertReadonly.IsDutyFree" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="UsingReferenceNumber" :error="$v.form.UsingReferenceNumber">
+              <NextCheckBox v-model="form.UsingReferenceNumber" :disabled="insertReadonly.UsingReferenceNumber" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsPublic" :error="$v.form.IsPublic">
+              <NextCheckBox v-model="form.IsPublic" :disabled="insertReadonly.IsPublic" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked">
+              <NextCheckBox v-model="form.IsBlocked" :disabled="insertReadonly.IsBlocked" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
+              <NextCheckBox v-model="form.IsAutoBlockingOff" type="number" toggle :disabled="insertReadonly.IsAutoBlockingOff"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ManualSItem" :error="$v.form.ManualSItem">
+              <NextCheckBox v-model="form.ManualSItem" type="number" toggle :disabled="insertReadonly.ManualSItem"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -134,14 +137,8 @@
             <NextFormGroup item-key="OwnerTypeId" :error="$v.form.OwnerTypeId">
               <NextDropdown v-model="selectedOwnerType" :disabled="insertReadonly.OwnerTypeId" lookup-key="OWNER_TYPE" @input="selectedType('OwnerTypeId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="ClassProposalId" :error="$v.form.ClassProposalId">
-              <NextDropdown :disabled="insertReadonly.ClassProposalId" v-model="classProposal" lookup-key="CUSTOMER_CLASS_PROPOSAL" @input="selectedType('ClassProposalId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="SalesMethodId" :error="$v.form.SalesMethodId">
               <NextDropdown v-model="selectedSalesMethod" :disabled="insertReadonly.SalesMethodId" lookup-key="CUSTOMER_SALES_METHOD" @input="selectedType('SalesMethodId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="GeographicEnvironmentId" :error="$v.form.GeographicEnvironmentId">
-              <NextDropdown v-model="selectedGeographicEnvironment" :disabled="insertReadonly.GeographicEnvironmentId" lookup-key="CUSTOMER_GEOGRAPHIC_ENVIRONMENT" @input="selectedType('GeographicEnvironmentId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TradeFocusId" :error="$v.form.TradeFocusId">
               <NextDropdown v-model="selectedTradeFocus" :disabled="insertReadonly.TradeFocusId" lookup-key="CUSTOMER_TRADE_FOCUS" @input="selectedType('TradeFocusId', $event)"/>
@@ -152,29 +149,26 @@
             <NextFormGroup item-key="ClassProposalReasonId" :error="$v.form.ClassProposalReasonId">
               <NextDropdown :disabled="insertReadonly.ClassProposalReasonId" v-model="classProposalReason"  lookup-key="CUSTOMER_CLASS_PROPOSAL_REASON" @input="selectedType('ClassProposalReasonId', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="ClassProposalId" :error="$v.form.ClassProposalId">
+              <NextDropdown :disabled="insertReadonly.ClassProposalId" v-model="classProposal" lookup-key="CUSTOMER_CLASS_PROPOSAL" @input="selectedType('ClassProposalId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="GeographicEnvironmentId" :error="$v.form.GeographicEnvironmentId">
+              <NextDropdown v-model="selectedGeographicEnvironment" :disabled="insertReadonly.GeographicEnvironmentId" lookup-key="CUSTOMER_GEOGRAPHIC_ENVIRONMENT" @input="selectedType('GeographicEnvironmentId', $event)"/>
+            </NextFormGroup>
             <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
               <NextDropdown :disabled="insertReadonly.BackMarginGroupId" v-model="backMarginGroup" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsTaxExemption" :error="$v.form.IsTaxExemption">
               <NextCheckBox v-model="form.IsTaxExemption" type="number" toggle/>
             </NextFormGroup>
-            <NextFormGroup item-key="Field1" :error="$v.form.Field1">
-              <NextDropdown :disabled="insertReadonly.Field1" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Field2" :error="$v.form.Field2">
-              <NextDropdown :disabled="insertReadonly.Field2" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Field3" :error="$v.form.Field3">
-              <NextDropdown :disabled="insertReadonly.Field3" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Field4" :error="$v.form.Field4">
-              <NextDropdown :disabled="insertReadonly.Field4" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="Field5" :error="$v.form.Field5">
-              <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="TextField6" :error="$v.form.TextField6">
               <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" />
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
+              <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="KindId" :error="$v.form.KindId">
+              <NextDropdown :disabled="insertReadonly.KindId" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -201,14 +195,26 @@
             <NextFormGroup item-key="DiscountGroup8Id" :error="$v.form.DiscountGroup8Id">
               <NextDropdown :disabled="insertReadonly.DiscountGroup8Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="KindId" :error="$v.form.KindId">
-              <NextDropdown :disabled="insertReadonly.KindId" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="Activity1Id" :error="$v.form.Activity1Id">
               <NextDropdown :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="OutSourceOrderId" :error="$v.form.OutSourceOrderId">
               <NextDropdown :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field1" :error="$v.form.Field1">
+              <NextDropdown :disabled="insertReadonly.Field1" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field2" :error="$v.form.Field2">
+              <NextDropdown :disabled="insertReadonly.Field2" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field3" :error="$v.form.Field3">
+              <NextDropdown :disabled="insertReadonly.Field3" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field4" :error="$v.form.Field4">
+              <NextDropdown :disabled="insertReadonly.Field4" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Field5" :error="$v.form.Field5">
+              <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -295,9 +301,6 @@
             <NextFormGroup item-key="IsBlackListed" :error="$v.form.IsBlackListed">
               <NextCheckBox v-model="form.IsBlackListed" :disabled="insertReadonly.IsBlackListed" type="number" toggle/>
             </NextFormGroup>
-            <NextFormGroup item-key="IsAutoBlockingOff" :error="$v.form.IsAutoBlockingOff">
-              <NextCheckBox v-model="form.IsAutoBlockingOff" :disabled="insertReadonly.IsAutoBlockingOff" type="number" toggle/>
-            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
@@ -313,6 +316,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="TextField2" :error="$v.form.TextField2">
               <NextInput v-model="form.TextField2" type="text" :disabled="insertReadonly.TextField2" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField3" :error="$v.form.TextField3">
+              <NextInput v-model="form.TextField3" type="text" :disabled="insertReadonly.TextField3" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField4" :error="$v.form.TextField4">
+              <NextInput v-model="form.TextField4" type="text" :disabled="insertReadonly.TextField4" />
             </NextFormGroup>
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <NextInput v-model="form.Barcode" type="text" :disabled="insertReadonly.Barcode" />
@@ -336,7 +345,36 @@
               <NextDropdown :disabled="insertReadonly.SignNameId" lookup-key="SIGN_NAME" @input="selectedType('SignNameId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsOpportunitySpot" :error="$v.form.IsOpportunitySpot">
-              <NextCheckBox v-model="form.IsOpportunitySpot" :disabled="insertReadonly.IsOpportunitySpot" type="number" toggle/>
+              <NextCheckBox v-model="form.IsOpportunitySpot" type="number" toggle/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
+              <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TrackCode" :error="$v.form.TrackCode">
+              <NextInput v-model="form.TrackCode" type="text" :disabled="insertReadonly.TrackCode" />
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.regions')" @click.prevent="tabValidation()">
+          <b-row>
+             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
+              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
+              <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.licenseInfo')" @click.prevent="tabValidation()">
+          <b-row>
+            <NextFormGroup item-key="IsLicenseRequired" :error="$v.form.IsLicenseRequired">
+              <NextCheckBox v-model="form.IsLicenseRequired" type="number" toggle :disabled="insertReadonly.IsLicenseRequired"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseStartDate" :error="$v.form.LicenseStartDate">
+              <NextDatePicker v-model="form.LicenseStartDate" :disabled="insertReadonly.LicenseStartDate" />
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseEndDate" :error="$v.form.LicenseEndDate">
+              <NextDatePicker v-model="form.LicenseEndDate" :disabled="insertReadonly.LicenseEndDate" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -348,6 +386,27 @@
         </b-tab>
         <b-tab :title="$t('insert.customer.FixedTerms')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems" :main-form="form" />
+        </b-tab>
+        <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()" >
+          <NextDetailPanel v-model="form.AssetLocations" :items="assetLocationsItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerTouchpoints" :items="customerTouchpointsItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerLabel')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerLabels" :items="customerLabelsItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerItems')" @click.prevent="tabValidation()" v-if="form.ManualSItem === 1">
+          <NextDetailPanel v-model="form.CustomerSItems" :items="customersItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerAnalysisHistories')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerAnalysisHistories" :items="customerAnalysisItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerStatusHistories')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerStatusHistories" :items="customerStatusHistoriesItems"/>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerAccountTeams')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerAccountTeams" :items="customerAccountTeamsItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -369,9 +428,20 @@ export default {
         CustomerItemDiscounts: [],
         RouteDetails: [],
         CustomFixedTerms: [],
+        CustomerTouchpoints: [],
+        AssetLocations: [],
+        CustomerLabels: [],
+        CustomerSItems: [],
+        CustomerAnalysisHistories: [],
+        CustomerStatusHistories: [],
+        CustomerAccountTeams: [],
         CardType: null,
         Group: null,
-        Kind: null,
+        KindId: null,
+        Genexp1: null,
+        TrackCode: null,
+        UsingReferenceNumber: null,
+        IsPublic: null,
         Type: null,
         IsDutyFree: null,
         IsAutoBlockingOff: null,
@@ -429,6 +499,13 @@ export default {
       paymentTypesItems: detailData.paymentTypesItems,
       routeDetailsItems: detailData.routeDetailsItems,
       customFixedTermItems: detailData.customFixedTermItems,
+      customerTouchpointsItems: detailData.customerTouchpointsItems,
+      customerLabelsItems: detailData.customerLabelsItems,
+      customersItems: detailData.customersItems,
+      customerAccountTeamsItems: detailData.customerAccountTeamsItems,
+      assetLocationsItems: detailData.assetLocationsItems,
+      customerStatusHistoriesItems: detailData.customerStatusHistoriesItems,
+      customerAnalysisItems: detailData.customerAnalysisItems,
       cardType: {},
       taxCustomerType: {},
       blockReason: {},
@@ -705,6 +782,27 @@ export default {
       }
       if (!rowData.CustomFixedTerms) {
         this.form.CustomFixedTerms = []
+      }
+      if (!rowData.CustomerTouchpoints) {
+        this.form.CustomerTouchpoints = []
+      }
+      if (!rowData.AssetLocations) {
+        this.form.AssetLocations = []
+      }
+      if (!rowData.CustomerLabels) {
+        this.form.CustomerLabels = []
+      }
+      if (!rowData.CustomerSItems) {
+        this.form.CustomerSItems = []
+      }
+      if (!rowData.CustomerAnalysisHistories) {
+        this.form.CustomerAnalysisHistories = []
+      }
+      if (!rowData.CustomerStatusHistories) {
+        this.form.CustomerStatusHistories = []
+      }
+      if (!rowData.CustomerAccountTeams) {
+        this.form.CustomerAccountTeams = []
       }
 
       if (rowData.Code === 'TZK') {

@@ -613,5 +613,268 @@ export const detailData = {
       isUnique: true,
       id: 1
     }
+  ],
+  customerTouchpointsItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'TouchpointTypeId',
+      objectKey: 'TouchpointType',
+      url: 'CUSTOMER_TOUCHPOINT_TYPE',
+      label: i18n.t('insert.customer.touchpointTypeId'),
+      required: false,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'TouchpointPriorityNumber',
+      objectKey: 'TouchpointPriorityNumber',
+      // valueProperty: 'Label',
+      url: 'CUSTOMER_TOUCHPOINT_PRIORITY',
+      label: i18n.t('insert.customer.touchpointPriority'),
+      required: false,
+      visible: true,
+      id: 2
+    }
+  ],
+  customerLabelsItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'LabelId',
+      objectKey: 'Label',
+      url: 'VisionNextCommonApi/api/Label/Search',
+      label: i18n.t('insert.customer.labelId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 1
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'LabelValueId',
+      objectKey: 'LabelValue',
+      url: 'VisionNextCommonApi/api/LabelDetail/Search',
+      label: i18n.t('insert.customer.labelValueId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 2
+    }
+  ],
+  customersItems: [
+    {
+      type: 'Autocomplete',
+      modelProperty: 'ItemId',
+      objectKey: 'Item',
+      url: 'VisionNextItem/api/Item/Search',
+      label: i18n.t('insert.customer.ItemId'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 1
+    }
+  ],
+  assetLocationsItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'AssetId',
+      objectKey: 'Asset',
+      // url: 'VisionNextAsset/api/Asset/Search',
+      label: i18n.t('insert.customer.AssetId'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'SerialNumber',
+      label: i18n.t('insert.customer.SerialNumber'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Quantity',
+      label: i18n.t('insert.customer.Quantity'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'LocationId',
+      label: i18n.t('insert.customer.LocationId'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 4
+    }
+  ],
+  customerAnalysisItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'AnalysisTypeId',
+      objectKey: 'AnalysisType',
+      url: '',
+      label: i18n.t('insert.customer.analysisTypeId'),
+      required: false,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Date',
+      modelProperty: 'AnalysisDate',
+      objectKey: 'analysisDate',
+      label: i18n.t('insert.customer.analysisDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 2
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'RepresentativeId',
+      objectKey: 'Representative',
+      url: '',
+      label: i18n.t('insert.customer.representative'),
+      required: false,
+      visible: true,
+      id: 3
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'QuestionId',
+      objectKey: 'Question',
+      url: '',
+      label: i18n.t('insert.customer.questionId'),
+      required: false,
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'ItemId',
+      objectKey: 'Item',
+      url: '',
+      label: i18n.t('insert.customer.itemId'),
+      required: false,
+      visible: true,
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Answer',
+      objectKey: 'Answer',
+      label: i18n.t('insert.customer.answer'),
+      required: false,
+      visible: true,
+      id: 6
+    }
+  ],
+  customerStatusHistoriesItems: [
+    {
+      type: 'Date',
+      modelProperty: 'ChangeDate',
+      objectKey: 'ChangeDate',
+      label: i18n.t('insert.customer.changeDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 1
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'EmployeeId',
+      objectKey: 'Employee',
+      url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
+      label: i18n.t('insert.customer.employee'),
+      visible: true,
+      required: false,
+      isUnique: true,
+      id: 2
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'customerStatusId',
+      objectKey: 'CustomerStatus',
+      url: '',
+      label: i18n.t('insert.customer.customerStatusId'),
+      visible: true,
+      required: false,
+      isUnique: true,
+      id: 3
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'ReasonId',
+      objectKey: 'Reason',
+      url: '',
+      label: i18n.t('insert.customer.reasonId'),
+      visible: true,
+      required: false,
+      isUnique: true,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Genexp1',
+      objectKey: 'Genexp1',
+      label: i18n.t('insert.customer.genexp1'),
+      required: false,
+      visible: true,
+      id: 5
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'RefCustomer',
+      objectKey: 'RefCustomer',
+      url: '',
+      label: i18n.t('insert.customer.refCustomer'),
+      visible: true,
+      required: false,
+      isUnique: true,
+      id: 6
+    }
+  ],
+  customerAccountTeamsItems: [
+    {
+      type: 'Autocomplete',
+      modelProperty: 'EmployeeId',
+      objectKey: 'Employee',
+      url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
+      label: i18n.t('insert.customer.employee'),
+      visible: true,
+      required: false,
+      isUnique: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'EmployeeGroupId',
+      objectKey: 'EmployeeGroup',
+      url: 'EMPLOYEE_GROUP',
+      label: i18n.t('insert.customer.EmployeeGroupId'),
+      required: false,
+      visible: true,
+      id: 2
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'EmployeeTypeId',
+      objectKey: 'EmployeeType',
+      url: 'EMPLOYEE_TYPE',
+      label: i18n.t('insert.customer.EmployeeType'),
+      required: false,
+      visible: true,
+      id: 3
+    }
   ]
 }
