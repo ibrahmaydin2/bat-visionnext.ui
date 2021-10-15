@@ -605,8 +605,6 @@ import LoyaltyGainUpdate from '@/pages/LoyaltyGain/update'
 
 import BudgetMasterIndex from '@/pages/BudgetMaster/'
 import BudgetMasterGet from '@/pages/BudgetMaster/get'
-import BudgetMasterInsert from '@/pages/BudgetMaster/insert'
-import BudgetMasterUpdate from '@/pages/BudgetMaster/update'
 
 import FieldAnalysisIndex from '@/pages/FieldAnalysis/'
 import FieldAnalysisGet from '@/pages/FieldAnalysis/get'
@@ -1007,7 +1005,7 @@ const listUpdate = [
   { path: '/Update/AssetType/:url', name: 'AssetTypeUpdate', component: AssetTypeUpdate, meta: { title: i18n.t('router.AssetTypeUpdate'), baseLink: 'AssetType' } },
   { path: '/Update/LoyaltyGain/:url', name: 'LoyaltyGainUpdate', component: LoyaltyGainUpdate, meta: { title: i18n.t('router.LoyaltyGainUpdate'), baseLink: 'LoyaltyGain' } },
   { path: '/Update/AssetOperation/:url', name: 'AssetOperationUpdate', component: AssetOperationUpdate, meta: { title: i18n.t('router.AssetOperationUpdate'), baseLink: 'AssetOperation' } },
-  { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: BudgetMasterUpdate, meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
+  { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: getTenantPage('BudgetMaster', 'update'), meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
   { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
   { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
   { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } }
@@ -1128,7 +1126,7 @@ const listInsert = [
   { path: '/Insert/AssetType', name: 'AssetTypeInsert', component: AssetTypeInsert, meta: { title: i18n.t('router.AssetTypeInsert'), baseLink: 'AssetType' } },
   { path: '/Insert/LoyaltyGain', name: 'LoyaltyGainInsert', component: LoyaltyGainInsert, meta: { title: i18n.t('router.LoyaltyGainInsert'), baseLink: 'LoyaltyGain' } },
   { path: '/Insert/AssetOperation', name: 'AssetOperationInsert', component: AssetOperationInsert, meta: { title: i18n.t('router.AssetOperationInsert'), baseLink: 'AssetOperation' } },
-  { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: BudgetMasterInsert, meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } },
+  { path: '/Insert/BudgetMaster', name: 'BudgetMasterInsert', component: getTenantPage('BudgetMaster', 'insert'), meta: { title: i18n.t('router.BudgetMasterInsert'), baseLink: 'BudgetMaster' } },
   { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } },
   { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
   { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } },
