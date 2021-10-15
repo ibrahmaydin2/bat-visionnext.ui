@@ -400,17 +400,8 @@
         <b-tab :title="$t('insert.customer.customerLabel')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerLabels" :items="customerLabelsItems"/>
         </b-tab>
-        <b-tab :title="$t('insert.customer.customerItems')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomersItems" :items="customersItems"/>
-        </b-tab>
-        <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()" v-if="form.ManualSItem === 1">
-          <NextDetailPanel v-model="form.AssetLocations" :items="assetLocationsItems"/>
-        </b-tab>
-        <b-tab :title="$t('insert.customer.customerAnalysisHistories')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerAnalysisHistories" :items="customerAnalysisItems"/>
-        </b-tab>
-        <b-tab :title="$t('insert.customer.customerStatusHistories')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerStatusHistories" :items="customerStatusHistoriesItems"/>
+        <b-tab :title="$t('insert.customer.customerItems')" @click.prevent="tabValidation()" v-if="form.ManualSItem === 1">
+          <NextDetailPanel v-model="form.CustomerSItems" :items="customersItems"/>
         </b-tab>
         <b-tab :title="$t('insert.customer.customerAccountTeams')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerAccountTeams" :items="customerAccountTeamsItems"/>
@@ -431,15 +422,12 @@ export default {
       form: {
         CustomerLocations: [],
         customerCreditHistories: [],
-        CustomerAnalysisHistories: [],
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
         CustomFixedTerms: [],
         CustomerTouchpoints: [],
         CustomerLabels: [],
-        CustomersItems: [],
-        AssetLocations: [],
-        CustomerStatusHistories: [],
+        CustomerSItems: [],
         CustomerAccountTeams: [],
         RouteDetails: [],
         RecordTypeId: 1,
@@ -552,9 +540,6 @@ export default {
       customerTouchpointsItems: detailData.customerTouchpointsItems,
       customerLabelsItems: detailData.customerLabelsItems,
       customersItems: detailData.customersItems,
-      assetLocationsItems: detailData.assetLocationsItems,
-      customerAnalysisItems: detailData.customerAnalysisItems,
-      customerStatusHistoriesItems: detailData.customerStatusHistoriesItems,
       customerAccountTeamsItems: detailData.customerAccountTeamsItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,

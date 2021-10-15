@@ -43,7 +43,7 @@ export default {
     return {
       form: {
         Deleted: 0,
-        System: 0,
+        System: 1,
         StatusId: 1,
         RecordState: 2,
         Code: null,
