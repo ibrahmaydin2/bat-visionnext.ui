@@ -1,5 +1,10 @@
 <template>
-  <v-select :disabled="disabled" v-model="selectedValue" :options="getSource()" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey" :multiple="multiple">
+  <v-select
+    :disabled="disabled" v-model="selectedValue"
+    :options="getSource()" @search="searchValue"
+    @input="selectValue($event)" :filterable="searchable ? false : true"
+    :label="labelKey" :multiple="multiple"
+    :reduce="getReduceFunc()">
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
@@ -64,6 +69,14 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    reduceValue: {
+      type: String,
+      default: null
+    },
+    defaultValue: {
+      type: Number,
+      default: null
     }
   },
   model: {
@@ -262,10 +275,22 @@ export default {
     setDefaultValue (source) {
       if (this.itemKey && this.insertDefaultValue[this.itemKey] && !this.selectedValue && source) {
         let defaultValue = this.insertDefaultValue[this.itemKey]
-        let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
-        if (filteredList && filteredList.length > 0) {
-          this.selectedValue = filteredList[0]
-        }
+        this.findDefaultValue(defaultValue, source)
+      } else if (this.defaultValue) {
+        this.findDefaultValue(this.defaultValue, source)
+      }
+    },
+    findDefaultValue (defaultValue, source) {
+      let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
+      if (filteredList && filteredList.length > 0) {
+        this.selectedValue = filteredList[0]
+      }
+    },
+    getReduceFunc () {
+      if (this.reduceValue) {
+        return (item) => item[this.reduceValue]
+      } else {
+        return (item) => item
       }
     }
   }

@@ -1,107 +1,166 @@
 <template>
   <div>
-    <b-modal :id="`confirm-edit-modal${unique}`">
+    <b-form-group>
+      <b-button class="mt-4" @click="showModal" variant="success" size="sm" :disabled="disabledButton">
+        <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
+      </b-button>
+    </b-form-group>
+    <b-modal :id="`modal${id}`" size="xl" @hide="hide">
       <template #modal-title>
-        {{$t('list.editConfirm')}}
+        {{action.Title}}
       </template>
-      {{$t('list.rowEditConfirm')}}
+      <b-row>
+        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.Label" :required="item.Required" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]">
+          <div v-if="item.modelControlUtil != null">
+            <NextDropdown
+              v-if="item.modelControlUtil.InputType === 'AutoComplete'"
+              :default-value="item.DefaultValue"
+              :url="item.modelControlUtil.ServiceUrl" searchable :disabled="item.disabled"
+              @input="selectDropdown($event, item)"
+              custom-option
+              :dynamic-and-condition="getCondtionModel(item.modelControlUtil.AndConditions)">
+            </NextDropdown>
+             <NextDropdown
+              v-else-if="item.modelControlUtil.IsLookupTable"
+              :default-value="item.DefaultValue"
+              :lookup-key="item.modelControlUtil.Code" :disabled="item.disabled"
+              :get-lookup="true"
+              @input="selectDropdown($event, item)">
+            </NextDropdown>
+             <NextDropdown
+              v-else
+              :default-value="item.DefaultValue"
+              :url="item.modelControlUtil.ServiceUrl" :disabled="item.disabled"
+              @input="selectDropdown($event, item)"
+              custom-option
+              :dynamic-and-condition="getCondtionModel(item.modelControlUtil.AndConditions)">
+            </NextDropdown>
+          </div>
+          <NextCheckBox v-if="item.columnType === 'Boolean'" v-model="form[item.ModelProperty]" type="number" toggle ></NextCheckBox>
+          <NextDatePicker v-if="item.columnType === 'DateTime'" v-model="form[item.ModelProperty]"></NextDatePicker>
+          <NextTimePicker v-if="item.columnType === 'Time'" v-model="form[item.ModelProperty]"></NextTimePicker>
+          <NextInput v-if="item.columnType === 'String'" type="text" v-model="form[item.ModelProperty]"></NextInput>
+          <NextInput v-if="item.columnType === 'Decimal'" type="number" v-model="form[item.ModelProperty]"></NextInput>
+        </NextFormGroup>
+        <b-col cols="12" md="12">
+          <b-form-group class="float-right">
+            <b-button size="sm" variant="success" @click="getList()">
+              <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
+              <span v-else><i class="fa fa-search"></i> {{$t('insert.multipleGrid.search')}}</span></b-button>
+            <b-button :disabled="selectedList.length === 0" class="ml-2" size="sm" variant="success" @click="addItems()"><i class="fa fa-plus"></i> {{$t('insert.multipleGrid.add')}}</b-button>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-table
+          :ref="`multipleGrid${id}`"
+          :fields="fields"
+          :items="list"
+          striped
+          responsive
+          :current-page="currentPage"
+          select-mode="multi"
+          :selectable="true"
+          @row-selected="rowSelected"
+          :per-page="10">
+          <template #cell(selection)="row">
+            <span>
+              <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+            </span>
+          </template>
+          <template #cell()="data">
+            <div v-if="data.field.column.Enabled">
+              <div v-if="data.field.column.modelControlUtil != null">
+                 <NextDropdown
+                  :tabindex="data.index+1"
+                  v-if="data.field.column.modelControlUtil.IsLookupTable"
+                  v-model="data.item[data.field.key]"
+                  :lookup-key="data.field.column.modelControlUtil.Code"
+                  reduce-value="DecimalValue"
+                  @input="setConvertedValues($event, data)" :get-lookup="true">
+                </NextDropdown>
+                 <NextDropdown
+                  v-else
+                  :tabindex="data.index+1"
+                  v-model="data.item[data.field.key]"
+                  :url="data.field.column.modelControlUtil.ServiceUrl"
+                  @input="setConvertedValues($event, data)"
+                  reduce-value="RecordId"
+                  custom-option>
+                </NextDropdown>
+              </div>
+              <NextCheckBox :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Boolean'" type="number" toggle v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextCheckBox>
+              <NextDatePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'DateTime'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextDatePicker>
+              <NextTimePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Time'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextTimePicker>
+              <NextInput
+                :tabindex="data.index+1"
+                :ref="`NextInput${data.index}`"
+                v-if="data.field.column.ColumnType === 'String' || data.field.column.ColumnType === 'Decimal'"
+                v-model="data.item[data.field.key]"
+                @input="setConvertedValues($event, data)"
+                :type="'number'"
+                :input-class="data.item.class"></NextInput>
+            </div>
+            <span v-else v-html="data.value"></span>
+          </template>
+        </b-table>
+        <b-pagination
+          :total-rows="list.length"
+          v-model="currentPage"
+          :per-page="10"
+          :aria-controls="id"
+        ></b-pagination>
+      </b-row>
       <template #modal-footer>
-        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`confirm-edit-modal${unique}`)">{{$t('insert.cancel')}}</b-button>
-        <b-button size="sm" class="float-right ml-2" variant="success" @click="editItem()">{{$t('insert.okay')}}</b-button>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`modal${id}`)">{{$t('insert.cancel')}}</b-button>
       </template>
     </b-modal>
-    <b-modal :id="`confirm-delete-modal${unique}`">
-      <template #modal-title>
-        {{$t('list.deleteConfirm')}}
-      </template>
-      {{$t('list.rowDeleteConfirm')}}
-      <template #modal-footer>
-        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`confirm-delete-modal${unique}`)">{{$t('insert.cancel')}}</b-button>
-        <b-button size="sm" class="float-right ml-2" variant="success" @click="removeItem()">{{$t('insert.okay')}}</b-button>
-      </template>
-    </b-modal>
-    <b-row v-if="editable">
-      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'" :filter="item.filter" />
-        <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
-        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number"  toggle :disabled="isDisabled(item)" />
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
-        <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
-      </NextFormGroup>
-      <b-col cols="12" md="2">
-        <b-form-group>
-          <AddDetailButton v-if="!isUpdated" @click.native="addItems()" />
-          <b-button v-if="isUpdated" class="mt-4" size="sm" variant="success" @click="addItems()">
-            <i class="fa fa-pencil-alt"></i> {{$t('insert.edit')}}
-          </b-button>
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-table
-        :id="id"
-        :fields="fields"
-        :items="values ? values.filter(i => i.RecordState !== 4) : []"
-        bordered
-        responsive
-        :current-page="currentPage"
-        :per-page="10">
-        <template #cell()="data">
-          <span v-html="data.value"></span>
-        </template>
-        <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
-            <i class="fa fa-pencil-alt"></i>
-          </b-button>
-          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
-            <i class="far fa-trash-alt ml-1"></i>
-          </b-button>
-          <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
-          <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
-        </template>
-        <template #cell(show_details)="row">
-          <div>
-            <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">
-              <i class="fa fa-arrow-down"></i>{{detailButtonText}}
-            </b-button>
-          </div>
-       </template>
-        <template #row-details v-if="hasDetail">
-          <div class="p-4">
-            <h2><slot name="title" /></h2>
-            <hr>
-            <slot name="body" />
-          </div>
-        </template>
-      </b-table>
-      <b-pagination
-        :total-rows="values ? values.length : 0"
-        v-model="currentPage"
-        :per-page="10"
-        :aria-controls="id"
-      ></b-pagination>
-    </b-row>
   </div>
 </template>
 <script>
 import mixin from '../mixins/index'
 import { requiredIf } from 'vuelidate/lib/validators'
 export default {
-  name: 'NextDetailPanel',
+  name: 'NextMultipleSelection',
   mixins: [mixin],
   props: {
     value: {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'v-model'
     },
     name: {
-      type: String
+      type: String,
+      description: 'Konfigurasyon Adı'
+    },
+    disabledButton: {
+      type: Boolean,
+      default: false,
+      description: 'Toplu Ekle butonu için disabled özelliği'
+    },
+    hiddenValues: {
+      type: Array,
+      default: () => {
+        return []
+      },
+      description: 'Gridde olmayan ancak listede olması gereken extra alanlar'
+    },
+    convertedValues: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Griddeki input girişine göre setlenen alanlar'
+    },
+    dynamicAndCondition: {
+      type: Object,
+      default: () => { return {} },
+      description: 'Search apisi için sayfaya özel and condition bilgisi'
+    },
+    validations: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Grid inputları için işletilmesi gereken sayfa validasyonları'
     }
   },
   model: {
@@ -111,20 +170,164 @@ export default {
   data () {
     return {
       form: {},
-      model: {},
-      label: {},
-      source: {},
-      values: [],
       action: {},
       searchItems: [],
-      listItems: []
+      listItems: [],
+      fields: [],
+      list: [],
+      id: Math.random().toString(36).substring(2),
+      currentPage: 1,
+      selectedList: [],
+      isLoading: false
     }
-  },
-  mounted () {
-    this.getFormFields()
   },
   methods: {
     getFormFields () {
+      let fields = {
+        Action: {
+          Title: 'Ürün Arama',
+          ActionUrl: 'VisionNextItem/api/Item/Search',
+          andConditionModels: 'StatusIds: [1]'
+        },
+        SearchItems: [
+          {
+            Label: 'Tip',
+            EntityProperty: 'CardTypeId',
+            Required: true,
+            Enabled: true,
+            Unique: false,
+            Visible: true,
+            DefaultValue: 1,
+            ColumnType: 'AutoComplete',
+            minLength: null,
+            maxLength: null,
+            UiControlOrder: null,
+            AndConditions: null,
+            OrConditions: null,
+            modelControlUtil: {
+              Code: null,
+              InputType: 'Select',
+              ServiceUrl: '/VisionNextItem/api/ItemCardType/AutoCompleteSearch',
+              IsLookupTable: 0,
+              MyProperty: 0,
+              UpperObject: null,
+              ModelProperty: 'CardTypeIds'
+            }
+          }
+        ],
+        ListItems: [
+          {
+            Label: 'Ürün',
+            EntityProperty: 'Description1',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'String',
+            UiControlOrder: 1,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Miktar/Karton',
+            EntityProperty: 'Quantity',
+            Enabled: true,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 2,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Fiyat',
+            EntityProperty: 'Price',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 3,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Stok',
+            EntityProperty: 'Stock',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 4,
+            modelControlUtil: null
+          },
+          {
+            Label: 'KDV %',
+            EntityProperty: 'Vat',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 5,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Net Tutar',
+            EntityProperty: 'NetTotal',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 5,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Toplam KDV',
+            EntityProperty: 'TotalVat',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 5,
+            modelControlUtil: null
+          },
+          {
+            Label: 'Toplam Tutar',
+            EntityProperty: 'GrossTotal',
+            Enabled: false,
+            Visible: true,
+            ColumnType: 'Decimal',
+            UiControlOrder: 5,
+            modelControlUtil: null
+          }
+        ],
+        IsCompleted: true,
+        Message: null,
+        StackTrace: null,
+        Validations: null
+      }
+      this.action = fields.Action
+      this.searchItems = fields.SearchItems
+      this.listItems = fields.ListItems
+      this.fields = this.listItems.sort((a, b) => {
+        return a.UiControlOrder < b.UiControlOrder
+      }).map(item => {
+        return {
+          key: item.EntityProperty,
+          label: item.Label,
+          formatter: (value, key, obj) => {
+            if (item.ColumnType === 'Object') {
+              return obj[item.EntityProperty].Label
+            } else {
+              return obj[item.EntityProperty]
+            }
+          },
+          column: item
+        }
+      })
+      this.fields.unshift({
+        key: 'selection',
+        label: ''
+      })
+    },
+    selectDropdown (data, item) {
+      let isLookupTable = item.modelControlUtil.IsLookupTable
+      let valueProperty = isLookupTable ? 'DecimalValue' : 'RecordId'
+      if (data) {
+        this.form[item.modelControlUtil.ModelProperty] = [data[valueProperty]]
+      } else {
+        this.form[item.modelControlUtil.ModelProperty] = null
+      }
+    },
+    getList () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -134,98 +337,130 @@ export default {
         })
         return
       }
-
-      this.form = {
-        ...this.form,
-        ...this.label
+      let request = {
+        andConditionModel: {
+          ...this.form,
+          ...this.dynamicAndCondition,
+          ...this.getCondtionModel(this.action.AndConditionModels)
+        },
+        orConditionModel: this.getCondtionModel(this.action.OrConditionModels)
       }
 
-      if (!this.values) {
-        this.values = []
-      }
+      this.isLoading = true
+      this.$store.commit('setDisabledLoading', true)
+      this.$api.postByUrl(request, this.action.ActionUrl).then((response) => {
+        this.isLoading = false
+        this.$store.commit('setDisabledLoading', false)
 
-      if (this.beforeAdd && !this.beforeAdd(this.form, this.values, this.isUpdated)) {
-        return
-      }
-
-      for (let i = 0; i < this.items.length; i++) {
-        const item = this.items[i]
-        if (item.isUnique) {
-          let filteredList = this.values.filter(i => i[item.modelProperty] === this.form[item.modelProperty] && !this.isUpdated && i.RecordState !== 4)
-          if (filteredList.length > 0) {
-            this.$toasted.show(this.$t('insert.sameRecordError'), {
-              type: 'error',
-              keepOnHover: true,
-              duration: '3000'
+        if (response.ListModel) {
+          this.list = response.ListModel.BaseModels.map(item => {
+            this.hiddenValues.forEach(h => {
+              item[h.targetProperty] = item[h.mainProperty]
             })
-            return
-          }
-        }
-      }
+            item.Price = 100
+            item.Stock = 50
 
-      this.form.Deleted = 0
-      this.form.System = 0
-      this.form.RecordState = this.form.RecordId ? 3 : 2
-      this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
-      const model = Object.keys(this.model)
-
-      for (let index = 0; index < model.length; index++) {
-        let item = model[index]
-        if (this.model[item]) {
-          let key = item + 'Desc'
-          let properties = this.items.filter(i => i.modelProperty === item)
-          if (properties && properties.length === 1) {
-            let property = properties[0]
-            if (property.labelProperty) {
-              this.form[key] = this.model[item][properties[0].labelProperty]
-            } else {
-              this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
-            }
-            if (property.gridCustomOption) {
-              let codeKey = item + 'Code'
-              this.form[codeKey] = this.model[item]['Code']
-            }
-          } else {
-            this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
-          }
-        }
-      }
-      if (this.hasLineNumber) {
-        this.form.LineNumber = this.lineNumber
-        this.lineNumber++
-      }
-      if (this.editForm) {
-        this.form = this.editForm(this.form)
-      }
-      if (this.isUpdated) {
-        this.values[this.selectedIndex] = {...this.form}
-        this.selectedIndex = null
-        this.isUpdated = false
-      } else {
-        this.values.push({...this.form})
-      }
-      this.$emit('valuechange', this.values)
-      this.form = {}
-      this.items.map(item => {
-        if (item.defaultValue) {
-          this.form[item.modelProperty] = item.defaultValue
-        }
-        if (item.createCode) {
-          this.form[item.modelProperty] = this.createNewCode(item.modelProperty)
+            return item
+          })
         }
       })
-
-      this.model = {}
-      this.label = {}
+    },
+    hide () {
+      this.list = []
+      this.form = {}
       this.$v.form.$reset()
+    },
+    showModal () {
+      this.getFormFields()
+      this.$bvModal.show(`modal${this.id}`)
+      setTimeout(() => {
+        this.list = this.value
+        setTimeout(() => {
+          this.$refs[`multipleGrid${this.id}`].selectAllRows()
+        }, 10)
+      }, 10)
+    },
+    closeModal () {
+      this.$bvModal.hide(`modal${this.id}`)
+    },
+    setConvertedValues (value, data) {
+      let property = data.field.key
+      let index = data.index
+
+      if (this.convertedValues.length > 0) {
+        let list = [...this.list]
+        this.list = []
+
+        this.convertedValues.forEach(c => {
+          if (c.mainProperty === property) {
+            list[index][c.targetProperty] = c.getValue(value, list[index])
+          }
+        })
+
+        this.list = list
+
+        setTimeout(() => {
+          let filteredList = this.listItems.filter(l => l.Enabled)
+          let validCount = 0
+
+          filteredList.forEach(item => {
+            let itemValue = this.list[data.index][item.EntityProperty]
+            if (itemValue && itemValue !== '' && itemValue !== '0') {
+              validCount++
+            }
+          })
+
+          if (validCount === filteredList.length) {
+            this.$refs[`multipleGrid${this.id}`].selectRow(data.index)
+          } else {
+            this.$refs[`multipleGrid${this.id}`].unselectRow(data.index)
+          }
+        }, 10)
+
+        if (this.validations.length > 0) {
+          this.validations.forEach(c => {
+            if (c.mainProperty === property) {
+              let result = c.validation(value, list[index])
+              list[index].class = result ? '' : 'error'
+              this.$forceUpdate()
+            }
+          })
+        }
+      }
+    },
+    rowSelected (data) {
+      this.selectedList = data
+    },
+    addItems () {
+      for (let i = 0; i < this.list.length; i++) {
+        let ref = this.$refs[`NextInput${i}`]
+        if (ref && ref.inputClass === 'error') {
+          this.$toasted.show(this.$t('insert.multipleGrid.validationError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+      }
+      this.$emit('valuechange', this.selectedList)
+      this.closeModal()
+    },
+    getCondtionModel (conditionModel) {
+      let model = {}
+      if (conditionModel) {
+        model = JSON.parse(`{${decodeURI(conditionModel)}}`)
+      }
+      return model
     }
   },
   validations () {
     let form = {}
-    this.items.forEach(item => {
-      form[item.modelProperty] = {
+    this.searchItems.forEach(item => {
+      let property = item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty
+      form[property] = {
         required: requiredIf(function () {
-          return this.isRequired(item)
+          return item.Required
         })
       }
     })
@@ -242,16 +477,21 @@ export default {
       },
       deep: true,
       immediate: true
-    },
-    createCode (newValue) {
-      if (newValue) {
-        this.items.map(item => {
-          if (item.createCode) {
-            this.form[item.modelProperty] = this.createNewCode(item.modelProperty)
-          }
-        })
-      }
     }
   }
 }
 </script>
+<style scoped>
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
+}
+.error, .error input {
+  border-color: red;
+  border-width: 2px;
+}
+</style>
