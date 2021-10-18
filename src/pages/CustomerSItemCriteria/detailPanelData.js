@@ -11,7 +11,7 @@ export const detailData = {
       label: i18n.t('insert.customerSItemCriteria.areaDesc'),
       required: true,
       visible: true,
-      isUnique: true,
+      isUnique: false,
       dynamicRequest: {paramId: 'ITEM_CRITERIA'},
       id: 1
     },
@@ -84,7 +84,7 @@ export const detailData = {
       label: i18n.t('insert.customerSItemCriteria.areaDesc'),
       required: true,
       visible: true,
-      isUnique: true,
+      isUnique: false,
       dynamicRequest: {paramId: 'CUSTOMER_CRITERIA'},
       id: 1
     },
