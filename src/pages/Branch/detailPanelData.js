@@ -646,5 +646,18 @@ export const detailData = {
       isUnique: true,
       id: 1
     }
+  ],
+  stockTransferBranchItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'PermitBranchId',
+      objectKey: 'PermitBranch',
+      url: '',
+      label: i18n.t('insert.branch.PermitBranchId'),
+      required: false,
+      visible: true,
+      isUnique: true,
+      id: 1
+    }
   ]
 }
