@@ -177,7 +177,11 @@ export default {
         })
         return
       }
-      let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
+
+      let andConditionModel = {
+        ...this.dynamicAndCondition,
+        ...this.dynamicRequest ? this.dynamicRequest.andConditionModel : {}
+      }
       let orConditionModels = []
       let orConditionModel = {}
       if (search) {
@@ -192,7 +196,16 @@ export default {
         }
       }
       loading(true)
-      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url, pagerecordCount).then((response) => {
+      let dynamicRequest = { ...this.dynamicRequest }
+      if (dynamicRequest && dynamicRequest.andConditionModel) {
+        delete dynamicRequest.andConditionModel
+      }
+      let request = {
+        andConditionModel: andConditionModel,
+        orConditionModels: orConditionModels,
+        ...dynamicRequest
+      }
+      this.$api.postByUrl(request, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels

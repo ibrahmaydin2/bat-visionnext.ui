@@ -565,8 +565,10 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [this.form.WarehouseId],
-        ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        andConditionModel: {
+          WarehouseIds: [this.form.WarehouseId],
+          ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        }
       }
       var me = this
       this.$api.postByUrl(model, 'VisionNextWarehouse/api/WarehouseStock/Search').then((response) => {

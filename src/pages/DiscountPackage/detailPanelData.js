@@ -10,6 +10,20 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: true,
+      pagerecordCount: 20,
+      dynamicRequest: {
+        andConditionModel: {
+          DiscountEndDate: {
+            BeginValue: new Date().toISOString()
+          }
+        },
+        OrderByColumns: [
+          {
+            column: 'CreatedDateTime',
+            orderByType: 1
+          }
+        ]
+      },
       id: 1
     },
     {
