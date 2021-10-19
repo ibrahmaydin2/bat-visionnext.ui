@@ -42,13 +42,17 @@
               <div v-html="getFormatDataByType(rowData.ShelfLife, 'text', 'get.Item.ShelfLife')"></div>
               <div v-html="getFormatDataByType(rowData.TimeFrame, 'object', 'get.Item.TimeFrameId')"></div>
               <div v-html="getFormatDataByType(rowData.Color, 'object', 'get.Item.ColorId')"></div>
+              <div v-html="getFormatDataByType(rowData.TrackType, 'object', 'get.Item.TrackTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Plant, 'text', 'get.Item.Plant')"></div>
               <div v-html="getFormatDataByType(rowData.SortOrder, 'text', 'get.Item.SortOrder')"></div>
+              <div v-html="getFormatDataByType(rowData.StockThreshold, 'text', 'get.Item.StockThreshold')"></div>
               <div v-html="getFormatDataByType(rowData.IsBarterAllowed, 'check', 'get.Item.IsBarterAllowed')"></div>
               <div v-html="getFormatDataByType(rowData.UseSalesAnalysis, 'check', 'get.Item.UseSalesAnalysis')"></div>
               <div v-html="getFormatDataByType(rowData.IsLaunchItem, 'check', 'get.Item.IsLaunchItem')"></div>
               <div v-html="getFormatDataByType(rowData.IsOrderAllowed, 'check', 'get.Item.IsOrderAllowed')"></div>
               <div v-html="getFormatDataByType(rowData.IsSaleAllowed, 'check', 'get.Item.IsSaleAllowed')"></div>
+              <div v-html="getFormatDataByType(rowData.IsRMAOff, 'check', 'get.Item.IsRMAOff')"></div>
+              <div v-html="getFormatDataByType(rowData.IsSPGiftItem, 'check', 'get.Item.IsSPGiftItem')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -71,6 +75,7 @@
               <div v-html="getFormatDataByType(rowData.DiscountGroup8, 'object', 'get.Item.DiscountGroup8Id')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'object', 'get.Item.DiscountGroup9Id')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'get.Item.DiscountGroup10Id')"></div>
+              <div v-html="getFormatDataByType(rowData.RecurrenceType, 'object', 'get.Item.RecurrenceTypeId')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -97,6 +102,33 @@
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
                 <NextDetailPanel type="get" v-model="rowData.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.AddTax')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ItemVats" :items="itemVatsItems"></NextDetailPanel>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.itemDeposits')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ItemDeposits" :items="itemDepositsItem"></NextDetailPanel>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemOrderQuotas')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ItemOrderQuotas" :items="itemOrderQuotasItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -137,7 +169,10 @@ export default {
       itemBomItems: detailData.itemBomItems,
       itemCustomerItems: detailData.itemCustomerItems,
       itemBarcodeItems: detailData.itemBarcodeItems,
-      sapPriceFields: detailData.sapPriceFields
+      sapPriceFields: detailData.sapPriceFields,
+      itemVatsItems: detailData.itemVatsItems,
+      itemDepositsItem: detailData.itemDepositsItem,
+      itemOrderQuotasItems: detailData.itemOrderQuotasItems
     }
   },
   mounted () {

@@ -45,7 +45,6 @@ import VehicleUpdate from '@/pages/Vehicle/update' // güncelleme
 import EmployeeIndex from '@/pages/Employee/' // liste ekranı
 
 import ItemIndex from '@/pages/Item/' // liste ekranı
-import ItemInsert from '@/pages/Item/insert' // yeni kayıt
 
 import BranchIndex from '@/pages/Branch/' // liste ekranı
 
@@ -1015,7 +1014,7 @@ const listInsert = [
   { path: '/Insert/Route', name: 'RouteInsert', component: RouteInsert, meta: { title: i18n.t('router.RouteInsert'), baseLink: 'Route' } },
   { path: '/Insert/Vehicle', name: 'VehicleInsert', component: VehicleInsert, meta: { title: i18n.t('router.VehicleInsert'), baseLink: 'Vehicle' } },
   { path: '/Insert/Employee', name: 'EmployeeInsert', component: getTenantPage('Employee', 'insert'), meta: { title: i18n.t('router.EmployeeInsert'), baseLink: 'Employee' } },
-  { path: '/Insert/Item', name: 'ItemInsert', component: ItemInsert, meta: { title: i18n.t('router.ItemInsert'), baseLink: 'Item' } },
+  { path: '/Insert/Item', name: 'ItemInsert', component: getTenantPage('Item', 'insert'), meta: { title: i18n.t('router.ItemInsert'), baseLink: 'Item' } },
   { path: '/Insert/Branch', name: 'BranchInsert', component: getTenantPage('Branch', 'insert'), meta: { title: i18n.t('router.BranchInsert'), baseLink: 'Branch' } },
   { path: '/Insert/Bcp', name: 'BcpInsert', component: BcpInsert, meta: { title: i18n.t('router.BcpInsert'), baseLink: 'Bcp' } },
   { path: '/Insert/AnalysisQuestions', name: 'AnalysisQuestionsInsert', component: AnalysisQuestionsInsert, meta: { title: i18n.t('router.AnalysisQuestionsInsert'), baseLink: 'AnalysisQuestions' } },

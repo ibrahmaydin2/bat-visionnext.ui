@@ -388,7 +388,7 @@
           <NextDetailPanel v-model="form.CustomFixedTerms" :items="customFixedTermItems" :main-form="form" />
         </b-tab>
         <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()" >
-          <NextDetailPanel v-model="form.AssetLocations" :items="assetLocationsItems"/>
+          <NextDetailPanel type="get" v-model="rowData.AssetLocations" :items="assetLocationsItems"/>
         </b-tab>
         <b-tab :title="$t('insert.customer.customerTouchpoints')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerTouchpoints" :items="customerTouchpointsItems"/>

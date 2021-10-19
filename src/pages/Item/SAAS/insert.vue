@@ -85,11 +85,17 @@
             <NextFormGroup item-key="ColorId" :error="$v.form.ColorId">
               <NextDropdown :disabled="insertReadonly.ColorId" url="VisionNextSystem/api/SysColor/AutoCompleteSearch" @input="selectedSearchType('ColorId', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="TrackTypeId" :error="$v.form.TrackTypeId">
+              <NextDropdown :disabled="insertReadonly.TrackTypeId" url="VisionNextItem/api/ItemTrackType/Search" @input="selectedSearchType('TrackTypeId', $event)"/>
+            </NextFormGroup>
             <NextFormGroup item-key="Plant" :error="$v.form.Plant">
               <NextInput v-model="form.Plant" type="text" :disabled="insertReadonly.Plant" />
             </NextFormGroup>
             <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
+            </NextFormGroup>
+            <NextFormGroup item-key="StockThreshold" :error="$v.form.StockThreshold">
+              <NextInput v-model="form.StockThreshold" type="text" :disabled="insertReadonly.StockThreshold" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
               <NextCheckBox :disabled="insertReadonly.IsOrderAllowed" v-model="form.IsOrderAllowed" type="number" toggle />
@@ -105,6 +111,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="IsLaunchItem" :error="$v.form.IsLaunchItem">
               <NextCheckBox :disabled="insertReadonly.IsLaunchItem" v-model="form.IsLaunchItem" type="number" toggle />
+            </NextFormGroup>
+            <NextFormGroup item-key="IsRMAOff" :error="$v.form.IsRMAOff">
+                <NextCheckBox v-model="form.IsRMAOff" type="number" toggle :disabled="insertReadonly.IsRMAOff"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsSpGiftItem" :error="$v.form.IsSpGiftItem">
+                <NextCheckBox v-model="form.IsSpGiftItem" type="number" toggle :disabled="insertReadonly.IsSpGiftItem"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -152,6 +164,9 @@
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
               <NextDropdown :disabled="insertReadonly.DiscountGroup10Id" lookup-key="ITEM_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
             </NextFormGroup>
+            <NextFormGroup item-key="RecurrenceTypeId" :error="$v.form.RecurrenceTypeId">
+              <NextDropdown :disabled="insertReadonly.RecurrenceTypeId" url="" @input="selectedSearchType('RecurrenceTypeId', $event)"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemTree')">
@@ -162,6 +177,15 @@
         </b-tab>
         <b-tab :title="$t('insert.item.ItemCode')">
           <NextDetailPanel v-model="form.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.item.AddTax')">
+          <NextDetailPanel v-model="form.ItemVats" :items="itemVatsItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.item.itemDeposits')">
+          <NextDetailPanel v-model="form.ItemDeposits" :items="itemDepositsItem"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.item.ItemOrderQuotas')">
+          <NextDetailPanel v-model="form.ItemOrderQuotas" :items="itemOrderQuotasItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
@@ -202,8 +226,8 @@
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/insert'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -214,7 +238,12 @@ export default {
         GroupId: null,
         Description1: null,
         ShortDescription: null,
+        IsRMAOff: null,
+        IsSPGiftItem: null,
+        RecurrenceTypeId: null,
+        TrackTypeId: null,
         StatusId: 1,
+        StockThreshold: null,
         ProducerCodeId: null,
         TypeId: null,
         IsOrderAllowed: null,
@@ -262,11 +291,17 @@ export default {
         CardTypeId: null,
         ItemBoms: [],
         ItemCustomers: [],
-        ItemBarcodes: []
+        ItemBarcodes: [],
+        ItemVats: [],
+        ItemDeposits: [],
+        ItemOrderQuotas: []
       },
       itemBomItems: detailData.itemBomItems,
       itemCustomerItems: detailData.itemCustomerItems,
-      itemBarcodeItems: detailData.itemBarcodeItems
+      itemBarcodeItems: detailData.itemBarcodeItems,
+      itemVatsItems: detailData.itemVatsItems,
+      itemDepositsItem: detailData.itemDepositsItem,
+      itemOrderQuotasItems: detailData.itemOrderQuotasItems
     }
   },
   mounted () {
