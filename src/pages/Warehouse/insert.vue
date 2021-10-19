@@ -103,6 +103,7 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    this.setLicenseNumber()
   },
   methods: {
     save () {
@@ -150,6 +151,30 @@ export default {
         return false
       }
       return true
+    },
+    setLicenseNumber () {
+      let request = {
+        andConditionModel: {
+          IsVehicle: 0,
+          IsCustomerWarehouse: 0,
+          StatusId: 1,
+          IsVirtualWareHouse: 0,
+          NonSapWarehouse: 0
+        },
+        page: 1,
+        OrderByColumns: [
+          {
+            column: 'CreatedDateTime',
+            orderByType: 0
+          }
+        ]
+      }
+
+      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/Search', 1).then(response => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.form.LicenseNumber = response.ListModel.BaseModels[0].LicenseNumber
+        }
+      })
     }
   },
   validations () {
