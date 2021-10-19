@@ -202,6 +202,15 @@ export default {
 
           return f
         })
+        this.setApproveState()
+      }
+    },
+    setApproveState () {
+      if (!this.approveState) {
+        let filteredArr = this.lookup.APPROVE_STATE ? this.lookup.APPROVE_STATE.filter(a => a.Code === 'ONYBK') : []
+        this.approveState = filteredArr && filteredArr.length > 0 ? filteredArr[0] : null
+        this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
+        this.$forceUpdate()
       }
     }
   },

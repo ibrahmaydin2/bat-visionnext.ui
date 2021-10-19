@@ -109,12 +109,6 @@
                 searchable
                 />
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextInput v-model="form.CustomerId" type="number" :disabled="insertReadonly.CustomerId" />
-            </NextFormGroup>
-            <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
-              <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
-            </NextFormGroup>
             <NextFormGroup item-key="CardOwner" :error="$v.form.CardOwner">
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>

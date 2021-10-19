@@ -1189,7 +1189,20 @@
       "SapPrice": "SAP Fiyatı",
       "StartDate": "Başlangıç Tarihi",
       "EndDate": "Bitiş Tarih",
-      "Condition": "Koşul"
+      "Condition": "Koşul",
+      "AddTax": "Ek Vergi",
+      "itemDeposits": "Depozito Tanımı",
+      "TaxTypeId": "Vergi Tipi",
+      "TaxKindId": "Vergi Tipi Uygulama Çeşidi",
+      "BeginDate": "Başlangıç Tarihi",
+      "Vat": "Değer",
+      "UnitId": "Birim Tanımları",
+      "DepositId": "Depozito",
+      "Quantity": "Adet",
+      "QuotaUnitId": "Birim Tanımları",
+      "quotaBranchId": "Kota Şubesi",
+      "quotaRegionId": "Kota Bölgesi",
+      "usedQuantity": "Kullanılan Kota"
     },
     "branch": {
       "EDocumentUsetypeId": "Kullanım Alanları",
@@ -1757,7 +1770,9 @@
       "routeId": "Rota Id",
       "branchId": "Şube Id",
       "branchCode":"Şube Kodu",
-      "branchName":"Şube Adı"
+      "branchName":"Şube Adı",
+      "importExcelButtonTitle": "Müşteriler",
+      "importExcelTitle": "Müşteri Yükle"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",
@@ -2724,7 +2739,12 @@
       "Category7Id": "Ürün Kategori 7",
       "Category8Id": "Ürün Kategori 8",
       "Category9Id": "Ürün Kategori 9",
-      "Category10Id": "Ürün Kategori 10"
+      "Category10Id": "Ürün Kategori 10",
+      "RecurrenceTypeId": "Yenileme Durumu",
+      "TrackTypeId": "İzleme Tipi",
+      "StockThreshold": "Satın Alma Stok Eşik Miktarı ",
+      "IsSPGiftItem": "Kontrat Hediyesi",
+      "IsRMAOff": "İadeye Kapalı"
     },
     "CycleInstruction": {
       "CustomerCriteriaId": "Müşteri Kriteri",
