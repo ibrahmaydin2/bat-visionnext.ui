@@ -139,11 +139,11 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in cashCards" :key="'dl' + i">
                   <b-td>{{r.Code}}</b-td>
-                  <b-td>{{r.Customer.Description1}}</b-td>
-                  <b-td>{{r.Currency.Description1}}</b-td>
-                  <b-td>{{r.Representative.Description1}}</b-td>
-                  <b-td>{{r.Route.Description1}}</b-td>
-                  <b-td>{{r.CashCardType.Description1}}</b-td>
+                  <b-td>{{r.Customer ? r.Customer.Description1 : ''}}</b-td>
+                  <b-td>{{r.Currency ? r.Currency.Description1 : ''}}</b-td>
+                  <b-td>{{r.Representative ? r.Representative.Description1 : ''}}</b-td>
+                  <b-td>{{r.Route ? r.Route.Description1 : ''}}</b-td>
+                  <b-td>{{r.CashCardType ? r.CashCardType.Description1 : ''}}</b-td>
                   <b-td>{{r.CashTotal}}</b-td>
                   <b-td class="text-center">
                     <i @click="editCashCard(r)" class="fa fa-pencil-alt text-warning mr-1"></i>
@@ -309,6 +309,7 @@ export default {
     multipleSave () {
       if (this.cashCards.length < 1) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
+        return
       }
       let status = true
       this.cashCards.map(item => {
@@ -328,6 +329,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        this.$router.push('/CashCard')
       }
     },
     save () {
