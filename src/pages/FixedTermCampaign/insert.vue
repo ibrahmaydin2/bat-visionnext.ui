@@ -230,6 +230,14 @@
                 <AddDetailButton @click.native="addFixedTermCampaignCustomer" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+              <CommonExcelModal
+                :title="$t('insert.fixedTermCampaign.importExcelTitle')"
+                :button-title="$t('insert.fixedTermCampaign.importExcelButtonTitle')"
+                :integration-type="21"
+                @success="successExcelImport"
+                ></CommonExcelModal>
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -610,6 +618,28 @@ export default {
         this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
           this.customerItemAreaList = res.Values
         })
+      }
+    },
+    successExcelImport (data) {
+      if (data) {
+        let list = []
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          let newObj = {
+            RecordState: 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            CustomerId: obj.CustomerId,
+            CustomerName: obj.CustomerDescription,
+            CustomerCode: obj.CustomerCode,
+            LocationName: obj.CustomerLocation,
+            BudgetId: obj.Budget,
+            BudgetName: obj.BudgetDescription
+          }
+          list.push(newObj)
+        })
+        this.form.FixedTermCampaignCustomers = list
       }
     }
   },
