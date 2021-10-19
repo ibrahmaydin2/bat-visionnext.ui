@@ -1757,7 +1757,9 @@
       "routeId": "Rota Id",
       "branchId": "Şube Id",
       "branchCode":"Şube Kodu",
-      "branchName":"Şube Adı"
+      "branchName":"Şube Adı",
+      "importExcelButtonTitle": "Müşteriler",
+      "importExcelTitle": "Müşteri Yükle"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",

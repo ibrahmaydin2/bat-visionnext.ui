@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="orderConvertModal" ref="order-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" @show="show" @hide="hide" id="orderConvertModal" ref="order-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
@@ -59,8 +59,10 @@
           variant="primary"
           size="sm"
           @click="submitModal()"
+          :disabled="isLoading"
         >
-          {{$t('index.approve')}}
+        <span v-if="isLoading"><b-spinner small></b-spinner></span>
+        <span v-else>{{$t('index.approve')}}</span>
         </b-button>
       </div>
     </template>
@@ -149,7 +151,8 @@ export default {
           label: this.$t('index.Convert.Count'),
           sortable: true
         }
-      ]
+      ],
+      isLoading: false
     }
   },
   validations () {
@@ -161,8 +164,8 @@ export default {
       }
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
+  methods: {
+    hide () {
       this.orderLines = []
       this.form = {
         InvoiceKindId: null,
@@ -174,8 +177,9 @@ export default {
       this.documentType = null
       this.employee = null
       this.invoiceType = null
-    })
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+      this.isLoading = false
+    },
+    show () {
       this.tableBusy = true
       this.orderLines = []
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
@@ -183,11 +187,10 @@ export default {
       this.form.RepresentativeId = userModel.UserId
       this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
       this.form.DocumentNumber = this.modalItem.DocumentNumber
+      this.$v.form.$reset()
       this.getCode()
       this.getConvert()
-    })
-  },
-  methods: {
+    },
     getCode () {
       this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextOrder/api/Order/GetCode`})
     },
@@ -197,6 +200,10 @@ export default {
           this.orderLines = response.OrderLines
           this.form.documentDate = response.DocumentDate.substr(0, 10)
           this.invoiceTypes = response.InvoiceKinds
+          if (this.invoiceTypes && this.invoiceTypes.length > 0) {
+            this.invoiceType = this.invoiceTypes[0]
+            this.selectedType('InvoiceKindId', this.invoiceType)
+          }
           this.getConvertData = response
         } else {
           if (response.Message) {
@@ -288,7 +295,11 @@ export default {
         'recordId': this.modalItem.RecordId,
         'orderConvertModel': this.getConvertData
       }
+      this.isLoading = true
+      this.$store.commit('setDisabledLoading', true)
       this.$api.postByUrl(request, 'VisionNextOrder/api/Order/ConvertOrder').then((res) => {
+        this.isLoading = false
+        this.$store.commit('setDisabledLoading', false)
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
@@ -298,6 +309,7 @@ export default {
           setTimeout(() => {
             this.$store.commit('setReloadGrid', true)
           }, 1000)
+          this.closeModal()
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
