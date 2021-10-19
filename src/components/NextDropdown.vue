@@ -1,5 +1,10 @@
 <template>
-  <v-select :disabled="disabled" v-model="selectedValue" :options="getSource()" @search="searchValue" @input="selectValue($event)" :filterable="false" :label="labelKey" :multiple="multiple">
+  <v-select
+    :disabled="disabled" v-model="selectedValue"
+    :options="getSource()" @search="searchValue"
+    @input="selectValue($event)" :filterable="searchable ? false : true"
+    :label="labelKey" :multiple="multiple"
+    :reduce="getReduceFunc()">
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
@@ -64,6 +69,14 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    reduceValue: {
+      type: String,
+      default: null
+    },
+    defaultValue: {
+      type: Number,
+      default: null
     }
   },
   model: {
@@ -164,7 +177,11 @@ export default {
         })
         return
       }
-      let andConditionModel = this.dynamicAndCondition ? this.dynamicAndCondition : {}
+
+      let andConditionModel = {
+        ...this.dynamicAndCondition,
+        ...this.dynamicRequest ? this.dynamicRequest.andConditionModel : {}
+      }
       let orConditionModels = []
       let orConditionModel = {}
       if (search) {
@@ -179,7 +196,16 @@ export default {
         }
       }
       loading(true)
-      this.$api.postByUrl({andConditionModel: andConditionModel, orConditionModels: orConditionModels}, this.url, pagerecordCount).then((response) => {
+      let dynamicRequest = { ...this.dynamicRequest }
+      if (dynamicRequest && dynamicRequest.andConditionModel) {
+        delete dynamicRequest.andConditionModel
+      }
+      let request = {
+        andConditionModel: andConditionModel,
+        orConditionModels: orConditionModels,
+        ...dynamicRequest
+      }
+      this.$api.postByUrl(request, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
           this.values = response.ListModel.BaseModels
@@ -262,10 +288,22 @@ export default {
     setDefaultValue (source) {
       if (this.itemKey && this.insertDefaultValue[this.itemKey] && !this.selectedValue && source) {
         let defaultValue = this.insertDefaultValue[this.itemKey]
-        let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
-        if (filteredList && filteredList.length > 0) {
-          this.selectedValue = filteredList[0]
-        }
+        this.findDefaultValue(defaultValue, source)
+      } else if (this.defaultValue) {
+        this.findDefaultValue(this.defaultValue, source)
+      }
+    },
+    findDefaultValue (defaultValue, source) {
+      let filteredList = source.filter(s => s.RecordId === defaultValue || s.DecimalValue === defaultValue)
+      if (filteredList && filteredList.length > 0) {
+        this.selectedValue = filteredList[0]
+      }
+    },
+    getReduceFunc () {
+      if (this.reduceValue) {
+        return (item) => item[this.reduceValue]
+      } else {
+        return (item) => item
       }
     }
   }

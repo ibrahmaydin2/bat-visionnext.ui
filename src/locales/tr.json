@@ -2454,6 +2454,12 @@
       "successCancel": "İptal işleminiz başarıyla tamamlanmıştır.",
       "cancelType": "İptal Tipi",
       "cancelDate": "İptal Zamanı"
+    },
+    "multipleGrid": {
+      "title": "Toplu Ekle",
+      "search": "Ara",
+      "add": "Ekle",
+      "validationError": "Girilen veriler kurallara uymamaktadır."
     }
   },
   "get": {
