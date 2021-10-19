@@ -298,22 +298,23 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        model: {
+          CustomerId: this.selectedCustomer.RecordId,
+          DocumentDate: this.form.DocumentDate
         }
       }
-      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/Search').then((response) => {
-        if (response.ListModel && response.ListModel.BaseModels) {
-          this.priceList = response.ListModel.BaseModels
-          if (this.priceList && this.priceList.length > 0) {
-            this.selectedPrice = this.priceList[0]
-            this.form.PriceListId = this.priceList[0].RecordId
-          } else {
-            this.selectedPrice = {}
-            this.form.PriceListId = null
+      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/SearchForPurschase').then((response) => {
+        if (response && response.Model) {
+          this.selectedPrice = {
+            RecordId: response.Model.PriceListId,
+            Description1: response.Model.Description1
           }
+          this.priceList = [this.selectedPrice]
+          this.form.PriceListId = response.Model.PriceListId
           this.searchPriceListItem()
+        } else {
+          this.selectedPrice = {}
+          this.form.PriceListId = null
         }
       })
     },
@@ -430,8 +431,10 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [this.form.WarehouseId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        andConditionModel: {
+          WarehouseIds: [this.form.WarehouseId],
+          ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        }
       }
       var me = this
       this.$api.postByUrl(model, 'VisionNextWarehouse/api/WarehouseStock/Search').then((response) => {

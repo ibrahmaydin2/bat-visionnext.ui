@@ -119,14 +119,21 @@
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
               <NextInput v-model="form.Genexp1" type="text" :disabled="insertReadonly.Genexp1" />
             </NextFormGroup>
-            <NextFormGroup item-key="BankIban" :error="$v.form.BankIban">
-              <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
-            </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup9Id" :error="$v.form.DiscountGroup9Id">
               <NextDropdown v-model="discountGroup9" :disabled="insertReadonly.DiscountGroup9Id"  lookup-key="CUSTOMER_DISCOUNT_GROUP_9" @input="selectedType('DiscountGroup9Id', $event)"/>
             </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.ibanInfo')">
+          <b-row>
+            <NextFormGroup item-key="BankIban" :error="$v.form.BankIban">
+              <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
+            </NextFormGroup>
             <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
-              <NextInput v-model="form.BankInfo" type="text" :disabled="insertReadonly.BankInfo" />
+              <NextDropdown :v-model="bankInfo" :disabled="insertReadonly.BankInfo"  url="VisionNextBank/api/Bank/Search" @input="selectedType('BankInfo', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="EDocumentUsetypeId" :error="$v.form.EDocumentUsetypeId">
+              <NextDropdown :v-model="eDocumentUsetype" :disabled="EDocumentUsetypeId"  lookup-key="E_DOCUMENT_USE_TYPE" @input="selectedType('EDocumentUsetypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -218,6 +225,9 @@
         <b-tab :title="$t('insert.branch.branchPaymentTypes')">
           <NextDetailPanel v-model="form.BranchPaymentTypes" :items="branchPaymentTypeItems"/>
         </b-tab>
+        <b-tab :title="$t('insert.branch.StockTransferBranch')">
+          <NextDetailPanel v-model="form.StockTransferBranch" :items="stockTransferBranchItems"/>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -299,6 +309,7 @@ export default {
         CustomerPrefixCode: null,
         CustomerItemDiscountCrts: [],
         CustomerBranchs: [],
+        StockTransferBranch: [],
         FinanceCode2: null,
         MersisNumber: null,
         BankIban: null,
@@ -312,7 +323,8 @@ export default {
         category2Id: null,
         category1Id: null,
         CustomerRegion5Id: null,
-        BackMarginGroupId: null
+        BackMarginGroupId: null,
+        EDocumentUsetypeId: null
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
@@ -320,6 +332,7 @@ export default {
       customFixedTermItems: detailData.customFixedTermItems,
       customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
       branchPaymentTypeItems: detailData.branchPaymentTypeItems,
+      stockTransferBranchItems: detailData.stockTransferBranchItems,
       customerItemDiscounts: [],
       distributionType: {},
       branchRegion: {},
@@ -347,6 +360,8 @@ export default {
       customerCategory3: {},
       customerCategory2: {},
       customerCategory1: {},
+      eDocumentUsetype: {},
+      bankInfo: {},
       branchDistributionTypeId: 0,
       showCustomerClassInfo: false
     }
@@ -370,6 +385,7 @@ export default {
       this.paymentPeriod = this.convertLookupValueToSearchValue(rowData.PaymentPeriod)
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
+      this.bankInfo = this.convertLookupValueToSearchValue(rowData.BankInfo)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
@@ -386,6 +402,7 @@ export default {
       this.category1 = rowData.Category1
       this.customerRegion5 = rowData.CustomerRegion5
       this.backMarginGroup = rowData.BackMarginGroup
+      this.eDocumentUsetype = rowData.EDocumentUsetype
       if (!rowData.CustomerItemDiscounts) {
         this.form.CustomerItemDiscounts = []
       }
@@ -409,6 +426,10 @@ export default {
 
       if (!rowData.CustomerItemDiscountCrts) {
         this.form.CustomerItemDiscountCrts = []
+      }
+
+      if (!rowData.StockTransferBranch) {
+        this.form.StockTransferBranch = []
       }
     },
     save () {

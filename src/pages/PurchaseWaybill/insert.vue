@@ -492,9 +492,11 @@ export default {
         return false
       }
       let model = {
-        WarehouseIds: [this.form.WarehouseId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId],
-        StatusIds: [2]
+        andConditionModel: {
+          WarehouseIds: [this.form.WarehouseId],
+          ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId],
+          StatusIds: [2]
+        }
       }
       var me = this
       this.searchItemsByModel('VisionNextWarehouse/api/WarehouseStock/Search', 'stocks', model, 1).then(() => {

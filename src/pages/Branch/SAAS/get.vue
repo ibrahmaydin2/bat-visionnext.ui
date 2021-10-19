@@ -60,9 +60,17 @@
               <div v-html="getFormatDataByType(rowData.Genexp1, 'text', 'insert.branch.Genexp1')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.BankIban, 'text', 'insert.branch.BankIban')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'object', 'insert.branch.DiscountGroup9Id')"></div>
-              <div v-html="getFormatDataByType(rowData.BankInfo, 'text', 'insert.branch.BankInfo')"></div>            </b-card>
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.branch.ibanInfo')">
+          <b-row class="p-4">
+            <b-card class="col-md-12 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.BankIban, 'text', 'insert.branch.BankIban')"></div>
+              <div v-html="getFormatDataByType(rowData.EDocumentUsetypeId, 'object', 'insert.branch.EDocumentUsetypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.BankInfo, 'object', 'insert.branch.BankInfo')"></div>
+            </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
@@ -147,6 +155,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.StockTransferBranch')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.StockTransferBranch" :items="stockTransferBranchItems"/>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -167,6 +184,7 @@ export default {
       customFixedTermItems: detailData.customFixedTermItems,
       customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
       branchPaymentTypeItems: detailData.branchPaymentTypeItems,
+      stockTransferBranchItems: detailData.stockTransferBranchItems,
       branchLocations: []
     }
   },

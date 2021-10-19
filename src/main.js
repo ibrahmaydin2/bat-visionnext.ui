@@ -68,6 +68,7 @@ import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkA
 import BudgetMasterApproveModal from './components/Actions/BudgetMasterApproveModal'
 import AssignEmployeeModal from './components/Actions/AssignEmployeeModal'
 import CommonInfoModal from './components/Actions/CommonInfoModal'
+import NextMultipleSelection from './components/NextMultipleSelection'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -146,6 +147,7 @@ Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)
 Vue.component('BudgetMasterApproveModal', BudgetMasterApproveModal)
 Vue.component('AssignEmployeeModal', AssignEmployeeModal)
 Vue.component('CommonInfoModal', CommonInfoModal)
+Vue.component('NextMultipleSelection', NextMultipleSelection)
 
 Vue.prototype.$api = new ApiManager()
 

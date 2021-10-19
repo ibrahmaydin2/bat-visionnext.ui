@@ -296,6 +296,11 @@ export default {
         required
       }
     }
+  },
+  watch: {
+    currentPage () {
+      this.allSelected = false
+    }
   }
 }
 </script>
