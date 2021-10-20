@@ -2082,7 +2082,12 @@
       "code": "Kodu",
       "status": "Durum",
       "description1": "Adı",
-      "cardType": "Birim Seti Tipi"
+      "cardType": "Birim Seti Tipi",
+      "coefficient": "Katsayı",
+      "RequrementTypeId": "Zorunluluk Tipi",
+      "DocumentTypeId": "Belge Türü",
+      "UnitId": "Birim Tanımları",
+      "Factor": "Katsayı"
     },
     "customerSItemCriteria": {
       "title": "Satılan Satılamayan Ürünler",

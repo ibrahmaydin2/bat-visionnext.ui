@@ -19,7 +19,7 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <NextInput v-model="form.Code" type="text" :disabled="true" />
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -35,20 +35,23 @@
               <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="CardTypeId" :error="$v.form.CardTypeId">
-              <NextDropdown :disabled="insertReadonly.CardTypeId" :source="cardTypes" label="Label" @input="selectedType('CardTypeId', $event)"/>
+              <NextDropdown v-model="cardType" :disabled="insertReadonly.CardTypeId" :source="cardTypes" label="Label" @input="selectedType('CardTypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.unitSet.units')" >
-          <NextDetailPanel type="insert" v-model="form.Units" :items="unitItems" />
+          <NextDetailPanel type="update" v-model="form.Units" :items="unitItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.unitSet.coefficient')" >
+          <NextDetailPanel type="update" v-model="form.UnitSetFactors" :items="unitSetFactorsItems" />
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/update'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -62,10 +65,13 @@ export default {
         Code: null,
         Description1: null,
         CardTypeId: null,
-        Units: []
+        Units: [],
+        UnitSetFactors: []
       },
-      unitItems: detailData.unitItems,
       routeName1: 'Unit',
+      cardType: null,
+      unitItems: detailData.unitItems,
+      unitSetFactorsItems: detailData.unitSetFactorsItems,
       cardTypes: [
         {
           Label: this.$t('insert.unitSet.userDefinedDimensions'),
@@ -75,7 +81,7 @@ export default {
     }
   },
   mounted () {
-    this.createManualCode()
+    this.getData().then(() => this.setData())
   },
   methods: {
     save () {
@@ -88,8 +94,13 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.createData()
+        this.updateData()
       }
+    },
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      this.cardType = rowData.CardType
     }
   }
 }

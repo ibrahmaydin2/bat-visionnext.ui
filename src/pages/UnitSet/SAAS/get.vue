@@ -40,19 +40,29 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.unitSet.units')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.UnitSetFactors" :items="unitSetFactorsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/index'
+import { detailData } from './../detailPanelData'
 export default {
   mixins: [mixin],
   data () {
     return {
-      unitItems: detailData.unitItems
+      unitItems: detailData.unitItems,
+      unitSetFactorsItems: detailData.unitSetFactorsItems
     }
   },
   mounted () {
