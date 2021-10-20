@@ -170,9 +170,6 @@ import BranchMasterRecordInsert from '@/pages/BranchMasterRecord/insert'
 import BranchMasterRecordUpdate from '@/pages/BranchMasterRecord/update'
 
 import UnitSetIndex from '@/pages/UnitSet/'
-import UnitSetGet from '@/pages/UnitSet/get'
-import UnitSetInsert from '@/pages/UnitSet/insert'
-import UnitSetUpdate from '@/pages/UnitSet/update'
 
 import BankIndex from '@/pages/Bank/'
 
@@ -784,7 +781,7 @@ const listGet = [
   { path: '/CustomerRecord/:url', name: 'CustomerRecordGet', component: CustomerRecordGet, meta: { title: i18n.t('router.CustomerRecordGet'), baseLink: 'CustomerRecord' } },
   { path: '/ItemMasterRecords/:url', name: 'ItemMasterRecordsGet', component: ItemMasterRecordsGet, meta: { title: i18n.t('router.ItemMasterRecordsGet'), baseLink: 'ItemMasterRecords' } },
   { path: '/BranchMasterRecord/:url', name: 'BranchMasterRecordGet', component: BranchMasterRecordGet, meta: { title: i18n.t('router.BranchMasterRecordGet'), baseLink: 'BranchMasterRecord' } },
-  { path: '/UnitSet/:url', name: 'UnitSetGet', component: UnitSetGet, meta: { title: i18n.t('router.UnitSetGet'), baseLink: 'UnitSet' } },
+  { path: '/UnitSet/:url', name: 'UnitSetGet', component: getTenantPage('UnitSet', 'get'), meta: { title: i18n.t('router.UnitSetGet'), baseLink: 'UnitSet' } },
   { path: '/Bank/:url', name: 'BankGet', component: getTenantPage('Bank', 'get'), meta: { title: i18n.t('router.BankGet'), baseLink: 'Bank' } },
   { path: '/Return/:url', name: 'ReturnGet', component: ReturnGet, meta: { title: i18n.t('router.ReturnGet'), baseLink: 'Return' } },
   { path: '/PurchaseReturnOrder/:url', name: 'PurchaseReturnOrderGet', component: PurchaseReturnOrderGet, meta: { title: i18n.t('router.PurchaseReturnOrderGet'), baseLink: 'PurchaseReturnOrder' } },
@@ -913,7 +910,7 @@ const listUpdate = [
   { path: '/Update/CustomerRecord/:url', name: 'CustomerRecordUpdate', component: CustomerRecordUpdate, meta: { title: i18n.t('router.CustomerRecordUpdate'), baseLink: 'CustomerRecord' } },
   { path: '/Update/ItemMasterRecords/:url', name: 'ItemMasterRecordsUpdate', component: ItemMasterRecordsUpdate, meta: { title: i18n.t('router.ItemMasterRecordsUpdate'), baseLink: 'ItemMasterRecords' } },
   { path: '/Update/BranchMasterRecord/:url', name: 'BranchMasterRecordUpdate', component: BranchMasterRecordUpdate, meta: { title: i18n.t('router.BranchMasterRecordUpdate'), baseLink: 'BranchMasterRecord' } },
-  { path: '/Update/UnitSet/:url', name: 'UnitSetUpdate', component: UnitSetUpdate, meta: { title: i18n.t('router.UnitSetUpdate'), baseLink: 'UnitSet' } },
+  { path: '/Update/UnitSet/:url', name: 'UnitSetUpdate', component: getTenantPage('UnitSet', 'update'), meta: { title: i18n.t('router.UnitSetUpdate'), baseLink: 'UnitSet' } },
   { path: '/Update/Bank/:url', name: 'BankUpdate', component: getTenantPage('Bank', 'update'), meta: { title: i18n.t('router.BankUpdate'), baseLink: 'Bank' } },
   { path: '/Update/Return/:url', name: 'ReturnUpdate', component: ReturnUpdate, meta: { title: i18n.t('router.ReturnUpdate'), baseLink: 'Return' } },
   { path: '/Update/PurchaseReturnOrder/:url', name: 'PurchaseReturnOrderUpdate', component: PurchaseReturnOrderUpdate, meta: { title: i18n.t('router.PurchaseReturnOrderUpdate'), baseLink: 'PurchaseReturnOrder' } },
@@ -1034,7 +1031,7 @@ const listInsert = [
   { path: '/Insert/CustomerRecord', name: 'CustomerRecordInsert', component: CustomerRecordInsert, meta: { title: i18n.t('router.CustomerRecordInsert'), baseLink: 'CustomerRecord' } },
   { path: '/Insert/ItemMasterRecords', name: 'ItemMasterRecordsInsert', component: ItemMasterRecordsInsert, meta: { title: i18n.t('router.ItemMasterRecordsInsert'), baseLink: 'ItemMasterRecords' } },
   { path: '/Insert/BranchMasterRecord', name: 'BranchMasterRecordInsert', component: BranchMasterRecordInsert, meta: { title: i18n.t('router.BranchMasterRecordInsert'), baseLink: 'BranchMasterRecord' } },
-  { path: '/Insert/UnitSet', name: 'UnitSetInsert', component: UnitSetInsert, meta: { title: i18n.t('router.UnitSetInsert'), baseLink: 'UnitSet' } },
+  { path: '/Insert/UnitSet', name: 'UnitSetInsert', component: getTenantPage('UnitSet', 'insert'), meta: { title: i18n.t('router.UnitSetInsert'), baseLink: 'UnitSet' } },
   { path: '/Insert/Bank', name: 'BankInsert', component: getTenantPage('Bank', 'insert'), meta: { title: i18n.t('router.BankInsert'), baseLink: 'Bank' } },
   { path: '/Insert/Return', name: 'ReturnInsert', component: ReturnInsert, meta: { title: i18n.t('router.ReturnInsert'), baseLink: 'Return' } },
   { path: '/Insert/PurchaseReturnOrder', name: 'PurchaseReturnOrderInsert', component: PurchaseReturnOrderInsert, meta: { title: i18n.t('router.PurchaseReturnOrderInsert'), baseLink: 'PurchaseReturnOrder' } },

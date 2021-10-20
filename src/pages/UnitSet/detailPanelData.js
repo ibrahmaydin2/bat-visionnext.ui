@@ -162,5 +162,49 @@ export const detailData = {
       visible: true,
       id: 17
     }
+  ],
+  unitSetFactorsItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'RequirementTypeId',
+      objectKey: 'RequirementType',
+      labelProperty: 'Label',
+      url: 'REQUIREMENT_TYPE',
+      label: i18n.t('insert.unitSet.RequrementTypeId'),
+      visible: true,
+      required: false,
+      id: 1
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'DocumentTypeId',
+      objectKey: 'DocumentType',
+      url: 'VisionNextOrder/api/OrderType/Search',
+      defaultValue: '',
+      label: i18n.t('insert.unitSet.DocumentTypeId'),
+      visible: true,
+      required: false,
+      id: 2
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'UnitId',
+      objectKey: 'Unit',
+      url: 'UNIT',
+      label: i18n.t('insert.unitSet.unitDefinitions'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Factor',
+      label: i18n.t('insert.unitSet.Factor'),
+      required: false,
+      visible: true,
+      id: 4
+    }
   ]
 }
