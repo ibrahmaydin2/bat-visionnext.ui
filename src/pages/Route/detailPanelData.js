@@ -121,10 +121,9 @@ export const detailData = {
     },
     {
       type: 'Date',
-      modelProperty: 'Day1StartTime',
-      label: i18n.t('insert.route.DayFreStartDate'),
-      required: false,
+      modelProperty: 'DayFreStartDate',
       visible: true,
+      label: i18n.t('insert.route.DayFreStartDate'),
       id: 13
     },
     {
@@ -257,7 +256,7 @@ export const detailData = {
     },
     {
       type: 'Date',
-      modelProperty: 'Day1StartTime',
+      modelProperty: 'DayFreStartDate',
       visible: true,
       label: i18n.t('insert.route.DayFreStartDate'),
       id: 13
