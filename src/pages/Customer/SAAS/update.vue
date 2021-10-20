@@ -168,53 +168,53 @@
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="KindId" :error="$v.form.KindId">
-              <NextDropdown :disabled="insertReadonly.KindId" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
+              <NextDropdown v-model="kind" :disabled="insertReadonly.KindId" lookup-key="CUSTOMER_KIND" @input="selectedType('KindId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.AdditionalClassInformation')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
+              <NextDropdown v-model="discountGroup1" :disabled="insertReadonly.DiscountGroup1Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup3Id" :error="$v.form.DiscountGroup3Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup3Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
+              <NextDropdown v-model="discountGroup3" :disabled="insertReadonly.DiscountGroup3Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_3" @input="selectedType('DiscountGroup3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup4Id" :error="$v.form.DiscountGroup4Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup4Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
+              <NextDropdown v-model="discountGroup4" :disabled="insertReadonly.DiscountGroup4Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_4" @input="selectedType('DiscountGroup4Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup5Id" :error="$v.form.DiscountGroup5Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup5Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
+              <NextDropdown v-model="discountGroup5" :disabled="insertReadonly.DiscountGroup5Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_5" @input="selectedType('DiscountGroup5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup6Id" :error="$v.form.DiscountGroup6Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup6Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
+              <NextDropdown v-model="discountGroup6" :disabled="insertReadonly.DiscountGroup6Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_6" @input="selectedType('DiscountGroup6Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup7Id" :error="$v.form.DiscountGroup7Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup7Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
+              <NextDropdown v-model="discountGroup7" :disabled="insertReadonly.DiscountGroup7Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_7" @input="selectedType('DiscountGroup7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup8Id" :error="$v.form.DiscountGroup8Id">
-              <NextDropdown :disabled="insertReadonly.DiscountGroup8Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
+              <NextDropdown v-model="discountGroup8" :disabled="insertReadonly.DiscountGroup8Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_8" @input="selectedType('DiscountGroup8Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Activity1Id" :error="$v.form.Activity1Id">
-              <NextDropdown :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
+              <NextDropdown v-model="activity1" :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="OutSourceOrderId" :error="$v.form.OutSourceOrderId">
-              <NextDropdown :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
+              <NextDropdown v-model="outSourceOrder" :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field1" :error="$v.form.Field1">
-              <NextDropdown :disabled="insertReadonly.Field1" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
+              <NextDropdown v-model="field1" :disabled="insertReadonly.Field1" lookup-key="FIELD_1" @input="selectedType('Field1', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field2" :error="$v.form.Field2">
-              <NextDropdown :disabled="insertReadonly.Field2" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
+              <NextDropdown v-model="field2" :disabled="insertReadonly.Field2" lookup-key="FIELD_2" @input="selectedType('Field2', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field3" :error="$v.form.Field3">
-              <NextDropdown :disabled="insertReadonly.Field3" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
+              <NextDropdown v-model="field3" :disabled="insertReadonly.Field3" lookup-key="FIELD_3" @input="selectedType('Field3', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field4" :error="$v.form.Field4">
-              <NextDropdown :disabled="insertReadonly.Field4" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
+              <NextDropdown v-model="field4" :disabled="insertReadonly.Field4" lookup-key="FIELD_4" @input="selectedType('Field4', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Field5" :error="$v.form.Field5">
-              <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
+              <NextDropdown v-model="field5" :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -549,7 +549,22 @@ export default {
       locationEditableIndex: null,
       addressInit: null,
       paymentTypes: [],
-      Location: {}
+      Location: {},
+      discountGroup1: {},
+      discountGroup3: {},
+      discountGroup4: {},
+      discountGroup5: {},
+      discountGroup6: {},
+      discountGroup7: {},
+      discountGroup8: {},
+      activity1: {},
+      outSourceOrder: {},
+      field1: {},
+      field2: {},
+      field3: {},
+      field4: {},
+      field5: {},
+      kind: {}
     }
   },
   computed: {
@@ -745,20 +760,35 @@ export default {
       this.category1 = rowData.Category1
       this.customerRegion5 = rowData.CustomerRegion5
       this.marketingRegion5 = rowData.MarketingRegion5
-      this.customerCategory3 = rowData.CustomerCategory3
-      this.customerCategory2 = rowData.CustomerCategory2
-      this.customerCategory1 = rowData.CustomerCategory1
-      this.selectedCustomerGroup = rowData.SelectedCustomerGroup
-      this.selectedCustomerClass = rowData.SelectedCustomerClass
+      this.customerCategory3 = rowData.Category3
+      this.customerCategory2 = rowData.Category2
+      this.customerCategory1 = rowData.Category1
+      this.selectedCustomerGroup = rowData.Group
+      this.selectedCustomerClass = rowData.Class
       this.salesType = rowData.SalesType
       this.classProposal = rowData.ClassProposal
-      this.selectedSalesMethod = rowData.SelectedSalesMethod
-      this.selectedGeographicEnvironment = rowData.SelectedGeographicEnvironment
-      this.selectedTradeFocus = rowData.SelectedTradeFocus
-      this.selectedOwnerType = rowData.SelectedOwnerType
+      this.selectedSalesMethod = rowData.SalesMethod
+      this.selectedGeographicEnvironment = rowData.GeographicEnvironment
+      this.selectedTradeFocus = rowData.TradeFocus
+      this.selectedOwnerType = rowData.OwnerType
       this.salesDocumentType = rowData.SalesDocumentType
       this.classProposalReason = rowData.ClassProposalReason
       this.backMarginGroup = rowData.BackMarginGroup
+      this.discountGroup1 = rowData.DiscountGroup1
+      this.discountGroup3 = rowData.DiscountGroup3
+      this.discountGroup4 = rowData.DiscountGroup4
+      this.discountGroup5 = rowData.DiscountGroup5
+      this.discountGroup6 = rowData.DiscountGroup6
+      this.discountGroup7 = rowData.DiscountGroup7
+      this.discountGroup8 = rowData.DiscountGroup8
+      this.activity1 = rowData.Activity1
+      this.outSourceOrder = rowData.OutSourceOrder
+      this.field1 = rowData.Field1
+      this.field2 = rowData.Field2
+      this.field3 = rowData.Field3
+      this.field4 = rowData.Field4
+      this.field5 = rowData.Field5
+      this.kind = rowData.Kind
       if (!rowData.CustomerLocations) {
         this.form.CustomerLocations = []
       }
@@ -888,6 +918,20 @@ export default {
       } else {
         this.Category1 = null
         this.Category2 = null
+        this.form.Category1Id = null
+        this.form.Category2Id = null
+        this.form.Category3Id = null
+      }
+    },
+    customerCategory3 (value) {
+      if (value) {
+        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
+        this.form.Category2Id = this.customerCategory2.DecimalValue
+        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
+        this.form.Category1Id = this.customerCategory1.DecimalValue
+      } else {
+        this.customerCategory1 = null
+        this.customerCategory2 = null
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
