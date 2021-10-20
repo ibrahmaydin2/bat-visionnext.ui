@@ -195,7 +195,8 @@ export default {
         this.customerCriterias = this.form.FieldAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         this.customers = this.form.FieldAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
       }
-      if (this.$route.query.saveAs === 1) {
+      // eslint-disable-next-line eqeqeq
+      if (this.$route.query.saveAs == 1) {
         this.form.FieldAnalysisValidDates.map(f => {
           f.RecordState = 2
           f.RecordId = null
@@ -206,12 +207,10 @@ export default {
       }
     },
     setApproveState () {
-      if (!this.approveState) {
-        let filteredArr = this.lookup.APPROVE_STATE ? this.lookup.APPROVE_STATE.filter(a => a.Code === 'ONYBK') : []
-        this.approveState = filteredArr && filteredArr.length > 0 ? filteredArr[0] : null
-        this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
-        this.$forceUpdate()
-      }
+      let filteredArr = this.lookup.APPROVE_STATE ? this.lookup.APPROVE_STATE.filter(a => a.Code === 'ONYBK') : []
+      this.approveState = filteredArr && filteredArr.length > 0 ? filteredArr[0] : null
+      this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
+      this.$forceUpdate()
     }
   },
   watch: {
@@ -220,6 +219,16 @@ export default {
         if (value && value.FieldAnalysisQuestions && value.FieldAnalysisQuestions.length > 0) {
           let filteredArr = value.FieldAnalysisQuestions.filter(i => i.IsNecessary === 1)
           this.form.IsNecessary = filteredArr && filteredArr.length > 0 ? 1 : 0
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    lookup: {
+      handler (value) {
+        // eslint-disable-next-line eqeqeq
+        if (value && value.APPROVE_STATE && this.$route.query.saveAs == 1) {
+          this.setApproveState()
         }
       },
       deep: true,
