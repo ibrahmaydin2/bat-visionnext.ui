@@ -310,14 +310,15 @@ export default {
       let model = {
         model: {
           CustomerId: this.selectedCustomer.RecordId,
-          DocumentDate: this.form.DocumentDate
+          DocumentDate: this.form.DocumentDate,
+          InvoiceClass: 2
         }
       }
-      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/SearchForPurschase').then((response) => {
+      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/SearchForPurchaseSales').then((response) => {
         if (response && response.Model) {
           this.selectedPrice = {
             RecordId: response.Model.PriceListId,
-            Description1: response.Model.Description1
+            Description1: response.Model.PriceList.Label
           }
           this.priceList = [this.selectedPrice]
           this.form.PriceListId = response.Model.PriceListId
