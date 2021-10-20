@@ -222,7 +222,7 @@
              <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
               <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetId" :required="true">
+             <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetName" :required="true">
               <b-form-input type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
@@ -361,7 +361,6 @@ export default {
         customerCode: null,
         locationId: null,
         locationName: null,
-        budgetId: null,
         budgetName: null
       },
       companyId: null
@@ -582,7 +581,6 @@ export default {
         CustomerCode: this.fixedTermCampaignCustomer.customerCode,
         LocationId: this.fixedTermCampaignCustomer.locationId,
         LocationName: this.fixedTermCampaignCustomer.locationName,
-        BudgetId: this.fixedTermCampaignCustomer.budgetId,
         BudgetName: this.fixedTermCampaignCustomer.budgetName
       })
       this.fixedTermCampaignCustomer = {}
@@ -634,8 +632,7 @@ export default {
             CustomerName: obj.CustomerDescription,
             CustomerCode: obj.CustomerCode,
             LocationName: obj.CustomerLocation,
-            BudgetId: obj.Budget,
-            BudgetName: obj.BudgetDescription
+            BudgetName: obj.Budget
           }
           list.push(newObj)
         })
@@ -650,10 +647,12 @@ export default {
         me.fixedTermCampaignCustomer.customerId = value.RecordId
         me.fixedTermCampaignCustomer.customerName = value.Description1
         me.fixedTermCampaignCustomer.customerCode = value.Code
-        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
+        let request = {
+          customerId: value.RecordId
+        }
+        me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
           if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
             let customerBudget = res.ListModel.BaseModels[0]
-            me.fixedTermCampaignCustomer.budgetId = customerBudget.BudgetId
             me.fixedTermCampaignCustomer.budgetName = customerBudget.CustomerDesc
             me.$forceUpdate()
           }

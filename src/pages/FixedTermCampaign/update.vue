@@ -509,7 +509,10 @@ export default {
         let customerIds = this.form.FixedTermCampaignCustomers.map(c => c.CustomerId)
         let me = this
         customerIds.forEach((id) => {
-          me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${id}`).then((res) => {
+          let request = {
+            customerId: id
+          }
+          me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
             if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
               let customerBudget = res.ListModel.BaseModels[0]
               let selectedCampaignCustomer = me.form.FixedTermCampaignCustomers.find(f => f.CustomerId === id)
@@ -578,7 +581,10 @@ export default {
         me.fixedTermCampaignCustomer.customerId = value.RecordId
         me.fixedTermCampaignCustomer.customerName = value.Description1
         me.fixedTermCampaignCustomer.customerCode = value.Code
-        me.$api.get('Budget', `Budget/GetCustomerBudget?customerId=${value.RecordId}`).then((res) => {
+        let request = {
+          customerId: value.RecordId
+        }
+        me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
           if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
             let customerBudget = res.ListModel.BaseModels[0]
             me.fixedTermCampaignCustomer.budgetId = customerBudget.BudgetId
