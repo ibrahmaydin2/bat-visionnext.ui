@@ -370,20 +370,25 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        model: {
+          CustomerId: this.selectedCustomer.RecordId,
+          DocumentDate: this.form.DocumentDate,
+          InvoiceClass: 4
         }
       }
-      this.searchItemsByModel('VisionNextFinance/api/PriceList/Search', 'priceList', model, 1).then(() => {
-        if (this.priceList && this.priceList.length > 0) {
-          this.selectedPrice = this.priceList[0]
-          this.form.PriceListId = this.priceList[0].RecordId
+      this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/SearchForPurchaseSales').then((response) => {
+        if (response && response.Model) {
+          this.selectedPrice = {
+            RecordId: response.Model.PriceListId,
+            Description1: response.Model.PriceList.Label
+          }
+          this.priceList = [this.selectedPrice]
+          this.form.PriceListId = response.Model.PriceListId
+          this.searchPriceListItem()
         } else {
           this.selectedPrice = {}
           this.form.PriceListId = null
         }
-        this.searchPriceListItem()
       })
     },
     searchItems (search, loading) {
