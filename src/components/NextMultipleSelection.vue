@@ -36,11 +36,11 @@
               :dynamic-and-condition="getCondtionModel(item.modelControlUtil.AndConditions)">
             </NextDropdown>
           </div>
-          <NextCheckBox v-if="item.columnType === 'Boolean'" v-model="form[item.ModelProperty]" type="number" toggle ></NextCheckBox>
-          <NextDatePicker v-if="item.columnType === 'DateTime'" v-model="form[item.ModelProperty]"></NextDatePicker>
-          <NextTimePicker v-if="item.columnType === 'Time'" v-model="form[item.ModelProperty]"></NextTimePicker>
-          <NextInput v-if="item.columnType === 'String'" type="text" v-model="form[item.ModelProperty]"></NextInput>
-          <NextInput v-if="item.columnType === 'Decimal'" type="number" v-model="form[item.ModelProperty]"></NextInput>
+          <NextCheckBox v-if="item.ColumnType === 'Boolean'" v-model="form[item.EntityProperty]" type="number" toggle ></NextCheckBox>
+          <NextDatePicker v-if="item.ColumnType === 'DateTime'" v-model="form[item.EntityProperty]"></NextDatePicker>
+          <NextTimePicker v-if="item.ColumnType === 'Time'" v-model="form[item.EntityProperty]"></NextTimePicker>
+          <NextInput v-if="item.ColumnType === 'String'" type="text" v-model="form[item.EntityProperty]"></NextInput>
+          <NextInput v-if="item.ColumnType === 'Decimal'" type="number" v-model="form[item.EntityProperty]"></NextInput>
         </NextFormGroup>
         <b-col cols="12" md="12">
           <b-form-group class="float-right">
@@ -183,139 +183,30 @@ export default {
   },
   methods: {
     getFormFields () {
-      let fields = {
-        Action: {
-          Title: 'Ürün Arama',
-          ActionUrl: 'VisionNextItem/api/Item/Search',
-          andConditionModels: 'StatusIds: [1]'
-        },
-        SearchItems: [
-          {
-            Label: 'Tip',
-            EntityProperty: 'CardTypeId',
-            Required: true,
-            Enabled: true,
-            Unique: false,
-            Visible: true,
-            DefaultValue: 1,
-            ColumnType: 'AutoComplete',
-            minLength: null,
-            maxLength: null,
-            UiControlOrder: null,
-            AndConditions: null,
-            OrConditions: null,
-            modelControlUtil: {
-              Code: null,
-              InputType: 'Select',
-              ServiceUrl: '/VisionNextItem/api/ItemCardType/AutoCompleteSearch',
-              IsLookupTable: 0,
-              MyProperty: 0,
-              UpperObject: null,
-              ModelProperty: 'CardTypeIds'
-            }
+      this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
+        this.action = response.Action
+        this.searchItems = response.SearchItems
+        this.listItems = response.ListItems
+        this.fields = this.listItems.sort((a, b) => {
+          return a.UiControlOrder < b.UiControlOrder
+        }).map(item => {
+          return {
+            key: item.EntityProperty,
+            label: item.Label,
+            formatter: (value, key, obj) => {
+              if (item.ColumnType === 'Object') {
+                return obj[item.EntityProperty].Label
+              } else {
+                return obj[item.EntityProperty]
+              }
+            },
+            column: item
           }
-        ],
-        ListItems: [
-          {
-            Label: 'Ürün',
-            EntityProperty: 'Description1',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'String',
-            UiControlOrder: 1,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Miktar/Karton',
-            EntityProperty: 'Quantity',
-            Enabled: true,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 2,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Fiyat',
-            EntityProperty: 'Price',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 3,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Stok',
-            EntityProperty: 'Stock',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 4,
-            modelControlUtil: null
-          },
-          {
-            Label: 'KDV %',
-            EntityProperty: 'Vat',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 5,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Net Tutar',
-            EntityProperty: 'NetTotal',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 5,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Toplam KDV',
-            EntityProperty: 'TotalVat',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 5,
-            modelControlUtil: null
-          },
-          {
-            Label: 'Toplam Tutar',
-            EntityProperty: 'GrossTotal',
-            Enabled: false,
-            Visible: true,
-            ColumnType: 'Decimal',
-            UiControlOrder: 5,
-            modelControlUtil: null
-          }
-        ],
-        IsCompleted: true,
-        Message: null,
-        StackTrace: null,
-        Validations: null
-      }
-      this.action = fields.Action
-      this.searchItems = fields.SearchItems
-      this.listItems = fields.ListItems
-      this.fields = this.listItems.sort((a, b) => {
-        return a.UiControlOrder < b.UiControlOrder
-      }).map(item => {
-        return {
-          key: item.EntityProperty,
-          label: item.Label,
-          formatter: (value, key, obj) => {
-            if (item.ColumnType === 'Object') {
-              return obj[item.EntityProperty].Label
-            } else {
-              return obj[item.EntityProperty]
-            }
-          },
-          column: item
-        }
-      })
-      this.fields.unshift({
-        key: 'selection',
-        label: ''
+        })
+        this.fields.unshift({
+          key: 'selection',
+          label: ''
+        })
       })
     },
     selectDropdown (data, item) {
@@ -357,8 +248,6 @@ export default {
             this.hiddenValues.forEach(h => {
               item[h.targetProperty] = item[h.mainProperty]
             })
-            item.Price = 100
-            item.Stock = 50
 
             return item
           })

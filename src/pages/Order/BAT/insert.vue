@@ -186,13 +186,14 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2">
-              <!--<NextMultipleSelection
+              <NextMultipleSelection
+                name="OrderMultipleItem"
                 v-model="form.OrderLines"
                 :disabled-button="!form.WarehouseId || !form.PriceListId"
                 :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId]}"
                 :hidden-values="hiddenValues"
                 :converted-values="convertedValues"
-                :validations="multipleValidations" /> -->
+                :validations="multipleValidations" />
             </b-col>
           </b-row>
           <b-row>
