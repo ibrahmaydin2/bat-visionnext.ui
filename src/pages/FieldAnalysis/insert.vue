@@ -151,7 +151,7 @@ export default {
           targetProperty: 'ColumnNameDesc'
         },
         {
-          mainProperty: 'Description1',
+          mainProperty: 'CommercialTitle',
           targetProperty: 'CustomerName'
         },
         {
