@@ -74,9 +74,11 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.question')">
+          <NextMultipleSelection v-model="form.FieldAnalysisQuestions" name="FieldAnalysisMultipleQuestion" :hidden-values="hiddenValuesQuestion"></NextMultipleSelection>
           <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.branchs')">
+          <NextMultipleSelection v-model="form.FieldAnalysisBranchs" name="FieldAnalysisMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
           <NextDetailPanel v-model="form.FieldAnalysisBranchs" :items="fieldAnalysisBranchItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.employeeType')">
@@ -86,6 +88,7 @@
           <NextDetailPanel v-model="form.FieldAnalysisValidDates" :items="fieldAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'" :disabled="!form.FieldAnalysisBranchs || form.FieldAnalysisBranchs.length === 0">
+          <NextMultipleSelection v-model="customers" name="FieldAnalysisMultipleCustomer" :hidden-values="hiddenValues"></NextMultipleSelection>
           <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
@@ -137,7 +140,57 @@ export default {
       fieldAnalysisEmployeeItems: detailData.fieldAnalysisEmployeeItems,
       fieldAnalysisCustomerItems: detailData.fieldAnalysisCustomerItems,
       fieldAnalysisValidDateItems: detailData.fieldAnalysisValidDateItems,
-      fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems
+      fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ColumnNameDesc'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'ColumnValueDesc2'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
+        }
+      ],
+      hiddenValuesBranch: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'AnalysisBranchId'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'AnalysisBranch'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'BranchName'
+        }
+      ],
+      hiddenValuesQuestion: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'QuestionId'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'Question'
+        }
+      ]
     }
   },
   mounted () {

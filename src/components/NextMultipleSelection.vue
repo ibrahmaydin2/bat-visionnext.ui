@@ -246,7 +246,11 @@ export default {
         if (response.ListModel) {
           this.list = response.ListModel.BaseModels.map(item => {
             this.hiddenValues.forEach(h => {
-              item[h.targetProperty] = item[h.mainProperty]
+              if (h.defaultValue) {
+                item[h.targetProperty] = h.defaultValue
+              } else {
+                item[h.targetProperty] = item[h.mainProperty]
+              }
             })
 
             return item
