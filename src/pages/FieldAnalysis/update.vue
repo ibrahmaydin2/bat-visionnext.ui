@@ -159,6 +159,14 @@ export default {
         {
           mainProperty: 'DefaultLocation',
           targetProperty: 'ColumnValueDesc2'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
         }
       ],
       hiddenValuesBranch: [
@@ -168,7 +176,7 @@ export default {
         },
         {
           mainProperty: 'Code',
-          targetProperty: 'AnalysisBranch'
+          targetProperty: 'AnalysisBranchIdDesc'
         },
         {
           mainProperty: 'Description1',
@@ -182,7 +190,7 @@ export default {
         },
         {
           mainProperty: 'Code',
-          targetProperty: 'Question'
+          targetProperty: 'QuestionIdDesc'
         }
       ]
     }

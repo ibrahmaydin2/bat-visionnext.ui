@@ -157,6 +157,14 @@ export default {
         {
           mainProperty: 'DefaultLocation',
           targetProperty: 'ColumnValueDesc2'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
         }
       ],
       hiddenValuesBranch: [
