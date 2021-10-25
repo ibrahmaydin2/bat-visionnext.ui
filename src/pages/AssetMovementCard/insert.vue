@@ -24,25 +24,25 @@
         <b-tab :title="$t('get.assetMovementCard.assetMovementCard')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
-              <b-form-input type="number" maxLength="16" :oninput="maxLengthControl" v-model="form.CardNumber" :readonly="insertReadonly.CardNumber" />
+              <NextInput v-model="form.CardNumber" maxLength="16" :oninput="maxLengthControl" type="number" :disabled="insertReadonly.CardNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId">
               <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)"/>
+              <NextDropdown v-model="employee" url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" searhable/>
             </NextFormGroup>
             <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
-              <b-form-datepicker v-model="form.OperationDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />
             </NextFormGroup>
              <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toLocation" :source="assetLocations" @input="selectedSearchType('ToLocationId', $event)"/>
+              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toLocation" :source="assetLocations" @input="selectedSearchType('ToLocationId', $event)" searhable/>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
               <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
-              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromLocation" :source="assetLocations" @input="selectedSearchType('FromLocationId', $event)"/>
+              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromLocation" :source="assetLocations" @input="selectedSearchType('FromLocationId', $event)" searhable/>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
               <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)"/>
@@ -55,19 +55,19 @@
               <NextDropdown v-model="assetMovementCardDetail.asset" url="VisionNextAsset/api/Asset/Search" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.serialNumber')" :error="$v.assetMovementCardDetail.serialNumber" :required="true" md="3" lg="3">
-              <b-form-input type="text" v-model="assetMovementCardDetail.serialNumber"/>
+              <NextInput v-model="assetMovementCardDetail.serialNumber" type="text" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.quantity')" :error="$v.assetMovementCardDetail.quantity" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="assetMovementCardDetail.quantity"/>
+              <NextInput v-model="assetMovementCardDetail.quantity" type="number" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.condition')" :error="$v.assetMovementCardDetail.condition" :required="true" md="3" lg="3">
               <NextDropdown v-model="assetMovementCardDetail.condition" lookup-key="ASSET_CONDITION" :get-lookup="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('get.assetMovementCard.serialNumber2')" :error="$v.assetMovementCardDetail.serialNumber2" :required="true" md="3" lg="3">
-              <b-form-input type="text" v-model="assetMovementCardDetail.serialNumber2"/>
+              <NextInput v-model="assetMovementCardDetail.serialNumber2" type="text" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.serialNumber3')" :error="$v.assetMovementCardDetail.serialNumber3" :required="true" md="3" lg="3">
-              <b-form-input type="text" v-model="assetMovementCardDetail.serialNumber3"/>
+              <NextInput v-model="assetMovementCardDetail.serialNumber3" type="text" />
             </NextFormGroup>
 
             <b-col cols="12" md="2">
