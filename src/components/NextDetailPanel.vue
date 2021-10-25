@@ -32,7 +32,7 @@
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
         <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
       </NextFormGroup>
-      <b-col cols="12" md="2">
+      <b-col cols="12" md="1">
         <b-form-group>
           <AddDetailButton v-if="!isUpdated" @click.native="addItems()" />
           <b-button v-if="isUpdated" class="mt-4" size="sm" variant="success" @click="addItems()">
@@ -40,6 +40,7 @@
           </b-button>
         </b-form-group>
       </b-col>
+      <slot name="grid" />
     </b-row>
     <b-row>
       <b-table

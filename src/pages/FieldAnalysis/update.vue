@@ -74,12 +74,22 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.question')">
-          <NextMultipleSelection v-model="form.FieldAnalysisQuestions" name="FieldAnalysisMultipleQuestion" :hidden-values="hiddenValuesQuestion"></NextMultipleSelection>
-          <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true"></NextDetailPanel>
+          <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true">
+            <template slot="grid">
+              <div cols="12" md="2">
+                  <NextMultipleSelection v-model="form.FieldAnalysisQuestions" name="FieldAnalysisMultipleQuestion" :hidden-values="hiddenValuesQuestion"></NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.branchs')">
-          <NextMultipleSelection v-model="form.FieldAnalysisBranchs" name="FieldAnalysisMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
-          <NextDetailPanel v-model="form.FieldAnalysisBranchs" :items="fieldAnalysisBranchItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.FieldAnalysisBranchs" :items="fieldAnalysisBranchItems">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection v-model="form.FieldAnalysisBranchs" name="FieldAnalysisMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.fieldAnalysis.employeeType')">
           <NextDetailPanel v-model="form.FieldAnalysisEmployeeTypes" :items="fieldAnalysisEmployeeItems"></NextDetailPanel>
@@ -88,8 +98,13 @@
           <NextDetailPanel v-model="form.FieldAnalysisValidDates" :items="fieldAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'" :disabled="!form.FieldAnalysisBranchs || form.FieldAnalysisBranchs.length === 0" >
-          <NextMultipleSelection v-model="customers" name="FieldAnalysisMultipleCustomer" :hidden-values="hiddenValues"></NextMultipleSelection>
-          <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection v-model="customers" name="FieldAnalysisMultipleCustomer" :hidden-values="hiddenValues"></NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="fieldAnalysisDetailItems"></NextDetailPanel>
