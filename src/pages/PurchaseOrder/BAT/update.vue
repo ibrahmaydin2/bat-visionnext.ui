@@ -363,8 +363,10 @@ export default {
         return false
       }
       let model = {
-        PriceListIds: [this.selectedPrice.RecordId],
-        ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        andConditionModel: {
+          PriceListIds: [this.selectedPrice.RecordId],
+          ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
+        }
       }
       var me = this
 
