@@ -21,11 +21,11 @@
           <NextFormGroup item-key="Code" :error="$v.form.Code">
             <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -53,7 +53,7 @@
               <NextDropdown v-model="CustomerRegion3" :disabled="insertReadonly.CustomerRegion3Id" label="Label" lookup-key="CUSTOMER_REGION_3" @input="selectBranch($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <NextDropdown v-model="BranchCriteria" :disabled="insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
+              <NextDropdown v-model="BranchCriteria" :disabled="!form.CustomerRegion3Id || insertReadonly.BranchCriteriaId" label="Label" lookup-key="BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -152,6 +152,7 @@ export default {
       } else {
         this.form.CustomerRegion3Id = null
       }
+      this.BranchCriteria = []
     },
     getCustomDetailItems () {
       this.bcpBranchsItems = [
@@ -178,6 +179,15 @@ export default {
           labelProperty: 'Code',
           customOption: true,
           url: 'VisionNextBranch/api/Branch/GetBranchListCustomerRegion3Id',
+          onAfter: (response) => {
+            if (response && response.Model.length === 0) {
+              this.$toasted.show(this.$t('insert.bcp.branchError'), {
+                type: 'error',
+                keepOnHover: true,
+                duration: '3000'
+              })
+            }
+          },
           label: this.$t('insert.bcp.ColumnValue'),
           dynamicRequest: {Region3Id: this.form.CustomerRegion3Id},
           required: true,

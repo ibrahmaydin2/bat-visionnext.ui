@@ -1474,7 +1474,8 @@
       "StatusId": "Durum",
       "Description1": "Açıklama",
       "ColumnValue": "Şube Kodu",
-      "ColumnNameDesc": "Şube Adı"
+      "ColumnNameDesc": "Şube Adı",
+      "branchError": "Seçtiğiniz Bölgeye Ait Şube Bulunamamıştır. Lütfen Başka Bölge Seçiniz!"
     },
     "integrationDataPark": {
       "Code": "Interface No",
