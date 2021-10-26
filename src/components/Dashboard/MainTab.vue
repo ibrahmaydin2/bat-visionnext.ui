@@ -1,5 +1,8 @@
 <template>
   <b-tabs class="dashboard-tabs" content-class="mt-3">
+    <b-tab v-if="false" title="Realtime Dashboard">
+      <realtime-dashboard :branchs="userBranches"></realtime-dashboard>
+    </b-tab>
     <b-tab v-for="(tab, i) in tabList" :key="i" :title="tab.Description" lazy>
       <TabContent :RecordId="tab.RecordId" />
     </b-tab>
@@ -14,13 +17,15 @@ export default {
   },
   data () {
     return {
-      tabList: []
+      tabList: [],
+      userBranches: []
     }
   },
   mounted () {
     this.$store.dispatch('getDashboard').then(res => {
-      this.tabList = res.data
+      this.tabList = res.data.UserDashboardModels
     })
+    this.userBranches = JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches
   }
 }
 </script>

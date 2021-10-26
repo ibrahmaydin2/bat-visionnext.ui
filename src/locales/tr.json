@@ -3236,7 +3236,16 @@
   "dashboard": {
     "search": "Ara",
     "create": "Oluştur",
-    "isError": "Gösterilecek veri bulunamadı."
+    "isError": "Gösterilecek veri bulunamadı.",
+    "realtime": {
+      "selectBranch": "Şube Seçin",
+      "totalSalesAmount": "Toplam Satış Tutarı",
+      "totalSalesQuantity": "Toplam Satış Miktarı",
+      "totalVisitCount": "Toplam Ziyaret Sayısı",
+      "activeUserCount": "Aktif Saha Kullanıcısı",
+      "sales": "Satış",
+      "quantity": "Miktar"
+    }
   },
   "sidebar": {
     "createShortcut": "Kısayol Oluştur",
