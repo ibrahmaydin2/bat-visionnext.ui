@@ -190,7 +190,7 @@
                 name="OrderMultipleItem"
                 v-model="form.OrderLines"
                 :disabled-button="!form.WarehouseId || !form.PriceListId"
-                :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId]}"
+                :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                 :hidden-values="hiddenValues"
                 :converted-values="convertedValues"
                 :validations="multipleValidations" />
