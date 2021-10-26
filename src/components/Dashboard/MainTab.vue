@@ -23,7 +23,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('getDashboard').then(res => {
-      this.tabList = res.data
+      this.tabList = res.data.UserDashboardModels
     })
     this.userBranches = JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches
   }
