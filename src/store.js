@@ -1277,7 +1277,7 @@ export const store = new Vuex.Store({
     },
     getDashboard ({ state, commit }, query) {
       const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
-      return axios.get(`VisionNextDashboard/api/DashboardApi/GetUserDashboards/${userId}`, authHeader)
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetUserDashboards?id=${userId}`, authHeader)
         .then(res => {
           return res
         })
@@ -1286,7 +1286,7 @@ export const store = new Vuex.Store({
         })
     },
     getDashboardReports ({ state, commit }, query) {
-      return axios.get(`VisionNextDashboard/api/DashboardApi/GetUserGadgets/${query.id}`, authHeader)
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetUserGadgets?id=${query.id}`, authHeader)
         .then(res => {
           return res
         })
@@ -1295,7 +1295,7 @@ export const store = new Vuex.Store({
         })
     },
     getDashboardReportDetail ({ state, commit }, query) {
-      return axios.get(`VisionNextDashboard/api/DashboardApi/GetGadgetDetails/${query.id}`, authHeader)
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetGadgetDetails?id=${query.id}`, authHeader)
         .then(res => {
           return res
         })

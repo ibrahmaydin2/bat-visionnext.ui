@@ -353,9 +353,11 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        andConditionModel: {
+          PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
+          EndDate: {
+            BeginValue: this.form.DocumentDate
+          }
         }
       }
       this.searchItemsByModel('VisionNextFinance/api/PriceList/Search', 'priceList', model, 1).then(() => {

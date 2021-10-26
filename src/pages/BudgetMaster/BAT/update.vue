@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.budgetMaster.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" :dynamic-and-condition="{UserGroupIds: [1,12,14,20,999]}" url="VisionNextEmployee/api/Employee/SearchForNonBranch" searchable/>
+              <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" or-condition-fields="Code,Description1,EmployeeDesc" :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}" label="EmployeeDesc" url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetGroupId" :error="$v.form.BudgetGroupId">
               <NextDropdown v-model="budgetGroup" disabled @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>

@@ -326,11 +326,11 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.warehouseMovementItems.quantity > this.maxPlanQuantity) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.warehouseMovementItems.quantity = this.maxPlanQuantity
-        return false
-      }
+      // if (this.warehouseMovementItems.quantity > this.maxPlanQuantity) {
+      //   this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
+      //   this.warehouseMovementItems.quantity = this.maxPlanQuantity
+      //   return false
+      // }
       let item = {
         Deleted: 0,
         System: 0,

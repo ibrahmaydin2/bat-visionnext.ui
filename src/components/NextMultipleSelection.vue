@@ -68,6 +68,13 @@
               <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
             </span>
           </template>
+            <template v-slot:head(selection)>
+              <b-link variant="white" size="sm" @click="selectAll">
+                <span>
+                  <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+                </span>
+              </b-link>
+            </template>
           <template #cell()="data">
             <div v-if="data.field.column.Enabled">
               <div v-if="data.field.column.modelControlUtil != null">
@@ -178,7 +185,8 @@ export default {
       id: Math.random().toString(36).substring(2),
       currentPage: 1,
       selectedList: [],
-      isLoading: false
+      isLoading: false,
+      allSelected: false
     }
   },
   methods: {
@@ -246,7 +254,11 @@ export default {
         if (response.ListModel) {
           this.list = response.ListModel.BaseModels.map(item => {
             this.hiddenValues.forEach(h => {
-              item[h.targetProperty] = item[h.mainProperty]
+              if (h.defaultValue) {
+                item[h.targetProperty] = h.defaultValue
+              } else {
+                item[h.targetProperty] = item[h.mainProperty]
+              }
             })
 
             return item
@@ -319,6 +331,15 @@ export default {
     },
     rowSelected (data) {
       this.selectedList = data
+    },
+    selectAll () {
+      if (this.allSelected) {
+        this.$refs[`multipleGrid${this.id}`].clearSelected()
+      } else {
+        this.$refs[`multipleGrid${this.id}`].selectAllRows()
+      }
+
+      this.allSelected = !this.allSelected
     },
     addItems () {
       for (let i = 0; i < this.list.length; i++) {

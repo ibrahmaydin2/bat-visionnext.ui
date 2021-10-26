@@ -360,9 +360,11 @@ export default {
         return false
       }
       let model = {
-        PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
-        EndDate: {
-          BeginValue: this.form.DocumentDate
+        andConditionModel: {
+          PriceListCategoryIds: [this.selectedCustomer.PriceListCategoryId],
+          EndDate: {
+            BeginValue: this.form.DocumentDate
+          }
         }
       }
       this.$api.postByUrl(model, 'VisionNextFinance/api/PriceList/Search').then((response) => {
@@ -434,8 +436,10 @@ export default {
         return false
       }
       let model = {
-        PriceListIds: [this.selectedPrice.RecordId],
-        ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        andConditionModel: {
+          PriceListIds: [this.selectedPrice.RecordId],
+          ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
+        }
       }
       var me = this
       me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {

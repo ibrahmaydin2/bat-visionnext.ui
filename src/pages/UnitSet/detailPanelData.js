@@ -180,7 +180,10 @@ export const detailData = {
       modelProperty: 'DocumentTypeId',
       objectKey: 'DocumentType',
       url: 'VisionNextOrder/api/OrderType/Search',
-      defaultValue: '',
+      filter (item) {
+        let list = ['ASIP']
+        return list.includes(item.Code)
+      },
       label: i18n.t('insert.unitSet.DocumentTypeId'),
       visible: true,
       required: false,
