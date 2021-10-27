@@ -36,7 +36,7 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
-                @input="selectedSearchType('CustomerId', $event)"
+                @input="selectedSearchType('CustomerId', $event); setReminder($event);"
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="customer"
@@ -152,7 +152,9 @@ export default {
       currency: {},
       representative: {},
       route: {},
-      cashCardType: {}
+      cashCardType: {},
+      routeName1: 'Finance',
+      routeName2: 'CashCard'
     }
   },
   mounted () {
@@ -167,6 +169,11 @@ export default {
       this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
       this.route = this.convertLookupValueToSearchValue(rowData.Route)
       this.cashCardType = this.convertLookupValueToSearchValue(rowData.CashCardType)
+      if (this.customer) {
+        this.$api.post({RecordId: this.customer.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
+      }
     },
     save () {
       this.$v.$touch()
@@ -176,6 +183,9 @@ export default {
       } else {
         this.updateData()
       }
+    },
+    setReminder (customer) {
+      this.customerReminder = customer ? customer.Remainder : 0
     }
   }
 
