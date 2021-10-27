@@ -2649,7 +2649,8 @@
       "CurrencyId": "Para Birimi",
       "RepresentativeId": "Saha Personeli",
       "RouteId": "Rota",
-      "CashCardTypeId": "İşlem Tipi"
+      "CashCardTypeId": "İşlem Tipi",
+      "reminder": "Müşteri Bakiyesi"
     },
     "CreditCard": {
       "title":"Kredi Kartı Ana Kayıtları",
