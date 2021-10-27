@@ -30,12 +30,11 @@
               <div v-html="getFormatDataByType(rowData.CashTotal, 'text', 'get.CashCard.CashTotal')"></div>
               <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
-
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CashCard.RouteId')"></div>
               <div v-html="getFormatDataByType(rowData.CashCardType, 'object', 'get.CashCard.CashCardTypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.reminder, 'text', 'get.CashCard.reminder')"></div>
+              <div v-html="getFormatDataByType(customerReminder, 'text', 'get.CashCard.reminder')"></div>
               <div v-html="getFormatDataByType(rowData.CurrencyRate, 'text', 'get.CreditCard.CurrencyRate')"></div>
               <div v-html="getFormatDataByType(rowData.SystemCurrencyRate, 'text', 'get.CreditCard.SystemCurrencyRate')"></div>
               <div v-html="getFormatDataByType(rowData.IsManuelClosure, 'check', 'get.CreditCard.IsManuelClosure')"></div>

@@ -43,7 +43,7 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
-                @input="selectedSearchType('CustomerId', $event)"
+                @input="selectedSearchType('CustomerId', $event); setReminder($event);"
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="Customer"
@@ -187,7 +187,9 @@ export default {
       customerReminder: null,
       routeName: this.$route.meta.baseLink,
       cashCards: [],
-      isEditable: false
+      isEditable: false,
+      routeName1: 'Finance',
+      routeName2: 'CashCard'
     }
   },
   mounted () {
@@ -336,11 +338,11 @@ export default {
         this.form.CurrencyCashTotal = this.form.CashTotal
         this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
         this.form.PaymentDate = this.dateConvertToISo(this.form.PaymentDate)
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextFinance/api/CashCard`, formdata: model, return: this.routeName})
+        this.createData()
       }
+    },
+    setReminder (customer) {
+      this.customerReminder = customer ? customer.Remainder : 0
     }
   }
 }
