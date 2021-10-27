@@ -140,6 +140,14 @@
                 <AddDetailButton @click.native="addInvoiceLine" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="ServicePurchaseInvoiceMultipleItem"
+                  v-model="form.InvoiceLines"
+                  :hidden-values="hiddenValues"
+                  :dynamic-and-condition="{CustomerIds: [form.CustomerId]}"
+                />
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -307,7 +315,13 @@ export default {
       selectedBranch: {},
       selectedPaymentType: {},
       paymentTypes: [],
-      selectedInvoiceKind: null
+      selectedInvoiceKind: null,
+      hiddenValues: [
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ItemCode'
+        }
+      ]
     }
   },
   computed: {

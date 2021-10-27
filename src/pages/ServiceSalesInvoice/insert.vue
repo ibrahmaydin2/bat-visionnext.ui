@@ -102,6 +102,9 @@
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
              <b-form-input type="text" v-model="form.PaymentPeriodId" disabled />
             </NextFormGroup>
+            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
+              <NextDropdown :disabled="insertReadonly.WarehouseId" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
@@ -143,6 +146,13 @@
               <b-form-group>
                 <AddDetailButton @click.native="addInvoiceLine" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="ServiceSalesInvoiceMultipleItem"
+                  v-model="form.InvoiceLines"
+                  :dynamic-and-condition="{CustomerIds: [form.CustomerId], WarehouseIds: [form.WarehouseId]}"
+                />
             </b-col>
           </b-row>
           <b-row>

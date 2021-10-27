@@ -64,10 +64,19 @@
             <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity">
               <NextInput v-model="vanLoadingItem.LoadingQuantity" type="number"/>
             </NextFormGroup>
-            <b-col cols="12" md="3" class="text-right ml-auto">
+            <b-col cols="12" md="3" class="text-right ml-auto addButton">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
                 <AddDetailButton @click.native="addItem()" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="VanLoadingMultipleItem"
+                  v-model="VanLoadingItems"
+                  :disabled-button="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate"
+                  :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], RouteIds: [form.RouteId], DocumentDate: form.LoadingDate}"
+                  :hidden-values="hiddenValues"
+                />
             </b-col>
           </b-row>
           <b-row>
@@ -153,7 +162,21 @@ export default {
         Item: null
       },
       detailPanelRecordId: null,
-      selectedIndex: 0
+      selectedIndex: 0,
+      hiddenValues: [
+        {
+          mainProperty: 'FromWHStockQuantity',
+          targetProperty: 'FromWhStockQuantity'
+        },
+        {
+          mainProperty: 'LastDaySalesQuantity',
+          targetProperty: 'LastdaySalesQuantity'
+        },
+        {
+          mainProperty: 'ToWHStockQuantity',
+          targetProperty: 'ToWhStockQuantity'
+        }
+      ]
     }
   },
   methods: {
@@ -303,5 +326,8 @@ export default {
   }
 }
 </script>
-<style lang="sass">
+<style scoped>
+.addButton  {
+  margin-top:-24px;
+}
 </style>
