@@ -44,7 +44,7 @@
         </NextFormGroup>
         <b-col cols="12" md="12">
           <b-form-group class="float-right">
-            <b-button size="sm" variant="success" @click="getList()">
+            <b-button size="sm" variant="success" @click="getList()" :disabled="isLoading">
               <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
               <span v-else><i class="fa fa-search"></i> {{$t('insert.multipleGrid.search')}}</span></b-button>
             <b-button :disabled="selectedList.length === 0" class="ml-2" size="sm" variant="success" @click="addItems()"><i class="fa fa-plus"></i> {{$t('insert.multipleGrid.add')}}</b-button>
@@ -57,12 +57,20 @@
           :fields="fields"
           :items="list"
           striped
+          small
+          sticky-header="300px"
           responsive
           :current-page="currentPage"
           select-mode="multi"
           :selectable="true"
           @row-selected="rowSelected"
-          :per-page="10">
+          :per-page="0"
+          :busy="tableBusy">
+          <template #table-busy>
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+              </div>
+            </template>
           <template #cell(selection)="row">
             <span>
               <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
@@ -112,10 +120,11 @@
           </template>
         </b-table>
         <b-pagination
-          :total-rows="list.length"
+          :total-rows="totalRowCount"
           v-model="currentPage"
-          :per-page="10"
+          :per-page="100"
           :aria-controls="id"
+          :disabled="tableBusy"
         ></b-pagination>
       </b-row>
       <template #modal-footer>
@@ -186,7 +195,11 @@ export default {
       currentPage: 1,
       selectedList: [],
       isLoading: false,
-      allSelected: false
+      allSelected: false,
+      totalRowCount: 0,
+      pagingRequest: {},
+      allList: {},
+      tableBusy: false
     }
   },
   methods: {
@@ -226,32 +239,53 @@ export default {
         this.form[item.modelControlUtil.ModelProperty] = null
       }
     },
-    getList () {
+    getList (isPaging) {
       this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
+      let request = null
+
+      if (!isPaging) {
+        if (this.$v.form.$error) {
+          this.$toasted.show(this.$t('insert.requiredFields'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+
+        request = {
+          andConditionModel: {
+            ...this.form,
+            ...this.dynamicAndCondition,
+            ...this.getCondtionModel(this.action.AndConditionModels)
+          },
+          orConditionModel: this.getCondtionModel(this.action.OrConditionModels)
+        }
+
+        this.isLoading = true
+        request.page = 1
+        this.currentPage = 1
+        this.pagingRequest = request
+        this.allList = {}
+      } else {
+        request = this.pagingRequest
+        request.page = this.currentPage
+      }
+
+      if (this.allList[this.currentPage]) {
+        this.list = this.allList[this.currentPage]
         return
       }
-      let request = {
-        andConditionModel: {
-          ...this.form,
-          ...this.dynamicAndCondition,
-          ...this.getCondtionModel(this.action.AndConditionModels)
-        },
-        orConditionModel: this.getCondtionModel(this.action.OrConditionModels)
-      }
 
-      this.isLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.postByUrl(request, this.action.ActionUrl).then((response) => {
+      this.tableBusy = true
+      this.$api.postByUrl(request, this.action.ActionUrl, 100).then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
+        this.tableBusy = false
 
         if (response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
           this.list = response.ListModel.BaseModels.map(item => {
             this.hiddenValues.forEach(h => {
               if (h.defaultValue) {
@@ -263,6 +297,7 @@ export default {
 
             return item
           })
+          this.allList[this.currentPage] = this.list
         }
       })
     },
@@ -387,6 +422,10 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    currentPage () {
+      this.allSelected = false
+      this.getList(true)
     }
   }
 }
