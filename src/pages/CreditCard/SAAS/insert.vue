@@ -112,6 +112,9 @@
             <NextFormGroup item-key="CardOwner" :error="$v.form.CardOwner">
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditcard.reminder')">
+              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+            </NextFormGroup>
             <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
               <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
             </NextFormGroup>
@@ -185,6 +188,9 @@ export default {
         this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate).substr(0, 10)
         this.createData()
       }
+    },
+    setReminder (customer) {
+      this.customerReminder = customer ? customer.Remainder : 0
     },
     selectBankBranches (value) {
       this.form.BankBranchId = null

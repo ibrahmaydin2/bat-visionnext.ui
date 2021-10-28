@@ -2673,7 +2673,8 @@
       "SystemCurrencyRate": "Sistem Döviz Kuru",
       "CardOwner": "Kart Sahibi",
       "IsManuelClosure": "Manuel Fatura Kapatma",
-      "BankBranchId": "Banka Şubesi"
+      "BankBranchId": "Banka Şubesi",
+      "reminder": "Müşteri Bakiyesi"
     },
     "CsCard": {
       "title":"Çek İşlem Ana Kayıtları",
