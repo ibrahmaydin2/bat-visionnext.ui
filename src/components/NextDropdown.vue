@@ -27,6 +27,9 @@ export default {
       type: Boolean,
       default: false
     },
+    onAfter: {
+      type: Function
+    },
     customOption: {
       type: Boolean,
       default: false
@@ -237,6 +240,9 @@ export default {
 
           if (this.filter) {
             this.values = this.values.filter(i => this.filter(i))
+          }
+          if (this.onAfter) {
+            this.onAfter(response)
           }
 
           if (this.labelObjectKey) {

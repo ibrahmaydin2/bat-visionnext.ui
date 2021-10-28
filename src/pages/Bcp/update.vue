@@ -21,11 +21,11 @@
           <NextFormGroup item-key="Code" :error="$v.form.Code">
             <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
             <NextInput type="text" v-model="form.Description1" :disabled="true"/>
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -178,6 +178,7 @@ export default {
       } else {
         this.form.CustomerRegion3Id = null
       }
+      this.BranchCriteria = []
     },
     getCustomDetailItems () {
       this.bcpBranchsItems = [

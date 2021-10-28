@@ -29,13 +29,13 @@
               <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.DocumentDate')"></div>
               <div v-html="getFormatDataByType(rowData.CashTotal, 'text', 'get.CashCard.CashTotal')"></div>
               <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
-              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
 
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CashCard.RouteId')"></div>
               <div v-html="getFormatDataByType(rowData.CashCardType, 'object', 'get.CashCard.CashCardTypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.reminder, 'text', 'get.CashCard.reminder')"></div>
+              <div v-html="getFormatDataByType(customerReminder, 'text', 'get.CashCard.reminder')"></div>
             </b-card>
           </b-row>
         </b-tab>

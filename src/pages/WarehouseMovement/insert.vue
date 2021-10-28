@@ -126,6 +126,14 @@
                 <AddDetailButton @click.native="addItem()" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="WarehouseMovementMultipleItem"
+                  v-model="form.WarehouseMovementItems"
+                  :disabled-button="!form.MovementTypeId"
+                  :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], TypeIds: [form.MovementTypeId]}"
+                />
+            </b-col>
           </b-row>
           <b-row>
             <b-col cols="12">

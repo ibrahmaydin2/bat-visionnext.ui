@@ -172,6 +172,14 @@
                 <AddDetailButton @click.native="addInvoiceLine" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="SalesInvoiceMultipleItem"
+                  v-model="form.InvoiceLines"
+                  :hidden-values="hiddenValues"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], CustomerIds: [form.CustomerId], PriceListIds: [form.PriceListId]}"
+                />
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -394,7 +402,13 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: []
+      stocks: [],
+      hiddenValues: [
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ItemCode'
+        }
+      ]
     }
   },
   mounted () {
