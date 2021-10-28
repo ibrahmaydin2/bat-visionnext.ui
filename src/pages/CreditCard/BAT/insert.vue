@@ -100,6 +100,9 @@
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextInput v-model="form.CustomerId" type="number" :disabled="insertReadonly.CustomerId" />
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditcard.reminder')">
+              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+            </NextFormGroup>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
               <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
             </NextFormGroup>
@@ -161,6 +164,9 @@ export default {
         this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate).substr(0, 10)
         this.createData()
       }
+    },
+    setReminder (customer) {
+      this.customerReminder = customer ? customer.Remainder : 0
     }
   }
 }
