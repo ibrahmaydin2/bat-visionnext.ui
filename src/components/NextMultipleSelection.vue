@@ -84,7 +84,7 @@
               </b-link>
             </template>
           <template #cell()="data">
-            <div v-if="data.field.column.Enabled">
+            <div v-if="data.field.column && data.field.column.Enabled">
               <div v-if="data.field.column.modelControlUtil != null">
                  <NextDropdown
                   :tabindex="data.index+1"
@@ -216,9 +216,31 @@ export default {
             label: item.Label,
             formatter: (value, key, obj) => {
               if (item.ColumnType === 'Object') {
-                return obj[item.EntityProperty].Label
+                if (obj[item.EntityProperty]) {
+                  return obj[item.EntityProperty].Label
+                } else {
+                  let filteredArr = this.hiddenValues.filter(h => h.mainProperty === item.EntityProperty)
+                  let value = ''
+                  filteredArr.forEach(f => {
+                    if (obj[f.targetProperty]) {
+                      value = obj[f.targetProperty]
+                    }
+                  })
+                  return value
+                }
               } else {
-                return obj[item.EntityProperty]
+                if (obj[item.EntityProperty]) {
+                  return obj[item.EntityProperty]
+                } else {
+                  let filteredArr = this.hiddenValues.filter(h => h.mainProperty === item.EntityProperty)
+                  let value = ''
+                  filteredArr.forEach(f => {
+                    if (obj[f.targetProperty]) {
+                      value = obj[f.targetProperty]
+                    }
+                  })
+                  return value
+                }
               }
             },
             column: item
@@ -336,7 +358,7 @@ export default {
         this.list = list
 
         setTimeout(() => {
-          let filteredList = this.listItems.filter(l => l.Enabled)
+          let filteredList = this.listItems ? this.listItems.filter(l => l.Enabled) : []
           let validCount = 0
 
           filteredList.forEach(item => {

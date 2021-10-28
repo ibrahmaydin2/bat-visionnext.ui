@@ -98,10 +98,13 @@
           <NextDetailPanel v-model="form.FieldAnalysisValidDates" :items="fieldAnalysisValidDateItems" :before-add="beforeValidDatesAdd"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="customerCriteria && customerCriteria.Code === 'ML'" :disabled="!form.FieldAnalysisBranchs || form.FieldAnalysisBranchs.length === 0">
-          <NextDetailPanel v-model="customers" :items="fieldAnalysisCustomerItems">
+          <NextDetailPanel v-model="customers" :items="getFieldAnalysisCustomerItems()">
             <template slot="grid">
               <div cols="12" md="2">
-                <NextMultipleSelection v-model="customers" name="FieldAnalysisMultipleCustomer" :hidden-values="hiddenValues"></NextMultipleSelection>
+                <NextMultipleSelection
+                  v-model="customers" name="FieldAnalysisMultipleCustomer"
+                  :hidden-values="hiddenValues"
+                  :dynamic-and-condition="{ BranchIds: this.form.FieldAnalysisBranchs.map(f => f.AnalysisBranchId) }"></NextMultipleSelection>
               </div>
             </template>
           </NextDetailPanel>
@@ -153,7 +156,6 @@ export default {
       fieldAnalysisQuestionItems: detailData.fieldAnalysisQuestionItems,
       fieldAnalysisBranchItems: detailData.fieldAnalysisBranchItems,
       fieldAnalysisEmployeeItems: detailData.fieldAnalysisEmployeeItems,
-      fieldAnalysisCustomerItems: detailData.fieldAnalysisCustomerItems,
       fieldAnalysisValidDateItems: detailData.fieldAnalysisValidDateItems,
       fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems,
       hiddenValues: [
@@ -166,12 +168,24 @@ export default {
           targetProperty: 'ColumnNameDesc'
         },
         {
+          mainProperty: 'Code',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'ColumnValueDesc'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'ColumnValueDesc2'
+        },
+        {
           mainProperty: 'CommercialTitle',
           targetProperty: 'CustomerName'
         },
         {
           mainProperty: 'DefaultLocation',
-          targetProperty: 'ColumnValueDesc2'
+          targetProperty: 'Location'
         },
         {
           defaultValue: 'RECORD_ID',
@@ -254,6 +268,70 @@ export default {
         this.form.ApproveStateId = this.approveState ? this.approveState.DecimalValue : null
         this.$forceUpdate()
       }
+    },
+    getFieldAnalysisCustomerItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'ColumnValue',
+          objectKey: 'ColumnNameDesc',
+          labelProperty: 'Code',
+          customOption: true,
+          isCustomer: true,
+          orConditionFields: 'Code,Description1',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
+          label: this.$t('insert.fieldAnalysis.customerCode'),
+          dynamicAndCondition: {
+            BranchIds: this.form.FieldAnalysisBranchs.map(f => f.AnalysisBranchId)
+          },
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'CustomerName',
+          objectKey: 'ColumnValueDesc',
+          parentProperty: 'Description1',
+          label: this.$t('insert.fieldAnalysis.commercialTitle'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 2
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Location',
+          valueProperty: 'AddressDetail',
+          objectKey: 'ColumnValueDesc2',
+          parentProperty: 'DefaultLocationId',
+          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          label: this.$t('insert.fieldAnalysis.location'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 5
+        }
+      ]
     }
   },
   watch: {
