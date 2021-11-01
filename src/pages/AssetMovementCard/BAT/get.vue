@@ -64,7 +64,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
