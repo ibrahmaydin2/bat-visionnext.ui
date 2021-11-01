@@ -444,6 +444,9 @@ export default {
       this.showAssignEmployeeModal = false
       this.showCommonInfoModal = false
 
+      if (!this.validateAction(action.Action)) {
+        return
+      }
       if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
         if (row.ApproveStateId !== 51) {
           this.$toasted.show(this.$t('index.errorApproveStateModal'), {
@@ -467,7 +470,7 @@ export default {
           this.$root.$emit('bv::show::modal', 'customConvertModal')
         })
       } else if (action.Action === 'OrderConvert') {
-        if (row && typeof row.StatusId !== 'undefined' && row.StatusId !== 2) {
+        if (row && typeof row.StatusId !== 'undefined' && row.StatusId !== 2 && this.$route.name !== 'PurchaseOrder') {
           this.$toasted.show(this.$t('index.errorSevk'), {
             type: 'error',
             keepOnHover: true,
@@ -1000,6 +1003,42 @@ export default {
         model = JSON.parse(`{${decodeURI(andConditionModels)}}`)
       }
       return model
+    },
+    validateAction (actionName) {
+      let isValid = true
+
+      switch (this.$route.name) {
+        case 'PurchaseOrder':
+          let stateId = this.modalItem.StateId
+
+          if (stateId === 3) {
+            switch (actionName) {
+              case 'Approve':
+                this.$toasted.show(this.$t('insert.order.approveError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+              case 'Canceled':
+                this.$toasted.show(this.$t('insert.order.cancelledError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+              case 'OrderConvert':
+                this.$toasted.show(this.$t('insert.order.orderConvertError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+            }
+            break
+          }
+      }
+      return isValid
     }
   },
   watch: {

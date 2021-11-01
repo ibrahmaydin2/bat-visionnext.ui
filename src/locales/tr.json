@@ -668,7 +668,8 @@
       "Customer": "Müşteri",
       "Location": "Lokasyon",
       "CustomerName": "Müşteri Adı",
-      "LocationName": "Lokasyon Adı"
+      "LocationName": "Lokasyon Adı",
+      "exportExcel": "Excel'e Aktar"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -1872,7 +1873,10 @@
       "cashCardMessage": "Nakit Tahsilatı Yapılsın Mı",
       "yes": "Evet",
       "no": "Hayır",
-      "pleaseConfirm": "Lütfen Onaylayın"
+      "pleaseConfirm": "Lütfen Onaylayın",
+      "approveError": "Sadece Öneri durumundaki siparişler onaylanabilir.",
+      "cancelledError": "Sadece Öneri durumundaki siparişler iptal edilebilir.",
+      "orderConvertError": "Kapalı durumdaki belge dönüştürülemez."
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

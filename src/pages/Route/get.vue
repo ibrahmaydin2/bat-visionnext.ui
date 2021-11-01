@@ -47,8 +47,15 @@
         <b-tab :title="$t('insert.route.locations')">
           <b-row>
             <b-col>
-              <b-card class="m-3 asc__showPage-card" >
-                <NextDetailPanel type="get"  v-model="rowData.RouteDetails" :items="getLocationItems" :detail-buttons="detailButtons" />
+              <b-card class="m-3 asc__showPage-card">
+                <div v-if="rowData.RouteDetails && rowData.RouteDetails.length > 0">
+                  <b-button class="float-right mb-1" size="sm" variant="success" @click="exportData">
+                    <i class="fas fa-download"> {{$t('insert.route.exportExcel')}}</i>
+                  </b-button>
+                </div>
+                <div class="clear-both">
+                  <NextDetailPanel type="get"  v-model="rowData.RouteDetails" :items="getLocationItems" :detail-buttons="detailButtons" />
+                </div>
               </b-card>
             </b-col>
           </b-row>
@@ -115,9 +122,25 @@ export default {
           })
         }
       })
+    },
+    exportData () {
+      this.$api.downloadByUrl({RecordId: this.$route.params.url}, 'VisionNextRoute/api/Route/ExportRouteDetail').then(response => {
+        if (!response) {
+          return
+        }
+        const url = window.URL.createObjectURL(new Blob([response]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${this.$t('insert.route.routeDetail')}-${this.$route.params.url}.xlsx`)
+        document.body.appendChild(link)
+        link.click()
+      })
     }
   }
 }
 </script>
-<style lang="sass">
+<style>
+.clear-both {
+  clear: both;
+}
 </style>

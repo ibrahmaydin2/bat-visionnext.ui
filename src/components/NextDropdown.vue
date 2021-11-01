@@ -292,7 +292,7 @@ export default {
       return values
     },
     setDefaultValue (source) {
-      if (this.itemKey && this.insertDefaultValue[this.itemKey] && !this.selectedValue && source) {
+      if (this.itemKey && (this.insertDefaultValue[this.itemKey] || this.insertDefaultValue[this.itemKey] === 0) && !this.selectedValue && source) {
         let defaultValue = this.insertDefaultValue[this.itemKey]
         this.findDefaultValue(defaultValue, source)
       } else if (this.defaultValue) {
