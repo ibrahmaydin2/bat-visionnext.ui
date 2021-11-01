@@ -172,8 +172,11 @@
                 <NextMultipleSelection
                   name="SalesWaybillMultipleItem"
                   v-model="form.InvoiceLines"
-                  :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], CustomerIds: [form.CustomerId], PriceListIds: [form.PriceListId]}"
+                  :disabled-button="!form.WarehouseId || !form.PriceListId"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
+                  :validations="multipleItemSearch.multipleValidations"
                 />
             </b-col>
           </b-row>
@@ -348,6 +351,7 @@
 <script>
 import { required, minValue, minLength, maxLength } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -453,18 +457,15 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: [],
-      hiddenValues: [
-        {
-          mainProperty: 'Code',
-          targetProperty: 'ItemCode'
-        }
-      ]
+      stocks: []
     }
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
     this.getInsertPage(this.routeName)
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     getInsertPage (e) {

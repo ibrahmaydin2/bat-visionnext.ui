@@ -191,9 +191,9 @@
                 v-model="form.OrderLines"
                 :disabled-button="!form.WarehouseId || !form.PriceListId"
                 :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
-                :hidden-values="hiddenValues"
-                :converted-values="convertedValues"
-                :validations="multipleValidations" />
+                :hidden-values="multipleItemSearch.hiddenValues"
+                :converted-values="multipleItemSearch.convertedValues"
+                :validations="multipleItemSearch.multipleValidations" />
             </b-col>
           </b-row>
           <b-row>
@@ -321,6 +321,7 @@
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -395,65 +396,15 @@ export default {
       items: [],
       priceListItems: [],
       stocks: [],
-      disabledItems: true,
-      hiddenValues: [
-        {
-          mainProperty: 'Code',
-          targetProperty: 'ItemCode'
-        },
-        {
-          mainProperty: 'RecordId',
-          targetProperty: 'ItemId'
-        },
-        {
-          mainProperty: 'Vat',
-          targetProperty: 'VatRate'
-        }
-      ],
-      convertedValues: [
-        {
-          mainProperty: 'Quantity',
-          targetProperty: 'NetTotal',
-          getValue: (value, data) => {
-            return this.roundNumber(data.Price * (value ? parseFloat(value) : 0))
-          }
-        },
-        {
-          mainProperty: 'Quantity',
-          targetProperty: 'TotalVat',
-          getValue: (value, data) => {
-            return data.IsVatIncluded === 1 ? 0 : this.roundNumber(data.NetTotal * data.VatRate / 100)
-          }
-        },
-        {
-          mainProperty: 'Quantity',
-          targetProperty: 'GrossTotal',
-          getValue: (value, data) => {
-            return this.roundNumber(parseFloat(data.NetTotal) + parseFloat(data.TotalVat))
-          }
-        }
-      ],
-      multipleValidations: [
-        {
-          mainProperty: 'Quantity',
-          validation: (value, data) => {
-            if (value && parseFloat(value) > data.Stock) {
-              this.$toasted.show(this.$t('insert.order.quantityStockException'), {
-                type: 'error',
-                keepOnHover: true,
-                duration: '3000'
-              })
-              return false
-            }
-            return true
-          }
-        }
-      ]
+      disabledItems: true
     }
   },
   mounted () {
     this.createManualCode('OrderNumber')
     this.getInsertPage(this.routeName)
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     getInsertPage (e) {

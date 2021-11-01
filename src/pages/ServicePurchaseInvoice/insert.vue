@@ -144,8 +144,10 @@
                 <NextMultipleSelection
                   name="ServicePurchaseInvoiceMultipleItem"
                   v-model="form.InvoiceLines"
-                  :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{CustomerIds: [form.CustomerId]}"
+                  :disabled-button="!form.CustomerId"
+                  :dynamic-and-condition="{CustomerIds: [form.CustomerId], CardTypeIds: [9]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
                 />
             </b-col>
           </b-row>
@@ -315,17 +317,11 @@ export default {
       selectedBranch: {},
       selectedPaymentType: {},
       paymentTypes: [],
-      selectedInvoiceKind: null,
-      hiddenValues: [
-        {
-          mainProperty: 'Code',
-          targetProperty: 'ItemCode'
-        }
-      ]
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['customers', 'currencies', 'orderStatusList', 'invoiceTypes', 'discountReasons', 'invoiceKinds'])
+    ...mapState(['customers', 'currencies', 'orderStatusList', 'invoiceTypes', 'discountReasons', 'invoiceKinds', 'multipleItemSearch'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')

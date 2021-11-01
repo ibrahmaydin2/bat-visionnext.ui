@@ -155,8 +155,10 @@
                 <NextMultipleSelection
                   name="PurchaseOrderMultipleItem"
                   v-model="form.OrderLines"
-                  :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], CustomerIds: [form.CustomerId], PriceListIds: [form.PriceListId]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :disabled-button="!form.WarehouseId || !form.PriceListId"
+                  :converted-values="multipleItemSearch.convertedValues"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                 />
             </b-col>
           </b-row>
@@ -219,6 +221,7 @@
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -282,18 +285,15 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: [],
-      hiddenValues: [
-        {
-          mainProperty: 'Code',
-          targetProperty: 'ItemCode'
-        }
-      ]
+      stocks: []
     }
   },
   mounted () {
     this.createManualCode('OrderNumber')
     this.getInsertPage(this.routeName)
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     getInsertPage (e) {

@@ -151,7 +151,10 @@
                 <NextMultipleSelection
                   name="ServiceSalesInvoiceMultipleItem"
                   v-model="form.InvoiceLines"
-                  :dynamic-and-condition="{CustomerIds: [form.CustomerId], WarehouseIds: [form.WarehouseId]}"
+                  :disabled-button="!form.CustomerId"
+                  :dynamic-and-condition="{CustomerIds: [form.CustomerId], CardTypeIds: [9]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
                 />
             </b-col>
           </b-row>
@@ -326,7 +329,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers', 'currencies', 'items', 'discountReasons', 'routes', 'invoiceKinds'])
+    ...mapState(['customers', 'currencies', 'items', 'discountReasons', 'routes', 'invoiceKinds', 'multipleItemSearch'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')

@@ -291,7 +291,50 @@ export const store = new Vuex.Store({
     lastGridModel: null,
     reloadGrid: false,
     cancelToken: {},
-    isMultipleGrid: false
+    isMultipleGrid: false,
+    multipleItemSearch: {
+      hiddenValues: [
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ItemCode'
+        }
+      ],
+      convertedValues: [
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'NetTotal',
+          getValue: (value, data) => {
+            return store.roundNumber(data.Price * (value ? parseFloat(value) : 0))
+          }
+        },
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'TotalVat',
+          getValue: (value, data) => {
+            return data.IsVatIncluded === 1 ? 0 : store.roundNumber(data.NetTotal * data.VatRate / 100)
+          }
+        },
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'GrossTotal',
+          getValue: (value, data) => {
+            return store.roundNumber(parseFloat(data.NetTotal) + parseFloat(data.TotalVat))
+          }
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value && parseFloat(value) > data.StockQuantity) {
+              store.commit('showAlert', { type: 'danger', msg: i18n.t('insert.order.quantityStockException') })
+              return false
+            }
+            return true
+          }
+        }
+      ]
+    }
   },
   actions: {
     // sistem gereksinimleri
@@ -1524,7 +1567,7 @@ export const store = new Vuex.Store({
           break
         case 'danger':
           this._vm.$bvToast.toast(payload.msg, {
-            title: JSON.stringify(payload.msg),
+            title: i18n.t('index.error'),
             variant: 'danger',
             noCloseButton: false
           })
@@ -1949,3 +1992,10 @@ export const store = new Vuex.Store({
     }
   }
 })
+
+store.roundNumber = (value, decimalCount = 2) => {
+  if (typeof value === 'string') {
+    value = parseFloat(value)
+  }
+  return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
+}
