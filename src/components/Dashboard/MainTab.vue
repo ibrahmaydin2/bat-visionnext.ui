@@ -1,6 +1,6 @@
 <template>
   <b-tabs class="dashboard-tabs" content-class="mt-3">
-    <b-tab v-if="false" title="Realtime Dashboard">
+    <b-tab title="Realtime Dashboard">
       <realtime-dashboard :branchs="userBranches"></realtime-dashboard>
     </b-tab>
     <b-tab v-for="(tab, i) in tabList" :key="i" :title="tab.Description" lazy>
