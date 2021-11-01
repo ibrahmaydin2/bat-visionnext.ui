@@ -179,13 +179,13 @@
           <NextDetailPanel v-model="form.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.AddTax')">
-          <NextDetailPanel v-model="form.ItemVats" :items="itemVatsItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.AdditionalTaxes" :items="itemVatsItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.itemDeposits')">
           <NextDetailPanel v-model="form.ItemDeposits" :items="itemDepositsItem"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemOrderQuotas')">
-          <NextDetailPanel v-model="form.ItemOrderQuotas" :items="itemOrderQuotasItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.ItemOrderQuotas" :items="itemOrderQuotasItemsUpdate"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
@@ -292,7 +292,7 @@ export default {
         ItemBoms: [],
         ItemCustomers: [],
         ItemBarcodes: [],
-        ItemVats: [],
+        AdditionalTaxes: [],
         ItemDeposits: [],
         ItemOrderQuotas: []
       },
@@ -341,7 +341,7 @@ export default {
       sapPriceFields: detailData.sapPriceFields,
       itemVatsItems: detailData.itemVatsItems,
       itemDepositsItem: detailData.itemDepositsItem,
-      itemOrderQuotasItems: detailData.itemOrderQuotasItems
+      itemOrderQuotasItemsUpdate: detailData.itemOrderQuotasItemsUpdate
     }
   },
   mounted () {

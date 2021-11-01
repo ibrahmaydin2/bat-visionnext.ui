@@ -175,7 +175,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'TaxTypeId',
       objectKey: 'TaxType',
-      url: 'VisionNextItem/api/ItemTaxType/Search',
+      url: 'VisionNextItem/api/TaxType/Search',
       label: i18n.t('insert.item.TaxTypeId'),
       visible: true,
       required: false,
@@ -183,10 +183,10 @@ export const detailData = {
       id: 1
     },
     {
-      type: 'Dropdown',
+      type: 'Lookup',
       modelProperty: 'TaxKindId',
       objectKey: 'TaxKind',
-      url: 'VisionNextItem/api/ItemTaxKind/Search',
+      url: 'TAX_TYPE_KIND',
       label: i18n.t('insert.item.TaxKindId'),
       visible: true,
       required: false,
@@ -230,6 +230,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'UnitId',
       objectKey: 'Unit',
+      labelProperty: 'UnitLookupValue.Label',
       url: 'VisionNextUnit/api/Unit/Search',
       label: i18n.t('insert.item.UnitId'),
       visible: true,
@@ -242,7 +243,7 @@ export const detailData = {
       modelProperty: 'DepositId',
       objectKey: 'Deposit',
       labelProperty: 'Label',
-      url: '',
+      url: 'VisionNextItem/api/Item/GetDepositForItem',
       label: i18n.t('insert.item.DepositId'),
       visible: true,
       required: false,
@@ -261,7 +262,7 @@ export const detailData = {
       id: 3
     }
   ],
-  itemOrderQuotasItems: [
+  itemOrderQuotasItemsUpdate: [
     {
       type: 'Date',
       modelProperty: 'BeginDate',
@@ -335,9 +336,78 @@ export const detailData = {
       objectKey: 'usedQuantity',
       label: i18n.t('insert.item.usedQuantity'),
       required: false,
+      disabled: true,
       visible: true,
       isUnique: false,
       id: 7
+    }
+  ],
+  itemOrderQuotasItemsInsert: [
+    {
+      type: 'Date',
+      modelProperty: 'BeginDate',
+      objectKey: 'BeginDate',
+      label: i18n.t('insert.item.BeginDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 1
+    },
+    {
+      type: 'Date',
+      modelProperty: 'EndDate',
+      objectKey: 'EndDate',
+      label: i18n.t('insert.item.EndDate'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 2
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'quotaUnitId',
+      objectKey: 'quotaUnit',
+      url: 'VisionNextUnit/api/UnitSet/Get',
+      dynamicAndCondition: { RecordIds: [1664960569] },
+      labelProperty: 'Label',
+      label: i18n.t('insert.item.QuotaUnitId'),
+      visible: true,
+      required: false,
+      isUnique: false,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'quotaQuantity',
+      objectKey: 'quotaQuantity',
+      label: i18n.t('insert.item.Quantity'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 4
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'quotaBranchId',
+      objectKey: 'quotaBranch',
+      url: 'VisionNextBranch/api/Branch/Search',
+      label: i18n.t('insert.item.quotaBranchId'),
+      visible: true,
+      required: false,
+      isUnique: false,
+      id: 5
+    },
+    {
+      type: 'Autocomplete',
+      modelProperty: 'quotaRegionId',
+      objectKey: 'quotaRegionId',
+      url: 'VisionNextCommonApi/api/Region/AutoCompleteSearch',
+      label: i18n.t('insert.item.quotaRegionId'),
+      visible: true,
+      required: false,
+      isUnique: false,
+      id: 6
     }
   ]
 }

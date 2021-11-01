@@ -110,7 +110,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ItemVats" :items="itemVatsItems"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="rowData.AdditionalTaxes" :items="itemVatsItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -128,7 +128,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ItemOrderQuotas" :items="itemOrderQuotasItems"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="rowData.ItemOrderQuotas" :items="itemOrderQuotasItemsUpdate"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -172,7 +172,7 @@ export default {
       sapPriceFields: detailData.sapPriceFields,
       itemVatsItems: detailData.itemVatsItems,
       itemDepositsItem: detailData.itemDepositsItem,
-      itemOrderQuotasItems: detailData.itemOrderQuotasItems
+      itemOrderQuotasItemsUpdate: detailData.itemOrderQuotasItemsUpdate
     }
   },
   mounted () {
