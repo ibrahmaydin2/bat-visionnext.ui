@@ -26,7 +26,7 @@ import 'vuelayers/lib/style.css' // needs css-loader
 import draggable from 'vuedraggable'
 
 import {VueMasonryPlugin} from 'vue-masonry'
-import RealtimeDashboard from './modules/realtime-dashboard'
+import RealtimeDashboard from './module/realtime-dashboard'
 
 // multiple date datepicker
 import DatePicker from 'vue2-datepicker'
