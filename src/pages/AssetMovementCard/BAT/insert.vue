@@ -74,6 +74,14 @@
                 <AddDetailButton @click.native="addAssetMovementCardDetails" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="AssetMovementCardMultipleAsset"
+                  v-model="form.AssetMovementCardDetails"
+                  :hidden-values="hiddenValues"
+                  :dynamic-and-condition="{}"
+                />
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -88,12 +96,12 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(a, i) in (form.AssetMovementCardDetails ? form.AssetMovementCardDetails.filter(m => m.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{a.Asset ? a.Asset.Label : a.AssetName}}</b-td>
-                  <b-td>{{a.Asset ? a.Asset.Code : a.AssetCode}}</b-td>
+                <b-tr v-for="(a, i) in form.AssetMovementCardDetails" :key="i">
+                  <b-td>{{a.AssetName}}</b-td>
+                  <b-td>{{a.AssetCode}}</b-td>
                   <b-td>{{a.SerialNumber}}</b-td>
                   <b-td>{{a.Quantity}}</b-td>
-                  <b-td>{{a.Condition ? a.Condition.Label : a.ConditionName}}</b-td>
+                  <b-td>{{a.ConditionName}}</b-td>
                   <b-td>{{a.SerialNumber2}}</b-td>
                   <b-td>{{a.SerialNumber3}}</b-td>
                   <b-td class="text-center"><i @click="removeAssetMovementCardDetails(a)" class="far fa-trash-alt text-danger"></i></b-td>
@@ -107,10 +115,10 @@
   </b-row>
 </template>
 <script>
-import updatetMixin from '../../mixins/update'
+import insertMixin from '../../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
 export default {
-  mixins: [updatetMixin],
+  mixins: [insertMixin],
   data () {
     return {
       form: {
@@ -139,11 +147,25 @@ export default {
         condition: null,
         serialNumber2: null,
         serialNumber3: null
-      }
+      },
+      hiddenValues: [
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'AssetName'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'AssetCode'
+        },
+        {
+          mainProperty: 'Barcode',
+          targetProperty: 'SerialNumber'
+        }
+      ]
     }
   },
   mounted () {
-    this.getData().then(() => this.setData())
+    this.createManualCode('CardNumber')
     this.initPage()
   },
   methods: {
@@ -153,16 +175,6 @@ export default {
           this.assetLocations = response.ListModel.BaseModels
         }
       })
-    },
-    setData () {
-      let rowData = this.rowData
-      this.form = rowData
-      this.assetMovementType = this.convertLookupValueToSearchValue(rowData.MovementType)
-      this.employee = this.convertLookupValueToSearchValue(rowData.Employee)
-      this.toState = this.convertLookupValueToSearchValue(rowData.ToState)
-      this.fromState = this.convertLookupValueToSearchValue(rowData.FromState)
-      this.toLocation = this.convertLookupValueToSearchValue(rowData.ToLocation)
-      this.fromLocation = this.convertLookupValueToSearchValue(rowData.FromLocation)
     },
     addAssetMovementCardDetails () {
       this.$v.assetMovementCardDetail.$touch()
@@ -189,11 +201,7 @@ export default {
       this.$v.assetMovementCardDetail.$reset()
     },
     removeAssetMovementCardDetails (item) {
-      if (item.RecordId > 0) {
-        this.form.AssetMovementCardDetails[this.form.AssetMovementCardDetails.indexOf(item)].RecordState = 4
-      } else {
-        this.form.AssetMovementCardDetails.splice(this.form.AssetMovementCardDetails.indexOf(item), 1)
-      }
+      this.form.AssetMovementCardDetails.splice(this.form.AssetMovementCardDetails.indexOf(item), 1)
     },
     save () {
       this.$v.form.$touch()
@@ -205,9 +213,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.ToCustomerId = this.toLocation && this.toLocation.CustomerId ? this.toLocation.CustomerId : this.form.ToCustomerId
-        this.form.FromCustomerId = this.fromLocation && this.fromLocation.CustomerId ? this.fromLocation.CustomerId : this.form.FromCustomerId
-        this.updateData()
+        this.form.ToCustomerId = this.toLocation ? this.toLocation.CustomerId : undefined
+        this.form.FromCustomerId = this.fromLocation ? this.fromLocation.CustomerId : undefined
+        this.createData()
       }
     }
   },

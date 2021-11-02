@@ -113,7 +113,7 @@
                 v-if="data.field.column.ColumnType === 'String' || data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                :type="'number'"
+                type="number"
                 :input-class="data.item.class"></NextInput>
             </div>
             <span v-else v-html="data.value"></span>
@@ -229,7 +229,7 @@ export default {
                   return value
                 }
               } else {
-                if (obj[item.EntityProperty]) {
+                if (obj[item.EntityProperty] || obj[item.EntityProperty] === 0) {
                   return obj[item.EntityProperty]
                 } else {
                   let filteredArr = this.hiddenValues.filter(h => h.mainProperty === item.EntityProperty)
@@ -410,6 +410,13 @@ export default {
           return
         }
       }
+      this.selectedList = this.selectedList.map(s => {
+        s.Deleted = 0
+        s.System = 0
+        s.RecordState = 2
+        s.StatusId = 1
+        return s
+      })
       this.$emit('valuechange', this.selectedList)
       this.closeModal()
     },

@@ -69,7 +69,6 @@
             <NextFormGroup :title="$t('get.assetMovementCard.serialNumber3')" :error="$v.assetMovementCardDetail.serialNumber3" :required="true" md="3" lg="3">
               <NextInput v-model="assetMovementCardDetail.serialNumber3" type="text" />
             </NextFormGroup>
-
             <b-col cols="12" md="2">
               <b-form-group>
                 <AddDetailButton @click.native="addAssetMovementCardDetails" />
@@ -108,7 +107,7 @@
   </b-row>
 </template>
 <script>
-import insertMixin from '../../mixins/insert'
+import insertMixin from '../../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [insertMixin],
