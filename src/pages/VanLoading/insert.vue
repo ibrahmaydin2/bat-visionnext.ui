@@ -24,11 +24,11 @@
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
               <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" searchable/>
             </NextFormGroup>
-          <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
-            <NextDropdown :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search" @input="selectedSearchType('IsDone', $event)"/>
-          </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
             <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
+            <NextCheckBox :disabled="insertReadonly.IsDone" v-model="form.IsDone"/>
           </NextFormGroup>
           <NextFormGroup item-key="Canceled" :error="$v.form.Canceled" md="2">
             <NextCheckBox v-model="form.Canceled" :disabled="insertReadonly.Canceled" type="number" toggle/>
@@ -76,6 +76,7 @@
                   :disabled-button="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate"
                   :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], RouteIds: [form.RouteId], DocumentDate: form.LoadingDate}"
                   :hidden-values="hiddenValues"
+                  :clickable-columns="clickableColumns"
                 />
             </b-col>
           </b-row>
@@ -174,6 +175,28 @@ export default {
         {
           mainProperty: 'ToWHStockQuantity',
           targetProperty: 'ToWhStockQuantity'
+        }
+      ],
+      clickableColumns: [
+        {
+          mainProperty: 'AverageSalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'LastSalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'LastdaySalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'SuggestedQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'ToWHStockQuantity',
+          targetProperty: 'LoadingQuantity'
         }
       ]
     }

@@ -59,10 +59,10 @@
               <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyRate" :error="$v.form.CurrencyRate">
-              <NextInput v-model="Customer.CurrencyRate" type="number" :disabled="insertReadonly.CurrencyRate" />
+              <NextInput v-model="form.CurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="SystemCurrencyRate" :error="$v.form.SystemCurrencyRate">
-              <NextInput v-model="Customer.SystemCurrencyRate" type="number" :disabled="insertReadonly.SystemCurrencyRate" />
+              <NextInput v-model="form.SystemCurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentDate" :start-weekday="1" :error="$v.form.PaymentDate">
               <NextDatePicker v-model="form.PaymentDate" :disabled="insertReadonly.PaymentDate" />
@@ -73,7 +73,7 @@
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown
                 @input="selectedSearchType('CurrencyId', $event)"
-                :disabled="insertReadonly.CurrencyId"
+                :disabled="true"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 v-model="Currency"
                 label="Description1"
@@ -180,10 +180,10 @@ export default {
         RepresentativeId: null,
         RouteId: null,
         CashCardTypeId: null,
-        CurrencyRate: null,
+        CurrencyRate: 1,
         CurrencyCashTotal: null,
         DocumentCreationTypeId: 621,
-        SystemCurrencyRate: null,
+        SystemCurrencyRate: 1,
         IsManuelClosure: 1
       },
       Currency: null,
@@ -193,10 +193,7 @@ export default {
       isMultiple: null,
       showMultiple: null,
       customerReminder: null,
-      Customer: {
-        CurrencyRate: null,
-        SystemCurrencyRate: null
-      },
+      Customer: null,
       routeName1: 'Finance',
       routeName2: 'CashCard',
       cashCards: [],
