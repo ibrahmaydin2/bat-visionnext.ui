@@ -70,15 +70,15 @@
               <NextInput v-model="form.CreditCardTotal" type="number" :disabled="insertReadonly.CreditCardTotal" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyRate" :error="$v.form.CurrencyRate">
-              <NextInput v-model="customer.CurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="form.CurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="SystemCurrencyRate" :error="$v.form.SystemCurrencyRate">
-              <NextInput v-model="customer.SystemCurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="form.SystemCurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown
                 @input="selectedSearchType('CurrencyId', $event)"
-                :disabled="insertReadonly.CurrencyId"
+                :disabled="true"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 v-model="currency"
                 label="Description1"
@@ -139,7 +139,7 @@ export default {
         Description1: null,
         CustomerId: null,
         ApproveNumber: null,
-        CurrencyRate: null,
+        CurrencyRate: 1,
         DocumentNumber: null,
         DocumentDate: new Date(),
         BankId: null,
@@ -149,7 +149,7 @@ export default {
         RepresentativeId: null,
         RouteId: null,
         IsBatcardTransaction: 0,
-        SystemCurrencyRate: null,
+        SystemCurrencyRate: 1,
         IsManuelClosure: 0
       },
       customerReminder: null,
@@ -182,6 +182,7 @@ export default {
       this.form = rowData
       this.customer = this.convertLookupValueToSearchValue(rowData.Customer)
       this.bank = this.convertLookupValueToSearchValue(rowData.Bank)
+      this.bankBranch = this.convertLookupValueToSearchValue(rowData.BankBranch)
       this.currency = this.convertLookupValueToSearchValue(rowData.Currency)
       this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
       this.route = this.convertLookupValueToSearchValue(rowData.Route)

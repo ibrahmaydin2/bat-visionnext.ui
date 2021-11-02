@@ -65,25 +65,24 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="BankBranchId" :error="$v.form.BankBranchId" md="3" lg="3">
-              <NextDropdown v-model="bankBranch" @input="selectedSearchType('BankBranchId', $event)" :source="bankBranches"/>
+              <NextDropdown :disabled="!form.BankId" v-model="bankBranch" @input="selectedSearchType('BankBranchId', $event)" :source="bankBranches"/>
             </NextFormGroup>
             <NextFormGroup item-key="CreditCardTotal" :error="$v.form.CreditCardTotal">
               <NextInput v-model="form.CreditCardTotal" type="number" :disabled="insertReadonly.CreditCardTotal" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyRate" :error="$v.form.CurrencyRate">
-              <NextInput v-model="customer.CurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="form.CurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="SystemCurrencyRate" :error="$v.form.SystemCurrencyRate">
-              <NextInput v-model="customer.SystemCurrencyRate" type="number" :disabled="true" />
+              <NextInput v-model="form.SystemCurrencyRate" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
               <NextDropdown
                 @input="selectedSearchType('CurrencyId', $event)"
-                :disabled="insertReadonly.CurrencyId"
+                :disabled="true"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 v-model="Currency"
                 label="Description1"
-                searchable
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
@@ -148,23 +147,21 @@ export default {
         BankId: null,
         CreditCardTotal: null,
         CurrencyId: null,
-        CurrencyRate: null,
+        CurrencyRate: 1,
         CardNumber: null,
         RepresentativeId: null,
         RouteId: null,
         IsBatcardTransaction: 0,
-        SystemCurrencyRate: null,
+        SystemCurrencyRate: 1,
         IsManuelClosure: 0,
         CardOwner: null
       },
       customerReminder: null,
-      customer: {
-        CurrencyRate: null,
-        SystemCurrencyRate: null
-      },
+      customer: null,
       Bank: null,
       BankBranch: null,
       Currency: null,
+      CurrencyRate: null,
       Representative: null,
       Route: null,
       bankBranch: null,
