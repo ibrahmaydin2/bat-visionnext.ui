@@ -17,35 +17,47 @@
     </b-col>
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
+        <b-row>
+          <b-col cols="12">
+            <b-row>
+              <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
+                <NextInput v-model="form.CardNumber" maxLength="16" :oninput="maxLengthControl" type="number" :disabled="insertReadonly.CardNumber" />
+              </NextFormGroup>
+              <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId">
+                <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
+              </NextFormGroup>
+              <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
+                <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />
+              </NextFormGroup>
+              <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+                <NextInput v-model="form.Description1" :disabled="insertReadonly.Description1" />
+              </NextFormGroup>
+            </b-row>
+          </b-col>
+        </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('get.assetMovementCard.assetMovementCard')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
-              <NextInput v-model="form.CardNumber" maxLength="16" :oninput="maxLengthControl" type="number" :disabled="insertReadonly.CardNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId">
-              <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" searhable/>
-            </NextFormGroup>
-            <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
-              <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />
+            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" >
+              <NextDropdown :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
              <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toLocation" :source="assetLocations" @input="selectedSearchType('ToLocationId', $event)" searhable/>
+              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('ToStateId', $event)"/>
+              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
-              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromLocation" :source="assetLocations" @input="selectedSearchType('FromLocationId', $event)" searhable/>
+              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" @input="selectedSearchType('FromLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
               <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsAssetMovement" :error="$v.form.IsAssetMovement">
+              <NextCheckBox v-model="form.IsAssetMovement" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -166,16 +178,8 @@ export default {
   },
   mounted () {
     this.createManualCode('CardNumber')
-    this.initPage()
   },
   methods: {
-    initPage () {
-      this.$api.postByUrl({}, 'VisionNextCustomer/api/CustomerLocation/Search').then((response) => {
-        if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
-          this.assetLocations = response.ListModel.BaseModels
-        }
-      })
-    },
     addAssetMovementCardDetails () {
       this.$v.assetMovementCardDetail.$touch()
       if (this.$v.assetMovementCardDetail.$error) {
