@@ -76,6 +76,7 @@
                   :disabled-button="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate"
                   :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], RouteIds: [form.RouteId], DocumentDate: form.LoadingDate}"
                   :hidden-values="hiddenValues"
+                  :clickable-columns="clickableColumns"
                 />
             </b-col>
           </b-row>
@@ -174,6 +175,28 @@ export default {
         {
           mainProperty: 'ToWHStockQuantity',
           targetProperty: 'ToWhStockQuantity'
+        }
+      ],
+      clickableColumns: [
+        {
+          mainProperty: 'AverageSalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'LastSalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'LastdaySalesQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'SuggestedQuantity',
+          targetProperty: 'LoadingQuantity'
+        },
+        {
+          mainProperty: 'ToWHStockQuantity',
+          targetProperty: 'LoadingQuantity'
         }
       ]
     }
