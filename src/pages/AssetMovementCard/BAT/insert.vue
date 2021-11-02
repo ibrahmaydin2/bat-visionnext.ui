@@ -178,16 +178,8 @@ export default {
   },
   mounted () {
     this.createManualCode('CardNumber')
-    this.initPage()
   },
   methods: {
-    initPage () {
-      this.$api.postByUrl({}, 'VisionNextCustomer/api/CustomerLocation/Search').then((response) => {
-        if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
-          this.assetLocations = response.ListModel.BaseModels
-        }
-      })
-    },
     addAssetMovementCardDetails () {
       this.$v.assetMovementCardDetail.$touch()
       if (this.$v.assetMovementCardDetail.$error) {
