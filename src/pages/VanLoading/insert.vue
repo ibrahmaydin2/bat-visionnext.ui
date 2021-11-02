@@ -25,7 +25,7 @@
               <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" searchable/>
             </NextFormGroup>
           <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
-            <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"  @input="selectedSearchType('IsDone', $event)"/>
+            <NextDropdown :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search" @input="selectedSearchType('IsDone', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
             <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
@@ -136,7 +136,6 @@ export default {
         Canceled: 0,
         VanLoadingItems: []
       },
-      selectedDone: null,
       routeName1: 'StockManagement',
       loadingQuantity: null,
       RecordId: null,
@@ -309,18 +308,6 @@ export default {
         LoadingQuantity: {
           required
         }
-      }
-    }
-  },
-  watch: {
-    vanLoadingStatus (e) {
-      if (e) {
-        e.map(item => {
-          if (item.RecordId === 0) {
-            this.selectedSearchType('IsDone', item)
-            this.selectedDone = item.Description1
-          }
-        })
       }
     }
   }

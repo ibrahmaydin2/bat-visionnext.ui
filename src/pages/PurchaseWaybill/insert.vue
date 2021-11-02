@@ -163,8 +163,11 @@
                 <NextMultipleSelection
                   name="PurchaseWaybillMultipleItem"
                   v-model="form.InvoiceLines"
-                  :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], CustomerIds: [form.CustomerId], PriceListIds: [form.PriceListId]}"
+                  :disabled-button="!form.WarehouseId || !form.PriceListId"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
+                  :validations="multipleItemSearch.multipleValidations"
                 />
             </b-col>
           </b-row>
@@ -303,17 +306,11 @@ export default {
       currentCustomer: {},
       customerSelectCancelled: false,
       selectedBranch: {},
-      selectedInvoiceKind: null,
-      hiddenValues: [
-        {
-          mainProperty: 'Code',
-          targetProperty: 'ItemCode'
-        }
-      ]
+      selectedInvoiceKind: null
     }
   },
   computed: {
-    ...mapState(['warehouses', 'customers', 'priceList', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds'])
+    ...mapState(['warehouses', 'customers', 'priceList', 'paymentTypes', 'currencies', 'items', 'priceListItems', 'stocks', 'routes', 'invoiceKinds', 'multipleItemSearch'])
   },
   mounted () {
     this.createManualCode('InvoiceNumber')

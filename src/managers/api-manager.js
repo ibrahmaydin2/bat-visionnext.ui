@@ -26,7 +26,11 @@ export class ApiManager {
     return this.call('delete', request, basePath, secondPath)
   }
 
-  async call (methodType, request, basePath, secondPath, url, pagerecordCount) {
+  async downloadByUrl (request, url) {
+    return this.call('post', request, null, null, url, 100, 'blob')
+  }
+
+  async call (methodType, request, basePath, secondPath, url, pagerecordCount, responseType = 'json') {
     if (!url) {
       if (!secondPath) {
         secondPath = basePath
@@ -55,6 +59,7 @@ export class ApiManager {
       store.commit('setCancelToken', {name: name, data: axios.CancelToken.source()})
     }
     return axios({
+      responseType: responseType,
       method: methodType,
       url: url,
       data: request,
