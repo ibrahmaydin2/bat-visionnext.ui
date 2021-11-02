@@ -42,8 +42,8 @@
         <b-tab :title="$t('insert.unitSet.units')" >
           <NextDetailPanel type="insert" v-model="form.Units" :items="unitItems" />
         </b-tab>
-        <b-tab :title="$t('insert.unitSet.coefficient')" >
-          <NextDetailPanel type="insert" v-model="form.UnitSetFactors" :items="unitSetFactorsItems" />
+        <b-tab lazy :title="$t('insert.unitSet.coefficient')" >
+          <NextDetailPanel type="insert" v-model="form.UnitSetFactors" :items="getUnitSetFactorsItems()" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -69,12 +69,17 @@ export default {
         UnitSetFactors: []
       },
       unitItems: detailData.unitItems,
-      unitSetFactorsItems: detailData.unitSetFactorsItems,
       routeName1: 'Unit',
       cardTypes: [
         {
           Label: this.$t('insert.unitSet.userDefinedDimensions'),
           DecimalValue: 5
+        }
+      ],
+      UnitList: [
+        {
+          RecordId: null,
+          Description1: null
         }
       ]
     }
@@ -95,6 +100,72 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getUnitSetFactorsItems () {
+      return [
+        {
+          type: 'Lookup',
+          modelProperty: 'RequirementTypeId',
+          objectKey: 'RequirementType',
+          labelProperty: 'Label',
+          url: 'REQUIREMENT_TYPE',
+          label: this.$t('insert.unitSet.RequrementTypeId'),
+          visible: true,
+          required: false,
+          id: 1
+        },
+        {
+          type: 'Dropdown',
+          modelProperty: 'DocumentTypeId',
+          objectKey: 'DocumentType',
+          url: 'VisionNextOrder/api/OrderType/Search',
+          filter (item) {
+            let list = ['ASIP']
+            return list.includes(item.Code)
+          },
+          label: this.$t('insert.unitSet.DocumentTypeId'),
+          visible: true,
+          required: false,
+          id: 2
+        },
+        {
+          type: 'Dropdown',
+          modelProperty: 'UnitId',
+          objectKey: 'Unit',
+          source: this.UnitList,
+          label: this.$t('insert.unitSet.unitDefinitions'),
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'Factor',
+          label: this.$t('insert.unitSet.Factor'),
+          required: false,
+          visible: true,
+          id: 4
+        }
+      ]
+    }
+  },
+  watch: {
+    form: {
+      handler (value) {
+        if (value && value.Units && value.Units.length > 0) {
+          this.UnitList = value.Units.map(u => {
+            let item = {
+              RecordId: u.UnitId,
+              Description1: u.UnitIdDesc
+            }
+            return item
+          })
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
