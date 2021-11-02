@@ -76,13 +76,19 @@
               <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
             </span>
           </template>
-            <template v-slot:head(selection)>
-              <b-link variant="white" size="sm" @click="selectAll">
-                <span>
-                  <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
-                </span>
-              </b-link>
-            </template>
+          <template v-slot:head()="data">
+            <b-link v-if="data.field.key == 'selection'" variant="white" size="sm" @click="selectAll">
+              <span>
+                <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+              </span>
+            </b-link>
+            <b-link v-else-if="showClickableColumn(data)" variant="white" size="sm" @click="columnClick(data.field.key)">
+              <span>
+                {{data.field.label}}
+              </span>
+            </b-link>
+            <span v-else>{{data.field.label}}</span>
+          </template>
           <template #cell()="data">
             <div v-if="data.field.column && data.field.column.Enabled">
               <div v-if="data.field.column.modelControlUtil != null">
@@ -177,6 +183,11 @@ export default {
       type: Array,
       default: () => { return [] },
       description: 'Grid inputları için işletilmesi gereken sayfa validasyonları'
+    },
+    clickableColumns: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Grid kolonlarının hangilerinin tıklanabildiği bilgisi'
     }
   },
   model: {
@@ -426,6 +437,18 @@ export default {
         model = JSON.parse(`{${decodeURI(conditionModel)}}`)
       }
       return model
+    },
+    columnClick (column) {
+      let clickableColumn = this.clickableColumns.find(f => f.mainProperty === column)
+      let listItem = this.listItems.find(l => l.EntityProperty === clickableColumn.targetProperty)
+      this.list = this.list.map(l => {
+        let value = l[clickableColumn.mainProperty]
+        l[clickableColumn.targetProperty] = !value && listItem.ColumnType === 'Decimal' ? 0 : value
+        return l
+      })
+    },
+    showClickableColumn (data) {
+      return this.clickableColumns.some(c => c.mainProperty === data.field.column.EntityProperty)
     }
   },
   validations () {
