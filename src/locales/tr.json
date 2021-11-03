@@ -747,6 +747,7 @@
       "Model_EducationId": "Öğrenim Durumu",
       "Model_Identificationnumber": "T.C Kimlik Numarası",
       "Model_BloodType": "Kan Grubu",
+      "Model_CountryCode": "Ülke Kodu",
       "Model_JeansSize": "Kot Pantolon Bedeni",
       "Model_ShirtSize": "Gömlek Bedeni",
       "Model_Shoesize": "Ayakkabı Numarası",

@@ -77,6 +77,7 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Telephone1, 'text', 'insert.employee.Model_Telephone1')"></div>
               <div v-html="getFormatDataByType(rowData.Telephone2, 'text', 'insert.employee.Model_Telephone2')"></div>
+              <div v-html="getFormatDataByType(rowData.CountryCode, 'object', 'insert.employee.Model_CountryCode')"></div>
               <div v-html="getFormatDataByType(rowData.GsmNumber, 'text', 'insert.employee.Model_GsmNumber')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">

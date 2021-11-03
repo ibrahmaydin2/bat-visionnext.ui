@@ -39,6 +39,7 @@
                 searchable
                 @input="selectedSearchType('RepresentativeId', $event)"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 :disabled="insertReadonly.RepresentativeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">

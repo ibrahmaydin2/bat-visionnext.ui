@@ -133,6 +133,9 @@
           <NextFormGroup item-key="Telephone2" :error="$v.form.Telephone2">
             <NextInput v-model="form.Telephone2" type="number" :disabled="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
           </NextFormGroup>
+          <NextFormGroup item-key="CountryCodeId" :error="$v.form.CountryCodeId">
+            <NextDropdown v-model="countryCode" :disabled="insertReadonly.CountryCodeId" lookup-key="COUNTRY_CODE" @input="selectedType('CountryCodeId', $event)"/>
+          </NextFormGroup>
           <NextFormGroup item-key="GsmNumber" :error="$v.form.GsmNumber">
             <NextInput v-model="form.GsmNumber" type="number" :disabled="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
           </NextFormGroup>
@@ -198,6 +201,7 @@ export default {
         BloodTypeId: null,
         ScoreCardClassId: null,
         IsRepresentative: null,
+        CountryCodeId: null,
         EmployeeTeams: [],
         EInvoiceSeqs: []
       },
@@ -222,7 +226,8 @@ export default {
       employeeType: null,
       userGroup: null,
       education: null,
-      bloodType: null
+      bloodType: null,
+      countryCode: null
     }
   },
   computed: {
@@ -281,6 +286,7 @@ export default {
       this.education = rowData.Education
       this.bloodType = rowData.BloodType
       this.priceListCategory = rowData.PriceListCategory
+      this.countryCode = rowData.CountryCode
     }
   },
   validations () {

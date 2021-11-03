@@ -244,8 +244,15 @@ export default {
         api: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
         name: 'employees',
         andConditionModel: {
-          Description1: search
-        }
+        },
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            Name: search,
+            Surname: search
+          }
+        ]
       }).then(res => {
         loading(false)
       })

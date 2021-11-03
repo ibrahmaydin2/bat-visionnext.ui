@@ -67,6 +67,7 @@
                 v-model="representative"
                 :searchable="true"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 :custom-option="true"
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"/>

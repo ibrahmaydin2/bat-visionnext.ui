@@ -87,7 +87,7 @@
                 v-model="Representative"
                 label="Description1"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
+                or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
                 :is-customer="true"
                 />
             </NextFormGroup>

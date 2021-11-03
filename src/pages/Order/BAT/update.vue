@@ -119,6 +119,7 @@
               <NextDropdown
                   v-model="selectedRepresentative"
                   url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                  orConditionFields="Code,Description1,Name,Surname"
                   @input="selectedSearchType('RepresentativeId', $event)" searchable
                   :disabled="insertReadonly.RepresentativeId"/>
               </NextFormGroup>
