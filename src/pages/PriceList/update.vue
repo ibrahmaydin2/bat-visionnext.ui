@@ -175,6 +175,7 @@ export default {
           var newItem = {
             Deleted: 0,
             System: 0,
+            PriceListId: item.PriceListId,
             RecordState: item.RecordId > 0 ? 3 : 2,
             RecordId: item.RecordId,
             StatusId: 1,
@@ -228,6 +229,7 @@ export default {
           product.UseConsumerPrice = selectedProduct.UseConsumerPrice
           product.IsVatIncluded = selectedProduct.IsVatIncluded
           product.RecordId = selectedProduct.RecordId
+          product.PriceListId = selectedProduct.PriceListId
         }
         return product
       })
