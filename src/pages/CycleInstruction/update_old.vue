@@ -138,6 +138,7 @@ export default {
           type: 'Autocomplete',
           inputType: null,
           modelProperty: 'EmployeeId',
+          orConditionFields: 'Code,Description1,Name,Surname',
           parentProperty: null,
           url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
           label: this.$t('insert.CycleInstruction.Employee'),

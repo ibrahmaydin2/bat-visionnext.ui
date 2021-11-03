@@ -133,8 +133,11 @@
           <NextFormGroup item-key="Telephone2" :error="$v.form.Telephone2">
             <NextInput v-model="form.Telephone2" type="number" :disabled="insertReadonly.Telephone2" maxLength="10" :oninput="maxLengthControl"/>
           </NextFormGroup>
+          <NextFormGroup item-key="CountryCodeId" :error="$v.form.CountryCodeId">
+            <NextDropdown :disabled="insertReadonly.CountryCodeId" lookup-key="COUNTRY_CODE" @input="selectedType('CountryCodeId', $event)"/>
+          </NextFormGroup>
           <NextFormGroup item-key="GsmNumber" :error="$v.form.GsmNumber">
-            <NextInput v-model="form.GsmNumber" type="number" :disabled="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
+            <NextInput v-model="form.GsmNumber"  type="number" :disabled="insertReadonly.GsmNumber" maxLength="10" :oninput="maxLengthControl"/>
           </NextFormGroup>
           <NextFormGroup item-key="FaxNumber" :error="$v.form.FaxNumber">
             <NextInput v-model="form.FaxNumber" type="number" :disabled="insertReadonly.FaxNumber" maxLength="10" :oninput="maxLengthControl"/>
@@ -198,6 +201,7 @@ export default {
         BloodTypeId: null,
         ScoreCardClassId: null,
         IsRepresentative: null,
+        CountryCodeId: null,
         EmployeeTeams: [],
         EInvoiceSeqs: []
       },

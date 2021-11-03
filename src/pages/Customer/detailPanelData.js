@@ -740,6 +740,7 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'RepresentativeId',
+      orConditionFields: 'Code,Description1,Name,Surname',
       objectKey: 'Representative',
       url: '',
       label: i18n.t('insert.customer.representative'),
@@ -792,6 +793,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'EmployeeId',
+      orConditionFields: 'Code,Description1,Name,Surname',
       objectKey: 'Employee',
       url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
       label: i18n.t('insert.customer.employee'),
@@ -848,6 +850,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'EmployeeId',
+      orConditionFields: 'Code,Description1,Name,Surname',
       objectKey: 'Employee',
       url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
       label: i18n.t('insert.customer.employee'),

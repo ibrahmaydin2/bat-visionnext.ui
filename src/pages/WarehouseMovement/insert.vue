@@ -30,6 +30,7 @@
           <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
             <NextDropdown
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
+              orConditionFields="Code,Description1,Name,Surname"
               @input="selectedSearchType('RepresentativeId', $event)"
               :disabled="isItemAdded || insertReadonly.RepresentativeId" />
           </NextFormGroup>

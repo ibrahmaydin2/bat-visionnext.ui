@@ -100,7 +100,7 @@
           </b-row>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
+              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" orConditionFields="Code,Description1,Name,Surname" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true" ></v-select>

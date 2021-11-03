@@ -157,6 +157,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'EmployeeId',
+      orConditionFields: 'Code,Description1,Name,Surname',
       objectKey: 'Employee',
       url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
       label: i18n.t('insert.CycleInstruction.Employee'),

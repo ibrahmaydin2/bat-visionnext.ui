@@ -84,6 +84,7 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 v-model="Representative"
                 label="Description1"
                 />

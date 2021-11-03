@@ -100,7 +100,7 @@
                     :disabled="insertReadonly.StateId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
+              <NextDropdown :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <NextDropdown
