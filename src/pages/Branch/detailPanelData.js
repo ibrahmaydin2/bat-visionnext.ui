@@ -528,6 +528,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'EmployeeId',
+      customOption: true,
       orConditionFields: 'Code,Description1,Name,Surname',
       objectKey: 'Employee',
       label: i18n.t('insert.branch.EmployeeId'),

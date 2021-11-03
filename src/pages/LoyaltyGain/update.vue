@@ -41,7 +41,7 @@
               <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" orConditionFields="Code,Description1,Name,Surname" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
+              <NextDropdown v-model="employee" :custom-option="true" orConditionFields="Code,Description1,Name,Surname" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
             </NextFormGroup>
           </b-row>
         </b-tab>

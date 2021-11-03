@@ -30,7 +30,7 @@
               <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" searhable/>
+              <NextDropdown v-model="employee" :custom-option="true" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/Search" @input="selectedSearchType('EmployeeId', $event)" searhable/>
             </NextFormGroup>
             <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
               <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />

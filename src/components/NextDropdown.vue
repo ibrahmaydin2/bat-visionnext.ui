@@ -10,7 +10,7 @@
     </template>
     <template v-slot:option="option" v-if="customOption">
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
-      <span v-if="!isCustomer">{{option.Code + ' - ' + option.Description1}}</span>
+      <span v-if="!isCustomer">{{option.Code + ' - ' + option.Name + ' ' + option.Surname}}</span>
     </template>
   </v-select>
 </template>

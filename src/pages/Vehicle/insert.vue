@@ -26,6 +26,8 @@
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
               @input="selectedSearchType('DefaultDriverEmployeeId', $event)"
               :dynamic-and-condition="{ StatusId: 1 }"
+              :custom-option="true"
+              orConditionFields="Code,Description1,CommercialTitle,Name,Surname"
               :disabled="insertReadonly.DefaultDriverEmployeeId" />
           </NextFormGroup>
           <NextFormGroup item-key="VehiclePlateNumber" :error="$v.form.VehiclePlateNumber">
