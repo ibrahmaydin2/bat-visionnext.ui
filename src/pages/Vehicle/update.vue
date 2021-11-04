@@ -26,6 +26,7 @@
               v-model="defaultDriverEmployee"
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
               @input="selectedSearchType('DefaultDriverEmployeeId', $event)"
+              orConditionFields="Code,Description1,CommercialTitle,Name,Surname"
               :dynamic-and-condition="{ StatusId: 1 }"
               :disabled="insertReadonly.DefaultDriverEmployeeId" />
           </NextFormGroup>

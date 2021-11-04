@@ -107,7 +107,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="Customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
             <b-col v-if="showMultiple" cols="12" md="2" lg="2">
               <b-form-group>
@@ -177,7 +177,9 @@ export default {
         SystemCurrencyRate: 0,
         IsManuelClosure: 0
       },
-      Customer: null,
+      Customer: {
+        Remainder: null
+      },
       Currency: null,
       Representative: null,
       Route: null,

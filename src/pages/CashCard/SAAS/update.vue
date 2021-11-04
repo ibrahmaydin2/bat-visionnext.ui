@@ -106,7 +106,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
               <NextCheckBox v-model="form.IsManuelClosure" :disabled="insertReadonly.IsManuelClosure" type="number" toggle/>
@@ -140,7 +140,8 @@ export default {
         RouteId: null,
         CashCardTypeId: null,
         SystemCurrencyRate: 1,
-        CurrencyRate: 1
+        CurrencyRate: 1,
+        IsManuelClosure: null
       },
       customerReminder: null,
       routeName: this.$route.meta.baseLink,
@@ -149,7 +150,9 @@ export default {
       representativeLabel: null,
       routeLabel: null,
       cashCardTypeLabel: null,
-      customer: {},
+      customer: {
+        Remainder: null
+      },
       currency: {},
       representative: {},
       route: {},

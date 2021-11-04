@@ -100,7 +100,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -139,7 +139,9 @@ export default {
       representativeLabel: null,
       routeLabel: null,
       cashCardTypeLabel: null,
-      customer: {},
+      customer: {
+        Remainder: null
+      },
       currency: {},
       representative: {},
       route: {},
