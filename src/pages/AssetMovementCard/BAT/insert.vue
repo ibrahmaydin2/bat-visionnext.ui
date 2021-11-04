@@ -42,7 +42,7 @@
         <b-tab :title="$t('get.assetMovementCard.assetMovementCard')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" >
-              <NextDropdown :disabled="insertReadonly.EmployeeId" :custom-option="true" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
+              <NextDropdown :disabled="insertReadonly.EmployeeId" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
              <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
               <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
