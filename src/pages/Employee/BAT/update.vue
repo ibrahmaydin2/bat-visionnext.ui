@@ -35,10 +35,10 @@
       <b-tab :title="$t('insert.employee.EmployeeInfo')" @click.prevent="tabValidation()" :active="true">
           <b-row>
             <NextFormGroup item-key="Name" :error="$v.form.Name">
-              <NextInput v-model="form.Name" type="text" :disabled="insertReadonly.Name" @keypress="isString($event)" />
+              <NextInput v-model="form.Name" type="text" :disabled="insertReadonly.Name" />
             </NextFormGroup>
             <NextFormGroup item-key="Surname" :error="$v.form.Surname">
-              <NextInput v-model="form.Surname" type="text" :disabled="insertReadonly.Surname" @keypress="isString($event)" />
+              <NextInput v-model="form.Surname" type="text" :disabled="insertReadonly.Surname" />
             </NextFormGroup>
             <NextFormGroup item-key="GroupId" :error="$v.form.GroupId">
               <NextDropdown v-model="group" lookup-key="EMPLOYEE_GROUP" @input="selectedType('GroupId', $event)" :disabled="insertReadonly.GroupId" />
