@@ -93,6 +93,7 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 v-model="Representative"
                 label="Description1"
                 searchable
@@ -112,13 +113,13 @@
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
               <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
-              <NextCheckBox v-model="form.IsManuelClosure" :disabled="true" type="number" toggle/>
+              <NextCheckBox v-model="form.IsManuelClosure" :disabled="insertReadonly.IsManuelClosure" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -153,11 +154,13 @@ export default {
         RouteId: null,
         IsBatcardTransaction: 0,
         SystemCurrencyRate: 1,
-        IsManuelClosure: 0,
+        IsManuelClosure: null,
         CardOwner: null
       },
       customerReminder: null,
-      customer: null,
+      customer: {
+        Remainder: null
+      },
       Bank: null,
       BankBranch: null,
       Currency: null,
@@ -187,7 +190,7 @@ export default {
       }
     },
     setReminder (customer) {
-      this.customerReminder = customer ? customer.Remainder : 0
+      this.customerReminder = customer ? customer.Remainder : customer.Remainder
     },
     selectBankBranches (value) {
       this.form.BankBranchId = null

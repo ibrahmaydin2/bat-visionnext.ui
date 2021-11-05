@@ -92,6 +92,7 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 v-model="representative"
                 label="Description1"
                 />
@@ -109,13 +110,13 @@
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
               <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
-              <NextCheckBox v-model="form.IsManuelClosure" :disabled="true" type="number" toggle/>
+              <NextCheckBox v-model="form.IsManuelClosure" :disabled="insertReadonly.IsManuelClosure" type="number" toggle/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -150,7 +151,7 @@ export default {
         RouteId: null,
         IsBatcardTransaction: 0,
         SystemCurrencyRate: 1,
-        IsManuelClosure: 0
+        IsManuelClosure: null
       },
       customerReminder: null,
       routeName1: 'Finance',
@@ -161,7 +162,9 @@ export default {
       routeLabel: null,
       cashCardTypeLabel: null,
       selectedCustomer: null,
-      customer: {},
+      customer: {
+        Remainder: null
+      },
       bank: {},
       bankBranches: [],
       bankBranch: {},

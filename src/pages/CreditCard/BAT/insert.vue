@@ -84,6 +84,7 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
                 v-model="Representative"
                 label="Description1"
                 />
@@ -101,7 +102,7 @@
               <NextInput v-model="form.CustomerId" type="number" :disabled="insertReadonly.CustomerId" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="Customer.CreditAccountRemainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
               <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
@@ -143,7 +144,9 @@ export default {
         IsManuelClosure: 0
       },
       customerReminder: null,
-      Customer: null,
+      Customer: {
+        CreditAccountRemainder: null
+      },
       Bank: null,
       Currency: null,
       Representative: null,
@@ -153,6 +156,7 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    this.setReminder()
   },
   methods: {
     save () {

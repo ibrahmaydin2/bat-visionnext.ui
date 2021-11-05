@@ -31,6 +31,7 @@
             <NextDropdown
               v-model="selectedRepresentative"
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
+              orConditionFields="Code,Description1,Name,Surname"
               @input="selectedSearchType('RepresentativeId', $event)"
               :disabled="insertReadonly.RepresentativeId" />
           </NextFormGroup>
@@ -138,7 +139,11 @@ export default {
         Description1: null,
         ToWarehouseId: null,
         ToStatusId: null,
-        StockAdjustmentItems: []
+        StockAdjustmentItems: [],
+        Canceled: 0,
+        IsPrinted: 0,
+        PrintCount: 0,
+        Printed: 0
       },
       routeName1: 'StockManagement',
       stockAdjustmentItems: {},

@@ -259,7 +259,14 @@ export default {
       }
       loading(true)
       let model = {
-        Description1: search
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            Name: search,
+            Surname: search
+          }
+        ]
       }
       this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'representatives', model).then(res => {
         loading(false)

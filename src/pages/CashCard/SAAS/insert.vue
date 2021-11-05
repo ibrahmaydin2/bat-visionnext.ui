@@ -87,7 +87,7 @@
                 v-model="Representative"
                 label="Description1"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
+                or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
                 :is-customer="true"
                 />
             </NextFormGroup>
@@ -113,7 +113,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="Customer.Remainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsManuelClosure" :error="$v.form.IsManuelClosure" md="3">
               <NextCheckBox v-model="form.IsManuelClosure" :disabled="insertReadonly.IsManuelClosure" type="number" toggle/>
@@ -184,7 +184,7 @@ export default {
         CurrencyCashTotal: null,
         DocumentCreationTypeId: 621,
         SystemCurrencyRate: 1,
-        IsManuelClosure: 1
+        IsManuelClosure: null
       },
       Currency: null,
       Representative: null,
@@ -193,7 +193,9 @@ export default {
       isMultiple: null,
       showMultiple: null,
       customerReminder: null,
-      Customer: null,
+      Customer: {
+        Remainder: null
+      },
       routeName1: 'Finance',
       routeName2: 'CashCard',
       cashCards: [],

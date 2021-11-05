@@ -74,7 +74,7 @@
                 v-model="representative"
                 label="Description1"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
+                or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
                 :is-customer="true"
                 />
             </NextFormGroup>
@@ -100,7 +100,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customerReminder" type="number" :disabled="true" />
+              <NextInput v-model="customer.CreditAccountRemainder" type="number" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -139,7 +139,9 @@ export default {
       representativeLabel: null,
       routeLabel: null,
       cashCardTypeLabel: null,
-      customer: {},
+      customer: {
+        CreditAccountRemainder: null
+      },
       currency: {},
       representative: {},
       route: {},
