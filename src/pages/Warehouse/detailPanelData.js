@@ -17,7 +17,7 @@ export const detailData = {
       parentProperty: 'RecordId',
       objectKey: 'PurchaseWarehouse',
       url: 'VisionNextWarehouse/api/Warehouse/SearchWithSelectedBranch?v=1',
-      request: JSON.stringify({andConditionModel: { BranchIds: ['val'], IsVehicle: 0, StatusId: 1 }}),
+      request: JSON.stringify({andConditionModel: { BranchIds: ['val'], IsVehicle: 0, StatusIds: [1] }}),
       label: i18n.t('insert.warehouse.PurchaseWarehouseId'),
       visible: true,
       disabled: (form) => {
@@ -32,7 +32,7 @@ export const detailData = {
       parentProperty: 'RecordId',
       objectKey: 'ReturnWarehouse',
       url: 'VisionNextWarehouse/api/Warehouse/SearchWithSelectedBranch?v=2',
-      request: JSON.stringify({andConditionModel: { BranchIds: ['val'], IsVehicle: 0, StatusId: 1 }}),
+      request: JSON.stringify({andConditionModel: { BranchIds: ['val'], IsVehicle: 0, StatusIds: [1] }}),
       label: i18n.t('insert.warehouse.ReturnWarehouseId'),
       visible: true,
       disabled: (form) => {
