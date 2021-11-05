@@ -28,6 +28,8 @@
               @input="selectedSearchType('DefaultDriverEmployeeId', $event)"
               orConditionFields="Code,Description1,CommercialTitle,Name,Surname"
               :dynamic-and-condition="{ StatusId: 1 }"
+              :custom-option="true"
+              :is-employee="true"
               :disabled="insertReadonly.DefaultDriverEmployeeId" />
           </NextFormGroup>
           <NextFormGroup item-key="VehiclePlateNumber" :error="$v.form.VehiclePlateNumber">
