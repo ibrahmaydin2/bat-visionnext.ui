@@ -158,6 +158,9 @@ export default {
         })
         this.tabValidation()
       } else {
+        if (this.form.StatusId !== 1) {
+          this.form.StatusId = 2
+        }
         this.updateData()
       }
     },
