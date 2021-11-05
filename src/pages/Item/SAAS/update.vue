@@ -115,8 +115,8 @@
             <NextFormGroup item-key="IsRMAOff" :error="$v.form.IsRMAOff">
                 <NextCheckBox v-model="form.IsRMAOff" type="number" toggle :disabled="insertReadonly.IsRMAOff"/>
             </NextFormGroup>
-            <NextFormGroup item-key="IsSPGiftItem" :error="$v.form.IsSPGiftItem">
-                <NextCheckBox v-model="form.IsSPGiftItem" type="number" toggle :disabled="insertReadonly.IsSPGiftItem"/>
+            <NextFormGroup item-key="IsSpGiftItem" :error="$v.form.IsSpGiftItem">
+                <NextCheckBox v-model="form.IsSpGiftItem" type="number" toggle :disabled="insertReadonly.IsSpGiftItem"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -132,7 +132,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdown v-model="UnitSet" :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
+              <NextDropdown v-model="UnitSet" :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedUnitSet"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
               <NextDropdown v-model="DiscountGroup1" :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
@@ -182,10 +182,10 @@
           <NextDetailPanel v-model="form.AdditionalTaxes" :items="itemVatsItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.itemDeposits')">
-          <NextDetailPanel v-model="form.ItemDeposits" :items="itemDepositsItem"></NextDetailPanel>
+          <NextDetailPanel v-model="form.ItemDeposits" :items="getItemDepositItems()"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.item.ItemOrderQuotas')">
-          <NextDetailPanel v-model="form.ItemOrderQuotas" :items="itemOrderQuotasItemsUpdate"></NextDetailPanel>
+        <b-tab lazy :title="$t('insert.item.ItemOrderQuotas')">
+          <NextDetailPanel v-model="form.ItemOrderQuotas" :items="getItemUnitSetItems()"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
@@ -340,8 +340,7 @@ export default {
       itemBarcodeItems: detailData.itemBarcodeItems,
       sapPriceFields: detailData.sapPriceFields,
       itemVatsItems: detailData.itemVatsItems,
-      itemDepositsItem: detailData.itemDepositsItem,
-      itemOrderQuotasItemsUpdate: detailData.itemOrderQuotasItemsUpdate
+      UnitsData: []
     }
   },
   mounted () {
@@ -361,6 +360,7 @@ export default {
           }
         }
       }
+      this.selectedUnitSet(this.UnitSet)
     },
     save () {
       this.$v.form.$touch()
@@ -374,6 +374,153 @@ export default {
       } else {
         this.updateData()
       }
+    },
+    selectedUnitSet (value) {
+      if (value) {
+        this.form.UnitSetId = value.RecordId
+
+        let model = {
+          andConditionModel: {
+            UnitSetIds: [value.RecordId]
+          }
+        }
+        this.$api.postByUrl(model, 'VisionNextUnit/api/Unit/Search').then((response) => {
+          if (response && response.ListModel && response.ListModel.BaseModels) {
+            this.UnitsData = response.ListModel.BaseModels
+          }
+        })
+      } else {
+        this.form.UnitSetId = null
+        this.UnitsData = []
+      }
+    },
+    getItemUnitSetItems () {
+      return [
+        {
+          type: 'Date',
+          modelProperty: 'BeginDate',
+          objectKey: 'BeginDate',
+          label: this.$t('insert.item.BeginDate'),
+          required: false,
+          visible: true,
+          isUnique: false,
+          id: 1
+        },
+        {
+          type: 'Date',
+          modelProperty: 'EndDate',
+          objectKey: 'EndDate',
+          label: this.$t('insert.item.EndDate'),
+          required: false,
+          visible: true,
+          isUnique: false,
+          id: 2
+        },
+        {
+          type: 'Dropdown',
+          modelProperty: 'QuotaUnitId',
+          objectKey: 'QuotaUnit',
+          source: this.UnitsData.map(u => {
+            return {
+              RecordId: u.UnitId,
+              Description1: u.UnitLookupValue ? u.UnitLookupValue.Label : ''
+            }
+          }),
+          label: this.$t('insert.item.QuotaUnitId'),
+          visible: true,
+          required: false,
+          isUnique: false,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'quotaQuantity',
+          objectKey: 'quotaQuantity',
+          label: this.$t('insert.item.Quantity'),
+          required: false,
+          visible: true,
+          isUnique: false,
+          id: 4
+        },
+        {
+          type: 'Dropdown',
+          modelProperty: 'quotaBranchId',
+          objectKey: 'quotaBranch',
+          url: 'VisionNextBranch/api/Branch/Search',
+          label: this.$t('insert.item.quotaBranchId'),
+          visible: true,
+          required: false,
+          isUnique: false,
+          id: 5
+        },
+        {
+          type: 'Autocomplete',
+          modelProperty: 'quotaRegionId',
+          objectKey: 'quotaRegionId',
+          url: 'VisionNextCommonApi/api/Region/AutoCompleteSearch',
+          label: this.$t('insert.item.quotaRegionId'),
+          visible: true,
+          required: false,
+          isUnique: false,
+          id: 6
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'usedQuantity',
+          objectKey: 'usedQuantity',
+          label: this.$t('insert.item.usedQuantity'),
+          required: false,
+          disabled: true,
+          visible: true,
+          isUnique: false,
+          id: 7
+        }
+      ]
+    },
+    getItemDepositItems () {
+      return [
+        {
+          type: 'Dropdown',
+          modelProperty: 'UnitId',
+          objectKey: 'Unit',
+          source: this.UnitsData.map(u => {
+            return {
+              RecordId: u.UnitId,
+              Description1: u.UnitLookupValue ? u.UnitLookupValue.Label : ''
+            }
+          }),
+          label: this.$t('insert.item.UnitId'),
+          visible: true,
+          required: false,
+          isUnique: false,
+          id: 1
+        },
+        {
+          type: 'Autocomplete',
+          modelProperty: 'DepositId',
+          objectKey: 'Deposit',
+          labelProperty: 'Label',
+          url: 'VisionNextItem/api/Item/GetDepositForItem',
+          label: this.$t('insert.item.DepositId'),
+          visible: true,
+          required: false,
+          isUnique: false,
+          id: 2
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'Quantity',
+          objectKey: 'Quantity',
+          label: this.$t('insert.item.Quantity'),
+          required: false,
+          visible: true,
+          isUnique: false,
+          id: 3
+        }
+      ]
     }
   }
 }

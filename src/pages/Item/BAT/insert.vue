@@ -92,19 +92,19 @@
               <NextInput v-model="form.SortOrder" type="text" :disabled="insertReadonly.SortOrder" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsOrderAllowed" v-model="form.IsOrderAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsOrderAllowed" v-model="IsOrderAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsSaleAllowed" :error="$v.form.IsSaleAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsSaleAllowed" v-model="form.IsSaleAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsSaleAllowed" v-model="IsSaleAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsBarterAllowed" :error="$v.form.IsBarterAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsBarterAllowed" v-model="form.IsBarterAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsBarterAllowed" v-model="IsBarterAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="UseSalesAnalysis" :error="$v.form.UseSalesAnalysis">
-              <NextCheckBox :disabled="insertReadonly.UseSalesAnalysis" v-model="form.UseSalesAnalysis" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.UseSalesAnalysis" v-model="UseSalesAnalysis" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsLaunchItem" :error="$v.form.IsLaunchItem">
-              <NextCheckBox :disabled="insertReadonly.IsLaunchItem" v-model="form.IsLaunchItem" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsLaunchItem" v-model="IsLaunchItem" type="number" toggle />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -266,7 +266,14 @@ export default {
       },
       itemBomItems: detailData.itemBomItems,
       itemCustomerItems: detailData.itemCustomerItems,
-      itemBarcodeItems: detailData.itemBarcodeItems
+      itemBarcodeItems: detailData.itemBarcodeItems,
+      IsOrderAllowed: null,
+      IsSaleAllowed: null,
+      IsBarterAllowed: null,
+      UseSalesAnalysis: null,
+      IsLaunchItem: null,
+      IsRMAOff: null,
+      IsSpGiftItem: null
     }
   },
   mounted () {

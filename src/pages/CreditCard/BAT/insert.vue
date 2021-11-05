@@ -102,7 +102,7 @@
               <NextInput v-model="form.CustomerId" type="number" :disabled="insertReadonly.CustomerId" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="Customer.Remainder" type="number" :disabled="true" />
+              <NextInput v-model="Customer.CreditAccountRemainder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
               <NextInput v-model="form.CardNumber" type="number" :disabled="insertReadonly.CardNumber" />
@@ -145,7 +145,7 @@ export default {
       },
       customerReminder: null,
       Customer: {
-        Remainder: null
+        CreditAccountRemainder: null
       },
       Bank: null,
       Currency: null,
