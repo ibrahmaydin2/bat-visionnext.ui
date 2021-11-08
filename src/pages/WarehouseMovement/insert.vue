@@ -31,6 +31,7 @@
             <NextDropdown
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
               orConditionFields="Code,Description1,Name,Surname"
+              :dynamic-and-condition="{ StatusIds: [1] }"
               @input="selectedSearchType('RepresentativeId', $event)"
               :disabled="isItemAdded || insertReadonly.RepresentativeId" />
           </NextFormGroup>
@@ -39,6 +40,7 @@
               v-model="movementType"
               url="VisionNextWarehouse/api/WarehouseMovementType/Search"
               :filter="item => filteredMovementTypes.includes(item.Code)"
+              :dynamic-and-condition="{ StatusIds: [1] }"
               @input="selectedSearchType('MovementTypeId', $event); selectStockStatus($event);"
               :disabled="isItemAdded || insertReadonly.MovementTypeId" />
           </NextFormGroup>
@@ -58,14 +60,15 @@
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="3" lg="3">
               <NextDropdown
                 v-model="route"
-                url="VisionNextRoute/api/Route/Search"
+                url="VisionNextRoute/api/Route/Search" searchable
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectRoute"
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.RouteId" />
             </NextFormGroup>
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="3" lg="3">
               <NextDropdown
                 v-model="fromWarehouse"
-                :dynamic-and-condition="getFromWarehouseAndCondition()"
+                :dynamic-and-condition="{ StatusIds: [1] } || getFromWarehouseAndCondition()"
                 @input="selectFromWarehouse($event)"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
                 :disabled="(movementType && movementType.Code === '04') || isItemAdded || insertReadonly.FromWarehouseId" />
@@ -74,6 +77,7 @@
               <NextDropdown
                 v-model="fromStatus"
                 @input="selectFromStatus($event)"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=1"
                 :disabled="(movementType && movementType.Code === '04') || isItemAdded || disabledStatus || insertReadonly.FromStatusId"
                 v-on:all-source="setStockStatus" />
@@ -83,21 +87,24 @@
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="3" lg="3">
               <NextDropdown
                 v-model="selectedVehicle"
+                orConditionFields="Code,VehiclePlateNumber"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/Search"
+                url="VisionNextVehicle/api/Vehicle/Search" searchable
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.VehicleId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" md="3" lg="3">
               <NextDropdown
                 v-model="toWarehouse"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :dynamic-and-condition="getToWarehouseAndCondition()"
+                :dynamic-and-condition="{StatusIds: [1] } || getToWarehouseAndCondition()"
                 @input="selectToWarehouse($event)"
                 :disabled="(movementType && movementType.Code === '05') || isItemAdded || insertReadonly.ToWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
               <NextDropdown
                 v-model="toStatus"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectedSearchType('ToStatusId', $event)"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=2"
                 :disabled="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')) || isItemAdded || disabledStatus" />
@@ -259,9 +266,11 @@ export default {
             Description1: search,
             Code: search
           }
-        ]
+        ],
+        andConditionModel: {
+          StatusIds: [1], CardTypeIds: [1, 2, 8]
+        }
       }
-
       return this.$api.postByUrl(model, 'VisionNextItem/api/Item/AutoCompleteSearch').then((response) => {
         if (response && response.ListModel) {
           return response.ListModel.BaseModels

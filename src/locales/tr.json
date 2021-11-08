@@ -501,6 +501,7 @@
     "chooseDate": "Tarih Seçiniz",
     "sameLocationField": "Aynı lokasyon tekrar eklenemez.",
     "checkQuantity": "Girilen değer 0'dan büyük olmalıdır.",
+    "checkQuantityCount": "Sipariş miktarından fazla dönüştürülemez",
     "rejectModal": "Reddet",
     "approveModal": "Kabul Et",
     "edit": "Düzenle",

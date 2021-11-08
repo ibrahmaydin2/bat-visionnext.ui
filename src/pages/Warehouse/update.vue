@@ -46,6 +46,7 @@
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
                 :customOption="true"
                 :is-vehicle="true"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 orConditionFields="Code,VehiclePlateNumber,Description1"
                 label="VehiclePlateNumber" :searchable="true"
                 @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle"/>

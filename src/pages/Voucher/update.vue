@@ -25,7 +25,7 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextDropdown v-model="status" url="VisionNextFinance/api/CsStatus/Search" @input="selectedSearchType('StatusId', $event)" :disabled="insertReadonly.StatusId"/>
+            <NextDropdown v-model="status" url="VisionNextFinance/api/CsStatus/Search" @input="selectedSearchType('StatusId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
           <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
             <NextDropdown
@@ -35,6 +35,7 @@
               :custom-option="true"
               :is-customer="true"
               or-condition-fields="Code,Description1,CommercialTitle"
+              :dynamic-and-condition="{ StatusIds: [1] }"
               @input="selectedSearchType('CustomerId', $event)"
               :disabled="insertReadonly.CustomerId"/>
           </NextFormGroup>
@@ -69,6 +70,7 @@
                 :searchable="true"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :custom-option="true"
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"/>
@@ -78,6 +80,7 @@
                 v-model="route"
                 :searchable="true"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :custom-option="true"
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"/>

@@ -45,13 +45,13 @@
               <NextDropdown :disabled="insertReadonly.EmployeeId" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
              <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
+              <NextDropdown v-model="toLocation" :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
               <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
-              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" @input="selectedSearchType('FromLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
+              <NextDropdown v-model="fromLocation" :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" @input="selectedSearchType('FromLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
               <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)"/>

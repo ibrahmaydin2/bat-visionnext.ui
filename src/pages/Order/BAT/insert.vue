@@ -100,12 +100,13 @@
                     :disabled="insertReadonly.StateId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
+              <NextDropdown :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <NextDropdown
                 @input="selectedSearchType('CurrencyId', $event); setDisabledItems()"
                 url="VisionNextSystem/api/SysCurrency/Search"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
@@ -113,13 +114,14 @@
                 searchable
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :disabled="insertReadonly.RouteId"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
-                searchable
                 @input="selectedSearchType('WarehouseId', $event); setDisabledItems()"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"
                 :disabled="insertReadonly.WarehouseId"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
@@ -127,6 +129,7 @@
                 searchable
                 @input="selectedSearchType('VehicleId', $event)"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :disabled="insertReadonly.VehicleId" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
@@ -193,7 +196,7 @@
                 :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
-                :validations="multipleItemSearch.multipleValidations" />
+                :validations="multipleItemSearch.quantityValidation" />
             </b-col>
           </b-row>
           <b-row>
@@ -463,7 +466,7 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          StatusIds: [1], CardTypeIds: [1, 2, 8]
         }
       }
 
