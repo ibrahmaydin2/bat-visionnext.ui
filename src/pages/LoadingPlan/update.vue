@@ -31,6 +31,7 @@
              <NextDropdown
                   v-model="selectedRoute"
                   url="VisionNextRoute/api/Route/Search"
+                  searchable
                   @input="selectedSearchType('RouteId', $event)"
                   :dynamic-and-condition="{RouteTypeIds: [1], StatusIds: [1]}" />
           </NextFormGroup>
@@ -50,6 +51,7 @@
                 url="VisionNextItem/api/Item/AutoCompleteSearch"
                 searchable
                 or-condition-fields="Code,Description1"
+                :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }"
                 custom-option/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
