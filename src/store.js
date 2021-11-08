@@ -333,6 +333,14 @@ export const store = new Vuex.Store({
             return true
           }
         }
+      ],
+      quantityValidation: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
       ]
     }
   },

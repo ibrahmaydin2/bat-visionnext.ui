@@ -196,7 +196,7 @@
                 :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
-                :validations="multipleItemSearch.multipleValidations" />
+                :validations="multipleItemSearch.quantityValidation" />
             </b-col>
           </b-row>
           <b-row>

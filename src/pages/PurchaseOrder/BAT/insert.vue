@@ -162,6 +162,7 @@
                   :disabled-button="!form.WarehouseId || !form.PriceListId"
                   :converted-values="multipleItemSearch.convertedValues"
                   :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                  :validations="multipleItemSearch.quantityValidation"
                 />
             </b-col>
           </b-row>
