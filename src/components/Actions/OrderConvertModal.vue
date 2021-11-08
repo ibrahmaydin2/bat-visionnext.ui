@@ -204,6 +204,7 @@ export default {
             this.invoiceType = this.invoiceTypes[0]
             this.selectedType('InvoiceKindId', this.invoiceType)
           }
+          this.warehouse = response.Warehouse ? response.Warehouse.Label : '-'
           this.getConvertData = response
         } else {
           if (response.Message) {
@@ -276,6 +277,15 @@ export default {
       })
       if (!checkQuantity) {
         this.$toasted.show(this.$t('insert.checkQuantity'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+
+      if (this.orderLines.some(o => o.ConversionQuantity > o.Quantity)) {
+        this.$toasted.show(this.$t('insert.checkQuantityCount'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
