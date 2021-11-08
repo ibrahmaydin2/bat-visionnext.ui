@@ -27,7 +27,7 @@
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
               @input="selectedSearchType('DefaultDriverEmployeeId', $event)"
               orConditionFields="Code,Description1,CommercialTitle,Name,Surname"
-              :dynamic-and-condition="{ StatusId: 1 }"
+              :dynamic-and-condition="{ StatusIds: [1] }"
               :custom-option="true"
               :is-employee="true"
               :disabled="insertReadonly.DefaultDriverEmployeeId" />

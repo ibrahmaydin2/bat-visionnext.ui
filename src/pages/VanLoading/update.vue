@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId">
-            <NextDropdown v-model="warehouse" :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)" searchable/>
+            <NextDropdown v-model="warehouse" :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
           </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <NextDropdown v-model="route" :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" searchable/>
+              <NextDropdown v-model="route" :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
             </NextFormGroup>
           <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
-            <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"  @input="selectedSearchType('IsDone', $event)"/>
+            <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"   @input="selectedSearchType('IsDone', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
             <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
             <NextFormGroup :title="$t('insert.vanLoading.items')" :error="$v.vanLoadingItem.Item">
-              <NextDropdown v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" url="VisionNextItem/api/Item/AutoCompleteSearch" @input="selectedItem" label="Description1" searchable/>
+              <NextDropdown v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" url="VisionNextItem/api/Item/AutoCompleteSearch" @input="selectedItem" label="Description1" :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }" searchable/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.vanLoading.FromWhStockQuantity')">
               <NextInput v-model="vanLoadingItem.FromWhStockQuantity" type="text" :disabled="true" />

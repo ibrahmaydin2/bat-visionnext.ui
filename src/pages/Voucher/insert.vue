@@ -25,7 +25,7 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextDropdown url="VisionNextFinance/api/CsStatus/Search" @input="selectedSearchType('StatusId', $event)" :disabled="insertReadonly.StatusId"/>
+            <NextDropdown url="VisionNextFinance/api/CsStatus/Search" @input="selectedSearchType('StatusId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
           <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
             <NextDropdown
@@ -34,6 +34,7 @@
               :custom-option="true"
               :is-customer="true"
               or-condition-fields="Code,Description1,CommercialTitle"
+              :dynamic-and-condition="{ StatusIds: [1] }"
               @input="selectedSearchType('CustomerId', $event)"
               :disabled="insertReadonly.CustomerId"/>
           </NextFormGroup>
@@ -57,7 +58,7 @@
               <NextInput v-model="form.SerialNumber" type="text" :disabled="insertReadonly.SerialNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="3" lg="3">
-             <NextDropdown url="VisionNextSystem/api/SysCurrency/Search" @input="selectedSearchType('CurrencyId', $event)" :disabled="insertReadonly.CurrencyId"/>
+             <NextDropdown url="VisionNextSystem/api/SysCurrency/Search" @input="selectedSearchType('CurrencyId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CsTotal" :error="$v.form.CsTotal" md="3" lg="3">
               <NextInput v-model="form.CsTotal" type="number" :disabled="insertReadonly.CsTotal" />
@@ -68,6 +69,7 @@
                 :searchable="true"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :custom-option="true"
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"/>
@@ -76,6 +78,7 @@
               <NextDropdown
                 :searchable="true"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :custom-option="true"
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"/>
