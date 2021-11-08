@@ -81,7 +81,7 @@
             <NextDropdown v-model="employeeType" lookup-key="EMPLOYEE_TYPE" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
           </NextFormGroup>
           <NextFormGroup item-key="UserGroupId" :error="$v.form.UserGroupId">
-            <NextDropdown v-model="userGroup" url="VisionNextSystem/api/SysUserGroup/Search" @input="selectedSearchType('UserGroupId', $event)" label="Description1" :disabled="insertReadonly.UserGroupId" />
+            <NextDropdown v-model="userGroup" url="VisionNextSystem/api/SysUserGroup/Search" @input="selectedSearchType('UserGroupId', $event)" label="Description1" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.UserGroupId" />
           </NextFormGroup>
         </b-row>
       </b-tab>

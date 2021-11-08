@@ -5,6 +5,7 @@ export const detailData = {
       type: 'Autocomplete',
       modelProperty: 'EmployeeId',
       orConditionFields: 'Code,Description1,Name,Surname',
+      dynamicAndCondition: { StatusIds: [1] },
       objectKey: 'Employee',
       url: 'VisionNextEmployee/api/Employee/AutoCompleteSearch',
       label: i18n.t('insert.employee.TeamPersonalName'),
@@ -32,6 +33,7 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'BankBranchId',
+      dynamicAndCondition: { StatusIds: [1] },
       objectKey: 'BankBranch',
       url: 'VisionNextBank/api/BankBranch/Search',
       label: i18n.t('insert.employee.bankBranch'),

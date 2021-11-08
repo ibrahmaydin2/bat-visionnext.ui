@@ -7,6 +7,7 @@ export const detailData = {
       objectKey: 'Item',
       customOption: true,
       orConditionFields: 'Code,Description1',
+      dynamicAndCondition: { StatusIds: [1] },
       url: 'VisionNextItem/api/Item/Search',
       label: i18n.t('insert.sao.item'),
       required: true,
@@ -29,7 +30,7 @@ export const detailData = {
       objectKey: 'DiscountKind',
       url: 'VisionNextDiscount/api/DiscountKind/Search',
       label: i18n.t('insert.sao.discountKind'),
-      dynamicAndCondition: { RecordIds: [1, 2] },
+      dynamicAndCondition: { RecordIds: [1, 2], StatusIds: [1] },
       visible: true,
       required: true,
       id: 3
