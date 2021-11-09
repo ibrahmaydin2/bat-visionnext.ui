@@ -109,6 +109,13 @@
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
+                <b-pagination
+                  id="searched-pagination"
+                  :total-rows="allBranchs ? allBranchs.length : 0"
+                  v-model="searchedCurrentPage"
+                  :per-page="perPage"
+                  aria-controls="searched-customer-list"
+                ></b-pagination>
               </b-card>
             </b-col>
           </b-row>
@@ -225,7 +232,9 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
-      customerLabelItems: detailData.customerLabelItems
+      customerLabelItems: detailData.customerLabelItems,
+      searchedCurrentPage: 1,
+      perPage: 10
     }
   },
   mounted () {

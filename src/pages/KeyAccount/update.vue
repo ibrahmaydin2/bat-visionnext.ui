@@ -170,7 +170,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-table-simple bordered small>
+            <b-table-simple id="searched-customer-list" :current-page="currentPage" :per-page="0" bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.BranchCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.BranchName')}}</span></b-th>
@@ -188,6 +188,12 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+            <b-pagination
+              :total-rows="totalRowCount"
+              v-model="currentPage"
+              :per-page="10"
+              aria-controls="searched-customer-list"
+            ></b-pagination>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
@@ -448,7 +454,11 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
-      customerLabelItems: detailData.customerLabelItems
+      customerLabelItems: detailData.customerLabelItems,
+      currentPage: 1,
+      totalRowCount: 0,
+      pagingRequest: {},
+      allList: {}
     }
   },
   mounted () {
@@ -571,15 +581,45 @@ export default {
         loading(false)
       })
     },
-    getBranchs (customerId) {
-      let request = {
-        andConditionModel: {
-          UpperCustomerIds: [customerId]
+    getBranchs (customerId, isPaging) {
+      let request = null
+      if (isPaging) {
+        if (this.$v.form.$error) {
+          this.$toasted.show(this.$t('insert.requiredFields'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
         }
+        request = {
+          andConditionModel: {
+            UpperCustomerIds: [customerId]
+          }
+        }
+        this.isLoading = true
+        request.page = 1
+        this.currentPage = 1
+        this.pagingRequest = request
+        this.allList = {}
+      } else {
+        request = {
+          andConditionModel: {
+            UpperCustomerIds: [customerId]
+          }
+        }
+        request = this.pagingRequest
+        request.page = this.currentPage
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search').then((response) => {
+      if (this.allList[this.currentPage]) {
+        this.branchs = this.allList[this.currentPage]
+        return
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 10).then((response) => {
         if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.branchs
         }
       })
     },
@@ -712,6 +752,18 @@ export default {
           }
         })
       }
+    },
+    value: {
+      handler (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          this.values = newValue
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    currentPage (values) {
+      this.getBranchs(values)
     }
   }
 }
