@@ -37,7 +37,6 @@ export const detailData = {
       label: i18n.t('insert.bcp.InvoiceQuantity'),
       required: true,
       visible: true,
-      isUnique: true,
       id: 3
     },
     {
@@ -48,7 +47,6 @@ export const detailData = {
       label: i18n.t('insert.bcp.MinPurchaseQuantity'),
       required: true,
       visible: true,
-      isUnique: true,
       id: 4
     }
   ],

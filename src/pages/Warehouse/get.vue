@@ -35,8 +35,8 @@
               <div v-html="getFormatDataByType(rowData.FinanceCode, 'text', 'get.Warehouse.FinanceCode')"></div>
               <div v-html="getFormatDataByType(rowData.FinanceCode2, 'text', 'get.Warehouse.FinanceCode2')"></div>
               <div v-html="getFormatDataByType(rowData.AddressDetail, 'text', 'get.Warehouse.Address')"></div>
-              <div v-html="getFormatDataByType(city.Label, 'text', 'get.Warehouse.CityId')"></div>
-              <div v-html="getFormatDataByType(district.Label, 'text', 'get.Warehouse.DistrictId')"></div>
+              <div v-html="getFormatDataByType(rowData.City, 'object', 'get.Warehouse.CityId')"></div>
+              <div v-html="getFormatDataByType(rowData.District, 'object', 'get.Warehouse.DistrictId')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -61,18 +61,14 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      city: {},
-      district: {},
       locationItems: detailData.locationItems
     }
   },
   mounted () {
     this.getData()
-    let allLookups = 'CITY,DISTRICT'
-    this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
   },
   computed: {
-    ...mapState(['rowData', 'lookup'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
@@ -80,19 +76,6 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextWarehouse/api/Warehouse', record: this.$route.params.url})
-    }
-  },
-  watch: {
-    lookup: {
-      handler (val) {
-        if (val.CITY && this.rowData.CityId) {
-          this.city = val.CITY.find(c => c.DecimalValue === this.rowData.CityId)
-        }
-        if (val.DISTRICT && this.rowData.DistrictId) {
-          this.district = val.DISTRICT.find(c => c.DecimalValue === this.rowData.DistrictId)
-        }
-      },
-      deep: true
     }
   }
 }
