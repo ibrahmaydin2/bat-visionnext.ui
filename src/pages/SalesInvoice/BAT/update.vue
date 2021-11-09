@@ -113,10 +113,10 @@
               <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable :disabled="insertReadonly.RepresentativeId"/>
+              <NextDropdown v-model="selectedRepresentative" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable :disabled="insertReadonly.RepresentativeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
-              <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable :disabled="insertReadonly.DeliveryRepresentativeId" />
+              <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable :disabled="insertReadonly.DeliveryRepresentativeId" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
               <NextDropdown
@@ -126,7 +126,7 @@
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <NextDropdown v-model="selectedRoute" @input="selectedSearchType('RouteId', $event)" url="VisionNextRoute/api/Route/AutoCompleteSearch" searchable :disabled="insertReadonly.RouteId" />
+              <NextDropdown v-model="selectedRoute" @input="selectedSearchType('RouteId', $event)" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable :disabled="insertReadonly.RouteId" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
@@ -134,10 +134,10 @@
                 @input="selectedSearchType('WarehouseId', $event)"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
                 :disabled="insertReadonly.WarehouseId"
-                :dynamic-and-condition="{ StatusIds: [1] }"/>
+                :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :disabled="insertReadonly.VehicleId" searchable />
+              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.VehicleId" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <NextDropdown
@@ -395,7 +395,7 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          StatusIds: [1], CardTypeIds: [1, 2, 8]
         }
       }
 

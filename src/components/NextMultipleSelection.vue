@@ -210,7 +210,8 @@ export default {
       totalRowCount: 0,
       pagingRequest: {},
       allList: {},
-      tableBusy: false
+      tableBusy: false,
+      pageSelectedList: []
     }
   },
   methods: {
@@ -307,6 +308,13 @@ export default {
 
       if (this.allList[this.currentPage]) {
         this.list = this.allList[this.currentPage]
+        if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
+          setTimeout(() => {
+            for (let index = 0; index < this.pageSelectedList.length; index++) {
+              this.$refs[`multipleGrid${this.id}`].selectRow(index)
+            }
+          }, 100)
+        }
         return
       }
 
@@ -319,7 +327,7 @@ export default {
 
         if (response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
-          this.list = response.ListModel.BaseModels.map(item => {
+          let list = response.ListModel.BaseModels.map(item => {
             this.hiddenValues.forEach(h => {
               if (h.defaultValue) {
                 item[h.targetProperty] = h.defaultValue
@@ -330,6 +338,15 @@ export default {
 
             return item
           })
+          if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
+            list = [...this.pageSelectedList, ...list]
+            setTimeout(() => {
+              for (let index = 0; index < this.pageSelectedList.length; index++) {
+                this.$refs[`multipleGrid${this.id}`].selectRow(index)
+              }
+            }, 100)
+          }
+          this.list = list
           this.allList[this.currentPage] = this.list
         }
       })
@@ -337,6 +354,8 @@ export default {
     hide () {
       this.list = []
       this.form = {}
+      this.currentPage = 1
+      this.totalRowCount = this.value.length
       this.$v.form.$reset()
     },
     showModal () {
@@ -344,6 +363,7 @@ export default {
       this.$bvModal.show(`modal${this.id}`)
       setTimeout(() => {
         this.list = this.value
+        this.pageSelectedList = this.value
         setTimeout(() => {
           this.$refs[`multipleGrid${this.id}`].selectAllRows()
         }, 10)
