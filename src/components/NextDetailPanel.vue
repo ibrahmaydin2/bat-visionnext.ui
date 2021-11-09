@@ -292,6 +292,9 @@ export default {
             let property = properties[0]
             if (property.labelProperty) {
               this.form[key] = this.model[item][properties[0].labelProperty]
+              if (this.form[properties[0].objectKey]) {
+                this.form[properties[0].objectKey] = this.model[item][properties[0].labelProperty]
+              }
             } else {
               this.form[key] = this.model[item].Description1 ? this.model[item].Description1 : this.model[item].Label
             }
