@@ -93,7 +93,7 @@
               <b-card class="m-3 asc__showPage-card">
                 <b-row>
                   <NextFormGroup :title="$t('insert.customer.Branchs')">
-                    <NextInput v-model="searchValue" @input="getBranchs(1)" type="text" ></NextInput>
+                    <NextInput v-model="searchValue" type="text" ></NextInput>
                   </NextFormGroup>
                 </b-row>
                 <b-table-simple :current-page="currentPage" :per-page="0" bordered small>
@@ -117,7 +117,7 @@
                 <b-pagination
                   :total-rows="totalRowCount"
                   v-model="currentPage"
-                  :per-page="10"
+                  :per-page="20"
                   aria-controls="searched-customer-list"
                 ></b-pagination>
               </b-card>
@@ -287,6 +287,7 @@ export default {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.branchs
         }
       })
     },
@@ -324,7 +325,7 @@ export default {
       this.getBranchs()
     },
     searchValue () {
-      this.getBranchs()
+      this.getBranchs(1)
     }
   }
 }
