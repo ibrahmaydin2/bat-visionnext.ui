@@ -339,6 +339,7 @@ export default {
             return item
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
+            list = list.filter(l => !this.pageSelectedList.some(p => p.ItemId === l.ItemId))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
               for (let index = 0; index < this.pageSelectedList.length; index++) {
@@ -387,34 +388,32 @@ export default {
         })
 
         this.list = list
+      }
 
-        setTimeout(() => {
-          let filteredList = this.listItems ? this.listItems.filter(l => l.Enabled) : []
-          let validCount = 0
-
-          filteredList.forEach(item => {
-            let itemValue = this.list[data.index][item.EntityProperty]
-            if (itemValue && itemValue !== '' && itemValue !== '0') {
-              validCount++
-            }
-          })
-
-          if (validCount === filteredList.length) {
-            this.$refs[`multipleGrid${this.id}`].selectRow(data.index)
-          } else {
-            this.$refs[`multipleGrid${this.id}`].unselectRow(data.index)
+      setTimeout(() => {
+        let filteredList = this.listItems ? this.listItems.filter(l => l.Enabled) : []
+        let validCount = 0
+        filteredList.forEach(item => {
+          let itemValue = this.list[data.index][item.EntityProperty]
+          if (itemValue && itemValue !== '' && itemValue !== '0') {
+            validCount++
           }
-        }, 10)
-
-        if (this.validations.length > 0) {
-          this.validations.forEach(c => {
-            if (c.mainProperty === property) {
-              let result = c.validation(value, list[index])
-              list[index].class = result ? '' : 'error'
-              this.$forceUpdate()
-            }
-          })
+        })
+        if (validCount === filteredList.length) {
+          this.$refs[`multipleGrid${this.id}`].selectRow(data.index)
+        } else {
+          this.$refs[`multipleGrid${this.id}`].unselectRow(data.index)
         }
+      }, 10)
+
+      if (this.validations.length > 0) {
+        this.validations.forEach(c => {
+          if (c.mainProperty === property) {
+            let result = c.validation(value, this.list[index])
+            this.list[index].class = result ? '' : 'error'
+            this.$forceUpdate()
+          }
+        })
       }
     },
     rowSelected (data) {
@@ -461,8 +460,11 @@ export default {
     columnClick (column) {
       let clickableColumn = this.clickableColumns.find(f => f.mainProperty === column)
       let listItem = this.listItems.find(l => l.EntityProperty === clickableColumn.targetProperty)
-      this.list = this.list.map(l => {
+      this.list = this.list.map((l, index) => {
         let value = l[clickableColumn.mainProperty]
+        if (value || value === 0) {
+          this.$refs[`multipleGrid${this.id}`].selectRow(index)
+        }
         l[clickableColumn.targetProperty] = !value && listItem.ColumnType === 'Decimal' ? 0 : value
         return l
       })
