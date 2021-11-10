@@ -322,6 +322,9 @@ export default {
     },
     currentPage () {
       this.getBranchs()
+    },
+    searchValue () {
+      this.getBranchs()
     }
   }
 }
