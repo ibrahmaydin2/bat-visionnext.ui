@@ -138,7 +138,8 @@
                 <NextMultipleSelection
                   name="WarehouseMovementMultipleItem"
                   v-model="form.WarehouseMovementItems"
-                  :disabled-button="!form.MovementTypeId"
+                  :disabled-button="disabledMultipleSelection"
+                  :hidden-values="multipleHiddenValues"
                   :dynamic-and-condition="{
                     FromWarehouseIds: form.FromWarehouseId ? [form.FromWarehouseId] : null,
                     ToWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
@@ -230,7 +231,17 @@ export default {
       isItemAdded: false,
       disabledStatus: false,
       stockStatus: [],
-      selectedIndex: null
+      selectedIndex: null,
+      multipleHiddenValues: [
+        {
+          mainProperty: 'FromQuantity',
+          targetProperty: 'FromWhStockQuantity'
+        },
+        {
+          mainProperty: 'ToQuantity',
+          targetProperty: 'ToWhStockQuantity'
+        }
+      ]
     }
   },
   mounted () {
@@ -238,6 +249,26 @@ export default {
     let currentDate = new Date()
     this.form.MovementDate = currentDate.toISOString().slice(0, 10)
     this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
+  },
+  computed: {
+    disabledMultipleSelection () {
+      if (this.movementType) {
+        switch (this.movementType.Code) {
+          case '01':
+          case '10':
+            return !this.form.FromWarehouseId || !this.form.ToWarehouseId || !this.form.FromStatusId
+          case '04':
+            return !this.form.ToWarehouseId || !this.form.ToStatusId
+          case '05':
+            return !this.form.FromWarehouseId || !this.form.FromStatusId
+          case '07':
+          case '12':
+            return !this.form.FromWarehouseId || !this.form.FromStatusId || !this.form.ToWarehouseId || !this.form.ToStatusId
+        }
+      }
+
+      return true
+    }
   },
   methods: {
     setStockStatus (value) {

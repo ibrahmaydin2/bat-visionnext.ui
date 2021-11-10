@@ -1,5 +1,5 @@
 <template>
-  <b-form-textarea :readonly="disabled" v-model="selectedValue" />
+  <b-form-textarea :readonly="disabled" v-model="selectedValue" :rows="rows" max-rows="6"/>
 </template>
 <script>
 export default {
@@ -10,7 +10,11 @@ export default {
   },
   props: {
     value: null,
-    disabled: null
+    disabled: null,
+    rows: {
+      type: Number,
+      default: 2
+    }
   },
   data () {
     return {

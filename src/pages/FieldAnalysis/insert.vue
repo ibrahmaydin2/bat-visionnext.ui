@@ -104,7 +104,9 @@
                 <NextMultipleSelection
                   v-model="customers" name="FieldAnalysisMultipleCustomer"
                   :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{ BranchIds: this.form.FieldAnalysisBranchs.map(f => f.AnalysisBranchId) }"></NextMultipleSelection>
+                  :dynamic-and-condition="multipleDynamicAndCondition">
+                </NextMultipleSelection>
+                <NextCustomerMultipleSearch v-model="customers" :dynamic-and-condition="multipleDynamicAndCondition" />
               </div>
             </template>
           </NextDetailPanel>
@@ -226,6 +228,13 @@ export default {
     this.createManualCode()
     this.setApproveState()
   },
+  computed: {
+    multipleDynamicAndCondition () {
+      return this.form.FieldAnalysisBranchs.length > 0
+        ? { BranchIds: this.form.FieldAnalysisBranchs.map(f => f.AnalysisBranchId) }
+        : {}
+    }
+  },
   methods: {
     save () {
       this.$v.form.$touch()
@@ -281,9 +290,7 @@ export default {
           orConditionFields: 'Code,Description1',
           url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.fieldAnalysis.customerCode'),
-          dynamicAndCondition: {
-            BranchIds: this.form.FieldAnalysisBranchs.map(f => f.AnalysisBranchId)
-          },
+          dynamicAndCondition: this.multipleDynamicAndCondition,
           required: true,
           visible: true,
           isUnique: true,
@@ -294,7 +301,7 @@ export default {
           inputType: 'text',
           modelProperty: 'CustomerName',
           objectKey: 'ColumnValueDesc',
-          parentProperty: 'Description1',
+          parentProperty: 'CommercialTitle',
           label: this.$t('insert.fieldAnalysis.commercialTitle'),
           visible: true,
           disabled: true,
@@ -305,10 +312,9 @@ export default {
           type: 'Label',
           inputType: 'text',
           modelProperty: 'Location',
-          valueProperty: 'AddressDetail',
+          valueProperty: 'Label',
           objectKey: 'ColumnValueDesc2',
-          parentProperty: 'DefaultLocationId',
-          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          parentProperty: 'DefaultLocation',
           label: this.$t('insert.fieldAnalysis.location'),
           visible: true,
           disabled: true,
