@@ -2219,7 +2219,7 @@
       "searchedCustomers": "Aranan Müşteriler",
       "currentCustomers": "Mevcut Müşteriler",
       "customerBulkOperations": "Toplu Müşteri Ekle/Çıkar",
-      "add": "Eke",
+      "add": "Ekle",
       "remove": "Çıkar",
       "customerGroup": "Yetki Sınıfı",
       "customerClass": "Kalite Sınıfı",
@@ -3190,6 +3190,16 @@
       "Quantity": "Talep Edilen İade Miktarı",
       "Price": "Geri Alış Fiyatı",
       "Item": "Ürün" 
+    },
+    "customerMultipleSearch": {
+      "title": "Toplu Müşteri Ekle",
+      "search": "Ara",
+      "emptyMessage": "Müşteri Listesi Bulunamadı",
+      "add": "Ekle",
+      "customerCodes": "Müşteri Kodları",
+      "customerCode":"Müşteri Kodu",
+      "commercialTitle":"Müşteri Ticari Ünvanı",
+      "location": "Lokasyon"
     }
   },
   "auth": {

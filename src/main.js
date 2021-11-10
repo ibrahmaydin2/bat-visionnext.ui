@@ -71,6 +71,7 @@ import AssignEmployeeModal from './components/Actions/AssignEmployeeModal'
 import CommonInfoModal from './components/Actions/CommonInfoModal'
 import NextMultipleSelection from './components/NextMultipleSelection'
 import CommonExcelModal from './components/Actions/CommonExcelModal'
+import NextCustomerMultipleSearch from './components/NextCustomerMultipleSearch'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -163,6 +164,7 @@ Vue.component('AssignEmployeeModal', AssignEmployeeModal)
 Vue.component('CommonInfoModal', CommonInfoModal)
 Vue.component('NextMultipleSelection', NextMultipleSelection)
 Vue.component('CommonExcelModal', CommonExcelModal)
+Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
 
 Vue.prototype.$api = new ApiManager()
 
