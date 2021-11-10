@@ -3,13 +3,12 @@ export const detailData = {
   customerLocationItems: [
     {
       type: 'Text',
-      inputType: 'text',
       modelProperty: 'Code',
+      objectKey: 'Code',
       createCode: true,
       label: i18n.t('insert.branch.locationCode'),
       required: true,
       visible: true,
-      isUnique: false,
       id: 1
     },
     {
