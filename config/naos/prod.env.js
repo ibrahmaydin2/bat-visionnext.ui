@@ -3,7 +3,7 @@ module.exports = {
   NODE_ENV: '"production"',
   VUE_APP_SERVICE_URL_BASE: "'https://naosapiuat.visionnext.com.tr/'",
   VUE_APP_SYSTEM_NAME: "'NAOS UI PRODUCTION'",
-  VUE_APP_VESION_NO: "'1.0.1.55'",
+  VUE_APP_VESION_NO: "'1.0.1.56'",
   BASE_URL: "'https://naos.visionnext.com.tr/'",
   TENANT: "'SAAS'",
   SITE_NAME: "'NAOS'",
