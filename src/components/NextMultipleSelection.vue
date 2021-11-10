@@ -120,7 +120,8 @@
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
                 type="number"
-                :input-class="data.item.class"></NextInput>
+                :input-class="data.item.class"
+                @keypress="keypress"></NextInput>
             </div>
             <span v-else v-html="data.value"></span>
           </template>
@@ -471,6 +472,19 @@ export default {
     },
     showClickableColumn (data) {
       return this.clickableColumns.some(c => c.mainProperty === data.field.column.EntityProperty)
+    },
+    keypress (event) {
+      if (event.keyCode === 13) {
+        let tabIndex = event.target.tabIndex
+        let td = event.target.parentElement.parentElement
+        let tdIndex = parseInt(td.ariaColIndex)
+        var parent = td.parentElement.parentElement
+        let target = parent.children[tabIndex] && parent.children[tabIndex].children && parent.children[tabIndex].children[tdIndex - 1]
+        if (target && target.firstElementChild && target.firstElementChild.firstElementChild) {
+          target.firstElementChild.firstElementChild.focus()
+        }
+        event.preventDefault()
+      }
     }
   },
   validations () {

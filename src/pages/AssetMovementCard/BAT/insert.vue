@@ -91,7 +91,8 @@
                   name="AssetMovementCardMultipleAsset"
                   v-model="form.AssetMovementCardDetails"
                   :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{}"
+                  :dynamic-and-condition="multipleDynamicAndCondition"
+                  :disabled-button="disabledMultipleSelection"
                 />
             </b-col>
           </b-row>
@@ -179,6 +180,40 @@ export default {
   mounted () {
     this.createManualCode('CardNumber')
   },
+  computed: {
+    disabledMultipleSelection () {
+      if (this.assetMovementType) {
+        switch (this.assetMovementType.Code) {
+          case 'STS':
+          case 'ASR':
+            return !this.form.FromLocationId || !this.form.FromStateId
+          case 'TRA':
+            return !this.form.FromLocationId || !this.form.FromStateId || !this.form.ToStateId
+          case 'ADF':
+            return !this.form.ToLocationId || !this.form.ToStateId
+        }
+      }
+
+      return true
+    },
+    multipleDynamicAndCondition () {
+      if (this.assetMovementType) {
+        if (this.assetMovementType.Code === 'ADF') {
+          return {
+            StateIds: [this.form.ToStateId],
+            LocationIds: [this.form.ToLocationId]
+          }
+        } else {
+          return {
+            StateIds: [this.form.FromStateId],
+            LocationIds: [this.form.FromLocationId]
+          }
+        }
+      }
+
+      return {}
+    }
+  },
   methods: {
     addAssetMovementCardDetails () {
       this.$v.assetMovementCardDetail.$touch()
@@ -221,6 +256,19 @@ export default {
         this.form.FromCustomerId = this.fromLocation ? this.fromLocation.CustomerId : undefined
         this.createData()
       }
+    }
+  },
+  watch: {
+    assetMovementType () {
+      this.form.FromStateId = null
+      this.form.FromLocationId = null
+      this.form.ToStateId = null
+      this.form.ToLocationId = null
+
+      this.fromState = null
+      this.fromLocation = null
+      this.toState = null
+      this.toLocation = null
     }
   },
   validations () {

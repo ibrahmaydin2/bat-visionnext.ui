@@ -44,7 +44,7 @@
               <NextDropdown :disabled="insertReadonly.BranchRegionId" url="VisionNextCommonApi/api/Region/Search" @input="selectedSearchType('BranchRegionId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" />
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
               <NextDropdown :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)" searchable/>
@@ -242,6 +242,7 @@
   </b-row>
 </template>
 <script>
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 import insertMixin from '../../../mixins/insert'
 import { detailData } from '../detailPanelData'
@@ -338,7 +339,8 @@ export default {
       allTypes: [],
       customerCategory3: null,
       customerCategory2: null,
-      customerCategory1: null
+      customerCategory1: null,
+      taxNumberReq: 10
     }
   },
   computed: {
@@ -364,6 +366,20 @@ export default {
         this.tabValidation()
       } else {
         this.createData()
+      }
+    },
+    selectedType (label, model) {
+      this.form[label] = model.DecimalValue
+
+      if (label === 'TaxCustomerTypeId') {
+        if (model.Code === 'TZK') {
+          this.taxNumberReq = 10
+        } else {
+          this.taxNumberReq = 11
+        }
+        this.insertRules.TaxNumber = {
+          required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+        }
       }
     },
     getPaymentType () {

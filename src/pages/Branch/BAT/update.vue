@@ -44,7 +44,7 @@
               <NextDropdown v-model="branchRegion" :disabled="insertReadonly.BranchRegionId" url="VisionNextCommonApi/api/Region/Search" @input="selectedSearchType('BranchRegionId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-              <NextInput v-model="form.TaxNumber" type="text" :disabled="insertReadonly.TaxNumber" />
+              <NextInput v-model="form.TaxNumber" type="text" :disabled="insertReadonly.TaxNumber" :maxLength="taxNumberReq" :oninput="maxLengthControl" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperBranchId" :error="$v.form.UpperBranchId">
               <NextDropdown v-model="form.upperBranch" :disabled="insertReadonly.UpperBranchId" url="VisionNextBranch/api/Branch/Search" @input="selectedSearchType('UpperBranchId', $event)" searchable/>
@@ -108,8 +108,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
+        <b-tab :title="$t('insert.branch.locations')" v-if="form.Code">
+          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" :main-form="form"/>
         </b-tab>
         <b-tab :title="$t('insert.branch.CustomerFinancialInfo')">
           <b-row>
@@ -236,6 +236,7 @@
   </b-row>
 </template>
 <script>
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 import updateMixin from '../../../mixins/update'
 import { detailData } from '../detailPanelData'
@@ -356,7 +357,8 @@ export default {
       customerCategory3: {},
       customerCategory2: {},
       customerCategory1: {},
-      branchDistributionTypeId: 0
+      branchDistributionTypeId: 0,
+      taxNumberReq: 10
     }
   },
   computed: {
@@ -404,6 +406,20 @@ export default {
       }
       if (!rowData.EInvoiceSeqs) {
         this.form.EInvoiceSeqs = []
+      }
+    },
+    selectedType (label, model) {
+      this.form[label] = model.DecimalValue
+
+      if (label === 'TaxCustomerTypeId') {
+        if (model.Code === 'TZK') {
+          this.taxNumberReq = 10
+        } else {
+          this.taxNumberReq = 11
+        }
+        this.insertRules.TaxNumber = {
+          required, minLength: minLength(this.taxNumberReq), maxLength: maxLength(this.taxNumberReq)
+        }
       }
     },
     save () {

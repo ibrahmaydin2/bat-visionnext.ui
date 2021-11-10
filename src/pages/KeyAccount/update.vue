@@ -167,10 +167,15 @@
               <b-form-group>
                 <AddDetailButton @click.native="addBranch" />
               </b-form-group>
-            </b-col>
+             </b-col>
           </b-row>
           <b-row>
-            <b-table-simple bordered small>
+            <NextFormGroup :title="$t('insert.customer.Branchs')">
+              <NextInput v-model="searchValue" type="text" ></NextInput>
+            </NextFormGroup>
+          </b-row>
+          <b-row>
+            <b-table-simple id="searched-customer-list" :current-page="currentPage" :per-page="0" bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.customer.BranchCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.BranchName')}}</span></b-th>
@@ -188,6 +193,12 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+            <b-pagination
+              :total-rows="totalRowCount"
+              v-model="currentPage"
+              :per-page="20"
+              aria-controls="searched-customer-list"
+            ></b-pagination>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerFinancialInfo')" @click.prevent="tabValidation()">
@@ -448,7 +459,12 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
-      customerLabelItems: detailData.customerLabelItems
+      customerLabelItems: detailData.customerLabelItems,
+      currentPage: 1,
+      totalRowCount: 0,
+      searchValue: null,
+      allList: {},
+      Description1: ''
     }
   },
   mounted () {
@@ -571,15 +587,36 @@ export default {
         loading(false)
       })
     },
-    getBranchs (customerId) {
+    getBranchs (currentPage) {
+      if (currentPage) {
+        this.currentPage = currentPage
+      }
       let request = {
         andConditionModel: {
-          UpperCustomerIds: [customerId]
-        }
+          UpperCustomerIds: [this.rowData.RecordId]
+        },
+        page: this.currentPage
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search').then((response) => {
+
+      if (this.searchValue) {
+        request.orConditionModels = [
+          {
+            Description1: this.searchValue,
+            Code: this.searchValue
+          }
+        ]
+      }
+      this.isLoading = true
+      this.allList = {}
+      if (this.allList[this.currentPage]) {
+        this.branchs = this.allList[this.currentPage]
+        return
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 20).then((response) => {
         if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.branchs
         }
       })
     },
@@ -712,6 +749,12 @@ export default {
           }
         })
       }
+    },
+    currentPage () {
+      this.getBranchs()
+    },
+    searchValue () {
+      this.getBranchs(1)
     }
   }
 }
