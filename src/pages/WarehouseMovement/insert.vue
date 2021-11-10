@@ -139,7 +139,12 @@
                   name="WarehouseMovementMultipleItem"
                   v-model="form.WarehouseMovementItems"
                   :disabled-button="!form.MovementTypeId"
-                  :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], TypeIds: [form.MovementTypeId]}"
+                  :dynamic-and-condition="{
+                    FromWarehouseIds: form.FromWarehouseId ? [form.FromWarehouseId] : null,
+                    ToWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
+                    MovementType: [form.MovementTypeId],
+                    FromWarehouseStatus: form.FromStatusId ? [form.FromStatusId] : null,
+                    ToWarehouseStatus: form.ToStatusId ? [form.ToStatusId] : null}"
                 />
             </b-col>
           </b-row>

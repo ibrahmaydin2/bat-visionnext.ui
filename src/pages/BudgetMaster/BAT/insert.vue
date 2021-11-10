@@ -35,7 +35,14 @@
         <b-tab :title="$t('insert.budgetMaster.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown v-model="employee" orConditionFields="Code,Description1,Name,Surname" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" or-condition-fields="Code,Description1,EmployeeDesc" :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}" label="EmployeeDesc" url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
+              <NextDropdown
+                v-model="employee"
+                :disabled="insertReadonly.EmployeeId"
+                @input="selectEmployee($event)"
+                or-condition-fields="Code,Description1,EmployeeDesc"
+                :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}"
+                label="EmployeeDesc"
+                url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetGroupId" :error="$v.form.BudgetGroupId">
               <NextDropdown :disabled="insertReadonly.BudgetGroupId" @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
@@ -153,7 +160,10 @@ export default {
         this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
           if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
             let user = response.ListModel.BaseModels[0]
-            this.employee = `${userModel.Name} ${userModel.Surname}`
+            this.employee = {
+              EmployeeId: user.EmployeeId,
+              EmployeeDesc: `${userModel.Name} ${userModel.Surname}`
+            }
             this.form.EmployeeId = user.EmployeeId
           }
         })
@@ -199,6 +209,15 @@ export default {
 
         return budget
       })
+    },
+    selectEmployee (value) {
+      if (value) {
+        this.employee = value
+        this.form.EmployeeId = value.EmployeeId
+      } else {
+        this.employee = null
+        this.form.EmployeeId = null
+      }
     }
   }
 }

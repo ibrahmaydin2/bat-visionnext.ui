@@ -208,11 +208,11 @@ export default {
 
       return this.roundNumber(total)
     },
-    roundNumber (value, decimalCount = 2) {
-      if (typeof value === 'string') {
-        value = parseFloat(value)
-      }
-      return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
+    roundNumber (value) {
+      return value.toLocaleString('tr-TR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
     },
     groupBy (list, key) {
       let group = list.reduce((r, a) => {
