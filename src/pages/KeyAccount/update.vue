@@ -167,7 +167,12 @@
               <b-form-group>
                 <AddDetailButton @click.native="addBranch" />
               </b-form-group>
-            </b-col>
+             </b-col>
+          </b-row>
+          <b-row>
+            <NextFormGroup :title="$t('insert.customer.Branchs')">
+              <NextInput v-model="searchValue" @input="getBranchs(1)" type="text" ></NextInput>
+            </NextFormGroup>
           </b-row>
           <b-row>
             <b-table-simple id="searched-customer-list" :current-page="currentPage" :per-page="0" bordered small>
@@ -457,8 +462,9 @@ export default {
       customerLabelItems: detailData.customerLabelItems,
       currentPage: 1,
       totalRowCount: 0,
-      pagingRequest: {},
-      allList: {}
+      searchValue: null,
+      allList: {},
+      Description1: ''
     }
   },
   mounted () {
@@ -581,45 +587,35 @@ export default {
         loading(false)
       })
     },
-    getBranchs (customerId, isPaging) {
-      let request = null
-      if (isPaging) {
-        if (this.$v.form.$error) {
-          this.$toasted.show(this.$t('insert.requiredFields'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        request = {
-          andConditionModel: {
-            UpperCustomerIds: [customerId]
-          }
-        }
-        this.isLoading = true
-        request.page = 1
-        this.currentPage = 1
-        this.pagingRequest = request
-        this.allList = {}
-      } else {
-        request = {
-          andConditionModel: {
-            UpperCustomerIds: [customerId]
-          }
-        }
-        request = this.pagingRequest
-        request.page = this.currentPage
+    getBranchs (currentPage) {
+      if (currentPage) {
+        this.currentPage = currentPage
       }
+      let request = {
+        andConditionModel: {
+          UpperCustomerIds: [this.rowData.RecordId]
+        },
+        page: this.currentPage
+      }
+
+      if (this.searchValue) {
+        request.orConditionModels = [
+          {
+            Description1: this.searchValue,
+            Code: this.searchValue
+          }
+        ]
+      }
+      this.isLoading = true
+      this.allList = {}
       if (this.allList[this.currentPage]) {
         this.branchs = this.allList[this.currentPage]
         return
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 10).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 20).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels
-          this.allList[this.currentPage] = this.branchs
         }
       })
     },
@@ -753,17 +749,8 @@ export default {
         })
       }
     },
-    value: {
-      handler (newValue, oldValue) {
-        if (newValue !== oldValue) {
-          this.values = newValue
-        }
-      },
-      deep: true,
-      immediate: true
-    },
-    currentPage (values) {
-      this.getBranchs(values)
+    currentPage () {
+      this.getBranchs()
     }
   }
 }
