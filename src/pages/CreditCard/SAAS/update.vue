@@ -36,7 +36,7 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
-                @input="selectedSearchType('CustomerId', $event)"
+                @input="setRemainder"
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="customer"
@@ -110,7 +110,7 @@
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
+              <NextInput v-model="customerReminder" type="number" :source="remainder" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
               <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
@@ -162,15 +162,14 @@ export default {
       routeLabel: null,
       cashCardTypeLabel: null,
       selectedCustomer: null,
-      customer: {
-        Remainder: null
-      },
+      customer: {},
       bank: {},
       bankBranches: [],
       bankBranch: {},
       currency: {},
       representative: {},
-      route: {}
+      route: {},
+      remainder: []
     }
   },
   computed: {
@@ -184,16 +183,12 @@ export default {
       let rowData = this.rowData
       this.form = rowData
       this.customer = this.convertLookupValueToSearchValue(rowData.Customer)
+      this.setRemainder(this.customer)
       this.bank = this.convertLookupValueToSearchValue(rowData.Bank)
       this.bankBranch = this.convertLookupValueToSearchValue(rowData.BankBranch)
       this.currency = this.convertLookupValueToSearchValue(rowData.Currency)
       this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
       this.route = this.convertLookupValueToSearchValue(rowData.Route)
-      if (this.customer) {
-        this.$api.post({RecordId: this.customer.RecordId}, 'Customer', 'Customer/Get').then((res) => {
-          this.customerReminder = res.Model.Remainder
-        })
-      }
     },
     save () {
       this.$v.$touch()
@@ -204,8 +199,27 @@ export default {
         this.updateData()
       }
     },
-    setReminder (customer) {
-      this.customerReminder = customer ? customer.Remainder : 0
+    setRemainder (value) {
+      this.customerReminder = null
+      this.remainder = []
+
+      if (value) {
+        this.form.CustomerId = value.RecordId
+
+        let request = {
+          CustomerIds: [this.form.CustomerId],
+          PageName: 'CreditCard',
+          CashCardTypeIds: this.form.CashCardTypeId ? this.form.CashCardTypeId : null
+        }
+        this.$api.postByUrl(request, 'VisionNextCustomer/api/AccountRemainder/GetCustomerRemainder').then((response) => {
+          if (response) {
+            this.remainder = response.Remainder ? response.Remainder : 0
+            this.customerReminder = this.remainder[0]
+          }
+        })
+      } else {
+        this.customerReminder = null
+      }
     },
     selectBankBranches (value) {
       this.form.BankBranchId = null

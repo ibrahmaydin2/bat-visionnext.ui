@@ -36,7 +36,7 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
-                @input="selectedSearchType('CustomerId', $event)"
+                @input="setRemainder"
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="customer"
@@ -113,7 +113,7 @@
               <NextInput v-model="form.CardOwner" type="text" :disabled="insertReadonly.CardOwner" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')">
-              <NextInput v-model="customer.Remainder" type="number" :disabled="true" />
+              <NextInput :source="remainder" v-model="customerReminder" type="number" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBatcardTransaction" :error="$v.form.IsBatcardTransaction" md="3">
               <NextCheckBox v-model="form.IsBatcardTransaction" :disabled="insertReadonly.IsBatcardTransaction" type="number" toggle/>
@@ -157,10 +157,7 @@ export default {
         IsManuelClosure: null,
         CardOwner: null
       },
-      customerReminder: null,
-      customer: {
-        Remainder: null
-      },
+      customer: null,
       Bank: null,
       BankBranch: null,
       Currency: null,
@@ -169,7 +166,9 @@ export default {
       Route: null,
       bankBranch: null,
       bankBranches: [],
-      routeName1: 'Finance'
+      routeName1: 'Finance',
+      customerReminder: null,
+      remainder: []
     }
   },
   mounted () {
@@ -189,8 +188,27 @@ export default {
         this.createData()
       }
     },
-    setReminder (customer) {
-      this.customerReminder = customer ? customer.Remainder : customer.Remainder
+    setRemainder (value) {
+      this.customerReminder = null
+      this.remainder = []
+
+      if (value) {
+        this.form.CustomerId = value.RecordId
+
+        let request = {
+          CustomerIds: [this.form.CustomerId],
+          PageName: 'CreditCard',
+          CashCardTypeIds: this.form.CashCardTypeId ? this.form.CashCardTypeId : null
+        }
+        this.$api.postByUrl(request, 'VisionNextCustomer/api/AccountRemainder/GetCustomerRemainder').then((response) => {
+          if (response) {
+            this.remainder = response.Remainder ? response.Remainder : 0
+            this.customerReminder = this.remainder[0]
+          }
+        })
+      } else {
+        this.customerReminder = null
+      }
     },
     selectBankBranches (value) {
       this.form.BankBranchId = null

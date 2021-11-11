@@ -1898,7 +1898,10 @@
       "searchustomer": "Müşteri Ara",
       "bulkCustomerApprove": "Toplu Müşteri Onaylama",
       "approveState":"Onay Durumu",
-      "customerNotFound": "Onaylanacak müşteri bulunamadı"
+      "customerNotFound": "Onaylanacak müşteri bulunamadı",
+      "updateBudget": "Bütçe Güncelle",
+      "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
+      "doYouApprove": "Onaylıyor musunuz?"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",

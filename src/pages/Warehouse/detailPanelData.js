@@ -40,6 +40,15 @@ export const detailData = {
       },
       parentId: 1,
       id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'SupplierCustomerId',
+      parentProperty: 'CustomerId',
+      hideOnTable: true,
+      parentId: 1,
+      id: 4
     }
   ]
 }

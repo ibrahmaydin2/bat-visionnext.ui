@@ -463,7 +463,7 @@ export default {
       let listItem = this.listItems.find(l => l.EntityProperty === clickableColumn.targetProperty)
       this.list = this.list.map((l, index) => {
         let value = l[clickableColumn.mainProperty]
-        if (value || value === 0) {
+        if (value || value > 0) {
           this.$refs[`multipleGrid${this.id}`].selectRow(index)
         }
         l[clickableColumn.targetProperty] = !value && listItem.ColumnType === 'Decimal' ? 0 : value

@@ -77,9 +77,9 @@ export default {
       type: Object,
       default: () => {}
     },
-    recordIds: {
-      type: Array,
-      default: () => []
+    modalItem: {
+      type: Object,
+      default: () => {}
     },
     items: {
       type: Array,
@@ -140,10 +140,15 @@ export default {
       this.$root.$emit('bv::hide::modal', 'credit-budget-bulk-approve-modal')
     },
     getCustomerGuarantees () {
-      if (this.recordIds && this.recordIds.length === 1) {
-        this.$api.postByUrl({RecordId: this.recordIds[0]}, 'VisionNextBudget/api/CreditBudget/Get').then((response) => {
-          if (response.Model && response.Model.CustomerGuarantees && response.Model.CustomerGuarantees.length > 0) {
-            this.customerGuarantees = response.Model.CustomerGuarantees.filter(c => c.ApproveStateId === 51)
+      if (this.modalItem && this.modalItem.RecordId) {
+        this.$api.postByUrl({RecordId: this.modalItem.RecordId}, 'VisionNextBudget/api/CreditBudget/Get').then((response) => {
+          if (response.Model && response.Model.CreditBudgetDetails && response.Model.CreditBudgetDetails.length > 0) {
+            this.customerGuarantees = response.Model.CreditBudgetDetails.filter(c => c.ApprovestateId === 51).map(item => {
+              let customerGuarantees = item.CustomerGuarantees
+              customerGuarantees.RecordId = item.RecordId
+              customerGuarantees.CreditBudgetId = item.CreditBudgetId
+              return customerGuarantees
+            })
             this.filteredCustomerGuarantees = this.customerGuarantees
             this.$forceUpdate()
           }
