@@ -2,6 +2,37 @@
   <b-row class="asc__insertPage">
     <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
     <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" />
+    <UpdateCreditBudgetModal :modalAction="{Title: $t('insert.creditBudget.updateBudget')}" :modalItem="form" @success="successUpdatedBudget"/>
+    <b-modal id="update-budget-confirm-modal">
+      <template #modal-title>
+        {{$t('insert.creditBudget.doYouApprove')}}
+      </template>
+      {{$t('insert.creditBudget.updateBudgetConfirmMessage')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('update-budget-confirm-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="updateBudget()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal id="credit-budget-confirm-edit-modal">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.rowEditConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-edit-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="editCustomerGuarantee()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal id="credit-budget-confirm-delete-modal">
+      <template #modal-title>
+        {{$t('list.deleteConfirm')}}
+      </template>
+      {{$t('list.rowDeleteConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-delete-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="removeCustomerGuarantee()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -26,6 +57,9 @@
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
+          <b-col md="4" lg="6">
+            <b-button v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+          </b-col>
         </b-row>
       </section>
     </b-col>
@@ -91,7 +125,7 @@
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
               <b-form-input type="text" v-model="customerGuarantees.Amount" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="true" :error="$v.customerGuarantees.PaymentPeriod" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="false" md="2" lg="2">
               <NextDropdown
                 v-model="paymentPeriod"
                 url="VisionNextCommonApi/api/FixedTerm/Search"
@@ -134,10 +168,10 @@
                 </span>
               </template>
               <template #cell(operations)="row">
-                <b-button :title="$t('list.edit')" @click="editCustomerGuarantee(row.item)" class="btn mr-2 btn-warning btn-sm">
+                <b-button :title="$t('list.edit')" @click="$bvModal.show('credit-budget-confirm-edit-modal'); selectedCustomerGuarantee = row.item;" class="btn mr-2 btn-warning btn-sm">
                   <i class="fa fa-pencil-alt"></i>
                 </b-button>
-                <b-button :title="$t('list.delete')" @click="removeCustomerGuarantee(row.item)" type="button" class="btn mr-2 btn-danger btn-sm">
+                <b-button :title="$t('list.delete')" @click="$bvModal.show('credit-budget-confirm-delete-modal'); selectedCustomerGuarantee = row.item;" type="button" class="btn mr-2 btn-danger btn-sm">
                   <i class="far fa-trash-alt ml-1"></i>
                 </b-button>
               </template>
@@ -221,7 +255,8 @@ export default {
         {key: 'operations', label: this.$t('list.operations'), sortable: false}
       ],
       selectedIndex: 0,
-      paymentPeriods: []
+      paymentPeriods: [],
+      selectedCustomerGuarantee: null
     }
   },
   mounted () {
@@ -309,28 +344,33 @@ export default {
       this.paymentPeriod = null
       this.$v.customerGuarantees.$reset()
     },
-    removeCustomerGuarantee (item) {
-      if (item.RecordId > 0) {
-        this.form.CustomerGuarantees[this.form.CustomerGuarantees.indexOf(item)].RecordState = 4
+    removeCustomerGuarantee () {
+      if (this.selectedCustomerGuarantee.RecordId > 0) {
+        this.form.CustomerGuarantees[this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
       } else {
-        this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
+        this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
       }
+      this.selectedCustomerGuarantee = null
+      this.$bvModal.hide('credit-budget-confirm-delete-modal')
+      this.$forceUpdate()
     },
-    editCustomerGuarantee (item) {
-      this.customerGuarantees = {...item}
+    editCustomerGuarantee () {
+      this.customerGuarantees = {...this.selectedCustomerGuarantee}
       this.selectedCustomer = null
       this.paymentPeriod = null
       this.customerGuarantees.isUpdated = true
-      if (item.RecordId > 0) {
+      if (this.selectedCustomerGuarantee.RecordId > 0) {
         this.customerGuarantees.RecordState = 3
       }
-      this.customerGuarantees.CreditAmountCentral = item.CreditAmount
-      this.paymentPeriod = this.getPaymentPeriodById(item.PaymentPeriod)
+      this.customerGuarantees.CreditAmountCentral = this.selectedCustomerGuarantee.CreditAmount
+      this.paymentPeriod = this.getPaymentPeriodById(this.selectedCustomerGuarantee.PaymentPeriod)
       this.selectedCustomer = {
-        RecordId: item.CustomerId,
-        Description1: item.CustomerDesc,
-        Code: item.CustomerCode
+        RecordId: this.selectedCustomerGuarantee.CustomerId,
+        Description1: this.selectedCustomerGuarantee.CustomerDesc,
+        Code: this.selectedCustomerGuarantee.CustomerCode
       }
+      this.selectedCustomerGuarantee = null
+      this.$bvModal.hide('credit-budget-confirm-edit-modal')
     },
     setData () {
       this.form = this.rowData
@@ -383,6 +423,13 @@ export default {
       if (paymentPeriods.length > 0) {
         return paymentPeriods.length > 0 ? paymentPeriods[0] : { RecordId: paymentPeriod }
       }
+    },
+    updateBudget () {
+      this.$bvModal.hide('update-budget-confirm-modal')
+      this.$bvModal.show('update-credit-budget-modal')
+    },
+    successUpdatedBudget () {
+      this.getData().then(() => { this.setData() })
     }
   },
   validations () {
@@ -393,9 +440,6 @@ export default {
           required
         },
         Amount: {
-          required
-        },
-        PaymentPeriod: {
           required
         }
       }

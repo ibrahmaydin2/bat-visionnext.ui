@@ -1,4 +1,4 @@
 <template>
-  <Nextgrid apiurl="VisionNextBudget/api/CreditBudget/Search" selection-mode="single"/>
+  <Nextgrid apiurl="VisionNextBudget/api/CreditBudget/Search"/>
 </template>
 <script>
