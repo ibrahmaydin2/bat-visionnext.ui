@@ -91,7 +91,7 @@
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
               <b-form-input type="number" v-model="customerGuarantees.Amount"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="true" :error="$v.customerGuarantees.PaymentPeriod" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="false" md="2" lg="2">
               <NextDropdown
                 v-model="paymentPeriod"
                 url="VisionNextCommonApi/api/FixedTerm/Search"
@@ -330,9 +330,6 @@ export default {
           required
         },
         Amount: {
-          required
-        },
-        PaymentPeriod: {
           required
         }
       }

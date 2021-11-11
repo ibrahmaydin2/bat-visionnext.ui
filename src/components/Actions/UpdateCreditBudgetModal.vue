@@ -135,10 +135,17 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        this.model = {}
+        this.movementType = null
+        this.$v.model.$reset()
         this.closeModal()
+        this.$emit('success')
       }).catch(() => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
+        this.model = {}
+        this.movementType = null
+        this.$v.model.$reset()
       })
     }
   }
