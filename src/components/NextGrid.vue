@@ -252,13 +252,13 @@
     <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
     <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
-    <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
     <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
     <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
     <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CommonInfoModal v-if="showCommonInfoModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CreditBudgetBulkApproveModal v-if="showCreditBulkBudgetModal" :modalAction="modalAction" :modalItem="modalItem" size="xl"/>
   </div>
 </template>
 <script>
@@ -273,7 +273,6 @@ import RmaConvertModal from './Actions/RmaConvertModal'
 import RmaInvoiceModal from './Actions/RmaInvoiceModal'
 import InvoiceConvertModal from './Actions/InvoiceConvertModal'
 import KmModal from './Actions/KmModal'
-import PriceListDayModal from './Actions/PriceListDayModal'
 import CreateSalesWaybill from './Actions/CreateSalesWaybill'
 import MultipleLoadingPlanModal from './Actions/MultipleLoadingPlanModal'
 let searchQ = {}
@@ -288,7 +287,6 @@ export default {
     RmaInvoiceModal,
     KmModal,
     InvoiceConvertModal,
-    PriceListDayModal,
     CreateSalesWaybill,
     MultipleLoadingPlanModal
   },
@@ -361,7 +359,6 @@ export default {
       showCustomConvertModal: false,
       showConfirmModal: false,
       showKmModal: false,
-      showPriceListDayModal: false,
       showLocationModal: false,
       showCreateSalesWaybillModal: false,
       autoSearchInput: {},
@@ -374,7 +371,8 @@ export default {
       disabledAutoComplete: false,
       showBudgetMasterApproveModal: false,
       showAssignEmployeeModal: false,
-      showCommonInfoModal: false
+      showCommonInfoModal: false,
+      showCreditBulkBudgetModal: false
     }
   },
   mounted () {
@@ -435,7 +433,6 @@ export default {
       this.showPotentialCustomerRejectModal = false
       this.showConfirmModal = false
       this.showKmModal = false
-      this.showPriceListDayModal = false
       this.showLocationModal = false
       this.showCreateSalesWaybillModal = false
       this.showMultipleLoadingPlanModal = false
@@ -443,6 +440,7 @@ export default {
       this.showBudgetMasterApproveModal = false
       this.showAssignEmployeeModal = false
       this.showCommonInfoModal = false
+      this.showCreditBulkBudgetModal = false
 
       if (!this.validateAction(action.Action)) {
         return
@@ -491,11 +489,6 @@ export default {
         this.showKmModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'kmModal')
-        })
-      } else if (action.Action === 'PriceListDayUpdate') {
-        this.showPriceListDayModal = true
-        this.$nextTick(() => {
-          this.$root.$emit('bv::show::modal', 'priceListDayModal')
         })
       } else if (action.Action === 'ShowOnMap') {
         this.showLocationModal = true
@@ -553,6 +546,11 @@ export default {
         this.showCommonInfoModal = true
         this.$nextTick(() => {
           this.$bvModal.show('common-info-modal')
+        })
+      } else if (action.Action === 'ContractCustomerApprove') {
+        this.showCreditBulkBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
         })
       } else {
         this.showConfirmModal = true

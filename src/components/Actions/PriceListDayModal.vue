@@ -35,11 +35,10 @@
   </b-modal>
 </template>
 <script>
-// import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'PriceListExcelModal',
   props: {
-    modalItem: {
+    modalAction: {
       type: Object,
       default: () => {}
     }
@@ -52,6 +51,14 @@ export default {
   },
   methods: {
     save () {
+      if (this.day === null || this.day === undefined || this.day === '') {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
       this.isLoading = true
       let request = {
         'model': {

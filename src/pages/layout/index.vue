@@ -166,8 +166,8 @@
          v-if="showSalesReturnInvoiceConvertModal" />
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
         <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
-        <CreditBudgetBulkApproveModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :recordIds="recordIds" size="xl"/>
         <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :documentDate="additionalValue"/>
+        <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" />
   </b-container>
 </template>
 <script>
@@ -181,6 +181,7 @@ import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturn
 import ItemFormulaModal from '../../components/Actions/ItemFormulaModal'
 import PurchaseReturnInvoiceRmaApproveModal from '../../components/Actions/PurchaseReturnInvoiceRmaApproveModal'
 import EdiOrderApproveModal from '../../components/Actions/EdiOrderApproveModal'
+import PriceListDayModal from '../../components/Actions/PriceListDayModal'
 
 export default {
   components: {
@@ -192,7 +193,8 @@ export default {
     SalesReturnInvoiceConvertModal,
     ItemFormulaModal,
     PurchaseReturnInvoiceRmaApproveModal,
-    EdiOrderApproveModal
+    EdiOrderApproveModal,
+    PriceListDayModal
   },
   data () {
     return {
@@ -208,14 +210,14 @@ export default {
       showSalesReturnInvoiceConvertModal: false,
       showItemFormulaModal: false,
       showPurchaseReturnInvoiceRmaApproveModal: false,
-      showUpdateCreditBudgetModal: false,
       showEdiOrderApproveModal: false,
       purchaseReturnRmaType: 'Invoice',
-      additionalValue: null
+      additionalValue: null,
+      showPriceListDayModal: false
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order', 'PriceList']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -299,8 +301,8 @@ export default {
     showMultipleModal (action) {
       this.showItemFormulaModal = false
       this.showPurchaseReturnInvoiceRmaApproveModal = false
-      this.showUpdateCreditBudgetModal = false
       this.showEdiOrderApproveModal = false
+      this.showPriceListDayModal = false
       if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
         this.$toasted.show(this.$t('index.selectRowError'), {
           type: 'error',
@@ -353,17 +355,17 @@ export default {
           this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
         })
         return
-      } else if (action.Action === 'ContractCustomerApprove') {
-        this.showUpdateCreditBudgetModal = true
-        this.$nextTick(() => {
-          this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
-        })
-        return
       } else if (action.Action === 'ApproveEdiOrder') {
         this.showEdiOrderApproveModal = true
         this.additionalValue = this.getValueFromGrid('DocumentDate')
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'edi-order-approve-modal')
+        })
+        return
+      } else if (action.Action === 'PriceListDayUpdate') {
+        this.showPriceListDayModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'priceListDayModal')
         })
         return
       }
