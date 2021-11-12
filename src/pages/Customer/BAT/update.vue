@@ -105,8 +105,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerLocations" :items="locationItems" />
+        <b-tab :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()" v-if="form.Code">
+          <NextDetailPanel v-model="form.CustomerLocations" :items="locationItems" :main-form="form"/>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
