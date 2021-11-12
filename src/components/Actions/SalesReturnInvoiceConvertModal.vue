@@ -12,7 +12,7 @@
             :items="list"
             :fields="fields"
             sticky-header
-            selection-mode="single"
+            select-mode="single"
             @row-selected="onRowSelected"
             selectable
             :busy="tableBusy"
@@ -20,6 +20,38 @@
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
+              </div>
+            </template>
+            <template #cell(show_details)="row">
+              <div>
+                <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success" :disabled="!row.rowSelected">
+                  <i class="fa fa-arrow-down"></i>
+                </b-button>
+              </div>
+           </template>
+            <template #row-details>
+              <div class="sales-return-invoice-convert">
+                <b-row>
+                  <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
+                    <NextInput v-model="selectedItem.InvoiceNumber" />
+                  </NextFormGroup>
+                  <NextFormGroup :title="$t('index.Convert.WarehouseId')" md="4" lg="4">
+                    <NextDropdown v-model="warehouse" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable/>
+                  </NextFormGroup>
+                  <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
+                    <NextInput v-model="selectedItem.DocumentNumber" />
+                  </NextFormGroup>
+              </b-row>
+              <b-table
+                id="convert-detail-list"
+                :items="form.InvoiceLines"
+                :fields="detailFields"
+                sticky-header
+              >
+                <template #cell(SalesQuantity1)="data">
+                  <NextInput ref="NextTextInput" type="number" v-model="data.item.SalesQuantity1" :input-class="!data.item.Stock || data.item.Stock < 1 || data.item.Stock < data.item.SalesQuantity1 ? 'error' : ''" />
+                </template>
+              </b-table>
               </div>
             </template>
           </b-table>
@@ -127,8 +159,50 @@ export default {
           key: 'GrossTotal',
           label: this.$t('index.Convert.grossTotal'),
           sortable: true
+        },
+        {
+          key: 'show_details',
+          label: this.$t('index.Convert.Details')
         }
-      ]
+      ],
+      detailFields: [
+        {
+          key: 'Item.Code',
+          label: this.$t('index.Convert.ItemCode'),
+          sortable: true
+        },
+        {
+          key: 'Item.Label',
+          label: this.$t('index.Convert.Item'),
+          sortable: true
+        },
+        {
+          key: 'Stock',
+          label: this.$t('index.Convert.Stock'),
+          sortable: true
+        },
+        {
+          key: 'UsedQuantity',
+          label: this.$t('index.Convert.TransformQuantity'),
+          sortable: true
+        },
+        {
+          key: 'SalesQuantity1',
+          label: this.$t('index.Convert.ReturnQuantity1'),
+          sortable: true
+        },
+        {
+          key: 'Quantity',
+          label: this.$t('index.Convert.ReturnQuantity'),
+          sortable: true
+        },
+        {
+          key: 'Price',
+          label: this.$t('index.Convert.Price'),
+          sortable: true
+        }
+      ],
+      warehouse: null
     }
   },
   mounted () {
@@ -169,21 +243,51 @@ export default {
       this.selectedItem = {}
       if (items && items.length > 0) {
         this.selectedItem = items[0]
+        this.getWarehouse(this.selectedItem.WarehouseId)
+        this.getCode()
         this.$api.postByUrl({recordId: this.selectedItem.RecordId}, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertDetail').then((response) => {
           this.form = response.InvoiceLiteModel
         })
       }
     },
-    submitModal () {
+    getWarehouse (id) {
       let request = {
+        RecordId: id
+      }
+      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/Get').then((response) => {
+        if (response.Model) {
+          this.warehouse = {
+            RecordId: response.Model.RecordId,
+            Description1: response.Model.Description1
+          }
+        }
+      })
+    },
+    getCode () {
+      this.$api.postByUrl({}, 'VisionNextInvoice/api/SalesReturnInvoice/GetCode').then(response => {
+        if (response.Model) {
+          this.selectedItem.InvoiceNumber = response.Model.Code
+        }
+      })
+    },
+    submitModal () {
+      if (this.$refs.NextTextInput.inputClass === 'error') {
+        this.$toasted.show(this.$t('index.Convert.StockException'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      } else if (this.$refs.NextTextInput.length > 0 && this.$refs.NextTextInput.some(a => a.inputClass === 'error')) {
+        this.$toasted.show(this.$t('index.Convert.StockException'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return
+      }
+      let request = {
+        invoiceNumber: this.selectedItem.InvoiceNumber,
         documentNumber: this.selectedItem.DocumentNumber,
-        warehouseId: this.selectedItem.WarehouseId,
+        warehouseId: this.warehouse ? this.warehouse.RecordId : null,
         recordId: this.selectedItem.RecordId,
         invoiceLiteModel: this.form
       }
       this.showLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/ReceiveInvoiceConvert').then((response) => {
+      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvert').then((response) => {
         this.$store.commit('setDisabledLoading', false)
         this.form = {}
         this.selectedItem = {}
@@ -215,5 +319,19 @@ export default {
 <style scoped>
 .modalZIndex {
   z-index: 100;
+}
+.sales-return-invoice-convert {
+  background: rgb(199, 197, 197);
+  border-radius: 10px;
+  padding: 20px;
+}
+.error, .error input {
+  border-color: red;
+  border-width: 2px;
+}
+</style>
+<style>
+.sales-return-invoice-convert table tbody tr {
+  background: white !important;
 }
 </style>
