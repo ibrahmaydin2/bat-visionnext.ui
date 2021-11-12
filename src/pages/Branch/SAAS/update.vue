@@ -207,8 +207,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.branch.locations')">
-          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" />
+        <b-tab :title="$t('insert.branch.locations')" v-if="form.Code">
+          <NextDetailPanel v-model="branchLocations" :items="customerLocationItems" :main-form="form" />
         </b-tab>
         <b-tab :title="$t('insert.branch.creditHistories')" :disabled="this.branchDistributionTypeId === 5">
           <NextDetailPanel v-model="form.BranchCreditHistories" :items="customerCreditHistoriesItems" />
