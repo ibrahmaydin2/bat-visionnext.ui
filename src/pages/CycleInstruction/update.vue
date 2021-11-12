@@ -71,8 +71,8 @@
         <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionRoutes')" v-if="routeCriteria && routeCriteria.Code === 'RL'" >
           <NextDetailPanel v-model="routes" :items="routeItems" />
         </b-tab>
-        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')" >
-          <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" :before-add="beforeValidTasksAdd"/>
+        <b-tab :title="$t('insert.CycleInstruction.CycleInstructionTaskItems')"  v-if="form.Code">
+          <NextDetailPanel v-model="form.CycleInstructionTasks" :items="taskItems" :main-form="form" :before-add="beforeValidTasksAdd"/>
         </b-tab>
         <b-tab lazy :title="$t('insert.CycleInstruction.CycleInstructionCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'" >
           <NextDetailPanel v-model="customerCriterias" :items="criteriaItems" />
