@@ -34,12 +34,14 @@
         <b-row>
           <NextFormGroup item-key="RecordTypeId" :error="$v.form.RecordTypeId" md="3" lg="3">
             <NextDropdown
+              v-model="RecordType"
+              :source="recordType"
               :disabled="insertReadonly.RecordTypeId"
               url="VisionNextCustomer/api/CustomerRecordType/Search"
               @input="selectedSearchType('RecordTypeId', $event)"
               :dynamic-and-condition="{RecordIds: [3, 4]}"/>
           </NextFormGroup>
-          <NextFormGroup v-if="form.RecordTypeId === 4" :title="$t('insert.customer.mainOfBranch')" :error="$v.mainBranch.customer.$error" md="3" lg="3">
+          <NextFormGroup  :title="$t('insert.customer.mainOfBranch')" :error="$v.mainBranch.customer" md="3" lg="3">
             <NextDropdown
               searchable
               v-model="mainBranch.customer"
@@ -51,7 +53,7 @@
               :is-customer="true"
             />
           </NextFormGroup>
-          <NextFormGroup v-if="form.RecordTypeId === 4" :title="$t('insert.customer.AuthorizedBranch')" :error="$v.mainBranch.branch.$error" md="3" lg="3">
+          <NextFormGroup :title="$t('insert.customer.AuthorizedBranch')" :error="$v.mainBranch.branch" md="3" lg="3">
             <NextDropdown
               searchable
               v-model="mainBranch.branch"
@@ -388,7 +390,9 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
-      customerLabelItems: detailData.customerLabelItems
+      customerLabelItems: detailData.customerLabelItems,
+      RecordType: null,
+      recordType: []
     }
   },
   mounted () {
@@ -396,8 +400,21 @@ export default {
     var selectedCustomer = this.$store.state.SelectedCustomer
     if (selectedCustomer && selectedCustomer.RecordId > 0) {
       this.mainBranch.customer = selectedCustomer
+      this.mainBranch.customer = selectedCustomer.Description1
       this.form.UpperCustomerId = selectedCustomer.RecordId
-      this.form.RecordTypeId = 4
+      this.mainBranch.branch = selectedCustomer.BranchId
+      let request = {
+        andConditionModel: {
+          RecordIds: [3, 4]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerRecordType/Search').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.recordType = response.ListModel.BaseModels
+          this.RecordType = response.ListModel.BaseModels[1]
+          this.form.RecordTypeId = this.RecordType.RecordId
+        }
+      })
       this.$store.commit('setValues', {
         name: 'SelectedCustomer',
         data: {
