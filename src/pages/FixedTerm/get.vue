@@ -3,7 +3,7 @@
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
-    <div v-if="rowData" class="asc__showPage-container">
+    <div class="asc__showPage-container">
       <b-row>
         <b-col cols="12">
           <header>
@@ -17,17 +17,11 @@
           <section>
             <span><i class="fas fa-check" />  <b>{{$t('insert.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.fixedTerm.code')}}:</b> {{rowData.Code}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.fixedTerm.period')}}:</b> {{rowData.Period}}</span>
-            <span><i class="fas fa-code" />  <b>{{$t('insert.fixedTerm.description1')}}:</b> {{rowData.Description1}}</span>
+            <span><i class="fas fa-calendar" />  <b>{{$t('insert.fixedTerm.period')}}:</b> {{rowData.Period}}</span>
+            <span><i class="fa fa-pencil-alt" />  <b>{{$t('insert.fixedTerm.description1')}}:</b> {{rowData.Description1}}</span>
           </section>
         </b-col>
       </b-row>
-      <!-- <b-tabs>
-        <b-tab :title="$t('insert.fixedTerm.title')" active>
-          <b-row>
-          </b-row>
-        </b-tab>
-      </b-tabs> -->
     </div>
   </div>
 </template>
@@ -41,7 +35,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
   },
   computed: {
     ...mapState(['rowData', 'style'])
@@ -56,5 +49,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>

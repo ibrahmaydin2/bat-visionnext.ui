@@ -16,7 +16,10 @@
           <b-dropdown-header id="dropdown-header-label">
             <i class="fas fa-network-wired" /> {{$t('general.branches')}}
           </b-dropdown-header>
-          <b-dropdown-item v-for="(branch, i) in UserBranches" :key="'branch' + i">
+          <b-col>
+            <b-form-input v-model="searchBranch" :placeholder="$t('nav.search')" />
+          </b-col>
+          <b-dropdown-item v-for="(branch, i) in filteredUserBranches" :key="'branch' + i">
             <span @click="changeBranch(branch)">
               {{branch.Desciption}}
             </span>
@@ -26,8 +29,17 @@
           <template v-slot:button-content>
             <i class="far fa-user" /> {{loginUser.name}}
           </template>
-          <b-dropdown-item :to="{name: 'Settings', params: {url: 'change-password'}}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
+          <b-dropdown-item :to="{name: 'ChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
           <b-dropdown-item @click="changeLang()"><i class="fa fa-language"></i> {{toggleLang}}</b-dropdown-item>
+          <b-dropdown variant="menu" class="inline-menu d-none d-md-inline-block" @click.native.capture.stop="showSecondMenu = !showSecondMenu">
+            <template v-slot:button-content>
+              <i class="fa fa-cog" /> {{$t('nav.settings')}}
+            </template>
+          </b-dropdown>
+          <ul v-if="showSecondMenu" class="sub-menu">
+            <b-dropdown-item :to="{name: 'ChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.changePassword')}}</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'StockChangePassword'}"><i class="fa fa-key"></i> {{$t('nav.stockChangePassword')}}</b-dropdown-item>
+          </ul>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="logoutHeader()"><i class="fa fa-sign-out-alt"></i> {{$t('nav.logout')}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
@@ -73,13 +85,11 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import Search from './Search'
 import Sidebar from './Sidebar'
 import SidebarRight from './SidebarRight'
 export default {
   components: {
     Sidebar,
-    Search,
     SidebarRight
   },
   data () {
@@ -91,12 +101,19 @@ export default {
       windowHeight: 0,
       toggleLang: 'English',
       modalHeader: '',
-      modalContent: ''
+      modalContent: '',
+      searchBranch: '',
+      showSecondMenu: false
     }
   },
   created () {
-    const selectedLang = localStorage.getItem('selectedLang')
-    selectedLang === 'tr' ? this.setLang('tr', 'English') : this.setLang('en', 'Türkçe')
+    const languageId = localStorage.getItem('LanguageId')
+    if (!languageId || languageId === '1') {
+      this.setLang('tr', 'English')
+    } else {
+      this.setLang('en', 'Türkçe')
+    }
+
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
     this.UserBranches = JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches
@@ -105,7 +122,16 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   computed: {
-    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId', 'system'])
+    ...mapState(['logo', 'loginUser', 'style', 'notify', 'CompanyId', 'BranchId', 'system']),
+    filteredUserBranches () {
+      if (this.searchBranch.length > 0) {
+        return this.UserBranches.filter((branch) => {
+          return branch.Desciption.toLocaleLowerCase('tr').includes(this.searchBranch.toLocaleLowerCase('tr'))
+        })
+      } else {
+        return this.UserBranches
+      }
+    }
   },
   methods: {
     ...mapMutations(['hamburger']),
@@ -129,22 +155,20 @@ export default {
         company: localStorage.getItem('CompanyId'),
         companyName: e.CommercialTitle,
         branch: e.Id,
-        branchName: e.Desciption
+        branchName: e.Desciption,
+        customerId: e.CustomerId
       })
     },
     changeLang () {
       switch (this.$i18n.locale) {
         case 'en':
-          // this.$i18n.locale = 'tr'
-          // this.toggleLang = 'English'
           this.setLang('tr', 'English')
           break
         case 'tr':
-          // this.$i18n.locale = 'en'
-          // this.toggleLang = 'Türkçe'
           this.setLang('en', 'Türkçe')
           break
       }
+      location.reload()
     },
     openModal (title, content) {
       this.modalContent = null
@@ -156,6 +180,7 @@ export default {
       this.$i18n.locale = lang
       this.toggleLang = toggleLang
       localStorage.setItem('selectedLang', lang)
+      localStorage.setItem('LanguageId', !lang || lang === 'tr' ? 1 : 2)
     }
   },
   watch: {
@@ -224,6 +249,7 @@ export default {
         max-height: 50vh
         overflow-x: auto
         padding-bottom: 15px
+        will-change: unset !important
         .dropdown-item
           font-size: 12px
           white-space: normal
@@ -299,4 +325,14 @@ export default {
     & span
       font-weight: 700
       color: #ffa300
+  .inline-menu
+    color: black !important
+    margin-left: 13px
+    button
+      color: black !important
+      border: none
+  .sub-menu
+    list-style-type: none;
+    li
+      width: max-content
 </style>

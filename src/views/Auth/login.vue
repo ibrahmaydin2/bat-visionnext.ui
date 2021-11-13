@@ -1,5 +1,5 @@
 <template>
-  <b-form>
+  <b-form v-if="loginEnabled">
     <b-form-group :label="$t('auth.email')" :class="{ 'form-group--error': $v.user.UserName.$error}">
       <b-form-input v-model="user.UserName" type="email" :placeholder="$t('auth.email')" @keyup.enter="submitForm" />
     </b-form-group>
@@ -36,7 +36,8 @@ export default {
         UserName: '',
         Password: '',
         InstanceHash: ''
-      }
+      },
+      loginEnabled: false
     }
   },
   validations () {
@@ -47,6 +48,14 @@ export default {
       }
     }
   },
+  mounted () {
+    if (this.$route.query.authKey && this.$route.query.hash && this.$route.query.redirectHash) {
+      this.loginEnabled = false
+      this.$store.dispatch('loginWithCua', {...this.authData, authKey: this.$route.query.authKey, hash: this.$route.query.hash, redirectHash: this.$route.query.redirectHash})
+    } else {
+      this.loginEnabled = true
+    }
+  },
   computed: {
     ...mapState(['loginError'])
   },
@@ -54,7 +63,11 @@ export default {
     submitForm () {
       this.$v.$touch()
       if (this.$v.$error) {
-        this.$toasted.show('Zorunlu alanları doldurun', {type: 'error', keepOnHover: true, duration: '3000'})
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
         this.$store.dispatch('login', {...this.authData, UserName: this.user.UserName, Password: this.user.Password, InstanceHash: this.user.InstanceHash})
       }

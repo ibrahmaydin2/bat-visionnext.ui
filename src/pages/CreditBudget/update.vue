@@ -1,0 +1,459 @@
+<template>
+  <b-row class="asc__insertPage">
+    <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
+    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" />
+    <UpdateCreditBudgetModal :modalAction="{Title: $t('insert.creditBudget.updateBudget')}" :modalItem="form" @success="successUpdatedBudget"/>
+    <b-modal id="update-budget-confirm-modal">
+      <template #modal-title>
+        {{$t('insert.creditBudget.doYouApprove')}}
+      </template>
+      {{$t('insert.creditBudget.updateBudgetConfirmMessage')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('update-budget-confirm-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="updateBudget()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal id="credit-budget-confirm-edit-modal">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.rowEditConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-edit-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="editCustomerGuarantee()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal id="credit-budget-confirm-delete-modal">
+      <template #modal-title>
+        {{$t('list.deleteConfirm')}}
+      </template>
+      {{$t('list.rowDeleteConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-delete-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="removeCustomerGuarantee()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-col cols="12">
+      <header>
+        <b-row>
+          <b-col cols="12" md="6">
+            <Breadcrumb />
+          </b-col>
+          <b-col cols="12" md="6" class="text-right">
+            <router-link :to="{name: 'CreditBudget' }">
+              <CancelButton />
+            </router-link>
+            <AddButton @click.native="save()" />
+          </b-col>
+        </b-row>
+      </header>
+    </b-col>
+    <b-col cols="12" class="asc__insertPage-content-head">
+      <section>
+        <b-row>
+          <NextFormGroup :title="$t('insert.code')">
+            <b-form-input type="text" v-model="form.Code" disabled />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+          </NextFormGroup>
+          <b-col md="4" lg="6">
+            <b-button v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+          </b-col>
+        </b-row>
+      </section>
+    </b-col>
+    <b-col cols="12">
+      <b-tabs>
+        <b-tab :title="$t('insert.creditBudget.title')" active>
+          <b-row>
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')" disabled />
+            </NextFormGroup>
+            <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
+              <b-form-datepicker v-model="form.EndDate" :placeholder="$t('insert.chooseDate')" disabled />
+            </NextFormGroup>
+            <NextFormGroup item-key="CreditBranchId" :error="$v.form.CreditBranchId">
+              <NextDropdown v-model="selectedBranch" url="VisionNextBranch/api/Branch/AutoCompleteSearch" @input="selectedSearchType('CreditBranchId', $event)" disabled searchable />
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input type="number" v-model="form.BudgetAmount" :readonly="true" @input="changedBudgetAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
+              <b-form-input type="text" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ReservedAmount" :error="$v.form.ReservedAmount">
+              <b-form-input type="text" v-model="form.ReservedAmount" :readonly="insertReadonly.ReservedAmount" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.remainingBudget')">
+              <b-form-input type="text" v-model="form.LeftAmount" disabled />
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.creditBudget.customerGuarantees')">
+          <b-row>
+            <NextFormGroup :title="$t('insert.creditBudget.customer')" :required="true" :error="$v.customerGuarantees.CustomerId" md="2" lg="2">
+              <NextDropdown
+                v-model="selectedCustomer"
+                url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
+                @input="selectCustomer" :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{BranchIds: [form.CreditBranchId]}"
+                :is-customer="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CreditLimit" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.riskLimit')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.RiskLimit" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.currentCredit')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CurrentCredit" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.currentRisk')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CurrentRisk" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.creditAccountRemainder')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CreditAccountRemainder" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.debitAccountRemainder')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.DebitAccountRemainder" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.creditAmountCentral')" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.CreditAmountCentral" disabled />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
+              <b-form-input type="text" v-model="customerGuarantees.Amount" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="false" md="2" lg="2">
+              <NextDropdown
+                v-model="paymentPeriod"
+                url="VisionNextCommonApi/api/FixedTerm/Search"
+                @input="selectPaymentPeriod"
+                v-on:all-source="setPaymentPeriods"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <AddDetailButton @click.native="addCustomerGuarantee" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
+              </b-form-group>
+            </b-col>
+             <b-col cols="12" md="2" v-if="selectedItems.length > 0">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table
+              :items="(form.CustomerGuarantees ? form.CustomerGuarantees.filter(c => c.RecordState !== 4) : [])"
+              :fields="customerGuaranteeFields"
+              sticky-header
+              select-mode="multi"
+              responsive
+              id="customer-guarantees"
+              selectable
+              bordered
+              small
+              @row-selected="onRowSelected"
+              :tbody-tr-class="rowClass"
+            >
+              <template #cell(selection)="row">
+                <span>
+                  <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+                </span>
+              </template>
+              <template #cell(operations)="row">
+                <b-button :title="$t('list.edit')" @click="$bvModal.show('credit-budget-confirm-edit-modal'); selectedCustomerGuarantee = row.item;" class="btn mr-2 btn-warning btn-sm">
+                  <i class="fa fa-pencil-alt"></i>
+                </b-button>
+                <b-button :title="$t('list.delete')" @click="$bvModal.show('credit-budget-confirm-delete-modal'); selectedCustomerGuarantee = row.item;" type="button" class="btn mr-2 btn-danger btn-sm">
+                  <i class="far fa-trash-alt ml-1"></i>
+                </b-button>
+              </template>
+            </b-table>
+          </b-row>
+        </b-tab>
+      </b-tabs>
+    </b-col>
+  </b-row>
+</template>
+<script>
+import { required } from 'vuelidate/lib/validators'
+import insertMixin from '../../mixins/update'
+export default {
+  mixins: [insertMixin],
+  data () {
+    return {
+      form: {
+        Code: null,
+        StatusId: 1,
+        BeginDate: null,
+        EndDate: null,
+        CreditBranchId: null,
+        BudgetAmount: null,
+        UsedAmount: 0,
+        ReservedAmount: 0,
+        LeftAmount: 0,
+        CreditBudgetDetails: [],
+        CustomerGuarantees: []
+      },
+      routeName1: 'Budget',
+      customerGuarantees: {
+        Amount: null,
+        AppStatus: null,
+        ApproveStateId: null,
+        CreditAccountRemainder: null,
+        CreditAmountCentral: null,
+        CreditLimit: null,
+        CurrentCredit: null,
+        CurrentRisk: null,
+        CustomerCode: null,
+        CustomerCreditHistoryId: null,
+        CustomerDesc: null,
+        CustomerId: null,
+        DebitAccountRemainder: null,
+        IsBlackListed: null,
+        PaymentPeriod: null,
+        RecordTypeId: null,
+        RiskLimit: null
+      },
+      selectedCustomer: {},
+      selectedBranch: null,
+      paymentPeriod: null,
+      selectedItems: [],
+      customerGuaranteeFields: [
+        {key: 'selection', label: '', sortable: false},
+        {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
+        {
+          key: 'CustomerDesc',
+          label: this.$t('insert.creditBudget.customer'),
+          sortable: false,
+          formatter (value, key, obj) {
+            return `${obj.CustomerCode} - ${obj.CustomerDesc}`
+          }
+        },
+        {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
+        {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
+        {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
+        {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
+        {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
+        {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
+        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
+        {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
+        {
+          key: 'PaymentPeriod',
+          label: this.$t('insert.creditBudget.paymentPeriod'),
+          sortable: false,
+          formatter (value, key, obj) {
+            return obj.paymentPeriodO ? obj.paymentPeriodO.Description1 : '-'
+          }},
+        {key: 'operations', label: this.$t('list.operations'), sortable: false}
+      ],
+      selectedIndex: 0,
+      paymentPeriods: [],
+      selectedCustomerGuarantee: null
+    }
+  },
+  mounted () {
+    this.getData().then(() => this.setData())
+  },
+  methods: {
+    save () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
+      } else {
+        this.form.CreditBudgetDetails = this.form.CustomerGuarantees.map((item) => {
+          let creditBudgetDetail = {
+            CreditBudgetId: item.CreditBudgetId,
+            ApprovestateId: item.ApproveStateId,
+            Amount: item.Amount,
+            CustomerId: item.CustomerId,
+            CustomerCreditHistory: item.CustomerCreditHistoryId,
+            PaymentPeriod: item.PaymentPeriod,
+            RecordState: item.RecordId > 0 ? 3 : 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            RecordId: item.RecordId,
+            CustomerGuarantees: item
+          }
+
+          return creditBudgetDetail
+        })
+        this.updateData()
+      }
+    },
+    changedBudgetAmount (value) {
+      this.form.LeftAmount = value > 0
+        ? (parseFloat(value) - (this.form.UsedAmount + this.form.ReservedAmount))
+        : 0
+    },
+    rowClass (item, type) {
+      if (!item || type !== 'row') return
+      if (item.ApproveStateId === 52) return 'tr-disabled'
+    },
+    selectCustomer (customer) {
+      this.customerGuarantees = {}
+      if (customer) {
+        this.customerGuarantees.CustomerCode = customer.Code
+        this.customerGuarantees.CustomerDesc = customer.Description
+        this.$api.getByUrl(`VisionNextBudget/api/CreditBudget/GetCustomerInfo?customerId=${customer.RecordId}`).then((res) => {
+          if (res) {
+            this.customerGuarantees = res
+            this.customerGuarantees.PaymentPeriod = null
+            this.customerGuarantees.Amount = null
+            this.paymentPeriod = null
+            this.customerGuarantees.CreditAmountCentral = res.CreditAmount
+            this.$v.customerGuarantees.$reset()
+          } else {
+            this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.contract.noCustomerBudget') })
+          }
+        })
+      }
+    },
+    selectPaymentPeriod (paymentPeriod) {
+      this.customerGuarantees.PaymentPeriod = paymentPeriod ? paymentPeriod.RecordId : null
+    },
+    addCustomerGuarantee () {
+      this.$v.customerGuarantees.$touch()
+      if (this.$v.customerGuarantees.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      this.customerGuarantees.paymentPeriodO = this.paymentPeriod
+      if (this.customerGuarantees.isUpdated) {
+        this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
+        this.selectedIndex = null
+      } else {
+        this.customerGuarantees.CreditBudgetId = this.form.RecordId
+        this.form.CustomerGuarantees.push(this.customerGuarantees)
+      }
+      this.customerGuarantees = {}
+      this.selectedCustomer = {}
+      this.paymentPeriod = null
+      this.$v.customerGuarantees.$reset()
+    },
+    removeCustomerGuarantee () {
+      if (this.selectedCustomerGuarantee.RecordId > 0) {
+        this.form.CustomerGuarantees[this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
+      } else {
+        this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
+      }
+      this.selectedCustomerGuarantee = null
+      this.$bvModal.hide('credit-budget-confirm-delete-modal')
+      this.$forceUpdate()
+    },
+    editCustomerGuarantee () {
+      this.customerGuarantees = {...this.selectedCustomerGuarantee}
+      this.selectedCustomer = null
+      this.paymentPeriod = null
+      this.customerGuarantees.isUpdated = true
+      if (this.selectedCustomerGuarantee.RecordId > 0) {
+        this.customerGuarantees.RecordState = 3
+      }
+      this.customerGuarantees.CreditAmountCentral = this.selectedCustomerGuarantee.CreditAmount
+      this.paymentPeriod = this.getPaymentPeriodById(this.selectedCustomerGuarantee.PaymentPeriod)
+      this.selectedCustomer = {
+        RecordId: this.selectedCustomerGuarantee.CustomerId,
+        Description1: this.selectedCustomerGuarantee.CustomerDesc,
+        Code: this.selectedCustomerGuarantee.CustomerCode
+      }
+      this.selectedCustomerGuarantee = null
+      this.$bvModal.hide('credit-budget-confirm-edit-modal')
+    },
+    setData () {
+      this.form = this.rowData
+
+      this.form.CustomerGuarantees = this.form.CreditBudgetDetails.map(item => {
+        let customerGuarantees = item.CustomerGuarantees
+        customerGuarantees.RecordId = item.RecordId
+        customerGuarantees.CreditBudgetId = item.CreditBudgetId
+        customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
+        return customerGuarantees
+      })
+      this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
+      this.form.LeftAmount = this.form.BudgetAmount > 0
+        ? (parseFloat(this.form.BudgetAmount) - (this.form.UsedAmount + this.form.ReservedAmount))
+        : 0
+    },
+    successExcelImport (data) {
+      if (data) {
+        let list = []
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          obj.RecordState = 2
+          obj.StatusId = 1
+          obj.Deleted = 0
+          obj.System = 0
+          if (obj.Period) {
+            obj.PaymentPeriod = obj.Period
+          }
+          obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
+          obj.CreditBudgetId = this.form.RecordId
+          list.push(obj)
+        })
+        if (this.form.CustomerGuarantees && this.form.CustomerGuarantees.length > 0) {
+          this.form.CustomerGuarantees.map(c => {
+            c.RecordState = 4
+            return c
+          })
+        }
+        this.form.CustomerGuarantees = [...this.form.CustomerGuarantees, ...list]
+      }
+    },
+    onRowSelected (items) {
+      this.selectedItems = items
+    },
+    setPaymentPeriods (value) {
+      this.paymentPeriods = value
+    },
+    getPaymentPeriodById (paymentPeriod) {
+      let paymentPeriods = this.paymentPeriods.filter(p => p.Period === paymentPeriod)
+      if (paymentPeriods.length > 0) {
+        return paymentPeriods.length > 0 ? paymentPeriods[0] : { RecordId: paymentPeriod }
+      }
+    },
+    updateBudget () {
+      this.$bvModal.hide('update-budget-confirm-modal')
+      this.$bvModal.show('update-credit-budget-modal')
+    },
+    successUpdatedBudget () {
+      this.getData().then(() => { this.setData() })
+    }
+  },
+  validations () {
+    return {
+      form: this.insertRules,
+      customerGuarantees: {
+        CustomerId: {
+          required
+        },
+        Amount: {
+          required
+        }
+      }
+    }
+  }
+}
+</script>
+<style scoped>
+.success-color {
+  color: #28a745;
+  font-size: medium;
+}
+.gray-color {
+  color: lightgray;
+  font-size: medium;
+}
+</style>

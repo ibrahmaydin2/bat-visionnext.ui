@@ -5,7 +5,15 @@
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-overlay :show="bigLoading" rounded="sm">
+          <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+            <template #overlay>
+              <b-icon
+                icon="three-dots"
+                animation="cylon"
+                scale="8"
+                variant="warning"
+              ></b-icon>
+            </template>
             <b-card class="asc__updatePage" no-body>
               <router-view/>
             </b-card>
@@ -31,6 +39,8 @@ export default {
   .asc__general-addingLoader
     display: none
     color: #ffa300
+  .v-none
+    visibility: hidden !important
   .asc__updatePage
     margin-bottom: 2rem
     & header
@@ -71,6 +81,9 @@ export default {
             font-size: 14px
           .nav-link
             color: #000
+          .error-tab
+            border: 1px #ff0000 solid !important
+            border-radius: 0.25rem
       .tab-pane
         padding: 1rem 15px
         background: #fbfbfb
@@ -213,4 +226,13 @@ export default {
         font-weight: bold
         font-size: 14px
         font-style: italic
+  .info-icon
+    font-size: 26px
+    margin-top: 2px
+    cursor: pointer
+  </style>
+  <style>
+  .nav-tabs .nav-link.disabled {
+    color: grey !important
+  }
   </style>

@@ -1,19 +1,20 @@
 <template>
   <div class="asc__nextgrid">
-    <b-table-simple hover bordered small responsive sticky-header class="asc__nextgrid-table">
+    <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.map(x => x.label).join()} ${$t('list.requiredFieldsMessage')}`}}</span>
+    <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
-        <draggable tag="tr" :list="head">
+        <draggable tag="tr" :list="head" :disabled="disabledDraggable">
           <b-th
             v-for="header in head"
-            :key="header.dataField"
-            :style="header.width ? 'width:' + header.width : ''"
+            :key="header.dataField+header.columnType"
+            :style="header.width ? 'width: ' + header.width : ''"
             :class="
               header.align == null ?
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-left'
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
-            <span class="asc__nextgrid-table-header-title">{{header.label}}</span>
+            <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
             <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
               <b-button
                 @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
@@ -24,197 +25,207 @@
                 <i :class="sort === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
               </b-button>
             </div>
-            <div class="asc__nextgrid-table-header-filter">
-              <v-select
-                v-if="header.columnType === 'LabelValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-              <v-select
-                v-if="header.columnType === 'CodeValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'UpperValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'ValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'DecimalValueValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-
-              <v-select
-                v-if="header.columnType === 'OtherPropertiesValue'"
-                v-once
-                label="title"
-                @open="onOpen(header.dataField, items)"
-                @click="filterAutocomplete(items)"
-                disabled
-              >
-              </v-select>
-
-              <!--<v-select
-                v-if="header.columnType === 'LabelValue'"
-                v-once
-                disabled
-                v-model="VehicleName"
-                label="VehiclePlateNumber"
-                :filterable="false"
-                :options="vehicleList"
-                @search="onVehicleSearch"
-                @input="selectedVehicle"
-              >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.VehiclePlateNumber }}
-                </template>
-              </v-select>-->
-
+            <div class="asc__nextgrid-table-header-filter" :style="header.width ? 'width: ' + header.width : ''">
+              <div v-if="header.modelControlUtil != null">
+                <div v-if="header.modelControlUtil.InputType === 'AutoComplete'">
+                  <autocomplete
+                    @click="onClickAutoComplete(header.modelControlUtil)"
+                    :search="onAutoCompleteSearch"
+                    class="autocomplete-search"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
+                    :get-result-value="getResultValue"
+                    @submit="handleSubmit(header.modelControlUtil.ModelProperty, $event)"
+                    ref="AutoCompleteDropdown"
+                    :disabled="disabledAutoComplete || header.disabled"
+                  >
+                    <template #result="{ result, props }">
+                      <li v-bind="props">
+                        <span v-if="result.Code">{{`${result.Code} - ${result.Description1}`}}</span>
+                        <span v-if="!result.Code">{{result.Description1}}</span>
+                      </li>
+                    </template>
+                  </autocomplete>
+                </div>
+                <div v-else>
+                  <v-select
+                    v-if="header.modelControlUtil.IsLookupTable"
+                    label="Label"
+                    :options="lookup[header.modelControlUtil.Code]"
+                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, 'lookup')"
+                    v-model="header.defaultValue"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
+                    :disabled="header.disabled"
+                  >
+                  </v-select>
+                  <v-select
+                    v-else
+                    label="Description1"
+                    :options="gridField[header.modelControlUtil.ModelProperty]"
+                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, 'search')"
+                    v-model="header.defaultValue"
+                    @focus="disabledDraggable = true"
+                    @blur="disabledDraggable = false"
+                    :disabled="header.disabled"
+                  >
+                  </v-select>
+                </div>
+              </div>
               <v-select
                 v-if="header.columnType === 'Boolean'"
-                v-once
-                v-model="searchText"
+                v-model="header.defaultValue"
                 :options="searchBoolean"
-                @input="filterBoolean(header.dataField)"
+                @input="filterBoolean(header)"
                 label="title"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
-
-              <b-form-datepicker
+              <date-picker
                 v-if="header.columnType === 'Date'"
-                v-once
-                v-model="searchText"
-                placeholder=""
-                @input="filterDate(header.dataField, searchText)"
-              />
+                range
+                type="date"
+                :placeholder="getFormattedDate(header.defaultValue)"
+                v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
+                @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
+              ></date-picker>
+
+              <date-picker
+                v-if="header.columnType === 'DateTime'"
+                range
+                type="date"
+                :placeholder="getFormattedDate(header.defaultValue)"
+                v-model="header.defaultValue"
+                format="YYYY-MM-DD"
+                value-type="format"
+                @change="filterRangeDate(header.dataField, header.defaultValue, header.columnType)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
+              ></date-picker>
 
               <b-form-datepicker
-                v-if="header.columnType === 'DateTime'"
-                v-once
-                v-model="searchText"
+                v-if="header.columnType === 'DateTime2'"
+                v-model="header.defaultValue"
                 placeholder=""
-                @input="filterDate(header.dataField, searchText)"
+                @input="filterDate(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
+              />
+
+              <b-form-input
+                v-if="header.columnType === 'Time'"
+                v-mask="'##:##:##'"
+                placeholder="00:00:00"
+                v-model="header.defaultValue"
+                @keydown.enter="filterTime(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
                 v-if="header.columnType === 'String'"
-                v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @input="setSearchQ(header.dataField, $event)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
+              />
+
+              <b-form-input
+                v-if="header.columnType === 'Decimal'"
+                type="number"
+                v-model="header.defaultValue"
+                @keydown.enter="filterDecimal(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
 
               <b-form-input
                 v-if="header.columnType === 'Id'"
-                v-once
-                v-model="searchText"
-                @keydown.enter="searchOnTable(header.dataField, searchText)"
+                v-model="header.defaultValue"
+                @keydown.enter="searchOnTable(header.dataField, header.defaultValue)"
+                @focus="disabledDraggable = true"
+                @blur="disabledDraggable = false"
+                :disabled="header.disabled"
               />
             </div>
           </b-th>
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="item in items" :key="'item' + item.Code">
-          <b-td v-for="h in head" :key="h.dataField">
-            <!-- eğer value gönderirlerse bu fonksiyonu çalıştırıcaz.
-            <template v-if="h.value">
-              {{ item[h.dataField][h.value] }}
-            </template>-->
+        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''">
+          <b-td v-for="h in head" :key="h.dataField+h.columnType">
+            <span v-if="h.columnType === 'selection'" class="d-block w-100">
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
+            </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>
-                <b-dropdown-item v-for="(opt, x) in tableOperations.RowActions" :key="'opt' + x">
-                  <router-link v-if="opt.ViewType === 'Route'" :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </router-link>
-                  <span v-else-if="opt.ViewType === 'Modal'" @click="showModal(opt.Action, opt.ActionUrl, item.RecordId, item, opt.Query, opt.QueryMessage)">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </span>
-                  <a v-else-if="opt.ViewType === 'Link'" :href="opt.Action" target="_blank">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </a>
-                  <router-link v-else :to="{name: $route.name + opt.Action, params: {url: item.RecordId}}">
-                    <i class="far fa-circle" /> {{ opt.Title }}
-                  </router-link>
-                </b-dropdown-item>
+                <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
+                <Workflow :items="workFlowList" :RecordId="item.RecordId" />
               </b-dropdown>
             </span>
-            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Label')">
               {{ labelFormat(item[h.dataField], 'Label') }}
             </span>
-            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Code')">
               {{ labelFormat(item[h.dataField], 'Code') }}
             </span>
-            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'UpperValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="abelFormat(item[h.dataField], 'UpperValue')">
               {{ labelFormat(item[h.dataField], 'UpperValue')}}
             </span>
-            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'ValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Value')">
               {{ labelFormat(item[h.dataField], 'Value')}}
             </span>
-            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DecimalValueValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'DecimalValue')">
               {{ labelFormat(item[h.dataField], 'DecimalValue')}}
             </span>
-            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'OtherPropertiesValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'OtherProperties')">
               {{ labelFormat(item[h.dataField], 'OtherProperties')}}
             </span>
 
             <span v-else-if="h.columnType === 'Boolean'" class="w-100 d-block text-center">
               <i :class="item[h.dataField] === 0 ? 'fas fa-times text-danger' : 'fas fa-check text-success'" />
             </span>
-            <span v-else-if="h.columnType === 'Date'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Date'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateFormat(item[h.dataField])">
               {{ dateFormat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DateTime'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateTimeformat(item[h.dataField])">
               {{ dateTimeformat(item[h.dataField]) }}
             </span>
-            <span v-else-if="h.columnType === 'String'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'DateTime2'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="dateTimeformat(item[h.dataField])">
+              {{ dateTimeformat(item[h.dataField]) }}
+            </span>
+            <span v-else-if="h.columnType === 'String'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               {{ item[h.dataField] }}
             </span>
-            <span v-else-if="h.columnType === 'Id'" class="d-block w-100">
+            <span v-else-if="h.columnType === 'Id'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               <i>{{ item[h.dataField] }}</i>
             </span>
-            <span v-else class="d-block w-100">
+            <span v-else-if="h.columnType === 'DescriptionValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item['Label' + h.dataField], 'Description1')">
+              {{ labelFormat(item['Label' + h.dataField], 'Description1') }}
+            </span>
+            <span v-else class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="item[h.dataField]">
               {{ item[h.dataField] }}
             </span>
           </b-td>
         </b-tr>
       </b-tbody>
     </b-table-simple>
-    <b-row class="asc__nextgrid-table-footer">
+    <b-row class="asc__nextgrid-table-footer" v-if="items && items.length > 0">
       <b-col cols="6">
         <b-dropdown :text="perPage + ' / ' + totalRowCount" size="sm">
           <b-dropdown-item v-for="p in perPageOpt" :key="'perpage' + p" @click="setPerPage(p)" active-class="dropdown-active">{{p}}</b-dropdown-item>
@@ -223,23 +234,88 @@
       <b-col cols="6">
         <b-pagination-nav pills :link-gen="linkGen" :number-of-pages="totalPageCount" use-router variant="dark" class="float-right asc__nextgrid-paginationlinks" />
       </b-col>
-      <!-- <b-col cols="6">
-        aranan tablo: {{tablefield}}, aranan kelime: {{searched}}
-      </b-col> -->
     </b-row>
-    <b-modal ref="RejectModal" hide-footer hide-header>
-      <PotentialCustomerRejectModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+    <b-modal id="approve-reject-modal" ref="RejectModal" hide-footer hide-header>
+      <PotentialCustomerRejectModal :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
-    <b-modal ref="ApproveModal" hide-footer hide-header>
-      <PotentialCustomerApproveModal :action="modalActionUrl" :recordId="modalRecordId" :data="modalRecord" :query="modalQuery" :message="modalQueryMessage" />
+    <b-modal id="approve-modal" ref="ApproveModal" hide-footer hide-header>
+      <PotentialCustomerApproveModal v-if="showPotentialCustomerApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     </b-modal>
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation v-if='showLocationModal' :Location="modalItem"/>
+    </b-modal>
+    <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <SalesWaybillConvertModal v-if="showWaybillConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaConvertModal v-if="showRmaConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <RmaInvoiceModal v-if="showRmaInvoiceModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <InvoiceConvertModal v-if="showInvoiceConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <KmModal v-if="showKmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CreateSalesWaybill v-if="showCreateSalesWaybillModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <MultipleLoadingPlanModal v-if="showMultipleLoadingPlanModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <UpdateCreditBudgetModal v-if="showUpdateCreditBudgetModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CommonInfoModal v-if="showCommonInfoModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <CreditBudgetBulkApproveModal v-if="showCreditBulkBudgetModal" :modalAction="modalAction" :modalItem="modalItem" size="xl"/>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../mixins/index'
+import Workflow from './Workflow'
+import ConfirmModal from './Actions/ConfirmModal'
+import CustomConvertModal from './Actions/CustomConvertModal'
+import OrderConvertModal from './Actions/OrderConvertModal'
+import SalesWaybillConvertModal from './Actions/SalesWaybillConvertModal'
+import RmaConvertModal from './Actions/RmaConvertModal'
+import RmaInvoiceModal from './Actions/RmaInvoiceModal'
+import InvoiceConvertModal from './Actions/InvoiceConvertModal'
+import KmModal from './Actions/KmModal'
+import CreateSalesWaybill from './Actions/CreateSalesWaybill'
+import MultipleLoadingPlanModal from './Actions/MultipleLoadingPlanModal'
 let searchQ = {}
 export default {
-  props: ['apiurl', 'apiparams', 'andConditionalModel'],
+  components: {
+    Workflow,
+    ConfirmModal,
+    CustomConvertModal,
+    OrderConvertModal,
+    SalesWaybillConvertModal,
+    RmaConvertModal,
+    RmaInvoiceModal,
+    KmModal,
+    InvoiceConvertModal,
+    CreateSalesWaybill,
+    MultipleLoadingPlanModal
+  },
+  props: {
+    apiurl: String,
+    apiparams: String,
+    andConditionalModel: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    workFlowModel: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    selectionMode: {
+      type: String,
+      validator: (prop) => [
+        'none',
+        'single',
+        'multi'
+      ].includes(prop),
+      default: 'none'
+    }
+  },
+  mixins: [mixin],
   data () {
     return {
       grid: [],
@@ -263,10 +339,47 @@ export default {
       searchBoolean: [
         { value: 1, title: 'Aktif' },
         { value: 0, title: 'Pasif' }
-      ]
+      ],
+      rangeDate: [],
+      selectedHeader: null,
+      workFlowList: [],
+      selectedItems: [],
+      requiredFields: [],
+      showRequiredInfo: true,
+      modalAction: null,
+      modalItem: null,
+      isGridFieldsReady: false,
+      isLookupReady: false,
+      showConvertModal: false,
+      showWaybillConvertModal: false,
+      showRmaConvertModal: false,
+      showRmaInvoiceModal: false,
+      showInvoiceConvertModal: false,
+      showPotentialCustomerApproveModal: false,
+      showCustomConvertModal: false,
+      showConfirmModal: false,
+      showKmModal: false,
+      showLocationModal: false,
+      showCreateSalesWaybillModal: false,
+      autoSearchInput: {},
+      showMultipleLoadingPlanModal: false,
+      AndConditionalModel: {},
+      disabledDraggable: false,
+      firstHead: null,
+      firstSearchItem: null,
+      showUpdateCreditBudgetModal: false,
+      disabledAutoComplete: false,
+      showBudgetMasterApproveModal: false,
+      showAssignEmployeeModal: false,
+      showCommonInfoModal: false,
+      showCreditBulkBudgetModal: false
     }
   },
   mounted () {
+    searchQ = {}
+    this.$store.commit('setIsMultipleGrid', this.selectionMode === 'multi')
+    this.$store.commit('setLastGridItem', null)
+    this.$store.commit('setLastGridModel', {})
     let sortOpt = {}
     // ön tanımlı olarak 20 kayıt gelir. eğer farklı bir değer seçilmişse onu belirtir.
     if (this.$route.query.count) {
@@ -279,6 +392,7 @@ export default {
       this.currentPage = parseInt(this.$route.query.page)
     } else {
       this.currentPage = 1
+      this.$route.query.page = 1
     }
     // ön tanımlı olarak sıralama gönderilmez. eğer varsa query alınacak.
     if (this.$route.query.sort) {
@@ -291,26 +405,180 @@ export default {
     } else {
       sortOpt = null
     }
-    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt)
+    this.AndConditionalModel = this.andConditionalModel
+    this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
+    this.getWorkflowData()
+    this.$store.commit('setSelectedTableRows', [])
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'nextgrid', 'gridField'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'tableRowsAll', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid'])
   },
   methods: {
-    showModal (action, url, id, data, query, message) {
-      this.modalRecordId = id
-      this.modalRecord = data
-      this.modalQuery = query
-      this.modalQueryMessage = message
-      this.$refs[`${action}Modal`].show()
-      this.modalActionUrl = url
+    getWorkflowData () {
+      if (this.workFlowModel && this.workFlowModel.ControllerName && this.workFlowModel.ClassName && this.workFlowModel.PageName) {
+        this.$api.post(this.workFlowModel, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
+          this.workFlowList = res.ListModel.BaseModels
+        })
+      }
+    },
+    showModal (action, row) {
+      this.modalAction = action
+      this.modalItem = row
+      this.showConvertModal = false
+      this.showCustomConvertModal = false
+      this.showWaybillConvertModal = false
+      this.showRmaConvertModal = false
+      this.showRmaInvoiceModal = false
+      this.showPotentialCustomerApproveModal = false
+      this.showPotentialCustomerRejectModal = false
+      this.showConfirmModal = false
+      this.showKmModal = false
+      this.showLocationModal = false
+      this.showCreateSalesWaybillModal = false
+      this.showMultipleLoadingPlanModal = false
+      this.showUpdateCreditBudgetModal = false
+      this.showBudgetMasterApproveModal = false
+      this.showAssignEmployeeModal = false
+      this.showCommonInfoModal = false
+      this.showCreditBulkBudgetModal = false
+
+      if (!this.validateAction(action.Action)) {
+        return
+      }
+      if (action.Action === 'RejectPotentialCustomer' || action.Action === 'ApprovePotentialCustomer') {
+        if (row.ApproveStateId !== 51) {
+          this.$toasted.show(this.$t('index.errorApproveStateModal'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+      }
+      if (action.Action === 'ApprovePotentialCustomer') {
+        this.showPotentialCustomerApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'approve-modal')
+        })
+      } else if (action.Action === 'RejectPotentialCustomer') {
+        this.$root.$emit('bv::show::modal', 'approve-reject-modal')
+      } else if (action.Action === 'CustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
+      } else if (action.Action === 'OrderConvert') {
+        if (row && typeof row.StatusId !== 'undefined' && row.StatusId !== 2 && this.$route.name !== 'PurchaseOrder') {
+          this.$toasted.show(this.$t('index.errorSevk'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.showConvertModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('orderConvertModal')
+        })
+      } else if (action.Action === 'WaybillConvert') {
+        this.showWaybillConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesWaybillConvertModal')
+        })
+      } else if (action.Action === 'KmModal') {
+        this.showKmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'kmModal')
+        })
+      } else if (action.Action === 'ShowOnMap') {
+        this.showLocationModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'location-modal')
+        })
+      } else if (action.Action === 'OrderRmaConvert') {
+        if (row && typeof row.RmaStatusId !== 'undefined' && row.RmaStatusId !== 3) {
+          this.$toasted.show(this.$t('index.errorConfirm'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.showRmaConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'rmaConvertModal')
+        })
+      } else if (action.Action === 'CreateDespatchWaybill') {
+        if (this.modalItem && this.modalItem.EDocumentStatus && (this.modalItem.EDocumentStatus.Code === 'SendToGib' || this.modalItem.EDocumentStatus.Code === 'SendToReceiver')) {
+          this.showCreateSalesWaybillModal = true
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'createSalesWaybillModal')
+          })
+        } else {
+          this.$toasted.show(this.$t('index.Convert.createSalesWaybillStatusError'), { type: 'error', keepOnHover: true, duration: '4000' })
+        }
+      } else if (action.Action === 'LoadingPlanMultiple') {
+        this.showMultipleLoadingPlanModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'multipleLoadingPlanModal')
+        })
+      } else if (action.Action === 'BudgetUpdate') {
+        this.showUpdateCreditBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'update-credit-budget-modal')
+        })
+      } else if (action.Action && action.Action.trim() === 'BudgetMasterApprove') {
+        this.showBudgetMasterApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'budget-master-approve-modal')
+        })
+      } else if (action.Action === 'AssignEmployee') {
+        this.showAssignEmployeeModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'assign-employee-modal')
+        })
+      } else if (action.Action === 'BranchCustomConvert') {
+        this.showCustomConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'customConvertModal')
+        })
+      } else if (action.Action === 'Info') {
+        this.showCommonInfoModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('common-info-modal')
+        })
+      } else if (action.Action === 'ContractCustomerApprove') {
+        this.showCreditBulkBudgetModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
+        })
+      } else {
+        this.showConfirmModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'confirmModal')
+        })
+      }
+      // if (action.Action === 'RmaInvoice') {
+      //   this.showRmaInvoiceModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'rmaInvoiceModal')
+      //   })
+      //   return
+      // }
+      // if (action.Action === 'PurchaseInvoiceConvert') {
+      //   this.showInvoiceConvertModal = true
+      //   this.$nextTick(() => {
+      //     this.$root.$emit('bv::show::modal', 'invoiceConvertModal')
+      //   })
+      //   return
+      // }
     },
     dateTimeformat (e) {
       let calendar, date
       if (e != null) {
         calendar = e.split('T')
         date = calendar[0].split('-')
-        return date[2] + '-' + date[1] + '-' + date[0] + ' ' + calendar[1]
+        return date[2] + '/' + date[1] + '/' + date[0] + ' ' + calendar[1]
       }
     },
     dateFormat (e) {
@@ -366,16 +634,157 @@ export default {
       this.searchOnTable(e, this.searchText.id)
     },
     filterBoolean (e) {
-      this.searchOnTable(e, this.searchText.value)
+      let search = e.defaultValue ? e.defaultValue.value : ''
+      this.searchOnTable(e.dataField, search)
     },
     filterDate (e, date) {
-      this.searchOnTable(e, date)
+      let model = {
+        Value: this.dateConvertToISo(date)
+      }
+      this.AndConditionalModel[e] = model
+      this.searchOnTable()
+    },
+    filterRangeDate (e, date, type) {
+      if (date[0] && date[1]) {
+        let beginValue = this.dateConvertToISo(date[0])
+        let endValue = this.dateConvertToISo(date[1])
+        let endDate = new Date(date[1])
+
+        switch (type) {
+          case 'DateTime':
+            if (date[0] === date[1]) {
+              endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59)).toISOString()
+            }
+            break
+          case 'Date':
+            beginValue = beginValue.substr(0, 10)
+            if (date[0] === date[1]) {
+              endValue = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), (endDate.getDate() + 1), 0, 0, 0)).toISOString().substr(0, 10)
+            } else {
+              endValue = endValue.substr(0, 10)
+            }
+            break
+        }
+
+        let model = {
+          BeginValue: beginValue,
+          EndValue: endValue
+        }
+        this.AndConditionalModel[e] = model
+        this.currentPage = 1
+      } else {
+        this.AndConditionalModel[e] = null
+        this.currentPage = 1
+      }
+      this.searchOnTable()
+    },
+    filterTime (e, time) {
+      this.searchOnTable(e, time)
     },
     filterLabel (e, i) {
       this.searchOnTable(`${e}Ids`, [i.RecordId])
     },
+    filterDecimal (e, i) {
+      this.searchOnTable(e, parseFloat(i))
+    },
+    selectedValue (label, model, type) {
+      if (model) {
+        this.currentPage = 1
+        if (!this.AndConditionalModel) {
+          this.AndConditionalModel = {}
+        }
+        if (type === 'lookup') {
+          this.AndConditionalModel[label] = [model.DecimalValue]
+        } else {
+          this.AndConditionalModel[label] = [model.RecordId]
+        }
+        this.searchOnTable()
+      } else {
+        delete this.AndConditionalModel[label]
+        this.searchOnTable()
+      }
+    },
+    onAutoCompleteSearch (input) {
+      if (input === '') { return [] }
+      if (this.selectedHeader && this.selectedHeader.ModelProperty) {
+        if (input === '' || this.autoSearchInput[this.selectedHeader.ModelProperty] === input) {
+          this.autoSearchInput[this.selectedHeader.ModelProperty] = input
+          return []
+        }
+        this.autoSearchInput[this.selectedHeader.ModelProperty] = input
+      }
+      if (input.length < 3) { return [] }
+      let pagerecordCount = 10
+      const orConditionModels = input === '%%%' ? [] : [
+        {
+          Description1: input.replaceAll('%', ''),
+          Code: input.replaceAll('%', '')
+        }
+      ]
+      let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
+      return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.ServiceUrl, val: this.selectedHeader.ModelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
+        if (res && res.length === 0) {
+          this.$bvToast.toast(this.$t('general.noResult'), {
+            title: this.$t('general.warningTitle'),
+            variant: 'warning',
+            toaster: 'b-toaster-top-right',
+            noCloseButton: false
+          })
+        }
+        return res
+      })
+    },
+    getResultValue (result) {
+      return this.selectedHeader.columnType === 'CodeValue' ? result.Code : result.Description1
+    },
+    handleSubmit (label, model) {
+      if (!model) {
+        this.$bvToast.toast(JSON.stringify(this.$t('insert.autoCompleteClickError')), {
+          title: this.$t('general.errorTitle'),
+          variant: 'danger',
+          toaster: 'b-toaster-top-right',
+          noCloseButton: false
+        })
+        return
+      }
+      if (model) {
+        this.currentPage = 1
+        if (!this.AndConditionalModel) {
+          this.AndConditionalModel = {}
+        }
+        this.AndConditionalModel[label] = [model.RecordId]
+        this.searchOnTable()
+      } else {
+        delete this.AndConditionalModel[label]
+        this.searchOnTable()
+      }
+    },
     searchOnTable (tableField, search) {
-      searchQ[tableField] = search
+      if (search || search === 0) {
+        this.currentPage = 1
+      }
+      if (!this.firstSearchItem) {
+        this.firstSearchItem = {
+          andConditionalModel: { ...this.AndConditionalModel },
+          searchQ: { ...searchQ }
+        }
+      }
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r.field] || this.AndConditionalModel[r.field] || this.AndConditionalModel[`${r.field}Ids`]) {
+          validCount++
+        }
+      })
+      if (validCount < this.requiredFields.length) {
+        return
+      }
+      this.showRequiredInfo = false
+      if ((search && search !== '') || search === 0) {
+        searchQ[tableField] = search
+      } else {
+        delete searchQ[tableField]
+      }
+      this.disabledAutoComplete = true
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -383,10 +792,14 @@ export default {
         page: this.currentPage,
         count: this.perPage,
         search: searchQ,
-        andConditionalModel: this.andConditionalModel
+        andConditionalModel: this.AndConditionalModel
+      }).then(() => {
+        this.disabledAutoComplete = false
+      }).catch(() => {
+        this.disabledAutoComplete = false
       })
     },
-    getData (e, p, c, s) {
+    getData (e, p, c, s, requiredFieldsError) {
       this.$store.dispatch('getTableOperations', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -396,14 +809,238 @@ export default {
         count: parseInt(c),
         sort: s,
         code: this.$route.query.code,
-        andConditionalModel: this.andConditionalModel
+        andConditionalModel: this.AndConditionalModel,
+        requiredFieldsError: requiredFieldsError
       })
+    },
+    closeApproveModal () {
+      this.$root.$emit('bv::hide::modal', 'approve-modal')
+      this.$root.$emit('bv::hide::modal', 'approve-reject-modal')
+    },
+    onClickAutoComplete (header) {
+      this.selectedHeader = header
+    },
+    isSelectable () {
+      return this.selectionMode === 'single' || this.selectionMode === 'multi'
+    },
+    selectRow (item) {
+      if (this.selectionMode === 'multi') {
+        item.Selected = !item.Selected
+        let includedItems = this.selectedItems.filter(s => s.RecordId === item.RecordId)
+        if (includedItems && includedItems.length > 0) {
+          this.selectedItems.splice(this.selectedItems.indexOf(includedItems[0]), 1)
+        } else {
+          this.selectedItems.push(item)
+        }
+        this.$forceUpdate()
+      } else if (this.selectionMode === 'single') {
+        this.items.map(i => {
+          i.Selected = false
+          return i
+        })
+        item.Selected = true
+        this.selectedItems = [item]
+        this.$forceUpdate()
+      }
+      this.$store.commit('setSelectedTableRows', this.selectedItems)
+    },
+    setDefaultValues (visibleRows) {
+      if (!this.AndConditionalModel) {
+        this.AndConditionalModel = {}
+      }
+      var me = this
+      for (let i = 0; i < visibleRows.length; i++) {
+        let row = this.tableRowsAll.find(c => c.dataField === visibleRows[i].dataField)
+        if (!row.defaultValue) {
+          continue
+        }
+        if (row.modelControlUtil !== null) {
+          if (typeof row.defaultValue === 'object') {
+            continue
+          }
+          let value = parseInt(row.defaultValue)
+          if (row.modelControlUtil.InputType === 'AutoComplete') {
+            me.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
+          } else {
+            this.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
+            if (row.modelControlUtil.InputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.ModelProperty]) {
+              row.defaultValue = me.gridField[row.modelControlUtil.ModelProperty].find(l => l.RecordId === value)
+            }
+            if (row.modelControlUtil.IsLookupTable && me.lookup && me.lookup[row.modelControlUtil.Code]) {
+              row.defaultValue = me.lookup[row.modelControlUtil.Code].find(l => l.DecimalValue === value)
+            }
+          }
+        } else {
+          switch (row.columnType) {
+            case 'Boolean':
+              if (row.defaultValue && typeof row.defaultValue !== 'object') {
+                let value = parseInt(row.defaultValue)
+                row.defaultValue = me.searchBoolean.find(b => b.value === value)
+                searchQ[row.dataField] = value
+              }
+              break
+            case 'Date':
+            case 'DateTime':
+              if (row.defaultValue && typeof row.defaultValue !== 'object') {
+                let model = {}
+                let today = new Date()
+                let todayDate = new Date(today)
+                let firstDayOfMonth = new Date(todayDate.setDate(1))
+                let firstDate = new Date(firstDayOfMonth)
+                let nextMonth = new Date(firstDate.setMonth(firstDate.getMonth() + 1))
+                let lastDayOfMonth = new Date(nextMonth.setDate(0))
+                switch (row.defaultValue) {
+                  case 'first':
+                    model.BeginValue = me.dateConvertToISo(firstDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
+                    break
+                  case 'last':
+                    model.BeginValue = me.dateConvertToISo(lastDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
+                    break
+                  case 'today':
+                    model.BeginValue = me.dateConvertToISo(today)
+                    model.EndValue = me.dateConvertToISo(today)
+                    break
+                  case 'firsttoday':
+                    model.BeginValue = me.dateConvertToISo(firstDayOfMonth)
+                    model.EndValue = me.dateConvertToISo(today)
+                    break
+                  case 'todaylast':
+                    model.BeginValue = me.dateConvertToISo(today)
+                    model.EndValue = me.dateConvertToISo(lastDayOfMonth)
+                    break
+                }
+                if (row.columnType === 'Date') {
+                  model.BeginValue = model.BeginValue.substr(0, 10)
+                  model.EndValue = model.EndValue.substr(0, 10)
+                }
+                row.defaultValue = [model.BeginValue, model.EndValue]
+                me.AndConditionalModel[row.dataField] = model
+              }
+              break
+            case 'String':
+            case 'Id':
+            case 'Decimal':
+              searchQ[row.dataField] = row.defaultValue
+              break
+          }
+        }
+        visibleRows[i] = row
+      }
+      return visibleRows
+    },
+    setRows () {
+      let lookups = ''
+      let hasAnyDropdown = false
+      this.tableRows.forEach(c => {
+        let row = this.tableRowsAll.find(t => t.dataField === c.dataField)
+        let control = row.modelControlUtil
+        if (control != null && control.InputType === 'DropDown') {
+          if (control.IsLookupTable) {
+            lookups += control.Code + ','
+          } else {
+            hasAnyDropdown = true
+            let andConditions = this.getAndConditionModel(row.AndConditions)
+            this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.ServiceUrl, val: control.ModelProperty, model: andConditions}).then(() => {
+              this.isGridFieldsReady = true
+            })
+          }
+        }
+      })
+      if (!hasAnyDropdown) {
+        this.isGridFieldsReady = true
+      }
+      if (lookups.length > 0) {
+        lookups = lookups.slice(0, -1)
+        this.$store.dispatch('getAllLookups', {...this.query, type: lookups}).then(() => {
+          this.isLookupReady = true
+        })
+      } else {
+        this.isLookupReady = true
+      }
+    },
+    setRowsAfter () {
+      if (!this.isGridFieldsReady || !this.isLookupReady) {
+        return
+      }
+      this.head = []
+      let visibleRows = this.tableRows.filter(item => item.visible === true)
+      visibleRows = this.setDefaultValues(visibleRows)
+      this.requiredFields = visibleRows.filter(v => v.required === true).map(x => {
+        let requiredField = {
+          field: x.dataField,
+          label: x.label
+        }
+        return requiredField
+      })
+      const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      if (this.selectionMode === 'multi') {
+        this.head.push(selection)
+      }
+      this.head.push(opt)
+      for (let t = 0; t < visibleRows.length; t++) {
+        let row = visibleRows[t]
+        this.head.push(row)
+      }
+      if (!this.firstHead) {
+        this.firstHead = this.head.map(h => ({...h}))
+      }
+      this.searchOnTable()
+    },
+    getFormattedDate (defaultValue) {
+      return defaultValue && defaultValue.length === 2 && defaultValue[0] && defaultValue[0].slice && defaultValue[1] && defaultValue[1].slice ? `${defaultValue[0].slice(0, 10)} - ${defaultValue[1].slice(0, 10)}` : ''
+    },
+    setSearchQ (tableField, model) {
+      searchQ[tableField] = model
+    },
+    getAndConditionModel (andConditionModels) {
+      let model = {}
+      if (andConditionModels) {
+        model = JSON.parse(`{${decodeURI(andConditionModels)}}`)
+      }
+      return model
+    },
+    validateAction (actionName) {
+      let isValid = true
+
+      switch (this.$route.name) {
+        case 'PurchaseOrder':
+          let stateId = this.modalItem.StateId
+
+          if (stateId === 3) {
+            switch (actionName) {
+              case 'Approve':
+                this.$toasted.show(this.$t('insert.order.approveError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+              case 'Canceled':
+                this.$toasted.show(this.$t('insert.order.cancelledError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+              case 'OrderConvert':
+                this.$toasted.show(this.$t('insert.order.orderConvertError'), {
+                  type: 'error',
+                  keepOnHover: true,
+                  duration: '3000'
+                })
+                break
+            }
+            break
+          }
+      }
+      return isValid
     }
   },
   watch: {
     $route (to, from) {
-      // sayfa değişikliklerini yakalamak ve içeriği güncellemek için bu bölüm şarttır.
-      let sortOpt = {}
       if (to.query.count) {
         this.perPage = parseInt(to.query.count)
       } else {
@@ -417,41 +1054,36 @@ export default {
       if (to.query.sort) {
         this.sort = to.query.sort
         this.sortField = to.query.field
-        sortOpt = {
-          table: this.sortField,
-          sort: this.sort
-        }
-      } else {
-        sortOpt = null
       }
-      this.getData(to.name, this.currentPage, this.perPage, sortOpt)
-    },
-    tableRows: function (e) {
-      this.head = []
-      const visibleRows = e.filter(item => item.visible === true)
-      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      this.head.push(opt)
-      for (let t = 0; t < visibleRows.length; t++) {
-        this.head.push(visibleRows[t])
-      }
-      e.forEach(c => {
-        let control = c.modelControlUtil
-        if (control != null) {
-          switch (control.inputType) {
-            case 'DropDown':
-              this.$store.dispatch('getGridFields', {...this.query, serviceUrl: control.serviceUrl, val: control.modelProperty})
-              break
-            case 'AutoComplete':
-              // control.code: null
-              // control.isLookupTable: 0
-              // control.modelProperty: "CardTypeIds"
-              // control.serviceUrl: "/VisionNextCustomer/api/CustomerCardType/Search"
-              // control.upperObject: null
 
-              break
-          }
+      let validCount = 0
+      this.requiredFields.forEach(r => {
+        if (searchQ[r.field] || this.AndConditionalModel[r.field] || this.AndConditionalModel[`${r.field}Ids`]) {
+          validCount++
         }
       })
+      if (validCount < this.requiredFields.length) {
+        return
+      }
+      if (this.$route.query.code && this.$route.query.code.length > 0) {
+        let sortOpt = {}
+        if (this.$route.query.sort) {
+          this.sort = this.$route.query.sort
+          this.sortField = this.$route.query.field
+          sortOpt = {
+            table: this.sortField,
+            sort: this.sort
+          }
+        } else {
+          sortOpt = null
+        }
+        this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
+      } else {
+        this.searchOnTable()
+      }
+    },
+    tableRows: function (e) {
+      this.setRows()
     },
     nextgrid: function (e) {
       // tablo datası yeniden yüklendiğinde bu bölüm çalıştırılacak.
@@ -462,6 +1094,51 @@ export default {
         this.totalPageCount = this.tableData.TotalPageCount
         this.perPage = this.tableData.PageRecordCount
       }
+    },
+    filtersCleared: function (e) {
+      if (e === true) {
+        this.AndConditionalModel = {}
+        searchQ = {}
+        if (this.firstSearchItem) {
+          this.AndConditionalModel = {...this.firstSearchItem.andConditionalModel}
+          searchQ = { ...this.firstSearchItem.searchQ }
+        }
+
+        let autoCompleteDropdowns = this.$refs.AutoCompleteDropdown
+        if (autoCompleteDropdowns && autoCompleteDropdowns.length > 0) {
+          autoCompleteDropdowns.forEach(a => {
+            a.value = ''
+          })
+        }
+        this.head = this.firstHead.map(h => ({...h}))
+        if (this.lastGridItem && this.lastGridItem.BaseModels) {
+          this.currentPage = this.lastGridItem.CurrentPage
+          this.items = this.lastGridItem.BaseModels
+          this.totalRowCount = this.lastGridItem.TotalRowCount
+          this.totalPageCount = this.lastGridItem.TotalPageCount
+          this.perPage = this.lastGridItem.PageRecordCount
+        } else {
+          this.searchOnTable()
+        }
+        let query = Object.assign({}, this.$route.query)
+        delete query.code
+        if (this.$router.history && this.$router.history.current && JSON.stringify(this.$router.history.current.query) !== JSON.stringify(query)) {
+          this.$router.replace({ query })
+        }
+        this.$store.commit('changeFiltersCleared', false)
+      }
+    },
+    reloadGrid: function (e) {
+      if (e === true) {
+        this.searchOnTable()
+        this.$store.commit('setReloadGrid', false)
+      }
+    },
+    isGridFieldsReady: function (e) {
+      this.setRowsAfter()
+    },
+    isLookupReady: function (e) {
+      this.setRowsAfter()
     }
   }
 }
@@ -475,6 +1152,35 @@ export default {
       height: 81vh
       max-height: inherit
       margin-bottom: 0px
+      .multi-hover-class
+        &:hover
+          cursor: pointer !important
+      .autocomplete-search
+        .autocomplete
+          text-align: center
+        .autocomplete-input
+          outline: none
+          padding-left: 10px
+          background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Ik0yMSAyMWwtNC00Ii8+PC9zdmc+)
+          background-repeat: no-repeat
+          background-position: center right 10px
+          background-size: 16px
+          background-color: white
+          border-radius: 5px
+          border: solid 1px lightgray
+        input::-webkit-input-placeholder
+          color: #656665
+          text-transform: initial !important
+        .autocomplete-result-list
+          line-height: 1.15
+          padding: 0
+          margin-top: 5px
+        .autocomplete-result
+          cursor: pointer
+          padding: 10px
+          text-align: left
+          border-bottom: 0.5px solid rgba(0,0,0,.16)
+          background: none
     .router-link-exact-active
       background: #007bff
       color: #fff
@@ -494,9 +1200,9 @@ export default {
     .asc__nextgrid-table-header-Boolean
       width: 120px
     .asc__nextgrid-table-header-Date
-      min-width: 100px
+      width: 170px
     .asc__nextgrid-table-header-DateTime
-      min-width: 100px
+      width: 170px
     .asc__nextgrid-table-header-String
       min-width: 100px
     .asc__nextgrid-table-header-Id
@@ -522,6 +1228,8 @@ export default {
           color: #000
       .asc__nextgrid-table-header-filter
         position: relative
+        input
+          height: 28px
     .asc__nextgrid-table-footer
       padding: 10px 0 0 0
       height: 50px
@@ -532,4 +1240,22 @@ export default {
         background: #ffffff
         color: #000
         border-color: #dee2e6
+    .row-selected
+      background-color: rgb(222, 226, 230)
+      border: solid 2px
+      border-color: darkgray
+      &:hover
+        cursor: pointer
+    .selected-color
+      color: #28a745
+    .unselected-color
+      color: lightgray
+    .grid-wrap-text
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      max-width: 200px
+      min-width: 50px
+    .mx-datepicker-range
+      width: 160px
 </style>

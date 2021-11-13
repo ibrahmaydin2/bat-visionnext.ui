@@ -39,6 +39,7 @@
                     <b-th><span>{{$t('insert.vanLoading.LastSalesQuantity')}}</span></b-th>
                     <b-th><span>{{$t('insert.vanLoading.LastdaySalesQuantity')}}</span></b-th>
                     <b-th><span>{{$t('insert.vanLoading.SuggestedQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.vanLoading.LoadingQuantity')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.VanLoadingItems" :key="i">
@@ -50,6 +51,7 @@
                       <b-td>{{r.LastSalesQuantity}}</b-td>
                       <b-td>{{r.LastdaySalesQuantity}}</b-td>
                       <b-td>{{r.SuggestedQuantity}}</b-td>
+                      <b-td>{{r.LoadingQuantity}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -73,7 +75,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
   },
   computed: {
     ...mapState(['rowData', 'style'])

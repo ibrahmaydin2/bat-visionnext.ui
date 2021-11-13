@@ -23,13 +23,15 @@
       </b-row>
       <b-tabs>
         <b-tab :title="$t('get.detail')" active>
+             <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.LoadingDate, 'date', 'insert.loadingplan.LoadingDate')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.loadingplan.Route')"></div>
+            </b-card>
+          </b-row>
           <b-row>
-            <!-- <b-col cols="12" md="4">
-              <b-card class="m-3 asc__showPage-card">
-                <h6>{{$t('get.detail')}}</h6>
-                <span><i class="far fa-circle" /> {{$t('insert.loadingplan.PlanQuantity')}}</span> <p>{{rowData.PlanQuantity}}</p>
-              </b-card>
-            </b-col> -->
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.loadingplan.items')}}</h6>
@@ -37,12 +39,16 @@
                   <b-thead head-variant="light">
                     <b-tr>
                       <b-th>{{$t('insert.loadingplan.items')}}</b-th>
+                      <b-th>{{$t('insert.loadingplan.itemCode')}}</b-th>
+                      <b-th>{{$t('insert.loadingplan.unit')}}</b-th>
                       <b-th>{{$t('insert.loadingplan.PlanQuantity')}}</b-th>
                     </b-tr>
                   </b-thead>
                   <b-tbody>
                     <tr v-for="(result, i) in rowData.LoadingPlanItems" :key="i">
                       <b-td>{{ result.Item ? result.Item.Label : '' }}</b-td>
+                      <b-td>{{ result.Item ? result.Item.Code : '' }}</b-td>
+                      <b-td>{{ result.Unit ? result.Unit.Label : '' }}</b-td>
                       <b-td>{{ result.PlanQuantity }}</b-td>
                     </tr>
                   </b-tbody>
@@ -67,7 +73,6 @@ export default {
   },
   mounted () {
     this.getData()
-    this.$store.commit('bigLoaded', false)
   },
   computed: {
     ...mapState(['rowData', 'style'])

@@ -1,0 +1,316 @@
+<template>
+  <b-row class="asc__insertPage">
+    <b-col cols="12">
+      <header>
+        <b-row>
+          <b-col cols="12" md="6">
+            <Breadcrumb />
+          </b-col>
+          <b-col cols="12" md="6" class="text-right">
+            <router-link :to="{name: 'PriceDiscountTransaction' }">
+              <CancelButton />
+            </router-link>
+            <AddButton @click.native="save()" />
+          </b-col>
+        </b-row>
+      </header>
+    </b-col>
+    <b-col cols="12" class="asc__insertPage-content-head">
+      <section>
+        <b-row>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
+        </b-row>
+      </section>
+    </b-col>
+    <b-col cols="12">
+      <b-tabs>
+        <b-tab :title="$t('get.PriceDiscountTransaction.general')" :active="!developmentMode">
+          <b-row>
+            <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
+              <v-select
+                :options="lookup.TCI_BREAKDOWN"
+                @input="selectedType('TciBreak1Id', $event)"
+                label="Label"
+              />
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+                <template v-slot:option="option">
+                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
+              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TransactionTime" :error="$v.form.TransactionTime">
+              <b-form-timepicker
+              :placeholder="$t('insert.chooseTime')"
+              :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
+              :label-no-time-selected="$t('insert.chooseTime')"
+              :label-close-button="$t('insert.close')"
+              close-button-variant="outline-danger"
+              v-model="form.TransactionTime"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="DiscountReasonId" :error="$v.form.DiscountReasonId">
+              <v-select :options="discountReasons" @input="selectedSearchType('DiscountReasonId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <NextFormGroup item-key="PriceDiscountAmount" :error="$v.form.PriceDiscountAmount">
+              <b-form-input type="text" v-model="form.PriceDiscountAmount" :readonly="insertReadonly.PriceDiscountAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+              <v-select :options="currencies" v-model="currencyLabel" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
+                <template slot="no-options">
+                  {{$t('insert.min3')}}
+                </template>
+              </v-select>
+            </NextFormGroup>
+            <!-- <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
+              <b-form-input disabled type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
+            </NextFormGroup>
+            <NextFormGroup item-key="BudgetConsumption" :error="$v.form.BudgetConsumption">
+              <b-form-input disabled type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
+            </NextFormGroup> -->
+            <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
+              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget' />
+            </NextFormGroup>
+            <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
+              <v-select
+                :options="lookup.APPROVE_STATE"
+                @input="selectedType('ApproveStateId', $event)"
+                label="Label"
+                v-model="approveState"
+                disabled
+              />
+            </NextFormGroup>
+            <NextFormGroup item-key="ErpCode" :error="$v.form.ErpCode">
+              <b-form-input type="text" v-model="form.ErpCode" :readonly="insertReadonly.ErpCode" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ExpirationDate" :error="$v.form.ExpirationDate">
+              <b-form-datepicker v-model="form.ExpirationDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
+              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
+              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+            </NextFormGroup>
+            <NextFormGroup item-key="GainTypeId" :error="$v.form.GainTypeId">
+              <b-form-input type="text" v-model="GainTypeName" readonly />
+            </NextFormGroup>
+            <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
+              <NextCheckBox v-model="useBudget" type="number" toggle :disabled="!form.CustomerId || form.CustomerId === 0"/>
+            </NextFormGroup>
+          </b-row>
+        </b-tab>
+      </b-tabs>
+    </b-col>
+  </b-row>
+</template>
+<script>
+import { mapState } from 'vuex'
+import insertMixin from '../../mixins/insert'
+import { required } from 'vuelidate/lib/validators'
+export default {
+  mixins: [insertMixin],
+  data () {
+    return {
+      customer: {},
+      budget: {},
+      form: {
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        RecordId: null,
+        Code: null,
+        Description1: null,
+        CustomerId: null,
+        TransactionDate: null,
+        TransactionTime: null,
+        DiscountReasonId: null,
+        PriceDiscountAmount: null,
+        CurrencyId: 1,
+        UseBudget: 0,
+        BudgetAmount: 0,
+        BudgetConsumption: 0,
+        BudgetId: null,
+        ApproveStateId: null,
+        ErpCode: null,
+        ExpirationDate: null,
+        BeginDate: null,
+        Genexp1: null,
+        GainTypeId: null,
+        TciBreak1Id: null
+      },
+      budgets: [],
+      currencyLabel: null,
+      useBudget: null,
+      GainTypeName: null,
+      routeName1: 'Discount'
+    }
+  },
+  computed: {
+    ...mapState(['customers', 'discountReasons', 'currencies']),
+    approveState () {
+      return this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.length > 0 ? this.lookup.APPROVE_STATE.find(a => a.Code === 'ONYBK') : {}
+    }
+  },
+  mounted () {
+    this.createManualCode()
+    this.getInsertPage(this.routeName)
+  },
+  methods: {
+    getInsertPage (e) {
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
+      let currentDate = new Date()
+      this.form.TransactionDate = currentDate.toISOString().slice(0, 10)
+      this.form.ExpirationDate = currentDate.toISOString().slice(0, 10)
+      this.form.BeginDate = currentDate.toISOString().slice(0, 10)
+      this.form.TransactionTime = currentDate.toTimeString().slice(0, 5)
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+      } else {
+        this.form[label] = null
+      }
+    },
+    searchCustomer (search, loading) {
+      if (search.length < 3) {
+        return false
+      }
+      loading(true)
+      this.$store.dispatch('getSearchItems', {
+        ...this.query,
+        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+        name: 'customers',
+        orConditionModels: [
+          {
+            Description1: search,
+            Code: search,
+            CommercialTitle: search
+          }
+        ]
+      }).then(res => {
+        loading(false)
+      })
+    },
+    save () {
+      this.form.BudgetConsumption = this.form.PriceDiscountAmount
+      this.form.BudgetAmount = this.form.PriceDiscountAmount
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        this.tabValidation()
+      } else {
+        this.createData()
+      }
+    }
+  },
+  validations () {
+    if (this.form.UseBudget === 1) {
+      this.insertRequired.BudgetId = true
+      this.insertRules.BudgetId = {
+        required
+      }
+    } else {
+      this.insertRules.BudgetId = {}
+      this.insertRequired.BudgetId = false
+    }
+    return {
+      form: this.insertRules
+    }
+  },
+  watch: {
+    customer (value) {
+      if (value) {
+        if (this.form.CustomerId > 0 && this.useBudget) {
+          var me = this
+          me.budgets = []
+          let request = {
+            customerId: this.form.CustomerId
+          }
+          me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
+            if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+              me.budgets = res.ListModel.BaseModels
+              me.$forceUpdate()
+            } else {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
+            }
+          })
+        }
+        this.$api.postByUrl({customerId: value.RecordId}, 'VisionNextDiscount/api/PriceDiscountTransaction/SetGainTypeViaCustomer').then((response) => {
+          if (response && response.gainType) {
+            this.form.GainTypeId = response.gainType.DecimalValue
+            this.GainTypeName = response.gainType.Label
+          } else {
+            this.form.GainTypeId = null
+            this.GainTypeName = null
+          }
+        })
+      } else {
+        this.form.GainTypeId = null
+        this.GainTypeName = null
+        this.form.BudgetId = 0
+        this.budgets = []
+        this.budget = {}
+      }
+    },
+    currencies (e) {
+      if (e) {
+        this.currencyLabel = e[0].Description1
+      }
+    },
+    useBudget (e) {
+      this.form.UseBudget = e
+      this.budgets = []
+      if (e === 0) {
+        this.budget = {}
+      } else {
+        if (this.form.CustomerId) {
+          var me = this
+          let request = {
+            customerId: this.form.CustomerId
+          }
+          me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
+            if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+              me.budgets = res.ListModel.BaseModels
+              me.$forceUpdate()
+            } else {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('get.PriceDiscountTransaction.customerBudgetNotFound') })
+            }
+          })
+        }
+      }
+    },
+    approveState: {
+      handler (newValue) {
+        this.form.ApproveStateId = newValue ? newValue.DecimalValue : null
+      },
+      deep: true,
+      immediate: true
+    }
+  }
+}
+</script>

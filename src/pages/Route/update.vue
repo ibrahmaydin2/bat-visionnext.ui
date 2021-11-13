@@ -1,5 +1,8 @@
 <template>
-  <b-row>
+  <b-row class="asc__insertPage">
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation :Location='Location' />
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -7,10 +10,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+            <router-link :to="{name: 'Route' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,223 +21,103 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-           <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.code')"
-            >
-              <b-form-input type="text" v-model="form.model.code" readonly />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group :label="$t('insert.route.rotaType')">
-              <v-select v-model="routeType" :options="routeTypes" @input="selectedRouteType" label="Description1"></v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.name')"
-            >
-              <b-form-input type="text" v-model="form.model.description1"/>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="2">
-            <b-form-group
-              :label="$t('insert.route.state')"
-            >
-              <b-form-checkbox v-model="statusId" name="check-button" switch>
-                {{(statusId) ? $t('insert.route.active'): $t('insert.route.passive')}}
-              </b-form-checkbox>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <NextInput  type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput  type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.route.detail')" active>
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.routeGroup')">
-                <v-select v-model="routeGroup" :options="routeGroups" @input="selectedRouteGroup" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.routeClass')">
-                <v-select v-model="routeClass" :options="routeClasses" @input="selectedRouteClass" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.vehicle')">
-                <v-select v-model="vehicle" :options="vehicles" @input="selectedVehicle" label="VehiclePlateNumber"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.personel')">
-                <v-select v-model="representative" :options="employees" @input="selectedEmployee" label="nameSurname"></v-select>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.control')">
-                <v-select v-model="visitStartControl" :options="visitStartControls" @input="selectedControl" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.route.multiDayRoute')"
-              >
-                <b-form-radio-group id="radio-group-multi-day" v-model="form.model.isMultidayRoute">
-                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group
-                :label="$t('insert.route.superRoute')"
-              >
-                <b-form-radio-group id="radio-group-super-route" v-model="form.model.isSuperRoute">
-                  <b-form-radio value="1">{{$t('insert.route.active')}}</b-form-radio>
-                  <b-form-radio value="0">{{$t('insert.route.passive')}}</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.city')">
-                <v-select :options="cities" @input="selectedCity" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.distirict')">
-                <v-select :options="distiricts" @input="selectedDistirict" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.town')">
-                <b-form-input type="text" v-model="form.town"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row v-if="showCustomerRegion">
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="customerRegionLabel">
-                <v-select :options="routeTypeOptions" @input="selectedCustomerRegion" label="Label"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
+              <NextDropdown
+                searchable
+                v-model="representative"
+                @input="selectedSearchType('RepresentativeId', $event)"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
+                :disabled="insertReadonly.RepresentativeId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
+              <NextDropdown
+                searchable
+                v-model="vehicle"
+                label="VehiclePlateNumber"
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :disabled="insertReadonly.VehicleId"
+                or-condition-fields="VehiclePlateNumber,Code"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
+              <NextDropdown
+                v-model="routeType"
+                @input="selectedSearchType('RouteTypeId', $event)"
+                url="VisionNextRoute/api/RouteType/Search"
+                :disabled="insertReadonly.RouteTypeId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
+              <NextDropdown
+                v-model="visitStartControl"
+                @input="selectedType('VisitStartControlId', $event)"
+                lookup-key="VISIT_START_CONTROL"
+                :disabled="insertReadonly.VisitStartControlId" />
+            </NextFormGroup>
+            <NextFormGroup  :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
+              <NextDropdown
+                v-model="CustomerRegion5Id"
+                @input="selectedLabelType('CustomerRegion5Id', $event)"
+                lookup-key="CUSTOMER_REGION_5"
+                :disabled="!showCustomerRegion || insertReadonly.CustomerRegion5Id" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.route.marketingArea')" :required="!!showMarketingRegion" :error="$v.form.MarketingRegion5Id">
+              <NextDropdown
+                v-model="MarketingRegion5Id"
+                @input="selectedLabelType('MarketingRegion5Id', $event)"
+                lookup-key="MARKETING_REGION_5"
+                :disabled="!showMarketingRegion || insertReadonly.CustomerRegion5Id" />
+            </NextFormGroup>
+            <NextFormGroup item-key="CityId" :error="$v.form.CityId">
+              <NextDropdown
+                v-model="city"
+                @input="selectedCity"
+                lookup-key="CITY"
+                :disabled="insertReadonly.CityId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="DistrictId" :error="$v.form.DistrictId">
+              <NextDropdown
+                v-model="district"
+                @input="selectedDistirict"
+                :source="distiricts"
+                :disabled="insertReadonly.DistrictId"
+                label="Label" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ParishIds" :error="$v.form.ParishIds">
+              <NextDropdown
+                multiple
+                v-model="parishes"
+                @input="selectedParish"
+                :source="avenues"
+                :disabled="insertReadonly.ParishIds"
+                label="Label" />
+            </NextFormGroup>
+            <NextFormGroup item-key="IsSuperRoute" :error="$v.form.IsSuperRoute">
+              <NextCheckBox v-model="form.IsSuperRoute" type="number" toggle :disabled="insertReadonly.IsSuperRoute"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsMultidayRoute" :error="$v.form.IsMultidayRoute">
+              <NextCheckBox v-model="form.IsMultidayRoute" type="number" toggle :disabled="insertReadonly.IsMultidayRoute" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.route.locations')">
-          <b-row>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.CustomerId')">
-                <v-select label="CommercialTitle" :filterable="false" :options="customerList" @search="onCustomerSearch" @input="selectedCustomer">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.CommercialTitle }}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.LocationId')">
-                <v-select label="Description1" :options="customerLocationsList" @input="selectedCustomerLocation">
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day1VisitOrder')">
-                <b-form-input type="number" v-model="Day1VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day2VisitOrder')">
-                <b-form-input type="number" v-model="Day2VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day3VisitOrder')">
-                <b-form-input type="number" v-model="Day3VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day4VisitOrder')">
-                <b-form-input type="number" v-model="Day4VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day5VisitOrder')">
-                <b-form-input type="number" v-model="Day5VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day6VisitOrder')">
-                <b-form-input type="number" v-model="Day6VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="2" lg="1">
-              <b-form-group :label="$t('insert.route.Day7VisitOrder')">
-                <b-form-input type="number" v-model="Day7VisitOrder" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.Day1FreStartDate')">
-                <b-form-datepicker
-                  v-model="DaysFreStartDate"
-                  locale="tr"
-                  class="mb-2"
-                  :value-as-date="true"
-                >
-                </b-form-datepicker>
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group :label="$t('insert.route.Day1Frequency')">
-                <b-form-input type="number" v-model="DaysFrequency" />
-              </b-form-group>
-            </b-col>
-            <b-col cols="12" md="3" lg="2">
-              <b-form-group>
-                <b-button @click="addCustomerLocation" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row v-if="form.model.routeDetails.length > 0">
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.route.CustomerId')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.LocationId')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day1VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day2VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day3VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day4VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day5VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day6VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('insert.route.Day7VisitOrder')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(r, i) in form.model.routeDetails" :key="'dl' + i">
-                  <b-td>{{r.CustomerId}}</b-td>
-                  <b-td>{{r.LocationId}}</b-td>
-                  <b-td>{{r.Day1VisitOrder}}</b-td>
-                  <b-td>{{r.Day2VisitOrder}}</b-td>
-                  <b-td>{{r.Day3VisitOrder}}</b-td>
-                  <b-td>{{r.Day4VisitOrder}}</b-td>
-                  <b-td>{{r.Day5VisitOrder}}</b-td>
-                  <b-td>{{r.Day6VisitOrder}}</b-td>
-                  <b-td>{{r.Day7VisitOrder}}</b-td>
-                  <b-td class="text-center"><i @click="removeRouteDetails(r)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -242,314 +125,285 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import { required } from 'vuelidate/lib/validators'
+import updateMixin from '../../mixins/update'
+import { detailData } from './detailPanelData'
 
 export default {
-  mixins: [mixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
-        model: {
-          code: null,
-          description1: null,
-          representativeId: null,
-          vehicleId: null,
-          routeTypeId: null,
-          routeClassId: null,
-          routeGroupId: null,
-          statusId: null,
-          customerRegion5Id: null,
-          isMultidayRoute: null,
-          isSuperRoute: null,
-          visitStartControlId: null,
-          cityId: null,
-          districtId: null,
-          parishIds: [],
-          routeDetails: [],
-          deleted: null,
-          recordId: null
-        }
+        VisitStartControlId: null,
+        IsSuperRoute: null,
+        DistrictId: null,
+        ParishIds: null,
+        Code: null,
+        Description1: null,
+        RepresentativeId: null,
+        VehicleId: null,
+        RouteTypeId: null,
+        RouteClassId: null,
+        RouteGroupId: null,
+        StatusId: null,
+        CustomerRegion5Id: null,
+        MarketingRegion5Id: null,
+        IsMultidayRoute: null,
+        CityId: null,
+        RouteDetails: []
       },
-      statusId: null,
+      avenues: [],
+      locationItems: detailData.locationItems,
+      showCustomerLocation: false,
       showCustomerRegion: false,
-      customerRegionLabel: '',
+      showMarketingRegion: false,
+      district: null,
+      CustomerRegion5Id: null,
+      MarketingRegion5Id: null,
+      parishes: [],
+      showCustomer: true,
       representative: null,
       vehicle: null,
-      routeType: null,
       routeClass: null,
       routeGroup: null,
-      customerRegion5: null,
-      city: null,
-      district: null,
-      parish: null,
       visitStartControl: null,
-      selectedParishes: [],
-      Day1VisitOrder: null,
-      Day2VisitOrder: null,
-      Day3VisitOrder: null,
-      Day4VisitOrder: null,
-      Day5VisitOrder: null,
-      Day6VisitOrder: null,
-      Day7VisitOrder: null,
-      DaysFreStartDate: null,
-      DaysFrequency: null,
-      selectedCustomerArr: [],
-      selectedLocationArr: [],
-      customerLocationTable: []
+      city: null,
+      parish: null,
+      routeType: null,
+      Location: {},
+      detailButtons: [
+        {
+          icon: 'fa fa-map-marker-alt text-primary mr-1',
+          getDetail: (data) => {
+            this.showMap(data)
+          }
+        }
+      ]
     }
   },
   computed: {
-    ...mapState(['cities', 'distiricts', 'rowData', 'employees', 'vehicles', 'routeClasses', 'routeGroups', 'visitStartControls', 'routeTypes', 'routeTypeOptions', 'customerLocationsList', 'customerList'])
+    ...mapState(['distiricts'])
   },
   mounted () {
-    // this.$store.commit('setCities', false)
-    this.$store.commit('bigLoaded', false)
-    this.getLookups()
-    this.getDatas()
-    this.getRowData()
+    this.getData().then(() => {
+      this.setData()
+    })
   },
   methods: {
-    getRowData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextRoute/api/Route', record: this.$route.params.url})
-    },
-    getDatas () {
-      this.$store.dispatch('getEmployeesByBranchId')
-      this.$store.dispatch('getVehiclesByBranchId')
-      this.$store.dispatch('getRouteTypesByBranchId')
-    },
-    getLookups () {
-      // Nameler store içerisinde statelerde statik oluşuturuluyor. Tek bir servis kullanmak için böyle yapıldı.
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_CLASS', name: 'routeClasses'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'ROUTE_GROUP', name: 'routeGroups'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'VISIT_START_CONTROL', name: 'visitStartControls'})
-      this.$store.dispatch('getLookups', {...this.query, type: 'CITY', name: 'cities'})
-    },
-    save () {
-      this.form.model.statusId = this.statusId ? 1 : 0
-      this.$store.dispatch('updateData', {...this.query, api: 'VisionNextRoute/api/Route', formdata: this.form, return: this.$route.meta.baseLink})
-    },
-    selectedRouteType (e) {
-      let payload = {
-        name: 'routeTypeOptions',
-        data: []
-      }
-      if (e) {
-        this.form.model.routeTypeId = e.RecordId
-        if (e.RecordId === 1 || e.RecordId === 6) {
-          this.showCustomerRegion = true
-          this.customerRegionLabel = this.$t('insert.route.customerArea')
-          this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_REGION_5', name: payload.name})
-        } else if (e.RecordId === 5) {
-          this.customerRegionLabel = this.$t('insert.route.marketingArea')
-          this.showCustomerRegion = true
-          this.$store.dispatch('getLookups', {...this.query, type: 'MARKETING_REGION_5', name: payload.name})
-        } else {
-          this.form.model.customerRegion5Id = null
-          this.showCustomerRegion = false
-          this.$store.commit('setValues', payload)
+    setData () {
+      const e = this.rowData
+      this.form = e
+      this.form.RouteDetails = e.RouteDetails.map((item) => {
+        item.DayFrequency = item.AnnualVisitCount
+
+        return item
+      })
+      this.representative = this.convertLookupValueToSearchValue(e.Representative)
+      this.visitStartControl = e.VisitStartControl
+      this.CustomerRegion5Id = e.CustomerRegion5
+      this.MarketingRegion5Id = e.MarketingRegion5
+      if (e.Vehicle) {
+        this.vehicle = {
+          RecordId: e.Vehicle.DecimalValue,
+          VehiclePlateNumber: e.Vehicle.Label
         }
-      } else {
-        this.form.model.routeTypeId = null
-        this.form.model.customerRegion5Id = null
-        this.showCustomerRegion = false
-        this.$store.commit('setValues', payload)
       }
-    },
-    selectedRouteGroup (e) {
-      if (e) {
-        this.form.model.routeGroupId = e.DecimalValue
-      } else {
-        this.form.model.routeGroupId = null
+      if (e.City) {
+        this.city = e.City
+        this.selectedCity(e.City)
       }
-    },
-    selectedRouteClass (e) {
-      if (e) {
-        this.form.model.routeClassId = e.DecimalValue
-      } else {
-        this.form.model.routeClassId = null
+      if (e.District) {
+        this.district = e.District
+        this.selectedDistirict(e.City)
       }
-    },
-    selectedVehicle (e) {
-      if (e) {
-        this.form.model.vehicleId = e.RecordId
-      } else {
-        this.form.model.vehicleId = null
+      if (e.Parish) {
+        this.parish = e.Parish
       }
-    },
-    selectedControl (e) {
-      if (e) {
-        this.form.model.visitStartControlId = e.DecimalValue
-      } else {
-        this.form.model.visitStartControlId = null
+      if (e.RouteType) {
+        this.routeType = this.convertLookupValueToSearchValue(e.RouteType)
+        if (e.RouteType.DecimalValue === 1 || e.RouteType.DecimalValue === 6) {
+          this.showCustomerRegion = true
+          this.showMarketingRegion = false
+        } else if (e.RouteType.DecimalValue === 5) {
+          this.showMarketingRegion = true
+          this.showCustomerRegion = false
+        } else {
+          this.showCustomerRegion = false
+          this.showMarketingRegion = false
+        }
       }
     },
     selectedCity (e) {
-      this.city = e.title
-      this.$store.commit('setDistiricts', e.plaka)
+      if (e) {
+        this.form.CityId = e.DecimalValue
+        this.$store.dispatch('getLookupsWithUpperValue', {...this.query, type: 'DISTRICT', name: 'distiricts', upperValue: e.DecimalValue})
+      } else {
+        this.form.CityId = null
+        this.form.DistrictId = null
+        this.form.ParishIds = null
+        this.district = null
+      }
     },
     selectedDistirict (e) {
-      console.log(e)
-      this.distirict = e.id
-    },
-    selectedEmployee (e) {
       if (e) {
-        this.form.model.representativeId = e.RecordId
+        this.form.DistrictId = e.DecimalValue
+        this.district = e.Label
+        let request = {
+          'LookupTableCode': 'AVENUE',
+          'UpperValue': e.DecimalValue
+        }
+        this.$api.postByUrl(request, 'VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue').then((res) => {
+          this.avenues = res.Values
+        })
       } else {
-        this.form.model.representativeId = null
+        this.form.DistrictId = null
+        this.form.ParishIds = null
+        this.district = null
       }
     },
-    selectedCustomerRegion (e) {
+    selectedParish (e) {
+      this.form.ParishIds = []
       if (e) {
-        this.form.model.customerRegion5Id = e.DecimalValue
+        e.map(parish => {
+          this.form.ParishIds.push(parish.DecimalValue)
+        })
+      }
+    },
+    selectedSearchType (label, model) {
+      if (model) {
+        this.form[label] = model.RecordId
+        if (label === 'RouteTypeId') {
+          if (model.RecordId === 1 || model.RecordId === 6) {
+            this.showCustomerRegion = true
+            this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
+            this.insertRules.CustomerRegion5Id = {
+              required
+            }
+          } else if (model.RecordId === 5) {
+            this.showMarketingRegion = true
+            this.showCustomerRegion = false
+            this.CustomerRegion5Id = null
+            this.insertRules.MarketingRegion5Id = {
+              required
+            }
+          } else {
+            this.showCustomerRegion = false
+            this.showMarketingRegion = false
+            this.MarketingRegion5Id = null
+            this.CustomerRegion5Id = null
+            this.insertRules.MarketingRegion5Id = {}
+            this.insertRules.CustomerRegion5Id = {}
+          }
+        }
       } else {
-        this.form.model.customerRegion5Id = null
+        this.form[label] = null
+        this.showCustomerRegion = false
+        this.showMarketingRegion = false
+        this.MarketingRegion5Id = null
+        this.CustomerRegion5Id = null
+        this.insertRules.MarketingRegion5Id = {}
+        this.insertRules.CustomerRegion5Id = {}
       }
     },
-    onCustomerSearch (search) {
-      if (search.length >= 3) {
-        this.$store.dispatch('acCustomer', {...this.query, searchField: 'CommercialTitle', searchText: search})
-      }
-    },
-    selectedCustomer (e) {
-      if (e) {
-        this.selectedCustomerArr = e
-        this.$store.dispatch('getCustomerLocationByCustomerIds', {...this.query, customerIds: [e.RecordId]})
+    selectedLabelType (label, model) {
+      if (label === 'CustomerRegion5Id') {
+        this.form.MarketingRegion5Id = null
       } else {
-        this.selectedCustomerArr = []
-        this.selectedLocationArr = []
+        this.form.CustomerRegion5Id = null
       }
-    },
-    selectedCustomerLocation (e) {
-      if (e) {
-        this.selectedLocationArr = e
+      if (model) {
+        this.form[label] = model.DecimalValue
       } else {
-        this.selectedLocationArr = []
+        this.form[label] = null
       }
     },
-    addCustomerLocation () {
-      if (this.selectedCustomerArr.length < 1 || this.selectedLocationArr < 1) {
+    editForm (form) {
+      form.Day1FreStartDate = form.DayFreStartDate
+      form.Day2FreStartDate = form.DayFreStartDate
+      form.Day3FreStartDate = form.DayFreStartDate
+      form.Day4FreStartDate = form.DayFreStartDate
+      form.Day5FreStartDate = form.DayFreStartDate
+      form.Day6FreStartDate = form.DayFreStartDate
+      form.Day7FreStartDate = form.DayFreStartDate
+      form.Day1Frequency = form.DayFrequency
+      form.Day2Frequency = form.DayFrequency
+      form.Day3Frequency = form.DayFrequency
+      form.Day4Frequency = form.DayFrequency
+      form.Day5Frequency = form.DayFrequency
+      form.Day6Frequency = form.DayFrequency
+      form.Day7Frequency = form.DayFrequency
+
+      form.Day1Value = !form.Day1VisitOrder || form.Day1VisitOrder === '0' ? 0 : 1
+      form.Day2Value = !form.Day2VisitOrder || form.Day2VisitOrder === '0' ? 0 : 1
+      form.Day3Value = !form.Day3VisitOrder || form.Day3VisitOrder === '0' ? 0 : 1
+      form.Day4Value = !form.Day4VisitOrder || form.Day4VisitOrder === '0' ? 0 : 1
+      form.Day5Value = !form.Day5VisitOrder || form.Day5VisitOrder === '0' ? 0 : 1
+      form.Day6Value = !form.Day6VisitOrder || form.Day6VisitOrder === '0' ? 0 : 1
+      form.Day7Value = !form.Day7VisitOrder || form.Day7VisitOrder === '0' ? 0 : 1
+
+      return form
+    },
+    showMap (item) {
+      this.$api.post({RecordId: item.LocationId}, 'Customer', 'CustomerLocation/Get').then((res) => {
+        this.Location = res.Model
+        if (res.Model) {
+          if (res.Model.XPosition == null || res.Model.YPosition == null) {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'location-modal', res.Model)
+          })
+        } else {
+          this.$toasted.show(this.$t('index.errorLocation'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
+    },
+    save () {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
-        return
+        this.tabValidation()
+      } else {
+        if (this.form.RouteDetails.length < 1) {
+          this.$toasted.show(this.$t('insert.route.locationFieldRequired'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+        this.form.RouteDetails.map(item => {
+          delete item['Customer']
+          delete item['Location']
+        })
+        this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
+        this.updateData()
       }
-      let date = this.dateConvertToISo(this.DaysFreStartDate)
-      this.form.model.routeDetails.push({
-        CustomerId: this.selectedCustomerArr.RecordId,
-        LocationId: this.selectedLocationArr.RecordId,
-        Day1Frequency: this.DaysFrequency,
-        Day1FreStartDate: date,
-        Day1VisitOrder: this.Day1VisitOrder,
-        Day2Frequency: this.DaysFrequency,
-        Day2FreStartDate: date,
-        Day2VisitOrder: this.Day2VisitOrder,
-        Day3Frequency: this.DaysFrequency,
-        Day3FreStartDate: date,
-        Day3VisitOrder: this.Day3VisitOrder,
-        Day4Frequency: this.DaysFrequency,
-        Day4FreStartDate: date,
-        Day4VisitOrder: this.Day4VisitOrder,
-        Day5Frequency: this.DaysFrequency,
-        Day5FreStartDate: date,
-        Day5VisitOrder: this.Day5VisitOrder,
-        Day6Frequency: this.DaysFrequency,
-        Day6FreStartDate: date,
-        Day6VisitOrder: this.Day6VisitOrder,
-        Day7Frequency: this.DaysFrequency,
-        Day7FreStartDate: date,
-        Day7VisitOrder: this.Day7VisitOrder,
-        StatusId: 1,
-        RecordState: 2,
-        AnnualVisitCount: null // Hesaplaması var öğrenilecek
-      })
-
-      this.selectedCustomerArr = []
-      this.selectedLocationArr = []
-    },
-    removeRouteDetails (item) {
-      this.form.model.routeDetails.splice(this.form.model.routeDetails.indexOf(item), 1)
     }
   },
-  watch: {
-    rowData (e) {
-      if (e) {
-        this.form.model = {
-          code: e.Code,
-          description1: e.Description1,
-          representativeId: e.RepresentativeId,
-          vehicleId: e.VehicleId,
-          routeTypeId: e.RouteTypeId,
-          routeClassId: e.RouteClassId,
-          routeGroupId: e.RouteGroupId,
-          statusId: e.StatusId,
-          customerRegion5Id: e.CustomerRegion5Id,
-          isMultidayRoute: e.IsMultidayRoute,
-          isSuperRoute: e.IsSuperRoute,
-          visitStartControlId: e.VisitStartControlId,
-          cityId: e.CityId,
-          districtId: e.DistrictId,
-          parishId: e.ParishId,
-          routeDetails: e.RouteDetails,
-          deleted: e.Deleted,
-          recordId: e.RecordId
-        }
-        this.statusId = !!e.StatusId
-
-        if (e.Representative) {
-          this.representative = e.Representative.Label
-        }
-        if (e.Vehicle) {
-          this.vehicle = e.Vehicle.Label
-        }
-        if (e.RouteClass) {
-          this.routeClass = e.RouteClass.Label
-        }
-        if (e.RouteGroup) {
-          this.routeGroup = e.RouteGroup.Label
-        }
-        if (e.VisitStartControl) {
-          this.visitStartControl = e.VisitStartControl.Label
-        }
-        if (e.RouteType) {
-          let payload = {
-            name: 'routeTypeOptions',
-            data: []
-          }
-          this.form.model.routeTypeId = e.RouteType.DecimalValue
-          this.routeType = e.RouteType.Label
-          if (e.RouteType.DecimalValue === 1 || e.RouteType.DecimalValue === 6) {
-            this.showCustomerRegion = true
-            this.customerRegionLabel = this.$t('insert.route.customerArea')
-            this.$store.dispatch('getLookups', {...this.query, type: 'CUSTOMER_REGION_5', name: payload.name})
-          } else if (e.RouteType.DecimalValue === 5) {
-            this.customerRegionLabel = this.$t('insert.route.marketingArea')
-            this.showCustomerRegion = true
-            this.$store.dispatch('getLookups', {...this.query, type: 'MARKETING_REGION_5', name: payload.name})
-          } else {
-            this.form.model.customerRegion5Id = null
-            this.showCustomerRegion = false
-            this.$store.commit('setValues', payload)
-          }
-        }
-
-        // routeType
-        // customerRegion5
-        // city
-        // district
-        // parish
-      }
-    },
-    employees (e) {
-      if (e) {
-        e.map(item => {
-          item.nameSurname = `${item.Name} ${item.Surname}`
-        })
-      }
+  validations () {
+    return {
+      form: this.insertRules
     }
   }
 }
 </script>
-<style lang="sass">
+<style scoped>
+  .b-form-datepicker {
+    height: 28px !important;
+  }
 </style>

@@ -11,7 +11,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+let mode = process.argv.length <= 2 ? 'prod' : process.argv[2]
+let tenant = process.argv.length <= 3 ? 'bat' : process.argv[3]
+
+const env = require(`../config/${tenant}/${mode}.env`)
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -103,8 +106,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
     new webpack.optimize.CommonsChunkPlugin({
       name: 'app',
-      async: 'vendor-async',
+      names: ['app', 'subPageA'],
       children: true,
+      async: true,
       minChunks: 3
     }),
 

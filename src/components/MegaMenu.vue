@@ -1,5 +1,18 @@
 <template>
   <b-dropdown class="asc__mega-menu-dropdown" :text="$t('nav.other')" ref="megamenuData">
+    <li>
+      <span class="asc__item-head-search">
+        <i class="fas far fa-search" />
+        <b-form-input type="text" v-model="searchText" :placeholder="$t('nav.search')" />
+      </span>
+        <ul v-if="searchText != ''">
+          <li v-for="(subs, x) in filteredList" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
+            <router-link class="asc__item-head-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
+              <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
+            </router-link>
+          </li>
+        </ul>
+    </li>
     <li v-for="(links, i) in data" :key="i">
       <template v-if="links.sub">
         <span class="asc__item-head-title">
@@ -7,7 +20,10 @@
         </span>
         <ul>
           <li v-for="(subs, x) in links.sub" :key="'sub' + x" :class="subs.sub ? 'asc__item-head-li asc__item-head-li-sub' : 'asc__item-head-li'">
-            <router-link class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
+            <a v-if="subs.sub.length >= 1" class="asc__item-title">
+              <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
+            </a>
+            <router-link v-if="subs.sub.length === 0" class="asc__item-title" :to="{name: subs.router, params: { url: subs.link }, query: {page: 1}}" @click.native="closeHeader()">
               <i :class="subs.icon ? 'fas ' + subs.icon : 'far fa-circle'" />{{ subs.title }}
             </router-link>
             <i v-if="subs.sub.length >= 1" class="fas fa-angle-double-right isub" />
@@ -33,14 +49,70 @@
 export default {
   name: 'MegaMenu',
   props: ['data'],
+  data () {
+    return {
+      searchText: ''
+    }
+  },
   methods: {
     closeHeader () {
-      this.$refs.megamenuData.hide(true)
+      if (this.$refs.megamenuData) {
+        this.$refs.megamenuData.hide(true)
+      }
+    }
+  },
+  computed: {
+    filteredList () {
+      const all = this.data
+      let link = []
+      let firstList = all.filter(a => !a.sub || a.sub.length === 0)
+      let secondList = []
+      let thirdList = []
+      all.map(s => {
+        if (s.sub) {
+          secondList = secondList.concat(s.sub.filter(a => !a.sub || a.sub.length === 0))
+        }
+      })
+      all.map(s => {
+        if (s.sub) {
+          s.sub.map(x => {
+            if (x.sub) {
+              thirdList = thirdList.concat(x.sub.filter(a => !a.sub || a.sub.length === 0))
+            }
+          })
+        }
+      })
+
+      link = firstList.concat(secondList).concat(thirdList)
+      return link.filter((data) => {
+        return data.title.toLowerCase().includes(this.searchText.toLowerCase().trim())
+      })
     }
   }
 }
 </script>
 <style lang="sass">
+  .asc__item-head-search
+    display: block
+    line-height: normal
+    font-size: 12px
+    height: 50px
+    padding: 10px 0 0
+    & i
+      width: 30px
+      float: left
+      text-align: center
+      height: 30px
+      line-height: 30px
+      color: #ea8b09
+    & .form-control
+      height: 30px
+      float: left
+      width: 130px
+      background: none
+      border-radius: 0
+      border: none
+      border-bottom: 1px solid #999
   .asc__mega-menu-dropdown
     button
       background: transparent !important
@@ -122,6 +194,8 @@ export default {
                   border-bottom: none
                 & a
                   color: #000 !important
+                & ul
+                  height: 310px
         & a
           color: #6e6e6e
           font-size: 12px
@@ -145,8 +219,11 @@ export default {
                 .isub
                   transform: translateX(10px)
                   transition: .3s
+                  position: absolute
               & ul
                 visibility: hidden
+                overflow: hidden
+                height: 100%
               &:hover
                 & ul
                   visibility: visible
@@ -165,7 +242,6 @@ export default {
       display: block
       padding: .5rem
       line-height: normal
-      cursor: default
       font-size: 12px
       & i
         width: 30px
@@ -180,9 +256,11 @@ export default {
       color: #fff !important
       & a
         color: #fff !important
+        width: 100%
         & i
           color: #fff !important
       & li
         & a
           color: #000
+          width: 100%
 </style>

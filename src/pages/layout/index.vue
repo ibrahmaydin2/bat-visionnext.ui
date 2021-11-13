@@ -6,6 +6,15 @@
       <b-row v-else class="mb-3">
         <b-col cols="12">
           <div :class="style.viewPush">
+            <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+              <template #overlay>
+                <b-icon
+                  icon="three-dots"
+                  animation="cylon"
+                  scale="8"
+                  variant="warning"
+            ></b-icon>
+            </template>
             <b-card class="asc__listPage shadow">
               <b-row class="asc__listPage-Header">
                 <b-col cols="12" sm="12" md="3" class="pl-0">
@@ -16,7 +25,7 @@
                     <b-button variant="info" size="sm" @click="clearFilters">
                       <i class="fas fa-search-minus" /> {{$t('list.clear')}}
                     </b-button>
-                    <b-button id="submitButton" class="btn btn-warning btn-sm">
+                    <b-button id="submitButton" class="btn btn-warning btn-sm" :disabled="!this.filterData || Object.keys(this.filterData).length === 0">
                       <i class="fas fa-save" /> {{$t('list.saveFilter')}}
                     </b-button>
                     <b-popover target="submitButton" triggers="hover" placement="top">
@@ -25,7 +34,7 @@
                       <b-button @click="saveFilter" variant="warning" size="sm" class="w-100 mt-1"><i class="fas fa-check" /> {{$t('list.save')}}</b-button>
                     </b-popover>
                   </template>
-                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1" variant="success" size="sm" :to="{name: createLink}">
+                  <b-button v-if="tableOperations.Actions && tableOperations.Actions.length === 1 && createLink" variant="success" size="sm" :to="{name: createLink}">
                     <i class="fas fa-plus-square" /> {{$t('list.create')}}
                   </b-button>
                   <b-dropdown v-else-if="tableOperations.Actions && tableOperations.Actions.length > 1" split :split-to="{name: createLink}" variant="success" right size="sm">
@@ -77,7 +86,6 @@
                         :key="'selectedRow' + i"
                         v-model="row.visible"
                         variant="danger"
-                        @input="changeRows"
                         switch>
                           {{ row.label }}
                       </b-form-checkbox>
@@ -98,49 +106,147 @@
                     <b-dropdown-item
                       v-for="(dwn, i) in tableOperations.Downloads"
                       :key="'download' + i"
-                      @click="downloadBtn(thisRout,dwn.Action,dwn.Action)"
+                      @click="downloadBtn(thisRoute,dwn)"
                     >
                       <i class="fas fa-file-pdf" /> {{dwn.Title}}
                     </b-dropdown-item>
                   </b-dropdown>
+                  <b-dropdown right variant="white" class="asc__listPage-Header-Download">
+                    <template v-slot:button-content>
+                      <i class="fas fa-upload" />
+                    </template>
+                    <b-dropdown-header id="dropdown-header-label">
+                      {{ $t('list.uploads') }}
+                    </b-dropdown-header>
+                    <b-dropdown-item
+                      v-for="(dwn, i) in tableOperations.Uploads"
+                      :key="'upload' + i"
+                      @click="uploadBtn(thisRoute,dwn)"
+                    >
+                      <i class="fas fa-file-pdf" /> {{dwn.Title}}
+                    </b-dropdown-item>
+                  </b-dropdown>
+                  <div v-if="isMultipleGrid || showManualActions" style="display: inline-grid">
+                    <b-dropdown v-if="tableOperations.RowActions && tableOperations.RowActions.length >= 1" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
+                      <template #button-content>
+                        <span class=" text-dark font-weight-bold">{{$t('general.actions')}} <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
+                      </template>
+                      <Actions :actions="tableOperations.RowActions" :isMultiple="1" @showMultipleModal="showMultipleModal" :RecordIds="recordIds" />
+                    </b-dropdown>
+                  </div>
                 </b-col>
               </b-row>
-              <b-overlay :show="bigLoading" rounded="sm">
-                <router-view />
-                <div class="clearfix" />
-              </b-overlay>
+              <router-view />
+              <div class="clearfix" />
             </b-card>
+            </b-overlay>
           </div>
         </b-col>
       </b-row>
+      <MultipleConfirmModal :modalAction="modalAction" :recordIds="recordIds" />
+      <PrintModal />
+      <ImportExcelModal :modalAction="modalAction" />
+      <MultiplePaymentChangeModal :modalAction="modalAction" :recordIds="recordIds" />
+       <PurchaseInvoiceConvertModal
+         id="purchaseWaybillConvertModal"
+         :modalAction="modalAction"
+         list-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceSearch"
+         detail-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceDetail"
+         convert-url="VisionNextInvoice/api/PurchaseWaybill/ReceiveInvoiceConvert"
+         v-if="showPurchaseWaybillConvertModal"/>
+       <PurchaseInvoiceConvertModal
+         id="purchaseInvoiceConvertModal"
+         :modalAction="modalAction"
+         list-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceSearch"
+         detail-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceDetail"
+         convert-url="VisionNextInvoice/api/PurchaseInvoice/ReceiveInvoiceConvert"
+         v-if="showPurchaseInvoiceConvertModal"/>
+         <SalesReturnInvoiceConvertModal
+         :modalAction="modalAction"
+         v-if="showSalesReturnInvoiceConvertModal" />
+         <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
+        <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
+        <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :documentDate="additionalValue"/>
+        <PriceListDayModal v-if="showPriceListDayModal" :modalAction="modalAction" />
   </b-container>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
+import MultipleConfirmModal from '../../components/Actions/MultipleConfirmModal'
+import PrintModal from '../../components/Actions/PrintModal'
+import ImportExcelModal from '../../components/Actions/ImportExcelModal'
+import MultiplePaymentChangeModal from '../../components/Actions/MultiplePaymentChangeModal'
+import PurchaseInvoiceConvertModal from '../../components/Actions/PurchaseInvoiceConvertModal'
+import SalesReturnInvoiceConvertModal from '../../components/Actions/SalesReturnInvoiceConvertModal'
+import ItemFormulaModal from '../../components/Actions/ItemFormulaModal'
+import PurchaseReturnInvoiceRmaApproveModal from '../../components/Actions/PurchaseReturnInvoiceRmaApproveModal'
+import EdiOrderApproveModal from '../../components/Actions/EdiOrderApproveModal'
+import PriceListDayModal from '../../components/Actions/PriceListDayModal'
+
 export default {
+  components: {
+    MultipleConfirmModal,
+    PrintModal,
+    ImportExcelModal,
+    MultiplePaymentChangeModal,
+    PurchaseInvoiceConvertModal,
+    SalesReturnInvoiceConvertModal,
+    ItemFormulaModal,
+    PurchaseReturnInvoiceRmaApproveModal,
+    EdiOrderApproveModal,
+    PriceListDayModal
+  },
   data () {
     return {
-      thisRout: this.$route.name,
+      thisRoute: this.$route.name,
       pageTitle: this.$route.meta.title,
       createLink: this.$route.meta.createLink,
-      filterTitle: ''
+      filterTitle: '',
+      modalAction: null,
+      recordIds: [],
+      showManualActions: false,
+      showPurchaseWaybillConvertModal: false,
+      showPurchaseInvoiceConvertModal: false,
+      showSalesReturnInvoiceConvertModal: false,
+      showItemFormulaModal: false,
+      showPurchaseReturnInvoiceRmaApproveModal: false,
+      showEdiOrderApproveModal: false,
+      purchaseReturnRmaType: 'Invoice',
+      additionalValue: null,
+      showPriceListDayModal: false
+    }
+  },
+  mounted () {
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order', 'PriceList']
+    if (pages.includes(this.thisRoute)) {
+      this.showManualActions = true
     }
   },
   computed: {
-    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData'])
+    ...mapState(['errorView', 'errorData', 'style', 'bigLoading', 'tableRowsAll', 'tableFilters', 'tableOperations', 'isFiltered', 'filterData', 'selectedTableRows', 'isMultipleGrid', 'tableRows'])
   },
   watch: {
     $route (to, from) {
       this.$store.commit('setError', {view: false, info: null})
-      this.thisRout = to.name
+      this.thisRoute = to.name
       this.pageTitle = to.meta.title
       this.createLink = to.meta.createLink
+    },
+    selectedTableRows (e) {
+      this.recordIds = []
+      if (e && e.length > 0) {
+        e.map(item => {
+          this.recordIds.push(item.RecordId)
+        })
+      } else {
+        this.recordIds = []
+      }
     }
   },
   methods: {
     ...mapMutations(['hideTableRow']),
     clearFilters () {
-      this.$router.push({name: this.$route.name, query: {'page': 1}})
+      this.$store.commit('changeFiltersCleared', true)
     },
     changeRows () {
       this.$store.commit('setTableRows', this.tableRowsAll)
@@ -155,41 +261,26 @@ export default {
           el += ',' + tbl[i].dataField
         }
       }
-      this.$store.dispatch('setSelectedRows', {...this.query, FormId: this.tableOperations.Id, Columns: el})
+      const path = this.$route.path.split('/')[1]
+
+      this.$store.dispatch('setSelectedRows', {...this.query, FormId: this.tableOperations.Id, Columns: el}).then(res => {
+        if (res.data.IsCompleted === true) {
+          this.$api.get('UIOperations', `UiOperationGroupUser/GetFormFieldsCacheReset?name=${path}`).then((r) => {
+            if (r.IsCompleted) {
+              this.$api.get('UIOperations', `UiOperationGroupUser/GetFormInitsCacheReset?name=${path}`).then((response) => {
+                this.$router.go(0)
+              })
+            }
+          })
+        }
+      })
     },
-    hideRow (t) {
-      // this.hideTableRow(hr)
+    downloadBtn (r, f) {
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name})
     },
-    downloadBtn (r, f, e) {
-      let apil = 'OrderLink'
-      let data
-      data = {
-        'infoType': '1',
-        'sapUserCode': '11081',
-        'operationType': e,
-        'visibleColumnList': [
-          'ConfirmationCodeDescription',
-          'SapCustomerCode',
-          'SapOrderNumber',
-          'SasNumber',
-          'OrderLineNumber',
-          'ProductType',
-          'ProductWeight',
-          'ProductWidthFormatted',
-          'ProductLengthFormatted',
-          'PackingTypeName',
-          'OrderQuantity',
-          'ShipmentQuantity',
-          'BalanceShipmentAmount',
-          'StockQuantity',
-          'UnitPrice',
-          'Currency',
-          'OrderAmountFormatted',
-          'DeliveryDate'
-        ],
-        'userPortalId': 'K11081'
-      }
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: apil, list: data, format: f})
+    uploadBtn (route, action) {
+      this.modalAction = action
+      this.$root.$emit('bv::show::modal', 'importExcelModal')
     },
     filterOnFilters (e) {
       this.$router.push({name: this.$route.name, query: {'page': 1, 'code': e}})
@@ -206,6 +297,85 @@ export default {
         model
       }
       this.$store.dispatch('createData', {...this.query, api: 'VisionNextUIOperations/api/UIFormView', formdata: modelForm, action: 'filters'})
+    },
+    showMultipleModal (action) {
+      this.showItemFormulaModal = false
+      this.showPurchaseReturnInvoiceRmaApproveModal = false
+      this.showEdiOrderApproveModal = false
+      this.showPriceListDayModal = false
+      if (action.Action !== 'ItemFormula' && this.selectedTableRows.length < 1 && !this.showManualActions) {
+        this.$toasted.show(this.$t('index.selectRowError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      }
+      this.modalAction = action
+      if (action.Action === 'MultiPaymentChange') {
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'multiplePaymentChangeModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseWaybillConvert') {
+        this.showPurchaseWaybillConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseWaybillConvertModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseInvoiceConvert') {
+        this.showPurchaseInvoiceConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseInvoiceConvertModal')
+        })
+        return
+      } else if (action.Action === 'SalesReturnInvoiceConvert') {
+        this.showSalesReturnInvoiceConvertModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesReturnInvoiceConvertModal')
+        })
+        return
+      } else if (action.Action === 'ItemFormula') {
+        this.showItemFormulaModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'itemFormulaModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseReturnInvoiceRmaApprove') {
+        this.purchaseReturnRmaType = 'Invoice'
+        this.showPurchaseReturnInvoiceRmaApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
+        })
+        return
+      } else if (action.Action === 'PurchaseReturnWaybillRmaApprove') {
+        this.purchaseReturnRmaType = 'Waybill'
+        this.showPurchaseReturnInvoiceRmaApproveModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'purchaseReturnInvoiceRmaApproveModal')
+        })
+        return
+      } else if (action.Action === 'ApproveEdiOrder') {
+        this.showEdiOrderApproveModal = true
+        this.additionalValue = this.getValueFromGrid('DocumentDate')
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'edi-order-approve-modal')
+        })
+        return
+      } else if (action.Action === 'PriceListDayUpdate') {
+        this.showPriceListDayModal = true
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'priceListDayModal')
+        })
+        return
+      }
+
+      this.$root.$emit('bv::show::modal', 'multipleConfirmModal')
+    },
+    getValueFromGrid (dataField) {
+      let filteredList = this.tableRows.filter(item => item.visible === true && item.dataField === dataField)
+
+      return filteredList && filteredList.length > 0 ? filteredList[0].defaultValue : null
     }
   }
 }
@@ -271,7 +441,6 @@ export default {
         text-align: left
         width: 140px
         border: 1px #ddd solid
-        background: #fff
         &::after
           float: right
           margin-top: 7px

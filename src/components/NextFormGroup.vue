@@ -1,0 +1,52 @@
+<template>
+  <b-col v-if="itemKey ? insertVisible != null && insertVisible[itemKey] != null ? insertVisible[itemKey] : false : true" cols="12" :md="md" :lg="lg">
+    <b-form-group :label="itemTitle + (itemRequired ? ' *' : '')" :class="{ 'form-group--error': itemError }">
+        <slot />
+    </b-form-group>
+  </b-col>
+</template>
+<script>
+import mixin from '../mixins/index'
+export default {
+  mixins: [mixin],
+  name: 'NextFormGroup',
+  props: {
+    itemKey: {
+      type: String
+    },
+    error: {
+      type: Object
+    },
+    title: {
+      type: String
+    },
+    required: {
+      type: Boolean
+    },
+    md: {
+      type: String,
+      default: '4'
+    },
+    lg: {
+      type: String,
+      default: '3'
+    }
+  },
+  data () {
+    return {
+    }
+  },
+  computed: {
+    itemTitle () {
+      return this.title != null && this.title !== undefined && this.title !== '' ? this.title : this.insertTitle[this.itemKey]
+    },
+    itemRequired () {
+      return this.insertRequired !== null && this.insertRequired[this.itemKey] != null ? this.insertRequired[this.itemKey] : this.required
+    },
+    itemError () {
+      return this.error && this.error.$error ? this.error.$error : false
+    }
+  }
+}
+
+</script>

@@ -1,11 +1,3 @@
 <template>
-  <Nextgrid apiurl="VisionNextBranch/api/Branch/Search" />
+  <Nextgrid apiurl="VisionNextBranch/api/Branch/SearchForUpperBranch" />
 </template>
-<script>
-import Nextgrid from '../../components/NextGrid'
-export default {
-  components: {
-    Nextgrid
-  }
-}
-</script>

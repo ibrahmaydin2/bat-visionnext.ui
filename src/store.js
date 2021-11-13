@@ -2,23 +2,83 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import { ToastPlugin } from 'bootstrap-vue'
-import { systemName, ideaName, copyright, verno, apiLink } from '../static/system'
+import { ideaName, copyright } from '../static/system'
 import router from './router'
 import i18n from './i18n'
 import { required, not } from 'vuelidate/lib/validators'
 
-import cities from '../static/cities.json'
-import distiricts from '../static/district.json'
-
-Vue.use(Vuex)
 Vue.use(ToastPlugin)
 Vue.use(Vuex)
+var pagerecordCount = 100
+var checkSearchObject = function (obj) {
+  if (obj) {
+    let isCustomSearch = false
+    let isAutoComplete = false
+    let isList = obj && (obj.length > 0)
+    if (isList) {
+      obj = obj[0]
+    }
+    let keys = Object.keys(obj)
+    keys.forEach(key => {
+      if (key === 'Description1') {
+        isAutoComplete = true
+      }
+      let value = obj[key]
+      if (value === '%%%') {
+        delete obj[key]
+        isCustomSearch = true
+      } else if ((typeof value === 'string' || value instanceof String) && value.includes('%')) {
+        obj[key] = value.replaceAll('%', '')
+        isCustomSearch = true
+      }
+    })
+    pagerecordCount = isCustomSearch || isAutoComplete ? 10 : 50
+    return !isList ? obj : obj && Object.keys(obj).length > 0 ? [obj] : []
+  } else {
+    pagerecordCount = 50
+    return undefined
+  }
+}
+var numberOfAjaxCAllPending = 0
+axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL_BASE
+axios.defaults.timeout = 120000
+axios.interceptors.request.use(function (config) {
+  numberOfAjaxCAllPending++
+  if (!store.state.disabledLoading) {
+    store.commit('bigLoaded', true)
+  }
+  return config
+})
+axios.interceptors.response.use(function (response) {
+  numberOfAjaxCAllPending--
+  if (numberOfAjaxCAllPending === 0) {
+    store.commit('bigLoaded', false)
+  } else {
+    store.commit('bigLoaded', true)
+  }
+  return response
+}, function (error) {
+  numberOfAjaxCAllPending--
+  if (numberOfAjaxCAllPending === 0) {
+    store.commit('bigLoaded', false)
+  }
+  if (error && error.code === 'ECONNABORTED') {
+    store.commit('showAlert', { type: 'danger', msg: i18n.t('general.timeoutError') })
+  }
+  if (error.response && error.response.status === 401) {
+    store.commit('showAlert', { type: 'danger', msg: i18n.t('general.tokenExpired') })
+    store.commit('logout')
+  }
+  return Promise.reject(error)
+})
 export default axios
-axios.defaults.baseURL = apiLink
 let user = JSON.parse(localStorage.getItem('UserModel')) ? JSON.parse(localStorage.getItem('UserModel')) : null
 let authHeader = {
   headers: {
-    'key': localStorage.getItem('Key')
+    'key': localStorage.getItem('Key'),
+    'hash': process.env.HASH,
+    'LanguageId': localStorage.getItem('LanguageId'),
+    'VersionNo': process.env.VUE_APP_VESION_NO
   }
 }
 
@@ -45,11 +105,11 @@ export const store = new Vuex.Store({
       navigation: 'asc__navigation asc__navigation-none asc__transition-right'
     },
     system: {
-      version: verno,
+      version: process.env.VUE_APP_VESION_NO,
       copyright: copyright
     },
     title: {
-      siteName: systemName,
+      siteName: process.env.VUE_APP_SYSTEM_NAME,
       idea: ideaName
     },
     logo: {
@@ -132,6 +192,7 @@ export const store = new Vuex.Store({
     branchList: [],
     analysisQuestions: [],
     warehouseList: [],
+    warehouseListTo: [],
     customerList: [],
     // Employee Lookups Values
     employeeTypes: [],
@@ -173,7 +234,6 @@ export const store = new Vuex.Store({
     customerCategory3: [],
     customerGroups: [],
     customerClass: [],
-    salesDocumentTypes: [],
     ownerTypes: [],
     classProposals: [],
     classProposalReasons: [],
@@ -199,9 +259,8 @@ export const store = new Vuex.Store({
     signNameIds: [],
     banks: [],
     currency: [],
-    items: [],
+    // items: [],
     paymentPeriods: [],
-    statementDays: [],
     paymentTypes: [],
     customerLabels: [],
     customerLabelValues: [],
@@ -218,22 +277,98 @@ export const store = new Vuex.Store({
     warehouses: [],
     vanLoadingStatus: [],
     itemForVanLoading: [],
-    creatorPassword: null
+    creatorPassword: null,
+    formFields: [],
+    branches: [],
+    stockStatus: [],
+    SelectedCustomer: {},
+    autoGridField: [],
+    selectedTableRows: [],
+    printDocuments: [],
+    disabledLoading: false,
+    filtersCleared: false,
+    lastGridItem: null,
+    lastGridModel: null,
+    reloadGrid: false,
+    cancelToken: {},
+    isMultipleGrid: false,
+    multipleItemSearch: {
+      hiddenValues: [
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ItemCode'
+        }
+      ],
+      convertedValues: [
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'NetTotal',
+          getValue: (value, data) => {
+            return store.roundNumber(data.Price * (value ? parseFloat(value) : 0))
+          }
+        },
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'TotalVat',
+          getValue: (value, data) => {
+            return data.IsVatIncluded === 1 ? 0 : store.roundNumber(data.NetTotal * data.VatRate / 100)
+          }
+        },
+        {
+          mainProperty: 'Quantity',
+          targetProperty: 'GrossTotal',
+          getValue: (value, data) => {
+            return store.roundNumber(parseFloat(data.NetTotal) + parseFloat(data.TotalVat))
+          }
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value && parseFloat(value) > data.StockQuantity) {
+              store.commit('showAlert', { type: 'danger', msg: i18n.t('insert.order.quantityStockException') })
+              return false
+            }
+            return true
+          }
+        }
+      ],
+      quantityValidation: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
+      ]
+    }
   },
   actions: {
     // sistem gereksinimleri
-    login ({ commit }, authData) {
+    async login ({ commit }, authData) {
       localStorage.clear()
       document.getElementById('loginButton').disabled = true
       document.getElementById('loginLoaderText').style.display = 'none'
       document.getElementById('loginLoader').style.display = 'block'
       commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
-      return axios.post('VisionNextAuthentication/api/Authentication/Login', {
+      let browserInfo = await this.dispatch('getBrowserInfo')
+      let os = await this.dispatch('getOSInfo')
+
+      let request = {
         SessionId: authData.SessionId,
         UserName: authData.UserName,
         Password: authData.Password,
-        InstanceHash: authData.InstanceHash
-      })
+        InstanceHash: process.env.HASH,
+        Info: {
+          Browser: browserInfo.name,
+          BrowserVersion: browserInfo.version,
+          UserHost: process.env.BASE_URL,
+          OperatingSystem: os
+        }
+      }
+
+      return axios.post('VisionNextAuthentication/api/Authentication/Login', request, authHeader)
         .then(res => {
           commit('hideAlert')
           document.getElementById('loginButton').disabled = false
@@ -244,7 +379,6 @@ export const store = new Vuex.Store({
           } else {
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
-            commit('bigLoaded', false)
           }
         })
         .catch(err => {
@@ -253,7 +387,28 @@ export const store = new Vuex.Store({
           document.getElementById('loginLoader').style.display = 'none'
           commit('showAlert', { type: 'network', msg: err })
           commit('setTableData', [])
-          commit('bigLoaded', false)
+        })
+    },
+    loginWithCua ({ commit }, authData) {
+      localStorage.clear()
+      commit('showAlert', { type: 'info', msg: i18n.t('general.loggined') })
+      return axios.post('VisionNextAuthentication/api/Authentication/LoginRedirect', {
+        InstanceHash: authData.hash,
+        RedirectInstanceHash: authData.redirectHash,
+        AuthKey: decodeURIComponent(authData.authKey)
+      }, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          if (res.data.IsCompleted === true) {
+            commit('login', res.data)
+          } else {
+            commit('showAlert', { type: 'error', msg: res.data.Message })
+            commit('setTableData', [])
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'network', msg: err })
+          commit('setTableData', [])
         })
     },
     logout ({ commit }, authData) {
@@ -268,14 +423,13 @@ export const store = new Vuex.Store({
     },
     changePassword ({ commit }, authData) {
       return axios.post('VisionNextAuthentication/api/Authentication/ChangePassword', {
-        Email: authData.Email,
-        OldPassword: authData.OldPassword,
-        NewPassword: authData.NewPassword,
-        CuaAuthKey: user.CuaKey
-      })
+        ...authCompanyAndBranch,
+        ...authData
+
+      }, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('showAlert', { type: 'success', msg: 'Şifreniz Değiştirildi.' })
+            commit('showAlert', { type: 'success', msg: i18n.t('general.changedPasswordMessage') })
             setTimeout(() => {
               router.push({name: 'Dashboard'})
             }, 1000)
@@ -296,7 +450,6 @@ export const store = new Vuex.Store({
             commit('setNavigation', {navigation: res.data.Model.sub, shortcut: res.data.Model.shortcut})
           } else {
             commit('showAlert', { type: 'catch', msg: res.data })
-            console.log(res)
           }
         })
         .catch(err => {
@@ -306,7 +459,6 @@ export const store = new Vuex.Store({
     // index ekranlarının tablo bilgilerini ve dinamik değerlerini getiren fonksiyondur.
     // fonksiyon olumlu çalıştığında tablo verisini doldurmak için getTableData fonksiyonunu çalıştırır.
     getTableOperations ({ state, commit }, query) {
-      commit('bigLoaded', true)
       commit('setError', {view: false, info: null})
       return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
         .then(res => {
@@ -317,11 +469,15 @@ export const store = new Vuex.Store({
 
             if ((res.data.UIPageModels[0].SelectedColumns) && (res.data.UIPageModels[0].SelectedColumns.length >= 1)) {
               commit('setTableRows', res.data.UIPageModels[0].SelectedColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns.map(item => {
+                let selectedColumns = res.data.UIPageModels[0].SelectedColumns.filter(s => s.dataField === item.dataField)
+                item.visible = selectedColumns && selectedColumns.length > 0 ? selectedColumns[0].visible : false
+                return item
+              }))
             } else {
               commit('setTableRows', res.data.UIPageModels[0].RowColumns)
+              commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
             }
-            commit('setTableRowsAll', res.data.UIPageModels[0].RowColumns)
-
             // başarılı -> tabloyu doldur.
             if (query.code) {
               let filterdata = {
@@ -346,11 +502,13 @@ export const store = new Vuex.Store({
                     commit('setError', {view: true, info: res.data.Message})
                   }
                 })
-                .catch(err => {
-                  console.log(err)
+                .catch(() => {
                   commit('setError', {view: true, info: 'Server Error'})
                 })
             } else {
+              if (query.requiredFieldsError) {
+                return
+              }
               this.dispatch('getTableData', {
                 ...this.query,
                 apiUrl: query.apiUrl,
@@ -366,11 +524,9 @@ export const store = new Vuex.Store({
             commit('setError', {view: false, info: null})
           } else {
             commit('setError', {view: true, info: res.data.Message})
-            commit('bigLoaded', false)
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           commit('setError', {view: true, info: 'Server Error'})
         })
     },
@@ -388,8 +544,7 @@ export const store = new Vuex.Store({
             commit('setError', {view: true, info: res.data.Message})
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           commit('setError', {view: true, info: 'Server Error'})
         })
     },
@@ -397,7 +552,6 @@ export const store = new Vuex.Store({
     getTableData ({ state, commit }, query) {
       commit('setTableData', [])
       commit('showNextgrid', false)
-      commit('bigLoaded', true)
       let dataQuery = {}
       let OrderByColumns = []
       let AndConditionModel = {}
@@ -412,18 +566,22 @@ export const store = new Vuex.Store({
           }
         ]
       } else {
-        OrderByColumns = []
+        OrderByColumns = [
+          {
+            'column': 'CreatedDateTime',
+            'orderByType': 1
+          }
+        ]
       }
-
       // search özelliği şuan tek sütunda geçerli.
       // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
       if (query.search) {
         state.isFiltered = true
-        state.filterData = query.search
         AndConditionModel = {
           ...query.search,
           ...query.andConditionalModel
         }
+        state.filterData = AndConditionModel
       } else {
         state.isFiltered = false
         state.filterData = []
@@ -438,17 +596,21 @@ export const store = new Vuex.Store({
         'companyId': state.CompanyId,
         'pagerecordCount': query.count,
         'page': query.page,
+        'UiFormId': state.tableOperations.Id,
         OrderByColumns
       }
+      commit('setLastGridModel', {AndConditionModel: AndConditionModel, OrderByColumns: OrderByColumns})
       // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
+          if (res.data.ListModel && !state.lastGridItem) {
+            commit('setLastGridItem', res.data.ListModel)
+          }
           commit('hideAlert')
           if (res.data.IsCompleted === true) {
             commit('setError', {view: false, info: null})
             commit('showNextgrid', true)
-            commit('bigLoaded', false)
             commit('setTableData', res.data.ListModel)
           } else {
             commit('showAlert', { type: 'danger', msg: res.data.Message })
@@ -465,7 +627,6 @@ export const store = new Vuex.Store({
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'UserId': state.UserId,
         'FormId': query.FormId,
         'Columns': query.Columns
       }
@@ -484,16 +645,15 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res
         })
         .catch(err => {
-          console.log(err)
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
     },
     // tüm GET ekranlarının genel datasını POST metodudyla besleyen fonksiyondur.
     getData ({ state, commit }, query) {
       commit('setTableData', [])
-      commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
         'BranchId': state.BranchId,
@@ -505,29 +665,33 @@ export const store = new Vuex.Store({
         .then(res => {
           switch (res.status) {
             case 200:
-              commit('bigLoaded', false)
               commit('setRowData', res.data.Model)
+              let history = router ? router.history : null
+              let current = history ? history.current : null
+              let routeName = current ? current.name : null
+              if (routeName && routeName.includes('Update') && res.data.Model && res.data.Model.System === 1) {
+                commit('showAlert', { type: 'error', msg: i18n.t('insert.systemRecordCanNotUpdate') })
+                document.getElementById('submitButton').disabled = true
+              }
               break
             case 900:
-              commit('bigLoaded', false)
               commit('logout')
               break
             default:
-              commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
               break
           }
         })
-        .catch(err => {
-          console.log(err.message)
+        .catch(() => {
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
-          // commit('bigLoaded', false)
         })
     },
     // tüm INSERT ekranlarının kontrolleri sağlanır.
     getAllLookups ({ state, commit }, query) {
-      const queryType = query.type.split(',').filter(function (item, i, allItems) {
+      let types = query.type.split(',')
+
+      const queryType = types.filter(function (item, i, allItems) {
         return i === allItems.indexOf(item)
       }).join(',')
 
@@ -564,36 +728,40 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    getInsertRules ({ commit }, query) {
-      commit('bigLoaded', true)
-      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}`, authHeader)
+    getInsertRules ({ state, commit }, query) {
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
           }
         })
         .catch(err => {
-          commit('bigLoaded', false)
+          commit('showAlert', { type: 'danger', msg: err })
+        })
+    },
+    GetUpdateRules ({ state, commit }, query) {
+      return axios.get(`VisionNextUIOperations/api/UIOperationGroupUser/GetFormUpdateInits?name=${query.api}&branchId=${state.BranchId}`, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setInsertRules', {rows: res.data.RowColumns, route: query.api})
+          }
+        })
+        .catch(err => {
           commit('showAlert', { type: 'danger', msg: err })
         })
     },
     getCreateCode ({ commit }, query) {
-      commit('bigLoaded', true)
       return axios.post(query.apiUrl, authCompanyAndBranch, authHeader)
         .then(res => {
-          commit('bigLoaded', false)
           if (res.data.IsCompleted === true) {
             commit('setGetCreateCode', res.data.Model.Code)
           } else {
           }
         })
         .catch(err => {
-          commit('bigLoaded', false)
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: err })
         })
@@ -605,7 +773,6 @@ export const store = new Vuex.Store({
         'CompanyId': state.CompanyId,
         ...query.formdata
       }
-      console.log(dataQuery)
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
       return axios.post(query.api + '/Insert', dataQuery, authHeader)
@@ -632,9 +799,47 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+          return res.data
         })
         .catch(err => {
-          console.log(err)
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
+    createRouteBalance ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        ...query.formdata
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+            if (query.return) {
+              router.push({name: query.return})
+            } else if (query.action) {
+              location.reload()
+            }
+          } else {
+            if (res.data.Validations) {
+              let errs = res.data.Validations.Errors
+              for (let i = 0; i < errs.length; i++) {
+                let errmsg = errs[i].States
+                for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                }
+              }
+            } else {
+              commit('showAlert', { type: 'validation', msg: res.data.Message })
+            }
+          }
+        })
+        .catch(err => {
           document.getElementById('submitButton').disabled = false
           commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
         })
@@ -647,6 +852,14 @@ export const store = new Vuex.Store({
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       document.getElementById('submitButton').disabled = true
+      if (dataQuery.model && state.insertVisible) {
+        dataQuery.model.updatedProperties = []
+        for (var key in state.insertVisible) {
+          if (state.insertVisible[key] === true) {
+            dataQuery.model.updatedProperties.push(key)
+          }
+        }
+      }
       return axios.post(query.api + '/Update', dataQuery, authHeader)
         .then(res => {
           commit('hideAlert')
@@ -663,6 +876,7 @@ export const store = new Vuex.Store({
               }
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -688,14 +902,12 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     // aşağıdaki fonksiyonlar temizlenmeli. birbirini taklit eden fonksiyonlar birleştirilmeli.
     getBranchData ({ state, commit }, query) {
       commit('setTableData', [])
-      commit('bigLoaded', true)
       let dataQuery = {}
       dataQuery = {
         'BranchId': state.BranchId,
@@ -706,49 +918,25 @@ export const store = new Vuex.Store({
         .then(res => {
           switch (res.status) {
             case 200:
-              commit('bigLoaded', false)
               commit('setBranch', res.data.Model)
               break
             case 900:
-              commit('bigLoaded', false)
               commit('logout')
               break
             default:
-              commit('bigLoaded', false)
               commit('showAlert', { type: 'error', msg: res.data.message })
               break
           }
         })
-        .catch(err => {
-          console.log(err.message)
+        .catch(() => {
           // commit('showAlert', { type: 'danger', msg: err })
           // commit('setTableData', [])
-          // commit('bigLoaded', false)
         })
     },
     // LOOKUP servisleri
-    lookupWareouseType ({ state, commit }, query) {
-      let dataQuery = {
-        'BranchId': state.BranchId,
-        'CompanyId': state.CompanyId,
-        'LookupTableCode': 'WAREHOUSE_TYPE'
-      }
-      return axios.post('VisionNextCommonApi/api/LookupValue/GetValues', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            state.lookupWarehouse_type = res.data.Values
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
     getGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
       let dataQuery = {
-        'AndConditionModel': {},
+        'AndConditionModel': query.model ? query.model : {},
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'pagerecordCount': 100,
@@ -764,7 +952,63 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getAutoGridFields ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      let dataQuery = {
+        'AndConditionModel': query.model ? query.model : {},
+        'OrConditionModels': query.orConditionModels ? query.orConditionModels : {},
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      if (query.val) {
+        if (typeof state.cancelToken[query.val] !== typeof undefined) {
+          state.cancelToken[query.val].cancel('CANCELLED_REQUEST')
+        }
+        commit('setCancelToken', {name: query.val, data: axios.CancelToken.source()})
+        if (state.cancelToken[query.val]) {
+          authHeader.cancelToken = state.cancelToken[query.val].token
+        }
+      }
+      return axios.post(query.serviceUrl, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            // commit('setAutoGridField', {data: res.data.ListModel.BaseModels, name: query.val})
+            return res.data.ListModel.BaseModels
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          if (err && err.message === 'CANCELLED_REQUEST') {
+            return
+          }
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getAutoGridFieldsWithOrConditionModel ({ state, commit }, query) { // index ekranlarındaki autocomplete/dropdown seçimleri için data yükler
+      let dataQuery = {
+        ...query.model,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'pagerecordCount': 100,
+        'page': 1,
+        'OrderByColumns': []
+      }
+      return axios.post(query.serviceUrl, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            // commit('setAutoGridField', {data: res.data.ListModel.BaseModels, name: query.val})
+            return res.data.ListModel.BaseModels
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -784,7 +1028,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -804,7 +1047,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -819,7 +1061,7 @@ export const store = new Vuex.Store({
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery)
+      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setVehicleList', res.data.ListModel.BaseModels)
@@ -828,7 +1070,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -851,7 +1092,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -874,7 +1114,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -897,15 +1136,12 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     acWarehouse ({ state, commit }, query) {
       let AndConditionModel = {}
       // AndConditionModel[query.searchField] = query.searchText
-      console.log(AndConditionModel)
-      console.log(state)
       let dataQuery = {
         AndConditionModel,
         'branchId': query.searchText,
@@ -918,216 +1154,38 @@ export const store = new Vuex.Store({
           if (res.data.IsCompleted === true) {
             commit('setWarehouseList', res.data.ListModel.BaseModels)
           } else {
+            commit('setWarehouseList', [])
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
-    acItems ({ state, commit }, query) {
+    acWarehouseTo ({ state, commit }, query) {
       let AndConditionModel = {}
-      AndConditionModel[query.searchField] = query.searchText
+      // AndConditionModel[query.searchField] = query.searchText
       let dataQuery = {
         AndConditionModel,
-        'branchId': state.BranchId,
+        'branchId': query.searchText,
         'companyId': state.CompanyId,
         'pagerecordCount': 50,
         'page': 1
       }
-      return axios.post('VisionNextItem/api/Item/Search', dataQuery, authHeader)
+      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
-            commit('setItems', res.data.ListModel.BaseModels)
+            commit('setWarehouseListTo', res.data.ListModel.BaseModels)
           } else {
+            commit('setWarehouseListTo', [])
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
         .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getEmployeesByBranchId ({state, commit}) {
-      let dataQuery = {
-        'AndConditionModel': {},
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1,
-        'OrderByColumns': []
-      }
-      return axios.post('VisionNextEmployee/api/Employee/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setEmployees', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getVehiclesByBranchId ({state, commit}) {
-      let dataQuery = {
-        'AndConditionModel': {},
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1,
-        'OrderByColumns': []
-      }
-      return axios.post('VisionNextVehicle/api/Vehicle/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setVehicles', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getRouteTypesByBranchId ({state, commit}) {
-      let dataQuery = {
-        'AndConditionModel': {},
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1,
-        'OrderByColumns': []
-      }
-      return axios.post('VisionNextRoute/api/RouteType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setRouteTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerLocationByCustomerIds ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-          'customerIds': query.customerIds
-          // 'isRouteNode': 1
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCustomer/api/CustomerLocation/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerLocationsList', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerCardType ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCustomer/api/CustomerCardType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerCardTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerCancelReasons ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCommonApi/api/CancelReason/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCancelReasons', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     // aşağıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
-    getBanks ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextBank/api/Bank/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setBanks', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCurrency ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextSystem/api/SysCurrency/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCurrency', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
     getItems ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
@@ -1146,311 +1204,6 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getRoutes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-          'RouteTypeIds': query.params.routeTypeIds,
-          'StatusIds': [1]
-        },
-        'branchId': 1,
-        'companyId': 1,
-        'Page': 1,
-        'PageRecordCount': 100
-      }
-      return axios.post('VisionNextRoute/api/Route/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setRoutes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getPaymentPeriods ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCommonApi/api/FixedTerm/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setPaymentPeriods', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getStatementDays ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextSystem/api/SysDay/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setStatementDays', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getPaymentTypes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCommonApi/api/PaymentType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setPaymentTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerLabels ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCommonApi/api/Label/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerLabels', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerLabelValues ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextCommonApi/api/LabelDetail/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerLabelValues', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getContractTypes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextContractManagement/api/ContractType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setContractTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getCustomerContracts ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-          'customerIds': query.ids
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 1000,
-        'page': 1,
-        'OrderByColumns': []
-      }
-      return axios.post('VisionNextContractManagement/api/Contract/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setCustomerContracts', res.data.ListModel.BaseModels)
-          } else {
-            commit('setCustomerContracts', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          commit('setCustomerContracts', [])
-          console.log(err.message)
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getBenefitTypes ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextContractManagement/api/ContractBenefitType/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setBenefitTypes', res.data.ListModel.BaseModels)
-          } else {
-            commit('setBenefitTypes', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setBenefitTypes', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getBudgets ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextBudget/api/BudgetMaster/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setBudgets', res.data.ListModel.BaseModels)
-          } else {
-            commit('setBudgets', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setBudgets', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getAssets ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextAsset/api/Asset/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setAssets', res.data.ListModel.BaseModels)
-          } else {
-            commit('setAssets', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setAssets', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getWarehouses ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-          'IsVehicle': 0,
-          'StatusIds': [1]
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextWarehouse/api/Warehouse/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setWarehouses', res.data.ListModel.BaseModels)
-          } else {
-            commit('setWarehouses', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setWarehouses', [])
-          commit('showAlert', { type: 'danger', msg: err.message })
-        })
-    },
-    getVanLoadingStatus ({state, commit}, query) {
-      let dataQuery = {
-        'AndConditionModel': {
-        },
-        'branchId': state.BranchId,
-        'companyId': state.CompanyId,
-        'pagerecordCount': 100,
-        'page': 1
-      }
-      return axios.post('VisionNextStockManagement/api/VanLoadingStatu/Search', dataQuery, authHeader)
-        .then(res => {
-          if (res.data.IsCompleted === true) {
-            commit('setVanLoadingStatus', res.data.ListModel.BaseModels)
-          } else {
-            commit('setVanLoadingStatus', [])
-            commit('showAlert', { type: 'danger', msg: res.data.Message })
-          }
-        })
-        .catch(err => {
-          console.log(err.message)
-          commit('setVanLoadingStatus', [])
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1475,30 +1228,47 @@ export const store = new Vuex.Store({
           }
         })
         .catch(err => {
-          console.log(err.message)
           commit('setItemForVanLoading', [])
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
     // yukarıdaki kodların tekrardan elden geçirilip temizlenmesi gerekiyor.
+
+    // Search isteklerinin ortak fonksiyonu
     getSearchItems ({state, commit}, query) {
       let dataQuery = {
         'AndConditionModel': {
+          ...checkSearchObject(query.andConditionModel)
         },
+        'OrConditionModels': checkSearchObject(query.orConditionModels),
+        ...query.props,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
-        'pagerecordCount': 100,
+        'pagerecordCount': query.pagerecordCount ? query.pagerecordCount : pagerecordCount,
         'page': 1
+      }
+      if (query.name) {
+        if (typeof state.cancelToken[query.name] !== typeof undefined && typeof state.cancelToken[query.name].cancel) {
+          state.cancelToken[query.name].cancel('CANCELLED_REQUEST')
+        }
+        commit('setCancelToken', {name: query.name, data: axios.CancelToken.source()})
+        if (state.cancelToken[query.name]) {
+          authHeader.cancelToken = state.cancelToken[query.name].token
+        }
       }
       return axios.post(query.api, dataQuery, authHeader)
         .then(res => {
           if (res.data.IsCompleted === true) {
             commit('setSearchItems', {data: res.data.ListModel.BaseModels, name: query.name})
           } else {
+            commit('setSearchItems', {data: [], name: query.name})
             commit('showAlert', { type: 'danger', msg: res.data.Message })
           }
         })
         .catch(err => {
+          if (err && err.message === 'CANCELLED_REQUEST') {
+            return
+          }
           commit('showAlert', { type: 'danger', msg: err.message })
         })
     },
@@ -1519,12 +1289,256 @@ export const store = new Vuex.Store({
         .catch(err => {
           commit('showAlert', { type: 'danger', msg: err.message })
         })
+    },
+    getDownloadLink ({state, commit}, query) {
+      let dataQuery = {
+        ...state.lastGridModel,
+        'branchId': state.BranchId,
+        'companyId': state.CompanyId,
+        'page': 1,
+        'formName': query.formName
+      }
+
+      return axios.post(query.api, dataQuery, {
+        responseType: 'blob',
+        ...authHeader
+      }).then(res => {
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'excel.xlsx')
+        document.body.appendChild(link)
+        link.click()
+      }).catch(err => {
+        commit('showAlert', { type: 'danger', msg: err.message })
+      })
+    },
+    getFormFields ({ state, commit }, query) {
+      return axios.get('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=' + query.api, authHeader)
+        .then(res => {
+          if ((res.data.IsCompleted === true) && (res.data.UIPageModels.length >= 1)) {
+            commit('setFormFields', res.data.UIPageModels[0])
+          } else {
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboard ({ state, commit }, query) {
+      const userId = JSON.parse(localStorage.getItem('UserModel')).UserId
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetUserDashboards?id=${userId}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReports ({ state, commit }, query) {
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetUserGadgets?id=${query.id}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getDashboardReportDetail ({ state, commit }, query) {
+      return axios.get(`VisionNextDashboard/api/Dashboard/GetGadgetDetails?id=${query.id}`, authHeader)
+        .then(res => {
+          return res
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    approvePotentialCustomer ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        ...query.formdata
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+            return res
+          } else {
+            let errs = res.data.Validations.Errors
+            for (let i = 0; i < errs.length; i++) {
+              let errmsg = errs[i].States
+              for (let x = 0; x < errmsg.length; x++) {
+                commit('showAlert', { type: 'validation', msg: errmsg })
+              }
+            }
+          }
+        })
+        .catch(err => {
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
+    // Sayfa içindeki get metodlarının ortak fonksiyonu
+    getAllData ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'RecordId': query.record
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGetItems', {data: res.data.Model, name: query.name})
+          } else {
+            commit('setGetItems', {data: [], name: query.name})
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    confirmModal ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          if (res.data.IsCompleted === true) {
+            commit('setGetItems', {data: res.data.Model, name: query.name})
+          } else {
+            commit('setGetItems', {data: [], name: query.name})
+            commit('showAlert', { type: 'danger', msg: res.data.Message })
+          }
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    cashCardMultipleInsert ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'model': query.item
+      }
+      return axios.post('VisionNextFinance/api/CashCard/Insert', dataQuery, authHeader)
+        .then(res => {
+          return res.data
+        })
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    importExcel ({ state, commit }, formData) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'model': { ...formData }
+      }
+      return axios.post('/VisionNextExcelIntegrator/api/Upload/UploadFile',
+        dataQuery,
+        authHeader
+      ).then(function (res) {
+        return res
+      }).catch(function () {
+        console.log('FAILURE!!')
+      })
+    },
+    transferExcel ({ state, commit }, query) {
+      let dataQuery = {}
+      dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'model': { ...query.model }
+      }
+      return axios.post(query.api, dataQuery, authHeader)
+        .catch(err => {
+          commit('showAlert', { type: 'danger', msg: err.message })
+        })
+    },
+    getBrowserInfo () {
+      var nAgt = navigator.userAgent
+      var browserName = navigator.appName
+      var fullVersion = '' + parseFloat(navigator.appVersion)
+      var nameOffset, verOffset, ix
+
+      // In Opera 15+, the true version is after "OPR/"
+      if ((verOffset = nAgt.indexOf('OPR/')) !== -1) {
+        browserName = 'Opera'
+        fullVersion = nAgt.substring(verOffset + 4)
+      } else if ((verOffset = nAgt.indexOf('Opera')) !== -1) { // In older Opera, the true version is after "Opera" or after "Version"
+        browserName = 'Opera'
+        fullVersion = nAgt.substring(verOffset + 6)
+        if ((verOffset = nAgt.indexOf('Version')) !== -1) {
+          fullVersion = nAgt.substring(verOffset + 8)
+        }
+      } else if ((verOffset = nAgt.indexOf('MSIE')) !== -1) { // In MSIE, the true version is after "MSIE" in userAgent
+        browserName = 'Microsoft Internet Explorer'
+        fullVersion = nAgt.substring(verOffset + 5)
+      } else if ((verOffset = nAgt.indexOf('Chrome')) !== -1) { // In Chrome, the true version is after "Chrome"
+        browserName = 'Chrome'
+        fullVersion = nAgt.substring(verOffset + 7)
+      } else if ((verOffset = nAgt.indexOf('Safari')) !== -1) { // In Safari, the true version is after "Safari" or after "Version"
+        browserName = 'Safari'
+        fullVersion = nAgt.substring(verOffset + 7)
+        if ((verOffset = nAgt.indexOf('Version')) !== -1) {
+          fullVersion = nAgt.substring(verOffset + 8)
+        }
+      } else if ((verOffset = nAgt.indexOf('Firefox')) !== -1) { // In Firefox, the true version is after "Firefox"
+        browserName = 'Firefox'
+        fullVersion = nAgt.substring(verOffset + 8)
+      } else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) < (verOffset = nAgt.lastIndexOf('/'))) { // In most other browsers, "name/version" is at the end of userAgent
+        browserName = nAgt.substring(nameOffset, verOffset)
+        fullVersion = nAgt.substring(verOffset + 1)
+        if (browserName.toLowerCase() === browserName.toUpperCase()) {
+          browserName = navigator.appName
+        }
+      }
+      if ((ix = fullVersion.indexOf(';')) !== -1) { // trim the fullVersion string at semicolon/space if present
+        fullVersion = fullVersion.substring(0, ix)
+      }
+      if ((ix = fullVersion.indexOf(' ')) !== -1) {
+        fullVersion = fullVersion.substring(0, ix)
+      }
+
+      let majorVersion = parseInt('' + fullVersion, 10)
+      if (isNaN(majorVersion)) {
+        fullVersion = '' + parseFloat(navigator.appVersion)
+      }
+
+      return {
+        name: browserName,
+        version: fullVersion
+      }
+    },
+    getOSInfo () {
+      let list = [
+        { subString: 'Win', identity: 'Windows' },
+        { subString: 'Mac', identity: 'macOS' },
+        { subString: 'iPhone', identity: 'iOS' },
+        { subString: 'iPad', identity: 'iOS' },
+        { subString: 'iPod', identity: 'iOS' },
+        { subString: 'Android', identity: 'Android' },
+        { subString: 'Linux', identity: 'Linux' }
+      ]
+
+      let platform = navigator.platform
+      let filteredList = list.filter(l => platform.includes(l.subString))
+
+      return filteredList.length > 0 ? filteredList[0].identity : '-'
     }
   },
   mutations: {
-    setDev (state, payload) {
-      state.developmentMode = payload
-    },
     setError (state, payload) {
       state.errorView = payload.view
       state.errorData = payload.info
@@ -1533,18 +1547,22 @@ export const store = new Vuex.Store({
       this._vm.$bvToast.hide()
     },
     showAlert (state, payload) {
+      if (payload.msg === 'CANCELLED_REQUEST' || (payload.msg && payload.msg.message === 'CANCELLED_REQUEST')) {
+        return
+      }
       switch (payload.type) {
         case 'catch':
-          if (payload.msg.status === 401) {
-            console.log(payload.msg)
+          if (payload.msg && payload.msg.status === 401) {
             store.commit('logout')
           }
-          this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
-            title: i18n.t('general.serverError'),
-            variant: 'danger',
-            toaster: 'b-toaster-bottom-right',
-            noCloseButton: false
-          })
+          if (payload.msg && payload.msg.data) {
+            this._vm.$bvToast.toast(JSON.stringify(payload.msg.data.Message), {
+              title: i18n.t('general.serverError'),
+              variant: 'danger',
+              toaster: 'b-toaster-bottom-right',
+              noCloseButton: false
+            })
+          }
           break
         case 'network':
           const err = payload.msg.message
@@ -1557,7 +1575,7 @@ export const store = new Vuex.Store({
           break
         case 'danger':
           this._vm.$bvToast.toast(payload.msg, {
-            title: JSON.stringify(payload.msg),
+            title: i18n.t('index.error'),
             variant: 'danger',
             noCloseButton: false
           })
@@ -1623,14 +1641,27 @@ export const store = new Vuex.Store({
     },
     setTableRows (state, payload) {
       state.tableRows = []
-      state.tableRows = payload
+      let index = 0
+      state.tableRows = payload.map(item => {
+        item.id = index
+        index++
+        return item
+      })
     },
     setTableRowsAll (state, payload) {
       state.tableRowsAll = []
-      state.tableRowsAll = payload
+      let index = 0
+      state.tableRowsAll = payload.map(item => {
+        item.id = index
+        index++
+        return item
+      })
     },
     setLookUp (state, payload) {
       state.lookup = payload
+    },
+    setSingleLookUp (state, payload) {
+      state.lookup[payload.key] = payload.value
     },
     setDetailPanelLookups (state, payload) {
       state.detailLookup = payload
@@ -1661,6 +1692,7 @@ export const store = new Vuex.Store({
         let fieldLabel = rule.Label
         let fieldRequired = rule.Required
         let fieldDefaultValue = rule.DefaultValue
+        let modelControlUtil = rule.modelControlUtil
         let fieldVisible = rule.Visible
         rull[fieldName] = fieldRequired === true ? { required } : { not } // validasyon durumu.
         star[fieldName] = fieldRequired // validasyon yıldızını göster.
@@ -1672,101 +1704,82 @@ export const store = new Vuex.Store({
         formData += fieldName + ': null,' + '\n'
         switch (rule.ColumnType) {
           case 'Id':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'String':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'LabelValue':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-input type="text" v-model="form.${fieldName}" :readonly="insertReadonly.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextInput v-model="form.${fieldName}" type="text" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Select':
-            if (fieldDefaultValue != null) {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <v-select
-                    :options="lookup.${fieldDefaultValue}"
-                    @input="selectedType('${fieldName}', $event)"
-                    label="Label"
-                  />
-                </b-form-group>
-              </b-col>`
+            if (modelControlUtil && modelControlUtil.Code) {
+              inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+                <NextDropdown :disabled="insertReadonly.${fieldName}" lookup-key="${modelControlUtil.Code}" @input="selectedType('${fieldName}', $event)"/>
+              </NextFormGroup>`
 
-              valueForAutoLookup += fieldDefaultValue + ','
+              valueForAutoLookup += modelControlUtil.Code + ','
             } else {
-              inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-                <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                  <v-select />
-                </b-form-group>
-              </b-col>`
+              inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+                <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)"/>
+              </NextFormGroup>`
             }
+            dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
           case 'SelectSearch':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <v-select />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextDropdown :disabled="insertReadonly.${fieldName}" url="" @input="selectedSearchType('${fieldName}', $event)" :searchable="true"/>
+            </NextFormGroup>`
+            dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
           case 'Radio':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-checkbox v-model="form.${fieldName}" name="check-button" switch>
-                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-col>`
-            if (parseInt(fieldDefaultValue) === 1) {
-              dflvl[fieldName] = true
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
+            </NextFormGroup>`
+            if (fieldDefaultValue === null) {
+              dflvl[fieldName] = 1
             } else {
-              dflvl[fieldName] = false
+              dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
             break
 
           case 'Check':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-checkbox v-model="form.${fieldName}" name="check-button">
-                  {{(form.${fieldName}) ? $t('insert.active'): $t('insert.passive')}}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" />
+            </NextFormGroup>`
             dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
 
           case 'DateTime':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" :start-weekday="1" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-datepicker v-model="form.${fieldName}" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextDatePicker v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
 
           case 'Text':
-            inputCode = `<b-col v-if="insertVisible.${fieldName} != null ? insertVisible.${fieldName} : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.${fieldName} + (insertRequired.${fieldName} === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.${fieldName}.$error }">
-                <b-form-textarea v-model="form.${fieldName}" placeholder="" />
-              </b-form-group>
-            </b-col>`
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextTextArea v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
+            dflvl[fieldName] = fieldDefaultValue
+            break
+
+          case 'Time':
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextTimePicker v-model="form.${fieldName}" :disabled="insertReadonly.${fieldName}" />
+            </NextFormGroup>`
             dflvl[fieldName] = fieldDefaultValue
             break
         }
@@ -1777,9 +1790,13 @@ export const store = new Vuex.Store({
         }
       })
 
-      this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
+      if (valueForAutoLookup.length > 0) {
+        valueForAutoLookup = valueForAutoLookup.slice(0, -1)
+        this.dispatch('getAllLookups', {...this.query, type: valueForAutoLookup})
+      }
       if (state.developmentMode === true) {
         state.insertHTML = insertPageHTML
+        console.log(formData)
       }
       state.insertRules = rull
       state.insertRequired = star
@@ -1827,20 +1844,25 @@ export const store = new Vuex.Store({
       state.loginUser.company = user.AuthorizedBranches[0].Desciption
       authHeader = {
         headers: {
-          'key': localStorage.getItem('Key')
+          'key': localStorage.getItem('Key'),
+          'hash': process.env.HASH,
+          'LanguageId': localStorage.getItem('LanguageId')
         }
       }
+      let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0]
       store.commit('userIDs', {
         userId: user.UserId,
         company: user.AuthorizedCompanies[0].Id,
-        branch: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Id,
-        branchName: user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0].Desciption
+        branch: defaultBranch.Id,
+        branchName: defaultBranch.Desciption,
+        customerId: defaultBranch.CustomerId
       })
     },
     userIDs (state, payload) {
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
@@ -1862,6 +1884,7 @@ export const store = new Vuex.Store({
       localStorage.setItem('UserId', payload.userId)
       localStorage.setItem('CompanyId', payload.company)
       localStorage.setItem('BranchId', payload.branch)
+      localStorage.setItem('CustomerId', payload.customerId)
 
       state.UserId = localStorage.getItem('UserId')
       state.CompanyId = localStorage.getItem('CompanyId')
@@ -1877,7 +1900,7 @@ export const store = new Vuex.Store({
         'CompanyId': localStorage.getItem('CompanyId'),
         'BranchId': localStorage.getItem('BranchId')
       }
-      location.reload()
+      location.href = '/dashboard'
     },
     logout () {
       store.commit('clearToken')
@@ -1887,25 +1910,15 @@ export const store = new Vuex.Store({
       localStorage.clear()
       localStorage.setItem('signed', false)
     },
-    changeLang (state, payload) {
-      state.appLang = payload.changedLang
-      localStorage.setItem('siteLang', payload.changedLang)
-    },
     // aşağıdaki fonksiyonlar temizlenmeli. birbirini taklit eden fonksiyonlar birleştirilmeli.
-    setCities (state, payload) {
-      state.cities = cities
-    },
-    setDistiricts (state, payload) {
-      state.distiricts = distiricts.filter(item => item.plaka === payload)
-    },
     setValues (state, payload) {
       state[payload.name] = payload.data.Values
     },
     setGridField (state, payload) {
       state.gridField[payload.name] = payload.data
     },
-    setEmployees (state, payload) {
-      state.employees = payload
+    setAutoGridField (state, payload) {
+      state.autoGridField[payload.name] = payload.data
     },
     setAnalysisQuestions (state, payload) {
       state.analysisQuestions = payload
@@ -1913,23 +1926,17 @@ export const store = new Vuex.Store({
     setBranch (state, payload) {
       state.branch = payload
     },
-    setVehicles (state, payload) {
-      state.vehicles = payload
-    },
-    setRouteTypes (state, payload) {
-      state.routeTypes = payload
-    },
-    setCustomerLocationsList (state, payload) {
-      state.customerLocationsList = payload
-    },
     setSearchItems (state, payload) {
+      if (typeof state[payload.name] === 'undefined') {
+        Vue.set(state, payload.name, [])
+      }
       state[payload.name] = payload.data
     },
-    setCustomerCardTypes (state, payload) {
-      state.customerCardTypes = payload
-    },
-    setCancelReasons (state, payload) {
-      state.cancelReasons = payload
+    setGetItems (state, payload) {
+      if (typeof state[payload.name] === 'undefined') {
+        Vue.set(state, payload.name, [])
+      }
+      state[payload.name] = payload.data
     },
     setVehicleList (state, payload) {
       state.vehicleList = payload
@@ -1943,63 +1950,60 @@ export const store = new Vuex.Store({
     setWarehouseList (state, payload) {
       state.warehouseList = payload
     },
-    setBanks (state, payload) {
-      state.banks = payload
-    },
-    setCurrency (state, payload) {
-      state.currency = payload
+    setWarehouseListTo (state, payload) {
+      state.warehouseListTo = payload
     },
     setItems (state, payload) {
       state.items = payload
     },
-    setPaymentPeriods (state, payload) {
-      state.paymentPeriods = payload
-    },
-    setStatementDays (state, payload) {
-      payload.map(item => {
-        item.Label = item.DayNumber + ' ' + item.Description1
-      })
-      state.statementDays = payload
-    },
-    setPaymentTypes (state, payload) {
-      state.paymentTypes = payload
-    },
-    setCustomerLabels (state, payload) {
-      state.customerLabels = payload
-    },
-    setCustomerLabelValues (state, payload) {
-      state.customerLabelValues = payload
-    },
-    setContractTypes (state, payload) {
-      state.contractTypes = payload
-    },
     setCustomerContracts (state, payload) {
       state.customerContracts = payload
-    },
-    setBenefitTypes (state, payload) {
-      state.benefitTypes = payload
-    },
-    setBudgets (state, payload) {
-      state.budgets = payload
-    },
-    setAssets (state, payload) {
-      state.assets = payload
-    },
-    setRoutes (state, payload) {
-      state.routes = payload
-    },
-    setWarehouses (state, payload) {
-      state.warehouses = payload
-    },
-    setVanLoadingStatus (state, payload) {
-      state.vanLoadingStatus = payload
     },
     setItemForVanLoading (state, payload) {
       state.itemForVanLoading = payload
     },
     setCreatorPassword (state, payload) {
       state.creatorPassword = payload
+    },
+    setFormFields (state, payload) {
+      state.formFields = payload
+    },
+    setSelectedTableRows (state, payload) {
+      state.selectedTableRows = payload
+    },
+    setPrintDocuments (state, payload) {
+      state.printDocuments = payload
+    },
+    setDisabledLoading (state, payload) {
+      state.disabledLoading = payload
+    },
+    changeFiltersCleared (state, payload) {
+      state.filtersCleared = payload
+    },
+    setLastGridItem (state, payload) {
+      state.lastGridItem = payload
+    },
+    setReloadGrid (state, payload) {
+      state.reloadGrid = payload
+    },
+    setCancelToken (state, payload) {
+      state.cancelToken[payload.name] = payload.data
+    },
+    resetCancelToken (state, payload) {
+      state.cancelToken = payload
+    },
+    setLastGridModel (state, payload) {
+      state.lastGridModel = payload
+    },
+    setIsMultipleGrid (state, payload) {
+      state.isMultipleGrid = payload
     }
-
   }
 })
+
+store.roundNumber = (value, decimalCount = 2) => {
+  if (typeof value === 'string') {
+    value = parseFloat(value)
+  }
+  return value && (Number.isInteger(value) || value % 1 !== 0) ? value.toFixed(decimalCount) : value
+}

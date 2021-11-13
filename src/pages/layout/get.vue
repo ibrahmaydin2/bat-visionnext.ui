@@ -5,7 +5,15 @@
     <b-row>
       <b-col cols="12">
         <div :class="style.viewPush">
-          <b-overlay :show="bigLoading" rounded="sm">
+          <b-overlay :show="bigLoading" rounded="sm" spinner-variant="warning">
+            <template #overlay>
+              <b-icon
+                icon="three-dots"
+                animation="cylon"
+                scale="8"
+                variant="warning"
+              ></b-icon>
+            </template>
             <b-card class="asc__getPage" no-body>
               <router-view/>
               <div class="clearfix" />
@@ -41,7 +49,8 @@ export default {
         span
           margin-right: 5px
     & header
-      display: block
+      display: flex
+      justify-content: space-between
       border-bottom: 2px #f6f6f6 solid
       padding: 10px 15px 0 15px !important
       background: #fff
@@ -81,7 +90,7 @@ export default {
       & p
         font-style: normal
         padding-bottom: 10px
-        border-bottom: 1px solid #e2dfdf
+        border-bottom: 1px solid #f79055
         margin-left: 15px
     .tabs
       .nav-tabs
@@ -143,4 +152,15 @@ export default {
       font-size: 1rem
       letter-spacing: -0.7px
       font-weight: bold
+  .info-icon
+    font-size: 26px
+    margin-top: 2px
+    cursor: pointer
+    color: #ff8b4d !important;
+    margin-right: 10px
 </style>
+  <style>
+  .nav-tabs .nav-link.disabled {
+    color: grey !important
+  }
+  </style>

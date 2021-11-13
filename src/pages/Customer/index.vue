@@ -1,12 +1,17 @@
 <template>
-  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" />
+  <Nextgrid apiurl="VisionNextCustomer/api/Customer/Search" :andConditionalModel="model" :workFlowModel="workFlowModel" selection-mode="multi" />
 </template>
 <script>
 export default {
   data () {
     return {
       model: {
-        recordTypeIds: [1, 2]
+        RecordTypeIds: [1, 2]
+      },
+      workFlowModel: {
+        ControllerName: 'Customer',
+        ClassName: 'Customer',
+        PageName: 'pg_Customer'
       }
     }
   }

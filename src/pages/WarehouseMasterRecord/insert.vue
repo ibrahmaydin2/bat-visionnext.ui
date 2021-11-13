@@ -220,7 +220,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('bigLoaded', false)
     this.getLookup()
     this.getCode()
   },
