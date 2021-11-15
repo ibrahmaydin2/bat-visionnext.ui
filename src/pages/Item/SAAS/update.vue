@@ -444,7 +444,7 @@ export default {
           id: 4
         },
         {
-          type: 'Dropdown',
+          type: 'Autocomplete',
           modelProperty: 'quotaBranchId',
           objectKey: 'quotaBranch',
           url: 'VisionNextBranch/api/Branch/Search',
