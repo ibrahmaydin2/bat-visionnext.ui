@@ -48,7 +48,7 @@
               <NextDropdown v-model="toLocation" :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
+              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ASR'" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
               <NextDropdown v-model="fromLocation" :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" @input="selectedSearchType('FromLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
@@ -185,6 +185,7 @@ export default {
       if (this.assetMovementType) {
         switch (this.assetMovementType.Code) {
           case 'STS':
+            return !this.form.FromLocationId || !this.form.FromStateId || !this.form.ToStateId
           case 'ASR':
             return !this.form.FromLocationId || !this.form.FromStateId
           case 'TRA':
@@ -293,6 +294,10 @@ export default {
     if (this.assetMovementType) {
       switch (this.assetMovementType.Code) {
         case 'STS':
+          this.insertRules.ToLocationId = {}
+
+          this.insertRequired.ToLocationId = false
+          break
         case 'ASR':
           this.insertRules.ToLocationId = {}
           this.insertRules.ToStateId = {}
