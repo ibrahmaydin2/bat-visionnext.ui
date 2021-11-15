@@ -145,10 +145,21 @@ export default {
             let apiUrl = `VisionNextExcelIntegrator/api/Upload/TransferFile`
             this.showLoading = true
             this.$store.commit('setDisabledLoading', true)
-            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model}).then(() => {
+            this.$store.dispatch('transferExcel', {...this.query, api: apiUrl, model: model}).then((response) => {
+              console.log(response)
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
-              this.isSuccess = true
+              if (response.data.IsCompleted) {
+                this.isSuccess = true
+              } else {
+                if (response.data.Message) {
+                  this.$toasted.show(response.data.Message, {
+                    type: 'error',
+                    keepOnHover: true,
+                    duration: '3000'
+                  })
+                }
+              }
             }).catch(() => {
               this.showLoading = false
               this.$store.commit('setDisabledLoading', false)
