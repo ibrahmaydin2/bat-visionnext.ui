@@ -61,6 +61,7 @@
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
+              <div v-html="getFormatDataByType(rowData.Printed, 'check', 'insert.order.Printed')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
@@ -73,6 +74,7 @@
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
               <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.isCanceled, 'check', 'insert.order.isCanceled')"></div>
             </b-card>
           </b-row>
         </b-tab>
