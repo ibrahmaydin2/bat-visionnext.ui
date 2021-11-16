@@ -37,7 +37,7 @@
                   :searchable="true" :custom-option="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
                   :is-customer="true"
-                  :dynamic-and-condition="{SalesDocumentTypeIds: [45, 46]}"/>
+                  :dynamic-and-condition="{SalesDocumentTypeIds: [45, 46], CardTypeIds: [2, 3]}"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="4" lg="4">
                 <NextDropdown
@@ -119,6 +119,9 @@
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable />
             </NextFormGroup>
+            <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
+              <NextDropdown @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable :disabled="insertReadonly.DeliveryRepresentativeId" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
@@ -190,6 +193,12 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoiceDiscounts" :items="invoiceDiscountsItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.order.invoiceLogisticCompanies')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoiceLogisticCompanies" :items="InvoiceLogisticCompaniesItems"></NextDetailPanel>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="confirm-modal">
@@ -216,6 +225,7 @@
 </template>
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
+import { detailData } from '../detailPanelData'
 import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -253,7 +263,10 @@ export default {
         TotalDiscount: 0,
         InvoiceLines: [],
         PrintedDispatchNumber: null,
-        PaymentPeriodId: null
+        PaymentPeriodId: null,
+        DeliveryRepresentativeId: null,
+        InvoiceDiscounts: [],
+        InvoiceLogisticCompanies: []
       },
       routeName1: 'Invoice',
       selectedCustomer: null,
@@ -285,7 +298,9 @@ export default {
       defaultPaymentType: null,
       stocks: [],
       priceList: [],
-      priceListItems: []
+      priceListItems: [],
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems,
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
     }
   },
   mounted () {

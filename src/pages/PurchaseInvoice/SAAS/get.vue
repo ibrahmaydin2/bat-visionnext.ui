@@ -54,6 +54,7 @@
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
+              <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -89,6 +90,33 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.InvoiceDiscounts" :items="invoiceDiscountsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.InvoicePaymentPlans" :items="invoicePaymentPlansItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.invoiceLogisticCompanies')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.InvoiceLogisticCompanies" :items="InvoiceLogisticCompaniesItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -96,11 +124,16 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../../mixins/index'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems,
+      invoicePaymentPlansItems: detailData.invoicePaymentPlansItems,
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
+    }
   },
   mounted () {
     this.getData()

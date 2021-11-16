@@ -120,6 +120,9 @@
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable />
             </NextFormGroup>
+            <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
+              <NextDropdown @input="selectedSearchType('DeliveryRepresentativeId', $event)" label="Description1" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable :disabled="insertReadonly.DeliveryRepresentativeId" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
@@ -191,6 +194,15 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoiceDiscounts" :items="invoiceDiscountsItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoicePaymentPlans" :items="invoicePaymentPlansItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.order.invoiceLogisticCompanies')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoiceLogisticCompanies" :items="InvoiceLogisticCompaniesItems"></NextDetailPanel>
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="confirm-products-modal">
@@ -207,6 +219,7 @@
 </template>
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
+import { detailData } from '../detailPanelData'
 import updateMixin from '../../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -242,7 +255,11 @@ export default {
         TotalOtherDiscount: 0,
         TotalDiscount: 0,
         InvoiceLines: [],
-        PrintedDispatchNumber: null
+        PrintedDispatchNumber: null,
+        DeliveryRepresentativeId: null,
+        InvoiceDiscounts: [],
+        InvoicePaymentPlans: [],
+        InvoiceLogisticCompanies: []
       },
       routeName1: 'Invoice',
       selectedCustomer: {},
@@ -275,7 +292,10 @@ export default {
       paymentTypes: [],
       stocks: [],
       priceList: [],
-      priceListItems: []
+      priceListItems: [],
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems,
+      invoicePaymentPlansItems: detailData.invoicePaymentPlansItems,
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
     }
   },
   mounted () {
@@ -583,6 +603,15 @@ export default {
           item.RecordState = 3
           return item
         })
+      }
+      if (!rowData.InvoiceDiscounts) {
+        this.form.InvoiceDiscounts = []
+      }
+      if (!rowData.InvoicePaymentPlans) {
+        this.form.InvoicePaymentPlans = []
+      }
+      if (!rowData.InvoiceLogisticCompanies) {
+        this.form.InvoiceLogisticCompanies = []
       }
     },
     getPaymentTypes () {
