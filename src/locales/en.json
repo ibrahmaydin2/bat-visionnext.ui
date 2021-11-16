@@ -2160,7 +2160,9 @@
       "noBudgetMasterList": "Uygun bütçe bulunamadı.",
       "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
       "transactionDate": "İşlem Tarihi",
-      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz"
+      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz",
+      "budgetSpendingDetail": "Bütçe Harcama Detayı",
+      "movementType": "Hareket Tipi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
