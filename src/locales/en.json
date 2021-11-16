@@ -1608,7 +1608,12 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "Price": "Liste Miktarı"
+      "Price": "Liste Miktarı",
+      "lastSalesQuantity": "Son Satış Miktarı",
+      "lastSalesPrice": "Son Satış Fiyatı",
+      "meanPrice": "Ortalama Satış Fiyatı",
+      "listPrice":"Liste Fiyatı",
+      "usedPrice": "İade Fiyatı"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
