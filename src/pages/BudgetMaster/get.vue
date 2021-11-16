@@ -6,6 +6,9 @@
     <b-modal id="monthly-budget-detail-modal" size="lg" hide-footer :title="$t('insert.budgetMaster.monthlyBudgetDetail')" no-close-on-backdrop>
       <MonthlyBudgetDetails :budget-detail="selectedBudgetDetail"/>
     </b-modal>
+    <b-modal id="budget-spending-detail-modal" size="md" hide-footer :title="$t('insert.budgetMaster.budgetSpendingDetail')" no-close-on-backdrop>
+      <BudgetSpendingDetail :budget-detail="selectedBudgetDetail"/>
+    </b-modal>
     <div class="asc__showPage-times">
       <i class="fas fa-times-circle" @click="closeQuick()" />
     </div>
@@ -70,11 +73,13 @@ import mixin from '../../mixins/index'
 import { detailData } from './detailPanelData'
 import BudgetDetail from './Details.vue'
 import MonthlyBudgetDetails from './MonthlyBudgetDetails.vue'
+import BudgetSpendingDetail from './BudgetSpendingDetail.vue'
 export default {
   mixins: [mixin],
   components: {
     BudgetDetail,
-    MonthlyBudgetDetails
+    MonthlyBudgetDetails,
+    BudgetSpendingDetail
   },
   data () {
     return {
@@ -87,6 +92,13 @@ export default {
           icon: 'fa fa-list',
           getDetail: (data) => {
             this.getMonthlyBudgetDetail(data)
+          }
+        },
+        {
+          title: this.$t('insert.budgetMaster.budgetSpendingDetail'),
+          icon: 'fa fa-arrow-right',
+          getDetail: (data) => {
+            this.getBudgetSpendingDetail(data)
           }
         }
       ]
@@ -112,6 +124,10 @@ export default {
     getMonthlyBudgetDetail (data) {
       this.selectedBudgetDetail = data
       this.$bvModal.show('monthly-budget-detail-modal')
+    },
+    getBudgetSpendingDetail (data) {
+      this.selectedBudgetDetail = data
+      this.$bvModal.show('budget-spending-detail-modal')
     }
   }
 }

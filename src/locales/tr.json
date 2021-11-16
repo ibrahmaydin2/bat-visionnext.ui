@@ -1737,7 +1737,12 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "Price": "Liste Miktarı"
+      "Price": "Liste Miktarı",
+      "lastSalesQuantity": "Son Satış Miktarı",
+      "lastSalesPrice": "Son Satış Fiyatı",
+      "meanPrice": "Ortalama Satış Fiyatı",
+      "listPrice":"Liste Fiyatı",
+      "usedPrice": "İade Fiyatı"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
@@ -2409,7 +2414,9 @@
       "noBudgetMasterList": "Uygun bütçe bulunamadı.",
       "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
       "transactionDate": "İşlem Tarihi",
-      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz"
+      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz",
+      "budgetSpendingDetail": "Bütçe Harcama Detayı",
+      "movementType": "Hareket Tipi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",

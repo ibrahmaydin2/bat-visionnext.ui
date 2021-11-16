@@ -2,18 +2,18 @@
   <b-row>
     <b-col cols="12">
       <b-table
-        id="monthly-budget-detail-list"
-        :items="monthlyBudgetDetails"
+        id="budget-spending-detail-list"
+        :items="list"
         :fields="fields"
         bordered responsive
         :current-page="currentPage"
         :per-page="10"
       />
       <b-pagination
-        :total-rows="monthlyBudgetDetails ? monthlyBudgetDetails.length : 0"
+        :total-rows="list ? list.length : 0"
         v-model="currentPage"
         :per-page="10"
-        aria-controls="monthly-budget-detail-list"
+        aria-controls="budget-spending-detail-list"
       ></b-pagination>
     </b-col>
   </b-row>
@@ -29,6 +29,10 @@ export default {
     return {
       fields: [
         {
+          key: 'MovementTypeo.Label',
+          label: this.$t('insert.budgetMaster.movementType')
+        },
+        {
           key: 'Amount',
           label: this.$t('insert.budgetMaster.amount')
         },
@@ -41,20 +45,21 @@ export default {
         }
       ],
       currentPage: 1,
-      monthlyBudgetDetails: []
+      list: []
     }
   },
   mounted () {
-    this.getMonthlyBudgetDetails()
+    this.getList()
   },
   methods: {
-    getMonthlyBudgetDetails () {
+    getList () {
       let request = {
-        logId: 2,
-        budgetId: this.budgetDetail.RecordId
+        andConditionModel: {
+          BudgetIds: [this.budgetDetail.RecordId]
+        }
       }
-      this.$api.postByUrl(request, 'VisionNextBudget/api/BudgetMaster/GetBudgetExpenditureDetail').then((response) => {
-        this.monthlyBudgetDetails = response ? response.Details : []
+      this.$api.postByUrl(request, 'VisionNextBudget/api/BudgetTransaction/Search').then((response) => {
+        this.list = response.ListModel ? response.ListModel.BaseModels : []
       })
     }
   }
