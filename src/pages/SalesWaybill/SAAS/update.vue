@@ -248,6 +248,10 @@
                 <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.DiscountReasonId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.LoyaltyId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.ContractId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.SalesVolumeId')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -255,14 +259,15 @@
                   <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
                   <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
                   <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                  <b-td>{{o.DiscountReason ? o.DiscountReason.Label : ''}}</b-td>
+                  <b-td>{{o.LoyaltyId}}</b-td>
+                  <b-td>{{o.ContractId}}</b-td>
+                  <b-td>{{o.SalesVolumeId}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.discounts')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.InvoiceDiscounts" :items="invoiceDiscountsItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.order.paymentPlan')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.InvoicePaymentPlans" :items="invoicePaymentPlansItems"></NextDetailPanel>

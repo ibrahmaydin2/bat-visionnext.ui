@@ -1772,7 +1772,11 @@
       "invoiceLogisticCompanies": "Lojistik Firma Bilgisi",
       "vehicleOrLogisticRequired": "Araç ya da Lojistik firma bilgisi girilmelidir",
       "isCanceled": "İptal Edildi",
-      "Printed": "Yazdırıldı"      
+      "Printed": "Yazdırıldı",
+      "EDocumentStatusId": "E-Belge Durumu",
+      "CustomerOrderNumber": "Müşteri Sipariş No",
+      "IsDBSOffline": "Online DBS Ödeme",
+      "IsDBS": "DBS Kullanılsın Mı?"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
