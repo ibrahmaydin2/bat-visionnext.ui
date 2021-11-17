@@ -344,7 +344,8 @@ export default {
           }
         ],
         andConditionModel: {
-          CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null
+          CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null,
+          PriceDate: this.form.PriceDate
         }
       }).then(res => {
         loading(false)
