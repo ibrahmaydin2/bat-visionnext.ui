@@ -157,12 +157,12 @@
                   <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
-                    <b-td>{{w.Item.LastSalesQuantity}}</b-td>
-                    <b-td>{{w.Item.LastPice}}</b-td>
+                    <b-td>{{w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
+                    <b-td>{{w.Item.LastPice ? w.Item.LastPice : w.LastPice}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td>{{w.Item.MeanPrice}}</b-td>
-                    <b-td>{{w.Item.ListPrice}}</b-td>
-                    <b-td>{{w.Item.UsedPrice}}</b-td>
+                    <b-td>{{w.Item.MeanPrice ? w.Item.MeanPrice : w.MeanPrice}}</b-td>
+                    <b-td>{{w.Item.ListPrice ? w.Item.ListPrice : w.ListPrice}}</b-td>
+                    <b-td>{{w.Item.UsedPrice ? w.Item.UsedPrice : w.UsedPrice}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -323,7 +323,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
+        api: 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement',
         name: 'items',
         orConditionModels: [
           {
@@ -370,9 +370,14 @@ export default {
       }
     },
     initRmaLine (value) {
+      this.rmaLine.ItemId = value.ItemId
+      this.rmaLine.Price = value.ListPrice
+      this.rmaLine.LastPrice = value.LastPrice
+      this.rmaLine.MeanPrice = value.MeanPrice
+      this.rmaLine.UsedPrice = value.UsedPrice
+      this.rmaLine.LastSalesQuantity = value.LastSalesQuantity
       this.rmaLine.UnitSetId = value.UnitSetId
       this.rmaLine.UnitId = value.UnitId
-      this.rmaLine.ItemId = value.RecordId
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity
       this.rmaLine.RmaUnit1Id = this.rmaLine.UnitId
       this.rmaLine.RmaReasonId = this.form.RmaReasonId
@@ -413,6 +418,7 @@ export default {
       }
     },
     save () {
+      this.form.StatusId = 1
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
