@@ -57,11 +57,15 @@
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
               <div v-html="getFormatDataByType(rowData.ActualDeliveryDate, 'date', 'insert.order.actualDeliveryDate')"></div>
               <div v-html="getFormatDataByType(rowData.ActualDeliveryTime, 'text', 'insert.order.actualDeliveryTime')"></div>
+              <div v-html="getFormatDataByType(rowData.EDocumentStatusId, 'object', 'insert.order.EDocumentStatusId')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerOrderNumber, 'text', 'insert.order.CustomerOrderNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Printed, 'check', 'insert.order.Printed')"></div>
+              <div v-html="getFormatDataByType(rowData.IsDBSOffline, 'check', 'insert.order.IsDBSOffline')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
@@ -72,7 +76,10 @@
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(rowData.ReferenceNumber, 'text', 'insert.order.ReferenceNumber')"></div>
               <div v-html="getFormatDataByType(rowData.IsCashCollection , 'check', 'insert.order.isCashCollection')"></div>
+              <div v-html="getFormatDataByType(rowData.isCanceled, 'check', 'insert.order.isCanceled')"></div>
+              <div v-html="getFormatDataByType(rowData.IsDBS, 'check', 'insert.order.IsDBS')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -124,6 +131,10 @@
                     <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.DiscountReasonId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.LoyaltyId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.ContractId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.SalesVolumeId')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
@@ -131,6 +142,10 @@
                       <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
                       <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
                       <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                      <b-td>{{o.DiscountReason ? o.DiscountReason.Label : ''}}</b-td>
+                      <b-td>{{o.LoyaltyId}}</b-td>
+                      <b-td>{{o.ContractId}}</b-td>
+                      <b-td>{{o.SalesVolumeId}}</b-td>
                       <b-td>{{o.TotalDiscount}}</b-td>
                     </b-tr>
                   </b-tbody>
@@ -163,6 +178,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.invoiceLogisticCompanies')" v-if="selectedBranch.UseEWaybill === 1">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.InvoiceLogisticCompanies" :items="InvoiceLogisticCompaniesItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -170,11 +194,16 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../../mixins/index'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems,
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems,
+      selectedBranch: {}
+    }
   },
   mounted () {
     this.getData()
@@ -187,7 +216,11 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesInvoice', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/SalesInvoice', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
+          this.selectedBranch = response && response.Model ? response.Model : {}
+        })
+      })
     }
   }
 }

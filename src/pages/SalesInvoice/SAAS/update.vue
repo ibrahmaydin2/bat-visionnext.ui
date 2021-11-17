@@ -103,11 +103,14 @@
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.DocumentNumber" :disabled="insertReadonly.DocumentNumber"></NextInput>
             </NextFormGroup>
-             <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+             <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2" v-if="selectedBranch.UseEWaybill === 1">
                 <NextDatePicker v-model="form.ActualDeliveryDate" :disabled="insertReadonly.ActualDeliveryDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEDispatch !== 0">
+            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" v-if="selectedBranch.UseEWaybill === 1">
               <NextTimePicker v-model="form.ActualDeliveryTime" :disabled="insertReadonly.ActualDeliveryTime" />
+            </NextFormGroup>
+            <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2" v-if="selectedBranch && selectedBranch.UseEWaybill === 1">
+              <NextDropdown url="VisionNextCommonApi/api/EDocumentStatus/Search" @input="selectedSearchType('EDocumentStatusId', $event)" :disabled="insertReadonly.EDocumentStatusId"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
@@ -137,7 +140,7 @@
                 :dynamic-and-condition="{ StatusIds: [1] }"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :disabled="insertReadonly.VehicleId" searchable />
+              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <NextDropdown
@@ -152,6 +155,24 @@
             </NextFormGroup>
              <NextFormGroup item-key="IsCashCollection" :error="$v.form.IsCashCollection" md="2" lg="2">
               <NextCheckBox type="number" toggle v-model="form.IsCashCollection" :disabled="!selectedPaymentType || selectedPaymentType.Code !== 'PES'"></NextCheckBox>
+            </NextFormGroup>
+            <NextFormGroup item-key="ReferenceNumber" :error="$v.form.ReferenceNumber" md="2" lg="2">
+              <NextInput type="text" v-model="form.ReferenceNumber" :disabled="insertReadonly.ReferenceNumber"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerOrderNumber" :error="$v.form.CustomerOrderNumber" md="2" lg="2">
+              <NextInput type="text" v-model="form.CustomerOrderNumber" :disabled="insertReadonly.CustomerOrderNumber"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDBS" :error="$v.form.IsDBS">
+              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDBS"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDBSOffline" :error="$v.form.IsDBSOffline">
+              <NextCheckBox v-model="form.IsDBSOffline" type="number" toggle :disabled="insertReadonly.IsDBSOffline"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="Printed" :error="$v.form.Printed">
+              <NextCheckBox v-model="form.Printed" type="number" toggle :disabled="insertReadonly.Printed"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="isCanceled" :error="$v.form.isCanceled">
+              <NextCheckBox v-model="form.isCanceled" type="number" toggle :disabled="insertReadonly.isCanceled"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -197,6 +218,10 @@
                 <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.DiscountReasonId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.LoyaltyId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.ContractId')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.SalesVolumeId')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -204,11 +229,21 @@
                   <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
                   <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
                   <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                  <b-td>{{o.DiscountReason ? o.DiscountReason.Label : ''}}</b-td>
+                  <b-td>{{o.LoyaltyId}}</b-td>
+                  <b-td>{{o.ContractId}}</b-td>
+                  <b-td>{{o.SalesVolumeId}}</b-td>
                   <b-td>{{o.TotalDiscount}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.paymentPlan')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoicePaymentPlans" :items="invoicePaymentPlansItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab :title="$t('insert.order.invoiceLogisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEWaybill === 1" :disabled="form.VehicleId > 0">
+          <NextDetailPanel v-model="form.InvoiceLogisticCompanies" :items="InvoiceLogisticCompaniesItems"></NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -246,6 +281,7 @@
 </template>
 <script>
 import updateMixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [updateMixin],
   data () {
@@ -299,7 +335,16 @@ export default {
         IsManuelTransaction: 0,
         IsMatched: 0,
         PrintedDispatchNumber: null,
-        IsCashCollection: null
+        IsCashCollection: null,
+        IsDBS: null,
+        IsDBSOffline: null,
+        ReferenceNumber: null,
+        isCanceled: null,
+        CustomerOrderNumber: null,
+        InvoiceDiscounts: [],
+        InvoiceLogisticCompanies: [],
+        EDocumentStatusId: null,
+        InvoicePaymentPlans: []
       },
       routeName1: 'Invoice',
       campaignFields: [
@@ -340,7 +385,9 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: []
+      stocks: [],
+      invoicePaymentPlansItems: detailData.invoicePaymentPlansItems,
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
     }
   },
   mounted () {
@@ -557,6 +604,15 @@ export default {
             item.RecordState = 3
             return item
           })
+        }
+        if (!rowData.InvoiceDiscounts) {
+          this.form.InvoiceDiscounts = []
+        }
+        if (!rowData.InvoicePaymentPlans) {
+          this.form.InvoicePaymentPlans = []
+        }
+        if (!rowData.InvoiceLogisticCompanies) {
+          this.form.InvoiceLogisticCompanies = []
         }
       }
     },
