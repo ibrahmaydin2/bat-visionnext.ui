@@ -278,7 +278,13 @@ export default {
       })
     },
     downloadBtn (r, f) {
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name})
+      let orderByColumns = this.$route.name === 'AccountTransaction' ? [
+        {
+          column: 'DocumentDate',
+          orderByType: 0
+        }
+      ] : null
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name, orderByColumns: orderByColumns})
     },
     uploadBtn (route, action) {
       this.modalAction = action
