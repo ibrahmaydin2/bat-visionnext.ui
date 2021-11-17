@@ -115,8 +115,23 @@
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
               <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
+              <b-form-input type="text" v-model="rmaLine.Item.LastSalesQuantity" readonly/>
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.LastPrice" readonly/>
+            </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
               <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event)" min=1 />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.MeanPrice" readonly/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.listPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.ListPrice" readonly/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.UsedPrice" readonly/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -130,14 +145,24 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesPrice')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.meanPrice')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.listPrice')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.usedPrice')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
+                    <b-td>{{w.Item.LastSalesQuantity}}</b-td>
+                    <b-td>{{w.Item.LastPice}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
+                    <b-td>{{w.Item.MeanPrice}}</b-td>
+                    <b-td>{{w.Item.ListPrice}}</b-td>
+                    <b-td>{{w.Item.UsedPrice}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -307,7 +332,8 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null,
+          PriceDate: this.form.PriceDate
         }
       }).then(res => {
         loading(false)

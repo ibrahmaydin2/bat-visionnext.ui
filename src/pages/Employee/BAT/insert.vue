@@ -212,7 +212,6 @@ export default {
         type: 'Dropdown',
         modelProperty: 'RecordId',
         objectKey: 'EmployeePrefix',
-        labelProperty: 'Code',
         source: [],
         label: this.$t('insert.employee.EmployeePrefix'),
         required: true,
@@ -239,7 +238,10 @@ export default {
           let eInvoiceSeqs = response.Model.EInvoiceSeqs
           if (eInvoiceSeqs) {
             this.prefixItem.source = eInvoiceSeqs.map(item => {
-              item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
+              return {
+                Description1: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`,
+                RecordId: item.RecordId
+              }
             })
             this.prefixItems.push(this.prefixItem)
           }
