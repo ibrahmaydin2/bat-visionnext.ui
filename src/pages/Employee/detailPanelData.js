@@ -19,8 +19,7 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'RecordId',
-      objectKey: 'EmployeePrefix',
-      labelProperty: 'Code',
+      objectKey: 'Description1',
       source: [],
       label: i18n.t('insert.employee.EmployeePrefix'),
       required: true,
