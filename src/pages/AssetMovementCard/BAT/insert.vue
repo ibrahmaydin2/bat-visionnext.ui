@@ -93,6 +93,7 @@
                   :hidden-values="hiddenValues"
                   :dynamic-and-condition="multipleDynamicAndCondition"
                   :disabled-button="disabledMultipleSelection"
+                  :validations="assetMovementType && assetMovementType.Code === 'ADF' ? [] : multipleValidations"
                 />
             </b-col>
           </b-row>
@@ -174,6 +175,14 @@ export default {
           mainProperty: 'Barcode',
           targetProperty: 'SerialNumber'
         }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            return value <= data.FromLocationQuantity
+          }
+        }
       ]
     }
   },
@@ -202,12 +211,14 @@ export default {
         if (this.assetMovementType.Code === 'ADF') {
           return {
             StateIds: [this.form.ToStateId],
-            LocationIds: [this.form.ToLocationId]
+            LocationIds: [this.form.ToLocationId],
+            MovementTypeIds: [this.form.MovementTypeId]
           }
         } else {
           return {
             StateIds: [this.form.FromStateId],
-            LocationIds: [this.form.FromLocationId]
+            LocationIds: [this.form.FromLocationId],
+            MovementTypeIds: [this.form.MovementTypeId]
           }
         }
       }

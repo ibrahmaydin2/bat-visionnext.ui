@@ -378,7 +378,12 @@ export default {
       this.rmaLines.splice(this.rmaLines.indexOf(item), 1)
     },
     initRmaLine (value) {
-      this.rmaLine.ItemId = value.RecordId
+      this.rmaLine.ItemId = value.ItemId
+      this.rmaLine.Price = value.ListPrice
+      this.rmaLine.LastPrice = value.LastPrice
+      this.rmaLine.MeanPrice = value.MeanPrice
+      this.rmaLine.UsedPrice = value.UsedPrice
+      this.rmaLine.LastSalesQuantity = value.LastSalesQuantity
       this.rmaLine.UnitSetId = value.UnitSetId
       this.rmaLine.UnitId = value.UnitId
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity

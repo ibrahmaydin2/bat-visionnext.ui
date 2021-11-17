@@ -3199,7 +3199,8 @@
       "ReturnQuantity": "İade Edilen Miktar",
       "ReturnQuantity1": "İade Edilen Miktar Birim 1",
       "Details": "Detaylar",
-      "StockException": "Talep edilen miktardan fazla değer girilemez."
+      "StockException": "Talep edilen miktardan fazla değer girilemez.",
+      "amount": "Tutar"
     },
     "ItemFormula": {
       "Code": "Kod",

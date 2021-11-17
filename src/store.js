@@ -1293,6 +1293,9 @@ export const store = new Vuex.Store({
     getDownloadLink ({state, commit}, query) {
       let dataQuery = {
         ...state.lastGridModel,
+        OrderByColumns: query.orderByColumns
+          ? query.orderByColumns
+          : state.lastGridModel.OrderByColumns ? state.lastGridModel.OrderByColumns : null,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'page': 1,
