@@ -1901,7 +1901,11 @@
       "invoiceLogisticCompanies": "Lojistik Firma Bilgisi",
       "vehicleOrLogisticRequired": "Araç ya da Lojistik firma bilgisi girilmelidir",
       "isCanceled": "İptal Edildi",
-      "Printed": "Yazdırıldı"
+      "Printed": "Yazdırıldı",
+      "EDocumentStatusId": "E-Belge Durumu",
+      "CustomerOrderNumber": "Müşteri Sipariş No",
+      "IsDBSOffline": "Online DBS Ödeme",
+      "IsDBS": "DBS Kullanılsın Mı?"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -3195,7 +3199,8 @@
       "ReturnQuantity": "İade Edilen Miktar",
       "ReturnQuantity1": "İade Edilen Miktar Birim 1",
       "Details": "Detaylar",
-      "StockException": "Talep edilen miktardan fazla değer girilemez."
+      "StockException": "Talep edilen miktardan fazla değer girilemez.",
+      "amount": "Tutar"
     },
     "ItemFormula": {
       "Code": "Kod",
