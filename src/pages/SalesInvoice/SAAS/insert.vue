@@ -850,7 +850,7 @@ export default {
           })
           return
         }
-        if (this.warehouse && this.warehouse.IsVehicle === 0) {
+        if (this.warehouse && this.warehouse.IsEmployeeWarehouse === 1) {
           this.$bvModal.show('confirm-warehouse-modal')
           return
         }
