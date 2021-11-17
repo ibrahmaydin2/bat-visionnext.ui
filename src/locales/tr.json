@@ -1737,7 +1737,12 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "Price": "Liste Miktarı"
+      "Price": "Liste Miktarı",
+      "lastSalesQuantity": "Son Satış Miktarı",
+      "lastSalesPrice": "Son Satış Fiyatı",
+      "meanPrice": "Ortalama Satış Fiyatı",
+      "listPrice":"Liste Fiyatı",
+      "usedPrice": "İade Fiyatı"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
@@ -1878,7 +1883,25 @@
       "pleaseConfirm": "Lütfen Onaylayın",
       "approveError": "Sadece Öneri durumundaki siparişler onaylanabilir.",
       "cancelledError": "Sadece Öneri durumundaki siparişler iptal edilebilir.",
-      "orderConvertError": "Kapalı durumdaki belge dönüştürülemez."
+      "orderConvertError": "Kapalı durumdaki belge dönüştürülemez.",
+      "DiscountReasonId": "İndirim Nedeni",
+      "DiscountPercent": "İndirim Oranı",
+      "TotalDiscount": "indirim Tutarı",
+      "LoyaltyId": "Sakadat Uygulamaları",
+      "ContractId": "Kontrat",
+      "SalesVolumeId": "Satış Hacmi Kampanyası",
+      "PaymentDate": "Ödeme Tarihi",
+      "PaymentPeriod": "Vade Günü",
+      "amount": "Ödenecek Tutar",
+      "paid": "Ödenen Tutar",
+      "CompanyName": "Firma Adı",
+      "cityId": "İl",
+      "districtId": "İlçe",
+      "taxnumber": "Vergi Numarası",
+      "invoiceLogisticCompanies": "Lojistik Firma Bilgisi",
+      "vehicleOrLogisticRequired": "Araç ya da Lojistik firma bilgisi girilmelidir",
+      "isCanceled": "İptal Edildi",
+      "Printed": "Yazdırıldı"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -2391,7 +2414,9 @@
       "noBudgetMasterList": "Uygun bütçe bulunamadı.",
       "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
       "transactionDate": "İşlem Tarihi",
-      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz"
+      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz",
+      "budgetSpendingDetail": "Bütçe Harcama Detayı",
+      "movementType": "Hareket Tipi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",

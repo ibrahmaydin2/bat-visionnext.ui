@@ -117,7 +117,7 @@ export default {
     selectedSourceCustomer (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this.$api.get('ContractManagement', `RefContract/GetResourceContract?contractId=${model.RecordId}`).then((res) => {
+        this.$api.get('ContractManagement', `RefContract/GetResourceContract?customerId=${model.RecordId}`).then((res) => {
           this.sourceContracts = res
         })
       } else {
@@ -130,7 +130,7 @@ export default {
     selectedSourceContract (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?customerId=${model.RecordId}`).then((res) => {
+        this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${model.RecordId}`).then((res) => {
           this.contractDetail = res
         })
       } else {

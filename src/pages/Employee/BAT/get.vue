@@ -99,7 +99,7 @@
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.EInvoiceSeqs" :items="prefixItems" />
+                <NextDetailPanel type="get" v-model="eInvoiceSeqs" :items="prefixItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -118,7 +118,8 @@ export default {
   data () {
     return {
       teamItems: detailData.teamItems,
-      prefixItems: detailData.prefixItems
+      prefixItems: detailData.prefixItems,
+      eInvoiceSeqs: []
     }
   },
   mounted () {
@@ -132,7 +133,12 @@ export default {
       this.$router.push({name: this.routeName})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextEmployee/api/Employee', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextEmployee/api/Employee', record: this.$route.params.url}).then(() => {
+        this.eInvoiceSeqs = this.rowData.EInvoiceSeqs.map(item => {
+          item.Description1 = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
+          return item
+        })
+      })
     }
   }
 }

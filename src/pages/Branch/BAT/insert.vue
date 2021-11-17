@@ -126,31 +126,31 @@
               <NextDropdown :disabled="!(DefaultPaymentType && DefaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="PriceListCategoryId" :error="$v.form.PriceListCategoryId">
-              <NextDropdown :disabled="insertReadonly.priceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.PriceListCategoryId"  lookup-key="PRICE_LIST_CATEGORY_TYPE" @input="selectedType('PriceListCategoryId', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CreditLimit" :error="$v.form.creditLimit">
-              <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.creditLimit" />
+            <NextFormGroup item-key="CreditLimit" :error="$v.form.CreditLimit">
+              <NextInput v-model="form.CreditLimit" type="text" :disabled="insertReadonly.CreditLimit" />
             </NextFormGroup>
-            <NextFormGroup item-key="RiskLimit" :error="$v.form.riskLimit">
-              <NextInput v-model="form.RiskLimit" type="text" :disabled="insertReadonly.riskLimit" />
+            <NextFormGroup item-key="RiskLimit" :error="$v.form.RiskLimit">
+              <NextInput v-model="form.RiskLimit" type="text" :disabled="insertReadonly.RiskLimit" />
             </NextFormGroup>
-            <NextFormGroup item-key="CurrentCredit" :error="$v.form.currentCredit">
-              <NextInput v-model="form.CurrentCredit" type="text" :disabled="insertReadonly.currentCredit" />
+            <NextFormGroup item-key="CurrentCredit" :error="$v.form.CurrentCredit">
+              <NextInput v-model="form.CurrentCredit" type="text" :disabled="insertReadonly.CurrentCredit" />
             </NextFormGroup>
-            <NextFormGroup item-key="CurrentRisk" :error="$v.form.currentRisk">
-              <NextInput v-model="form.CurrentRisk" type="text" :disabled="insertReadonly.currentRisk" />
+            <NextFormGroup item-key="CurrentRisk" :error="$v.form.CurrentRisk">
+              <NextInput v-model="form.CurrentRisk" type="text" :disabled="insertReadonly.CurrentRisk" />
             </NextFormGroup>
-            <NextFormGroup item-key="DebitAccountRemainder" :error="$v.form.debitAccountRemainder">
-              <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.debitAccountRemainder" />
+            <NextFormGroup item-key="DebitAccountRemainder" :error="$v.form.DebitAccountRemainder">
+              <NextInput v-model="form.DebitAccountRemainder" type="text" :disabled="insertReadonly.DebitAccountRemainder" />
             </NextFormGroup>
-            <NextFormGroup item-key="CreditAccountRemainder" :error="$v.form.creditAccountRemainder">
-              <NextInput v-model="form.CreditAccountRemainder" type="text" :disabled="insertReadonly.creditAccountRemainder" />
+            <NextFormGroup item-key="CreditAccountRemainder" :error="$v.form.CreditAccountRemainder">
+              <NextInput v-model="form.CreditAccountRemainder" type="text" :disabled="insertReadonly.CreditAccountRemainder" />
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountPercent1" :error="$v.form.discountPercent1">
-              <NextInput v-model="form.DiscountPercent1" type="text" :disabled="insertReadonly.discountPercent1" />
+            <NextFormGroup item-key="DiscountPercent1" :error="$v.form.DiscountPercent1">
+              <NextInput v-model="form.DiscountPercent1" type="text" :disabled="insertReadonly.DiscountPercent1" />
             </NextFormGroup>
-            <NextFormGroup item-key="DiscountPercent2" :error="$v.form.discountPercent2">
-              <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.discountPercent2" />
+            <NextFormGroup item-key="DiscountPercent2" :error="$v.form.DiscountPercent2">
+              <NextInput v-model="form.DiscountPercent2" type="text" :disabled="insertReadonly.DiscountPercent2" />
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <NextDropdown :disabled="insertReadonly.TciBreak1Id" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
@@ -158,14 +158,14 @@
             <NextFormGroup item-key="TciBreak2Id" :error="$v.form.TciBreak2Id">
               <NextDropdown :disabled="insertReadonly.TciBreak2Id" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak2Id', $event)" />
             </NextFormGroup>
-            <NextFormGroup item-key="StatementDay" :error="$v.form.statementDay">
-              <NextDropdown :disabled="insertReadonly.statementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
+            <NextFormGroup item-key="StatementDay" :error="$v.form.StatementDay">
+              <NextDropdown :disabled="insertReadonly.StatementDay" url="VisionNextSystem/api/SysDay/Search" @input="selectedSearchType('StatementDay', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="SapCustomerId" :error="$v.form.sapCustomerId">
-              <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.sapCustomerId" />
+            <NextFormGroup item-key="SapCustomerId" :error="$v.form.SapCustomerId">
+              <NextInput v-model="form.SapCustomerId" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.SapCustomerId" />
             </NextFormGroup>
-            <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.deliveryDayParam">
-              <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.deliveryDayParam" />
+            <NextFormGroup item-key="DeliveryDayParam" :error="$v.form.DeliveryDayParam">
+              <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.DeliveryDayParam" />
             </NextFormGroup>
             <NextFormGroup item-key="MaxBonusRate" :error="$v.form.MaxBonusRate">
               <NextInput v-model="form.MaxBonusRate" type="number" :disabled="insertReadonly.MaxBonusRate" />
@@ -220,20 +220,20 @@
         </b-tab>
         <b-tab :title="$t('insert.branch.customerClassInfo')">
           <b-row>
-            <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
-              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+            <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
+              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.Category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
+            <NextFormGroup item-key="Category2Id" :error="$v.form.Category2Id">
               <NextDropdown v-model="customerCategory2" :disabled="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="Category1Id" :error="$v.form.category1Id">
+            <NextFormGroup item-key="Category1Id" :error="$v.form.Category1Id">
               <NextDropdown v-model="customerCategory1" :disabled="true" lookup-key="CUSTOMER_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.customerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
+              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.backMarginGroupId">
-              <NextDropdown :disabled="insertReadonly.backMarginGroupId" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
+            <NextFormGroup item-key="BackMarginGroupId" :error="$v.form.BackMarginGroupId">
+              <NextDropdown :disabled="insertReadonly.BackMarginGroupId" lookup-key="BACK_MARGIN_GROUP" @input="selectedType('BackMarginGroupId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
