@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <RouteLocationDetail :detail="selectedLocation" />
     <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
       <NextLocation :Location='Location' />
     </b-modal>
@@ -128,9 +129,13 @@ import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
+import RouteLocationDetail from './RouteLocationDetail'
 
 export default {
   mixins: [updateMixin],
+  components: {
+    RouteLocationDetail
+  },
   data () {
     return {
       form: {
@@ -171,7 +176,17 @@ export default {
       parish: null,
       routeType: null,
       Location: {},
+      selectedLocation: null,
       detailButtons: [
+        {
+          icon: 'fa fa-search',
+          getDetail: (data) => {
+            this.selectedLocation = data
+            this.$nextTick(() => {
+              this.$bvModal.show('route-location-modal')
+            })
+          }
+        },
         {
           icon: 'fa fa-map-marker-alt text-primary mr-1',
           getDetail: (data) => {
@@ -194,7 +209,7 @@ export default {
       const e = this.rowData
       this.form = e
       this.form.RouteDetails = e.RouteDetails.map((item) => {
-        item.DayFrequency = item.AnnualVisitCount
+        item.DayFrequency = item.Day1Frequency
 
         return item
       })
