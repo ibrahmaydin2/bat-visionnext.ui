@@ -1,6 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
-    <RouteLocationDetail :detail="selectedLocation" />
+    <RouteLocationDetail :detail="selectedLocation" :index="selectedLocationIndex" @save="setLocationDetail" />
     <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
       <NextLocation :Location='Location' />
     </b-modal>
@@ -177,11 +177,13 @@ export default {
       routeType: null,
       Location: {},
       selectedLocation: null,
+      selectedLocationIndex: null,
       detailButtons: [
         {
           icon: 'fa fa-search',
-          getDetail: (data) => {
+          getDetail: (data, index) => {
             this.selectedLocation = data
+            this.selectedLocationIndex = index
             this.$nextTick(() => {
               this.$bvModal.show('route-location-modal')
             })
@@ -408,6 +410,9 @@ export default {
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.updateData()
       }
+    },
+    setLocationDetail (model, index) {
+      this.form.RouteDetails[index] = model
     }
   },
   validations () {
