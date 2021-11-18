@@ -12,6 +12,9 @@
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isVehicle">{{option.Code + ' - ' + option.VehiclePlateNumber + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isEmployee">{{option.Code + ' - ' + option.Name + ' ' + option.Surname}}</span>
+      <div v-else-if="isCustomSlot">
+        <slot name="option" :option="option"></slot>
+      </div>
       <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
     </template>
   </v-select>
@@ -90,6 +93,10 @@ export default {
     defaultValue: {
       type: Number,
       default: null
+    },
+    isCustomSlot: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
