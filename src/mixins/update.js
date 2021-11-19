@@ -49,11 +49,6 @@ export default {
         model.model.RecordId = null
         model.model.RecordState = 2
         return this.$store.dispatch('createData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
-      }
-      if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
-        model.model.RecordId = this.form.RecordId
-        model.model.RecordState = 2
-        return this.$store.dispatch('createSalesWaybill', {...this.query, api: `VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs`, formdata: model, return: this.routeName})
       } else {
         return this.$store.dispatch('updateData', {...this.query, api: `VisionNext${this.routeName1}/api/${this.routeName2}`, formdata: model, return: this.routeName})
       }
@@ -62,11 +57,6 @@ export default {
   mounted () {
     this.isSaveAs = this.$route.query.saveAs === 1
     if (this.isSaveAs) {
-      this.createManualCode()
-    }
-    this.$store.dispatch('GetUpdateRules', {...this.query, api: this.routeName})
-    this.isSalesWaybillCopy = this.$route.query.salesWaybillCopy === 1
-    if (this.isSalesWaybillCopy) {
       this.createManualCode()
     }
     this.$store.dispatch('GetUpdateRules', {...this.query, api: this.routeName})
@@ -79,10 +69,6 @@ export default {
     },
     form (newValue) {
       if (newValue && this.rowDataReceipt && this.isSaveAs) {
-        this.rowDataReceipt = false
-        this.form[this.codeLabel] = this.code
-      }
-      if (newValue && this.rowDataReceipt && this.isSalesWaybillCopy) {
         this.rowDataReceipt = false
         this.form[this.codeLabel] = this.code
       }

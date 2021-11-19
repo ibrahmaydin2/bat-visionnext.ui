@@ -46,7 +46,7 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber">
-              <NextInput v-model="form.DocumentNumber" type="number" :disabled="insertReadonly.DocumentNumber" />
+              <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :start-weekday="1" :error="$v.form.DocumentDate">
               <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
