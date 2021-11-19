@@ -283,7 +283,7 @@ export default {
         this.branchs = this.allList[this.currentPage]
         return
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 20).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/SearchKeyAccount', 20).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels

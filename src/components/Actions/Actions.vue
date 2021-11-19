@@ -322,8 +322,22 @@ export default {
           })
           return
         }
-        if (confirm(res.ConfirmMessage)) {
-          this.$router.push({name: 'SalesWaybillCopy', params: {url: row.RecordId}})
+        if (res.ConfirmMessage) {
+          this.$bvModal.msgBoxConfirm(this.$t(res.ConfirmMessage), {
+            size: 'sm',
+            buttonSize: 'sm',
+            okTitle: this.$t('insert.order.yes'),
+            cancelTitle: this.$t('insert.order.no'),
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+          })
+            .then(value => {
+              if (confirm) {
+                value === true ? this.$router.push({name: 'SalesWaybill' + 'Update', params: {url: row.RecordId}, query: {salesWaybillCopy: 1}}) : this.$router.push({name: 'SalesWaybill', params: {}, query: {}})
+              }
+            })
+        } else {
         }
       })
     }

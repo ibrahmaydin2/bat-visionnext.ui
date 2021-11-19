@@ -136,7 +136,7 @@ export default {
         BranchIds: null,
         documentTypeIds: null,
         DocumentDate: null,
-        CustomerIds: null,
+        UpperCustomerIds: null,
         RepresentativeIds: null
       },
       tableBusy: false,
@@ -245,7 +245,7 @@ export default {
         BranchIds: null,
         documentTypeIds: null,
         DocumentDate: null,
-        CustomerIds: null,
+        UpperCustomerIds: null,
         RepresentativeIds: null
       }
       this.documentType = null
@@ -277,10 +277,10 @@ export default {
       if (model) {
         this.documentType = model.Description
         this.form[label] = [model.RecordId]
-        if (model.RecordId === 3 || model.CustomerIds === 3) {
-          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/ConvertToSearch'
+        if (model.RecordId === 3) {
+          this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
         } else {
-          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/ConvertToSearch'
+          this.actionUrl = 'VisionNextInvoice/api/SalesReturnWaybill/KeyAccountDispatchTransformSearch'
         }
       } else {
         this.form[label] = []
@@ -319,7 +319,7 @@ export default {
         if (this.modalAction.Action === 'CustomConvert') {
           customerId = this.modalItem.RecordId
         }
-        this.form.CustomerIds = customerId > 0 ? [customerId] : null
+        this.form.UpperCustomerIds = customerId > 0 ? [customerId] : null
         let request = {
           'andConditionModel': {
             ...this.form

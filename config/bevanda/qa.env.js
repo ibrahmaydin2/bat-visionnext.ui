@@ -6,7 +6,7 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"qa"',
   VUE_APP_SERVICE_URL_BASE: "'https://bevandapiuat.visionnext.com.tr/'",
   VUE_APP_SYSTEM_NAME: "'BEVANDA UI QA'",
-  VUE_APP_VESION_NO: "'1.0.1.56'",
+  VUE_APP_VESION_NO: "'1.0.1.57'",
   BASE_URL: "'https://bevandaqa.visionnext.com.tr/'",
   TENANT: "'SAAS'",
   SITE_NAME: "'BEVANDA'",
