@@ -62,7 +62,9 @@
             <i class="far fa-trash-alt ml-1"></i>
           </b-button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
-          <i v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item)" :title="detail.title" :class="`ml-3 text-success ${detail.icon}`"></i>
+          <b-button class="btn mr-2 btn-success btn-sm" v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item, data.index)" :title="detail.title">
+            <i :class="`text-light ${detail.icon}`"></i>
+          </b-button>
         </template>
         <template #cell(show_details)="row">
           <div>

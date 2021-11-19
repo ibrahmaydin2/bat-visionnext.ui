@@ -123,6 +123,7 @@
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
                 @input="selectedSearchType('WarehouseId', $event)"
+                v-model="warehouse"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
                 :disabled="insertReadonly.WarehouseId"
                 :dynamic-and-condition="{ StatusIds: [1] }"/>
@@ -338,6 +339,15 @@
         <b-button size="sm" class="float-right ml-2" variant="success" @click="getLastProducts">{{$t('insert.okay')}}</b-button>
       </template>
     </b-modal>
+    <b-modal id="confirm-warehouse-modal">
+      <template #modal-title>
+        {{$t('insert.order.IsEmployeeWarehouse')}}
+      </template>
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-warehouse-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="savePage">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -452,7 +462,8 @@ export default {
       priceListItems: [],
       stocks: [],
       invoiceDiscountsItems: detailData.invoiceDiscountsItems,
-      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems,
+      warehouse: null
     }
   },
   mounted () {
@@ -837,6 +848,10 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+          return
+        }
+        if (this.warehouse && this.warehouse.IsEmployeeWarehouse === 1) {
+          this.$bvModal.show('confirm-warehouse-modal')
           return
         }
         this.$api.post({invoice: this.form}, 'Discount', 'Discount/ApplyInvoiceInsertDiscounts').then((res) => {

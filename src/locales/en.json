@@ -631,7 +631,12 @@
       "Location": "Lokasyon",
       "CustomerName": "Müşteri Adı",
       "LocationName": "Lokasyon Adı",
-      "exportExcel": "Excel'e Aktar"
+      "exportExcel": "Excel'e Aktar",
+      "Frequency": "Frekans",
+      "visitCount": "Ziyaret Sayısı",
+      "weekCount": "Hafta Sayısı",
+      "startDate": "Başlangıç Tarihi",
+      "locationDetail": "Lokasyon Detayı"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -1725,6 +1730,7 @@
       "products": "Ürünler",
       "getLastOrderProducts": "Son Siparişten Ürün Getir",
       "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
+      "IsEmployeeWarehouse": "Personel deposu dışında bir depo seçilmiş, devam etmek istiyor musunuz?",
       "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir! Onaylıyor musunuz?",
       "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",

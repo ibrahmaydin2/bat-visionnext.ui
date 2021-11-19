@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <RouteLocationDetail :detail="selectedLocation" :index="selectedLocationIndex" @save="setLocationDetail" />
     <b-col cols="12">
       <header>
         <b-row>
@@ -108,7 +109,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm"/>
+          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -119,9 +120,13 @@ import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
 import { detailData } from './detailPanelData'
+import RouteLocationDetail from './RouteLocationDetail'
 
 export default {
   mixins: [insertMixin],
+  components: {
+    RouteLocationDetail
+  },
   data () {
     return {
       form: {
@@ -150,7 +155,21 @@ export default {
       showMarketingRegion: false,
       district: null,
       CustomerRegion5Id: null,
-      MarketingRegion5Id: null
+      MarketingRegion5Id: null,
+      detailButtons: [
+        {
+          icon: 'fa fa-search',
+          getDetail: (data, index) => {
+            this.selectedLocation = data
+            this.selectedLocationIndex = index
+            this.$nextTick(() => {
+              this.$bvModal.show('route-location-modal')
+            })
+          }
+        }
+      ],
+      selectedLocation: null,
+      selectedLocationIndex: null
     }
   },
   computed: {
@@ -296,6 +315,9 @@ export default {
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.createData()
       }
+    },
+    setLocationDetail (model, index) {
+      this.form.RouteDetails[index] = model
     }
   },
   validations () {
