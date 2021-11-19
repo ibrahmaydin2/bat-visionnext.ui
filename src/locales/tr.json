@@ -670,7 +670,12 @@
       "Location": "Lokasyon",
       "CustomerName": "Müşteri Adı",
       "LocationName": "Lokasyon Adı",
-      "exportExcel": "Excel'e Aktar"
+      "exportExcel": "Excel'e Aktar",
+      "Frequency": "Frekans",
+      "visitCount": "Ziyaret Sayısı",
+      "weekCount": "Hafta Sayısı",
+      "startDate": "Başlangıç Tarihi",
+      "locationDetail": "Lokasyon Detayı"
     },
     "vehicles": {
       "code": "Araç Kodu",

@@ -66,18 +66,10 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'Day1VisitOrder',
-      visible: true,
-      label: i18n.t('insert.route.Day1VisitOrder'),
-      id: 6
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
       modelProperty: 'Day2VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day2VisitOrder'),
-      id: 7
+      id: 6
     },
     {
       type: 'Text',
@@ -85,7 +77,7 @@ export const detailData = {
       modelProperty: 'Day3VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day3VisitOrder'),
-      id: 8
+      id: 7
     },
     {
       type: 'Text',
@@ -93,7 +85,7 @@ export const detailData = {
       modelProperty: 'Day4VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day4VisitOrder'),
-      id: 9
+      id: 8
     },
     {
       type: 'Text',
@@ -101,7 +93,7 @@ export const detailData = {
       modelProperty: 'Day5VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day5VisitOrder'),
-      id: 10
+      id: 9
     },
     {
       type: 'Text',
@@ -109,7 +101,7 @@ export const detailData = {
       modelProperty: 'Day6VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day6VisitOrder'),
-      id: 11
+      id: 10
     },
     {
       type: 'Text',
@@ -117,22 +109,31 @@ export const detailData = {
       modelProperty: 'Day7VisitOrder',
       visible: true,
       label: i18n.t('insert.route.Day7VisitOrder'),
-      id: 12
+      id: 11
     },
     {
       type: 'Date',
       modelProperty: 'DayFreStartDate',
       visible: true,
       label: i18n.t('insert.route.DayFreStartDate'),
-      id: 13
+      id: 12
     },
     {
       type: 'Text',
       inputType: 'number',
       modelProperty: 'DayFrequency',
       visible: true,
+      hideOnTable: true,
+      label: i18n.t('insert.route.Frequency'),
+      id: 13
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'AnnualVisitCount',
+      visible: false,
       label: i18n.t('insert.route.DayFrequency'),
-      id: 14
+      id: 13
     }
   ],
   getLocationItems: [
