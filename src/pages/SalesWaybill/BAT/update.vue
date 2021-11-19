@@ -644,7 +644,27 @@ export default {
           })
           return
         }
-        this.updateData()
+        let model = {
+          'model': this.form
+        }
+        if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
+          model.RecordId = this.form.RecordId
+          model.model.RecordId = null
+          model.model.RecordState = 2
+          model.model.RecordId = null
+          model.model.EncryptedKey = null
+          model.model.CreatedUser = null
+          model.model.CreatedDateTime = null
+          model.model.ModifiedUser = null
+          model.model.ModifiedDateTime = null
+          model.model.InvoiceId = null
+          this.$api.postByUrl({}, '/VisionNextInvoice/api/SalesWaybill/GetCode').then(res => {
+            model.model.InvoiceNumber = res.Model.InvoiceNumber
+            return this.$store.dispatch('createSalesWaybill', {...this.query, api: `VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs`, formdata: model, return: this.routeName})
+          })
+        } else {
+          this.updateData()
+        }
       }
     }
   },

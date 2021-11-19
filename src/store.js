@@ -848,6 +848,7 @@ export const store = new Vuex.Store({
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
+        'RecordId': state.RecordId,
         ...query.formdata
       }
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
@@ -876,6 +877,7 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
