@@ -556,7 +556,9 @@ export const store = new Vuex.Store({
       let OrderByColumns = []
       let AndConditionModel = {}
 
-      if (query.sort) {
+      if (query.OrderByColumns && query.OrderByColumns.length > 0) {
+        OrderByColumns = query.OrderByColumns
+      } else if (query.sort) {
         // sıralama özelliği şuan tek sütunda geçerli.
         // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
         OrderByColumns = [

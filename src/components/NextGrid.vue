@@ -52,7 +52,7 @@
                     v-if="header.modelControlUtil.IsLookupTable"
                     label="Label"
                     :options="lookup[header.modelControlUtil.Code]"
-                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, 'lookup')"
+                    @input="selectedValue(header.modelControlUtil.ModelProperty, $event, (header.columnType === 'DropDownCode' ? 'code' : 'lookup'))"
                     v-model="header.defaultValue"
                     @focus="disabledDraggable = true"
                     @blur="disabledDraggable = false"
@@ -313,6 +313,10 @@ export default {
         'multi'
       ].includes(prop),
       default: 'none'
+    },
+    OrderByColumns: {
+      type: Array,
+      default: () => []
     }
   },
   mixins: [mixin],
@@ -695,6 +699,8 @@ export default {
         }
         if (type === 'lookup') {
           this.AndConditionalModel[label] = [model.DecimalValue]
+        } else if (type === 'code') {
+          this.AndConditionalModel[label] = model.Code
         } else {
           this.AndConditionalModel[label] = [model.RecordId]
         }
@@ -792,7 +798,8 @@ export default {
         page: this.currentPage,
         count: this.perPage,
         search: searchQ,
-        andConditionalModel: this.AndConditionalModel
+        andConditionalModel: this.AndConditionalModel,
+        OrderByColumns: this.OrderByColumns
       }).then(() => {
         this.disabledAutoComplete = false
       }).catch(() => {
@@ -862,12 +869,17 @@ export default {
           if (row.modelControlUtil.InputType === 'AutoComplete') {
             me.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
           } else {
-            this.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
             if (row.modelControlUtil.InputType === 'DropDown' && me.gridField && me.gridField[row.modelControlUtil.ModelProperty]) {
               row.defaultValue = me.gridField[row.modelControlUtil.ModelProperty].find(l => l.RecordId === value)
+              this.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
             }
             if (row.modelControlUtil.IsLookupTable && me.lookup && me.lookup[row.modelControlUtil.Code]) {
               row.defaultValue = me.lookup[row.modelControlUtil.Code].find(l => l.DecimalValue === value)
+              if (row.columnType === 'DropDownCode') {
+                this.AndConditionalModel[row.modelControlUtil.ModelProperty] = row.defaultValue ? row.defaultValue.Code : null
+              } else {
+                this.AndConditionalModel[row.modelControlUtil.ModelProperty] = [value]
+              }
             }
           }
         } else {
