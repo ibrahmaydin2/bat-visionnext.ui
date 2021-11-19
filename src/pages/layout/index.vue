@@ -280,7 +280,7 @@ export default {
     downloadBtn (r, f) {
       let orderByColumns = this.$route.name === 'AccountTransaction' ? [
         {
-          column: 'DocumentDate',
+          column: 'RecordId',
           orderByType: 0
         }
       ] : null

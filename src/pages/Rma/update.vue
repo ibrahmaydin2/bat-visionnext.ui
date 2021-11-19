@@ -102,8 +102,8 @@
         </b-tab>
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" v-model="rmaLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
+              <v-select :options="items" v-model="rmaLine.Item" @search="searchItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -121,7 +121,7 @@
              <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
               <b-form-input type="text" v-model="rmaLine.Item.LastPrice" readonly/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
               <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event)" min=1 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.meanPrice')">
@@ -158,7 +158,7 @@
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
-                    <b-td>{{w.Item.LastPice ? w.Item.LastPice : w.LastPice}}</b-td>
+                    <b-td>{{w.Item.LastPrice ? w.Item.LastPrice : w.LastPrice}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td>{{w.Item.MeanPrice ? w.Item.MeanPrice : w.MeanPrice}}</b-td>
                     <b-td>{{w.Item.ListPrice ? w.Item.ListPrice : w.ListPrice}}</b-td>
@@ -221,12 +221,7 @@ export default {
         RmaUnit1Id: null,
         RecordId: null,
         Price: null,
-        Item: {
-          Description1: null,
-          Code: null,
-          RecordId: null,
-          ItemId: null
-        }
+        Item: {}
       },
       rmaLines: [],
       customer: null,
@@ -349,7 +344,7 @@ export default {
         })
         return false
       }
-      let filteredArr = this.rmaLines.filter(i => i.Item.RecordId === this.rmaLine.Item.RecordId)
+      let filteredArr = this.rmaLines.filter(i => i.ItemId === this.rmaLine.Item.ItemId && i.RecordState !== 4)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
@@ -399,22 +394,7 @@ export default {
         RmaQuantity1: null,
         RmaUnit1Id: null,
         Price: null,
-        Item: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
-      }
-    },
-    selectedItem (e) {
-      if (e) {
-        this.rmaLine.Item = e
-      } else {
-        this.rmaLine.Item = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        Item: {}
       }
     },
     save () {
@@ -437,7 +417,7 @@ export default {
             RecordId: item.RecordId,
             LineNumber: item.LineNumber,
             ItemId: item.ItemId,
-            RmaReasonId: item.RmaReasonId,
+            RmaReasonId: this.form.RmaReasonId,
             UnitSetId: item.UnitSetId,
             UnitId: item.UnitId,
             ConvFact1: item.ConvFact1,
@@ -505,12 +485,16 @@ export default {
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules,
       rmaLine: {
         Quantity: {
           required
+        },
+        Item: {
+          ItemId: {
+            required
+          }
         }
       }
     }
