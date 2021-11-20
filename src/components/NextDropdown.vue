@@ -57,6 +57,7 @@ export default {
     dynamicAndCondition: {},
     orConditionFields: {},
     dynamicRequest: {},
+    dynamicOrConditions: [],
     source: {
       type: Array
     },
@@ -202,15 +203,17 @@ export default {
         ...this.dynamicAndCondition,
         ...this.dynamicRequest ? this.dynamicRequest.andConditionModel : {}
       }
-      let orConditionModels = []
-      let orConditionModel = {}
+      let orConditionModels = this.dynamicOrConditions && this.dynamicOrConditions.length > 0 ? this.dynamicOrConditions : []
+
       if (search) {
         if (this.orConditionFields) {
+          if (orConditionModels.length === 0) {
+            orConditionModels = [{}]
+          }
           let fields = this.orConditionFields.split(',')
           fields.forEach(field => {
-            orConditionModel[field] = search
+            orConditionModels[0][field] = search
           })
-          orConditionModels = [orConditionModel]
         } else {
           andConditionModel[this.andConditionSearchField] = search
         }
@@ -219,6 +222,9 @@ export default {
       let dynamicRequest = { ...this.dynamicRequest }
       if (dynamicRequest && dynamicRequest.andConditionModel) {
         delete dynamicRequest.andConditionModel
+      }
+      if (this.dynamicOrConditions && this.dynamicOrConditions.length > 0) {
+        this.orConditionModels = [...orConditionModels, ...this.dynamicOrConditions]
       }
       let request = {
         andConditionModel: andConditionModel,

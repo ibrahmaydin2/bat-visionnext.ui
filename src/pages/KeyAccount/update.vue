@@ -4,13 +4,22 @@
       <header>
         <b-row>
           <b-col cols="12" md="6">
-            <Breadcrumb />
+            <header>
+              <Breadcrumb />
+            </header>
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'KeyAccount' }">
-              <CancelButton />
-            </router-link>
-            <AddButton @click.native="save()" />
+            <b-row>
+              <b-col cols="12" md="6">
+                <GetFormField v-if="showWorkFlow" v-model="workFlowModel" :hide-edit="true"/>
+              </b-col>
+              <b-col cols="12" md="6">
+                <router-link :to="{name: 'KeyAccount' }">
+                  <CancelButton />
+                </router-link>
+                <AddButton @click.native="save()" />
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
       </header>
@@ -37,7 +46,7 @@
         <b-row v-if="form.RecordTypeId === 4 && upperCustomer !== null">
           <b-col md="12" lg="12">
             <b-form-group :label="$t('insert.customer.mainOfBranch')">
-              <a :href="`/Update/KeyAccount/${upperCustomer.DecimalValue}`"> {{upperCustomer.Label}}</a>
+              <a :href="`/Update/KeyAccount/${upperCustomer.DecimalValue}`"> {{upperCustomer.Code}} - {{upperCustomer.Label}}</a>
             </b-form-group>
           </b-col>
         </b-row>
@@ -93,7 +102,7 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked" md="2" lg="2">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :disabled="insertReadonly.IsBlocked" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary" md="2" lg="2">
               <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
@@ -464,7 +473,9 @@ export default {
       totalRowCount: 0,
       searchValue: null,
       allList: {},
-      Description1: ''
+      Description1: '',
+      showWorkFlow: false,
+      workFlowModel: {}
     }
   },
   mounted () {
@@ -700,6 +711,15 @@ export default {
         this.TCIBreak1 = e.TCIBreak1
         this.TCIBreak2 = e.TCIBreak2
         this.StatementDay = this.convertLookupValueToSearchValue(e.StatementDayo)
+
+        this.workFlowModel = {
+          ControllerName: 'Customer',
+          ClassName: 'Customer',
+          PageName: this.rowData.RecordType === 4 ? 'pg_Customer' : 'pg_KeyAccount'
+        }
+        this.$nextTick(() => {
+          this.showWorkFlow = true
+        })
       }
     }
   },
@@ -743,7 +763,7 @@ export default {
             if (this.upperCustomerObj.DistributionTypeId === 5) {
               this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
               setTimeout(() => {
-                this.$router.push({ name: 'PurchaseWaybill' })
+                this.$router.push({ name: 'KeyAccount' })
               }, 2000)
             }
           }
