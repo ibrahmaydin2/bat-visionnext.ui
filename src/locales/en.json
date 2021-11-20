@@ -2941,7 +2941,15 @@
       "ReturnQuantity1": "İade Edilen Miktar Birim 1",
       "Details": "Detaylar",
       "StockException": "Talep edilen miktardan fazla değer girilemez.",
-      "amount": "Tutar"
+      "amount": "Tutar",
+      "description1": "Açıklama",
+      "invoiceNumber": "İrsaliye No",
+      "documentNumber": "Belge No",
+      "printed": "Yazdırıldı",
+      "warehouse": "Depo",
+      "waybillDocumentDate": "İrsaliye Tarihi",
+      "edocumentStatus": "E-Belge Durumu",
+      "representative": "Personel"
     },
     "ItemFormula": {
       "Code": "Kod",

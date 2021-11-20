@@ -5,8 +5,8 @@
         <NextFormGroup :title="$t('index.Convert.branchId')" md="4" lg="4">
           <v-select :options="branchList" label="Desciption" @input="selectedBranch('BranchIds', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.documentTypeIds" :required="false" md="4" lg="4">
-          <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeIds', $event)"></v-select>
+        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.DocumentClassIds" :required="false" md="4" lg="4">
+          <v-select v-model="documentClass" :options="documentClasses" label="Description" @input="selectedType('DocumentClassIds', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.documentDate')" md="4" lg="4">
           <date-picker
@@ -134,7 +134,7 @@ export default {
     return {
       form: {
         BranchIds: null,
-        documentTypeIds: null,
+        DocumentClassIds: null,
         DocumentDate: null,
         UpperCustomerIds: null,
         RepresentativeIds: null
@@ -144,8 +144,8 @@ export default {
       CreatedDateTime: null,
       DocumentDate: null,
       branchList: JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches,
-      documentType: null,
-      documentTypes: [
+      documentClass: null,
+      documentClasses: [
         {
           'Description': this.$t('index.Convert.salesWaybill'),
           'RecordId': 3
@@ -163,14 +163,6 @@ export default {
           sortable: false
         },
         {
-          key: 'DocumentDate',
-          label: this.$t('index.Convert.documentDate'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value ? this.dateConvertFromTimezone(value) : ''
-          }
-        },
-        {
           key: 'Customer',
           label: this.$t('index.Convert.customer'),
           sortable: true,
@@ -179,19 +171,27 @@ export default {
           }
         },
         {
-          key: 'InvoiceClass',
-          label: this.$t('index.Convert.invoiceClass'),
+          key: 'Description1',
+          label: this.$t('index.Convert.description1'),
           sortable: true,
           formatter: (value, key, item) => {
-            return value ? value.Label : ''
+            return value && value
           }
         },
         {
-          key: 'InvoiceKind',
-          label: this.$t('index.Convert.invoiceKind'),
+          key: 'InvoiceNumber',
+          label: this.$t('index.Convert.invoiceNumber'),
           sortable: true,
           formatter: (value, key, item) => {
-            return value ? value.Label : ''
+            return value && value
+          }
+        },
+        {
+          key: 'DocumentNumber',
+          label: this.$t('index.Convert.documentNumber'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value && value
           }
         },
         {
@@ -203,19 +203,51 @@ export default {
           }
         },
         {
-          key: 'Representative',
-          label: this.$t('index.Convert.employee'),
+          key: 'Route',
+          label: this.$t('index.Convert.route'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
           }
         },
         {
-          key: 'Status',
-          label: this.$t('index.Convert.status'),
+          key: 'Representative',
+          label: this.$t('index.Convert.representative'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? value.Label : ''
+          }
+        },
+        {
+          key: 'Printed',
+          label: this.$t('index.Convert.printed'),
           sortable: true,
           formatter: (value, key, item) => {
             return value && value
+          }
+        },
+        {
+          key: 'Warehouse',
+          label: this.$t('index.Convert.warehouse'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? value.Label : ''
+          }
+        },
+        {
+          key: 'DocumentDate',
+          label: this.$t('index.Convert.waybillDocumentDate'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? this.dateConvertFromTimezone(value) : ''
+          }
+        },
+        {
+          key: 'EDocumentStatus',
+          label: this.$t('index.Convert.edocumentStatus'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? value.Label : ''
           }
         }
       ],
@@ -230,7 +262,7 @@ export default {
   validations () {
     return {
       form: {
-        documentTypeIds: {
+        DocumentClassIds: {
           required
         }
       }
@@ -243,12 +275,12 @@ export default {
       this.selected = []
       this.form = {
         BranchIds: null,
-        documentTypeIds: null,
+        DocumentClassIds: null,
         DocumentDate: null,
         UpperCustomerIds: null,
         RepresentativeIds: null
       }
-      this.documentType = null
+      this.documentClass = null
       this.DocumentDate = null
       this.CreatedDateTime = null
       this.employee = null
@@ -275,7 +307,7 @@ export default {
     },
     selectedType (label, model) {
       if (model) {
-        this.documentType = model.Description
+        this.documentClass = model.Description
         this.form[label] = [model.RecordId]
         if (model.RecordId === 3) {
           this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
@@ -284,7 +316,7 @@ export default {
         }
       } else {
         this.form[label] = []
-        this.documentType = null
+        this.documentClass = null
       }
     },
     selectedSearchType (label, model) {
