@@ -25,7 +25,7 @@
             <NextDropdown v-model="cardType" :disabled="insertReadonly.CardTypeId" label="Description1" url="VisionNextCustomer/api/CustomerCardType/Search" @input="selectedSearchType('CardTypeId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusReasonId" :error="$v.form.StatusReasonId">
-            <NextDropdown :disabled="insertReadonly.StatusReasonId" label="Description1" url="VisionNextCommonApi/api/CancelReason/Search" @input="selectedSearchType('StatusReasonId', $event)"/>
+            <NextDropdown v-model="statusReason" :disabled="insertReadonly.StatusReasonId" label="Description1" url="VisionNextCommonApi/api/CancelReason/Search" @input="selectedSearchType('StatusReasonId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle/>
@@ -404,13 +404,13 @@ export default {
         TradeFocus: null,
         HoldsAsset: null,
         Contracted: null,
-        StatusReason: null,
+        StatusReasonId: null,
         SignName: null,
         MarketingRegion5: null,
         TaxCustomerType: null,
         InvoiceCombineRule: null,
         SalesDocumentType: null,
-        BlockReason: null,
+        BlockReasonId: null,
         CustomerInvoiceType: null,
         BackMarginGroup: null,
         Activity1: null,
@@ -468,7 +468,8 @@ export default {
       addressInit: null,
       paymentTypes: [],
       Location: {},
-      allPaymentTypes: []
+      allPaymentTypes: [],
+      statusReason: null
     }
   },
   computed: {
@@ -633,6 +634,7 @@ export default {
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
+      this.statusReason = this.convertLookupValueToSearchValue(rowData.StatusReason)
       this.customerInvoiceType = rowData.CustomerInvoiceType
       this.type = rowData.Type
       this.salesDocumentType = rowData.SalesDocumentType
@@ -701,14 +703,6 @@ export default {
           item.Label = item.DayNumber + ' ' + item.Description1
         })
       }
-    },
-    lookup: {
-      handler (val) {
-        if (this.form.BlockReasonId && val.CUSTOMER_BLOCK_REASON) {
-          this.BlockReason = val.CUSTOMER_BLOCK_REASON.find(c => c.DecimalValue === this.form.BlockReasonId)
-        }
-      },
-      deep: true
     },
     address (value) {
       if (value) {
