@@ -1,12 +1,12 @@
 <template>
-  <b-modal v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.branchId')" md="4" lg="4">
           <v-select :options="branchList" label="Desciption" @input="selectedBranch('BranchIds', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.documentTypeIds" :required="false" md="4" lg="4">
-          <v-select v-model="documentType" :options="documentTypes" label="Description" @input="selectedType('documentTypeIds', $event)"></v-select>
+        <NextFormGroup :title="$t('index.Convert.documentType')" :error="$v.form.DocumentClassIds" :required="false" md="4" lg="4">
+          <v-select :disabled="true" v-model="documentClass" :options="documentClasses" label="Description" @input="selectedType('DocumentClassIds', $event)"></v-select>
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.documentDate')" md="4" lg="4">
           <date-picker
@@ -64,15 +64,24 @@
             :busy="tableBusy"
             show-empty
           >
-            <template #cell(selected)="{ rowSelected }">
-              <template v-if="rowSelected">
-                <span aria-hidden="true">&check;</span>
-                <span class="sr-only">Selected</span>
-              </template>
-              <template v-else>
-                <span aria-hidden="true">&nbsp;</span>
-                <span class="sr-only">Not selected</span>
-              </template>
+            <template #cell(selection)="row">
+              <span>
+                <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+              </span>
+            </template>
+            <template v-slot:head()="data">
+              <b-link v-if="data.field.key == 'selection'" variant="white" size="sm" @click="selectAll">
+                <span>
+                  <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+                </span>
+              </b-link>
+              <span v-else>{{data.field.label}}</span>
+            </template>
+            <template #cell(Printed)="data">
+              <NextCheckBox type="number" v-model="data.item.Printed"></NextCheckBox>
+            </template>
+             <template #cell(InvoiceNumber)="data">
+              <NextInput input-class="input-width" v-model="data.item.InvoiceNumber"></NextInput>
             </template>
             <template #empty="">
               <div class="text-center text-danger my-2">
@@ -134,7 +143,7 @@ export default {
     return {
       form: {
         BranchIds: null,
-        documentTypeIds: null,
+        DocumentClassIds: null,
         DocumentDate: null,
         UpperCustomerIds: null,
         RepresentativeIds: null
@@ -144,8 +153,8 @@ export default {
       CreatedDateTime: null,
       DocumentDate: null,
       branchList: JSON.parse(localStorage.getItem('UserModel')).AuthorizedBranches,
-      documentType: null,
-      documentTypes: [
+      documentClass: null,
+      documentClasses: [
         {
           'Description': this.$t('index.Convert.salesWaybill'),
           'RecordId': 3
@@ -158,17 +167,9 @@ export default {
       actionUrl: null,
       fields: [
         {
-          key: 'selected',
+          key: 'selection',
           label: '',
           sortable: false
-        },
-        {
-          key: 'DocumentDate',
-          label: this.$t('index.Convert.documentDate'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value ? this.dateConvertFromTimezone(value) : ''
-          }
         },
         {
           key: 'Customer',
@@ -179,20 +180,19 @@ export default {
           }
         },
         {
-          key: 'InvoiceClass',
-          label: this.$t('index.Convert.invoiceClass'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value ? value.Label : ''
-          }
+          key: 'Description1',
+          label: this.$t('index.Convert.description1'),
+          sortable: true
         },
         {
-          key: 'InvoiceKind',
-          label: this.$t('index.Convert.invoiceKind'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value ? value.Label : ''
-          }
+          key: 'InvoiceNumber',
+          label: this.$t('index.Convert.invoiceNumber'),
+          sortable: true
+        },
+        {
+          key: 'DocumentNumber',
+          label: this.$t('index.Convert.documentNumber'),
+          sortable: true
         },
         {
           key: 'Branch',
@@ -203,19 +203,51 @@ export default {
           }
         },
         {
-          key: 'Representative',
-          label: this.$t('index.Convert.employee'),
+          key: 'Route',
+          label: this.$t('index.Convert.route'),
           sortable: true,
           formatter: (value, key, item) => {
             return value ? value.Label : ''
           }
         },
         {
-          key: 'Status',
-          label: this.$t('index.Convert.status'),
+          key: 'Representative',
+          label: this.$t('index.Convert.representative'),
           sortable: true,
           formatter: (value, key, item) => {
-            return value && value
+            return value ? value.Label : ''
+          }
+        },
+        {
+          key: 'Printed',
+          label: this.$t('index.Convert.printed'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value === 1 ? this.$t('insert.yes') : this.$t('insert.no')
+          }
+        },
+        {
+          key: 'Warehouse',
+          label: this.$t('index.Convert.warehouse'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? value.Label : ''
+          }
+        },
+        {
+          key: 'DocumentDate',
+          label: this.$t('index.Convert.waybillDocumentDate'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? this.dateConvertFromTimezone(value) : ''
+          }
+        },
+        {
+          key: 'EDocumentStatus',
+          label: this.$t('index.Convert.edocumentStatus'),
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value ? value.Label : ''
           }
         }
       ],
@@ -224,13 +256,14 @@ export default {
       totalCount: 0,
       successfullCount: 0,
       unSuccessfullCount: 0,
-      selected: []
+      selected: [],
+      allSelected: false
     }
   },
   validations () {
     return {
       form: {
-        documentTypeIds: {
+        DocumentClassIds: {
           required
         }
       }
@@ -243,12 +276,10 @@ export default {
       this.selected = []
       this.form = {
         BranchIds: null,
-        documentTypeIds: null,
         DocumentDate: null,
         UpperCustomerIds: null,
         RepresentativeIds: null
       }
-      this.documentType = null
       this.DocumentDate = null
       this.CreatedDateTime = null
       this.employee = null
@@ -266,6 +297,13 @@ export default {
     })
   },
   methods: {
+    show () {
+      this.documentClass = this.documentClasses.find(d => d.RecordId === 3)
+      this.form.DocumentClassIds = [3]
+      this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
+      this.allSelected = false
+      this.selected = []
+    },
     selectedBranch (label, model) {
       if (model) {
         this.form[label] = [model.Id]
@@ -275,7 +313,6 @@ export default {
     },
     selectedType (label, model) {
       if (model) {
-        this.documentType = model.Description
         this.form[label] = [model.RecordId]
         if (model.RecordId === 3) {
           this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
@@ -284,7 +321,6 @@ export default {
         }
       } else {
         this.form[label] = []
-        this.documentType = null
       }
     },
     selectedSearchType (label, model) {
@@ -380,9 +416,13 @@ export default {
         this.documents[this.documents.indexOf(item)].Status = ''
         this.$api.postByUrl({recordId: item.RecordId}, `VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice?v=${i}`).then((response) => {
           if (response && response.IsCompleted) {
+            let model = response.invoiceConvertModel
+            model.Printed = item.Printed
+            model.InvoiceNumber = item.InvoiceNumber
+
             let request = {
               'recordId': item.RecordId,
-              'invoiceConvertModel': response.invoiceConvertModel
+              'invoiceConvertModel': model
             }
             this.$api.postByUrl(request, `VisionNextInvoice/api/SalesWaybill/ConvertToInvoice?v=${i}`).then((res) => {
               if (res && res.IsCompleted) {
@@ -400,15 +440,30 @@ export default {
         })
       })
       this.selected = []
-      this.clearSelected()
-    },
-    clearSelected () {
       this.$refs.selectableTable.clearSelected()
+      this.allSelected = false
+
+      if (this.unSuccessfullCount === 0) {
+        this.$toasted.show(this.$t('index.Convert.successConvert'), {
+          type: 'success',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      }
     },
     clearProgress () {
       this.successfullCount = 0
       this.unSuccessfullCount = 0
       this.totalCount = 0
+    },
+    selectAll () {
+      if (this.allSelected) {
+        this.$refs.selectableTable.clearSelected()
+      } else {
+        this.$refs.selectableTable.selectAllRows()
+      }
+
+      this.allSelected = !this.allSelected
     }
   }
 }
@@ -416,5 +471,16 @@ export default {
 <style scoped>
   .mx-datepicker-range {
     width: 100% !important;
+  }
+  .success-color {
+  color: #28a745;
+  font-size: medium;
+  }
+  .gray-color {
+    color: lightgray;
+    font-size: medium;
+  }
+  .input-width {
+    width: 150px;
   }
 </style>
