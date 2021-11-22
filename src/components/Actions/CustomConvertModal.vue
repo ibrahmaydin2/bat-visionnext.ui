@@ -78,7 +78,8 @@
               <span v-else>{{data.field.label}}</span>
             </template>
             <template #cell(Printed)="data">
-              <NextCheckBox type="number" v-model="data.item.Printed"></NextCheckBox>
+              <i v-if="data.item.Printed === 1" class="fa fa-check text-success"></i>
+              <i v-else class="fa fa-times text-danger"></i>
             </template>
              <template #cell(InvoiceNumber)="data">
               <NextInput input-class="input-width" v-model="data.item.InvoiceNumber"></NextInput>
@@ -417,7 +418,6 @@ export default {
         this.$api.postByUrl({recordId: item.RecordId}, `VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice?v=${i}`).then((response) => {
           if (response && response.IsCompleted) {
             let model = response.invoiceConvertModel
-            model.Printed = item.Printed
             model.InvoiceNumber = item.InvoiceNumber
 
             let request = {
