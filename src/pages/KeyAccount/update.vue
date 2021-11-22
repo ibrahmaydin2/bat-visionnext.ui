@@ -452,8 +452,6 @@ export default {
       taxNumberReq: 10,
       upperCustomer: null,
       Location: {},
-      branchDistributionTypeId: 0,
-      upperCustomerObj: null,
       detailButtons: [
         {
           icon: 'fa fa-map-marker-alt text-primary mr-1',
@@ -479,7 +477,6 @@ export default {
     }
   },
   mounted () {
-    this.getCurrentBranch()
     this.getData().then(() => { this.setData() })
   },
   methods: {
@@ -613,7 +610,9 @@ export default {
         request.orConditionModels = [
           {
             Description1: this.searchValue,
-            Code: this.searchValue
+            Code: this.searchValue,
+            LicenseNumber: this.searchValue,
+            CommercialTitle: this.searchValue
           }
         ]
       }
@@ -640,22 +639,17 @@ export default {
       })
       this.$router.push('/Insert/KeyAccount')
     },
-    getCurrentBranch () {
-      let request = {
-        RecordId: this.$store.state.BranchId
-      }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
-        if (response && response.Model) {
-          let branch = response.Model
-          this.branchDistributionTypeId = branch.DistributionTypeId
-        }
-      })
-    },
     setData () {
       let e = this.rowData
       if (e) {
         if (e.RecordTypeId === 3) {
           this.getBranchs(e.RecordId)
+        }
+        if (e.UpperDistributionTypeId === 5) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
+          setTimeout(() => {
+            this.$router.push({ name: 'KeyAccount' })
+          }, 2000)
         }
         this.form = e
         this.form.ZcreditAccountRemainder = e.ZCreditAccountRemainder
@@ -753,21 +747,6 @@ export default {
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
-      }
-    },
-    upperCustomer (value) {
-      if (value && !this.upperCustomerObj) {
-        this.$api.postByUrl({RecordId: value.DecimalValue}, 'VisionNextCustomer/api/Customer/Get').then((response) => {
-          if (response && response.Model) {
-            this.upperCustomerObj = response.Model
-            if (this.upperCustomerObj.DistributionTypeId === 5) {
-              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
-              setTimeout(() => {
-                this.$router.push({ name: 'KeyAccount' })
-              }, 2000)
-            }
-          }
-        })
       }
     },
     currentPage () {
