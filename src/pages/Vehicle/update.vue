@@ -182,6 +182,7 @@ export default {
         WeightCp: null,
         ColorId: null,
         ContractEndDate: null,
+        Description1: null,
         VehicleReplacementDrivers: []
       },
       vehicleReplacementDriverItems: detailData.vehicleReplacementDriverItems,
@@ -214,6 +215,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.Description1 = this.form.VehiclePlateNumber
         this.updateData()
       }
     },

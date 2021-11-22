@@ -50,12 +50,16 @@
                 :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? {System: 1} : {}"
                 :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
                 :is-custom-slot="true"
-                :custom-option="true">
+                :custom-option="true"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">
                 <template v-slot:option="{option}">
                    <table class="bordered-table">
                      <tr>
-                        <td>{{option.AddressDetail}}</td>
-                        <td style="width:'50px'">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
@@ -72,13 +76,17 @@
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
                 :is-custom-slot="true"
                 :custom-option="true"
-                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ADF' ? {StatusIds: [1], System: 1} : {}"
-                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []">
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ADF' ? {StatusIds: [1]} : {}"
+                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">>
                   <template v-slot:option="{option}">
                    <table class="bordered-table">
-                     <tr>
-                        <td>{{option.AddressDetail}}</td>
-                        <td style="width:'50px'">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                      <tr>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
@@ -441,5 +449,8 @@ export default {
 }
 .bordered-table {
   width: 100%
+}
+.bordered-table td {
+  min-width: 150px;
 }
 </style>

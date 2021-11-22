@@ -279,7 +279,9 @@ export default {
         request.orConditionModels = [
           {
             Description1: this.searchValue,
-            Code: this.searchValue
+            Code: this.searchValue,
+            LicenseNumber: this.searchValue,
+            CommercialTitle: this.searchValue
           }
         ]
       }

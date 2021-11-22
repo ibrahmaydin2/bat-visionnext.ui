@@ -2555,7 +2555,8 @@
       "RmaDate": "İade Tarihi",
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
-      "RmaReason": "İade Nedeni"
+      "RmaReason": "İade Nedeni",
+      "updateError" :"Tamamlanan ve Onaylanan iade talepleri güncellenemez!"
     },
     "RmaOrder": {
       "General": "Genel",
