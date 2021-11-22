@@ -55,11 +55,11 @@
                 <template v-slot:option="{option}">
                    <table class="bordered-table">
                      <tr>
-                        <td class="min-width-80">{{option.Description1}}</td>
-                        <td class="min-width-80">{{option.CustomerDesc}}</td>
-                        <td class="min-width-80">{{option.CustomerCode}}</td>
-                        <td class="min-width-80">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
-                        <td class="min-width-80">{{option.CustomerCommercialTitle}}</td>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
@@ -82,11 +82,11 @@
                   <template v-slot:option="{option}">
                    <table class="bordered-table">
                       <tr>
-                        <td class="min-width-80">{{option.Description1}}</td>
-                        <td class="min-width-80">{{option.CustomerDesc}}</td>
-                        <td class="min-width-80">{{option.CustomerCode}}</td>
-                        <td class="min-width-80">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
-                        <td class="min-width-80">{{option.CustomerCommercialTitle}}</td>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
@@ -450,7 +450,7 @@ export default {
 .bordered-table {
   width: 100%
 }
-.min-width-80 {
-  width: 80px
+.bordered-table td {
+  min-width: 150px;
 }
 </style>

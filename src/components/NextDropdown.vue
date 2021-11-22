@@ -207,13 +207,12 @@ export default {
 
       if (search) {
         if (this.orConditionFields) {
-          if (orConditionModels.length === 0) {
-            orConditionModels = [{}]
-          }
           let fields = this.orConditionFields.split(',')
+          let condition = {}
           fields.forEach(field => {
-            orConditionModels[0][field] = search
+            condition[field] = search
           })
+          orConditionModels.push(condition)
         } else {
           andConditionModel[this.andConditionSearchField] = search
         }
