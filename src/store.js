@@ -663,7 +663,8 @@ export const store = new Vuex.Store({
         'RecordId': query.record
       }
       commit('showNextgrid', false)
-      return axios.post(query.api + '/Get', dataQuery, authHeader)
+      let path = query.path ? query.path : '/Get'
+      return axios.post(query.api + path, dataQuery, authHeader)
         .then(res => {
           switch (res.status) {
             case 200:
