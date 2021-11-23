@@ -251,7 +251,7 @@ export default {
       this.$router.push({name: this.routeName})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url}).then(() => {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', path: '/GetKeyAccount', record: this.$route.params.url}).then(() => {
         this.getBranchs()
 
         this.workFlowModel = {
