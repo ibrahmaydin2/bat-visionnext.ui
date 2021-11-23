@@ -257,7 +257,7 @@ export default {
         this.workFlowModel = {
           ControllerName: 'Customer',
           ClassName: 'Customer',
-          PageName: this.rowData.RecordType === 4 ? 'pg_Customer' : 'pg_KeyAccount'
+          PageName: this.rowData.RecordTypeId === 4 ? 'pg_Customer' : 'pg_KeyAccount'
         }
         this.$nextTick(() => {
           this.showWorkFlow = true
