@@ -1,5 +1,5 @@
 <template>
-  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"  :maxLength="maxLength" :class="inputClass"/>
+  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"  :maxLength="maxLength" :min="minLength" :class="inputClass"/>
 </template>
 <script>
 export default {
@@ -17,7 +17,8 @@ export default {
     },
     oninput: null,
     maxLength: '',
-    inputClass: ''
+    inputClass: '',
+    minLength: ''
   },
   data () {
     return {
