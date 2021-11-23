@@ -118,7 +118,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm" :detail-buttons="detailButtons"/>
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -158,7 +158,8 @@ export default {
         RouteDetails: []
       },
       avenues: [],
-      locationItems: detailData.locationItems,
+      locationItems1: detailData.locationItems1,
+      locationItems2: detailData.locationItems2,
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
@@ -412,6 +413,9 @@ export default {
       }
     },
     setLocationDetail (model, index) {
+      if (model.RecordState === 1) {
+        model.RecordState = 3
+      }
       this.form.RouteDetails[index] = model
     }
   },

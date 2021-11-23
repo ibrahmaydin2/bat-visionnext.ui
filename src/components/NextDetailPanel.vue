@@ -27,7 +27,7 @@
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'" :filter="item.filter" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
-        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
+        <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :minLength="item.minLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number"  toggle :disabled="isDisabled(item)" />
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
         <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
@@ -439,6 +439,9 @@ export default {
                   this.$api.postByUrl(request, item.url).then((res) => {
                     if (typeof res.ListModel !== 'undefined') {
                       this.source[item.modelProperty] = res.ListModel.BaseModels
+                      if (item.firstElementSelected) {
+                        this.model[item.modelProperty] = this.source[item.modelProperty][0]
+                      }
                       this.$forceUpdate()
                     } else if (res.Values) {
                       this.source[item.modelProperty] = res.Values
@@ -450,6 +453,9 @@ export default {
                   })
                   this.$forceUpdate()
                 }
+                break
+              case 'Autocomplete':
+                item.dynamicRequest = JSON.parse(item.request.replace('val', model[item.parentProperty]))
                 break
               case 'Text':
                 this.form[item.modelProperty] = model[item.parentProperty]

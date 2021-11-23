@@ -675,7 +675,9 @@
       "visitCount": "Ziyaret Sayısı",
       "weekCount": "Hafta Sayısı",
       "startDate": "Başlangıç Tarihi",
-      "locationDetail": "Lokasyon Detayı"
+      "locationDetail": "Lokasyon Detayı",
+      "BranchId": "Şube",
+      "BranchName": "Şube Adı"
     },
     "vehicles": {
       "code": "Araç Kodu",
