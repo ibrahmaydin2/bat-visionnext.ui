@@ -195,7 +195,7 @@
                 <b-tr v-for="(b, i) in branchs" :key="i">
                   <b-td>{{b.Code}}</b-td>
                   <b-td>{{b.Description1}}</b-td>
-                  <b-td>{{allBranchs != null ? allBranchs.find(x => x.RecordId === b.BranchId).Description1 : ''}}</b-td>
+                  <b-td>{{allBranchs != null && allBranchs.length > 0 ? allBranchs.find(x => x.RecordId === b.BranchId).Description1 : ''}}</b-td>
                   <b-td class="text-center">
                     <a :href="`/Update/KeyAccount/${b.RecordId}`"><i class="fas fa-edit text-success" /></a>
                   </b-td>
@@ -477,7 +477,7 @@ export default {
     }
   },
   mounted () {
-    this.getData().then(() => { this.setData() })
+    this.getData('/GetKeyAccount').then(() => { this.setData() })
   },
   methods: {
     selectedType (label, model) {
