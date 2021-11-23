@@ -439,8 +439,9 @@ export default {
                   this.$api.postByUrl(request, item.url).then((res) => {
                     if (typeof res.ListModel !== 'undefined') {
                       this.source[item.modelProperty] = res.ListModel.BaseModels
-                      if (item.firstElementSelected) {
+                      if (item.firstElementSelected && this.source[item.modelProperty]) {
                         this.model[item.modelProperty] = this.source[item.modelProperty][0]
+                        this.additionalSearchType(item.id, item.modelProperty, this.model[item.modelProperty], item.valueProperty)
                       }
                       this.$forceUpdate()
                     } else if (res.Values) {

@@ -154,6 +154,7 @@ export const detailData = {
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
       label: i18n.t('insert.route.BranchId'),
+      hideOnTable: true,
       required: true,
       visible: true,
       id: 12
@@ -166,6 +167,7 @@ export const detailData = {
       objectKey: 'Branch',
       disabled: true,
       label: i18n.t('insert.route.BranchName'),
+      hideOnTable: true,
       id: 13,
       parentId: 12
     },
