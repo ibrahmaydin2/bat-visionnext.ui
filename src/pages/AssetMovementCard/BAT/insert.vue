@@ -44,45 +44,56 @@
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
               <NextDropdown
                 v-model="fromLocation"
-                :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'"
+                :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
-                url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable
+                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? {System: 1} : {}"
+                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
                 :is-custom-slot="true"
-                :custom-option="true">
+                :custom-option="true"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">
                 <template v-slot:option="{option}">
                    <table class="bordered-table">
                      <tr>
-                        <td>{{option.AddressDetail}}</td>
-                        <td style="width:'50px'">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
               </NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'ADF' || this.assetMovementType.Code === 'ASR')" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)" v-on:all-source="setAllAssetState"/>
+              <NextDropdown :disabled="assetMovementType && (assetMovementType.Code === 'ADF' || assetMovementType.Code === 'ASR')" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)" v-on:all-source="setAllAssetState"/>
             </NextFormGroup>
             <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
               <NextDropdown
                 v-model="toLocation"
-                :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')"
+                :disabled="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ASR')"
                 @input="selectedSearchType('ToLocationId', $event)"
-                url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable
+                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
                 :is-custom-slot="true"
                 :custom-option="true"
-                :dynamic-and-condition="this.assetMovementType && this.assetMovementType.Code === 'ADF' ? {StatusIds: [1], System: 1} : {}">
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ADF' ? {StatusIds: [1]} : {}"
+                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">>
                   <template v-slot:option="{option}">
                    <table class="bordered-table">
-                     <tr>
-                        <td>{{option.AddressDetail}}</td>
-                        <td style="width:'50px'">{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                      <tr>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
                    </table>
                   </template>
               </NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'ASR' || this.assetMovementType.Code === 'ADF')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
+              <NextDropdown :disabled="assetMovementType && (assetMovementType.Code === 'ASR' || assetMovementType.Code === 'ADF')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" >
               <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
@@ -438,5 +449,8 @@ export default {
 }
 .bordered-table {
   width: 100%
+}
+.bordered-table td {
+  min-width: 150px;
 }
 </style>

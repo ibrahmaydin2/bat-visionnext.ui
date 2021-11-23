@@ -441,6 +441,15 @@ export default {
     setModel () {
       let e = this.rowData
       if (e) {
+        if (e.RmaStatus && (e.RmaStatus.Code === 'ONY' || e.RmaStatus.Code === 'TMM')) {
+          this.$toasted.show(this.$t('get.RMA.updateError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          document.getElementById('submitButton').disabled = true
+          return
+        }
         e.RmaLines.map(item => {
           if (item.Item) {
             this.rmaLines.push({

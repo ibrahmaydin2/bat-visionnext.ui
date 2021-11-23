@@ -2555,7 +2555,8 @@
       "RmaDate": "İade Tarihi",
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
-      "RmaReason": "İade Nedeni"
+      "RmaReason": "İade Nedeni",
+      "updateError" :"Tamamlanan ve Onaylanan iade talepleri güncellenemez!"
     },
     "RmaOrder": {
       "General": "Genel",
@@ -2941,7 +2942,15 @@
       "ReturnQuantity1": "İade Edilen Miktar Birim 1",
       "Details": "Detaylar",
       "StockException": "Talep edilen miktardan fazla değer girilemez.",
-      "amount": "Tutar"
+      "amount": "Tutar",
+      "description1": "Açıklama",
+      "invoiceNumber": "İrsaliye No",
+      "documentNumber": "Belge No",
+      "printed": "Yazdırıldı",
+      "warehouse": "Depo",
+      "waybillDocumentDate": "İrsaliye Tarihi",
+      "edocumentStatus": "E-Belge Durumu",
+      "representative": "Personel"
     },
     "ItemFormula": {
       "Code": "Kod",

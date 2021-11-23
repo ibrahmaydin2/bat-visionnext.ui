@@ -7,7 +7,7 @@
             <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="plus" aria-hidden="false" size="sm"></b-icon>
           </b-button>
         </router-link>
-        <router-link v-if="filteredUpdateAction && filteredUpdateAction.length > 0" :to="{name: `${baseLink}Update`, params: {url: $route.params.url}}">
+        <router-link v-if="filteredUpdateAction && filteredUpdateAction.length > 0 && !hideEdit" :to="{name: `${baseLink}Update`, params: {url: $route.params.url}}">
           <b-button class="bg-orange text-white font-weight-bold rounded-0 mr-1" size="sm">
             <b-icon font-scale="0.9" shift-h="1" shift-v="2.5" icon="pencil" aria-hidden="false" size="sm"></b-icon>
           </b-button>
@@ -28,7 +28,11 @@ import Workflow from './Workflow'
 export default {
   props: {
     value: {},
-    routeName: String
+    routeName: String,
+    hideEdit: {
+      type: Boolean,
+      default: false
+    }
   },
   model: {
     prop: 'value',
