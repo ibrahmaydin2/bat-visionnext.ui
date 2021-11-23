@@ -44,7 +44,6 @@ export default {
   data () {
     return {
       workFlowList: [],
-      recordId: this.RecordId ? this.RecordId : this.$route.params.url,
       processModel: [],
       modalTitle: '',
       modalOptions: [],
@@ -52,6 +51,11 @@ export default {
       baseLink: this.$route.meta.baseLink,
       id: Math.random().toString(36).substring(2),
       isLoading: false
+    }
+  },
+  computed: {
+    recordId () {
+      return this.RecordId ? this.RecordId : this.$route.params.url
     }
   },
   mounted () {
