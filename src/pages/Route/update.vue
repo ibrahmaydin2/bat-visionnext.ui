@@ -117,7 +117,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.route.locations')">
+        <b-tab lazy :title="$t('insert.route.locations')">
           <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
