@@ -433,9 +433,6 @@ export default {
                 this.unSuccessfullCount++
               }
             })
-            setTimeout(() => {
-              this.search()
-            }, 2000)
           } else {
             this.documents[this.documents.indexOf(item)].Status = response.Message
             this.unSuccessfullCount++
@@ -452,6 +449,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        this.search()
       }
     },
     clearProgress () {
