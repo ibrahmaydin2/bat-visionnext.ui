@@ -449,6 +449,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        this.search()
       }
     },
     clearProgress () {
