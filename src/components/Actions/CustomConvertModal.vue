@@ -433,6 +433,9 @@ export default {
                 this.unSuccessfullCount++
               }
             })
+            setTimeout(() => {
+              this.search()
+            }, 2000)
           } else {
             this.documents[this.documents.indexOf(item)].Status = response.Message
             this.unSuccessfullCount++
