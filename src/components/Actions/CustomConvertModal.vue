@@ -81,8 +81,8 @@
               <i v-if="data.item.Printed === 1" class="fa fa-check text-success"></i>
               <i v-else class="fa fa-times text-danger"></i>
             </template>
-             <template #cell(InvoiceNumber)="data">
-              <NextInput input-class="input-width" v-model="data.item.InvoiceNumber"></NextInput>
+             <template #cell(InvoiceNo)="data">
+              <NextInput input-class="input-width" v-model="data.item.InvoiceNo" :source="InvoiceNoCode"></NextInput>
             </template>
             <template #empty="">
               <div class="text-center text-danger my-2">
@@ -244,6 +244,11 @@ export default {
           }
         },
         {
+          key: 'InvoiceNo',
+          label: this.$t('index.Convert.invoiceNo'),
+          sortable: true
+        },
+        {
           key: 'EDocumentStatus',
           label: this.$t('index.Convert.edocumentStatus'),
           sortable: true,
@@ -258,7 +263,8 @@ export default {
       successfullCount: 0,
       unSuccessfullCount: 0,
       selected: [],
-      allSelected: false
+      allSelected: false,
+      InvoiceNoCode: []
     }
   },
   validations () {
@@ -305,6 +311,13 @@ export default {
       this.allSelected = false
       this.selected = []
     },
+    getCode () {
+      this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode`).then(response => {
+        if (response && response.Model) {
+          this.InvoiceNoCode = response.Model.Code
+        }
+      })
+    },
     selectedBranch (label, model) {
       if (model) {
         this.form[label] = [model.Id]
@@ -340,6 +353,7 @@ export default {
       this.$root.$emit('bv::hide::modal', 'customConvertModal')
     },
     search () {
+      this.getCode()
       this.clearProgress()
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -366,6 +380,9 @@ export default {
         this.$api.postByUrl(request, this.actionUrl).then((res) => {
           this.tableBusy = false
           this.documents = res.ListModel.BaseModels
+          for (let index = 0; index < this.documents.length; index++) {
+            this.documents[index].InvoiceNo = this.InvoiceNoCode++
+          }
         })
       }
     },
@@ -418,7 +435,7 @@ export default {
         this.$api.postByUrl({recordId: item.RecordId}, `VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice?v=${i}`).then((response) => {
           if (response && response.IsCompleted) {
             let model = response.invoiceConvertModel
-            model.InvoiceNumber = item.InvoiceNumber
+            model.InvoiceNumber = item.InvoiceNo
 
             let request = {
               'recordId': item.RecordId,
