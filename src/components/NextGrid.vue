@@ -174,8 +174,8 @@
                 <template #button-content>
                   <i class="fas fa-th" />
                 </template>
-                <Actions :actions="tableOperations.RowActions" :row="item" @showModal="showModal" />
-                <Workflow :items="workFlowList" :RecordId="item.RecordId" />
+                <Actions :actions="filterRowActions(tableOperations.RowActions, item)" :row="item" @showModal="showModal" />
+                <Workflow v-if="visibleWorkFlow(item)" :items="workFlowList" :RecordId="item.RecordId" />
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Label')">
@@ -317,7 +317,8 @@ export default {
     OrderByColumns: {
       type: Array,
       default: () => []
-    }
+    },
+    actionCondition: null
   },
   mixins: [mixin],
   data () {
@@ -831,6 +832,9 @@ export default {
       return this.selectionMode === 'single' || this.selectionMode === 'multi'
     },
     selectRow (item) {
+      if (!this.visibleWorkFlow(item)) {
+        return
+      }
       if (this.selectionMode === 'multi') {
         item.Selected = !item.Selected
         let includedItems = this.selectedItems.filter(s => s.RecordId === item.RecordId)
@@ -1049,6 +1053,18 @@ export default {
           }
       }
       return isValid
+    },
+    filterRowActions (actions, item) {
+      if (this.actionCondition && this.actionCondition.condition(item)) {
+        return actions.filter(a => this.actionCondition.actions.includes(a.Action))
+      }
+      return actions
+    },
+    visibleWorkFlow (item) {
+      if (this.actionCondition && this.actionCondition.condition(item)) {
+        return false
+      }
+      return true
     }
   },
   watch: {

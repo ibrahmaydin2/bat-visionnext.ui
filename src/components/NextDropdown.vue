@@ -8,6 +8,15 @@
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
+    <template #selected-option="option" v-if="customOption">
+      <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+      <span v-else-if="isVehicle">{{option.Code + ' - ' + (option.VehiclePlateNumber ? option.VehiclePlateNumber : option.Description1) + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+      <span v-else-if="isEmployee">{{option.Code + ' - ' + (option.Name && option.Surname ? option.Name + ' ' + option.Surname : option.Description1)}}</span>
+      <!--<div v-else-if="isCustomSlot">
+        <slot name="option" :option="option"></slot>
+      </div>-->
+      <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
+    </template>
     <template v-slot:option="option" v-if="customOption">
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isVehicle">{{option.Code + ' - ' + option.VehiclePlateNumber + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
