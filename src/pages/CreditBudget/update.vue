@@ -375,13 +375,15 @@ export default {
     setData () {
       this.form = this.rowData
 
-      this.form.CustomerGuarantees = this.form.CreditBudgetDetails.map(item => {
-        let customerGuarantees = item.CustomerGuarantees
-        customerGuarantees.RecordId = item.RecordId
-        customerGuarantees.CreditBudgetId = item.CreditBudgetId
-        customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
-        return customerGuarantees
-      })
+      this.form.CustomerGuarantees = this.form.CreditBudgetDetails
+        .filter(c => c.CustomerGuarantees !== null && c.CustomerGuarantees !== undefined)
+        .map(item => {
+          let customerGuarantees = item.CustomerGuarantees
+          customerGuarantees.RecordId = item.RecordId
+          customerGuarantees.CreditBudgetId = item.CreditBudgetId
+          customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
+          return customerGuarantees
+        })
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
       this.form.LeftAmount = this.form.BudgetAmount > 0
         ? (parseFloat(this.form.BudgetAmount) - (this.form.UsedAmount + this.form.ReservedAmount))

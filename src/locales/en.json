@@ -1075,7 +1075,9 @@
       "Address" : "Adres",
       "CityId" : "İl",
       "DistrictId" : "İlçe",
-      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz."
+      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz.",
+      "doYouConfirm":"Onaylıyor musunuz?",
+      "vehicleConfirmMessage": "Araç Deposu hayır seçtiniz, Araç seçimleri kaldırılacaktır. Devam etmek istiyor musunuz?"
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
