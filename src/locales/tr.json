@@ -677,7 +677,8 @@
       "startDate": "Başlangıç Tarihi",
       "locationDetail": "Lokasyon Detayı",
       "BranchId": "Şube",
-      "BranchName": "Şube Adı"
+      "BranchName": "Şube Adı",
+      "WeeklyFrequency": "Haftalık Frekans"
     },
     "vehicles": {
       "code": "Araç Kodu",

@@ -636,7 +636,8 @@
       "visitCount": "Ziyaret Sayısı",
       "weekCount": "Hafta Sayısı",
       "startDate": "Başlangıç Tarihi",
-      "locationDetail": "Lokasyon Detayı"
+      "locationDetail": "Lokasyon Detayı",
+      "WeeklyFrequency": "Haftalık Frekans"
     },
     "vehicles": {
       "code": "Araç Kodu",
