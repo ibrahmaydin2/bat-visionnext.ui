@@ -1511,7 +1511,7 @@
       "itemCode": "Ürün Kodu",
       "unit": "Birim",
       "FromWhStockQuantity": "Depo Stok Miktarı",
-      "ToWhStockQuantity": "Rezerve Stok Miktarı",
+      "ToWhStockQuantity": "Mevcut",
       "AverageSalesQuantity": "Ortalama Satış",
       "LastSalesQuantity": "Son Satış",
       "LastdaySalesQuantity": "Son Iş Günü Satışı",
