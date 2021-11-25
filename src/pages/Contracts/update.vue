@@ -64,6 +64,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :is-customer="true"/>
             </NextFormGroup>
           </b-row>
@@ -285,7 +286,7 @@
               <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code !== 'YYM'" md="3" lg="3">
-              <NextInput type="number" v-model="contractPriceDiscounts.discountAmount" :disabled="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
+              <NextInput type="number" v-model="contractPriceDiscounts.discountAmount" :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
               <b-form-input
@@ -318,7 +319,7 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM')" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              :disabled="contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && (contractPriceDiscounts.benefitCondition.Code === 'YYM' || contractPriceDiscounts.benefitCondition.Code === 'SOZ'))" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
               <b-form-datepicker
