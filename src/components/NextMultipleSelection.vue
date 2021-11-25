@@ -5,7 +5,7 @@
         <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
       </b-button>
     </b-form-group>
-    <b-modal :id="`modal${id}`" size="xl" @hide="hide">
+    <b-modal :id="`modal${id}`" size="xl" @hide="hide" no-close-on-backdrop>
       <template #modal-title>
         {{action.Title}}
       </template>

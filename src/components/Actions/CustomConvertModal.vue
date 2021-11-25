@@ -81,8 +81,8 @@
               <i v-if="data.item.Printed === 1" class="fa fa-check text-success"></i>
               <i v-else class="fa fa-times text-danger"></i>
             </template>
-             <template #cell(InvoiceNumber)="data">
-              <NextInput input-class="input-width" v-model="data.item.InvoiceNumber"></NextInput>
+             <template #cell(InvoiceNo)="data">
+              <NextInput input-class="input-width" v-model="data.item.InvoiceNo"></NextInput>
             </template>
             <template #empty="">
               <div class="text-center text-danger my-2">
@@ -244,6 +244,11 @@ export default {
           }
         },
         {
+          key: 'InvoiceNo',
+          label: this.$t('index.Convert.invoiceNo'),
+          sortable: true
+        },
+        {
           key: 'EDocumentStatus',
           label: this.$t('index.Convert.edocumentStatus'),
           sortable: true,
@@ -258,7 +263,8 @@ export default {
       successfullCount: 0,
       unSuccessfullCount: 0,
       selected: [],
-      allSelected: false
+      allSelected: false,
+      InvoiceNoCode: null
     }
   },
   validations () {
@@ -304,6 +310,14 @@ export default {
       this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
       this.allSelected = false
       this.selected = []
+    },
+    getCode (index) {
+      this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode?v=${index}`).then(response => {
+        if (response && response.Model) {
+          this.documents[index].InvoiceNo = response.Model.Code
+          this.$forceUpdate()
+        }
+      })
     },
     selectedBranch (label, model) {
       if (model) {
@@ -366,6 +380,9 @@ export default {
         this.$api.postByUrl(request, this.actionUrl).then((res) => {
           this.tableBusy = false
           this.documents = res.ListModel.BaseModels
+          for (let index = 0; index < this.documents.length; index++) {
+            this.getCode(index)
+          }
         })
       }
     },
@@ -418,7 +435,7 @@ export default {
         this.$api.postByUrl({recordId: item.RecordId}, `VisionNextInvoice/api/SalesWaybill/GetConvertToInvoice?v=${i}`).then((response) => {
           if (response && response.IsCompleted) {
             let model = response.invoiceConvertModel
-            model.InvoiceNumber = item.InvoiceNumber
+            model.InvoiceNumber = item.InvoiceNo
 
             let request = {
               'recordId': item.RecordId,

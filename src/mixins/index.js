@@ -143,7 +143,8 @@ export default {
         return {
           RecordId: lookupValue.DecimalValue,
           Description1: lookupValue.Label,
-          Code: lookupValue.Code
+          Code: lookupValue.Code,
+          StatusId: lookupValue.StatusId
         }
       }
     },

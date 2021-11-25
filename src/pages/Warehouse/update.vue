@@ -1,5 +1,15 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="vehicle-confirm-modal" no-close-on-backdrop>
+      <template #modal-title>
+        {{$t('insert.warehouse.doYouConfirm')}}
+      </template>
+      {{$t('insert.warehouse.vehicleConfirmMessage')}}
+      <template #modal-footer>
+        <CancelButton class="float-right ml-2" @click.native="cancelVehicleSelection" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmVehicleSelection">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -137,20 +147,25 @@ export default {
       }
     },
     checkVehicle (value) {
-      if (value !== 1) {
-        this.form.VehicleId = null
-        this.selectedVehicle = null
+      if (value !== 1 && this.form.VehicleId > 0) {
+        this.$bvModal.show('vehicle-confirm-modal')
       }
+    },
+    confirmVehicleSelection () {
+      this.form.VehicleId = null
+      this.selectedVehicle = null
+      this.$bvModal.hide('vehicle-confirm-modal')
+    },
+    cancelVehicleSelection () {
+      this.form.IsVehicle = 1
+      this.$bvModal.hide('vehicle-confirm-modal')
     },
     setData () {
       let rowData = this.rowData
       this.form = rowData
       this.form.IsVirtualWarehouse = rowData.IsVirtualWareHouse
       if (rowData.Vehicle) {
-        this.selectedVehicle = {
-          RecordId: rowData.Vehicle.DecimalValue,
-          VehiclePlateNumber: rowData.Vehicle.Label
-        }
+        this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
       }
       this.address = {
         CityId: rowData.CityId,

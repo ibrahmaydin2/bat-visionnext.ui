@@ -8,6 +8,7 @@ export const detailData = {
       labelProperty: 'Code',
       customOption: true,
       isCustomer: true,
+      dynamicAndCondition: { StatusIds: [1] },
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
       label: i18n.t('insert.route.CustomerId'),
@@ -132,7 +133,7 @@ export const detailData = {
       modelProperty: 'DayFrequency',
       visible: true,
       hideOnTable: true,
-      label: i18n.t('insert.route.Frequency'),
+      label: i18n.t('insert.route.WeeklyFrequency'),
       id: 13
     },
     {
@@ -179,6 +180,7 @@ export const detailData = {
       customOption: true,
       isCustomer: true,
       parentProperty: 'RecordId',
+      dynamicAndCondition: { StatusIds: [1] },
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
       request: JSON.stringify({andConditionModel: { BranchIds: ['val'] }}),
@@ -305,7 +307,7 @@ export const detailData = {
       modelProperty: 'DayFrequency',
       visible: true,
       hideOnTable: true,
-      label: i18n.t('insert.route.Frequency'),
+      label: i18n.t('insert.route.WeeklyFrequency'),
       id: 13
     },
     {

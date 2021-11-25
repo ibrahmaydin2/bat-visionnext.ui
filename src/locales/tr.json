@@ -677,7 +677,8 @@
       "startDate": "Başlangıç Tarihi",
       "locationDetail": "Lokasyon Detayı",
       "BranchId": "Şube",
-      "BranchName": "Şube Adı"
+      "BranchName": "Şube Adı",
+      "WeeklyFrequency": "Haftalık Frekans"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -1136,7 +1137,9 @@
       "Address" : "Adres",
       "CityId" : "İl",
       "DistrictId" : "İlçe",
-      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz."
+      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz.",
+      "doYouConfirm":"Onaylıyor musunuz?",
+      "vehicleConfirmMessage": "Araç Deposu hayır seçtiniz, Araç seçimleri kaldırılacaktır. Devam etmek istiyor musunuz?"
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
@@ -1640,7 +1643,7 @@
       "itemCode": "Ürün Kodu",
       "unit": "Birim",
       "FromWhStockQuantity": "Depo Stok Miktarı",
-      "ToWhStockQuantity": "Rezerve Stok Miktarı",
+      "ToWhStockQuantity": "Mecvut",
       "AverageSalesQuantity": "Ortalama Satış",
       "LastSalesQuantity": "Son Satış",
       "LastdaySalesQuantity": "Son Iş Günü Satışı",
@@ -3212,6 +3215,7 @@
       "amount": "Tutar",
       "description1": "Açıklama",
       "invoiceNumber": "İrsaliye No",
+      "invoiceNo": "Fatura No",
       "documentNumber": "Belge No",
       "printed": "Yazdırıldı",
       "warehouse": "Depo",
