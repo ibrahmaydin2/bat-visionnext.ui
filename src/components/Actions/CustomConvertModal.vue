@@ -315,8 +315,7 @@ export default {
       this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode?v=${index}`).then(response => {
         if (response && response.Model) {
           this.documents[index].InvoiceNo = response.Model.Code
-          this.$refs.selectableTable.selectAllRows()
-          this.$refs.selectableTable.clearSelected()
+          this.$forceUpdate()
         }
       })
     },
