@@ -82,7 +82,7 @@
               <i v-else class="fa fa-times text-danger"></i>
             </template>
              <template #cell(InvoiceNo)="data">
-              <NextInput input-class="input-width" v-model="data.item.InvoiceNo" :source="InvoiceNoCode"></NextInput>
+              <NextInput input-class="input-width" v-model="data.item.InvoiceNo"></NextInput>
             </template>
             <template #empty="">
               <div class="text-center text-danger my-2">
@@ -264,7 +264,7 @@ export default {
       unSuccessfullCount: 0,
       selected: [],
       allSelected: false,
-      InvoiceNoCode: []
+      InvoiceNoCode: null
     }
   },
   validations () {
@@ -311,10 +311,12 @@ export default {
       this.allSelected = false
       this.selected = []
     },
-    getCode () {
-      this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode`).then(response => {
+    getCode (index) {
+      this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode?v=${index}`).then(response => {
         if (response && response.Model) {
-          this.InvoiceNoCode = response.Model.Code
+          this.documents[index].InvoiceNo = response.Model.Code
+          this.$refs.selectableTable.selectAllRows()
+          this.$refs.selectableTable.clearSelected()
         }
       })
     },
@@ -353,7 +355,6 @@ export default {
       this.$root.$emit('bv::hide::modal', 'customConvertModal')
     },
     search () {
-      this.getCode()
       this.clearProgress()
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -381,7 +382,7 @@ export default {
           this.tableBusy = false
           this.documents = res.ListModel.BaseModels
           for (let index = 0; index < this.documents.length; index++) {
-            this.documents[index].InvoiceNo = this.InvoiceNoCode++
+            this.getCode(index)
           }
         })
       }
