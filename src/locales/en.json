@@ -2945,6 +2945,7 @@
       "amount": "Tutar",
       "description1": "Açıklama",
       "invoiceNumber": "İrsaliye No",
+      "invoiceNo": "Fatura No",     
       "documentNumber": "Belge No",
       "printed": "Yazdırıldı",
       "warehouse": "Depo",
