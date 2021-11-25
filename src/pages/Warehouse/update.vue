@@ -147,10 +147,7 @@ export default {
       this.form = rowData
       this.form.IsVirtualWarehouse = rowData.IsVirtualWareHouse
       if (rowData.Vehicle) {
-        this.selectedVehicle = {
-          RecordId: rowData.Vehicle.DecimalValue,
-          VehiclePlateNumber: rowData.Vehicle.Label
-        }
+        this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
       }
       this.address = {
         CityId: rowData.CityId,
