@@ -1792,6 +1792,17 @@ export const store = new Vuex.Store({
             break
           case 'Radio':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" radio />
+            </NextFormGroup>`
+            if (fieldDefaultValue === null) {
+              dflvl[fieldName] = 1
+            } else {
+              dflvl[fieldName] = parseInt(fieldDefaultValue)
+            }
+            break
+
+          case 'Boolean':
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
             </NextFormGroup>`
             if (fieldDefaultValue === null) {
