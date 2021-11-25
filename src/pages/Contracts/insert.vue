@@ -25,7 +25,7 @@
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :readonly="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -63,6 +63,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :is-customer="true"/>
             </NextFormGroup>
           </b-row>
@@ -293,9 +294,10 @@
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code !== 'YYM'" md="3" lg="3">
               <b-form-input
-                type="number" v-model="contractPriceDiscounts.discountAmount" />
+                type="number" v-model="contractPriceDiscounts.discountAmount"
+                :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
               <b-form-input
@@ -328,7 +330,7 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM')" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && (contractPriceDiscounts.benefitCondition.Code === 'YYM' || contractPriceDiscounts.benefitCondition.Code === 'SOZ'))" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
               <b-form-datepicker
@@ -2479,6 +2481,10 @@ export default {
     }
     if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'KOT') {
       contractPriceDiscounts.quotaAmount = {}
+    }
+
+    if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code === 'YYM') {
+      contractPriceDiscounts.discountAmount = {}
     }
     return {
       form: this.insertRules,
