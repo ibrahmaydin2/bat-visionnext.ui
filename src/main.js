@@ -26,7 +26,6 @@ import 'vuelayers/lib/style.css' // needs css-loader
 import draggable from 'vuedraggable'
 
 import {VueMasonryPlugin} from 'vue-masonry'
-import RealtimeDashboard from './module/realtime-dashboard'
 
 // multiple date datepicker
 import DatePicker from 'vue2-datepicker'
@@ -110,19 +109,6 @@ Vue.use(PointGeom)
 Vue.use(StyleBox)
 Vue.use(IconStyle)
 Vue.use(VueLazyload)
-Vue.use(RealtimeDashboard, {
-  firebaseConfig: {
-    apiKey: 'AIzaSyCLYHFHFAOvvidAZcHFo0LshFvqAMST7Eg',
-    authDomain: 'onlinetransactions-3d4e4.firebaseapp.com',
-    projectId: 'onlinetransactions-3d4e4',
-    storageBucket: 'onlinetransactions-3d4e4.appspot.com',
-    messagingSenderId: '1033068817596',
-    appId: '1:1033068817596:web:2508c66ca0c4744dc7b4b9',
-    measurementId: 'G-XKSJQ8JBE2',
-    databaseUrl: 'https://onlinetransactions-3d4e4.firebaseio.com'
-  }
-}, i18n)
-
 Vue.component('draggable', draggable)
 Vue.component('v-select', vSelect)
 Vue.component('Carousel', Carousel)
