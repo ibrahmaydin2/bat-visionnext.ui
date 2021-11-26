@@ -41,7 +41,7 @@
         <b-tab :title="$t('insert.vanLoading.items')" active>
           <b-row>
             <NextFormGroup :title="$t('insert.vanLoading.items')" :error="$v.vanLoadingItem.Item">
-              <NextDropdown or-condition-fields="Code,Description1" v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" url="VisionNextItem/api/Item/AutoCompleteSearch" @input="selectedItem" label="Description1" :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }" searchable/>
+              <NextDropdown :custom-option="true" or-condition-fields="Code,Description1" v-model="vanLoadingItem.Item" :disabled="!form.FromWarehouseId || !form.RouteId || !form.LoadingDate" url="VisionNextItem/api/Item/AutoCompleteSearch" @input="selectedItem" label="Description1" :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }" searchable/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.vanLoading.FromWhStockQuantity')">
               <NextInput v-model="vanLoadingItem.FromWhStockQuantity" type="text" :disabled="true" />
