@@ -3,7 +3,7 @@ module.exports = {
   NODE_ENV: '"production"',
   VUE_APP_SERVICE_URL_BASE: "'https://mutluvnapiuat.visionnext.com.tr/'",
   VUE_APP_SYSTEM_NAME: "'MUTLU UI PRODUCTION'",
-  VUE_APP_VESION_NO: "'1.0.1.60'",
+  VUE_APP_VESION_NO: "'1.0.1.61'",
   BASE_URL: "'https://mutlu.visionnext.com.tr/'",
   TENANT: "'SAAS'",
   SITE_NAME: "'MUTLU'",
