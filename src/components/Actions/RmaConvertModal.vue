@@ -1,5 +1,4 @@
 <template>
-<!-- Rma apisi bulunmadığı için sonra yapılacak -->
   <b-modal v-if="modalAction" @show="show" id="rmaConvertModal" @hide="hide" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
@@ -125,7 +124,7 @@ export default {
         },
         {
           key: 'Price',
-          label: this.$t('index.Convert.Amount'),
+          label: this.$t('index.Convert.amount'),
           sortable: true
         },
         {

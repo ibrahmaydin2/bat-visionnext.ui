@@ -41,20 +41,62 @@
       <b-tabs>
         <b-tab :title="$t('get.assetMovementCard.assetMovementCard')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" >
-              <NextDropdown :disabled="insertReadonly.EmployeeId" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
-            </NextFormGroup>
-             <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
-              <NextDropdown v-model="toLocation" :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" @input="selectedSearchType('ToLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
-            </NextFormGroup>
-            <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
-            </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
-              <NextDropdown v-model="fromLocation" :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" @input="selectedSearchType('FromLocationId', $event)" url="VisionNextCustomer/api/CustomerLocation/AutoCompleteSearch" searchable/>
+              <NextDropdown
+                v-model="fromLocation"
+                :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
+                @input="selectedSearchType('FromLocationId', $event)"
+                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? {System: 1} : {}"
+                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
+                :is-custom-slot="true"
+                :custom-option="true"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">
+                <template v-slot:option="{option}">
+                   <table class="bordered-table">
+                     <tr>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
+                     </tr>
+                   </table>
+                  </template>
+              </NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
-              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)"/>
+              <NextDropdown :disabled="assetMovementType && (assetMovementType.Code === 'ADF' || assetMovementType.Code === 'ASR')" v-model="fromState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('FromStateId', $event)" v-on:all-source="setAllAssetState"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
+              <NextDropdown
+                v-model="toLocation"
+                :disabled="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ASR')"
+                @input="selectedSearchType('ToLocationId', $event)"
+                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
+                :is-custom-slot="true"
+                :custom-option="true"
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ADF' ? {StatusIds: [1]} : {}"
+                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">>
+                  <template v-slot:option="{option}">
+                   <table class="bordered-table">
+                      <tr>
+                        <td>{{option.Description1}}</td>
+                        <td>{{option.CustomerDesc}}</td>
+                        <td>{{option.CustomerCode}}</td>
+                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                        <td>{{option.CustomerCommercialTitle}}</td>
+                     </tr>
+                   </table>
+                  </template>
+              </NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
+              <NextDropdown :disabled="assetMovementType && (assetMovementType.Code === 'ASR' || assetMovementType.Code === 'ADF')" v-model="toState" url="VisionNextAsset/api/AssetState/AutoCompleteSearch" @input="selectedSearchType('ToStateId', $event)"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId" >
+              <NextDropdown v-model="employee" :disabled="insertReadonly.EmployeeId" orConditionFields="Code,Description1,Name,Surname" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="IsAssetMovement" :error="$v.form.IsAssetMovement">
               <NextCheckBox v-model="form.IsAssetMovement" type="number" toggle/>
@@ -66,19 +108,19 @@
             <NextFormGroup :title="$t('get.assetMovementCard.asset')" :error="$v.assetMovementCardDetail.asset" :required="true" md="3" lg="3">
               <NextDropdown v-model="assetMovementCardDetail.asset" url="VisionNextAsset/api/Asset/Search" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('get.assetMovementCard.serialNumber')" :error="$v.assetMovementCardDetail.serialNumber" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('get.assetMovementCard.serialNumber')" :error="$v.assetMovementCardDetail.serialNumber" md="3" lg="3">
               <NextInput v-model="assetMovementCardDetail.serialNumber" type="text" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.quantity')" :error="$v.assetMovementCardDetail.quantity" :required="true" md="3" lg="3">
               <NextInput v-model="assetMovementCardDetail.quantity" type="number" />
             </NextFormGroup>
             <NextFormGroup :title="$t('get.assetMovementCard.condition')" :error="$v.assetMovementCardDetail.condition" :required="true" md="3" lg="3">
-              <NextDropdown v-model="assetMovementCardDetail.condition" lookup-key="ASSET_CONDITION" :get-lookup="true"/>
+              <NextDropdown v-model="assetMovementCardDetail.condition" lookup-key="ASSET_CONDITION" :get-lookup="true" :disabled="true" v-on:all-source="setAssetConditions"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('get.assetMovementCard.serialNumber2')" :error="$v.assetMovementCardDetail.serialNumber2" :required="true" md="3" lg="3">
+             <NextFormGroup :title="$t('get.assetMovementCard.serialNumber2')" :error="$v.assetMovementCardDetail.serialNumber2" md="3" lg="3">
               <NextInput v-model="assetMovementCardDetail.serialNumber2" type="text" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('get.assetMovementCard.serialNumber3')" :error="$v.assetMovementCardDetail.serialNumber3" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('get.assetMovementCard.serialNumber3')" :error="$v.assetMovementCardDetail.serialNumber3" md="3" lg="3">
               <NextInput v-model="assetMovementCardDetail.serialNumber3" type="text" />
             </NextFormGroup>
             <b-col cols="12" md="2">
@@ -93,6 +135,7 @@
                   :hidden-values="hiddenValues"
                   :dynamic-and-condition="multipleDynamicAndCondition"
                   :disabled-button="disabledMultipleSelection"
+                  :validations="assetMovementType && assetMovementType.Code === 'ADF' ? [] : multipleValidations"
                 />
             </b-col>
           </b-row>
@@ -140,7 +183,7 @@ export default {
         EmployeeId: null,
         ToStateId: null,
         FromStateId: null,
-        OperationDate: null,
+        OperationDate: new Date().toISOString(),
         ToLocationId: null,
         FromLocationId: null,
         AssetMovementCardDetails: []
@@ -174,17 +217,29 @@ export default {
           mainProperty: 'Barcode',
           targetProperty: 'SerialNumber'
         }
-      ]
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            return value <= data.FromLocationQuantity
+          }
+        }
+      ],
+      assetStates: [],
+      defaultAssetCondition: null
     }
   },
   mounted () {
     this.createManualCode('CardNumber')
+    this.getUserInfo()
   },
   computed: {
     disabledMultipleSelection () {
       if (this.assetMovementType) {
         switch (this.assetMovementType.Code) {
           case 'STS':
+            return !this.form.FromLocationId || !this.form.FromStateId || !this.form.ToStateId
           case 'ASR':
             return !this.form.FromLocationId || !this.form.FromStateId
           case 'TRA':
@@ -201,12 +256,14 @@ export default {
         if (this.assetMovementType.Code === 'ADF') {
           return {
             StateIds: [this.form.ToStateId],
-            LocationIds: [this.form.ToLocationId]
+            LocationIds: [this.form.ToLocationId],
+            MovementTypeIds: [this.form.MovementTypeId]
           }
         } else {
           return {
             StateIds: [this.form.FromStateId],
-            LocationIds: [this.form.FromLocationId]
+            LocationIds: [this.form.FromLocationId],
+            MovementTypeIds: [this.form.MovementTypeId]
           }
         }
       }
@@ -236,7 +293,9 @@ export default {
         SerialNumber2: this.assetMovementCardDetail.serialNumber2,
         SerialNumber3: this.assetMovementCardDetail.serialNumber3
       })
-      this.assetMovementCardDetail = {}
+      this.assetMovementCardDetail = {
+        condition: this.defaultAssetCondition
+      }
       this.$v.assetMovementCardDetail.$reset()
     },
     removeAssetMovementCardDetails (item) {
@@ -256,10 +315,37 @@ export default {
         this.form.FromCustomerId = this.fromLocation ? this.fromLocation.CustomerId : undefined
         this.createData()
       }
+    },
+    getUserInfo () {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      if (userModel) {
+        let request = {
+          andConditionModel: {
+            RecordIds: [userModel.UserId]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
+          if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
+            let user = response.ListModel.BaseModels[0]
+            this.employee = {
+              RecordId: user.EmployeeId,
+              Description1: `${userModel.Name} ${userModel.Surname}`
+            }
+            this.form.EmployeeId = user.EmployeeId
+          }
+        })
+      }
+    },
+    setAllAssetState (value) {
+      this.assetStates = value
+    },
+    setAssetConditions (value) {
+      this.defaultAssetCondition = value && value.length > 0 ? value.find(a => a.Code === 'AKT') : null
+      this.assetMovementCardDetail.condition = this.defaultAssetCondition
     }
   },
   watch: {
-    assetMovementType () {
+    assetMovementType (value) {
       this.form.FromStateId = null
       this.form.FromLocationId = null
       this.form.ToStateId = null
@@ -269,6 +355,33 @@ export default {
       this.fromLocation = null
       this.toState = null
       this.toLocation = null
+
+      if (value) {
+        let faulty = this.assetStates.find(a => a.Code === 'ARZ')
+        let success = this.assetStates.find(a => a.Code === 'SAG')
+        switch (value.Code) {
+          case 'STS':
+            this.fromState = success
+            this.form.FromStateId = success.RecordId
+            this.toState = faulty
+            this.form.ToStateId = faulty.RecordId
+            break
+          case 'TRA':
+            this.fromState = success
+            this.form.FromStateId = success.RecordId
+            this.toState = success
+            this.form.ToStateId = success.RecordId
+            break
+          case 'ADF':
+            this.toState = success
+            this.form.ToStateId = success.RecordId
+            break
+          case 'ASR':
+            this.fromState = success
+            this.form.FromStateId = success.RecordId
+            break
+        }
+      }
     }
   },
   validations () {
@@ -293,6 +406,10 @@ export default {
     if (this.assetMovementType) {
       switch (this.assetMovementType.Code) {
         case 'STS':
+          this.insertRules.ToLocationId = {}
+
+          this.insertRequired.ToLocationId = false
+          break
         case 'ASR':
           this.insertRules.ToLocationId = {}
           this.insertRules.ToStateId = {}
@@ -315,19 +432,10 @@ export default {
         asset: {
           required
         },
-        serialNumber: {
-          required
-        },
         quantity: {
           required
         },
         condition: {
-          required
-        },
-        serialNumber2: {
-          required
-        },
-        serialNumber3: {
           required
         }
       }
@@ -335,3 +443,14 @@ export default {
   }
 }
 </script>
+<style>
+.bordered-table tr td {
+  border: 1px gray solid;
+}
+.bordered-table {
+  width: 100%
+}
+.bordered-table td {
+  min-width: 150px;
+}
+</style>

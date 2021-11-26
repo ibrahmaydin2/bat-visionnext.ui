@@ -8,11 +8,23 @@
     <template slot="no-options" v-if="searchable">
       {{$t('insert.min3')}}
     </template>
+    <template #selected-option="option" v-if="customOption">
+      <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+      <span v-else-if="isVehicle">{{option.Code + ' - ' + (option.VehiclePlateNumber ? option.VehiclePlateNumber : option.Description1) + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
+      <span v-else-if="isEmployee">{{option.Code + ' - ' + (option.Name && option.Surname ? option.Name + ' ' + option.Surname : option.Description1)}}</span>
+      <!--<div v-else-if="isCustomSlot">
+        <slot name="option" :option="option"></slot>
+      </div>-->
+      <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
+    </template>
     <template v-slot:option="option" v-if="customOption">
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isVehicle">{{option.Code + ' - ' + option.VehiclePlateNumber + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isEmployee">{{option.Code + ' - ' + option.Name + ' ' + option.Surname}}</span>
-      <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
+      <div v-else-if="isCustomSlot">
+        <slot name="option" :option="option"></slot>
+      </div>
+      <span v-else>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
     </template>
   </v-select>
 </template>
@@ -54,6 +66,7 @@ export default {
     dynamicAndCondition: {},
     orConditionFields: {},
     dynamicRequest: {},
+    dynamicOrConditions: [],
     source: {
       type: Array
     },
@@ -90,6 +103,10 @@ export default {
     defaultValue: {
       type: Number,
       default: null
+    },
+    isCustomSlot: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -195,15 +212,16 @@ export default {
         ...this.dynamicAndCondition,
         ...this.dynamicRequest ? this.dynamicRequest.andConditionModel : {}
       }
-      let orConditionModels = []
-      let orConditionModel = {}
+      let orConditionModels = this.dynamicOrConditions && this.dynamicOrConditions.length > 0 ? this.dynamicOrConditions : []
+
       if (search) {
         if (this.orConditionFields) {
           let fields = this.orConditionFields.split(',')
+          let condition = {}
           fields.forEach(field => {
-            orConditionModel[field] = search
+            condition[field] = search
           })
-          orConditionModels = [orConditionModel]
+          orConditionModels.push(condition)
         } else {
           andConditionModel[this.andConditionSearchField] = search
         }
@@ -212,6 +230,9 @@ export default {
       let dynamicRequest = { ...this.dynamicRequest }
       if (dynamicRequest && dynamicRequest.andConditionModel) {
         delete dynamicRequest.andConditionModel
+      }
+      if (this.dynamicOrConditions && this.dynamicOrConditions.length > 0) {
+        this.orConditionModels = [...orConditionModels, ...this.dynamicOrConditions]
       }
       let request = {
         andConditionModel: andConditionModel,

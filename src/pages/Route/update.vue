@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <RouteLocationDetail :detail="selectedLocation" :index="selectedLocationIndex" @save="setLocationDetail" />
     <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
       <NextLocation :Location='Location' />
     </b-modal>
@@ -44,6 +45,8 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
+                :customOption="true"
+                :is-employee="true"
                 :disabled="insertReadonly.RepresentativeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
@@ -116,8 +119,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm" :detail-buttons="detailButtons"/>
+        <b-tab lazy :title="$t('insert.route.locations')">
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -128,9 +131,13 @@ import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import updateMixin from '../../mixins/update'
 import { detailData } from './detailPanelData'
+import RouteLocationDetail from './RouteLocationDetail'
 
 export default {
   mixins: [updateMixin],
+  components: {
+    RouteLocationDetail
+  },
   data () {
     return {
       form: {
@@ -153,7 +160,8 @@ export default {
         RouteDetails: []
       },
       avenues: [],
-      locationItems: detailData.locationItems,
+      locationItems1: detailData.locationItems1,
+      locationItems2: detailData.locationItems2,
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
@@ -171,7 +179,19 @@ export default {
       parish: null,
       routeType: null,
       Location: {},
+      selectedLocation: null,
+      selectedLocationIndex: null,
       detailButtons: [
+        {
+          icon: 'fa fa-search',
+          getDetail: (data, index) => {
+            this.selectedLocation = data
+            this.selectedLocationIndex = index
+            this.$nextTick(() => {
+              this.$bvModal.show('route-location-modal')
+            })
+          }
+        },
         {
           icon: 'fa fa-map-marker-alt text-primary mr-1',
           getDetail: (data) => {
@@ -194,7 +214,7 @@ export default {
       const e = this.rowData
       this.form = e
       this.form.RouteDetails = e.RouteDetails.map((item) => {
-        item.DayFrequency = item.AnnualVisitCount
+        item.DayFrequency = item.Day1Frequency
 
         return item
       })
@@ -393,6 +413,12 @@ export default {
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.updateData()
       }
+    },
+    setLocationDetail (model, index) {
+      if (model.RecordState === 1) {
+        model.RecordState = 3
+      }
+      this.form.RouteDetails[index] = model
     }
   },
   validations () {

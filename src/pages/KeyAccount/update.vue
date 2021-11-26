@@ -4,13 +4,22 @@
       <header>
         <b-row>
           <b-col cols="12" md="6">
-            <Breadcrumb />
+            <header>
+              <Breadcrumb />
+            </header>
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'KeyAccount' }">
-              <CancelButton />
-            </router-link>
-            <AddButton @click.native="save()" />
+            <b-row>
+              <b-col cols="12" md="6">
+                <GetFormField v-if="showWorkFlow" v-model="workFlowModel" :hide-edit="true"/>
+              </b-col>
+              <b-col cols="12" md="6">
+                <router-link :to="{name: 'KeyAccount' }">
+                  <CancelButton />
+                </router-link>
+                <AddButton @click.native="save()" />
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
       </header>
@@ -37,7 +46,7 @@
         <b-row v-if="form.RecordTypeId === 4 && upperCustomer !== null">
           <b-col md="12" lg="12">
             <b-form-group :label="$t('insert.customer.mainOfBranch')">
-              <a :href="`/Update/KeyAccount/${upperCustomer.DecimalValue}`"> {{upperCustomer.Label}}</a>
+              <a :href="`/Update/KeyAccount/${upperCustomer.DecimalValue}`"> {{upperCustomer.Code}} - {{upperCustomer.Label}}</a>
             </b-form-group>
           </b-col>
         </b-row>
@@ -93,7 +102,7 @@
               <NextDatePicker v-model="form.LicenseValidDate" :disabled="insertReadonly.LicenseValidDate" />
             </NextFormGroup>
             <NextFormGroup item-key="IsBlocked" :error="$v.form.IsBlocked" md="2" lg="2">
-              <NextCheckBox v-model="form.IsBlocked" type="number" toggle/>
+              <NextCheckBox v-model="form.IsBlocked" type="number" toggle :disabled="insertReadonly.IsBlocked" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderChangeUnitary" :error="$v.form.IsOrderChangeUnitary" md="2" lg="2">
               <NextCheckBox v-model="form.IsOrderChangeUnitary" type="number" toggle/>
@@ -186,7 +195,7 @@
                 <b-tr v-for="(b, i) in branchs" :key="i">
                   <b-td>{{b.Code}}</b-td>
                   <b-td>{{b.Description1}}</b-td>
-                  <b-td>{{allBranchs != null ? allBranchs.find(x => x.RecordId === b.BranchId).Description1 : ''}}</b-td>
+                  <b-td>{{allBranchs != null && allBranchs.length > 0 ? allBranchs.find(x => x.RecordId === b.BranchId).Description1 : ''}}</b-td>
                   <b-td class="text-center">
                     <a :href="`/Update/KeyAccount/${b.RecordId}`"><i class="fas fa-edit text-success" /></a>
                   </b-td>
@@ -443,8 +452,6 @@ export default {
       taxNumberReq: 10,
       upperCustomer: null,
       Location: {},
-      branchDistributionTypeId: 0,
-      upperCustomerObj: null,
       detailButtons: [
         {
           icon: 'fa fa-map-marker-alt text-primary mr-1',
@@ -464,12 +471,13 @@ export default {
       totalRowCount: 0,
       searchValue: null,
       allList: {},
-      Description1: ''
+      Description1: '',
+      showWorkFlow: false,
+      workFlowModel: {}
     }
   },
   mounted () {
-    this.getCurrentBranch()
-    this.getData().then(() => { this.setData() })
+    this.getData('/GetKeyAccount').then(() => { this.setData() })
   },
   methods: {
     selectedType (label, model) {
@@ -602,7 +610,9 @@ export default {
         request.orConditionModels = [
           {
             Description1: this.searchValue,
-            Code: this.searchValue
+            Code: this.searchValue,
+            LicenseNumber: this.searchValue,
+            CommercialTitle: this.searchValue
           }
         ]
       }
@@ -612,7 +622,7 @@ export default {
         this.branchs = this.allList[this.currentPage]
         return
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 20).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/SearchKeyAccount', 20).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels
@@ -629,22 +639,17 @@ export default {
       })
       this.$router.push('/Insert/KeyAccount')
     },
-    getCurrentBranch () {
-      let request = {
-        RecordId: this.$store.state.BranchId
-      }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
-        if (response && response.Model) {
-          let branch = response.Model
-          this.branchDistributionTypeId = branch.DistributionTypeId
-        }
-      })
-    },
     setData () {
       let e = this.rowData
       if (e) {
         if (e.RecordTypeId === 3) {
           this.getBranchs(e.RecordId)
+        }
+        if (e.UpperDistributionTypeId === 5) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
+          setTimeout(() => {
+            this.$router.push({ name: 'KeyAccount' })
+          }, 2000)
         }
         this.form = e
         this.form.ZcreditAccountRemainder = e.ZCreditAccountRemainder
@@ -700,6 +705,15 @@ export default {
         this.TCIBreak1 = e.TCIBreak1
         this.TCIBreak2 = e.TCIBreak2
         this.StatementDay = this.convertLookupValueToSearchValue(e.StatementDayo)
+
+        this.workFlowModel = {
+          ControllerName: 'Customer',
+          ClassName: 'Customer',
+          PageName: this.rowData.RecordTypeId === 4 ? 'pg_Customer' : 'pg_KeyAccount'
+        }
+        this.$nextTick(() => {
+          this.showWorkFlow = true
+        })
       }
     }
   },
@@ -733,21 +747,6 @@ export default {
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
-      }
-    },
-    upperCustomer (value) {
-      if (value && !this.upperCustomerObj) {
-        this.$api.postByUrl({RecordId: value.DecimalValue}, 'VisionNextCustomer/api/Customer/Get').then((response) => {
-          if (response && response.Model) {
-            this.upperCustomerObj = response.Model
-            if (this.upperCustomerObj.DistributionTypeId === 5) {
-              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.customer.keyAccountNotValidToUpdate') })
-              setTimeout(() => {
-                this.$router.push({ name: 'PurchaseWaybill' })
-              }, 2000)
-            }
-          }
-        })
       }
     },
     currentPage () {

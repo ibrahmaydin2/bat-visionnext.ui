@@ -23,16 +23,20 @@ export default {
         }
       })
     },
-    getData () {
+    getData (path) {
       if (!this.routeName1) {
         this.routeName1 = this.routeName
       }
       if (!this.routeName2) {
         this.routeName2 = this.routeName
       }
-      return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}/Get`).then((res) => {
+      if (!path) {
+        path = '/Get'
+      }
+      return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}${path}`).then((res) => {
         if (res.IsCompleted) {
           this.$store.commit('setRowData', res.Model)
+          this.$forceUpdate()
           if (res.Model && res.Model.System === 1) {
             this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.systemRecordCanNotUpdate') })
             document.getElementById('submitButton').disabled = true

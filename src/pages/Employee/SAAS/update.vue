@@ -245,7 +245,10 @@ export default {
     getInsertPage () {
       this.getData().then(() => { this.setData() })
       this.getLists()
-      this.$api.postByUrl({RecordId: 1}, 'VisionNextBranch/api/Branch/Get').then(response => {
+      let request = {
+        RecordId: this.$store.state.BranchId
+      }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
         if (response && response.Model) {
           let eInvoiceSeqs = response.Model.EInvoiceSeqs
           if (eInvoiceSeqs) {

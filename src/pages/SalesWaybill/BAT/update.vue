@@ -143,7 +143,87 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterProducts')" v-if="this.$route.query.salesWaybillCopy === 1" @click.prevent="tabValidation()">
+          <b-row>
+            <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
+              <NextDropdown
+                    v-model="selectedInvoiceLine.selectedItem"
+                    searchable
+                    :custom-option="true"
+                    @input="selectItem($event)"
+                    :search="searchItems"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event)" min=1></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.price" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.stock')" :error="$v.selectedInvoiceLine.stock" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.stock" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
+               <NextInput type="number" v-model="selectedInvoiceLine.vatRate" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.netTotal')" :error="$v.selectedInvoiceLine.netTotal" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.netTotal" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.vatTotal')" :error="$v.selectedInvoiceLine.totalVat" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.totalVat" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.grossTotal')" :error="$v.selectedInvoiceLine.grossTotal" :required="true" md="2" lg="2">
+              <NextInput type="number" v-model="selectedInvoiceLine.grossTotal" :disabled="true"></NextInput>
+            </NextFormGroup>
+            <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addInvoiceLine" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="SalesWaybillMultipleItem"
+                  v-model="form.InvoiceLines"
+                  :disabled-button="!form.WarehouseId || !form.PriceListId"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
+                  :validations="multipleItemSearch.multipleValidations"
+                />
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.product')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.price')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(o, i) in form.InvoiceLines" :key="i">
+                  <b-td>{{o.Description1}}</b-td>
+                  <b-td>{{o.ItemCode}}</b-td>
+                  <b-td>{{o.Quantity}}</b-td>
+                  <b-td>{{o.Price}}</b-td>
+                  <b-td>{{o.VatRate}}</b-td>
+                  <b-td>{{o.NetTotal}}</b-td>
+                  <b-td>{{o.TotalVat}}</b-td>
+                  <b-td>{{o.GrossTotal}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
+                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.enterProducts')" v-if="!(this.$route.query.salesWaybillCopy === 1)" @click.prevent="tabValidation()">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -172,7 +252,53 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0" :disabled="form.VehicleId > 0">
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && this.$route.query.salesWaybillCopy === 1" :disabled="form.VehicleId > 0">
+          <b-row>
+            <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
+              <NextInput type="text" v-model="selectedInvoiceLogisticCompany.companyName"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.order.taxNumber')" :error="$v.selectedInvoiceLogisticCompany.taxNumber" :required="true" md="4" lg="3">
+              <NextInput type="number" v-model="selectedInvoiceLogisticCompany.taxNumber" :maxLength="10" :oninput="maxLengthControl"></NextInput>
+            </NextFormGroup>
+          </b-row>
+          <NextAddress
+            v-model="address"
+            :required="true"
+            :city-error="$v.selectedInvoiceLogisticCompany.cityId.$error"
+            :district-error="$v.selectedInvoiceLogisticCompany.districtId.$error"
+            :hide-address="true"
+            md="4"
+            lg="3"
+          />
+          <b-col cols="12" md="8" lg="6" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addInvoiceLogisticCompanyCopy" />
+              </b-form-group>
+            </b-col>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.order.companyName')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.taxNumber')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.city')}}</span></b-th>
+                <b-th><span>{{$t('insert.order.district')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(l, i) in form.InvoiceLogisticCompanies" :key="i">
+                  <b-td>{{l.CompanyName}}</b-td>
+                  <b-td>{{l.TaxNumber}}</b-td>
+                  <b-td>{{l.CityName}}</b-td>
+                  <b-td>{{l.DistrictName}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeInvoiceLogisticCompanyCopy(l)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && !(this.$route.query.salesWaybillCopy === 1)" :disabled="form.VehicleId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
               <NextInput type="text" v-model="selectedInvoiceLogisticCompany.companyName"></NextInput>
@@ -245,6 +371,7 @@
 <script>
 import { required, minValue, minLength, maxLength } from 'vuelidate/lib/validators'
 import updateMixin from '../../../mixins/update'
+import { mapState } from 'vuex'
 export default {
   mixins: [updateMixin],
   data () {
@@ -349,13 +476,16 @@ export default {
       stocks: []
     }
   },
+  computed: {
+    ...mapState(['multipleItemSearch'])
+  },
   mounted () {
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1) {
+        if (this.rowData.Printed === 1 && !(this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy)) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
           setTimeout(() => {
             this.$router.push({ name: 'SalesWaybill' })
@@ -538,6 +668,96 @@ export default {
       this.form.TotalVat = this.roundNumber(this.form.TotalVat)
       this.form.GrossTotal = this.roundNumber(this.form.GrossTotal)
     },
+    addInvoiceLine () {
+      this.$v.selectedInvoiceLine.$touch()
+      if (this.$v.selectedInvoiceLine.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.InvoiceLines.filter(i => i.ItemId === this.selectedInvoiceLine.selectedItem.RecordId)
+      if (filteredArr.length > 0 && !this.selectedInvoiceLine.isUpdated) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      if (this.selectedInvoiceLine.quantity > this.selectedInvoiceLine.stock) {
+        this.$toasted.show(this.$t('insert.order.quantityStockException'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let length = this.form.InvoiceLines.length
+      let selectedItem = this.selectedInvoiceLine.selectedItem
+      let quantity = this.selectedInvoiceLine.quantity
+      let order = {
+        Description1: selectedItem.Description1,
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        LineNumber: length,
+        ItemId: selectedItem.RecordId,
+        ItemCode: selectedItem.Code,
+        UnitSetId: selectedItem.UnitSetId,
+        UnitId: selectedItem.UnitId,
+        ConvFact1: 1,
+        ConvFact2: 1,
+        Quantity: quantity,
+        Stock: this.selectedInvoiceLine.stock,
+        VatRate: this.selectedInvoiceLine.vatRate,
+        TotalVat: this.selectedInvoiceLine.totalVat,
+        TotalItemDiscount: 0,
+        TotalOtherDiscount: 0,
+        Price: this.selectedInvoiceLine.price,
+        GrossTotal: this.selectedInvoiceLine.grossTotal,
+        NetTotal: this.selectedInvoiceLine.netTotal,
+        IsFreeItem: 0,
+        IsCanceled: 0,
+        PriceListPrice: this.selectedInvoiceLine.price,
+        SalesQuantity1: quantity,
+        SalesUnit1Id: selectedItem.UnitId,
+        TempDiscountQuantity: 0,
+        TempDiscountNetTotal: 0,
+        DiscountNetTotal: 0,
+        DiscountQuantity: 0
+      }
+      if (this.selectedInvoiceLine.isUpdated) {
+        this.form.InvoiceLines[this.selectedIndex] = order
+        this.selectedInvoiceLine.isUpdated = false
+      } else {
+        this.form.InvoiceLines.push(order)
+      }
+      this.calculateTotalPrices()
+      this.selectedIndex = null
+      this.selectedInvoiceLine = {}
+      this.$v.selectedInvoiceLine.$reset()
+    },
+    removeInvoiceLine (item) {
+      this.form.InvoiceLines.splice(this.form.InvoiceLines.indexOf(item), 1)
+      this.calculateTotalPrices()
+      this.selectedIndex = null
+      this.selectedInvoiceLine = {}
+      this.$v.selectedInvoiceLine.$reset()
+    },
+    editInvoiceLine (item) {
+      this.selectedIndex = this.form.InvoiceLines.indexOf(item)
+      this.selectedInvoiceLine = {
+        quantity: item.Quantity,
+        price: item.Price,
+        vatRate: item.VatRate,
+        netTotal: item.NetTotal,
+        totalVat: item.TotalVat,
+        grossTotal: item.GrossTotal,
+        stock: item.Stock,
+        isUpdated: true
+      }
+      this.getItem(item.ItemId)
+    },
     setData () {
       let rowData = this.rowData
       if (rowData) {
@@ -570,7 +790,49 @@ export default {
             return item
           })
         }
+        if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
+          this.$api.postByUrl({}, '/VisionNextInvoice/api/SalesWaybill/GetCode').then(res => {
+            this.form.InvoiceNumber = res.Model.Code
+          })
+        }
       }
+    },
+    addInvoiceLogisticCompanyCopy () {
+      this.$v.selectedInvoiceLogisticCompany.$touch()
+      if (this.$v.selectedInvoiceLogisticCompany.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let filteredArr = this.form.InvoiceLogisticCompanies.filter(i => i.CompanyName === this.selectedInvoiceLogisticCompany.companyName &&
+      i.TaxNumber === this.selectedInvoiceLogisticCompany.taxNumber && i.CityId === this.selectedInvoiceLogisticCompany.cityId &&
+      i.DistrictId === this.selectedInvoiceLogisticCompany.districtId)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
+      let logisticCompany = {
+        Deleted: 0,
+        System: 0,
+        StatusId: 1,
+        RecordState: 2,
+        CompanyName: this.selectedInvoiceLogisticCompany.companyName,
+        TaxNumber: this.selectedInvoiceLogisticCompany.taxNumber,
+        CityId: this.selectedInvoiceLogisticCompany.cityId,
+        DistrictId: this.selectedInvoiceLogisticCompany.districtId,
+        CityName: this.selectedInvoiceLogisticCompany.cityName,
+        DistrictName: this.selectedInvoiceLogisticCompany.districtName
+      }
+      this.form.InvoiceLogisticCompanies.push(logisticCompany)
+      this.selectedInvoiceLogisticCompany = {}
+      this.address = {}
+      this.$v.selectedInvoiceLogisticCompany.$reset()
+    },
+    removeInvoiceLogisticCompanyCopy (item) {
+      this.form.InvoiceLogisticCompanies.splice(this.form.InvoiceLogisticCompanies.indexOf(item), 1)
     },
     addInvoiceLogisticCompany () {
       this.$v.selectedInvoiceLogisticCompany.$touch()
@@ -644,7 +906,23 @@ export default {
           })
           return
         }
-        this.updateData()
+        let model = {
+          'model': this.form
+        }
+        if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
+          model.RecordId = this.form.RecordId
+          model.model.RecordId = null
+          model.model.RecordState = 2
+          model.model.EncryptedKey = null
+          model.model.CreatedUser = null
+          model.model.CreatedDateTime = null
+          model.model.ModifiedUser = null
+          model.model.ModifiedDateTime = null
+          model.model.InvoiceId = null
+          return this.$store.dispatch('createSalesWaybill', {...this.query, api: `VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs`, formdata: model, return: this.routeName})
+        } else {
+          this.updateData()
+        }
       }
     }
   },

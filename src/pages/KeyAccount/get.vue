@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData && rowData.Description1" />
-            <GetFormField v-model="workFlowModel"/>
+            <GetFormField v-if="showWorkFlow" v-model="workFlowModel"/>
           </header>
           <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
             <NextLocation :Location='Location' />
@@ -51,7 +51,7 @@
               <div v-html="getFormatDataByType(rowData.IsOrderChangeUnitary, 'check', 'insert.customer.UseEDispatch')"></div>
               <div v-html="getFormatDataByType(rowData.IsWarehouseSale, 'check', 'insert.customer.IsWarehouseSale')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
-              <div v-if="rowData.RecordTypeId === 4 && rowData.UpperCustomer != null"><span><i class="far fa-circle"></i>{{$t('insert.customer.mainOfBranch')}}</span><p><a :href="`/KeyAccount/${rowData.UpperCustomer.DecimalValue}`"> {{rowData.UpperCustomer.Label}}</a></p></div>
+              <div v-if="rowData.RecordTypeId === 4 && rowData.UpperCustomer != null"><span><i class="far fa-circle"></i>{{$t('insert.customer.mainOfBranch')}}</span><p><a :href="`/KeyAccount/${rowData.UpperCustomer.DecimalValue}`"> {{rowData.UpperCustomer.Code}} - {{rowData.UpperCustomer.Label}}</a></p></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -216,11 +216,7 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      workFlowModel: {
-        ControllerName: 'Customer',
-        ClassName: 'Customer',
-        PageName: 'pg_KeyAccount'
-      },
+      workFlowModel: {},
       Location: {},
       detailButtons: [
         {
@@ -240,7 +236,8 @@ export default {
       currentPage: 1,
       totalRowCount: 0,
       searchValue: null,
-      allList: {}
+      allList: {},
+      showWorkFlow: false
     }
   },
   mounted () {
@@ -254,8 +251,17 @@ export default {
       this.$router.push({name: this.routeName})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url}).then(() => {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', path: '/GetKeyAccount', record: this.$route.params.url}).then(() => {
         this.getBranchs()
+
+        this.workFlowModel = {
+          ControllerName: 'Customer',
+          ClassName: 'Customer',
+          PageName: this.rowData.RecordTypeId === 4 ? 'pg_Customer' : 'pg_KeyAccount'
+        }
+        this.$nextTick(() => {
+          this.showWorkFlow = true
+        })
       })
     },
     getBranchs (currentPage) {
@@ -273,7 +279,9 @@ export default {
         request.orConditionModels = [
           {
             Description1: this.searchValue,
-            Code: this.searchValue
+            Code: this.searchValue,
+            LicenseNumber: this.searchValue,
+            CommercialTitle: this.searchValue
           }
         ]
       }
@@ -283,7 +291,7 @@ export default {
         this.branchs = this.allList[this.currentPage]
         return
       }
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Search', 20).then((response) => {
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/SearchKeyAccount', 20).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           this.branchs = response.ListModel.BaseModels

@@ -57,10 +57,15 @@
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
               <div v-html="getFormatDataByType(rowData.ActualDeliveryDate, 'date', 'insert.order.actualDeliveryDate')"></div>
               <div v-html="getFormatDataByType(rowData.ActualDeliveryTime, 'text', 'insert.order.actualDeliveryTime')"></div>
+              <div v-html="getFormatDataByType(rowData.EDocumentStatusId, 'object', 'insert.order.EDocumentStatusId')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerOrderNumber, 'text', 'insert.order.CustomerOrderNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Printed, 'check', 'insert.order.Printed')"></div>
+              <div v-html="getFormatDataByType(rowData.IsDBSOffline, 'check', 'insert.order.IsDBSOffline')"></div>
+
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
@@ -72,7 +77,11 @@
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
               <div v-html="getFormatDataByType(rowData.Vehicle, 'object', 'insert.order.vehicle')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(rowData.ReferenceNumber, 'text', 'insert.order.ReferenceNumber')"></div>
               <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.isCanceled, 'check', 'insert.order.isCanceled')"></div>
+              <div v-html="getFormatDataByType(rowData.IsDBS, 'check', 'insert.order.IsDBS')"></div>
+
             </b-card>
           </b-row>
         </b-tab>
@@ -121,7 +130,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')">
+        <b-tab :title="$t('insert.order.logisticCompanies')" v-if="selectedBranch.UseEWaybill === 1">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -154,6 +163,10 @@
                     <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.DiscountReasonId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.LoyaltyId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.ContractId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.SalesVolumeId')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
@@ -161,6 +174,10 @@
                       <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
                       <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
                       <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                      <b-td>{{o.DiscountReason ? o.DiscountReason.Label : ''}}</b-td>
+                      <b-td>{{o.LoyaltyId}}</b-td>
+                      <b-td>{{o.ContractId}}</b-td>
+                      <b-td>{{o.SalesVolumeId}}</b-td>
                       <b-td>{{o.TotalDiscount}}</b-td>
                     </b-tr>
                   </b-tbody>
@@ -205,7 +222,8 @@ export default {
   props: ['dataKey'],
   data () {
     return {
-      paymentPeriod: 0
+      paymentPeriod: 0,
+      selectedBranch: {}
     }
   },
   mounted () {
@@ -224,6 +242,9 @@ export default {
           if (res && res.Model) {
             this.paymentPeriod = res.Model.PaymentPeriod ? res.Model.PaymentPeriod : 0
           }
+        })
+        this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
+          this.selectedBranch = response && response.Model ? response.Model : {}
         })
       })
     }

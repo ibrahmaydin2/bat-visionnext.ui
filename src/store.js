@@ -556,7 +556,9 @@ export const store = new Vuex.Store({
       let OrderByColumns = []
       let AndConditionModel = {}
 
-      if (query.sort) {
+      if (query.OrderByColumns && query.OrderByColumns.length > 0) {
+        OrderByColumns = query.OrderByColumns
+      } else if (query.sort) {
         // sıralama özelliği şuan tek sütunda geçerli.
         // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
         OrderByColumns = [
@@ -661,7 +663,8 @@ export const store = new Vuex.Store({
         'RecordId': query.record
       }
       commit('showNextgrid', false)
-      return axios.post(query.api + '/Get', dataQuery, authHeader)
+      let path = query.path ? query.path : '/Get'
+      return axios.post(query.api + path, dataQuery, authHeader)
         .then(res => {
           switch (res.status) {
             case 200:
@@ -838,6 +841,46 @@ export const store = new Vuex.Store({
               commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
+        })
+        .catch(err => {
+          document.getElementById('submitButton').disabled = false
+          commit('showAlert', { type: 'danger', msg: JSON.stringify(err.message) })
+        })
+    },
+    createSalesWaybill ({ state, commit }, query) {
+      let dataQuery = {
+        'BranchId': state.BranchId,
+        'CompanyId': state.CompanyId,
+        'RecordId': state.RecordId,
+        ...query.formdata
+      }
+      commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
+      document.getElementById('submitButton').disabled = true
+      return axios.post(query.api, dataQuery, authHeader)
+        .then(res => {
+          commit('hideAlert')
+          document.getElementById('submitButton').disabled = false
+          if (res.data.IsCompleted === true) {
+            commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
+            if (query.return) {
+              router.push({name: query.return})
+            } else if (query.action) {
+              location.reload()
+            }
+          } else {
+            if (res.data.Validations) {
+              let errs = res.data.Validations.Errors
+              for (let i = 0; i < errs.length; i++) {
+                let errmsg = errs[i].States
+                for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                }
+              }
+            } else {
+              commit('showAlert', { type: 'validation', msg: res.data.Message })
+            }
+          }
+          return res.data
         })
         .catch(err => {
           document.getElementById('submitButton').disabled = false
@@ -1293,6 +1336,9 @@ export const store = new Vuex.Store({
     getDownloadLink ({state, commit}, query) {
       let dataQuery = {
         ...state.lastGridModel,
+        OrderByColumns: query.orderByColumns
+          ? query.orderByColumns
+          : state.lastGridModel.OrderByColumns ? state.lastGridModel.OrderByColumns : null,
         'branchId': state.BranchId,
         'companyId': state.CompanyId,
         'page': 1,
@@ -1745,6 +1791,17 @@ export const store = new Vuex.Store({
             dflvl[fieldName] = parseInt(fieldDefaultValue)
             break
           case 'Radio':
+            inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
+              <NextCheckBox v-model="form.${fieldName}" type="number" radio />
+            </NextFormGroup>`
+            if (fieldDefaultValue === null) {
+              dflvl[fieldName] = 1
+            } else {
+              dflvl[fieldName] = parseInt(fieldDefaultValue)
+            }
+            break
+
+          case 'Boolean':
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
             </NextFormGroup>`

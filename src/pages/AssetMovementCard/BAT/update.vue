@@ -39,7 +39,7 @@
               <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toLocation" :source="assetLocations" @input="selectedSearchType('ToLocationId', $event)" searhable/>
             </NextFormGroup>
             <NextFormGroup item-key="ToStateId" :error="$v.form.ToStateId">
-              <NextDropdown :disabled="this.assetMovementType && (this.assetMovementType.Code === 'STS' || this.assetMovementType.Code === 'ASR')" v-model="toState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('ToStateId', $event)"/>
+              <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ASR'" v-model="toState" url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('ToStateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
               <NextDropdown :disabled="this.assetMovementType && this.assetMovementType.Code === 'ADF'" v-model="fromLocation" :source="assetLocations" @input="selectedSearchType('FromLocationId', $event)" searhable/>
@@ -233,6 +233,10 @@ export default {
     if (this.assetMovementType) {
       switch (this.assetMovementType.Code) {
         case 'STS':
+          this.insertRules.ToLocationId = {}
+
+          this.insertRequired.ToLocationId = false
+          break
         case 'ASR':
           this.insertRules.ToLocationId = {}
           this.insertRules.ToStateId = {}

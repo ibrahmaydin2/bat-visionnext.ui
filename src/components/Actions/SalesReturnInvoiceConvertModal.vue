@@ -11,7 +11,7 @@
           <b-table
             :items="list"
             :fields="fields"
-            sticky-header
+            sticky-header="700px"
             select-mode="single"
             @row-selected="onRowSelected"
             selectable
@@ -46,10 +46,10 @@
                 id="convert-detail-list"
                 :items="form.InvoiceLines"
                 :fields="detailFields"
-                sticky-header
+                sticky-header="500px"
               >
                 <template #cell(SalesQuantity1)="data">
-                  <NextInput ref="NextTextInput" type="number" v-model="data.item.SalesQuantity1" :input-class="!data.item.Stock || data.item.Stock < 1 || data.item.Stock < data.item.SalesQuantity1 ? 'error' : ''" />
+                  <NextInput ref="NextTextInput" type="number" v-model="data.item.SalesQuantity1" :input-class="!data.item.UsedQuantity || data.item.UsedQuantity < 1 || data.item.UsedQuantity < data.item.SalesQuantity1 ? 'error' : ''" />
                 </template>
               </b-table>
               </div>
@@ -105,6 +105,10 @@ export default {
     openModal: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: 'Invoice'
     }
   },
   data () {
@@ -225,7 +229,7 @@ export default {
       }
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertSearch').then((response) => {
+      this.$api.postByUrl(request, `VisionNextInvoice/api/SalesReturn${this.type}/SalesReturn${this.type}ConvertSearch`).then((response) => {
         this.tableBusy = false
         this.$store.commit('setDisabledLoading', false)
         if (response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
@@ -245,7 +249,8 @@ export default {
         this.selectedItem = items[0]
         this.getWarehouse(this.selectedItem.WarehouseId)
         this.getCode()
-        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertDetail').then((response) => {
+        let api = this.type === 'Invoice' ? 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvertDetail' : 'VisionNextInvoice/api/SalesReturnWaybill/ReceiveInvoiceDetail'
+        this.$api.postByUrl({recordId: this.selectedItem.RecordId}, api).then((response) => {
           this.form = response.InvoiceLiteModel
         })
       }
@@ -264,17 +269,17 @@ export default {
       })
     },
     getCode () {
-      this.$api.postByUrl({}, 'VisionNextInvoice/api/SalesReturnInvoice/GetCode').then(response => {
+      this.$api.postByUrl({}, `VisionNextInvoice/api/SalesReturn${this.type}/GetCode`).then(response => {
         if (response.Model) {
           this.selectedItem.InvoiceNumber = response.Model.Code
         }
       })
     },
     submitModal () {
-      if (this.$refs.NextTextInput.inputClass === 'error') {
+      if (this.$refs.NextTextInput && this.$refs.NextTextInput.inputClass === 'error') {
         this.$toasted.show(this.$t('index.Convert.StockException'), { type: 'error', keepOnHover: true, duration: '3000' })
         return
-      } else if (this.$refs.NextTextInput.length > 0 && this.$refs.NextTextInput.some(a => a.inputClass === 'error')) {
+      } else if (this.$refs.NextTextInput && this.$refs.NextTextInput.length > 0 && this.$refs.NextTextInput.some(a => a.inputClass === 'error')) {
         this.$toasted.show(this.$t('index.Convert.StockException'), { type: 'error', keepOnHover: true, duration: '3000' })
         return
       }
@@ -287,7 +292,8 @@ export default {
       }
       this.showLoading = true
       this.$store.commit('setDisabledLoading', true)
-      this.$api.postByUrl(request, 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvert').then((response) => {
+      let api = this.type === 'Invoice' ? 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvert' : 'VisionNextInvoice/api/SalesReturnWaybill/ReceiveInvoiceConvert'
+      this.$api.postByUrl(request, api).then((response) => {
         this.$store.commit('setDisabledLoading', false)
         this.form = {}
         this.selectedItem = {}

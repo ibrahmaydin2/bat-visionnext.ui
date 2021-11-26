@@ -211,8 +211,7 @@ export default {
       prefixItem: {
         type: 'Dropdown',
         modelProperty: 'RecordId',
-        objectKey: 'EmployeePrefix',
-        labelProperty: 'Code',
+        objectKey: 'Description1',
         source: [],
         label: this.$t('insert.employee.EmployeePrefix'),
         required: true,
@@ -242,15 +241,20 @@ export default {
     getInsertPage () {
       this.getData().then(() => { this.setData() })
       this.getLists()
-      this.$api.postByUrl({RecordId: 1}, 'VisionNextBranch/api/Branch/Get').then(response => {
-        if (response && response.Model) {
-          let eInvoiceSeqs = response.Model.EInvoiceSeqs
-          if (eInvoiceSeqs) {
-            this.prefixItem.source = eInvoiceSeqs.map(item => {
-              item.Label = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
-            })
-            this.prefixItems.push(this.prefixItem)
-          }
+      let request = {
+        andConditionModel: {
+          EInvoiceBranchIds: [this.$store.state.BranchId]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextCommonApi/api/EInvoiceSeq/Search').then(response => {
+        if (response && response.ListModel) {
+          this.prefixItem.source = response.ListModel.BaseModels.map(item => {
+            return {
+              Description1: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType ? item.EInvoiceType.Label : ''}`,
+              RecordId: item.RecordId
+            }
+          })
+          this.prefixItems.push(this.prefixItem)
         }
       })
     },
@@ -287,6 +291,11 @@ export default {
       this.bloodType = rowData.BloodType
       this.priceListCategory = rowData.PriceListCategory
       this.countryCode = rowData.CountryCode
+
+      this.form.EInvoiceSeqs = rowData.EInvoiceSeqs.map(item => {
+        item.Description1 = `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`
+        return item
+      })
     }
   },
   validations () {

@@ -670,7 +670,15 @@
       "Location": "Lokasyon",
       "CustomerName": "Müşteri Adı",
       "LocationName": "Lokasyon Adı",
-      "exportExcel": "Excel'e Aktar"
+      "exportExcel": "Excel'e Aktar",
+      "Frequency": "Frekans",
+      "visitCount": "Ziyaret Sayısı",
+      "weekCount": "Hafta Sayısı",
+      "startDate": "Başlangıç Tarihi",
+      "locationDetail": "Lokasyon Detayı",
+      "BranchId": "Şube",
+      "BranchName": "Şube Adı",
+      "WeeklyFrequency": "Haftalık Frekans"
     },
     "vehicles": {
       "code": "Araç Kodu",
@@ -1129,7 +1137,9 @@
       "Address" : "Adres",
       "CityId" : "İl",
       "DistrictId" : "İlçe",
-      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz."
+      "warehousesAreRequired": "Satın Alma Deposu veya İade Deposu seçiniz.",
+      "doYouConfirm":"Onaylıyor musunuz?",
+      "vehicleConfirmMessage": "Araç Deposu hayır seçtiniz, Araç seçimleri kaldırılacaktır. Devam etmek istiyor musunuz?"
     },
     "cashcard": {
       "Code": "Nakit Ödeme Kodu",
@@ -1633,7 +1643,7 @@
       "itemCode": "Ürün Kodu",
       "unit": "Birim",
       "FromWhStockQuantity": "Depo Stok Miktarı",
-      "ToWhStockQuantity": "Rezerve Stok Miktarı",
+      "ToWhStockQuantity": "Mecvut",
       "AverageSalesQuantity": "Ortalama Satış",
       "LastSalesQuantity": "Son Satış",
       "LastdaySalesQuantity": "Son Iş Günü Satışı",
@@ -1737,7 +1747,12 @@
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
       "Quantity": "İade Miktarı",
-      "Price": "Liste Miktarı"
+      "Price": "Liste Miktarı",
+      "lastSalesQuantity": "Son Satış Miktarı",
+      "lastSalesPrice": "Son Satış Fiyatı",
+      "meanPrice": "Ortalama Satış Fiyatı",
+      "listPrice":"Liste Fiyatı",
+      "usedPrice": "İade Fiyatı"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
@@ -1849,6 +1864,7 @@
       "products": "Ürünler",
       "getLastOrderProducts": "Son Siparişten Ürün Getir",
       "getLastInvoiceProducts": "Son Faturadan Ürün Getir",
+      "IsEmployeeWarehouse": "Personel deposu dışında bir depo seçilmiş, devam etmek istiyor musunuz?",
       "productsWillDeleted": "Mevcutta girilen ürünler varsa silinecektir! Onaylıyor musunuz?",
       "lastProductsRequiredMessage": "Bu işlem için Müşteri, Depo ve Fiyat Listesi bilgilerinin doldurulması gerekmektedir.",
       "noLastOrderProducts": "Son siparişteki ürün bilgisi bulunamadı!",
@@ -1878,7 +1894,29 @@
       "pleaseConfirm": "Lütfen Onaylayın",
       "approveError": "Sadece Öneri durumundaki siparişler onaylanabilir.",
       "cancelledError": "Sadece Öneri durumundaki siparişler iptal edilebilir.",
-      "orderConvertError": "Kapalı durumdaki belge dönüştürülemez."
+      "orderConvertError": "Kapalı durumdaki belge dönüştürülemez.",
+      "DiscountReasonId": "İndirim Nedeni",
+      "DiscountPercent": "İndirim Oranı",
+      "TotalDiscount": "indirim Tutarı",
+      "LoyaltyId": "Sakadat Uygulamaları",
+      "ContractId": "Kontrat",
+      "SalesVolumeId": "Satış Hacmi Kampanyası",
+      "PaymentDate": "Ödeme Tarihi",
+      "PaymentPeriod": "Vade Günü",
+      "amount": "Ödenecek Tutar",
+      "paid": "Ödenen Tutar",
+      "CompanyName": "Firma Adı",
+      "cityId": "İl",
+      "districtId": "İlçe",
+      "taxnumber": "Vergi Numarası",
+      "invoiceLogisticCompanies": "Lojistik Firma Bilgisi",
+      "vehicleOrLogisticRequired": "Araç ya da Lojistik firma bilgisi girilmelidir",
+      "isCanceled": "İptal Edildi",
+      "Printed": "Yazdırıldı",
+      "EDocumentStatusId": "E-Belge Durumu",
+      "CustomerOrderNumber": "Müşteri Sipariş No",
+      "IsDBSOffline": "Online DBS Ödeme",
+      "IsDBS": "DBS Kullanılsın Mı?"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -2391,7 +2429,9 @@
       "noBudgetMasterList": "Uygun bütçe bulunamadı.",
       "monthlyBudgetDetail": "Aylık Toplamda Bütçe Harcama Detayı",
       "transactionDate": "İşlem Tarihi",
-      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz"
+      "timeControl": "Aynı aralıkta tanımlı bütçe olamaz",
+      "budgetSpendingDetail": "Bütçe Harcama Detayı",
+      "movementType": "Hareket Tipi"
     },
     "fieldAnalysis": {
       "title": "Saha Araştırması Tanımları",
@@ -2775,7 +2815,8 @@
       "RmaDate": "İade Tarihi",
       "GrvNumber": "Müşteri İade No",
       "Route": "Rota",
-      "RmaReason": "İade Nedeni"
+      "RmaReason": "İade Nedeni",
+      "updateError" :"Tamamlanan ve Onaylanan iade talepleri güncellenemez!"
     },
     "RmaOrder": {
       "General": "Genel",
@@ -3170,7 +3211,17 @@
       "ReturnQuantity": "İade Edilen Miktar",
       "ReturnQuantity1": "İade Edilen Miktar Birim 1",
       "Details": "Detaylar",
-      "StockException": "Stoktan fazla değer girdiniz."
+      "StockException": "Talep edilen miktardan fazla değer girilemez.",
+      "amount": "Tutar",
+      "description1": "Açıklama",
+      "invoiceNumber": "İrsaliye No",
+      "invoiceNo": "Fatura No",
+      "documentNumber": "Belge No",
+      "printed": "Yazdırıldı",
+      "warehouse": "Depo",
+      "waybillDocumentDate": "İrsaliye Tarihi",
+      "edocumentStatus": "E-Belge Durumu",
+      "representative": "Personel"
     },
     "ItemFormula": {
       "Code": "Kod",

@@ -19,8 +19,8 @@
           <b-col>
             <b-form-input v-model="searchBranch" :placeholder="$t('nav.search')" />
           </b-col>
-          <b-dropdown-item v-for="(branch, i) in filteredUserBranches" :key="'branch' + i">
-            <span @click="changeBranch(branch)">
+          <b-dropdown-item v-for="(branch, i) in filteredUserBranches" :key="'branch' + i" @click="changeBranch(branch)">
+            <span>
               {{branch.Desciption}}
             </span>
           </b-dropdown-item>

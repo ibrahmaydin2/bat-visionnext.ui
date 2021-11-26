@@ -102,10 +102,10 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('get.RMA.Items')">
+        <b-tab :title="$t('get.RMA.Items')" :disabled="!form.CustomerId">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
+              <v-select v-model="rmaLine.Item" :options="items" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -117,8 +117,23 @@
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
               <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
+              <b-form-input type="text" v-model="rmaLine.Item.LastSalesQuantity" readonly/>
+            </NextFormGroup>
+             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.LastPrice" readonly/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
               <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event)" min=1 />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.MeanPrice" readonly/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.listPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.ListPrice" readonly/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')">
+              <b-form-input type="text" v-model="rmaLine.Item.UsedPrice" readonly/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -132,14 +147,24 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesPrice')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.meanPrice')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.listPrice')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.usedPrice')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaLines" :key="i">
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
+                    <b-td>{{w.Item.LastSalesQuantity}}</b-td>
+                    <b-td>{{w.Item.LastPrice}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
+                    <b-td>{{w.Item.MeanPrice}}</b-td>
+                    <b-td>{{w.Item.ListPrice}}</b-td>
+                    <b-td>{{w.Item.UsedPrice}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
                 </b-tbody>
@@ -196,11 +221,7 @@ export default {
         RmaQuantity1: null,
         RmaUnit1Id: null,
         Price: null,
-        Item: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        Item: {}
       },
       rmaLines: [],
       rmaStatusLabel: null,
@@ -310,7 +331,7 @@ export default {
       loading(true)
       this.$store.dispatch('getSearchItems', {
         ...this.query,
-        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
+        api: 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement',
         name: 'items',
         orConditionModels: [
           {
@@ -319,7 +340,8 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null,
+          PriceDate: this.form.PriceDate
         }
       }).then(res => {
         loading(false)
@@ -335,7 +357,7 @@ export default {
         })
         return false
       }
-      let filteredArr = this.rmaLines.filter(i => i.Item.RecordId === this.rmaLine.Item.RecordId)
+      let filteredArr = this.rmaLines.filter(i => i.ItemId === this.rmaLine.Item.ItemId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
@@ -352,7 +374,12 @@ export default {
       this.rmaLines.splice(this.rmaLines.indexOf(item), 1)
     },
     initRmaLine (value) {
-      this.rmaLine.ItemId = value.RecordId
+      this.rmaLine.ItemId = value.ItemId
+      this.rmaLine.Price = value.ListPrice
+      this.rmaLine.LastPrice = value.LastPrice
+      this.rmaLine.MeanPrice = value.MeanPrice
+      this.rmaLine.UsedPrice = value.UsedPrice
+      this.rmaLine.LastSalesQuantity = value.LastSalesQuantity
       this.rmaLine.UnitSetId = value.UnitSetId
       this.rmaLine.UnitId = value.UnitId
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity
@@ -375,11 +402,7 @@ export default {
         RmaQuantity1: null,
         RmaUnit1Id: null,
         Price: null,
-        Item: {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        Item: {}
       }
     },
     selectedItem (e) {
@@ -396,11 +419,7 @@ export default {
           }
         })
       } else {
-        this.rmaLine.Item = {
-          Description1: null,
-          Code: null,
-          RecordId: null
-        }
+        this.rmaLine.Item = {}
       }
     },
     save () {
@@ -413,20 +432,26 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaLines = this.rmaLines
+        this.form.RmaLines = this.rmaLines.map(r => {
+          r.RmaReasonId = this.form.RmaReasonId
+
+          return r
+        })
         this.createData()
-        // update işlemiyse
-        // this.updateData()
       }
     }
   },
   validations () {
-    // Eğer Detay Panelde validasyon yapılacaksa kullanılmalı. Detay Panel yoksa silinebilir.
     return {
       form: this.insertRules,
       rmaLine: {
         Quantity: {
           required
+        },
+        Item: {
+          ItemId: {
+            required
+          }
         }
       }
     }

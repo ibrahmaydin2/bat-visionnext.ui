@@ -25,7 +25,7 @@
             <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :readonly="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -63,6 +63,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :is-customer="true"/>
             </NextFormGroup>
           </b-row>
@@ -223,28 +224,29 @@
           <b-row>
             <NextFormGroup :title="$t('insert.contract.fieldDescription')" :error="$v.contractItems.fieldDescription" :required="true" md="3" lg="3">
               <NextDropdown
+              :disabled="contractItems.IsDefaultValue"
               v-model="contractItems.fieldDescription"
               :source="itemCriterias"
               :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
               @input="getItemValues($event, 'item')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractItems.fieldValue" :required="true" md="3" lg="3">
-              <v-select :disabled="!contractItems.fieldDescription" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
+              <v-select :disabled="!contractItems.fieldDescription || contractItems.IsDefaultValue" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetQuantity')" :error="$v.contractItems.quotaQuantity" :required="contractItems.targetType && contractItems.targetType.Code === 'MKTR'" md="3" lg="3">
               <b-form-input type="number" v-model="contractItems.quotaQuantity" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'TTR'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetType')" :error="$v.contractItems.targetType" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
+              <NextDropdown :disabled="contractItems.IsDefaultValue" v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractItems.unit" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractItems.unit" :source="lookupValues.UNIT" label="Label" />
+              <NextDropdown :disabled="contractItems.IsDefaultValue" v-model="contractItems.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetAmount')" :error="$v.contractItems.quotaAmount" :required="contractItems.targetType && contractItems.targetType.Code === 'TTR'" md="3" lg="3">
-              <b-form-input type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR'"/>
+              <b-form-input type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR' || contractItems.IsDefaultValue"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractItems.currency" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractItems.currency" :source="currencies" />
+              <NextDropdown :disabled="contractItems.IsDefaultValue" v-model="contractItems.currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -274,8 +276,13 @@
                   <b-td>{{c.QuotaAmount}}</b-td>
                   <b-td>{{c.CurrencyName}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractItems', form.ContractItems, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i>
+
+                    <b-button @click="editRow('contractItems', form.ContractItems, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button :disabled="c.IsDefaultValue" @click="removeContractItems(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -287,9 +294,10 @@
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPriceDiscounts.benefitCondition" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractPriceDiscounts.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" @input="selectedBenefitCondition($event)" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.discountAmount')" :error="$v.contractPriceDiscounts.discountAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code !== 'YYM'" md="3" lg="3">
               <b-form-input
-                type="number" v-model="contractPriceDiscounts.discountAmount" />
+                type="number" v-model="contractPriceDiscounts.discountAmount"
+                :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
               <b-form-input
@@ -322,7 +330,7 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
               <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM')" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && (contractPriceDiscounts.benefitCondition.Code === 'YYM' || contractPriceDiscounts.benefitCondition.Code === 'SOZ'))" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
               <b-form-datepicker
@@ -330,7 +338,7 @@
                 || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
               v-model="contractPriceDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractPriceDiscounts.beginDate" :required="true">
               <b-form-datepicker
               v-model="contractPriceDiscounts.beginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
@@ -1512,7 +1520,8 @@ export default {
         UnitName: this.contractItems.unit.Label,
         QuotaAmount: this.contractItems.quotaAmount,
         CurrencyId: this.contractItems.currency.RecordId,
-        CurrencyName: this.contractItems.currency.Description1
+        CurrencyName: this.contractItems.currency.Description1,
+        IsDefaultValue: this.contractItems.IsDefaultValue
       }
       if (this.contractItems.isUpdated) {
         this.form.ContractItems[this.selectedIndex] = item
@@ -1915,6 +1924,7 @@ export default {
         },
         columnName: {
           Code: item.ColumnName,
+          ForeignField: item.ColumnName,
           Label: item.ColumnNameStr
         },
         columnValue: {
@@ -1923,6 +1933,7 @@ export default {
         },
         quotaColumnName: {
           Code: item.QuotaColumnName,
+          ForeignField: item.QuotaColumnName,
           Label: item.QuotaColumnNameStr ? item.QuotaColumnNameStr : this.getQuotaColumnNameLabel(item.QuotaColumnName)
         },
         quotaColumnValue: {
@@ -1988,6 +1999,7 @@ export default {
         },
         fieldDescription: {
           Code: item.ColumnName,
+          ForeignField: item.ColumnName,
           Label: item.ColumnNameStr
         },
         fieldValue: {
@@ -1997,7 +2009,8 @@ export default {
         targetType: {
           DecimalValue: item.QuotaTypeId,
           Label: item.QuotaType ? item.QuotaType.Label : item.QuotaTypeName
-        }
+        },
+        IsDefaultValue: item.IsDefaultValue
       }
     },
     setBenefitCondition (objectKey, decimalValue) {
@@ -2054,6 +2067,22 @@ export default {
         this.contractBenefitTypeSource = value.Code === 'RS'
           ? this.contractBenefitTypes.filter(c => c.Code === 'VAR' || c.Code === 'CI')
           : this.contractBenefitTypes.filter(c => c.Code !== 'CI')
+
+        let request = {
+          TypeId: value.RecordId
+        }
+        this.$api.postByUrl(request, 'VisionNextContractManagement/api/Contract/GetContractItemCriteria').then((response) => {
+          this.form.ContractItems = response && response.length > 0 ? response.map(r => {
+            r.Deleted = 0
+            r.System = 0
+            r.RecordState = 2
+            r.StatusId = 1
+            r.SalesQuantity = 0
+            r.SalesAmount = 0
+            r.IsDefaultValue = true
+            return r
+          }) : []
+        })
       }
     },
     getItemCriterias () {
@@ -2451,10 +2480,17 @@ export default {
       },
       quotaAmount: {
         required
+      },
+      beginDate: {
+        required
       }
     }
     if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'KOT') {
       contractPriceDiscounts.quotaAmount = {}
+    }
+
+    if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code === 'YYM') {
+      contractPriceDiscounts.discountAmount = {}
     }
     return {
       form: this.insertRules,

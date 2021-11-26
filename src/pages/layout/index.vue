@@ -163,7 +163,8 @@
          v-if="showPurchaseInvoiceConvertModal"/>
          <SalesReturnInvoiceConvertModal
          :modalAction="modalAction"
-         v-if="showSalesReturnInvoiceConvertModal" />
+         v-if="showSalesReturnInvoiceConvertModal"
+         :type="salesReturnInvoiceType" />
          <ItemFormulaModal :modalAction="modalAction" v-if="showItemFormulaModal" />
         <PurchaseReturnInvoiceRmaApproveModal v-if="showPurchaseReturnInvoiceRmaApproveModal" :modalAction="modalAction" :type="purchaseReturnRmaType" />
         <EdiOrderApproveModal v-if="showEdiOrderApproveModal" :modalAction="modalAction" :documentDate="additionalValue"/>
@@ -213,11 +214,12 @@ export default {
       showEdiOrderApproveModal: false,
       purchaseReturnRmaType: 'Invoice',
       additionalValue: null,
-      showPriceListDayModal: false
+      showPriceListDayModal: false,
+      salesReturnInvoiceType: 'Invoice'
     }
   },
   mounted () {
-    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order', 'PriceList']
+    let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order', 'PriceList', 'SalesReturnWaybill']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
     }
@@ -276,7 +278,13 @@ export default {
       })
     },
     downloadBtn (r, f) {
-      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name})
+      let orderByColumns = this.$route.name === 'AccountTransaction' ? [
+        {
+          column: 'RecordId',
+          orderByType: 0
+        }
+      ] : null
+      this.$store.dispatch('getDownloadLink', {...this.bom, api: f.Url, formName: this.$route.name, orderByColumns: orderByColumns})
     },
     uploadBtn (route, action) {
       this.modalAction = action
@@ -331,6 +339,14 @@ export default {
         return
       } else if (action.Action === 'SalesReturnInvoiceConvert') {
         this.showSalesReturnInvoiceConvertModal = true
+        this.salesReturnInvoiceType = 'Invoice'
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'salesReturnInvoiceConvertModal')
+        })
+        return
+      } else if (action.Action === 'SalesReturnWaybillConvert') {
+        this.showSalesReturnInvoiceConvertModal = true
+        this.salesReturnInvoiceType = 'Waybill'
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'salesReturnInvoiceConvertModal')
         })

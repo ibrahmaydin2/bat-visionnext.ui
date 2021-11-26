@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <RouteLocationDetail :detail="selectedLocation" :index="selectedLocationIndex" @save="setLocationDetail" />
     <b-col cols="12">
       <header>
         <b-row>
@@ -40,6 +41,8 @@
                 @input="selectedSearchType('RepresentativeId', $event)"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
+                :customOption="true"
+                :is-employee="true"
                 :disabled="insertReadonly.RepresentativeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
@@ -107,8 +110,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="locationItems" :edit-form="editForm"/>
+        <b-tab lazy :title="$t('insert.route.locations')">
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -119,9 +122,13 @@ import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
 import { detailData } from './detailPanelData'
+import RouteLocationDetail from './RouteLocationDetail'
 
 export default {
   mixins: [insertMixin],
+  components: {
+    RouteLocationDetail
+  },
   data () {
     return {
       form: {
@@ -144,13 +151,28 @@ export default {
         RouteDetails: []
       },
       avenues: [],
-      locationItems: detailData.locationItems,
+      locationItems1: detailData.locationItems1,
+      locationItems2: detailData.locationItems2,
       showCustomerLocation: false,
       showCustomerRegion: false,
       showMarketingRegion: false,
       district: null,
       CustomerRegion5Id: null,
-      MarketingRegion5Id: null
+      MarketingRegion5Id: null,
+      detailButtons: [
+        {
+          icon: 'fa fa-search',
+          getDetail: (data, index) => {
+            this.selectedLocation = data
+            this.selectedLocationIndex = index
+            this.$nextTick(() => {
+              this.$bvModal.show('route-location-modal')
+            })
+          }
+        }
+      ],
+      selectedLocation: null,
+      selectedLocationIndex: null
     }
   },
   computed: {
@@ -296,6 +318,9 @@ export default {
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.createData()
       }
+    },
+    setLocationDetail (model, index) {
+      this.form.RouteDetails[index] = model
     }
   },
   validations () {
