@@ -130,6 +130,7 @@
                 v-model="paymentPeriod"
                 url="VisionNextCommonApi/api/FixedTerm/Search"
                 @input="selectPaymentPeriod"
+                :dynamic-request="{orderByColums: {column: 'Period', orderByType: 0}}"
                 v-on:all-source="setPaymentPeriods"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
