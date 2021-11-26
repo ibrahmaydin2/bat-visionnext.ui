@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData ? rowData.Description1 : ''" />
-            <GetFormField v-model="workFlowModel"/>
+            <GetFormField v-if="showWorkFlow" v-model="workFlowModel"/>
           </header>
         </b-col>
       </b-row>
@@ -347,7 +347,8 @@ export default {
       ],
       Location: {},
       customerDiscountsItems: detailData.customerDiscountsItems,
-      routeDetailsItems: detailData.routeDetailsItems
+      routeDetailsItems: detailData.routeDetailsItems,
+      showWorkFlow: false
     }
   },
   mounted () {
@@ -361,7 +362,9 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/Customer', record: this.$route.params.url}).then(() => {
+        this.showWorkFlow = this.rowData.RecordTypeId !== 3 && this.rowData.RecordTypeId !== 4
+      })
     },
     showMap (item) {
       this.Location = item

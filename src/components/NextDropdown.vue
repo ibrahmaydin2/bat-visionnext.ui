@@ -24,7 +24,7 @@
       <div v-else-if="isCustomSlot">
         <slot name="option" :option="option"></slot>
       </div>
-      <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
+      <span v-else>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
     </template>
   </v-select>
 </template>

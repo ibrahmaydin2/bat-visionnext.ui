@@ -234,20 +234,19 @@ export default {
       this.createManualCode()
       this.getLists()
       let request = {
-        RecordId: this.$store.state.BranchId
+        andConditionModel: {
+          EInvoiceBranchIds: [this.$store.state.BranchId]
+        }
       }
-      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Get').then(response => {
-        if (response && response.Model) {
-          let eInvoiceSeqs = response.Model.EInvoiceSeqs
-          if (eInvoiceSeqs) {
-            this.prefixItem.source = eInvoiceSeqs.map(item => {
-              return {
-                Description1: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType.Label}`,
-                RecordId: item.RecordId
-              }
-            })
-            this.prefixItems.push(this.prefixItem)
-          }
+      this.$api.postByUrl(request, 'VisionNextCommonApi/api/EInvoiceSeq/Search').then(response => {
+        if (response && response.ListModel) {
+          this.prefixItem.source = response.ListModel.BaseModels.map(item => {
+            return {
+              Description1: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType ? item.EInvoiceType.Label : ''}`,
+              RecordId: item.RecordId
+            }
+          })
+          this.prefixItems.push(this.prefixItem)
         }
       })
     },
