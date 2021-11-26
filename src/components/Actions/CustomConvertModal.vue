@@ -466,7 +466,9 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
-        this.search()
+        setTimeout(() => {
+          this.search()
+        }, 3000)
       }
     },
     clearProgress () {
