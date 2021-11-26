@@ -338,7 +338,7 @@
                 || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
               v-model="contractPriceDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractPriceDiscounts.beginDate" :required="true">
               <b-form-datepicker
               v-model="contractPriceDiscounts.beginDate" :placeholder="$t('insert.chooseDate')"/>
             </NextFormGroup>
@@ -1924,6 +1924,7 @@ export default {
         },
         columnName: {
           Code: item.ColumnName,
+          ForeignField: item.ColumnName,
           Label: item.ColumnNameStr
         },
         columnValue: {
@@ -1932,6 +1933,7 @@ export default {
         },
         quotaColumnName: {
           Code: item.QuotaColumnName,
+          ForeignField: item.QuotaColumnName,
           Label: item.QuotaColumnNameStr ? item.QuotaColumnNameStr : this.getQuotaColumnNameLabel(item.QuotaColumnName)
         },
         quotaColumnValue: {
@@ -1997,6 +1999,7 @@ export default {
         },
         fieldDescription: {
           Code: item.ColumnName,
+          ForeignField: item.ColumnName,
           Label: item.ColumnNameStr
         },
         fieldValue: {
@@ -2476,6 +2479,9 @@ export default {
         required
       },
       quotaAmount: {
+        required
+      },
+      beginDate: {
         required
       }
     }
