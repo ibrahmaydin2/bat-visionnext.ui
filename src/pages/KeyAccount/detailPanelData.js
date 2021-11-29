@@ -48,7 +48,7 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Genexp2',
       label: i18n.t('insert.customer.Model_Genexp2'),
-      required: true,
+      required: false,
       visible: true,
       isUnique: false,
       id: 5
