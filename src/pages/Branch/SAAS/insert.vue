@@ -130,10 +130,10 @@
               <NextInput v-model="form.BankIban" type="text" :disabled="insertReadonly.BankIban" />
             </NextFormGroup>
             <NextFormGroup item-key="BankInfo" :error="$v.form.BankInfo">
-              <NextDropdown :disabled="bankInfo"  url="VisionNextBank/api/Bank/Search" @input="selectedType('BankInfo', $event)"/>
+              <NextDropdown v-model="form.BankInfo" :disabled="insertReadonly.BankInfo"  url="VisionNextBank/api/Bank/Search" @input="selectedType('BankInfo', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EDocumentUsetypeId" :error="$v.form.EDocumentUsetypeId">
-              <NextDropdown :disabled="insertReadonly.EDocumentUsetypeId"  lookup-key="E_DOCUMENT_USE_TYPE" @input="selectedType('EDocumentUsetypeId', $event)"/>
+              <NextDropdown v-model="form.EDocumentUsetypeId" :disabled="insertReadonly.EDocumentUsetypeId"  lookup-key="E_DOCUMENT_USE_TYPE" @input="selectedType('EDocumentUsetypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
