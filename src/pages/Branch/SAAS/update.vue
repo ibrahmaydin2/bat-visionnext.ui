@@ -133,7 +133,7 @@
               <NextDropdown :v-model="bankInfo" :disabled="insertReadonly.BankInfo"  url="VisionNextBank/api/Bank/Search" @input="selectedType('BankInfo', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="EDocumentUsetypeId" :error="$v.form.EDocumentUsetypeId">
-              <NextDropdown :v-model="eDocumentUsetype" :disabled="EDocumentUsetypeId"  lookup-key="E_DOCUMENT_USE_TYPE" @input="selectedType('EDocumentUsetypeId', $event)"/>
+              <NextDropdown :v-model="eDocumentUsetype" :disabled="insertReadonly.EDocumentUsetypeId"  lookup-key="E_DOCUMENT_USE_TYPE" @input="selectedType('EDocumentUsetypeId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
