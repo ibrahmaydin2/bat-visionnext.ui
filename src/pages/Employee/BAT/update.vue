@@ -207,18 +207,7 @@ export default {
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
-      prefixItems: [],
-      prefixItem: {
-        type: 'Dropdown',
-        modelProperty: 'RecordId',
-        objectKey: 'Description1',
-        source: [],
-        label: this.$t('insert.employee.EmployeePrefix'),
-        required: true,
-        visible: true,
-        isUnique: true,
-        id: 1
-      },
+      prefixItems: detailData.prefixItems,
       group: null,
       category1: null,
       scoreCardClass: null,
@@ -241,21 +230,19 @@ export default {
     getInsertPage () {
       this.getData().then(() => { this.setData() })
       this.getLists()
-      let request = {
-        andConditionModel: {
-          EInvoiceBranchIds: [this.$store.state.BranchId]
-        }
-      }
-      this.$api.postByUrl(request, 'VisionNextCommonApi/api/EInvoiceSeq/Search').then(response => {
-        if (response && response.ListModel) {
-          this.prefixItem.source = response.ListModel.BaseModels.map(item => {
-            return {
-              Description1: `${item.Prefix} ${item.Year ? item.Year : ''} ${item.EInvoiceType ? item.EInvoiceType.Label : ''}`,
-              RecordId: item.RecordId
-            }
-          })
-          this.prefixItems.push(this.prefixItem)
-        }
+      this.prefixItems.push({
+        type: 'Dropdown',
+        customOption: true,
+        isPrefix: true,
+        modelProperty: 'RecordId',
+        objectKey: 'Description1',
+        hideOnTable: true,
+        url: 'VisionNextCommonApi/api/EInvoiceSeq/Search',
+        dynamicAndCondition: {EInvoiceBranchIds: [this.$store.state.BranchId]},
+        label: this.$t('insert.employee.EmployeePrefix'),
+        required: true,
+        visible: true,
+        id: 1
       })
     },
     save () {
