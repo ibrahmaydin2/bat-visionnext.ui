@@ -150,8 +150,8 @@
       <b-tab :title="$t('insert.employee.Model_Team')" @click.prevent="tabValidation()" v-if="form.IsTeam">
         <NextDetailPanel v-model="form.EmployeeTeams" :items="teamItems"></NextDetailPanel>
       </b-tab>
-      <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
-        <NextDetailPanel v-model="form.EInvoiceSeqs" :items="prefixItems"></NextDetailPanel>
+      <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length >= 0">
+        <NextDetailPanel :hideEditButton="true" v-model="form.EInvoiceSeqs" :items="prefixItems()" :before-add="beforeValidLabelAdd"></NextDetailPanel>
       </b-tab>
       </b-tabs>
     </b-col>
@@ -207,7 +207,6 @@ export default {
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
-      prefixItems: detailData.prefixItems,
       group: null,
       category1: null,
       scoreCardClass: null,
@@ -230,20 +229,76 @@ export default {
     getInsertPage () {
       this.getData().then(() => { this.setData() })
       this.getLists()
-      this.prefixItems.push({
-        type: 'Dropdown',
-        customOption: true,
-        isPrefix: true,
-        modelProperty: 'RecordId',
-        objectKey: 'Description1',
-        hideOnTable: true,
-        url: 'VisionNextCommonApi/api/EInvoiceSeq/Search',
-        dynamicAndCondition: {EInvoiceBranchIds: [this.$store.state.BranchId]},
-        label: this.$t('insert.employee.EmployeePrefix'),
-        required: true,
-        visible: true,
-        id: 1
-      })
+    },
+    prefixItems () {
+      return [
+        {
+          type: 'Dropdown',
+          customOption: true,
+          isPrefix: true,
+          modelProperty: 'RecordId',
+          objectKey: 'Description1',
+          hideOnTable: true,
+          url: 'VisionNextCommonApi/api/EInvoiceSeq/Search',
+          dynamicAndCondition: {EInvoiceBranchIds: [this.$store.state.BranchId]},
+          label: this.$t('insert.employee.EmployeePrefix'),
+          required: true,
+          visible: true,
+          id: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'Prefix',
+          label: this.$t('insert.employee.prefix'),
+          required: false,
+          visible: false,
+          parentProperty: 'Prefix',
+          objectKey: 'EmployeePrefix',
+          id: 2,
+          parentId: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'Year',
+          label: this.$t('insert.employee.year'),
+          required: false,
+          visible: false,
+          parentProperty: 'Year',
+          objectKey: 'EmployeePrefix',
+          id: 3,
+          parentId: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Label',
+          label: this.$t('insert.employee.EInvoiceType'),
+          required: false,
+          visible: false,
+          parentProperty: 'EInvoiceType',
+          objectKey: 'EInvoiceType',
+          isUnique: true,
+          id: 4,
+          parentId: 1
+        }
+      ]
+    },
+    beforeValidLabelAdd (item, list) {
+      let filteredList = list.filter(l =>
+        (l.Label <= item.Label && item.Label <= l.Label) ||
+        (item.Label <= l.Label && l.Label <= item.Label))
+
+      if (filteredList && filteredList.length > 0) {
+        this.$toasted.show(this.$t('insert.employee.sameEInvoiceError'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      return true
     },
     save () {
       this.$v.form.$touch()

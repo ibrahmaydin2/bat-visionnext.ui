@@ -800,7 +800,8 @@
       "model": "Model",
       "deviceUseAraeId": "Cihaz Kullanım Alanı",
       "year": "Yıl",
-      "EInvoiceType": "E-Belge Tipi"
+      "EInvoiceType": "E-Belge Tipi",
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
