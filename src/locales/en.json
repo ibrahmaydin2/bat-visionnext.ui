@@ -757,7 +757,8 @@
       "employeeDevices": "Uygun Cihazlar",
       "serialNumber": "Seri No",
       "model": "Model",
-      "deviceUseAraeId": "Cihaz Kullanım Alanı"
+      "deviceUseAraeId": "Cihaz Kullanım Alanı",
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
