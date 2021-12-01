@@ -207,16 +207,19 @@ export default {
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
-      prefixItems: [],
+      prefixItems: detailData.prefixItems,
       prefixItem: {
         type: 'Dropdown',
+        customOption: true,
+        isPrefix: true,
         modelProperty: 'RecordId',
         objectKey: 'EmployeePrefix',
-        source: [],
+        hideOnTable: true,
+        url: 'VisionNextCommonApi/api/EInvoiceSeq/Search',
+        dynamicAndCondition: {EInvoiceBranchIds: [this.$store.state.BranchId]},
         label: this.$t('insert.employee.EmployeePrefix'),
         required: true,
         visible: true,
-        isUnique: true,
         id: 1
       }
     }

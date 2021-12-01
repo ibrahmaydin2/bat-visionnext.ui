@@ -20,12 +20,48 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'RecordId',
       objectKey: 'Description1',
-      source: [],
+      hideOnTable: true,
       label: i18n.t('insert.employee.EmployeePrefix'),
       required: true,
-      visible: true,
-      isUnique: true,
+      visible: false,
       id: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Prefix',
+      label: i18n.t('insert.employee.prefix'),
+      required: false,
+      visible: false,
+      parentProperty: 'Prefix',
+      objectKey: 'EmployeePrefix',
+      id: 2,
+      parentId: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'Year',
+      label: i18n.t('insert.employee.year'),
+      required: false,
+      visible: false,
+      parentProperty: 'Year',
+      objectKey: 'EmployeePrefix',
+      id: 3,
+      parentId: 1
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'Label',
+      label: i18n.t('insert.employee.EInvoiceType'),
+      required: false,
+      visible: false,
+      parentProperty: 'EInvoiceType',
+      objectKey: 'EmployeePrefix',
+      isUnique: true,
+      id: 4,
+      parentId: 1
     }
   ],
   employeeBankItems: [

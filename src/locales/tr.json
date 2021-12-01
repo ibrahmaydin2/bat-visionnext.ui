@@ -798,7 +798,9 @@
       "employeeDevices": "Uygun Cihazlar",
       "serialNumber": "Seri No",
       "model": "Model",
-      "deviceUseAraeId": "Cihaz Kullanım Alanı"
+      "deviceUseAraeId": "Cihaz Kullanım Alanı",
+      "year": "Yıl",
+      "EInvoiceType": "E-Belge Tipi"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
