@@ -798,7 +798,10 @@
       "employeeDevices": "Uygun Cihazlar",
       "serialNumber": "Seri No",
       "model": "Model",
-      "deviceUseAraeId": "Cihaz Kullanım Alanı"
+      "deviceUseAraeId": "Cihaz Kullanım Alanı",
+      "year": "Yıl",
+      "EInvoiceType": "E-Belge Tipi",
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
@@ -1092,7 +1095,10 @@
       "SAASModel_Field4" : "Alan 4",
       "SAASModel_Field5" : "Alan 5",
       "SAASModel_PaymentPeriod": "Satış Ödeme Vadesi",
-      "SAASsapCustomerId": "SAP Müşteri ID"
+      "SAASsapCustomerId": "SAP Müşteri ID",
+      "CustomerAlias": "Alias",
+      "IsDefaultAlias": "Varsayılan Alias",
+      "ECustomerAliases": "Müşteri Alias"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

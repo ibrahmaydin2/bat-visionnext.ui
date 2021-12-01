@@ -203,6 +203,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.ECustomerAliases')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ECustomerAliases" :items="eCustomerAliasesItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -233,6 +242,7 @@ export default {
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
       customerLabelItems: detailData.customerLabelItems,
+      eCustomerAliasesItems: detailData.eCustomerAliasesItems,
       currentPage: 1,
       totalRowCount: 0,
       searchValue: null,

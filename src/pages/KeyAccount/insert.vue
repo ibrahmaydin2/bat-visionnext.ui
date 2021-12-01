@@ -287,6 +287,9 @@
         <b-tab :title="$t('insert.customer.tag')"  @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerLabels" :items="customerLabelItems" />
         </b-tab>
+        <b-tab :title="$t('insert.customer.ECustomerAliases')"  @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.ECustomerAliases" :items="eCustomerAliasesItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -372,7 +375,8 @@ export default {
         RiskLimit: null,
         ReservedLimit: null,
         UpperCustomerId: null,
-        TypeId: null
+        TypeId: null,
+        ECustomerAliases: []
       },
       routeName1: 'Customer',
       routeName2: 'Customer',
@@ -391,6 +395,7 @@ export default {
       paymentTypesItems: detailData.paymentTypesItems,
       customerDiscountsItems: detailData.customerDiscountsItems,
       customerLabelItems: detailData.customerLabelItems,
+      eCustomerAliasesItems: detailData.eCustomerAliasesItems,
       RecordType: null,
       recordType: []
     }

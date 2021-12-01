@@ -23,7 +23,7 @@
     <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields" :is-employee="item.isEmployee" :is-vehicle="item.isVehicle"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :onAfter="item.onAfter" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :onAfter="item.onAfter" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" :is-prefix="item.isPrefix"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'" :filter="item.filter" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
@@ -55,7 +55,7 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable && !hideEditButton" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
             <i class="fa fa-pencil-alt"></i>
           </b-button>
           <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
@@ -140,6 +140,10 @@ export default {
       default: true
     },
     hideOperations: {
+      type: Boolean,
+      default: false
+    },
+    hideEditButton: {
       type: Boolean,
       default: false
     },
