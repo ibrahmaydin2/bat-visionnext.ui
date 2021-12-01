@@ -17,16 +17,6 @@ export const detailData = {
   ],
   prefixItems: [
     {
-      type: 'Dropdown',
-      modelProperty: 'RecordId',
-      objectKey: 'Description1',
-      hideOnTable: true,
-      label: i18n.t('insert.employee.EmployeePrefix'),
-      required: true,
-      visible: false,
-      id: 1
-    },
-    {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'Prefix',
@@ -58,7 +48,7 @@ export const detailData = {
       required: false,
       visible: false,
       parentProperty: 'EInvoiceType',
-      objectKey: 'EmployeePrefix',
+      objectKey: 'EInvoiceType',
       isUnique: true,
       id: 4,
       parentId: 1
