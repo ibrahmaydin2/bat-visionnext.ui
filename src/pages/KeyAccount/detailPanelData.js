@@ -518,5 +518,27 @@ export const detailData = {
       visible: true,
       id: 2
     }
+  ],
+  eCustomerAliasesItems: [
+    {
+      type: 'Text',
+      inputType: 'Text',
+      modelProperty: 'CustomerAlias',
+      objectKey: 'CustomerAlias',
+      label: i18n.t('insert.customer.CustomerAlias'),
+      required: false,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Radio',
+      modelProperty: 'IsDefaultAlias',
+      objectKey: 'IsDefaultAlias',
+      label: i18n.t('insert.customer.IsDefaultAlias'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 2
+    }
   ]
 }

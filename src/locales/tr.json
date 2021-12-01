@@ -1094,7 +1094,10 @@
       "SAASModel_Field4" : "Alan 4",
       "SAASModel_Field5" : "Alan 5",
       "SAASModel_PaymentPeriod": "Satış Ödeme Vadesi",
-      "SAASsapCustomerId": "SAP Müşteri ID"
+      "SAASsapCustomerId": "SAP Müşteri ID",
+      "CustomerAlias": "Alias",
+      "IsDefaultAlias": "Varsayılan Alias",
+      "ECustomerAliases": "Müşteri Alias"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

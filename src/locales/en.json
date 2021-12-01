@@ -1030,7 +1030,10 @@
       "refCustomer": "İlişkili Müşteri",
       "customerAccountTeams": "Müşteri Temsilcisi",
       "EmployeeGroupId": "Personel Grubu",
-      "EmployeeType": "Personel Tipi"
+      "EmployeeType": "Personel Tipi",
+      "CustomerAlias": "Alias",
+      "IsDefaultAlias": "Varsayılan Alias",
+      "ECustomerAliases": "Müşteri Alias"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
