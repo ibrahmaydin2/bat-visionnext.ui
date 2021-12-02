@@ -151,7 +151,7 @@
         <NextDetailPanel v-model="form.EmployeeTeams" :items="teamItems"></NextDetailPanel>
       </b-tab>
       <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length >= 0">
-        <NextDetailPanel :hideEditButton="true" v-model="form.EInvoiceSeqs" :items="prefixItems()" :before-add="beforeValidLabelAdd"></NextDetailPanel>
+        <NextDetailPanel :showEdit="false" v-model="form.EInvoiceSeqs" :items="prefixItems()" :before-add="beforeValidLabelAdd"></NextDetailPanel>
       </b-tab>
       </b-tabs>
     </b-col>
