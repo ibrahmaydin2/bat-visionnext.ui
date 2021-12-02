@@ -151,7 +151,7 @@
         <NextDetailPanel v-model="form.EmployeeTeams" :items="teamItems"></NextDetailPanel>
       </b-tab>
       <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length >= 0">
-        <NextDetailPanel :hideEditButton="true" v-model="form.EInvoiceSeqs" :items="prefixItems()" :before-add="beforeValidLabelAdd"></NextDetailPanel>
+        <NextDetailPanel :showEdit="false" v-model="form.EInvoiceSeqs" :items="prefixItems()" :before-add="beforeValidLabelAdd"></NextDetailPanel>
       </b-tab>
       </b-tabs>
     </b-col>
@@ -282,13 +282,28 @@ export default {
           isUnique: true,
           id: 4,
           parentId: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'EInvoiceType',
+          label: this.$t('insert.employee.EInvoiceType'),
+          required: false,
+          visible: false,
+          hideOnTable: true,
+          parentProperty: 'EInvoiceType',
+          objectKey: 'EInvoiceType',
+          isUnique: true,
+          id: 5,
+          parentId: 1
         }
       ]
     },
     beforeValidLabelAdd (item, list) {
       let filteredList = list.filter(l =>
-        (l.Label <= item.Label && item.Label <= l.Label) ||
-        (item.Label <= l.Label && l.Label <= item.Label))
+        item.EInvoiceType &&
+        (item.EInvoiceType.DecimalValue === l.EInvoiceTypeId || (l.EInvoiceType && item.EInvoiceType.DecimalValue === l.EInvoiceType.DecimalValue)) &&
+        l.RecordState !== 4)
 
       if (filteredList && filteredList.length > 0) {
         this.$toasted.show(this.$t('insert.employee.sameEInvoiceError'), {

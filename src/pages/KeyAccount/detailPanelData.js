@@ -524,18 +524,18 @@ export const detailData = {
       type: 'Text',
       inputType: 'Text',
       modelProperty: 'CustomerAlias',
-      objectKey: 'CustomerAlias',
       label: i18n.t('insert.customer.CustomerAlias'),
       required: false,
       visible: true,
       id: 1
     },
     {
-      type: 'Radio',
+      type: 'Check',
+      inputType: 'Text',
       modelProperty: 'IsDefaultAlias',
       objectKey: 'IsDefaultAlias',
       label: i18n.t('insert.customer.IsDefaultAlias'),
-      required: true,
+      required: false,
       visible: true,
       isUnique: true,
       id: 2

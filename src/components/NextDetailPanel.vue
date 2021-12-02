@@ -55,7 +55,7 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable && !hideEditButton" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
             <i class="fa fa-pencil-alt"></i>
           </b-button>
           <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
@@ -140,10 +140,6 @@ export default {
       default: true
     },
     hideOperations: {
-      type: Boolean,
-      default: false
-    },
-    hideEditButton: {
       type: Boolean,
       default: false
     },
