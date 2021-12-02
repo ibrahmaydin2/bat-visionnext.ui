@@ -459,17 +459,18 @@ export default {
       this.selected = []
       this.$refs.selectableTable.clearSelected()
       this.allSelected = false
-
-      if (this.unSuccessfullCount === 0) {
-        this.$toasted.show(this.$t('index.Convert.successConvert'), {
-          type: 'success',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        setTimeout(() => {
-          this.search()
-        }, 3000)
-      }
+      setTimeout(() => {
+        if (this.unSuccessfullCount === 0) {
+          this.$toasted.show(this.$t('index.Convert.successConvert'), {
+            type: 'success',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          setTimeout(() => {
+            this.search()
+          }, 3000)
+        }
+      }, 3000)
     },
     clearProgress () {
       this.successfullCount = 0
