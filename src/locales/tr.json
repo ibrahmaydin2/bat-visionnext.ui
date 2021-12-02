@@ -2109,7 +2109,8 @@
       "customerNotFound": "Onaylanacak müşteri bulunamadı",
       "updateBudget": "Bütçe Güncelle",
       "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
-      "doYouApprove": "Onaylıyor musunuz?"
+      "doYouApprove": "Onaylıyor musunuz?",
+      "waitingApproval": "Onay Bekliyor"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",

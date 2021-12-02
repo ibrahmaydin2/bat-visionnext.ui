@@ -40,34 +40,32 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.creditBudget.customer')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.creditLimit')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.riskLimit')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.currentCredit')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.currentRisk')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.creditAccountRemainder')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.debitAccountRemainder')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.creditAmount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.amount')}}</span></b-th>
-                    <b-th><span>{{$t('insert.creditBudget.paymentPeriod')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in customerGuarantees" :key="i">
-                      <b-td>{{c.CustomerDesc}}</b-td>
-                      <b-td>{{c.CreditLimit}}</b-td>
-                      <b-td>{{c.RiskLimit}}</b-td>
-                      <b-td>{{c.CurrentCredit}}</b-td>
-                      <b-td>{{c.CurrentRisk}}</b-td>
-                      <b-td>{{c.CreditAccountRemainder}}</b-td>
-                      <b-td>{{c.DebitAccountRemainder}}</b-td>
-                      <b-td>{{c.CreditAmount}}</b-td>
-                      <b-td>{{c.Amount}}</b-td>
-                      <b-td>{{c.PaymentPeriod}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <NextFormGroup :title="$t('insert.creditBudget.customer')" md="4" lg="4">
+                  <NextDropdown
+                    v-model="filterCustomer"
+                    url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
+                    :searchable="true" :custom-option="true"
+                    or-condition-fields="Code,Description1,CommercialTitle"
+                    :dynamic-and-condition="{BranchIds: [rowData.CreditBranchId]}"
+                    :is-customer="true"/>
+                </NextFormGroup>
+                <b-table
+                  :items="customerGuarantees"
+                  :fields="customerGuaranteeFields"
+                  striped
+                  small
+                  sticky-header="300px"
+                  responsive
+                  bordered
+                  :current-page="currentPage"
+                  :per-page="0"
+                ></b-table>
+                <b-pagination
+                  :total-rows="totalRowCount"
+                  v-model="currentPage"
+                  :per-page="100"
+                  aria-controls="customer-guarantees"
+                ></b-pagination>
               </b-card>
             </b-col>
           </b-row>
@@ -89,11 +87,35 @@ export default {
         ClassName: 'CreditBudget',
         PageName: 'pg_CreditBudget'
       },
-      customerGuarantees: []
+      customerGuarantees: [],
+      customerGuaranteeFields: [
+        {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
+        {
+          key: 'CustomerDesc',
+          label: this.$t('insert.creditBudget.customer'),
+          sortable: false,
+          formatter (value, key, obj) {
+            return `${obj.CustomerCode} - ${obj.CustomerDesc}`
+          }
+        },
+        {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
+        {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
+        {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
+        {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
+        {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
+        {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
+        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
+        {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
+        {key: 'PaymentPeriodDesc', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false}
+      ],
+      currentPage: 1,
+      totalRowCount: 0,
+      filterCustomer: null
     }
   },
   mounted () {
     this.getData()
+    this.getCreditBudgetDetails()
   },
   computed: {
     ...mapState(['rowData', 'style'])
@@ -103,11 +125,45 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/CreditBudget', record: this.$route.params.url}).then(() => {
-        this.customerGuarantees = this.rowData.CreditBudgetDetails
-          .filter(c => c.CustomerGuarantees !== null && c.CustomerGuarantees !== undefined)
-          .map(item => item.CustomerGuarantees)
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextBudget/api/CreditBudget', record: this.$route.params.url})
+    },
+    getCreditBudgetDetails () {
+      let request = {
+        andConditionModel: {
+          CreditBudgetIds: [this.$route.params.url],
+          CustomerIds: this.filterCustomer ? [this.filterCustomer.RecordId] : null
+        },
+        page: this.currentPage,
+        OrderByColumns: [
+          {
+            column: 'ApprovestateId',
+            'orderByType': 0
+          }
+        ]
+      }
+      this.$api.postByUrl(request, 'VisionNextBudget/api/CreditBudgetDetail/Search', 100).then((response) => {
+        if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
+          this.customerGuarantees = response.ListModel.BaseModels
+            .filter(c => c.CustomerGuarantees !== null && c.CustomerGuarantees !== undefined)
+            .map(item => {
+              let customerGuarantees = item.CustomerGuarantees
+              customerGuarantees.RecordId = item.RecordId
+              customerGuarantees.CreditBudgetId = item.CreditBudgetId
+              customerGuarantees.PaymentPeriodDesc = item.PaymentPeriodDesc
+              return customerGuarantees
+            })
+        }
       })
+    }
+  },
+  watch: {
+    currentPage () {
+      this.getCreditBudgetDetails()
+    },
+    filterCustomer () {
+      this.currentPage = 1
+      this.getCreditBudgetDetails()
     }
   }
 }
