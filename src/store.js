@@ -1794,8 +1794,8 @@ export const store = new Vuex.Store({
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" radio />
             </NextFormGroup>`
-            if (fieldDefaultValue === null) {
-              dflvl[fieldName] = 1
+            if (fieldDefaultValue === '0') {
+              dflvl[fieldName] = '0'
             } else {
               dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
@@ -1805,8 +1805,8 @@ export const store = new Vuex.Store({
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
             </NextFormGroup>`
-            if (fieldDefaultValue === null) {
-              dflvl[fieldName] = 1
+            if (fieldDefaultValue === '0') {
+              dflvl[fieldName] = '0'
             } else {
               dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
