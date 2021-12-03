@@ -2081,8 +2081,8 @@
       "riskLimit": "Risk Limiti",
       "currentCredit": "Güncel Limit",
       "currentRisk": "Güncel Risk",
-      "creditAccountRemainder": "Borç Bakiyesi",
-      "debitAccountRemainder": "Alacak Bakiyesi",
+      "creditAccountRemainder": "Alacak Bakiyesi",
+      "debitAccountRemainder": "Borç Bakiyesi",
       "creditAmountCentral": "Merkez Teminat Bütçesi",
       "creditAmount": "Teminat Bütçesi",
       "amount": "Teminat Tutarı",
@@ -2111,7 +2111,10 @@
       "updateBudget": "Bütçe Güncelle",
       "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
       "doYouApprove": "Onaylıyor musunuz?",
-      "waitingApproval": "Onay Bekliyor"
+      "waitingApproval": "Onay Bekliyor",
+      "currentRiskValidationMessage": "Kredi limitinin güncel krediden farkı miktarı, teminat tutarından büyük olmamalıdır.",
+      "budgetValidationMessage": "Rezerve bütçe tutarı, bütçe tutarı kulllanılan bütçe miktarından büyük olmamalıdır",
+      "sameRecordException": "Aynı özellikteki kayıt birden fazla girilemez"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",
