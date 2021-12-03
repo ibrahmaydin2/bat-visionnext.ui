@@ -12,6 +12,8 @@
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isVehicle">{{option.Code + ' - ' + (option.VehiclePlateNumber ? option.VehiclePlateNumber : option.Description1) + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isEmployee">{{option.Code + ' - ' + (option.Name && option.Surname ? option.Name + ' ' + option.Surname : option.Description1)}}</span>
+      <span v-else-if="isPrefix">{{option.Prefix + ' - ' + option.Year + ' ' + (option.EInvoiceType ? option.EInvoiceType.Label : '')}}</span>
+
       <!--<div v-else-if="isCustomSlot">
         <slot name="option" :option="option"></slot>
       </div>-->
@@ -21,6 +23,7 @@
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isVehicle">{{option.Code + ' - ' + option.VehiclePlateNumber + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isEmployee">{{option.Code + ' - ' + option.Name + ' ' + option.Surname}}</span>
+      <span v-else-if="isPrefix">{{option.Prefix + ' - ' + option.Year + ' ' + (option.EInvoiceType ? option.EInvoiceType.Label : '')}}</span>
       <div v-else-if="isCustomSlot">
         <slot name="option" :option="option"></slot>
       </div>
@@ -83,6 +86,10 @@ export default {
       default: false
     },
     isVehicle: {
+      type: Boolean,
+      default: false
+    },
+    isPrefix: {
       type: Boolean,
       default: false
     },

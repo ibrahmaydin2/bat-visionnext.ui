@@ -310,7 +310,7 @@
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'"
                 v-model="contractPriceDiscounts.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.budgetAmount')" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.contract.budgetAmount')" :error="$v.contractPriceDiscounts.budgetAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'YYM'" md="3" lg="3">
               <b-form-input
               :disabled="!contractPriceDiscounts.benefitCondition
               || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" type="number" v-model="contractPriceDiscounts.budgetAmount" />
@@ -2481,12 +2481,19 @@ export default {
       quotaAmount: {
         required
       },
+      budgetAmount: {
+        required
+      },
       beginDate: {
         required
       }
     }
     if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'KOT') {
       contractPriceDiscounts.quotaAmount = {}
+    }
+
+    if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code !== 'YYM') {
+      contractPriceDiscounts.budgetAmount = {}
     }
 
     if (this.contractPriceDiscounts.benefitCondition && this.contractPriceDiscounts.benefitCondition.Code === 'YYM') {

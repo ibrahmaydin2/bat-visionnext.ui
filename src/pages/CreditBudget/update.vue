@@ -1,7 +1,7 @@
 <template>
   <b-row class="asc__insertPage">
     <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
-    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" />
+    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" @success="successBulkApprove" />
     <UpdateCreditBudgetModal :modalAction="{Title: $t('insert.creditBudget.updateBudget')}" :modalItem="form" @success="successUpdatedBudget"/>
     <b-modal id="update-budget-confirm-modal">
       <template #modal-title>
@@ -149,19 +149,31 @@
               </b-form-group>
             </b-col>
           </b-row>
+          <hr />
           <b-row>
+            <NextFormGroup :title="$t('insert.creditBudget.customer')" md="4" lg="4">
+              <NextDropdown
+                v-model="filterCustomer"
+                url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :dynamic-and-condition="{BranchIds: [form.CreditBranchId]}"
+                :is-customer="true"
+                :disabled="importedExcel"/>
+            </NextFormGroup>
             <b-table
-              :items="(form.CustomerGuarantees ? form.CustomerGuarantees.filter(c => c.RecordState !== 4) : [])"
+              :items="(CustomerGuarantees ? CustomerGuarantees.filter(c => c.RecordState !== 4) : [])"
               :fields="customerGuaranteeFields"
-              sticky-header
-              select-mode="multi"
+              striped
+              small
+              sticky-header="300px"
               responsive
-              id="customer-guarantees"
+              select-mode="multi"
               selectable
               bordered
-              small
               @row-selected="onRowSelected"
-              :tbody-tr-class="rowClass"
+              :current-page="currentPage"
+              :per-page="0"
             >
               <template #cell(selection)="row">
                 <span>
@@ -177,6 +189,12 @@
                 </b-button>
               </template>
             </b-table>
+            <b-pagination
+              :total-rows="totalRowCount"
+              v-model="currentPage"
+              :per-page="100"
+              aria-controls="customer-guarantees"
+            ></b-pagination>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -200,8 +218,7 @@ export default {
         UsedAmount: 0,
         ReservedAmount: 0,
         LeftAmount: 0,
-        CreditBudgetDetails: [],
-        CustomerGuarantees: []
+        CreditBudgetDetails: []
       },
       routeName1: 'Budget',
       customerGuarantees: {
@@ -223,6 +240,7 @@ export default {
         RecordTypeId: null,
         RiskLimit: null
       },
+      CustomerGuarantees: [],
       selectedCustomer: {},
       selectedBranch: null,
       paymentPeriod: null,
@@ -257,11 +275,18 @@ export default {
       ],
       selectedIndex: 0,
       paymentPeriods: [],
-      selectedCustomerGuarantee: null
+      selectedCustomerGuarantee: null,
+      currentPage: 1,
+      totalRowCount: 0,
+      filterCustomer: null,
+      insertedDetails: [],
+      updatedDetails: [],
+      importedExcel: false
     }
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.getCreditBudgetDetails()
   },
   methods: {
     save () {
@@ -274,7 +299,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.CreditBudgetDetails = this.form.CustomerGuarantees.map((item) => {
+        let list = [...this.insertedDetails, ...this.updatedDetails]
+        this.form.CreditBudgetDetails = list.map((item) => {
+          item.PaymentPeriod = item.paymentPeriodO ? item.paymentPeriodO.Period : null
           let creditBudgetDetail = {
             CreditBudgetId: item.CreditBudgetId,
             ApprovestateId: item.ApproveStateId,
@@ -282,7 +309,7 @@ export default {
             CustomerId: item.CustomerId,
             CustomerCreditHistory: item.CustomerCreditHistoryId,
             PaymentPeriod: item.PaymentPeriod,
-            RecordState: item.RecordId > 0 ? 3 : 2,
+            RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
             StatusId: 1,
             Deleted: 0,
             System: 0,
@@ -299,10 +326,6 @@ export default {
       this.form.LeftAmount = value > 0
         ? (parseFloat(value) - (this.form.UsedAmount + this.form.ReservedAmount))
         : 0
-    },
-    rowClass (item, type) {
-      if (!item || type !== 'row') return
-      if (item.ApproveStateId === 52) return 'tr-disabled'
     },
     selectCustomer (customer) {
       this.customerGuarantees = {}
@@ -326,30 +349,87 @@ export default {
     selectPaymentPeriod (paymentPeriod) {
       this.customerGuarantees.PaymentPeriod = paymentPeriod ? paymentPeriod.RecordId : null
     },
-    addCustomerGuarantee () {
+    async addCustomerGuarantee () {
       this.$v.customerGuarantees.$touch()
       if (this.$v.customerGuarantees.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      if (this.customerGuarantees.Amount < this.customerGuarantees.CurrentRisk) {
+        this.$toasted.show(this.$t('insert.creditBudget.currentRiskValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (this.customerGuarantees.Amount > this.form.LeftAmount) {
+        this.$toasted.show(this.$t('insert.creditBudget.budgetValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (!this.customerGuarantees.isUpdated) {
+        let request = {
+          andConditionModel: {
+            CreditBudgetIds: [this.form.RecordId],
+            CustomerIds: [this.customerGuarantees.CustomerId]
+          },
+          page: this.currentPage,
+          OrderByColumns: [
+            {
+              column: 'ApprovestateId',
+              'orderByType': 0
+            }
+          ]
+        }
+        let filteredList = await this.$api.postByUrl(request, 'VisionNextBudget/api/CreditBudgetDetail/Search')
+
+        if (this.CustomerGuarantees.some(c => c.CustomerId === this.customerGuarantees.CustomerId && c.RecordState !== 4) || (filteredList && filteredList.ListModel && filteredList.ListModel.BaseModels.length > 0)) {
+          this.$toasted.show(this.$t('insert.creditBudget.sameRecordException'), { type: 'error', keepOnHover: true, duration: '3000' })
+          return false
+        }
+      }
+      if (this.customerGuarantees.ApproveStateId === 53 || this.customerGuarantees.ApproveStateId === 52) {
+        this.customerGuarantees.ApproveStateId = 51
+        this.customerGuarantees.AppStatus = this.$t('insert.creditBudget.waitingApproval')
+      }
       this.customerGuarantees.paymentPeriodO = this.paymentPeriod
       if (this.customerGuarantees.isUpdated) {
-        this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
+        this.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
         this.selectedIndex = null
+
+        let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.customerGuarantees.CustomerId)
+        if (filteredList.length > 0) {
+          this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])] = this.customerGuarantees
+        } else {
+          let data = {...this.customerGuarantees}
+          this.updatedDetails.push(data)
+        }
       } else {
         this.customerGuarantees.CreditBudgetId = this.form.RecordId
-        this.form.CustomerGuarantees.push(this.customerGuarantees)
+        this.CustomerGuarantees.unshift(this.customerGuarantees)
+        let filteredList = this.insertedDetails.filter(u => u.CustomerId === this.customerGuarantees.CustomerId)
+        if (filteredList.length > 0) {
+          this.insertedDetails[this.insertedDetails.indexOf(filteredList[0])] = this.customerGuarantees
+        } else {
+          let data = {...this.customerGuarantees}
+          this.insertedDetails.push(data)
+        }
+        this.push(this.customerGuarantees)
       }
       this.customerGuarantees = {}
-      this.selectedCustomer = {}
+      this.selectedCustomer = null
       this.paymentPeriod = null
       this.$v.customerGuarantees.$reset()
     },
     removeCustomerGuarantee () {
       if (this.selectedCustomerGuarantee.RecordId > 0) {
-        this.form.CustomerGuarantees[this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
+        this.CustomerGuarantees[this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
       } else {
-        this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
+        this.CustomerGuarantees.splice(this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
+      }
+      let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.selectedCustomerGuarantee.CustomerId)
+      if (filteredList.length > 0) {
+        this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])].RecordState = 4
+      } else {
+        let data = {...this.selectedCustomerGuarantee}
+        data.RecordState = 4
+        this.updatedDetails.push(data)
       }
       this.selectedCustomerGuarantee = null
       this.$bvModal.hide('credit-budget-confirm-delete-modal')
@@ -357,6 +437,7 @@ export default {
     },
     editCustomerGuarantee () {
       this.customerGuarantees = {...this.selectedCustomerGuarantee}
+      this.selectedIndex = this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)
       this.selectedCustomer = null
       this.paymentPeriod = null
       this.customerGuarantees.isUpdated = true
@@ -375,16 +456,6 @@ export default {
     },
     setData () {
       this.form = this.rowData
-
-      this.form.CustomerGuarantees = this.form.CreditBudgetDetails
-        .filter(c => c.CustomerGuarantees !== null && c.CustomerGuarantees !== undefined)
-        .map(item => {
-          let customerGuarantees = item.CustomerGuarantees
-          customerGuarantees.RecordId = item.RecordId
-          customerGuarantees.CreditBudgetId = item.CreditBudgetId
-          customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
-          return customerGuarantees
-        })
       this.selectedBranch = this.convertLookupValueToSearchValue(this.rowData.CreditBranch)
       this.form.LeftAmount = this.form.BudgetAmount > 0
         ? (parseFloat(this.form.BudgetAmount) - (this.form.UsedAmount + this.form.ReservedAmount))
@@ -399,6 +470,8 @@ export default {
           obj.StatusId = 1
           obj.Deleted = 0
           obj.System = 0
+          obj.ApproveStateId = 51
+          obj.AppStatus = this.$t('insert.creditBudget.waitingApproval')
           if (obj.Period) {
             obj.PaymentPeriod = obj.Period
           }
@@ -406,13 +479,11 @@ export default {
           obj.CreditBudgetId = this.form.RecordId
           list.push(obj)
         })
-        if (this.form.CustomerGuarantees && this.form.CustomerGuarantees.length > 0) {
-          this.form.CustomerGuarantees.map(c => {
-            c.RecordState = 4
-            return c
-          })
-        }
-        this.form.CustomerGuarantees = [...this.form.CustomerGuarantees, ...list]
+        this.CustomerGuarantees = [...list]
+        this.insertedDetails = [...list]
+        this.totalRowCount = list.length
+        this.importedExcel = true
+        this.filterCustomer = null
       }
     },
     onRowSelected (items) {
@@ -433,6 +504,44 @@ export default {
     },
     successUpdatedBudget () {
       this.getData().then(() => { this.setData() })
+    },
+    getCreditBudgetDetails () {
+      let request = {
+        andConditionModel: {
+          CreditBudgetIds: [this.$route.params.url],
+          CustomerIds: this.filterCustomer ? [this.filterCustomer.RecordId] : null
+        },
+        page: this.currentPage,
+        OrderByColumns: [
+          {
+            column: 'ApprovestateId',
+            'orderByType': 0
+          }
+        ]
+      }
+      this.$api.postByUrl(request, 'VisionNextBudget/api/CreditBudgetDetail/Search', 100).then((response) => {
+        if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
+          let responseList = response.ListModel.BaseModels
+            .filter(c => c.CustomerGuarantees !== null && c.CustomerGuarantees !== undefined)
+            .map(item => {
+              let customerGuarantees = item.CustomerGuarantees
+              customerGuarantees.RecordId = item.RecordId
+              customerGuarantees.CreditBudgetId = item.CreditBudgetId
+              customerGuarantees.paymentPeriodO = this.getPaymentPeriodById(item.PaymentPeriod)
+              return customerGuarantees
+            })
+          if (this.currentPage === 1) {
+            this.CustomerGuarantees = [...this.insertedDetails, ...responseList]
+          } else {
+            this.CustomerGuarantees = responseList
+          }
+        }
+      })
+    },
+    successBulkApprove () {
+      this.currentPage = 1
+      this.getCreditBudgetDetails()
     }
   },
   validations () {
@@ -445,6 +554,19 @@ export default {
         Amount: {
           required
         }
+      }
+    }
+  },
+  watch: {
+    currentPage () {
+      if (!this.importedExcel) {
+        this.getCreditBudgetDetails()
+      }
+    },
+    filterCustomer () {
+      if (!this.importedExcel) {
+        this.currentPage = 1
+        this.getCreditBudgetDetails()
       }
     }
   }

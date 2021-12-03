@@ -48,7 +48,7 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Genexp2',
       label: i18n.t('insert.customer.Model_Genexp2'),
-      required: true,
+      required: false,
       visible: true,
       isUnique: false,
       id: 5
@@ -516,6 +516,28 @@ export const detailData = {
       label: i18n.t('insert.customer.labelValueId'),
       required: true,
       visible: true,
+      id: 2
+    }
+  ],
+  eCustomerAliasesItems: [
+    {
+      type: 'Text',
+      inputType: 'Text',
+      modelProperty: 'CustomerAlias',
+      label: i18n.t('insert.customer.CustomerAlias'),
+      required: false,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Check',
+      inputType: 'Text',
+      modelProperty: 'IsDefaultAlias',
+      objectKey: 'IsDefaultAlias',
+      label: i18n.t('insert.customer.IsDefaultAlias'),
+      required: false,
+      visible: true,
+      isUnique: true,
       id: 2
     }
   ]

@@ -757,7 +757,8 @@
       "employeeDevices": "Uygun Cihazlar",
       "serialNumber": "Seri No",
       "model": "Model",
-      "deviceUseAraeId": "Cihaz Kullanım Alanı"
+      "deviceUseAraeId": "Cihaz Kullanım Alanı",
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
@@ -1030,7 +1031,10 @@
       "refCustomer": "İlişkili Müşteri",
       "customerAccountTeams": "Müşteri Temsilcisi",
       "EmployeeGroupId": "Personel Grubu",
-      "EmployeeType": "Personel Tipi"
+      "EmployeeType": "Personel Tipi",
+      "CustomerAlias": "Alias",
+      "IsDefaultAlias": "Varsayılan Alias",
+      "ECustomerAliases": "Müşteri Alias"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -1279,8 +1283,8 @@
       "UseEDispatch": "E-İrsaliye Hizmet Durumu",
       "CurrentCredit": "Güncel Kredi",
       "CurrentRisk": "Güncel Risk",
-      "DebitAccountRemainder": "Borç Bakiyesi",
-      "CreditAccountRemainder": "Alacak Bakiyesi",
+      "creditAccountRemainder": "Alacak Bakiyesi",
+      "debitAccountRemainder": "Borç Bakiyesi",
       "StatementDay": "Statement Günü",
       "SapCustomerId": "SAP Müşteri ID",
       "PaymentPeriod": "Ödeme Vadesi",
@@ -1937,7 +1941,11 @@
       "customerNotFound": "Onaylanacak müşteri bulunamadı",
       "updateBudget": "Bütçe Güncelle",
       "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
-      "doYouApprove": "Onaylıyor musunuz?"
+      "doYouApprove": "Onaylıyor musunuz?",
+      "waitingApproval": "Onay Bekliyor",
+      "currentRiskValidationMessage": "Kredi limitinin güncel krediden farkı miktarı, teminat tutarından büyük olmamalıdır.",
+      "budgetValidationMessage": "Rezerve bütçe tutarı, bütçe tutarı kulllanılan bütçe miktarından büyük olmamalıdır",
+      "sameRecordException": "Aynı özellikteki kayıt birden fazla girilemez"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",

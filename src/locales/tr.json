@@ -798,7 +798,10 @@
       "employeeDevices": "Uygun Cihazlar",
       "serialNumber": "Seri No",
       "model": "Model",
-      "deviceUseAraeId": "Cihaz Kullanım Alanı"
+      "deviceUseAraeId": "Cihaz Kullanım Alanı",
+      "year": "Yıl",
+      "EInvoiceType": "E-Belge Tipi",
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
@@ -1092,7 +1095,10 @@
       "SAASModel_Field4" : "Alan 4",
       "SAASModel_Field5" : "Alan 5",
       "SAASModel_PaymentPeriod": "Satış Ödeme Vadesi",
-      "SAASsapCustomerId": "SAP Müşteri ID"
+      "SAASsapCustomerId": "SAP Müşteri ID",
+      "CustomerAlias": "Alias",
+      "IsDefaultAlias": "Varsayılan Alias",
+      "ECustomerAliases": "Müşteri Alias"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
@@ -2075,8 +2081,8 @@
       "riskLimit": "Risk Limiti",
       "currentCredit": "Güncel Limit",
       "currentRisk": "Güncel Risk",
-      "creditAccountRemainder": "Borç Bakiyesi",
-      "debitAccountRemainder": "Alacak Bakiyesi",
+      "creditAccountRemainder": "Alacak Bakiyesi",
+      "debitAccountRemainder": "Borç Bakiyesi",
       "creditAmountCentral": "Merkez Teminat Bütçesi",
       "creditAmount": "Teminat Bütçesi",
       "amount": "Teminat Tutarı",
@@ -2104,7 +2110,11 @@
       "customerNotFound": "Onaylanacak müşteri bulunamadı",
       "updateBudget": "Bütçe Güncelle",
       "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
-      "doYouApprove": "Onaylıyor musunuz?"
+      "doYouApprove": "Onaylıyor musunuz?",
+      "waitingApproval": "Onay Bekliyor",
+      "currentRiskValidationMessage": "Kredi limitinin güncel krediden farkı miktarı, teminat tutarından büyük olmamalıdır.",
+      "budgetValidationMessage": "Rezerve bütçe tutarı, bütçe tutarı kulllanılan bütçe miktarından büyük olmamalıdır",
+      "sameRecordException": "Aynı özellikteki kayıt birden fazla girilemez"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",

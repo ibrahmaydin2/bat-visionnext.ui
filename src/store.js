@@ -911,12 +911,16 @@ export const store = new Vuex.Store({
             commit('showAlert', { type: 'success', msg: i18n.t('form.createOk') })
             router.push({name: query.return})
           } else {
-            let errs = res.data.Validations.Errors
-            for (let i = 0; i < errs.length; i++) {
-              let errmsg = errs[i].States
-              for (let x = 0; x < errmsg.length; x++) {
-                commit('showAlert', { type: 'validation', msg: errmsg })
+            if (res.data.Validations) {
+              let errs = res.data.Validations.Errors
+              for (let i = 0; i < errs.length; i++) {
+                let errmsg = errs[i].States
+                for (let x = 0; x < errmsg.length; x++) {
+                  commit('showAlert', { type: 'validation', msg: errmsg })
+                }
               }
+            } else {
+              commit('showAlert', { type: 'validation', msg: res.data.Message })
             }
           }
           return res.data
@@ -1794,8 +1798,8 @@ export const store = new Vuex.Store({
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" radio />
             </NextFormGroup>`
-            if (fieldDefaultValue === null) {
-              dflvl[fieldName] = 1
+            if (fieldDefaultValue === '0') {
+              dflvl[fieldName] = '0'
             } else {
               dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
@@ -1805,8 +1809,8 @@ export const store = new Vuex.Store({
             inputCode = `<NextFormGroup item-key="${fieldName}" :error="$v.form.${fieldName}">
               <NextCheckBox v-model="form.${fieldName}" type="number" toggle />
             </NextFormGroup>`
-            if (fieldDefaultValue === null) {
-              dflvl[fieldName] = 1
+            if (fieldDefaultValue === '0') {
+              dflvl[fieldName] = '0'
             } else {
               dflvl[fieldName] = parseInt(fieldDefaultValue)
             }
