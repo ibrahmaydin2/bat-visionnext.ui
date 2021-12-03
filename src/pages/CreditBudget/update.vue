@@ -309,7 +309,7 @@ export default {
             CustomerId: item.CustomerId,
             CustomerCreditHistory: item.CustomerCreditHistoryId,
             PaymentPeriod: item.PaymentPeriod,
-            RecordState: item.RecordId > 0 ? 3 : 2,
+            RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
             StatusId: 1,
             Deleted: 0,
             System: 0,
@@ -392,11 +392,25 @@ export default {
       if (this.customerGuarantees.isUpdated) {
         this.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
         this.selectedIndex = null
-        this.updatedDetails.push(this.customerGuarantees)
+
+        let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.customerGuarantees.CustomerId)
+        if (filteredList.length > 0) {
+          this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])] = this.customerGuarantees
+        } else {
+          let data = {...this.customerGuarantees}
+          this.updatedDetails.push(data)
+        }
       } else {
         this.customerGuarantees.CreditBudgetId = this.form.RecordId
         this.CustomerGuarantees.unshift(this.customerGuarantees)
-        this.insertedDetails.push(this.customerGuarantees)
+        let filteredList = this.insertedDetails.filter(u => u.CustomerId === this.customerGuarantees.CustomerId)
+        if (filteredList.length > 0) {
+          this.insertedDetails[this.insertedDetails.indexOf(filteredList[0])] = this.customerGuarantees
+        } else {
+          let data = {...this.customerGuarantees}
+          this.insertedDetails.push(data)
+        }
+        this.push(this.customerGuarantees)
       }
       this.customerGuarantees = {}
       this.selectedCustomer = null
@@ -409,12 +423,21 @@ export default {
       } else {
         this.CustomerGuarantees.splice(this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
       }
+      let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.selectedCustomerGuarantee.CustomerId)
+      if (filteredList.length > 0) {
+        this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])].RecordState = 4
+      } else {
+        let data = {...this.selectedCustomerGuarantee}
+        data.RecordState = 4
+        this.updatedDetails.push(data)
+      }
       this.selectedCustomerGuarantee = null
       this.$bvModal.hide('credit-budget-confirm-delete-modal')
       this.$forceUpdate()
     },
     editCustomerGuarantee () {
       this.customerGuarantees = {...this.selectedCustomerGuarantee}
+      this.selectedIndex = this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)
       this.selectedCustomer = null
       this.paymentPeriod = null
       this.customerGuarantees.isUpdated = true
