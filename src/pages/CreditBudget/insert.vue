@@ -215,6 +215,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CreditBudgetDetails = this.form.CustomerGuarantees.map((item) => {
+          item.PaymentPeriod = item.paymentPeriodO ? item.paymentPeriodO.Period : null
           let creditBudgetDetail = {
             ApprovestateId: item.ApproveStateId,
             Amount: item.Amount,
@@ -266,6 +267,18 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      if (this.customerGuarantees.Amount < this.customerGuarantees.CurrentRisk) {
+        this.$toasted.show(this.$t('insert.creditBudget.currentRiskValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (this.customerGuarantees.Amount > this.form.LeftAmount) {
+        this.$toasted.show(this.$t('insert.creditBudget.budgetValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (this.form.CustomerGuarantees.some(c => c.CustomerId === this.customerGuarantees.CustomerId)) {
+        this.$toasted.show(this.$t('insert.creditBudget.sameRecordException'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
       this.customerGuarantees.paymentPeriodO = this.paymentPeriod
       if (this.customerGuarantees.isUpdated) {
         this.form.CustomerGuarantees[this.selectedIndex] = this.customerGuarantees
@@ -274,7 +287,7 @@ export default {
         this.form.CustomerGuarantees.push(this.customerGuarantees)
       }
       this.customerGuarantees = {}
-      this.selectedCustomer = {}
+      this.selectedCustomer = null
       this.paymentPeriod = null
       this.$v.customerGuarantees.$reset()
     },

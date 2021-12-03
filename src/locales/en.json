@@ -1283,8 +1283,8 @@
       "UseEDispatch": "E-İrsaliye Hizmet Durumu",
       "CurrentCredit": "Güncel Kredi",
       "CurrentRisk": "Güncel Risk",
-      "DebitAccountRemainder": "Borç Bakiyesi",
-      "CreditAccountRemainder": "Alacak Bakiyesi",
+      "creditAccountRemainder": "Alacak Bakiyesi",
+      "debitAccountRemainder": "Borç Bakiyesi",
       "StatementDay": "Statement Günü",
       "SapCustomerId": "SAP Müşteri ID",
       "PaymentPeriod": "Ödeme Vadesi",
@@ -1942,7 +1942,10 @@
       "updateBudget": "Bütçe Güncelle",
       "updateBudgetConfirmMessage": "Güncelleme yapıldığında kaydetmediğiniz bilgiler kaybolacak, devam etmek istiyor musunuz?",
       "doYouApprove": "Onaylıyor musunuz?",
-      "waitingApproval": "Onay Bekliyor"
+      "waitingApproval": "Onay Bekliyor",
+      "currentRiskValidationMessage": "Kredi limitinin güncel krediden farkı miktarı, teminat tutarından büyük olmamalıdır.",
+      "budgetValidationMessage": "Rezerve bütçe tutarı, bütçe tutarı kulllanılan bütçe miktarından büyük olmamalıdır",
+      "sameRecordException": "Aynı özellikteki kayıt birden fazla girilemez"
     },
     "CycleInstruction": {
       "EmployeesList": "Personel Listesi",
