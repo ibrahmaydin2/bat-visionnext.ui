@@ -1,7 +1,7 @@
 <template>
   <b-row class="asc__insertPage">
     <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
-    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" />
+    <CreditBudgetBulkApproveModal :modalAction="{Title: $t('insert.creditBudget.bulkCustomerApprove')}" :items="selectedItems" @success="successBulkApprove" />
     <UpdateCreditBudgetModal :modalAction="{Title: $t('insert.creditBudget.updateBudget')}" :modalItem="form" @success="successUpdatedBudget"/>
     <b-modal id="update-budget-confirm-modal">
       <template #modal-title>
@@ -172,7 +172,6 @@
               selectable
               bordered
               @row-selected="onRowSelected"
-              :tbody-tr-class="rowClass"
               :current-page="currentPage"
               :per-page="0"
             >
@@ -302,6 +301,7 @@ export default {
       } else {
         let list = [...this.insertedDetails, ...this.updatedDetails]
         this.form.CreditBudgetDetails = list.map((item) => {
+          item.PaymentPeriod = item.paymentPeriodO ? item.paymentPeriodO.Period : null
           let creditBudgetDetail = {
             CreditBudgetId: item.CreditBudgetId,
             ApprovestateId: item.ApproveStateId,
@@ -327,10 +327,6 @@ export default {
         ? (parseFloat(value) - (this.form.UsedAmount + this.form.ReservedAmount))
         : 0
     },
-    rowClass (item, type) {
-      if (!item || type !== 'row') return
-      if (item.ApproveStateId === 52) return 'tr-disabled'
-    },
     selectCustomer (customer) {
       this.customerGuarantees = {}
       if (customer) {
@@ -353,13 +349,42 @@ export default {
     selectPaymentPeriod (paymentPeriod) {
       this.customerGuarantees.PaymentPeriod = paymentPeriod ? paymentPeriod.RecordId : null
     },
-    addCustomerGuarantee () {
+    async addCustomerGuarantee () {
       this.$v.customerGuarantees.$touch()
       if (this.$v.customerGuarantees.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
-      if (this.customerGuarantees.ApproveStateId === 53) {
+      if (this.customerGuarantees.Amount < this.customerGuarantees.CurrentRisk) {
+        this.$toasted.show(this.$t('insert.creditBudget.currentRiskValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (this.customerGuarantees.Amount > this.form.LeftAmount) {
+        this.$toasted.show(this.$t('insert.creditBudget.budgetValidationMessage'), { type: 'error', keepOnHover: true, duration: '3000' })
+        return false
+      }
+      if (!this.customerGuarantees.isUpdated) {
+        let request = {
+          andConditionModel: {
+            CreditBudgetIds: [this.form.RecordId],
+            CustomerIds: [this.customerGuarantees.CustomerId]
+          },
+          page: this.currentPage,
+          OrderByColumns: [
+            {
+              column: 'ApprovestateId',
+              'orderByType': 0
+            }
+          ]
+        }
+        let filteredList = await this.$api.postByUrl(request, 'VisionNextBudget/api/CreditBudgetDetail/Search')
+
+        if (this.CustomerGuarantees.some(c => c.CustomerId === this.customerGuarantees.CustomerId && c.RecordState !== 4) || (filteredList && filteredList.ListModel && filteredList.ListModel.BaseModels.length > 0)) {
+          this.$toasted.show(this.$t('insert.creditBudget.sameRecordException'), { type: 'error', keepOnHover: true, duration: '3000' })
+          return false
+        }
+      }
+      if (this.customerGuarantees.ApproveStateId === 53 || this.customerGuarantees.ApproveStateId === 52) {
         this.customerGuarantees.ApproveStateId = 51
         this.customerGuarantees.AppStatus = this.$t('insert.creditBudget.waitingApproval')
       }
@@ -490,6 +515,10 @@ export default {
           }
         }
       })
+    },
+    successBulkApprove () {
+      this.currentPage = 1
+      this.getCreditBudgetDetails()
     }
   },
   validations () {
