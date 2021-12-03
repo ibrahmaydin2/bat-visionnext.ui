@@ -3,31 +3,54 @@
     <section>
       <div v-if="(!modalOptions || modalOptions.length === 0) && (!items || items.length === 0)">
         <b-row>
-          <NextFormGroup :title="$t('insert.creditBudget.customer')" md="8" lg="8">
-            <b-form-input type="text" :placeholder="$t('insert.creditBudget.searchustomer')" @input="filterList" />
-          </NextFormGroup>
+          <NextFormGroup :title="$t('insert.creditBudget.customer')" md="4" lg="4">
+              <NextDropdown
+                v-model="selectedCustomer"
+                url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
+                :disabled="items && items.length > 0"/>
+            </NextFormGroup>
         </b-row>
         <b-table
-          :items="filteredCustomerGuarantees"
+          :items="customerGuarantees"
           :fields="customerGuaranteeFields"
+          ref="selectableTable"
           select-mode="multi"
+          sticky-header="300px"
           responsive
-          id="customer-guarantees"
           selectable
           bordered
           tbody-tr-class="bg-white"
           @row-selected="onRowSelected"
           show-empty
+          :current-page="currentPage"
+          :per-page="0"
         >
         <template #cell(selection)="row">
           <span>
             <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
           </span>
         </template>
+        <template v-slot:head()="data">
+            <b-link v-if="data.field.key == 'selection'" variant="white" size="sm" @click="selectAll">
+              <span>
+                <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
+              </span>
+            </b-link>
+            <span v-else>{{data.field.label}}</span>
+          </template>
         <template #empty>
           <h6 class="text-center">{{$t('insert.creditBudget.customerNotFound')}}</h6>
         </template>
       </b-table>
+      <b-pagination
+        :total-rows="totalRowCount"
+        v-model="currentPage"
+        :per-page="perPage"
+        aria-controls="customer-guarantees"
+      ></b-pagination>
       </div>
       <b-row v-if="modalOptions.length > 0 || items.length > 0" >
          <NextFormGroup :title="$t('insert.creditBudget.approveState')" md="8" lg="8">
@@ -95,10 +118,8 @@ export default {
       model: {},
       isLoading: false,
       customerGuarantees: [],
-      filteredCustomerGuarantees: [],
       selectedItems: [],
       workFlowId: 0,
-      workFlowOperationId: null,
       modalOptions: [],
       selectedModalOption: null,
       customerGuaranteeFields: [
@@ -113,21 +134,34 @@ export default {
         {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
         {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmount'), sortable: false},
         {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
-        {key: 'PaymentPeriod', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false}
-      ]
+        {key: 'PaymentPeriodDesc', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false}
+      ],
+      currentPage: 1,
+      selectedCustomer: null,
+      totalRowCount: 0,
+      perPage: 100,
+      allSelected: false
     }
   },
   methods: {
     show () {
       this.isLoading = false
       this.customerGuarantees = []
-      this.filteredCustomerGuarantees = []
       this.selectedItems = []
       this.workFlowId = 0
       this.modalOptions = []
       this.selectedModalOption = null
+      this.perPage = 100
+      this.currentPage = 1
+      this.selectedCustomer = null
+      this.totalRowCount = 0
+      this.allSelected = false
+
       if (this.items && this.items.length > 0) {
         this.selectedItems = this.items
+        this.customerGuarantees = this.items
+        this.totalRowCount = this.items.length
+        this.perPage = this.items.length
         this.getWorkFlows()
       } else {
         this.getCustomerGuarantees()
@@ -141,28 +175,35 @@ export default {
     },
     getCustomerGuarantees () {
       if (this.modalItem && this.modalItem.RecordId) {
-        this.$api.postByUrl({RecordId: this.modalItem.RecordId}, 'VisionNextBudget/api/CreditBudget/Get').then((response) => {
-          if (response.Model && response.Model.CreditBudgetDetails && response.Model.CreditBudgetDetails.length > 0) {
-            this.customerGuarantees = response.Model.CreditBudgetDetails.filter(c => c.ApprovestateId === 51).map(item => {
+        let request = {
+          andConditionModel: {
+            CreditBudgetIds: [ this.modalItem.RecordId ],
+            ApprovestateIds: [51],
+            CustomerIds: this.selectedCustomer ? [this.selectedCustomer.RecordId] : null
+          },
+          page: this.currentPage,
+          OrderByColumns: [
+            {
+              column: 'ApprovestateId',
+              orderByType: 0
+            }
+          ]
+        }
+
+        this.$api.postByUrl(request, 'VisionNextBudget/api/CreditBudgetDetail/Search', this.perPage).then((response) => {
+          if (response && response.ListModel) {
+            this.totalRowCount = response.ListModel.TotalRowCount
+            this.customerGuarantees = response.ListModel.BaseModels.map(item => {
               let customerGuarantees = item.CustomerGuarantees
               customerGuarantees.RecordId = item.RecordId
               customerGuarantees.CreditBudgetId = item.CreditBudgetId
+              customerGuarantees.PaymentPeriodDesc = item.PaymentPeriodDesc
               return customerGuarantees
             })
-            this.filteredCustomerGuarantees = this.customerGuarantees
             this.$forceUpdate()
           }
         })
       }
-    },
-    filterList (search) {
-      if (!search || search.length === 0) {
-        this.filteredCustomerGuarantees = this.customerGuarantees
-        return
-      }
-      search = search.toLocaleLowerCase()
-      this.filteredCustomerGuarantees = this.customerGuarantees.filter(c => c.CustomerDesc.toLocaleLowerCase().includes(search) || c.CustomerCode.toLocaleLowerCase().includes(search))
-      this.$forceUpdate()
     },
     approve () {
       if (!this.selectedModalOption) {
@@ -174,10 +215,10 @@ export default {
         return
       }
       let request = {
-        'WorkflowOperationId': this.workFlowOperationId,
-        'InfoText': 'Toplu Bütçe Onay',
-        'WorkflowId': this.workFlowId,
-        'RecordIds': this.selectedItems.map(s => s.CreditBudgetDetailId)
+        WorkflowOperationId: this.selectedModalOption.Id,
+        InfoText: 'Toplu Bütçe Onay',
+        WorkflowId: this.workFlowId,
+        RecordIds: this.selectedItems.map(s => s.CreditBudgetDetailId)
 
       }
       this.isLoading = true
@@ -198,6 +239,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        this.$emit('success')
         this.closeModal()
       })
     },
@@ -244,13 +286,32 @@ export default {
           return
         }
         res.ProcessModel.OperationProcessModel.map(process => {
-          this.workFlowOperationId = process.RecordId
           this.modalOptions.push({
             Id: process.RecordId,
             Label: process.ToValue.Label
           })
         })
       })
+    },
+    selectAll () {
+      if (this.allSelected) {
+        this.$refs.selectableTable.clearSelected()
+      } else {
+        this.$refs.selectableTable.selectAllRows()
+      }
+
+      this.allSelected = !this.allSelected
+    }
+  },
+  watch: {
+    currentPage () {
+      this.allSelected = false
+      this.getCustomerGuarantees()
+    },
+    selectedCustomer () {
+      this.allSelected = false
+      this.currentPage = 1
+      this.getCustomerGuarantees()
     }
   }
 }
