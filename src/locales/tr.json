@@ -493,7 +493,11 @@
     "SaoUpdate": "Sao Tanımı Güncelle",
     "AssetService": "Servis Ana Kayıtları",
     "AssetServiceGet": "Servis Ana Kayıtları Görüntüle",
-    "AssetServiceInsert": "Yeni Servis Ana Kayıtları"
+    "AssetServiceInsert": "Yeni Servis Ana Kayıtları",
+    "NewOrder": "Sipariş",
+    "NewOrderGet": "Sipariş Görüntüle",
+    "NewOrderInsert": "Yeni Sipariş",
+    "NewOrderUpdate": "Sipariş Güncelle"
   },
   "insert": {
     "paymentPeriodrequired": "Varsayılan Ödeme Tipi Açık Hesap Seçiliyken Satış Ödeme Vadesi Girilmesi Zorunludur",
@@ -2547,6 +2551,24 @@
       "search": "Ara",
       "add": "Ekle",
       "validationError": "Girilen veriler kurallara uymamaktadır."
+    },
+    "newOrder": {
+      "products": "Ürünler",
+      "category1": "Kategori 1",
+      "category2": "Kategori 2",
+      "category3": "Kategori 3",
+      "category4": "Kategori 4",
+      "category5": "Kategori 5",
+      "product": "Ürün",
+      "productCode": "Ürün",
+      "quantity": "Adet",
+      "price": "Fiyat",
+      "stock": "Stok",
+      "vatRate":"KDV",
+      "netTotal":"Net Tutar",
+      "vatTotal":"Toplam KDV",
+      "grossTotal": "Toplam Tutar",
+      "itemNotFound": "Aradığınız kategoride ürün bulunamadı!"
     }
   },
   "get": {
