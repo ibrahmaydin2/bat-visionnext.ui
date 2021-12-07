@@ -98,25 +98,25 @@
               <NextInput v-model="form.StockThreshold" type="text" :disabled="insertReadonly.StockThreshold" />
             </NextFormGroup>
             <NextFormGroup item-key="IsOrderAllowed" :error="$v.form.IsOrderAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsOrderAllowed" v-model="IsOrderAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsOrderAllowed" v-model="form.IsOrderAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsSaleAllowed" :error="$v.form.IsSaleAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsSaleAllowed" v-model="IsSaleAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsSaleAllowed" v-model="form.IsSaleAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsBarterAllowed" :error="$v.form.IsBarterAllowed">
-              <NextCheckBox :disabled="insertReadonly.IsBarterAllowed" v-model="IsBarterAllowed" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsBarterAllowed" v-model="form.IsBarterAllowed" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="UseSalesAnalysis" :error="$v.form.UseSalesAnalysis">
-              <NextCheckBox :disabled="insertReadonly.UseSalesAnalysis" v-model="UseSalesAnalysis" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.UseSalesAnalysis" v-model="form.UseSalesAnalysis" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsLaunchItem" :error="$v.form.IsLaunchItem">
-              <NextCheckBox :disabled="insertReadonly.IsLaunchItem" v-model="IsLaunchItem" type="number" toggle />
+              <NextCheckBox :disabled="insertReadonly.IsLaunchItem" v-model="form.IsLaunchItem" type="number" toggle />
             </NextFormGroup>
             <NextFormGroup item-key="IsRMAOff" :error="$v.form.IsRMAOff">
-                <NextCheckBox v-model="IsRMAOff" type="number" toggle :disabled="insertReadonly.IsRMAOff"/>
+                <NextCheckBox v-model="form.IsRMAOff" type="number" toggle :disabled="insertReadonly.IsRMAOff"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsSpGiftItem" :error="$v.form.IsSpGiftItem">
-                <NextCheckBox v-model="IsSpGiftItem" type="number" toggle :disabled="insertReadonly.IsSpGiftItem"/>
+                <NextCheckBox v-model="form.IsSpGiftItem" type="number" toggle :disabled="insertReadonly.IsSpGiftItem"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -265,6 +265,7 @@ export default {
         IsBarterAllowed: null,
         UseSalesAnalysis: null,
         IsLaunchItem: null,
+        IsSpGiftItem: null,
         Vat: null,
         MaxDiscountRate: null,
         FinanceCode: null,
@@ -300,13 +301,6 @@ export default {
       itemCustomerItems: detailData.itemCustomerItems,
       itemBarcodeItems: detailData.itemBarcodeItems,
       itemVatsItems: detailData.itemVatsItems,
-      IsOrderAllowed: null,
-      IsSaleAllowed: null,
-      IsBarterAllowed: null,
-      UseSalesAnalysis: null,
-      IsLaunchItem: null,
-      IsRMAOff: null,
-      IsSpGiftItem: null,
       UnitsData: []
     }
   },

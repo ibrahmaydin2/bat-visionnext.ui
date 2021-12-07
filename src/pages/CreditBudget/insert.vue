@@ -220,7 +220,7 @@ export default {
             ApprovestateId: item.ApproveStateId,
             Amount: item.Amount,
             CustomerId: item.CustomerId,
-            CustomerCreditHistory: item.CustomerCreditHistoryId,
+            CustomerCreditHistoryId: item.CustomerCreditHistoryId,
             PaymentPeriod: item.PaymentPeriod,
             RecordState: 2,
             StatusId: 1,

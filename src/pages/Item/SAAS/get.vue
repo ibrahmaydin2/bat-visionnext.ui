@@ -52,7 +52,7 @@
               <div v-html="getFormatDataByType(rowData.IsOrderAllowed, 'check', 'get.Item.IsOrderAllowed')"></div>
               <div v-html="getFormatDataByType(rowData.IsSaleAllowed, 'check', 'get.Item.IsSaleAllowed')"></div>
               <div v-html="getFormatDataByType(rowData.IsRMAOff, 'check', 'get.Item.IsRMAOff')"></div>
-              <div v-html="getFormatDataByType(rowData.IsSPGiftItem, 'check', 'get.Item.IsSPGiftItem')"></div>
+              <div v-html="getFormatDataByType(rowData.IsSpGiftItem, 'check', 'get.Item.IsSPGiftItem')"></div>
             </b-card>
           </b-row>
         </b-tab>

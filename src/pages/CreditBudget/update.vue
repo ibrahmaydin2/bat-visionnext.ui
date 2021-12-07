@@ -307,7 +307,7 @@ export default {
             ApprovestateId: item.ApproveStateId,
             Amount: item.Amount,
             CustomerId: item.CustomerId,
-            CustomerCreditHistory: item.CustomerCreditHistoryId,
+            CustomerCreditHistoryId: item.CustomerCreditHistoryId,
             PaymentPeriod: item.PaymentPeriod,
             RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
             StatusId: 1,
@@ -418,18 +418,33 @@ export default {
       this.$v.customerGuarantees.$reset()
     },
     removeCustomerGuarantee () {
-      if (this.selectedCustomerGuarantee.RecordId > 0) {
-        this.CustomerGuarantees[this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
+      if (this.selectedCustomerGuarantee.ApproveStateId !== 51 && this.selectedCustomerGuarantee.ApproveStateId !== 53) {
+        this.$toasted.show(this.$t('insert.aprroveNotDeleted'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return
+      } if (this.selectedCustomerGuarantee.ApproveStateId === 51 || this.selectedCustomerGuarantee.CreditAmountCentral > 0) {
+        this.$toasted.show(this.$t('insert.notDeleted'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
-        this.CustomerGuarantees.splice(this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
-      }
-      let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.selectedCustomerGuarantee.CustomerId)
-      if (filteredList.length > 0) {
-        this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])].RecordState = 4
-      } else {
-        let data = {...this.selectedCustomerGuarantee}
-        data.RecordState = 4
-        this.updatedDetails.push(data)
+        if (this.selectedCustomerGuarantee.RecordId > 0) {
+          this.CustomerGuarantees[this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
+        } else {
+          this.CustomerGuarantees.splice(this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee), 1)
+        }
+        let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.selectedCustomerGuarantee.CustomerId)
+        if (filteredList.length > 0) {
+          this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])].RecordState = 4
+        } else {
+          let data = {...this.selectedCustomerGuarantee}
+          data.RecordState = 4
+          this.updatedDetails.push(data)
+        }
       }
       this.selectedCustomerGuarantee = null
       this.$bvModal.hide('credit-budget-confirm-delete-modal')
