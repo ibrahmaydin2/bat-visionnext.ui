@@ -610,6 +610,8 @@ import AssetServiceIndex from '@/pages/AssetService/'
 import AssetServiceGet from '@/pages/AssetService/get'
 import AssetServiceInsert from '@/pages/AssetService/insert'
 
+import NewOrderIndex from '@/pages/NewOrder'
+
 Vue.use(Router)
 
 // TenantBase Pages
@@ -747,7 +749,8 @@ const listIndex = [
   {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert', keepAlive: true }},
   {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert', keepAlive: true }},
   {path: '/Sao', name: 'Sao', component: SaoIndex, meta: { title: i18n.t('router.Sao'), createLink: 'SaoInsert', keepAlive: true }},
-  {path: '/AssetService', name: 'AssetService', component: AssetServiceIndex, meta: { title: i18n.t('router.AssetService'), createLink: 'AssetServiceInsert', keepAlive: true }}
+  {path: '/AssetService', name: 'AssetService', component: AssetServiceIndex, meta: { title: i18n.t('router.AssetService'), createLink: 'AssetServiceInsert', keepAlive: true }},
+  {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }}
 
 ]
 
@@ -877,7 +880,8 @@ const listGet = [
   { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } },
   { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } },
   { path: '/Sao/:url', name: 'SaoGet', component: SaoGet, meta: { title: i18n.t('router.SaoGet'), baseLink: 'Sao' } },
-  { path: '/AssetService/:url', name: 'AssetServiceGet', component: AssetServiceGet, meta: { title: i18n.t('router.AssetServiceGet'), baseLink: 'AssetService' } }
+  { path: '/AssetService/:url', name: 'AssetServiceGet', component: AssetServiceGet, meta: { title: i18n.t('router.AssetServiceGet'), baseLink: 'AssetService' } },
+  { path: '/NewOrder/:url', name: 'NewOrderGet', component: getTenantPage('NewOrder', 'get'), meta: { title: i18n.t('router.NewOrderGet'), baseLink: 'NewOrder' } }
 ]
 
 const listUpdate = [
@@ -998,7 +1002,8 @@ const listUpdate = [
   { path: '/Update/BudgetMaster/:url', name: 'BudgetMasterUpdate', component: getTenantPage('BudgetMaster', 'update'), meta: { title: i18n.t('router.BudgetMasterUpdate'), baseLink: 'BudgetMaster' } },
   { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
   { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
-  { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } }
+  { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } },
+  { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } }
 ]
 
 const listInsert = [
@@ -1120,7 +1125,8 @@ const listInsert = [
   { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } },
   { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
   { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } },
-  { path: '/Insert/AssetService', name: 'AssetServiceInsert', component: AssetServiceInsert, meta: { title: i18n.t('router.AssetServiceInsert'), baseLink: 'AssetService' } }
+  { path: '/Insert/AssetService', name: 'AssetServiceInsert', component: AssetServiceInsert, meta: { title: i18n.t('router.AssetServiceInsert'), baseLink: 'AssetService' } },
+  { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } }
 ]
 
 const routes = [
