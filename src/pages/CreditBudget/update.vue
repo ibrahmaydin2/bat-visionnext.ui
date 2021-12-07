@@ -424,6 +424,7 @@ export default {
           keepOnHover: true,
           duration: '3000'
         })
+        return
       } if (this.selectedCustomerGuarantee.ApproveStateId === 51 || this.selectedCustomerGuarantee.CreditAmountCentral > 0) {
         this.$toasted.show(this.$t('insert.notDeleted'), {
           type: 'error',
