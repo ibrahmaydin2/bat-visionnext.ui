@@ -445,13 +445,6 @@ export default {
           this.updatedDetails.push(data)
         }
       }
-      // if (this.customerGuarantees.ApproveStateId === 51) {
-      //   this.$toasted.show(this.$t('insert.aprroveNotDeleted'), {
-      //     type: 'error',
-      //     keepOnHover: true,
-      //     duration: '3000'
-      //   })
-      // }
       this.selectedCustomerGuarantee = null
       this.$bvModal.hide('credit-budget-confirm-delete-modal')
       this.$forceUpdate()
