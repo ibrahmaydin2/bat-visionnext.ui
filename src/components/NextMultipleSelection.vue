@@ -189,6 +189,10 @@ export default {
       type: Array,
       default: () => { return [] },
       description: 'Grid kolonlarının hangilerinin tıklanabildiği bilgisi'
+    },
+    filterFunc: {
+      type: Function,
+      description: 'Seçilen listeleri filtrelemek için kullanılır'
     }
   },
   model: {
@@ -448,7 +452,19 @@ export default {
         s.StatusId = 1
         return s
       })
-      this.$emit('valuechange', this.selectedList)
+      let filteredList = [...this.selectedList]
+      if (this.filterFunc) {
+        filteredList = this.selectedList.filter(s => this.filterFunc(s))
+        if (filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.multipleGrid.filteredFuncError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+      }
+      this.$emit('valuechange', filteredList)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {
