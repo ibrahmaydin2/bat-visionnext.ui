@@ -344,7 +344,7 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
               <b-form-input
-              :disabled="!contractPriceDiscounts.benefitCondition" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
+                :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
               <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
@@ -1563,7 +1563,7 @@ export default {
         QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
         StartDate: this.contractPriceDiscounts.beginDate,
-        BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
+        BranchSharePercent: this.contractPriceDiscounts.branchSharePercent ? this.this.contractPriceDiscounts.branchSharePercent : 0,
         ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
         CurrencyId: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.RecordId : null,
@@ -1575,7 +1575,9 @@ export default {
       } else {
         this.form.ContractPriceDiscounts.push(item)
       }
-      this.contractPriceDiscounts = {}
+      this.contractPriceDiscounts = {
+        branchSharePercent: 0
+      }
       this.$v.contractPriceDiscounts.$reset()
     },
     removeContractPriceDiscounts (item) {
@@ -2108,7 +2110,8 @@ export default {
     },
     selectedBenefitCondition (value) {
       this.contractPriceDiscounts = {
-        benefitCondition: value
+        benefitCondition: value,
+        branchSharePercent: 0
       }
     },
     getQuotaColumnNameLabel (code) {
