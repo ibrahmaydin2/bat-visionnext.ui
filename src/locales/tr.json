@@ -2568,7 +2568,22 @@
       "netTotal":"Net Tutar",
       "vatTotal":"Toplam KDV",
       "grossTotal": "Toplam Tutar",
-      "itemNotFound": "Aradığınız kategoride ürün bulunamadı!"
+      "itemNotFound": "Aradığınız kategoride ürün bulunamadı!",
+      "newCustomer": "Yeni Müşteri",
+      "addNewCustomer": "Yeni Müşteri Ekle",
+      "add": "Ekle",
+      "customerName":"Müşteri Adı",
+      "customerSurname": "Müşteri Soyadı",
+      "tcknOrVkn": "TCKN/VKN",
+      "phoneNumber": "Telefon Numarası",
+      "address": "Adres",
+      "commercialTitle": "Müşteri Ticari Ünvanı",
+      "taxCustomerTypeId": "Müşteri Vergi Tipi",
+      "taxOffice": "Vergi Dairesi",
+      "customerEmail": "E-Posta",
+      "city": "İl",
+      "district": "İlçe",
+      "postCode": "Posta Kodu"
     }
   },
   "get": {
