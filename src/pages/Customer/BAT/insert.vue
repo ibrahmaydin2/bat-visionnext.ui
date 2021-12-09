@@ -73,8 +73,20 @@
             <NextFormGroup item-key="CustomerInvoiceTypeId" :error="$v.form.CustomerInvoiceTypeId">
               <NextDropdown :disabled="insertReadonly.CustomerInvoiceTypeId"  lookup-key="CUSTOMER_INVOICE_TYPE" @input="selectedType('CustomerInvoiceTypeId', $event)"/>
             </NextFormGroup>
-             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.customerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.customerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+             <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
+              <NextDropdown v-model="customerRegion5" :disabled="insertReadonly.CustomerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion4Id" :error="$v.form.CustomerRegion4Id">
+              <NextDropdown v-model="customerRegion4" :disabled="insertReadonly.CustomerRegion4Id" lookup-key="CUSTOMER_REGION_4" @input="selectedType('CustomerRegion4Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
+              <NextDropdown v-model="customerRegion3" :disabled="insertReadonly.CustomerRegion3Id" lookup-key="CUSTOMER_REGION_3" @input="selectedType('CustomerRegion3Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion2Id" :error="$v.form.CustomerRegion2Id">
+              <NextDropdown v-model="customerRegion2" :disabled="insertReadonly.CustomerRegion2Id" lookup-key="CUSTOMER_REGION_2" @input="selectedType('CustomerRegion2Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion1Id" :error="$v.form.CustomerRegion1Id">
+              <NextDropdown v-model="customerRegion1" :disabled="insertReadonly.CustomerRegion1Id" lookup-key="CUSTOMER_REGION_1" @input="selectedType('CustomerRegion1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
               <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
@@ -394,6 +406,10 @@ export default {
         SignNameId: null,
         IsOpportunitySpot: null,
         CustomerRegion5Id: null,
+        CustomerRegion4Id: null,
+        CustomerRegion3Id: null,
+        CustomerRegion2Id: null,
+        CustomerRegion1Id: null,
         MarketingRegion5Id: null,
         Code: null,
         CardTypeId: null,
@@ -495,7 +511,12 @@ export default {
       selectedTradeFocus: null,
       customerType: null,
       paymentTypes: [],
-      allPaymentTypes: []
+      allPaymentTypes: [],
+      customerRegion5: null,
+      customerRegion4: null,
+      customerRegion3: null,
+      customerRegion2: null,
+      customerRegion1: null
     }
   },
   computed: {
@@ -605,6 +626,28 @@ export default {
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
+      }
+    },
+    customerRegion5 (value) {
+      if (value) {
+        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue)
+        this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
+        this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
+        this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
+        this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
+        this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
+        this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
+        this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+      } else {
+        this.customerRegion1 = null
+        this.customerRegion2 = null
+        this.customerRegion3 = null
+        this.customerRegion4 = null
+        this.form.CustomerRegion1Id = null
+        this.form.CustomerRegion2Id = null
+        this.form.CustomerRegion3Id = null
+        this.form.CustomerRegion4Id = null
+        this.form.CustomerRegion5Id = null
       }
     },
     customerType (value) {
