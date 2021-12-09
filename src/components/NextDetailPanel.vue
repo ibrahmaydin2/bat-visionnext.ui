@@ -347,7 +347,7 @@ export default {
         let data = this.selectedItem
         this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
         const index = this.values.indexOf(data)
-        if (data.CreditDescriptionId === 94) {
+        if (data.CreditDescriptionId === 100) {
           this.$toasted.show(this.$t('insert.CustomerCreditNotDeleted'), {
             type: 'error',
             keepOnHover: true,
@@ -373,7 +373,7 @@ export default {
       if (this.errorOperations) {
         let data = this.selectedItem
         this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        if (data.CreditDescriptionId === 94) {
+        if (data.CreditDescriptionId === 100) {
           this.$toasted.show(this.$t('insert.CustomerCreditNotEdited'), {
             type: 'error',
             keepOnHover: true,
