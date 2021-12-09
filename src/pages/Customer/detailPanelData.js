@@ -223,9 +223,9 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'text',
-      modelProperty: 'AddressDetail',
-      label: i18n.t('insert.customer.Model_AddressDescription'),
-      required: false,
+      modelProperty: 'AddressDescription',
+      label: i18n.t('insert.customer.Model_AddressDetail'),
+      required: true,
       visible: true,
       isUnique: false,
       id: 3
@@ -263,9 +263,9 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'text',
-      modelProperty: 'AddressDescription',
-      label: i18n.t('insert.customer.Model_AddressDetail'),
-      required: true,
+      modelProperty: 'AddressDetail',
+      label: i18n.t('insert.customer.Model_AddressDescription'),
+      required: false,
       visible: true,
       isUnique: false,
       id: 7

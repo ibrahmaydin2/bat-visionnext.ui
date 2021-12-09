@@ -74,7 +74,19 @@
               <NextDropdown :disabled="insertReadonly.CustomerInvoiceTypeId" v-model="customerInvoiceType"  lookup-key="CUSTOMER_INVOICE_TYPE" @input="selectedType('CustomerInvoiceTypeId', $event)"/>
             </NextFormGroup>
              <NextFormGroup item-key="CustomerRegion5Id" :error="$v.form.CustomerRegion5Id">
-              <NextDropdown :disabled="insertReadonly.CustomerRegion5Id" v-model="customerRegion5" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+              <NextDropdown v-model="customerRegion5" :disabled="insertReadonly.CustomerRegion5Id" lookup-key="CUSTOMER_REGION_5" @input="selectedType('CustomerRegion5Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion4Id" :error="$v.form.CustomerRegion4Id">
+              <NextDropdown v-model="customerRegion4" :disabled="insertReadonly.CustomerRegion4Id" lookup-key="CUSTOMER_REGION_4" @input="selectedType('CustomerRegion4Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion3Id" :error="$v.form.CustomerRegion3Id">
+              <NextDropdown v-model="customerRegion3" :disabled="insertReadonly.CustomerRegion3Id" lookup-key="CUSTOMER_REGION_3" @input="selectedType('CustomerRegion3Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion2Id" :error="$v.form.CustomerRegion2Id">
+              <NextDropdown v-model="customerRegion2" :disabled="insertReadonly.CustomerRegion2Id" lookup-key="CUSTOMER_REGION_2" @input="selectedType('CustomerRegion2Id', $event)"/>
+            </NextFormGroup>
+             <NextFormGroup item-key="CustomerRegion1Id" :error="$v.form.CustomerRegion1Id">
+              <NextDropdown v-model="customerRegion1" :disabled="insertReadonly.CustomerRegion1Id" lookup-key="CUSTOMER_REGION_1" @input="selectedType('CustomerRegion1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="MarketingRegion5Id" :error="$v.form.MarketingRegion5Id">
               <NextDropdown :disabled="insertReadonly.MarketingRegion5Id" v-model="marketingRegion5" lookup-key="MARKETING_REGION_5" @input="selectedType('MarketingRegion5Id', $event)"/>
@@ -384,7 +396,11 @@ export default {
         Category3: null,
         DefaultPaymentType: {},
         PriceListCategory: null,
-        CustomerRegion5: null,
+        CustomerRegion5Id: null,
+        CustomerRegion4Id: null,
+        CustomerRegion3Id: null,
+        CustomerRegion2Id: null,
+        CustomerRegion1Id: null,
         DiscountGroup1: null,
         DiscountGroup2: null,
         DiscountGroup3: null,
@@ -429,7 +445,6 @@ export default {
       blockReason: {},
       type: {},
       customerInvoiceType: {},
-      customerRegion5: {},
       marketingRegion5: {},
       customerCategory3: {},
       customerCategory2: {},
@@ -470,7 +485,12 @@ export default {
       paymentTypes: [],
       Location: {},
       allPaymentTypes: [],
-      statusReason: null
+      statusReason: null,
+      customerRegion5: {},
+      customerRegion4: {},
+      customerRegion3: {},
+      customerRegion2: {},
+      customerRegion1: {}
     }
   },
   computed: {
@@ -553,7 +573,8 @@ export default {
             this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
           })
         } else {
-          this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+          // this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
+          this.updateData()
         }
       }
     },
@@ -651,10 +672,14 @@ export default {
       this.category2 = rowData.Category2
       this.category1 = rowData.Category1
       this.customerRegion5 = rowData.CustomerRegion5
+      this.customerRegion4 = rowData.CustomerRegion4
+      this.customerRegion3 = rowData.CustomerRegion3
+      this.customerRegion2 = rowData.CustomerRegion2
+      this.customerRegion1 = rowData.CustomerRegion1
       this.marketingRegion5 = rowData.MarketingRegion5
-      this.customerCategory3 = rowData.CustomerCategory3
-      this.customerCategory2 = rowData.CustomerCategory2
-      this.customerCategory1 = rowData.CustomerCategory1
+      this.customerCategory3 = rowData.Category3
+      this.customerCategory2 = rowData.Category2
+      this.customerCategory1 = rowData.Category1
       this.selectedCustomerGroup = rowData.SelectedCustomerGroup
       this.selectedCustomerClass = rowData.SelectedCustomerClass
       this.salesType = rowData.SalesType
@@ -714,25 +739,44 @@ export default {
         this.locationCityLabel = value.DistrictName
       }
     },
-    Category3 (value) {
+    customerCategory3 (value) {
       if (value) {
-        if (!value.UpperValue) {
-          return
-        }
-        this.Category2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
-        this.form.Category2Id = this.Category2.DecimalValue
-        this.Category1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.Category2.UpperValue)
-        this.form.Category1Id = this.Category1.DecimalValue
+        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
+        this.form.Category2Id = this.customerCategory2.DecimalValue
+        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
+        this.form.Category1Id = this.customerCategory1.DecimalValue
         this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x => x.Value === value.UpperValue)
         this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
       } else {
         this.discountGroup3 = null
-        this.Category1 = null
-        this.Category2 = null
+        this.customerCategory1 = null
+        this.customerCategory2 = null
         this.form.DiscountGroup3Id = null
         this.form.Category1Id = null
         this.form.Category2Id = null
         this.form.Category3Id = null
+      }
+    },
+    customerRegion5 (value) {
+      if (value) {
+        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue)
+        this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
+        this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
+        this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
+        this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
+        this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
+        this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
+        this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+      } else {
+        this.customerRegion1 = null
+        this.customerRegion2 = null
+        this.customerRegion3 = null
+        this.customerRegion4 = null
+        this.form.CustomerRegion1Id = null
+        this.form.CustomerRegion2Id = null
+        this.form.CustomerRegion3Id = null
+        this.form.CustomerRegion4Id = null
+        this.form.CustomerRegion5Id = null
       }
     },
     type (value) {
