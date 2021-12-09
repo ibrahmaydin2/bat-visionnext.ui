@@ -146,6 +146,7 @@
                     MovementType: [form.MovementTypeId],
                     FromWarehouseStatus: form.FromStatusId ? [form.FromStatusId] : null,
                     ToWarehouseStatus: form.ToStatusId ? [form.ToStatusId] : null}"
+                  :filter-func="(row) => row.Quantity > 0"
                 />
             </b-col>
           </b-row>
