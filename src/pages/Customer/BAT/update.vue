@@ -313,7 +313,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerCreditHistories" :items="customerCreditHistoriesItemsBAT" />
+          <NextDetailPanel v-model="form.CustomerCreditHistories" :errorOperations="true" :items="customerCreditHistoriesItemsBAT" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerPaymentTypes" :items="paymentTypesItems" />
@@ -403,7 +403,7 @@ export default {
         CustomerRegion1Id: null,
         DiscountGroup1: null,
         DiscountGroup2: null,
-        DiscountGroup3: null,
+        DiscountGroup3Id: null,
         DiscountGroup4: null,
         DiscountGroup5: null,
         DiscountGroup6: null,
@@ -745,7 +745,13 @@ export default {
         this.form.Category2Id = this.customerCategory2.DecimalValue
         this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
         this.form.Category1Id = this.customerCategory1.DecimalValue
-        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x => x.Value === value.UpperValue)
+        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x =>
+          this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
+            if (response) {
+              x.Value = response.RecordValue
+            }
+          })
+        )
         this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
       } else {
         this.discountGroup3 = null

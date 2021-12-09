@@ -500,6 +500,8 @@
     "NewOrderUpdate": "Sipariş Güncelle"
   },
   "insert": {
+    "CustomerCreditNotDeleted": "Merkez Teminatı Tipindeki Kayıtlar Silinemez",
+    "CustomerCreditNotEdited": "Merkez Teminatı Tipindeki Kayıtlar Düzenlenemez",    
     "notDeleted": "Merkez Tutarı 0'dan büyük bütçeler ile 'Onay bekliyor' durumundaki bütçeler silinemez.",
     "aprroveNotDeleted": "Onaylı kayıtlar silinemez",
     "paymentPeriodrequired": "Varsayılan Ödeme Tipi Açık Hesap Seçiliyken Satış Ödeme Vadesi Girilmesi Zorunludur",
