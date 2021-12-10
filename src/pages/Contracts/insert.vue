@@ -1508,7 +1508,7 @@ export default {
         StatusId: 1,
         SalesQuantity: 0,
         SalesAmount: 0,
-        TableName: 'T-ITEM',
+        TableName: 'T_ITEM',
         ColumnName: this.contractItems.fieldDescription.ForeignField,
         ColumnValue: this.contractItems.fieldValue.DecimalValue,
         ColumnNameStr: this.contractItems.fieldDescription.Label,
@@ -1737,7 +1737,7 @@ export default {
         (this.contractPaymentPlans.budgetEndDate >= c.BudgetBeginDate && this.contractPaymentPlans.budgetEndDate <= c.BudgetEndDate) ||
         (c.BudgetBeginDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetBeginDate <= this.contractPaymentPlans.budgetEndDate) ||
         (c.BudgetEndDate >= this.contractPaymentPlans.budgetBeginDate && c.BudgetEndDate <= this.contractPaymentPlans.budgetEndDate))
-      if (filteredArray && filteredArray.length) {
+      if (filteredArray && filteredArray.length && !this.contractPaymentPlans.isUpdated) {
         this.$toasted.show(this.$t('insert.contract.datesShouldNotIntersect'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
