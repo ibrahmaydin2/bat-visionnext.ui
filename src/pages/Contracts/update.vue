@@ -1547,7 +1547,7 @@ export default {
         StatusId: 1,
         SalesQuantity: 0,
         SalesAmount: 0,
-        TableName: 'T-ITEM',
+        TableName: 'T_ITEM',
         ColumnName: this.contractItems.fieldDescription.ForeignField,
         ColumnValue: this.contractItems.fieldValue.DecimalValue,
         ColumnNameStr: this.contractItems.fieldDescription.Label,
