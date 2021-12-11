@@ -241,8 +241,9 @@ export default {
         Printed: null,
         PrintCount: null,
         TerminalOrPc: null,
-        PaymentPeriodId: null,
+        PaymentPeriodId: 0,
         Description1: null,
+        PaymentTypeId: null,
         OrderLines: []
       },
       routeName1: 'Order',
@@ -738,7 +739,7 @@ export default {
   watch: {
     selectedCustomer (e) {
       if (e) {
-        this.form.PaymentPeriodId = e ? e.PaymentPeriod : 0
+        this.form.PaymentTypeId = e && e.DefaultPaymentTypeId ? e.DefaultPaymentTypeId : 0
         this.searchPriceList()
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
