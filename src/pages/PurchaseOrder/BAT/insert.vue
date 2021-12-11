@@ -260,8 +260,9 @@ export default {
         Printed: 0,
         PrintCount: 0,
         TerminalOrPc: 'P',
-        PaymentPeriodId: null,
+        PaymentPeriodId: 0,
         Description1: null,
+        PaymentTypeId: null,
         OrderLines: []
       },
       routeName1: 'Order',
@@ -727,7 +728,7 @@ export default {
   },
   watch: {
     selectedCustomer (newValue, oldValue) {
-      this.form.PaymentPeriodId = newValue && newValue.PaymentPeriod ? newValue.PaymentPeriod : 0
+      this.form.PaymentTypeId = newValue && newValue.DefaultPaymentTypeId ? newValue.DefaultPaymentTypeId : 0
       if (this.customerFirstSet) {
         this.confirmSelectedCustomer()
         return

@@ -368,8 +368,8 @@ export default {
       this.getFormFields()
       this.$bvModal.show(`modal${this.id}`)
       setTimeout(() => {
-        this.list = this.value
-        this.pageSelectedList = this.value
+        this.list = [...this.value]
+        this.pageSelectedList = [...this.value]
         setTimeout(() => {
           this.$refs[`multipleGrid${this.id}`].selectAllRows()
         }, 10)
@@ -434,17 +434,31 @@ export default {
       this.allSelected = !this.allSelected
     },
     addItems () {
-      for (let i = 0; i < this.list.length; i++) {
-        let ref = this.$refs[`NextInput${i}`]
-        if (ref && ref.inputClass === 'error') {
-          this.$toasted.show(this.$t('insert.multipleGrid.validationError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
+      let isError = false
+      if (this.validations.length > 0) {
+        for (let i = 0; i < this.selectedList.length; i++) {
+          let item = this.selectedList[i]
+          this.validations.forEach(v => {
+            let result = v.validation(item[v.mainProperty], item)
+            if (!result) {
+              this.$toasted.show(this.$t('insert.multipleGrid.validationError'), {
+                type: 'error',
+                keepOnHover: true,
+                duration: '3000'
+              })
+              isError = true
+            }
           })
-          return
+          if (isError) {
+            break
+          }
         }
       }
+
+      if (isError) {
+        return
+      }
+
       this.selectedList = this.selectedList.map(s => {
         s.Deleted = 0
         s.System = 0

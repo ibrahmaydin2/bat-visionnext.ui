@@ -29,7 +29,7 @@
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.InputType === 'AutoComplete'">
                   <autocomplete
-                    @click="onClickAutoComplete(header.modelControlUtil)"
+                    @click="onClickAutoComplete(header)"
                     :search="onAutoCompleteSearch"
                     class="autocomplete-search"
                     @focus="disabledDraggable = true"
@@ -347,6 +347,7 @@ export default {
       ],
       rangeDate: [],
       selectedHeader: null,
+      autoCompleteAndConditions: null,
       workFlowList: [],
       selectedItems: [],
       requiredFields: [],
@@ -728,7 +729,7 @@ export default {
           Code: input.replaceAll('%', '')
         }
       ]
-      let andConditions = this.getAndConditionModel(this.selectedHeader.AndConditions)
+      let andConditions = this.getAndConditionModel(this.autoCompleteAndConditions)
       return this.$store.dispatch('getAutoGridFields', {...this.query, serviceUrl: this.selectedHeader.ServiceUrl, val: this.selectedHeader.ModelProperty, orConditionModels: orConditionModels, pagerecordCount: pagerecordCount, model: andConditions}).then((res) => {
         if (res && res.length === 0) {
           this.$bvToast.toast(this.$t('general.noResult'), {
@@ -826,7 +827,8 @@ export default {
       this.$root.$emit('bv::hide::modal', 'approve-reject-modal')
     },
     onClickAutoComplete (header) {
-      this.selectedHeader = header
+      this.selectedHeader = header.modelControlUtil
+      this.autoCompleteAndConditions = header.AndConditions
     },
     isSelectable () {
       return this.selectionMode === 'single' || this.selectionMode === 'multi'
