@@ -95,7 +95,7 @@
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="number" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrency($event)"/>
+              <b-form-input type="text" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyStr($event)" min="1" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -141,6 +141,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        Canceled: 0,
         CustomerId: null,
         WarehouseId: null,
         RepresentativeId: null,
@@ -235,7 +236,7 @@ export default {
         andConditionModel: {
           IsVehicle: 0,
           IsVirtualWarehouse: 0,
-          StatusId: 1
+          StatusIds: [1]
         }
       }).then(res => {
         loading(false)
@@ -257,7 +258,7 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          StatusIds: [1]
         }
       }).then(res => {
         loading(false)
@@ -353,7 +354,10 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaOrderLine = this.rmaOrderLines
+        this.form.RmaOrderLine = this.rmaOrderLines.map(r => {
+          r.Quantity = r.Quantity.replace(',', '.')
+          return r
+        })
         this.createData()
       }
     }
