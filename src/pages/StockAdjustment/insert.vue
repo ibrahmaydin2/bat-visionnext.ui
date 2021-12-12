@@ -57,7 +57,9 @@
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" md="3" lg="3">
               <NextDropdown
                 @input="selectedSearchType('ToWarehouseId', $event)"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable />
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"
+                :disabled="insertReadonly.ToWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
               <NextDropdown
@@ -71,7 +73,10 @@
               <NextDropdown
                   v-model="stockAdjustmentItems.item"
                   @input="selectedItem"
-                  url="VisionNextItem/api/Item/AutoCompleteSearch" searchable />
+                  url="VisionNextItem/api/Item/AutoCompleteSearch" searchable
+                  :custom-option="true"
+                  or-condition-fields="Code,Description1"
+                  :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" :required="true" :error="$v.stockAdjustmentItems.toWhStockQuantity" md="3" lg="3">
               <NextInput type="text" v-model="stockAdjustmentItems.toWhStockQuantity" :disabled="true"></NextInput>
