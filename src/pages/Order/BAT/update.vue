@@ -533,7 +533,7 @@ export default {
         andConditionModel: {
           StatusIds: [1],
           CardTypeIds: [1, 2, 8],
-          IsSaleAllowed: 1
+          IsOrderAllowed: 1
         }
       }
 
