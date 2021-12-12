@@ -78,16 +78,33 @@
                   or-condition-fields="Code,Description1"
                   :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" :required="true" :error="$v.stockAdjustmentItems.toWhStockQuantity" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" :required="true" :error="$v.stockAdjustmentItems.toWhStockQuantity" md="2" lg="2">
               <NextInput type="text" v-model="stockAdjustmentItems.toWhStockQuantity" :disabled="true"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.stockAdjustmentItems.quantity" md="3" lg="3">
               <NextInput type="number" min="0" :max="maxPlanQuantity" v-model="stockAdjustmentItems.quantity"></NextInput>
             </NextFormGroup>
-            <b-col cols="12" md="3" lg="3" class="ml-auto">
+            <b-col cols="12" md="2" lg="2" class="ml-auto">
               <b-form-group>
                 <AddDetailButton @click.native="addItem()" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="2">
+              <NextMultipleSelection
+                name="StockAdjustmentMultipleItem"
+                v-model="form.StockAdjustmentItems"
+                :hidden-values="hiddenValues"
+                :dynamic-and-condition="{
+                  ToWarehouseStatus: form.ToStatusId ? [form.ToStatusId] : null,
+                  ToWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
+                  FromWarehouseStatus: form.ToStatusId ? [form.ToStatusId] : null,
+                  FromWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
+                  MovementType: [form.MovementTypeId]
+                }"
+                :disabled-button="!form.ToStatusId || !form.ToWarehouseId || !form.MovementTypeId"
+                :validations="multipleValidations"
+                :filter-func="(row) => row.Quantity > 0"
+              />
             </b-col>
           </b-row>
           <b-row>
@@ -154,7 +171,25 @@ export default {
       stockAdjustmentItems: {},
       selectedRepresentative: null,
       selectedIndex: null,
-      maxPlanQuantity: null
+      maxPlanQuantity: null,
+      hiddenValues: [
+        {
+          mainProperty: 'ToQuantity',
+          targetProperty: 'ToWhStockQuantity'
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value && parseFloat(value) > data.ToQuantity) {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.quantityStockException') })
+              return false
+            }
+            return true
+          }
+        }
+      ]
     }
   },
   mounted () {

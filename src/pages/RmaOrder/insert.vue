@@ -75,9 +75,9 @@
               />
             </NextFormGroup>
           </b-row>
-                    <hr />
+          <hr />
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
+            <NextFormGroup :title="$t('insert.RMA.Item')" md="3" lg="3">
               <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -87,16 +87,28 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')"  md="2" lg="2">
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
               <b-form-input type="text" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyStr($event)" min="1" />
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
+            <b-col class="ml-auto"  md="2" lg="2">
               <b-form-group>
                 <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="2">
+              <NextMultipleSelection
+                name="RmaOrderMultipleItem"
+                v-model="form.rmaOrderLines"
+                :dynamic-and-condition="{
+                  ToWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                  FromWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                }"
+                :disabled-button="!form.WarehouseId"
+                :filter-func="(row) => row.Quantity > 0"
+              />
             </b-col>
           </b-row>
           <b-row>
