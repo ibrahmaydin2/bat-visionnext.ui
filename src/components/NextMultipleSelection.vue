@@ -5,7 +5,7 @@
         <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
       </b-button>
     </b-form-group>
-    <b-modal :id="`modal${id}`" size="xl" @hide="hide" no-close-on-backdrop>
+    <b-modal :id="`modal${id}`" size="xl" @hide="hide" @show="show" no-close-on-backdrop>
       <template #modal-title>
         {{action.Title}}
       </template>
@@ -364,16 +364,16 @@ export default {
       this.totalRowCount = this.value.length
       this.$v.form.$reset()
     },
+    show () {
+      this.list = JSON.parse(JSON.stringify(this.value))
+      this.pageSelectedList = [...this.list]
+      setTimeout(() => {
+        this.$refs[`multipleGrid${this.id}`].selectAllRows()
+      }, 10)
+    },
     showModal () {
       this.getFormFields()
       this.$bvModal.show(`modal${this.id}`)
-      setTimeout(() => {
-        this.list = [...this.value]
-        this.pageSelectedList = [...this.value]
-        setTimeout(() => {
-          this.$refs[`multipleGrid${this.id}`].selectAllRows()
-        }, 10)
-      }, 10)
     },
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
