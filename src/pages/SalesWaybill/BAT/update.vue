@@ -30,13 +30,13 @@
                 <NextDropdown
                   v-model="selectedCustomer"
                   :searchable="true"
-                  url="VisionNextCustomer/api/Customer/SearchSapCustomer"
+                  :url="customerSearchUrl"
                   :custom-option="true"
                   :is-customer="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
                   @input="selectedSearchType('CustomerId', $event)"
                   :disabled="insertReadonly.CustomerId"
-                  :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
+                  :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0, SalesDocumentTypeIds: [44, 46] }"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <NextDropdown
@@ -477,7 +477,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    customerSearchUrl () {
+      return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    }
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -548,7 +551,9 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8],
+          IsSaleAllowed: 1
         }
       }
 

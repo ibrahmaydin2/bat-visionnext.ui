@@ -33,7 +33,7 @@
                 <NextDropdown
                   v-model="selectedCustomer"
                   :searchable="true"
-                  url="VisionNextCustomer/api/Customer/SearchSapCustomer"
+                  :url="customerSearchUrl"
                   :custom-option="true"
                   :is-customer="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
@@ -414,7 +414,10 @@ export default {
     this.getInsertPage(this.routeName)
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    customerSearchUrl () {
+      return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    }
   },
   methods: {
     getInsertPage (e) {
@@ -480,7 +483,9 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8],
+          IsSaleAllowed: 1
         }
       }
 
