@@ -39,7 +39,7 @@
                 <NextDropdown
                   v-model="selectedCustomer"
                   :searchable="true"
-                  url="VisionNextCustomer/api/Customer/SearchSapCustomer"
+                  :url="customerSearchUrl"
                   :custom-option="true"
                   :is-customer="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
@@ -399,7 +399,8 @@ export default {
       items: [],
       priceListItems: [],
       stocks: [],
-      disabledItems: true
+      disabledItems: true,
+      selectedBranch: {}
     }
   },
   mounted () {
@@ -407,10 +408,16 @@ export default {
     this.getInsertPage(this.routeName)
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    customerSearchUrl () {
+      return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    }
   },
   methods: {
     getInsertPage (e) {
+      this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
+        this.selectedBranch = response ? response.Model : {}
+      })
       let currentDate = new Date()
       this.documentDate = currentDate.toISOString().slice(0, 10)
       this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
@@ -466,7 +473,9 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8],
+          IsSaleAllowed: 1
         }
       }
 
