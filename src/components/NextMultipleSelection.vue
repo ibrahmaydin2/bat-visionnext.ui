@@ -121,7 +121,7 @@
                 @input="setConvertedValues($event, data)"
                 type="number"
                 :input-class="data.item.class"
-                @keypress="keypress"></NextInput>
+                @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
             <span v-else v-html="data.value"></span>
           </template>

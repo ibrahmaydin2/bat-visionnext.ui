@@ -91,7 +91,7 @@
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
-              <b-form-input type="text" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <b-form-input type="number" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <b-col class="ml-auto"  md="2" lg="2">
               <b-form-group>

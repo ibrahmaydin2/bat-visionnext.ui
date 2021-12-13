@@ -3,7 +3,7 @@ module.exports = {
   NODE_ENV: '"production"',
   VUE_APP_SERVICE_URL_BASE: "'https://batvnapi.visionnext.com.tr/'",
   VUE_APP_SYSTEM_NAME: "'BAT UI PRODUCTION'",
-  VUE_APP_VESION_NO: "'1.0.1.62'",
+  VUE_APP_VESION_NO: "'1.0.1.63'",
   BASE_URL: "'http://bat.visionnext.com.tr/'",
   TENANT: "'BAT'",
   SITE_NAME: "'BAT'",

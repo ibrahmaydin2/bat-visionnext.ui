@@ -122,7 +122,7 @@
               <b-form-input type="text" v-model="rmaLine.Item.LastPrice" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
-              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrency($event)" min=1 />
+              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.meanPrice')">
               <b-form-input type="text" v-model="rmaLine.Item.MeanPrice" readonly/>

@@ -120,7 +120,7 @@
             </b-col>
             <b-col cols="12" md="3">
               <b-form-group :label="$t('insert.BranchStockTransfer.PlanQuantity')">
-                <b-form-input type="number" min="0" :max="maxPlanQuantity" v-model="BranchStockTransferItems.Quantity" />
+                <b-form-input type="number" min="1" @keypress="onlyForCurrencyDot($event)" :max="maxPlanQuantity" v-model="BranchStockTransferItems.Quantity" />
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" class="ml-auto">
