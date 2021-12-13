@@ -33,6 +33,7 @@ export default {
       if (!path) {
         path = '/Get'
       }
+      this.$store.commit('setRowData', {})
       return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}${path}`).then((res) => {
         if (res.IsCompleted) {
           this.$store.commit('setRowData', res.Model)
