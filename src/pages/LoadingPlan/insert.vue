@@ -54,7 +54,7 @@
                 custom-option/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
-              <b-form-input type="text" v-model="detailPanel.planQuantity" />
+              <b-form-input type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>

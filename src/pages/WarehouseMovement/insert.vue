@@ -127,7 +127,7 @@
               <NextInput type="number" v-model="warehouseMovementItems.toWhStockQuantity" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.warehouseMovementItems.quantity" md="3" lg="3">
-              <NextInput type="number" v-model="warehouseMovementItems.quantity"/>
+              <NextInput type="number" v-model="warehouseMovementItems.quantity" @keypress="onlyForCurrencyDot($event)" min="1"/>
             </NextFormGroup>
             <b-col cols="12" md="3" lg="3" class="ml-auto">
               <b-form-group>
