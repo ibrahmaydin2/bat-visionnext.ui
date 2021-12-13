@@ -102,8 +102,6 @@
                   MovementType: [form.MovementTypeId]
                 }"
                 :disabled-button="!form.ToStatusId || !form.ToWarehouseId || !form.MovementTypeId"
-                :validations="multipleValidations"
-                :filter-func="(row) => row.Quantity > 0"
               />
             </b-col>
           </b-row>

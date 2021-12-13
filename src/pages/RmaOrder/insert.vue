@@ -101,13 +101,13 @@
             <b-col cols="12" md="2" lg="2">
               <NextMultipleSelection
                 name="RmaOrderMultipleItem"
-                v-model="form.rmaOrderLines"
+                v-model="rmaOrderLines"
                 :dynamic-and-condition="{
                   ToWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
                   FromWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
                 }"
                 :disabled-button="!form.WarehouseId"
-                :filter-func="(row) => row.Quantity > 0"
+                :hidden-values="hiddenValues"
               />
             </b-col>
           </b-row>
@@ -122,8 +122,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaOrderLines" :key="i">
-                    <b-td>{{w.Item.Code}}</b-td>
-                    <b-td>{{w.Item.Description1}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -159,7 +159,7 @@ export default {
         PriceDate: new Date(),
         RmaReasonId: null,
         RmaStatusId: 2,
-        RmaOrderLine: []
+        RmaOrderLines: []
       },
       rmaOrderLine: {
         Deleted: 0,
@@ -187,7 +187,13 @@ export default {
       warehouse: {},
       customers: [],
       customer: {},
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ]
     }
   },
   computed: {
@@ -357,8 +363,9 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaOrderLine = this.rmaOrderLines.map(r => {
-          r.Quantity = r.Quantity.replace(',', '.')
+        this.form.RmaOrderLines = this.rmaOrderLines.map(r => {
+          r.Quantity = r.Quantity.toString().replace(',', '.')
+          r.RecordId = null
           return r
         })
         this.createData()
