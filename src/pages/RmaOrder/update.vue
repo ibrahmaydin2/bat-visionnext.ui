@@ -96,7 +96,7 @@
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="text" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyStr($event)" min="1" />
+              <b-form-input type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -151,7 +151,7 @@ export default {
         PriceDate: null,
         RmaReasonId: null,
         RmaStatusId: null,
-        RmaOrderLine: []
+        RmaOrderLines: []
       },
       rmaOrderLine: {
         Deleted: 0,
@@ -350,7 +350,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaOrderLine = this.rmaOrderLines.map((item) => {
+        this.form.RmaOrderLines = this.rmaOrderLines.map((item) => {
           var newItem = {
             Deleted: item.Deleted,
             System: item.System,
@@ -386,7 +386,7 @@ export default {
         this.disabledFields = true
         document.getElementById('submitButton').disabled = true
       }
-      e.RmaOrderLine.map(item => {
+      e.RmaOrderLines.map(item => {
         if (item.Item) {
           this.rmaOrderLines.push({
             Item: {

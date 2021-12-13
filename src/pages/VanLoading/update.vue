@@ -62,7 +62,7 @@
               <NextInput v-model="vanLoadingItem.SuggestedQuantity" type="text" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity">
-              <NextInput v-model="vanLoadingItem.LoadingQuantity" type="number"/>
+              <NextInput v-model="vanLoadingItem.LoadingQuantity" @keypress="onlyForCurrencyDot($event)" min="1" type="number"/>
             </NextFormGroup>
             <b-col cols="12" md="3" class="text-right ml-auto">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">

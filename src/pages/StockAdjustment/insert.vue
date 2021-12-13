@@ -82,7 +82,7 @@
               <NextInput type="text" v-model="stockAdjustmentItems.toWhStockQuantity" :disabled="true"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.stockAdjustmentItems.quantity" md="3" lg="3">
-              <NextInput type="number" min="0" :max="maxPlanQuantity" v-model="stockAdjustmentItems.quantity"></NextInput>
+              <NextInput type="number" min="1" :max="maxPlanQuantity" @keypress="onlyForCurrencyDot($event)" v-model="stockAdjustmentItems.quantity"></NextInput>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="ml-auto">
               <b-form-group>
