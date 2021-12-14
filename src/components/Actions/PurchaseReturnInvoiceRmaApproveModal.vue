@@ -56,13 +56,14 @@
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4" :error="$v.form.DocumentNumber">
           <b-form-input type="text" v-model="form.DocumentNumber" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.DocumentClassId" :required="false" md="4" lg="4">
+        <NextFormGroup v-if="type !== 'Waybill'" :title="$t('index.Convert.InvoiceKindId')" :error="$v.form.DocumentClassId" :required="false" md="4" lg="4">
           <v-select v-model="invoiceType" :options="invoiceTypes" label="label" @input="selectedType('DocumentClassId', $event)"></v-select>
         </NextFormGroup>
-        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4" :error="$v.form.Warehouse">
+        <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4" :error="$v.form.WarehouseId">
           <NextDropdown
             url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
             @input="selectedWarehouse"
+            v-model="warehouse"
             :searchable="true"
             :custom-option="true"
           />
@@ -123,6 +124,11 @@ export default {
     type: {
       type: String,
       default: 'Invoice'
+    }
+  },
+  mounted () {
+    if (this.type === 'Waybill') {
+      this.form.DocumentClassId = 8
     }
   },
   data () {
@@ -189,7 +195,8 @@ export default {
       ],
       showInvoiceLines: false,
       showRmaLines: false,
-      rmaDetail: []
+      rmaDetail: [],
+      warehouse: null
     }
   },
   validations () {
@@ -204,7 +211,7 @@ export default {
         DocumentNumber: {
           required
         },
-        Warehouse: {
+        WarehouseId: {
           required
         }
       }
@@ -231,9 +238,9 @@ export default {
     },
     selectedWarehouse (e) {
       if (e) {
-        this.form.Warehouse = e.RecordId
+        this.form.WarehouseId = e.RecordId
       } else {
-        this.form.Warehouse = null
+        this.form.WarehouseId = null
       }
     },
     closeModal () {
@@ -279,6 +286,11 @@ export default {
           this.invoiceTypes = this.getInvoiceClassTypes()
           this.rmaLines = res.Model.RmaLines
           this.rmaDetail = res.Model
+          this.warehouse = {
+            Description1: res.Model.Warehouse ? res.Model.Warehouse.Label : '',
+            RecordId: res.Model.WarehouseId
+          }
+          this.form.WarehouseId = res.Model.WarehouseId
           this.showRmaLines = true
         } else {
           this.$toasted.show(res.Message, {
@@ -315,7 +327,7 @@ export default {
       }
       this.rmaDetail.InvoiceNumber = this.form.InvoiceNumber
       this.rmaDetail.DocumentNumber = this.form.DocumentNumber
-      this.rmaDetail.WarehouseId = this.form.Warehouse
+      this.rmaDetail.WarehouseId = this.form.WarehouseId
       this.rmaDetail.DocumentClassId = this.form.DocumentClassId
       this.rmaDetail.RmaLines = this.rmaLines
       let request = {

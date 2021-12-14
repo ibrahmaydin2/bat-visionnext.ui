@@ -196,26 +196,20 @@ export default {
     },
     getConvert () {
       this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, id: this.modalItem.RecordId}, 'VisionNextOrder/api/Order/GetConvert').then((response) => {
-        if (Object.keys(response).length > 0) {
-          this.orderLines = response.OrderLines
-          this.form.documentDate = response.DocumentDate.substr(0, 10)
-          this.invoiceTypes = response.InvoiceKinds
-          if (this.invoiceTypes && this.invoiceTypes.length > 0) {
-            this.invoiceType = this.invoiceTypes[0]
-            this.selectedType('InvoiceKindId', this.invoiceType)
-          }
-          this.warehouse = response.Warehouse ? response.Warehouse.Label : '-'
-          this.getConvertData = response
-        } else {
-          if (response.Message) {
-            this.$toasted.show(this.$t(response.Message), {
-              type: 'error',
-              keepOnHover: true,
-              duration: '3000'
-            })
-            this.close()
-          }
+        if (!response.IsCompleted) {
+          this.close()
+          return
         }
+
+        this.orderLines = response.OrderLines
+        this.form.documentDate = response.DocumentDate.substr(0, 10)
+        this.invoiceTypes = response.InvoiceKinds
+        if (this.invoiceTypes && this.invoiceTypes.length > 0) {
+          this.invoiceType = this.invoiceTypes[0]
+          this.selectedType('InvoiceKindId', this.invoiceType)
+        }
+        this.warehouse = response.Warehouse ? response.Warehouse.Label : '-'
+        this.getConvertData = response
         this.tableBusy = false
       })
     },

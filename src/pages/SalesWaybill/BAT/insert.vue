@@ -33,13 +33,13 @@
                 <NextDropdown
                   v-model="selectedCustomer"
                   :searchable="true"
-                  url="VisionNextCustomer/api/Customer/SearchSapCustomer"
+                  :url="customerSearchUrl"
                   :custom-option="true"
                   :is-customer="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
                   @input="selectedSearchType('CustomerId', $event)"
                   :disabled="insertReadonly.CustomerId"
-                  :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
+                  :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0, SalesDocumentTypeIds: [44, 46] }"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
                 <NextDropdown
@@ -148,7 +148,7 @@
                     :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event)" min=1></NextInput>
+              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)" min="1"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedInvoiceLine.price" :disabled="true"></NextInput>
@@ -470,7 +470,10 @@ export default {
     this.getInsertPage(this.routeName)
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    customerSearchUrl () {
+      return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    }
   },
   methods: {
     getInsertPage (e) {
@@ -537,7 +540,9 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8],
+          IsSaleAllowed: 1
         }
       }
 

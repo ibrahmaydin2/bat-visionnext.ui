@@ -32,7 +32,7 @@
               <NextDropdown v-model="customer" :source="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid || disabledFields'></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false" :disabled="disabledFields">
+              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="true" :disabled="disabledFields">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
                 </template>
@@ -96,7 +96,7 @@
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="text" v-model="rmaOrderLine.Quantity" :disabled="disabledFields"/>
+              <b-form-input type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -151,7 +151,7 @@ export default {
         PriceDate: null,
         RmaReasonId: null,
         RmaStatusId: null,
-        RmaOrderLine: []
+        RmaOrderLines: []
       },
       rmaOrderLine: {
         Deleted: 0,
@@ -201,6 +201,7 @@ export default {
   methods: {
     getInsertPage () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+      this.getWarehouses()
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -233,11 +234,7 @@ export default {
         loading(false)
       })
     },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
+    getWarehouses () {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: 'VisionNextWarehouse/api/Warehouse/Search',
@@ -245,10 +242,8 @@ export default {
         andConditionModel: {
           IsVehicle: 0,
           IsVirtualWarehouse: 0,
-          StatusId: 1
+          StatusIds: [1]
         }
-      }).then(res => {
-        loading(false)
       })
     },
     searchItem (search, loading) {
@@ -267,7 +262,8 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8]
         }
       }).then(res => {
         loading(false)
@@ -355,7 +351,7 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaOrderLine = this.rmaOrderLines.map((item) => {
+        this.form.RmaOrderLines = this.rmaOrderLines.map((item) => {
           var newItem = {
             Deleted: item.Deleted,
             System: item.System,
@@ -369,7 +365,7 @@ export default {
             UnitId: item.UnitId,
             ConvFact1: item.ConvFact1,
             ConvFact2: item.ConvFact2,
-            Quantity: item.Quantity,
+            Quantity: item.Quantity.toString().replace(',', '.'),
             RmaQuantity1: item.RmaQuantity1,
             RmaUnit1Id: item.RmaUnit1Id,
             RmaOrderId: item.RmaOrderId,
@@ -391,7 +387,7 @@ export default {
         this.disabledFields = true
         document.getElementById('submitButton').disabled = true
       }
-      e.RmaOrderLine.map(item => {
+      e.RmaOrderLines.map(item => {
         if (item.Item) {
           this.rmaOrderLines.push({
             Item: {
@@ -462,9 +458,18 @@ export default {
       }
       this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
-          let length = res.Model.WarehouseSuppliers.length
+          let filteredArr = res.Model.WarehouseSuppliers.filter(w => w.ReturnWarehouseId !== null)
+          let length = filteredArr.length
+          if (length === 0) {
+            this.$toasted.show(this.$t('insert.RmaOrder.WarehouseError'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
           for (let a = 0; a < length; a++) {
-            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierCustomer)
+            this.customers.push(filteredArr[a].SupplierCustomer)
           }
           this.customerValid = true
         } else {

@@ -42,7 +42,7 @@
                 <NextDropdown
                   v-model="selectedCustomer"
                   :searchable="true"
-                  url="VisionNextCustomer/api/Customer/SearchSapCustomer"
+                  :url="customerSearchUrl"
                   :custom-option="true"
                   :is-customer="true"
                   or-condition-fields="Code,Description1,CommercialTitle"
@@ -188,7 +188,7 @@
                 :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event)" min=1></NextInput>
+              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)" min="1"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -459,16 +459,25 @@ export default {
       items: [],
       priceListItems: [],
       stocks: [],
-      disabledItems: false
+      disabledItems: false,
+      selectedBranch: {}
     }
   },
   mounted () {
     this.getInsertPage(this.routeName)
   },
+  computed: {
+    customerSearchUrl () {
+      return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    }
+  },
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
         this.setData()
+      })
+      this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
+        this.selectedBranch = response && response.Model ? response.Model : {}
       })
     },
     searchPriceList () {
@@ -522,7 +531,9 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8],
+          IsOrderAllowed: 1
         }
       }
 

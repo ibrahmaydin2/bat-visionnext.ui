@@ -664,6 +664,7 @@ export const store = new Vuex.Store({
       }
       commit('showNextgrid', false)
       let path = query.path ? query.path : '/Get'
+      commit('setRowData', {})
       return axios.post(query.api + path, dataQuery, authHeader)
         .then(res => {
           switch (res.status) {

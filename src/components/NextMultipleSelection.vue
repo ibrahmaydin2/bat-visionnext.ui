@@ -5,7 +5,7 @@
         <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
       </b-button>
     </b-form-group>
-    <b-modal :id="`modal${id}`" size="xl" @hide="hide" no-close-on-backdrop>
+    <b-modal :id="`modal${id}`" size="xl" @hide="hide" @show="show" no-close-on-backdrop>
       <template #modal-title>
         {{action.Title}}
       </template>
@@ -121,7 +121,7 @@
                 @input="setConvertedValues($event, data)"
                 type="number"
                 :input-class="data.item.class"
-                @keypress="keypress"></NextInput>
+                @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
             <span v-else v-html="data.value"></span>
           </template>
@@ -189,6 +189,10 @@ export default {
       type: Array,
       default: () => { return [] },
       description: 'Grid kolonlarının hangilerinin tıklanabildiği bilgisi'
+    },
+    filterFunc: {
+      type: Function,
+      description: 'Seçilen listeleri filtrelemek için kullanılır'
     }
   },
   model: {
@@ -360,16 +364,16 @@ export default {
       this.totalRowCount = this.value.length
       this.$v.form.$reset()
     },
+    show () {
+      this.list = JSON.parse(JSON.stringify(this.value))
+      this.pageSelectedList = [...this.list]
+      setTimeout(() => {
+        this.$refs[`multipleGrid${this.id}`].selectAllRows()
+      }, 10)
+    },
     showModal () {
       this.getFormFields()
       this.$bvModal.show(`modal${this.id}`)
-      setTimeout(() => {
-        this.list = this.value
-        this.pageSelectedList = this.value
-        setTimeout(() => {
-          this.$refs[`multipleGrid${this.id}`].selectAllRows()
-        }, 10)
-      }, 10)
     },
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
@@ -430,17 +434,31 @@ export default {
       this.allSelected = !this.allSelected
     },
     addItems () {
-      for (let i = 0; i < this.list.length; i++) {
-        let ref = this.$refs[`NextInput${i}`]
-        if (ref && ref.inputClass === 'error') {
-          this.$toasted.show(this.$t('insert.multipleGrid.validationError'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
+      let isError = false
+      if (this.validations.length > 0) {
+        for (let i = 0; i < this.selectedList.length; i++) {
+          let item = this.selectedList[i]
+          this.validations.forEach(v => {
+            let result = v.validation(item[v.mainProperty], item)
+            if (!result) {
+              this.$toasted.show(this.$t('insert.multipleGrid.validationError'), {
+                type: 'error',
+                keepOnHover: true,
+                duration: '3000'
+              })
+              isError = true
+            }
           })
-          return
+          if (isError) {
+            break
+          }
         }
       }
+
+      if (isError) {
+        return
+      }
+
       this.selectedList = this.selectedList.map(s => {
         s.Deleted = 0
         s.System = 0
@@ -448,7 +466,19 @@ export default {
         s.StatusId = 1
         return s
       })
-      this.$emit('valuechange', this.selectedList)
+      let filteredList = [...this.selectedList]
+      if (this.filterFunc) {
+        filteredList = this.selectedList.filter(s => this.filterFunc(s))
+        if (filteredList.length === 0) {
+          this.$toasted.show(this.$t('insert.multipleGrid.filteredFuncError'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
+      }
+      this.$emit('valuechange', filteredList)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {

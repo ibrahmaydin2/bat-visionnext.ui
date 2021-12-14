@@ -33,11 +33,7 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="true"></v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <v-select :options="employees" @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
@@ -79,9 +75,9 @@
               />
             </NextFormGroup>
           </b-row>
-                    <hr />
+          <hr />
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
+            <NextFormGroup :title="$t('insert.RMA.Item')" md="3" lg="3">
               <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
                 <template slot="no-options">
                   {{$t('insert.min3')}}
@@ -91,16 +87,28 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')"  md="2" lg="2">
               <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="number" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrency($event)"/>
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
+              <b-form-input type="number" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
+            <b-col class="ml-auto"  md="2" lg="2">
               <b-form-group>
                 <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="2">
+              <NextMultipleSelection
+                name="RmaOrderMultipleItem"
+                v-model="rmaOrderLines"
+                :dynamic-and-condition="{
+                  ToWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                  FromWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                }"
+                :disabled-button="!form.WarehouseId"
+                :hidden-values="hiddenValues"
+              />
             </b-col>
           </b-row>
           <b-row>
@@ -114,8 +122,8 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaOrderLines" :key="i">
-                    <b-td>{{w.Item.Code}}</b-td>
-                    <b-td>{{w.Item.Description1}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -141,6 +149,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        Canceled: 0,
         CustomerId: null,
         WarehouseId: null,
         RepresentativeId: null,
@@ -150,7 +159,7 @@ export default {
         PriceDate: new Date(),
         RmaReasonId: null,
         RmaStatusId: 2,
-        RmaOrderLine: []
+        RmaOrderLines: []
       },
       rmaOrderLine: {
         Deleted: 0,
@@ -178,7 +187,13 @@ export default {
       warehouse: {},
       customers: [],
       customer: {},
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ]
     }
   },
   computed: {
@@ -191,6 +206,7 @@ export default {
   methods: {
     getInsertPage (e) {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
+      this.getWarehouses()
     },
     searchEmployee (search, loading) {
       if (search.length < 3) {
@@ -223,11 +239,7 @@ export default {
         loading(false)
       })
     },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
+    getWarehouses () {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
         api: 'VisionNextWarehouse/api/Warehouse/Search',
@@ -235,10 +247,8 @@ export default {
         andConditionModel: {
           IsVehicle: 0,
           IsVirtualWarehouse: 0,
-          StatusId: 1
+          StatusIds: [1]
         }
-      }).then(res => {
-        loading(false)
       })
     },
     searchItem (search, loading) {
@@ -257,7 +267,8 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusId: 1
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8]
         }
       }).then(res => {
         loading(false)
@@ -353,7 +364,11 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.RmaOrderLine = this.rmaOrderLines
+        this.form.RmaOrderLines = this.rmaOrderLines.map(r => {
+          r.Quantity = r.Quantity.toString().replace(',', '.')
+          r.RecordId = null
+          return r
+        })
         this.createData()
       }
     }
@@ -381,9 +396,18 @@ export default {
       this.form.CustomerId = null
       this.$api.post({RecordId: e.RecordId}, 'Warehouse', 'Warehouse/Get').then((res) => {
         if (res.Model.WarehouseSuppliers && res.Model.WarehouseSuppliers.length) {
-          let length = res.Model.WarehouseSuppliers.length
+          let filteredArr = res.Model.WarehouseSuppliers.filter(w => w.ReturnWarehouseId !== null)
+          let length = filteredArr.length
+          if (length === 0) {
+            this.$toasted.show(this.$t('insert.RmaOrder.WarehouseError'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
           for (let a = 0; a < length; a++) {
-            this.customers.push(res.Model.WarehouseSuppliers[a].SupplierCustomer)
+            this.customers.push(filteredArr[a].SupplierCustomer)
           }
           this.customerValid = true
         } else {

@@ -333,7 +333,7 @@
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
               <b-form-input
-              :disabled="!contractPriceDiscounts.benefitCondition" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
+              :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
               <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
@@ -1087,7 +1087,7 @@ export default {
         quotaColumnValue: null,
         quotaBeginDate: null,
         quotaEndDate: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         itemFormula: null,
         currency: null,
         beginDate: null
@@ -1119,7 +1119,7 @@ export default {
         budgetAmount: null,
         quotaQuantity: null,
         quotaUnit: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         quotaBeginDate: null,
         quotaEndDate: null
       },
@@ -1137,7 +1137,7 @@ export default {
         beginDate: null,
         quotaQuantity: null,
         unit: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         freeQuantityLimit: null,
         allowOverLimit: null,
         quotaLevelTaken: null,
@@ -1149,7 +1149,7 @@ export default {
         benefitCondition: null,
         paymentAmount: null,
         plannedPaymentDate: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         budgetBeginDate: null,
         budgetEndDate: null,
         quotaColumnName: null,
@@ -1180,7 +1180,7 @@ export default {
         freeItem: null,
         endrsPaymentType: null,
         salesPercentage: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         executionDate: null
       },
       showCustomPrices: false,
@@ -1189,7 +1189,7 @@ export default {
         benefitCondition: null,
         item: null,
         customPrice: null,
-        branchSharePercent: null,
+        branchSharePercent: 0,
         beginDate: null,
         endDate: null,
         quotaColumnName: null,
@@ -1279,6 +1279,9 @@ export default {
           StartDate: this.validDates.contractStartDate,
           EndDate: this.validDates.contractEndDate
         }]
+        if (this.form.StatusId !== 1) {
+          this.form.StatusId = 2
+        }
         this.updateData()
       }
     },
@@ -1544,7 +1547,7 @@ export default {
         StatusId: 1,
         SalesQuantity: 0,
         SalesAmount: 0,
-        TableName: 'T-ITEM',
+        TableName: 'T_ITEM',
         ColumnName: this.contractItems.fieldDescription.ForeignField,
         ColumnValue: this.contractItems.fieldValue.DecimalValue,
         ColumnNameStr: this.contractItems.fieldDescription.Label,
@@ -1602,7 +1605,7 @@ export default {
         QuotaBeginDate: this.contractPriceDiscounts.quotaBeginDate,
         QuotaEndDate: this.contractPriceDiscounts.quotaEndDate,
         StartDate: this.contractPriceDiscounts.beginDate,
-        BranchSharePercent: this.contractPriceDiscounts.branchSharePercent,
+        BranchSharePercent: this.contractPriceDiscounts.branchSharePercent ? this.this.contractPriceDiscounts.branchSharePercent : 0,
         ItemFormulaId: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.RecordId : null,
         ItemFormulaName: this.contractPriceDiscounts.itemFormula ? this.contractPriceDiscounts.itemFormula.Description1 : null,
         CurrencyId: this.contractPriceDiscounts.currency ? this.contractPriceDiscounts.currency.RecordId : null,
@@ -1614,7 +1617,9 @@ export default {
       } else {
         this.form.ContractPriceDiscounts.push(item)
       }
-      this.contractPriceDiscounts = {}
+      this.contractPriceDiscounts = {
+        branchSharePercent: 0
+      }
       this.$v.contractPriceDiscounts.$reset()
     },
     removeContractPriceDiscounts (item) {
@@ -2157,7 +2162,8 @@ export default {
     },
     selectedBenefitCondition (value) {
       this.contractPriceDiscounts = {
-        benefitCondition: value
+        benefitCondition: value,
+        branchSharePercent: 0
       }
     },
     getQuotaColumnNameLabel (code) {
