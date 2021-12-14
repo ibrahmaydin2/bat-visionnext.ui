@@ -303,9 +303,10 @@ export default {
   methods: {
     getInsertPage (e) {
       let currentDate = new Date()
-      this.documentDate = currentDate.toISOString().slice(0, 10)
+      let date = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
+      this.documentDate = date
       this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
-      this.form.DueDate = currentDate.toISOString().slice(0, 10)
+      this.form.DueDate = date
     },
     searchPriceList () {
       if (!this.selectedCustomer || !this.form.DocumentDate) {

@@ -499,7 +499,7 @@ export default {
         this.selectedBranch = response && response.Model ? response.Model : {}
       })
       let currentDate = new Date()
-      let date = currentDate.toISOString().slice(0, 10)
+      let date = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
       this.form.ActualDeliveryDate = date
       this.documentDate = date
       this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
