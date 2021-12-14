@@ -267,7 +267,8 @@ export default {
           }
         ],
         andConditionModel: {
-          StatusIds: [1]
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8]
         }
       }).then(res => {
         loading(false)

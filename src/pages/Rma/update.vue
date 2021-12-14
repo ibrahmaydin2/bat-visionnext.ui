@@ -328,7 +328,9 @@ export default {
         ],
         andConditionModel: {
           CustomerIds: this.form.CustomerId ? [this.form.CustomerId] : null,
-          PriceDate: this.form.PriceDate
+          PriceDate: this.form.PriceDate,
+          StatusIds: [1],
+          CardTypeIds: [1, 2, 8]
         }
       }).then(res => {
         loading(false)
