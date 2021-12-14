@@ -1021,8 +1021,6 @@ export default {
       return model
     },
     validateAction (actionName) {
-      let isValid = true
-
       switch (this.$route.name) {
         case 'PurchaseOrder':
           let stateId = this.modalItem.StateId
@@ -1035,26 +1033,25 @@ export default {
                   keepOnHover: true,
                   duration: '3000'
                 })
-                break
+                return false
               case 'Canceled':
                 this.$toasted.show(this.$t('insert.order.cancelledError'), {
                   type: 'error',
                   keepOnHover: true,
                   duration: '3000'
                 })
-                break
+                return false
               case 'OrderConvert':
                 this.$toasted.show(this.$t('insert.order.orderConvertError'), {
                   type: 'error',
                   keepOnHover: true,
                   duration: '3000'
                 })
-                break
+                return false
             }
-            break
           }
       }
-      return isValid
+      return true
     },
     filterRowActions (actions, item) {
       if (this.actionCondition && this.actionCondition.condition(item)) {
