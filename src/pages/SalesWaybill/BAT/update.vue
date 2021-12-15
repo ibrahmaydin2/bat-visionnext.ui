@@ -206,8 +206,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in form.InvoiceLines" :key="i">
-                  <b-td>{{o.Description1}}</b-td>
-                  <b-td>{{o.ItemCode}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
