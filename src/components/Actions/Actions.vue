@@ -37,36 +37,8 @@
       </b-dropdown-item>
     </div>
     <div v-else>
-      <b-dropdown-item v-for="(action, i) in filteredActions" :key="i">
-        <router-link v-if="action.ViewType === 'Route'" :to="{name: $route.name + action.Action, params: {url: row.RecordId}}">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </router-link>
-        <router-link v-else-if="action.ViewType === 'SaveAs'" :to="{name: $route.name + 'Update', params: {url: row.RecordId}, query: {saveAs: 1}}">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </router-link>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Modal'" @click.prevent.stop="showModal (action, row)">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </span>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Print'" @click.prevent.stop="print(action, row)">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </span>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Action'" @click.prevent.stop="openAction(action, row)">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </span>
-        <span class="d-inline-block w-100" v-else-if="action.Action === 'ShowOnMap'" @click.prevent.stop="showMap(action, row)">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </span>
-        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Copy'" @click.prevent.stop="copy(action, row)">
-          <img width="10" height="10" :src="icon" />
-          <span class="ml-1">{{action.Title}}</span>
-        </span>
-        <span class="d-inline-block w-100" v-else>
+      <b-dropdown-item v-for="(action, i) in filteredActions" :key="i" @click.prevent.stop="actionClick(action, row)">
+        <span class="d-inline-block w-100">
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
@@ -340,6 +312,31 @@ export default {
         } else {
         }
       })
+    },
+    actionClick (action, row) {
+      switch (action.ViewType) {
+        case 'Route':
+          this.$router.push({name: this.$route.name + action.Action, params: {url: row.RecordId}})
+          break
+        case 'SaveAs':
+          this.$router.push({name: this.$route.name + 'Update', params: {url: row.RecordId}, query: {saveAs: 1}})
+          break
+        case 'Modal':
+          this.showModal(action, row)
+          break
+        case 'Print':
+          this.print(action, row)
+          break
+        case 'Action':
+          this.openAction(action, row)
+          break
+        case 'ShowOnMap':
+          this.showMap(action, row)
+          break
+        case 'Copy':
+          this.copy(action, row)
+          break
+      }
     }
   }
 }
