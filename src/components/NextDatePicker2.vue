@@ -6,9 +6,9 @@
     :timePicker24Hour="true"
     :showWeekNumbers="true"
     :showDropdowns="true"
-    :showRanges="true"
+    :ranges="true"
     :autoApply="false"
-    :disabled="disabled"
+    :readonly="disabled"
     :date-range="selectedValue"
     :linkedCalendars="true">
     <template v-slot:input="picker" style="min-width: 350px;">
