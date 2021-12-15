@@ -419,7 +419,7 @@ export default {
         this.selectedBranch = response ? response.Model : {}
       })
       let currentDate = new Date()
-      this.documentDate = currentDate.toISOString().slice(0, 10)
+      this.documentDate = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
       this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
     },
     searchPriceList () {
