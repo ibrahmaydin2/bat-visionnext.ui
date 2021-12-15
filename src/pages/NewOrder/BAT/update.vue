@@ -24,19 +24,20 @@
                 <NextInput type="text" v-model="form.OrderNumber" :disabled="insertReadonly.OrderNumber"></NextInput>
               </NextFormGroup>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-                <NextDatePicker2 :time-picker="true" v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
+                <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
                 <NextTimePicker v-model="form.DocumentTime" :disabled="insertReadonly.DocumentTime" />
               </NextFormGroup>
               <NextFormGroup item-key="DueDate" :error="$v.form.DueDate" md="3" lg="3">
-                <NextDatePicker2 v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
+                <NextDatePicker v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
               </NextFormGroup>
               <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="3" lg="3">
                   <NextDropdown v-model="representative" :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
                 </NextFormGroup>
               <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="3" lg="3">
                 <NextDropdown
+                  v-model="warehouse"
                   searchable
                   @input="selectedSearchType('WarehouseId', $event)"
                   url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
@@ -54,7 +55,6 @@
                   :disabled="insertReadonly.CustomerId"
                   :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
               </NextFormGroup>
-              <AddCustomer @success="successCustomerAdded" />
             </b-row>
           </b-col>
           <b-col md="12" lg="3" sm="12">
@@ -169,9 +169,9 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(o, i) in form.OrderLines" :key="i">
-                  <b-td>{{o.ItemCode}}</b-td>
-                  <b-td>{{o.Description1}}</b-td>
+                <b-tr v-for="(o, i) in form.OrderLines.filter(o => o.RecordState !== 4)" :key="i">
+                  <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
+                  <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
@@ -193,13 +193,9 @@
 </template>
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../../mixins/insert'
-import AddCustomer from '../AddCustomer.vue'
+import updatetMixin from '../../../mixins/update'
 export default {
-  mixins: [insertMixin],
-  components: {
-    AddCustomer
-  },
+  mixins: [updatetMixin],
   data () {
     return {
       form: {
@@ -224,6 +220,7 @@ export default {
         OrderLines: []
       },
       selectedCustomer: null,
+      warehouse: null,
       priceListItems: [],
       priceListItem: null,
       orderLine: {},
@@ -241,16 +238,9 @@ export default {
     }
   },
   mounted () {
-    this.createManualCode('OrderNumber')
-    this.getInsertPage()
-    this.getUserInfo()
+    this.getData().then(() => { this.setData() })
   },
   methods: {
-    getInsertPage (e) {
-      let currentDate = new Date()
-      this.form.DocumentDate = currentDate.toISOString()
-      this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
-    },
     getItem (recordId) {
       let request = {
         andConditionModel: {
@@ -261,6 +251,11 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           this.orderLine.item = res.ListModel.BaseModels[0]
+          this.orderLine.category1 = this.orderLine.item.Category1
+          this.orderLine.category2 = this.orderLine.item.Category2
+          this.orderLine.category3 = this.orderLine.item.Category3
+          this.orderLine.category4 = this.orderLine.item.Category4
+          this.orderLine.category5 = this.orderLine.item.Category5
           this.selectItem()
           this.$forceUpdate()
         }
@@ -356,7 +351,7 @@ export default {
       this.form.TotalItemDiscount = 0
       this.form.TotalOtherDiscount = 0
       this.form.TotalDiscount = 0
-      for (let index = 0; index < this.form.OrderLines.length; index++) {
+      for (let index = 0; index < this.form.OrderLines.filter(o => o.RecordState !== 4).length; index++) {
         this.form.OrderLines[index].LineNumber = index
         this.form.NetTotal += parseFloat(this.form.OrderLines[index].NetTotal)
         this.form.TotalVat += parseFloat(this.form.OrderLines[index].TotalVat)
@@ -389,7 +384,7 @@ export default {
         Description1: selectedItem.Description1,
         Deleted: 0,
         System: 0,
-        RecordState: 2,
+        RecordState: this.orderLine.recordState ? this.orderLine.recordState : 2,
         StatusId: 1,
         LineNumber: length,
         ItemId: selectedItem.RecordId,
@@ -418,7 +413,8 @@ export default {
         Category2: this.orderLine.category2,
         Category3: this.orderLine.category3,
         Category4: this.orderLine.category4,
-        Category5: this.orderLine.category5
+        Category5: this.orderLine.category5,
+        RecordId: this.orderLine.recordId ? this.orderLine.recordId : null
       }
       if (this.orderLine.isUpdated) {
         this.form.OrderLines[this.selectedIndex] = order
@@ -438,7 +434,11 @@ export default {
       this.$v.orderLine.$reset()
     },
     removeOrderLine (item) {
-      this.form.OrderLines.splice(this.form.OrderLines.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.OrderLines[this.form.OrderLines.indexOf(item)].RecordState = 4
+      } else {
+        this.form.OrderLines.splice(this.form.OrderLines.indexOf(item), 1)
+      }
       this.calculateTotalPrices()
       this.selectedIndex = null
       this.orderLine = {}
@@ -454,6 +454,9 @@ export default {
         vatTotal: item.TotalVat,
         grossTotal: item.GrossTotal,
         stock: item.Stock,
+        recordState: item.RecordState === 1 ? 3 : item.RecordState,
+        recordId: item.RecordId,
+        orderId: item.OrderId,
         isUpdated: true,
         category1: item.Category1,
         category2: item.Category2,
@@ -489,7 +492,7 @@ export default {
           })
           return
         }
-        this.createData()
+        this.updateData()
       }
     },
     getPaymentTypes () {
@@ -535,31 +538,13 @@ export default {
         })
       }
     },
-    successCustomerAdded (value) {
-      if (value) {
-        this.selectedCustomer = value
-        this.form.CustomerId = value.RecordId
-      }
-    },
-    getUserInfo () {
-      let userModel = JSON.parse(localStorage.getItem('UserModel'))
-      if (userModel) {
-        let request = {
-          andConditionModel: {
-            RecordIds: [userModel.UserId]
-          }
-        }
-        this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
-          if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
-            let user = response.ListModel.BaseModels[0]
-            this.representative = {
-              RecordId: user.EmployeeId,
-              Description1: `${userModel.Name} ${userModel.Surname}`
-            }
-            this.form.RepresentativeId = user.EmployeeId
-          }
-        })
-      }
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      this.warehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
+      this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
+      this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
+      this.$forceUpdate()
     }
   },
   validations () {
