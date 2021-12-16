@@ -26,11 +26,13 @@ import 'vuelayers/lib/style.css' // needs css-loader
 import draggable from 'vuedraggable'
 
 import {VueMasonryPlugin} from 'vue-masonry'
+import DateRangePicker from 'vue2-daterange-picker'
 
 // multiple date datepicker
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import 'vue2-datepicker/locale/tr'
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import VueLazyload from 'vue-lazyload'
 
 import Nextgrid from './components/NextGrid'
@@ -59,6 +61,7 @@ import NextDropdown from './components/NextDropdown'
 import NextDetailPanel from './components/NextDetailPanel'
 import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
+import NextDatePicker2 from './components/NextDatePicker2'
 import NextTimePicker from './components/NextTimePicker'
 import NextInput from './components/NextInput'
 import NextTextArea from './components/NextTextArea'
@@ -139,6 +142,7 @@ Vue.component('NextDetailPanel', NextDetailPanel)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)
+Vue.component('NextDatePicker2', NextDatePicker2)
 Vue.component('NextTimePicker', NextTimePicker)
 Vue.component('NextInput', NextInput)
 Vue.component('NextTextArea', NextTextArea)
@@ -151,6 +155,7 @@ Vue.component('CommonInfoModal', CommonInfoModal)
 Vue.component('NextMultipleSelection', NextMultipleSelection)
 Vue.component('CommonExcelModal', CommonExcelModal)
 Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
+Vue.component('DateRangePicker', DateRangePicker)
 
 Vue.prototype.$api = new ApiManager()
 
