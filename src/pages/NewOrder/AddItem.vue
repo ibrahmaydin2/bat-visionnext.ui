@@ -1,50 +1,70 @@
 <template>
   <div>
-    <b-form-group>
-      <b-button class="mt-4" @click="showModal" variant="success" size="sm">
-        <i class="fa fa-plus"></i> {{$t('insert.newOrder.newCustomer')}}
-      </b-button>
-    </b-form-group>
-    <b-modal :id="`modal${id}`" size="lg" @show="show">
+    <NextFormGroup :title="$t('insert.newOrder.product')" :error="error" :required="true" md="12" lg="12">
+      <div class="form-control" @click="showModal">
+        <img v-if="value" height="20px" src="https://productimages.hepsiburada.net/s/47/550/10921432318002.jpg" />
+        <span>{{value ? `${value.Code} - ${value.Description1}` : $t('insert.newOrder.selectItem')}}</span>
+      </div>
+    </NextFormGroup>
+    <b-modal :id="`modal${id}`" size="xl" @show="show">
       <template #modal-title>
-        {{$t('insert.newOrder.addNewCustomer')}}
+        {{$t('insert.newOrder.addNewItem')}}
       </template>
       <b-row>
-        <NextFormGroup :title="$t('insert.newOrder.commercialTitle')" md="4" lg="4" :required="true" :error="$v.form.CommercialTitle">
-          <NextInput type="text" v-model="form.CommercialTitle"></NextInput>
+        <NextFormGroup :title="$t('insert.newOrder.category1')" :error="$v.itemInfo.category1" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.category1"
+            lookup-key="ITEM_CATEGORY_1"
+            @input="selectCategory($event, 2)"
+            get-lookup/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.taxCustomerTypeId')" md="4" lg="4" :required="true" :error="$v.form.TaxCustomerTypeId">
-          <NextDropdown v-model="taxCustomerType" lookup-key="TAX_CUSTOMER_TYPE" :get-lookup="true" @input="selectedType('TaxCustomerTypeId', $event)"/>
+        <NextFormGroup :title="$t('insert.newOrder.category2')" :error="$v.itemInfo.category2" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.category2"
+            label="Label"
+            :source="category2List"
+            :disabled="!itemInfo.category1"
+            @input="selectCategory($event, 3)"/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.tcknOrVkn')" md="4" lg="4" :required="true" :error="$v.form.TaxNumber">
-          <NextInput type="number" v-model="form.TaxNumber" maxLength="11" :oninput="maxLengthControl"></NextInput>
+        <NextFormGroup :title="$t('insert.newOrder.category3')" :error="$v.itemInfo.category3" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.category3"
+            label="Label"
+            :source="category3List"
+            :disabled="!itemInfo.category2"
+            @input="selectCategory($event, 4)"/>
         </NextFormGroup>
-        <NextFormGroup v-if="taxCustomerType && taxCustomerType.Code === 'TZK'" :title="$t('insert.newOrder.taxOffice')" md="4" lg="4" :required="true" :error="$v.form.TaxOffice">
-          <NextInput type="text" v-model="form.TaxOffice"></NextInput>
+        <NextFormGroup :title="$t('insert.newOrder.category4')" :error="$v.itemInfo.category4" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.category4"
+            label="Label"
+            :source="category4List"
+            :disabled="!itemInfo.category3"
+            @input="selectCategory($event, 5)"/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.phoneNumber')" md="4" lg="4" :required="true" :error="$v.form.PhoneNumber1">
-          <NextInput type="number" v-model="form.PhoneNumber1" maxLength="10" :oninput="maxLengthControl"></NextInput>
+        <NextFormGroup :title="$t('insert.newOrder.category5')" :error="$v.itemInfo.category5" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.category5"
+            label="Label"
+            :source="category5List"
+            :disabled="!itemInfo.category4"
+            @input="selectCategory($event, 0)"/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.customerEmail')" md="4" lg="4" :required="true" :error="$v.form.CustomerEmail">
-          <NextInput type="email" v-model="form.CustomerEmail"></NextInput>
+        <NextFormGroup :title="$t('insert.newOrder.product')" :error="$v.itemInfo.item" :required="true" md="2" lg="2">
+          <NextDropdown
+            v-model="itemInfo.item"
+            :disabled="!itemInfo.category5"
+            :source="itemList"
+            @input="updateData"/>
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.city')" md="4" lg="4" :required="true" :error="$v.form.CityId">
-          <NextDropdown lookup-key="CITY" :get-lookup="true" @input="selectCity"/>
-        </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.district')" md="4" lg="4" :required="true" :error="$v.form.DistrictId">
-         <NextDropdown v-model="district" :source="districts" :disabled="!form.CityId" label="Label" @input="selectedType('DistrictId', $event)"/>
-        </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.address')" md="4" lg="4" :required="true" :error="$v.form.AddressDetail">
-          <NextTextArea v-model="form.AddressDetail"></NextTextArea>
-        </NextFormGroup>
-        <NextFormGroup :title="$t('insert.newOrder.postCode')" md="4" lg="4" :required="true" :error="$v.form.PostCode">
-          <NextInput type="number" v-model="form.PostCode" maxLength="5" :oninput="maxLengthControl"></NextInput>
-        </NextFormGroup>
+        <div class="selected-item" v-if="itemInfo.item">
+          <img height="40px" src="https://productimages.hepsiburada.net/s/47/550/10921432318002.jpg" />
+          <span class="pl-2">{{`${itemInfo.item.Code} - ${itemInfo.item.Description1}`}}</span>
+        </div>
         <b-col cols="12" md="12">
           <b-form-group class="float-right">
-            <b-button size="sm" variant="success" @click="addCustomer()" :disabled="isLoading">
-              <span v-if="isLoading"><b-spinner small></b-spinner> {{$t('index.loading')}}</span>
-              <span v-else><i class="fa fa-plus"></i> {{$t('insert.newOrder.add')}}</span>
+            <b-button size="sm" variant="success" @click="addItem()">
+              <span><i class="fa fa-plus"></i> {{$t('insert.newOrder.add')}}</span>
             </b-button>
           </b-form-group>
         </b-col>
@@ -57,37 +77,42 @@
 </template>
 <script>
 import mixin from '../../mixins/index'
-import { required, requiredIf, minLength, maxLength } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'NewOrderAddItem',
   mixins: [mixin],
   props: {
+    value: {
+      type: Object
+    },
+    error: {}
+  },
+  model: {
+    prop: 'value',
+    event: 'valuechange'
   },
   data () {
     return {
       id: Math.random().toString(36).substring(2),
-      form: {
-        CommercialTitle: null,
-        TaxCustomerTypeId: null,
-        TaxNumber: null,
-        TaxOffice: null,
-        PhoneNumber1: null,
-        CustomerEmail: null,
-        AddressDetail: null,
-        CityId: null,
-        DistrictId: null,
-        PostCode: null
+      itemInfo: {
+        category1: null,
+        category2: null,
+        category3: null,
+        category4: null,
+        category5: null,
+        item: null
       },
-      isLoading: false,
-      taxCustomerType: null,
-      district: null,
-      districts: []
+      itemList: [],
+      category2List: [],
+      category3List: [],
+      category4List: [],
+      category5List: []
     }
   },
   methods: {
-    addCustomer () {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
+    addItem () {
+      this.$v.itemInfo.$touch()
+      if (this.$v.itemInfo.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
           keepOnHover: true,
@@ -96,68 +121,22 @@ export default {
         return
       }
 
-      let request = {
-        model: {
-          Code: this.form.Code,
-          CommercialTitle: this.form.CommercialTitle,
-          Description1: this.form.CommercialTitle,
-          CustomerEmail: this.form.CustomerEmail,
-          TaxCustomerTypeId: this.form.TaxCustomerTypeId,
-          TaxOffice: this.taxCustomerType.Code === 'TZK' ? this.form.TaxOffice : this.form.TaxNumber,
-          TaxNumber: this.form.TaxNumber,
-          StatusId: 1,
-          TypeId: 5004,
-          SalesDocumentTypeId: 45,
-          PriceListCategoryId: 1681208812,
-          RecordTypeId: 1,
-          IsTaxExemption: 0,
-          CardTypeId: 1,
-          SalesTypeId: 1,
-          SalesPriceChangeRate: 0,
-          DefaultPaymentTypeId: 1,
-          UseEInvoice: 0,
-          RecordState: 2,
-          CustomerLocations: [
-            {
-              AddressDetail: this.form.AddressDetail,
-              PhoneNumber1: this.form.PhoneNumber1,
-              CityId: this.form.CityId,
-              DistrictId: this.form.DistrictId,
-              PostCode: this.form.PostCode,
-              Code: `${this.form.Code}-1`,
-              Description1: `${this.form.CommercialTitle} 1`,
-              AddressDescription: this.form.AddressDetail,
-              IsDefaultLocation: 1,
-              IsInvoiceAddress: 1,
-              IsDeliveryAddress: 1,
-              RecordState: 2
-            }
-          ]
-        }
-      }
-
-      this.isLoading = true
-      this.$store.commit('setDisabledLoading', true)
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/Insert').then((response) => {
-        this.isLoading = false
-        this.$store.commit('setDisabledLoading', false)
-
-        if (response && response.IsCompleted) {
-          this.$emit('success', response.Model)
-          this.closeModal()
-        }
-      })
+      this.$emit('success', this.itemInfo.item)
+      this.$emit('valuechange', this.itemInfo.item)
+      this.closeModal()
     },
     show () {
-      this.form = {}
-      this.$v.form.$reset()
-
-      this.isLoading = false
-      this.taxCustomerType = null
-      this.district = null
-      this.districts = []
-
-      this.getCode()
+      this.category2List = []
+      this.category3List = []
+      this.category4List = []
+      this.category5List = []
+      this.itemList = []
+      if (this.value) {
+        this.initializeData(this.value)
+      } else {
+        this.itemInfo = {}
+      }
+      this.$v.itemInfo.$reset()
     },
     showModal () {
       this.$bvModal.show(`modal${this.id}`)
@@ -165,77 +144,101 @@ export default {
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
     },
-    selectCity (value) {
-      this.district = null
-      this.districts = []
-      this.form.DistrictId = null
-
-      if (value) {
-        this.form.CityId = value.DecimalValue
-        let request = {
-          UpperValue: value.DecimalValue,
-          LookupTableCode: 'DISTRICT'
+    selectCategory (value, index) {
+      if (index > 0) {
+        for (let i = index; i <= 5; i++) {
+          this.itemInfo[`category${i}`] = null
+          this[`category${i}List`] = []
         }
-        this.$api.postByUrl(request, 'VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue').then(response => {
-          if (response) {
-            this.districts = response.Values
+        this.itemInfo.item = null
+        this.itemInfo[`category${index - 1}`] = value
+      }
+      if (value) {
+        let request = {
+          andConditionModel: {
+            Category1Ids: this.itemInfo.category1 ? [this.itemInfo.category1.DecimalValue] : null,
+            Category2Ids: this.itemInfo.category2 ? [this.itemInfo.category2.DecimalValue] : null,
+            Category3Ids: this.itemInfo.category3 ? [this.itemInfo.category3.DecimalValue] : null,
+            Category4Ids: this.itemInfo.category4 ? [this.itemInfo.category4.DecimalValue] : null,
+            Category5Ids: this.itemInfo.category5 ? [this.itemInfo.category5.DecimalValue] : null
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextItem/api/Item/Search').then((response) => {
+          if (response && response.ListModel && response.ListModel.BaseModels.length > 0) {
+            if (index > 0) {
+              this[`category${index}List`] = [...new Set(response.ListModel.BaseModels.map(r => r[`Category${index}`]))]
+            } else {
+              this.itemList = response.ListModel.BaseModels
+            }
+          } else {
+            this.$toasted.show(this.$t('insert.newOrder.itemNotFound'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
           }
         })
-      } else {
-        this.form.CityId = null
       }
     },
-    getCode () {
-      this.$api.postByUrl({}, 'VisionNextOrder/api/Order/GetCode').then(response => {
-        if (response && response.Model) {
-          this.form.Code = response.Model.Code
-        }
+    initializeData (value) {
+      this.itemInfo = {
+        category1: value.Category1,
+        category2: value.Category2,
+        category3: value.Category3,
+        category4: value.Category4,
+        category5: value.Category5,
+        item: value
+      }
+      this.updateData()
+    },
+    updateData () {
+      this.$nextTick(() => {
+        this.$$forceUpdate()
       })
     }
   },
   validations () {
-    let isTZK = this.taxCustomerType && this.taxCustomerType.Code === 'TZK'
-    let taxNumberReq = isTZK ? 10 : 11
+    let itemInfo = {
+      category1: {
+        required
+      },
+      category2: {
+        required
+      },
+      category3: {
+        required
+      },
+      category4: {
+        required
+      },
+      category5: {
+        required
+      },
+      item: {
+        required
+      }
+    }
     return {
-      form: {
-        CommercialTitle: {
-          required
-        },
-        TaxCustomerTypeId: {
-          required
-        },
-        TaxNumber: {
-          required,
-          minLength: minLength(taxNumberReq),
-          maxLength: maxLength(taxNumberReq)
-        },
-        TaxOffice: {
-          required: requiredIf(function () {
-            return isTZK
-          })
-        },
-        CustomerEmail: {
-          required
-        },
-        PhoneNumber1: {
-          required,
-          minLength: minLength(10)
-        },
-        CityId: {
-          required
-        },
-        DistrictId: {
-          required
-        },
-        AddressDetail: {
-          required
-        },
-        PostCode: {
-          required,
-          minLength: minLength(5)
-        }
+      itemInfo: itemInfo
+    }
+  },
+  watch: {
+    value (newValue) {
+      if (newValue) {
+        this.initializeData(newValue)
       }
     }
   }
 }
 </script>
+<style scoped>
+.selected-item {
+  border: 1px solid gray;
+  border-radius: 9px;
+  padding: 14px;
+  width: 100%;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+</style>

@@ -2588,7 +2588,9 @@
       "customerEmail": "E-Posta",
       "city": "İl",
       "district": "İlçe",
-      "postCode": "Posta Kodu"
+      "postCode": "Posta Kodu",
+      "addNewItem": "Yeni Ürün Ekle",
+      "selectItem": "Ürün Seç"
     }
   },
   "get": {

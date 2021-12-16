@@ -80,52 +80,7 @@
       <b-tabs>
         <b-tab :title="$t('insert.newOrder.products')" @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup :title="$t('insert.newOrder.category1')" :error="$v.orderLine.category1" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.category1"
-                    lookup-key="ITEM_CATEGORY_1"
-                    @input="selectCategory($event, 2)"
-                    get-lookup/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.category2')" :error="$v.orderLine.category2" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.category2"
-                    label="Label"
-                    :source="category2List"
-                    :disabled="!orderLine.category1"
-                    @input="selectCategory($event, 3)"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.category3')" :error="$v.orderLine.category3" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.category3"
-                    label="Label"
-                    :source="category3List"
-                    :disabled="!orderLine.category2"
-                    @input="selectCategory($event, 4)"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.category4')" :error="$v.orderLine.category4" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.category4"
-                    label="Label"
-                    :source="category4List"
-                    :disabled="!orderLine.category3"
-                    @input="selectCategory($event, 5)"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.category5')" :error="$v.orderLine.category5" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.category5"
-                    label="Label"
-                    :source="category5List"
-                    :disabled="!orderLine.category4"
-                    @input="selectCategory($event, 0)"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.product')" :error="$v.orderLine.item" :required="true" md="2" lg="2">
-              <NextDropdown
-                    v-model="orderLine.item"
-                    @input="selectItem($event)"
-                    :disabled="!orderLine.category5"
-                    :source="itemList"/>
-            </NextFormGroup>
+            <AddItem v-model="orderLine.item" @success="successItemAdded" :error="$v.orderLine.item" />
             <NextFormGroup :title="$t('insert.newOrder.quantity')" :error="$v.orderLine.quantity" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="orderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrency($event)" min=1></NextInput>
             </NextFormGroup>
@@ -193,10 +148,12 @@
 import { required, minValue } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
 import AddCustomer from '../AddCustomer.vue'
+import AddItem from '../AddItem.vue'
 export default {
   mixins: [insertMixin],
   components: {
-    AddCustomer
+    AddCustomer,
+    AddItem
   },
   data () {
     return {
@@ -452,7 +409,6 @@ export default {
       this.calculateTotalPrices()
       this.selectedIndex = null
       this.orderLine = {}
-      this.category1List = []
       this.category2List = []
       this.category3List = []
       this.category4List = []
@@ -564,6 +520,11 @@ export default {
         this.form.CustomerId = value.RecordId
       }
     },
+    successItemAdded (value) {
+      if (value) {
+        this.selectItem(value)
+      }
+    },
     getUserInfo () {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       if (userModel) {
@@ -587,21 +548,6 @@ export default {
   },
   validations () {
     let orderLine = {
-      category1: {
-        required
-      },
-      category2: {
-        required
-      },
-      category3: {
-        required
-      },
-      category4: {
-        required
-      },
-      category5: {
-        required
-      },
       item: {
         required
       },

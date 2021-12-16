@@ -445,7 +445,6 @@ export default {
       this.calculateTotalPrices()
       this.selectedIndex = null
       this.orderLine = {}
-      this.category1List = []
       this.category2List = []
       this.category3List = []
       this.category4List = []
