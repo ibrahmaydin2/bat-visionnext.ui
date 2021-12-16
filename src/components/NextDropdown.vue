@@ -114,6 +114,10 @@ export default {
     isCustomSlot: {
       type: Boolean,
       default: false
+    },
+    firstItemSelected: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -335,6 +339,8 @@ export default {
         this.findDefaultValue(defaultValue, source)
       } else if (this.defaultValue) {
         this.findDefaultValue(this.defaultValue, source)
+      } else if (this.firstItemSelected && source.length > 0) {
+        this.selectedValue = source[0]
       }
     },
     findDefaultValue (defaultValue, source) {

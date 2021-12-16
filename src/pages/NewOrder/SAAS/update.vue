@@ -24,13 +24,10 @@
                 <NextInput type="text" v-model="form.OrderNumber" :disabled="insertReadonly.OrderNumber"></NextInput>
               </NextFormGroup>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-                <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
-              </NextFormGroup>
-              <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
-                <NextTimePicker v-model="form.DocumentTime" :disabled="insertReadonly.DocumentTime" />
+                <NextDatePicker2 :time-picker="true" v-model="documentDate" :disabled="insertReadonly.DocumentDate" @input="selectDocumentDate" />
               </NextFormGroup>
               <NextFormGroup item-key="DueDate" :error="$v.form.DueDate" md="3" lg="3">
-                <NextDatePicker v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
+                <NextDatePicker2 v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
               </NextFormGroup>
               <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="3" lg="3">
                   <NextDropdown v-model="representative" :disabled="insertReadonly.RepresentativeId" @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
@@ -38,9 +35,9 @@
               <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="3" lg="3">
                 <NextDropdown
                   v-model="warehouse"
-                  searchable
                   @input="selectedSearchType('WarehouseId', $event)"
                   url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+                  :dynamic-and-conditions="{IsCenterWarehouse: 1, StatusId: 1}"
                   :disabled="insertReadonly.WarehouseId"/>
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4">
@@ -50,7 +47,7 @@
                   url="VisionNextCustomer/api/Customer/Search"
                   :custom-option="true"
                   :is-customer="true"
-                  or-condition-fields="Code,Description1,CommercialTitle"
+                  or-condition-fields="Code,Description1,CommercialTitle,TaxNumber"
                   @input="selectedSearchType('CustomerId', $event);"
                   :disabled="insertReadonly.CustomerId"
                   :dynamic-and-condition="{ StatusIds: [1], IsBlocked: 0 }"/>
@@ -113,7 +110,7 @@
                     :disabled="!orderLine.category3"
                     @input="selectCategory($event, 5)"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.newOrder.category5')" :error="$v.orderLine.category1" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.newOrder.category5')" :error="$v.orderLine.category5" :required="true" md="2" lg="2">
               <NextDropdown
                     v-model="orderLine.category5"
                     label="Label"
@@ -223,7 +220,20 @@ export default {
       warehouse: null,
       priceListItems: [],
       priceListItem: null,
-      orderLine: {},
+      orderLine: {
+        category1: null,
+        category2: null,
+        category3: null,
+        category4: null,
+        category5: null,
+        item: null,
+        quantity: null,
+        price: null,
+        grossTotal: null,
+        netTotal: null,
+        vatRate: null,
+        vatTotal: null
+      },
       stocks: [],
       paymentTypes: [],
       selectedPaymentType: null,
@@ -234,13 +244,23 @@ export default {
       category4List: [],
       category5List: [],
       routeName1: 'Order',
-      routeName2: 'Order'
+      routeName2: 'Order',
+      documentDate: null
     }
   },
   mounted () {
     this.getData().then(() => { this.setData() })
   },
   methods: {
+    selectDocumentDate (value) {
+      if (value) {
+        this.form.DocumentDate = value.slice(0, 10)
+        this.form.DocumentTime = new Date(value).toTimeString().slice(0, 5)
+      } else {
+        this.form.DocumentDate = null
+        this.form.DocumentTime = null
+      }
+    },
     getItem (recordId) {
       let request = {
         andConditionModel: {
@@ -544,51 +564,53 @@ export default {
       this.warehouse = this.convertLookupValueToSearchValue(rowData.Warehouse)
       this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
       this.representative = this.convertLookupValueToSearchValue(rowData.Representative)
+      this.documentDate = `${this.form.DocumentDate.slice(0, 10)}T${this.form.DocumentTime}`
       this.$forceUpdate()
     }
   },
   validations () {
+    let orderLine = {
+      category1: {
+        required
+      },
+      category2: {
+        required
+      },
+      category3: {
+        required
+      },
+      category4: {
+        required
+      },
+      category5: {
+        required
+      },
+      item: {
+        required
+      },
+      quantity: {
+        required,
+        minValue: minValue(1)
+      },
+      price: {
+        required
+      },
+      grossTotal: {
+        required
+      },
+      netTotal: {
+        required
+      },
+      vatRate: {
+        required
+      },
+      vatTotal: {
+        required
+      }
+    }
     return {
       form: this.insertRules,
-      orderLine: {
-        category1: {
-          required
-        },
-        category2: {
-          required
-        },
-        category3: {
-          required
-        },
-        category4: {
-          required
-        },
-        category5: {
-          required
-        },
-        item: {
-          required
-        },
-        quantity: {
-          required,
-          minValue: minValue(1)
-        },
-        price: {
-          required
-        },
-        grossTotal: {
-          required
-        },
-        netTotal: {
-          required
-        },
-        vatRate: {
-          required
-        },
-        vatTotal: {
-          required
-        }
-      }
+      orderLine: orderLine
     }
   },
   watch: {
