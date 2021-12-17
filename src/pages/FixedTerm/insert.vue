@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+              <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Period" :error="$v.form.Period">
-              <b-form-input type="number" v-model="form.Period" :readonly="insertReadonly.Period" />
+              <NextInput v-model="form.Period" type="number" :disabled="insertReadonly.Period" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+              <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
               <NextCheckBox v-model="form.StatusId" type="number" toggle/>

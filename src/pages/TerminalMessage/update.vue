@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code" md="4" lg="4">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" disabled/>
+            <NextInput type="text" v-model="form.Code" :disabled="true"/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="4" lg="4">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" disabled/>
+            <NextInput type="text" v-model="form.Description1" :disabled="true"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="4" lg="4">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -35,10 +35,10 @@
         <b-tab :title="$t('insert.terminalMessage.definitions')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="MessageSubject" :error="$v.form.MessageSubject" md="3" lg="3">
-              <b-form-input type="text" v-model="form.MessageSubject" :readonly="insertReadonly.MessageSubject" disabled/>
+              <NextInput type="text" v-model="form.MessageSubject" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="MessageBody" :error="$v.form.MessageBody" md="3" lg="3">
-              <b-form-input type="text" v-model="form.MessageBody" :readonly="insertReadonly.MessageBody" disabled/>
+              <NextInput type="text" v-model="form.MessageBody" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="MessageTypeId" :error="$v.form.MessageTypeId" md="3" lg="3">
               <NextDropdown v-model="selectedMessageType" lookup-key="MESSAGE_TYPE" @input="selectedType('MessageTypeId', $event)" disabled/>
@@ -76,7 +76,7 @@
                 or-condition-fields="Code,Description1"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.terminalMessage.branchName')">
-              <b-form-input type="text" v-model="branchName" :disabled="true"/>
+              <NextInput type="text" v-model="branchName" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>

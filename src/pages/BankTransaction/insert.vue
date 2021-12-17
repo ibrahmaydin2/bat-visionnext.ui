@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-            <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')"/>
+            <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -44,7 +44,7 @@
               <NextDropdown @input="selectedSearchType('BankBranchId', $event)" :source="bankBranches"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankAccountNumber" :error="$v.form.BankAccountNumber" md="3" lg="3">
-              <b-form-input type="text" v-model="form.BankAccountNumber" :readonly="insertReadonly.BankAccountNumber" />
+              <NextInput v-model="form.BankAccountNumber" type="text" :disabled="insertReadonly.BankAccountNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
               <NextDropdown
@@ -61,10 +61,10 @@
               <NextDropdown @input="selectedSearchType('CustomerBankBranchId', $event)" :source="customerBankBranches"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankAccountNumber" :error="$v.form.CustomerBankAccountNumber" md="3" lg="3">
-              <b-form-input type="text" v-model="form.CustomerBankAccountNumber" :readonly="insertReadonly.CustomerBankAccountNumber" />
+              <NextInput v-model="form.CustomerBankAccountNumber" type="text" :disabled="insertReadonly.CustomerBankAccountNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="3" lg="3">
-              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+              <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="3" lg="3">
               <NextDropdown @input="selectedSearchType('CurrencyId', $event)" url="VisionNextSystem/api/SysCurrency/Search"/>
@@ -73,7 +73,7 @@
               <NextDropdown @input="selectedSearchType('TransactionTypeId', $event)" url="VisionNextBank/api/BankTransactionType/Search"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTotal" :error="$v.form.TransactionTotal" md="3" lg="3">
-               <b-form-input type="text" v-model="form.TransactionTotal" :readonly="insertReadonly.TransactionTotal" />
+              <NextInput v-model="form.TransactionTotal" type="text" :disabled="insertReadonly.TransactionTotal" />
             </NextFormGroup>
           </b-row>
         </b-tab>
