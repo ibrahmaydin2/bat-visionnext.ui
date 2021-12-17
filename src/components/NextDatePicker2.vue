@@ -6,14 +6,15 @@
     :timePicker24Hour="true"
     :showWeekNumbers="true"
     :showDropdowns="true"
-    :ranges="true"
+    :ranges="false"
     :autoApply="false"
     :readonly="disabled"
     :date-range="selectedValue"
-    :linkedCalendars="true">
+    :linkedCalendars="true"
+    :time-picker-increment="1">
     <template v-slot:input="picker" style="min-width: 350px;">
-      <span v-if="range">{{ picker.startDate | date }} - {{ picker.endDate | date }}</span>
-      <span v-else>{{ picker.startDate | date}}</span>
+      <span v-if="range">{{ picker.startDate | date(timePicker) }} - {{ picker.endDate | date(timePicker) }}</span>
+      <span v-else>{{ picker.startDate | date(timePicker)}}</span>
     </template>
   </date-range-picker>
 </template>
@@ -79,27 +80,35 @@ export default {
         }
       }
       this.$emit('valuechange', val)
+      this.$emit('input', val)
     }
   },
   filters: {
-    date (value) {
-      return value ? value.toLocaleDateString() : ''
+    date (value, timePicker) {
+      if (value) {
+        return timePicker ? `${value.toLocaleDateString()} ${value.toLocaleTimeString().slice(0, 5)}` : value.toLocaleDateString()
+      }
+      return ''
     }
   },
   watch: {
-    value (newValue, oldValue) {
-      let val = ''
-      if (newValue !== oldValue) {
-        if (!this.range) {
-          val = {
-            startDate: newValue,
-            endDate: newValue
+    value: {
+      handler (newValue, oldValue) {
+        let val = ''
+        if (newValue !== oldValue) {
+          if (!this.range) {
+            val = {
+              startDate: newValue,
+              endDate: newValue
+            }
+          } else {
+            val = newValue
           }
-        } else {
-          val = newValue
+          this.selectedValue = val
         }
-        this.selectedValue = val
-      }
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
@@ -109,7 +118,7 @@ export default {
 .vue-daterange-picker {
   width: 100% !important;
 }
-.calendars {
-  min-width: 360px;
+.daterangepicker {
+  min-width: 295px !important;
 }
 </style>
