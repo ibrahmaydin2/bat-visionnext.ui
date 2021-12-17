@@ -4,11 +4,11 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  VUE_APP_SERVICE_URL_BASE: "'https://saasvndevapi.visionnext.com.tr/'",
-  VUE_APP_SYSTEM_NAME: "'SAAS UI DEVELOPMENT'",
+  VUE_APP_SERVICE_URL_BASE: "'https://batdev.visionnext.com.tr/'",
+  VUE_APP_SYSTEM_NAME: "'BAT UI DEVELOPMENT'",
   VUE_APP_VESION_NO: "'1.0.1.63'",
-  BASE_URL: "'https://saasfedev.visionnext.com.tr/'",
-  TENANT: "'SAAS'",
-  SITE_NAME: "'SAAS'",
-  HASH: "'2a3e24c0-ce45-50b0-3ff9-8b9523611a2b'"
+  BASE_URL: "'http://batfedev.visionnext.com.tr/'",
+  TENANT: "'BAT'",
+  SITE_NAME: "'BAT'",
+  HASH: "'e28d4630-558a-7890-be16-9d0c1a9dc096'"
 })

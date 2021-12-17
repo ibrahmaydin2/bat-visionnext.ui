@@ -341,6 +341,7 @@ export default {
         this.findDefaultValue(this.defaultValue, source)
       } else if (this.firstItemSelected && source.length > 0) {
         this.selectedValue = source[0]
+        this.$emit('input', this.selectedValue)
       }
     },
     findDefaultValue (defaultValue, source) {
