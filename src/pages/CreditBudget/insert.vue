@@ -20,7 +20,7 @@
       <section>
         <b-row>
           <NextFormGroup :title="$t('insert.code')">
-            <b-form-input type="text" v-model="form.Code" disabled />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -33,25 +33,25 @@
         <b-tab :title="$t('insert.creditBudget.title')" active>
           <b-row>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
-              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
             </NextFormGroup>
             <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
-              <b-form-datepicker v-model="form.EndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.EndDate" :disabled="insertReadonly.EndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="CreditBranchId" :error="$v.form.CreditBranchId">
               <NextDropdown url="VisionNextBranch/api/Branch/AutoCompleteSearch" @input="selectedSearchType('CreditBranchId', $event)" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" @input="changedBudgetAmount" />
+              <NextInput v-model="form.BudgetAmount" type="number" :disabled="insertReadonly.BudgetAmount" @input="changedBudgetAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
-              <b-form-input type="text" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount"/>
+              <NextInput type="text" v-model="form.UsedAmount" :disabled="insertReadonly.UsedAmount"/>
             </NextFormGroup>
             <NextFormGroup item-key="ReservedAmount" :error="$v.form.ReservedAmount">
-              <b-form-input type="text" v-model="form.ReservedAmount" :readonly="insertReadonly.ReservedAmount" />
+              <NextInput type="text" v-model="form.ReservedAmount" :disabled="insertReadonly.ReservedAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.remainingBudget')">
-              <b-form-input type="text" v-model="form.LeftAmount" disabled />
+              <NextInput type="text" v-model="form.LeftAmount" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -68,28 +68,28 @@
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditLimit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditLimit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.riskLimit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.RiskLimit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.RiskLimit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.currentCredit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CurrentCredit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CurrentCredit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.currentRisk')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CurrentRisk" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CurrentRisk" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditAccountRemainder')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAccountRemainder" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditAccountRemainder" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.debitAccountRemainder')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.DebitAccountRemainder" disabled />
+              <NextInput type="text" v-model="customerGuarantees.DebitAccountRemainder" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditAmountCentral')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAmountCentral" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditAmountCentral" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
-              <b-form-input type="number" v-model="customerGuarantees.Amount"/>
+              <NextInput type="number" v-model="customerGuarantees.Amount"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="false" md="2" lg="2">
               <NextDropdown

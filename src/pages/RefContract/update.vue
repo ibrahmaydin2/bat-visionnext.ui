@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -57,10 +57,10 @@
               <NextDropdown :disabled="true" v-model="transferLabel" lookup-key="CONTRACT_TRANSFER_STATUS" @input="selectedType('ContractTransferStatusId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractStartDate" :error="$v.form.SourceContractStartDate">
-              <b-form-datepicker v-model="form.SourceContractStartDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.SourceContractStartDate" :disabled="insertReadonly.SourceContractStartDate" />
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractEndDate" :error="$v.form.SourceContractEndDate">
-              <b-form-datepicker v-model="form.SourceContractEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.SourceContractEndDate" :disabled="insertReadonly.SourceContractEndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="TransferReasonId" :error="$v.form.TransferReasonId">
               <NextDropdown v-model="transferReason" lookup-key="TRANSFER_REASON" @input="selectedType('TransferReasonId', $event)"/>

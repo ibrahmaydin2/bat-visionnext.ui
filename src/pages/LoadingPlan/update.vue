@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code" md="2" lg="2">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2" lg="2">
             <b-form-datepicker v-model="form.LoadingDate" />
@@ -55,7 +55,7 @@
                 custom-option/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
-              <b-form-input type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
+              <NextInput type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
