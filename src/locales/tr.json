@@ -2565,7 +2565,7 @@
       "category4": "Kategori 4",
       "category5": "Kategori 5",
       "product": "Ürün",
-      "productCode": "Ürün",
+      "productCode": "Ürün Kodu",
       "quantity": "Adet",
       "price": "Fiyat",
       "stock": "Stok",
@@ -2588,7 +2588,11 @@
       "customerEmail": "E-Posta",
       "city": "İl",
       "district": "İlçe",
-      "postCode": "Posta Kodu"
+      "postCode": "Posta Kodu",
+      "addNewItem": "Yeni Ürün Ekle",
+      "selectItem": "Ürün Seç",
+      "requiredProducts": "Lütfen en az 1 ürün için adet giriniz.",
+      "addProducts": "Ürünleri Ekle"
     }
   },
   "get": {
