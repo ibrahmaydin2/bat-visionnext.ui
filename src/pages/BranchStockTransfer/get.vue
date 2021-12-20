@@ -26,14 +26,14 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.FromWarehouseId')}}</span><p>{{rowData.FromWarehouse && rowData.FromWarehouse.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.FromBranchId')}}</span><p>{{rowData.FromBranch && rowData.FromBranch.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.FromStatusId')}}</span><p>{{rowData.FromStatus && rowData.FromStatus.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.FromWarehouse, 'object', 'insert.BranchStockTransfer.FromWarehouseId')"></div>
+              <div v-html="getFormatDataByType(rowData.FromBranch, 'object', 'insert.BranchStockTransfer.FromBranchId')"></div>
+              <div v-html="getFormatDataByType(rowData.FromStatus, 'object', 'insert.BranchStockTransfer.FromStatusId')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToWarehouseId')}}</span><p>{{rowData.ToWarehouse && rowData.ToWarehouse.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToBranchId')}}</span><p>{{rowData.ToBranch && rowData.ToBranch.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('insert.BranchStockTransfer.ToStatusId')}}</span><p>{{rowData.ToStatus && rowData.ToStatus.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.ToWarehouse, 'object', 'insert.BranchStockTransfer.ToWarehouseId')"></div>
+              <div v-html="getFormatDataByType(rowData.ToBranch, 'object', 'insert.BranchStockTransfer.ToBranchId')"></div>
+              <div v-html="getFormatDataByType(rowData.ToStatus, 'object', 'insert.BranchStockTransfer.ToStatusId')"></div>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
               <!-- <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
