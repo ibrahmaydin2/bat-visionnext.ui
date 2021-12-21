@@ -20,7 +20,6 @@
             v-model="itemInfo.category2"
             label="Label"
             :source="category2List"
-            :disabled="!itemInfo.category1"
             @input="selectCategory($event, 3)"/>
         </NextFormGroup>
         <NextFormGroup :title="$t('insert.newOrder.category3')" md="2" lg="2">
@@ -95,7 +94,8 @@ export default {
       category4List: [],
       category5List: [],
       products: [],
-      itemInfo: {}
+      itemInfo: {},
+      itemCategory2List: []
     }
   },
   methods: {
@@ -122,6 +122,7 @@ export default {
     },
     showModal () {
       this.$bvModal.show(`modal${this.id}`)
+      this.getItemCategory2()
     },
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
@@ -134,10 +135,14 @@ export default {
         }
         this.itemInfo[`category${index - 1}`] = value
       }
-      if (index === 2 && !value) {
+      if ((index === 2 || index === 3) && !value) {
         this.products = []
+        if (index === 2) {
+          this.category2List = this.itemCategory2List
+        }
         return
       }
+
       let request = {
         andConditionModel: {
           Category1Ids: this.itemInfo.category1 ? [this.itemInfo.category1.DecimalValue] : null,
@@ -176,6 +181,14 @@ export default {
       this.products[index].TotalVat = vatTotal
       this.products[index].GrossTotal = parseFloat(netTotal + vatTotal)
       this.$forceUpdate()
+    },
+    getItemCategory2 () {
+      this.$api.postByUrl({LookupTableCode: 'ITEM_CATEGORY_2'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=1').then((response) => {
+        if (response) {
+          this.itemCategory2List = response.Values
+          this.category2List = response.Values
+        }
+      })
     }
   },
   computed: {
