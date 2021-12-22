@@ -25,20 +25,20 @@
         <b-tab :title="$t('insert.cscard.CsCard')" active>
            <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CustomerId')}}</span><p>{{rowData.CustomerId && rowData.Customer.Label }}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.DocumentNumber')}}</span> <p>{{rowData.DocumentNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.DocumentDate')}}</span> <p>{{rowData.DocumentDate}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.Bank')}}</span> <p>{{rowData.Bank && rowData.Bank.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CorrespondentBranch')}}</span> <p>{{rowData.BankBranch && rowData.BankBranch.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CsTotal')}}</span> <p>{{rowData.CurrencyCsTotal}}</p>
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.CsCard.CustomerId')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'get.CsCard.DocumentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'get.CsCard.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.Bank, 'object', 'get.CsCard.Bank')"></div>
+              <div v-html="getFormatDataByType(rowData.BankBranch, 'object', 'get.CsCard.CorrespondentBranch')"></div>
+              <div v-html="getFormatDataByType(rowData.CurrencyCsTotal, 'text', 'get.CsCard.CsTotal')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.CurrencyId')}}</span> <p>{{rowData.Currency && rowData.Currency.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.DueDate')}}</span> <p>{{rowData.DueDate}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.SerialNumber')}}</span> <p>{{rowData.SerialNumber}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.RouteId')}}</span> <p>{{rowData.Route && rowData.Route.Label}}</p>
-                <span><i class="far fa-circle" /> {{$t('get.CsCard.PayCity')}}</span> <p>{{payCity}}</p>
-                <span><i class="far fa-circle" /> {{$t('insert.cscard.reminder')}}</span> <p>{{customerReminder}}</p>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CsCard.CurrencyId')"></div>
+              <div v-html="getFormatDataByType(rowData.DueDate, 'date', 'get.CsCard.DueDate')"></div>
+              <div v-html="getFormatDataByType(rowData.SerialNumber, 'text', 'get.CsCard.SerialNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CsCard.RouteId')"></div>
+              <div v-html="getFormatDataByType(payCity, 'object', 'get.CsCard.PayCity')"></div>
+              <div v-html="getFormatDataByType(customerReminder, 'text', 'insert.cscard.reminder')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -48,8 +48,10 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import mixin from '../../mixins/index'
 export default {
   props: ['dataKey'],
+  mixins: [mixin],
   data () {
     return {
       customerReminder: null,
