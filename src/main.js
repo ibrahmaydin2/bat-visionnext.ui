@@ -20,6 +20,7 @@ import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import Sortable from 'vue-sortable'
 import { ApiManager } from './managers/api-manager'
+import { LocalizationManager } from './managers/localization-manager'
 import { Map, TileLayer, OsmSource, Geoloc, Feature, PointGeom, StyleBox, IconStyle } from 'vuelayers'
 import 'vuelayers/lib/style.css' // needs css-loader
 
@@ -157,15 +158,22 @@ Vue.component('CommonExcelModal', CommonExcelModal)
 Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
 Vue.component('DateRangePicker', DateRangePicker)
 
-Vue.prototype.$api = new ApiManager()
+let apiManager = new ApiManager()
+Vue.prototype.$api = apiManager
+window.$api = apiManager
+let localization = new LocalizationManager()
+Vue.prototype.$localization = localization
 
 Vue.config.productionTip = false
-// eslint-disable-next-line no-new
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  i18n,
-  template: '<App/>'
+
+localization.setLocalization().then(() => {
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    components: { App },
+    i18n,
+    template: '<App/>'
+  })
 })
