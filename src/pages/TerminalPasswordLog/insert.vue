@@ -7,10 +7,10 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
-              <b-button size="sm" variant="outline-danger">{{$t('header.cancel')}}</b-button>
+            <router-link :to="{name: 'TerminalPasswordLog' }">
+              <CancelButton />
             </router-link>
-            <b-button @click="save()" id="submitButton" size="sm" variant="success">{{$t('header.save')}}</b-button>
+            <AddButton @click.native="save()" />
           </b-col>
         </b-row>
       </header>
@@ -18,16 +18,12 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.Code != null ? insertVisible.Code : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Code + (insertRequired.Code === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Code.$error }">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description1 != null ? insertVisible.Description1 : developmentMode" cols="12" md="2">
-            <b-form-group :label="insertTitle.Description1 + (insertRequired.Description1 === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description1.$error }">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
-            </b-form-group>
-          </b-col>
+           <NextFormGroup item-key="Code" :error="$v.form.Code">
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -35,25 +31,17 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
-            <b-col v-if="insertVisible.Keyword != null ? insertVisible.Keyword : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Keyword + (insertRequired.Keyword === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Keyword.$error }">
-                <b-form-input type="text" v-model="form.Keyword" :readonly="insertReadonly.Keyword" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="Password" :error="$v.form.Password">
+              <NextInput v-model="form.Password" type="text" :disabled="insertReadonly.Password" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Operation" :error="$v.form.Operation">
+              <NextInput v-model="form.Operation" type="text" :disabled="insertReadonly.Operation" />
+            </NextFormGroup>
+            <NextFormGroup item-key="Keyword" :error="$v.form.Keyword">
+              <NextInput v-model="form.Keyword" type="text" :disabled="insertReadonly.Keyword" />
+            </NextFormGroup>
             <b-col class="d-flex align-items-center" cols="12" md="2">
               <b-button class="mt-1" @click="createPassword()" id="submitButton" size="sm" variant="success">{{$t('insert.createPassword')}}</b-button>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col v-if="insertVisible.Password != null ? insertVisible.Password : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Password + (insertRequired.Password === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Password.$error }">
-                <b-form-input type="text" v-model="form.Password" :readonly="insertReadonly.Password" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.Operation != null ? insertVisible.Operation : developmentMode" cols="12" md="2">
-              <b-form-group :label="insertTitle.Operation + (insertRequired.Operation === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Operation.$error }">
-                <b-form-input type="text" v-model="form.Operation" :readonly="insertReadonly.Operation" />
-              </b-form-group>
             </b-col>
           </b-row>
         </b-tab>
@@ -62,8 +50,7 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
   data () {
@@ -73,71 +60,37 @@ export default {
         Description1: null,
         Keyword: null,
         Password: null,
-        Operation: null
+        Operation: null,
+        OperationDate: null
       },
-      routeName: this.$route.meta.baseLink
+      routeName1: 'MobileApi'
     }
-  },
-  computed: {
-    ...mapState(['developmentMode', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'createCode', 'creatorPassword'])
   },
   mounted () {
-    this.getInsertPage(this.routeName)
+    this.createManualCode()
+    this.form.OperationDate = new Date().toISOString()
   },
   methods: {
-    getInsertPage (e) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // her insert ekranının kuralları ve createCode değerini alır.
-      this.$store.dispatch('getInsertRules', {...this.query, api: e})
-      this.$store.dispatch('getCreateCode', {...this.query, apiUrl: `VisionNextMobileApi/api/TerminalPasswordLog/GetCode`})
-    },
     createPassword () {
-      this.$store.dispatch('getPasswordCreator', {...this.query, keyword: this.form.Keyword})
+      if (!this.form.Keyword) { return }
+
+      let request = {
+        Keyword: this.form.Keyword
+      }
+      return this.$api.postByUrl(request, 'VisionNextMobileApi/api/TerminalPasswordLog/GetPasswordCreator')
+        .then(res => {
+          this.form.Password = res.Model.Password
+          this.form.Operation = res.Model.Operation
+        })
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('createData', {...this.query, api: `VisionNextMobileApi/api/TerminalPasswordLog`, formdata: model, return: this.routeName})
-      }
-    }
-  },
-  validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    return {
-      form: this.insertRules
-    }
-  },
-  watch: {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // her insert ekranı sistemden gelen kodla çalışır.
-    createCode (e) {
-      if (e) {
-        this.form.Code = e
-      }
-    },
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // sistemden gönderilen default değerleri inputlara otomatik basacaktır.
-    insertDefaultValue (value) {
-      Object.keys(value).forEach(el => {
-        if (el !== 'Code') {
-          this.form[el] = value[el]
-        }
-      })
-    },
-    creatorPassword (e) {
-      if (e) {
-        this.form.Password = e.Password
-        this.form.Operation = e.Operation
+        this.createData()
       }
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
