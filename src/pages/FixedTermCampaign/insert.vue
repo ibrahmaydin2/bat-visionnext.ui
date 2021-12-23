@@ -18,14 +18,14 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
            <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -35,53 +35,66 @@
         <b-tab :title="$t('insert.fixedTermCampaign.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CampaignBeginDate" :error="$v.form.CampaignBeginDate">
-              <b-form-datepicker v-model="form.CampaignBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.CampaignBeginDate" />
             </NextFormGroup>
             <NextFormGroup item-key="CampaignEndDate" :error="$v.form.CampaignEndDate">
-              <b-form-datepicker v-model="form.CampaignEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.CampaignEndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
               <NextCheckBox v-model="form.UseBudget" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" :disabled="!form.UseBudget" />
+              <NextInput type="number" v-model="form.BudgetAmount" :disabled="!form.UseBudget" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
-              <b-form-input type="number" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount" :disabled="true" />
+              <NextInput type="number" v-model="form.UsedAmount" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
-              <v-select v-model="selectedRouteCriteria" :options="lookup.ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)" label="Label"/>
+              <NextDropdown v-model="selectedRouteCriteria" :disabled="insertReadonly.RouteCriteriaId" label="Label" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <v-select v-model="selectedCustomerCriteria" :options="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code !== 'MS') : [])" @input="selectedType('CustomerCriteriaId', $event)" label="Label"/>
+              <NextDropdown v-model="selectedCustomerCriteria"
+               :disabled="insertReadonly.CustomerCriteriaId"
+               label="Label"
+               @input="selectedType('CustomerCriteriaId', $event)"
+               :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code == 'MK' || c.Code === 'ML' || c.Code === 'TM'): [])"
+               />
             </NextFormGroup>
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <v-select v-model="selectedItemCriteria" :options="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" @input="selectedType('ItemCriteriaId', $event)" label="Label"/>
+              <NextDropdown v-model="selectedItemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" :source="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label"/>
+              <NextDropdown
+                v-model="selectedBranchCriteria"
+                @input="selectedType('BranchCriteriaId', $event)"
+                lookup-key="BRANCH_CRITERIA"
+                :disabled="insertReadonly.BranchCriteriaId"
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="CampaignTypeId" :error="$v.form.CampaignTypeId">
-              <v-select :options="discountTypes" @input="selectedSearchType('CampaignTypeId', $event)" label="Description1"/>
+              <NextDropdown
+                @input="selectedSearchType('CampaignTypeId', $event)"
+                url="VisionNextDiscount/api/DiscountType/Search"
+              ></NextDropdown>
             </NextFormGroup>
              <NextFormGroup item-key="CampaignRate" :error="$v.form.CampaignRate">
-              <b-form-input type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" />
+              <NextInput type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" />
             </NextFormGroup>
-             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-              <v-select :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1" :disabled="!form.UseBudget"/>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+              <NextDropdown :disabled="!form.UseBudget" @input="selectedSearchType('CurrencyId', $event)" label="Description1" url="VisionNextSystem/api/SysCurrency/Search"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.maturityPeriods')">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.startQuantity')" :error="$v.fixedTermCampaignTaken.startQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.startQuantity" />
+              <NextInput type="number" v-model="fixedTermCampaignTaken.startQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.endQuantity')" :error="$v.fixedTermCampaignTaken.endQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.endQuantity" />
+              <NextInput type="number" v-model="fixedTermCampaignTaken.endQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.paymentPeriod')" :error="$v.fixedTermCampaignTaken.paymentPeriod" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.paymentPeriod" />
+              <NextInput type="number" v-model="fixedTermCampaignTaken.paymentPeriod" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -113,7 +126,11 @@
         <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.campaignItemArea" :required="true" md="5" lg="5">
-              <v-select v-model="campaignItemArea" :options="campaignItemAreaList" :filterable="true" label="Label"/>
+              <NextDropdown
+                v-model="campaignItemArea"
+                :source="campaignItemAreaList"
+                label="Label"
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
               <v-select v-model="campaignItemValue" :options="campaignItemValueList" :filterable="true" label="Label"/>
@@ -146,7 +163,12 @@
         <b-tab :title="$t('insert.fixedTermCampaign.routes')" v-if="selectedRouteCriteria && selectedRouteCriteria.Code === 'RL'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.route')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
-              <v-select v-model="selectedRoute" :options="routes" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')" label="Description1"/>
+              <NextDropdown
+                v-model="selectedRoute"
+                url="VisionNextRoute/api/Route/Search"
+                @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')"
+                label="Description1"
+              ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -174,10 +196,18 @@
         <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'" @click="getCustomerCriteriaItems">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.customerItemArea" :required="true" md="5" lg="5">
-              <v-select v-model="customerItemArea" :options="customerItemAreaList" :filterable="false" label="Label"/>
+              <NextDropdown
+                v-model="customerItemArea"
+                :source="customerItemAreaList"
+                label="Label"
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.customerItemValue" :required="true" md="5" lg="5">
-              <v-select v-model="customerItemValue" :options="customerItemValueList" :filterable="false" label="Label" />
+              <NextDropdown
+                v-model="customerItemValue"
+                :source="customerItemValueList"
+                label="Label"
+              ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -207,23 +237,22 @@
         <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
-              <v-select v-model="customer" :options="customers" @search="searchCustomer" :filterable="false" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
-              </v-select>
+              <NextDropdown
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                v-model="customer"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                label="Description1"
+                :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customerCode')" :error="$v.fixedTermCampaignCustomer.customerCode" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
+              <NextInput type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
+              <NextInput type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetName" :required="true">
-              <b-form-input type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
+              <NextInput type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -265,7 +294,11 @@
         <b-tab :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.branch')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
-              <v-select v-model="selectedBranch" :options="branchs" :filterable="false" @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')" label="Description1" />
+              <NextDropdown
+                v-model="selectedBranch"
+                url="VisionNextBranch/api/Branch/Search"
+                @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')" label="Description1"
+              ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -296,7 +329,6 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -366,9 +398,6 @@ export default {
       companyId: null
     }
   },
-  computed: {
-    ...mapState(['discountTypes', 'currencies', 'routes', 'branchs', 'customers'])
-  },
   mounted () {
     this.createManualCode()
     this.getInsertPage(this.routeName)
@@ -380,10 +409,6 @@ export default {
       this.form.CampaignBeginDate = today
       this.form.CampaignEndDate = today
       let me = this
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountType/Search', name: 'discountTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         me.campaignItemAreaList = res.Values
       })
@@ -499,26 +524,6 @@ export default {
     },
     removeFixedTermCampaignDetail (item) {
       this.form.FixedTermCampaignDetails.splice(this.form.FixedTermCampaignDetails.indexOf(item), 1)
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
     },
     addFixedTermCampaignTaken () {
       this.$v.fixedTermCampaignTaken.$touch()

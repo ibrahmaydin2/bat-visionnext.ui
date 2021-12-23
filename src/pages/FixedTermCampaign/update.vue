@@ -18,14 +18,14 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
-          </NextFormGroup>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" :disabled="!isCampaignDateNew"/>
+            <NextInput type="text" v-model="form.Code" :disabled="!isCampaignDateNew" />
           </NextFormGroup>
            <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -35,53 +35,69 @@
         <b-tab :title="$t('insert.fixedTermCampaign.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CampaignBeginDate" :error="$v.form.CampaignBeginDate">
-              <b-form-datepicker v-model="form.CampaignBeginDate" :placeholder="$t('insert.chooseDate')" @input="setDisabledValues"/>
+              <NextDatePicker v-model="form.CampaignBeginDate" @input="setDisabledValues" />
             </NextFormGroup>
             <NextFormGroup item-key="CampaignEndDate" :error="$v.form.CampaignEndDate">
-              <b-form-datepicker v-model="form.CampaignEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.CampaignEndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
-              <NextCheckBox v-model="form.UseBudget" type="number" toggle disabled/>
+              <NextCheckBox v-model="form.UseBudget" type="number" toggle :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" disabled />
+              <NextInput type="number" v-model="form.BudgetAmount" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
-              <b-form-input type="number" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount" disabled />
+              <NextInput type="number" v-model="form.UsedAmount" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
-              <v-select v-model="selectedRouteCriteria" :options="lookup.ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)" label="Label" disabled/>
+              <NextDropdown v-model="selectedRouteCriteria" :disabled="true" label="Label" lookup-key="ROUTE_CRITERIA" @input="selectedType('RouteCriteriaId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
-              <v-select v-model="selectedCustomerCriteria" :options="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code !== 'MS') : [])" @input="selectedType('CustomerCriteriaId', $event)" label="Label" disabled/>
+              <NextDropdown v-model="selectedCustomerCriteria"
+               :disabled="true"
+               label="Label"
+               @input="selectedType('CustomerCriteriaId', $event)"
+               :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code == 'MK' || c.Code === 'ML' || c.Code === 'TM'): [])"
+               />
             </NextFormGroup>
             <NextFormGroup item-key="ItemCriteriaId" :error="$v.form.ItemCriteriaId">
-              <v-select v-model="selectedItemCriteria" :options="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" @input="selectedType('ItemCriteriaId', $event)" label="Label" disabled/>
+              <NextDropdown v-model="selectedItemCriteria" :disabled="true" @input="selectedType('ItemCriteriaId', $event)" :source="(lookup.ITEM_CRITERIA ? lookup.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
-              <v-select v-model="selectedBranchCriteria" :options="lookup.BRANCH_CRITERIA" @input="selectedType('BranchCriteriaId', $event)" label="Label" disabled/>
+              <NextDropdown
+                v-model="selectedBranchCriteria"
+                @input="selectedType('BranchCriteriaId', $event)"
+                lookup-key="BRANCH_CRITERIA"
+                label="Label"
+                :disabled="true"
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="CampaignTypeId" :error="$v.form.CampaignTypeId">
-              <v-select v-model="discountType" :options="discountTypes" @input="selectedSearchType('CampaignTypeId', $event)" label="Description1" disabled/>
+              <NextDropdown
+                v-model="discountType"
+                :disabled="true"
+                @input="selectedSearchType('CampaignTypeId', $event)"
+                url="VisionNextDiscount/api/DiscountType/Search"
+              ></NextDropdown>
             </NextFormGroup>
              <NextFormGroup item-key="CampaignRate" :error="$v.form.CampaignRate">
-              <b-form-input type="number" v-model="form.CampaignRate" :readonly="insertReadonly.CampaignRate" :disabled="!isCampaignDateNew"/>
+              <NextInput type="number" v-model="form.CampaignRate" :disabled="!isCampaignDateNew" />
             </NextFormGroup>
-             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-              <v-select v-model="selectedCurrency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1" disabled/>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+              <NextDropdown v-model="selectedCurrency" :disabled="true" @input="selectedSearchType('CurrencyId', $event)" label="Description1" url="VisionNextSystem/api/SysCurrency/Search" />
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.maturityPeriods')">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.startQuantity')" :error="$v.fixedTermCampaignTaken.startQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.startQuantity" :disabled="!isCampaignDateNew"/>
+              <NextInput type="number" v-model="fixedTermCampaignTaken.startQuantity" :disabled="!isCampaignDateNew" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.endQuantity')" :error="$v.fixedTermCampaignTaken.endQuantity" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.endQuantity" :disabled="!isCampaignDateNew" />
+              <NextInput type="number" v-model="fixedTermCampaignTaken.endQuantity" :disabled="!isCampaignDateNew" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.paymentPeriod')" :error="$v.fixedTermCampaignTaken.paymentPeriod" :required="true">
-              <b-form-input type="number" v-model="fixedTermCampaignTaken.paymentPeriod" :disabled="!isCampaignDateNew"/>
+              <NextInput type="number" v-model="fixedTermCampaignTaken.paymentPeriod" :disabled="!isCampaignDateNew" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -266,11 +282,12 @@ export default {
         budgetName: null
       },
       selectedCurrency: null,
-      isCampaignDateNew: false
+      isCampaignDateNew: false,
+      currencies: []
     }
   },
   computed: {
-    ...mapState(['discountTypes', 'currencies', 'routes', 'branchs', 'customers'])
+    ...mapState(['routes', 'branchs', 'customers'])
   },
   mounted () {
     this.getData().then(() => {
@@ -284,8 +301,6 @@ export default {
       this.form.CampaignBeginDate = today
       this.form.CampaignEndDate = today
       let me = this
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountType/Search', name: 'discountTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search ', name: 'routes'})
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
