@@ -24,7 +24,7 @@
         <b-tab :title="$t('get.RmaOrder.RmaOrder')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.TciBreak1, 'object', 'get.PriceDiscountTransaction.TciBreak1')"></div>
+              <div v-html="getFormatDataByType(rowData.TCIBreak1, 'object', 'get.PriceDiscountTransaction.TciBreak1')"></div>
               <div v-html="getFormatDataByType(rowData.TransactionDate, 'date', 'get.PriceDiscountTransaction.TransactionDate')"></div>
               <div v-html="getFormatDataByType(rowData.TransactionTime, 'text', 'get.PriceDiscountTransaction.TransactionTime')"></div>
               <div v-html="getFormatDataByType(rowData.DiscountReason, 'object', 'get.PriceDiscountTransaction.DiscountReason')"></div>
