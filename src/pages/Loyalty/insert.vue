@@ -106,6 +106,9 @@
               :fields="loyaltyActiveCategoryFields"
               :items="this.form.LoyaltyActiveCategories ? this.form.LoyaltyActiveCategories.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="row">
                 <div class="text-center">
                   <b-button size="sm" @click="removeLoyaltyActiveCategory(row.item)" class="mr-2" variant="danger">
