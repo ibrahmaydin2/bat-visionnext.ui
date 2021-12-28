@@ -50,7 +50,10 @@
             <b-table
               :fields="loyaltyGainDetailFields"
               :items="(form.LoyaltyGainDetails ? form.LoyaltyGainDetails.filter(l => l.Value > 0) : [])"
-              bordered responsive >
+              bordered responsive>
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(Value)="data">
                 <NextInput type="number" v-model="data.item.Value"/>
               </template>

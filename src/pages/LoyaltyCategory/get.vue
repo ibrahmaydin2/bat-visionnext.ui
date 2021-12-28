@@ -56,6 +56,9 @@
                   :fields="loyaltyCategoryFields"
                   :items="rowData.LoyaltyCategoryCrits"
                   bordered responsive >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(operations)="row">
                     <div class="text-center">
                       <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">
@@ -65,6 +68,9 @@
                   </template>
                   <template #row-details="{item}">
                     <b-table :items="item.LoyaltyCategoryCritDetails" :fields="loyaltyQuestionFields.filter(f => f.key !== 'operations')">
+                      <template #head()="data">
+                        {{$t(data.label)}}
+                      </template>
                     </b-table>
                   </template>
                 </b-table>
@@ -98,6 +104,9 @@
                   :fields="loyaltyCategoryFields"
                   :items="this.rowData.LoyaltyCatSales"
                   bordered responsive >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(operations)="row">
                     <div class="text-center">
                       <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success">

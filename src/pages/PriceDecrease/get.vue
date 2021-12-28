@@ -41,6 +41,9 @@
                   :fields="(priceDecreaseItemFields ? priceDecreaseItemFields.filter(p => p.key !== 'operations'): [])"
                   :items="rowData.PriceDecreaseItems"
                   bordered responsive >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                 </b-table>
               </b-card>
             </b-col>

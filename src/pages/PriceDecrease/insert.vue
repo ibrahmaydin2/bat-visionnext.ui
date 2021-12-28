@@ -84,6 +84,9 @@
               :fields="priceDecreaseItemFields"
               :items="this.form.PriceDecreaseItems ? this.form.PriceDecreaseItems.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="{item}">
                 <div class="text-center">
                   <b-button :title="$t('list.delete')" @click="removePriceDecreaseItem(item)" type="button" class="btn mr-2 btn-danger btn-sm">
