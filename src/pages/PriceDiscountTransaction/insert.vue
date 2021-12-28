@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />
@@ -35,50 +35,45 @@
         <b-tab :title="$t('get.PriceDiscountTransaction.general')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
-              <v-select
-                :options="lookup.TCI_BREAKDOWN"
+              <NextDropdown
                 @input="selectedType('TciBreak1Id', $event)"
+                lookup-key="TCI_BREAKDOWN"
                 label="Label"
-              />
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
-              </v-select>
+              <NextDropdown
+                @input="selectedSearchType('CustomerId', $event)"
+                :disabled="insertReadonly.CustomerId"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                v-model="customer"
+                :searchable="true" :custom-option="true"
+                label="Description1"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
-              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.TransactionDate" :disabled="insertReadonly.TransactionDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTime" :error="$v.form.TransactionTime">
-              <b-form-timepicker
-              :placeholder="$t('insert.chooseTime')"
-              :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
-              :label-no-time-selected="$t('insert.chooseTime')"
-              :label-close-button="$t('insert.close')"
-              close-button-variant="outline-danger"
+              <NextTimePicker
+              :disabled="insertReadonly.TransactionTime"
               v-model="form.TransactionTime"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountReasonId" :error="$v.form.DiscountReasonId">
-              <v-select :options="discountReasons" @input="selectedSearchType('DiscountReasonId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                @input="selectedSearchType('DiscountReasonId', $event)"
+                :disabled="insertReadonly.DiscountReasonId"
+                url="VisionNextDiscount/api/DiscountReason/Search"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="PriceDiscountAmount" :error="$v.form.PriceDiscountAmount">
-              <b-form-input type="text" v-model="form.PriceDiscountAmount" :readonly="insertReadonly.PriceDiscountAmount" />
+              <NextInput type="text" v-model="form.PriceDiscountAmount" :disabled="insertReadonly.PriceDiscountAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-              <v-select :options="currencies" v-model="currencyLabel" @input="selectedSearchType('CurrencyId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown v-model="currencyLabel" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" label="Description1" url="VisionNextSystem/api/SysCurrency/Search" />
             </NextFormGroup>
             <!-- <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
               <b-form-input disabled type="text" v-model="form.BudgetAmount" :readonly="insertReadonly.BudgetAmount" />
@@ -87,31 +82,31 @@
               <b-form-input disabled type="text" v-model="form.BudgetConsumption" :readonly="insertReadonly.BudgetConsumption" />
             </NextFormGroup> -->
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget' />
+              <NextDropdown v-model="budget" :disabled="!form.UseBudget" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :source="budgets"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <v-select
-                :options="lookup.APPROVE_STATE"
+              <NextDropdown
                 @input="selectedType('ApproveStateId', $event)"
-                label="Label"
+                lookup-key="APPROVE_STATE"
                 v-model="approveState"
-                disabled
-              />
+                :disabled="true"
+                label="Label"
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ErpCode" :error="$v.form.ErpCode">
-              <b-form-input type="text" v-model="form.ErpCode" :readonly="insertReadonly.ErpCode" />
+              <NextInput type="text" v-model="form.ErpCode" :disabled="insertReadonly.ErpCode" />
             </NextFormGroup>
             <NextFormGroup item-key="ExpirationDate" :error="$v.form.ExpirationDate">
-              <b-form-datepicker v-model="form.ExpirationDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.ExpirationDate" :disabled="insertReadonly.ExpirationDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
-              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <NextInput type="text" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="GainTypeId" :error="$v.form.GainTypeId">
-              <b-form-input type="text" v-model="GainTypeName" readonly />
+              <NextInput type="text" v-model="GainTypeName" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
               <NextCheckBox v-model="useBudget" type="number" toggle :disabled="!form.CustomerId || form.CustomerId === 0"/>
@@ -123,7 +118,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
 export default {
@@ -166,7 +160,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers', 'discountReasons', 'currencies']),
     approveState () {
       return this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.length > 0 ? this.lookup.APPROVE_STATE.find(a => a.Code === 'ONYBK') : {}
     }
@@ -177,8 +170,6 @@ export default {
   },
   methods: {
     getInsertPage (e) {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextDiscount/api/DiscountReason/Search', name: 'discountReasons'})
       let currentDate = new Date()
       this.form.TransactionDate = currentDate.toISOString().slice(0, 10)
       this.form.ExpirationDate = currentDate.toISOString().slice(0, 10)
@@ -191,26 +182,6 @@ export default {
       } else {
         this.form[label] = null
       }
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
     },
     save () {
       this.form.BudgetConsumption = this.form.PriceDiscountAmount

@@ -84,6 +84,9 @@
               :fields="priceDecreaseItemFields"
               :items="this.form.PriceDecreaseItems ? this.form.PriceDecreaseItems.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="{item}">
                 <div class="text-center">
                   <i @click="removePriceDecreaseItem(item)" class="far fa-trash-alt text-danger"></i>
