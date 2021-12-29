@@ -5,7 +5,11 @@ export const detailData = {
       key: 'ActiveCategoryId',
       label: i18n.t('insert.loyaltyGain.category'),
       formatter: (value, key, obj) => {
-        return obj.ActiveCategory ? obj.ActiveCategory.Label : obj.Description1 ? obj.Description1 : '-'
+        if (obj.ActiveCategory && obj.ActiveCategory.Label) {
+          return obj.ActiveCategory.Label
+        } else {
+          return obj.Description1 ? obj.Description1 : '-'
+        }
       }
     },
     {
