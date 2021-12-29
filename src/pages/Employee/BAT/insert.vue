@@ -289,7 +289,6 @@ export default {
       ]
     },
     beforeValidLabelAdd (item, list) {
-      debugger
       let filteredList = list.filter(l =>
         item.EInvoiceType &&
         (item.EInvoiceType.DecimalValue === l.EInvoiceTypeId || (l.EInvoiceType && item.EInvoiceType.DecimalValue === l.EInvoiceType.DecimalValue)) &&

@@ -176,13 +176,9 @@ import StockAdjustmentInsert from '@/pages/StockAdjustment/insert'
 
 import WarehouseStockHistoryIndex from '@/pages/WarehouseStockHistory/'
 import WarehouseStockHistoryGet from '@/pages/WarehouseStockHistory/get'
-import WarehouseStockHistoryInsert from '@/pages/WarehouseStockHistory/insert'
-import WarehouseStockHistoryUpdate from '@/pages/WarehouseStockHistory/update'
 
 import WarehouseStockIndex from '@/pages/WarehouseStock/'
 import WarehouseStockGet from '@/pages/WarehouseStock/get'
-import WarehouseStockInsert from '@/pages/WarehouseStock/insert'
-import WarehouseStockUpdate from '@/pages/WarehouseStock/update'
 
 import FixedTermIndex from '@/pages/FixedTerm/'
 import FixedTermGet from '@/pages/FixedTerm/get'
@@ -624,8 +620,6 @@ const listUpdate = [
   { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
   { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: getTenantPage('CreditCard', 'update'), meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
-  { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
-  { path: '/Update/WarehouseStock/:url', name: 'WarehouseStockUpdate', component: WarehouseStockUpdate, meta: { title: i18n.t('router.WarehouseStockUpdate'), baseLink: 'WarehouseStock' } },
   { path: '/Update/Order/:url', name: 'OrderUpdate', component: getTenantPage('Order', 'update'), meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
   { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldAnalysisResult/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResult' } },
@@ -704,8 +698,6 @@ const listInsert = [
   { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
   { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: getTenantPage('CreditCard', 'insert'), meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/StockAdjustment', name: 'StockAdjustmentInsert', component: StockAdjustmentInsert, meta: { title: i18n.t('router.StockAdjustmentInsert'), baseLink: 'StockAdjustment' } },
-  { path: '/Insert/WarehouseStockHistory', name: 'WarehouseStockHistoryInsert', component: WarehouseStockHistoryInsert, meta: { title: i18n.t('router.WarehouseStockHistoryInsert'), baseLink: 'WarehouseStockHistory' } },
-  { path: '/Insert/WarehouseStock', name: 'WarehouseStockInsert', component: WarehouseStockInsert, meta: { title: i18n.t('router.WarehouseStockInsert'), baseLink: 'WarehouseStock' } },
   { path: '/Insert/BranchStockTransfer', name: 'BranchStockTransferInsert', component: BranchStockTransferInsert, meta: { title: i18n.t('router.BranchStockTransferInsert'), baseLink: 'BranchStockTransfer' } },
   { path: '/Insert/Order', name: 'OrderInsert', component: getTenantPage('Order', 'insert'), meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
   { path: '/Insert/Contracts', name: 'ContractsInsert', component: ContractsInsert, meta: { title: i18n.t('router.ContractsInsert'), baseLink: 'Contracts' } },

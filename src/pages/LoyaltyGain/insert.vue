@@ -163,8 +163,8 @@ export default {
           CustomerId: this.form.CustomerId
         }
         this.$api.postByUrl(model, 'VisionNextLoyalty/api/LoyaltyGain/GetGain').then((response) => {
-          if (response.ListModel) {
-            this.form.LoyaltyGainDetails = response.ListModel.map(item => {
+          if (response) {
+            this.form.LoyaltyGainDetails = response.map(item => {
               item.Deleted = 0
               item.System = 0
               item.RecordState = 2

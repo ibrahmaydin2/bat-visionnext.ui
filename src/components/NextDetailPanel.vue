@@ -149,9 +149,8 @@ export default {
     editForm: {
       type: Function
     },
-    errorOperations: {
-      type: Boolean,
-      default: false
+    changeValidation: {
+      type: Function
     }
   },
   model: {
@@ -343,85 +342,65 @@ export default {
       this.$v.form.$reset()
     },
     removeItem () {
-      if (this.errorOperations) {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        const index = this.values.indexOf(data)
-        if (data.CreditDescriptionId === 100) {
-          this.$toasted.show(this.$t('insert.CustomerCreditNotDeleted'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        } else {
-          this.values.splice(index, 1)
-        }
-        this.$emit('valuechange', this.values)
-      } else {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        const index = this.values.indexOf(data)
-        if (data.RecordId) {
-          this.values[index].RecordState = 4
-        } else {
-          this.values.splice(index, 1)
-        }
-        this.$emit('valuechange', this.values)
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
+
+      if (this.changeValidation && !this.changeValidation(data)) {
+        return
       }
+      const index = this.values.indexOf(data)
+      if (data.RecordId) {
+        this.values[index].RecordState = 4
+      } else {
+        this.values.splice(index, 1)
+      }
+      this.$emit('valuechange', this.values)
     },
     editItem () {
-      if (this.errorOperations) {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        if (data.CreditDescriptionId === 100) {
-          this.$toasted.show(this.$t('insert.CustomerCreditNotEdited'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        } else {
-          let data = this.selectedItem
-          this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
-          this.form = {...data}
-          this.isUpdated = true
-          this.selectedIndex = this.values.indexOf(data)
-          this.$set(this.form, 'RecordId', data.RecordId)
-          this.items.map(i => {
-            let labelProperty = ''
-            let valueProperty = ''
-            let model = {}
-            switch (i.type) {
-              case 'Autocomplete':
-              case 'Dropdown':
-                valueProperty = i.valueProperty ? i.valueProperty : 'RecordId'
-                labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
-                model[valueProperty] = data[i.modelProperty]
-                model[labelProperty] = this.getObjectLabel(i, data)
-                this.$set(this.model, i.modelProperty, model)
-                this.additionalSearchTypeFirst = true
-                this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
-                break
-              case 'Lookup':
-                valueProperty = i.valueProperty ? i.valueProperty : 'DecimalValue'
-                labelProperty = i.labelProperty ? i.labelProperty : 'Label'
-                model[valueProperty] = data[i.modelProperty]
-                model[labelProperty] = this.getObjectLabel(i, data)
-                this.$set(this.model, i.modelProperty, model)
-                this.additionalSearchTypeFirst = true
-                this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
-                break
-              case 'Label':
-                this.$set(this.label, i.modelProperty, data[i.modelProperty])
-                break
-              case 'Text':
-              case 'Check':
-              case 'Date':
-                this.$set(this.form, i.modelProperty, data[i.modelProperty])
-                break
-            }
-          })
-        }
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
+
+      if (this.changeValidation && !this.changeValidation(data)) {
+        return
       }
+      this.form = {...data}
+      this.isUpdated = true
+      this.selectedIndex = this.values.indexOf(data)
+      this.$set(this.form, 'RecordId', data.RecordId)
+      this.items.map(i => {
+        let labelProperty = ''
+        let valueProperty = ''
+        let model = {}
+        switch (i.type) {
+          case 'Autocomplete':
+          case 'Dropdown':
+            valueProperty = i.valueProperty ? i.valueProperty : 'RecordId'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Lookup':
+            valueProperty = i.valueProperty ? i.valueProperty : 'DecimalValue'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Label'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Label':
+            this.$set(this.label, i.modelProperty, data[i.modelProperty])
+            break
+          case 'Text':
+          case 'Check':
+          case 'Date':
+            this.$set(this.form, i.modelProperty, data[i.modelProperty])
+            break
+        }
+      })
     },
     additionalSearchType (id, label, model, valueProperty) {
       if (model) {
