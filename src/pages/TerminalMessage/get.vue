@@ -36,120 +36,54 @@
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.validDates')">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.beginDate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.endDate')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.TerminalMessageValidDates" :key="i">
-                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
-                      <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.TerminalMessageValidDates" :items="validDateItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.branchs')">
-          <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.branchCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.branchName')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.TerminalMessageBranchs" :key="i">
-                      <b-td>{{c.Code}}</b-td>
-                      <b-td>{{c.Description1}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+         <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.TerminalMessageBranchs" :items="messageBranchItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
          <b-tab :title="$t('insert.terminalMessage.customerCriterias')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MK'">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.columnName')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.columnValue')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in (rowData.TerminalMessageDetails ? rowData.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName !== 'RECORD_ID') : [])" :key="i">
-                      <b-td>{{c.ColumnName}}</b-td>
-                      <b-td>{{c.ColumnValue}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="customerCriterias" :items="customerCriteriaItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.customerList')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'ML'">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.customerCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.commercialTitle')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.location')}}</span></b-th>
-                 </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in (rowData.TerminalMessageDetails ? rowData.TerminalMessageDetails.filter(c => c.TableName === 'T_CUSTOMER' && c.ColumnName === 'RECORD_ID') : [])" :key="i">
-                      <b-td>{{c.ColumnNameDesc}}</b-td>
-                      <b-td>{{c.ColumnValueDesc}}</b-td>
-                      <b-td>{{c.ColumnValueDesc2}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="customerList" :items="customerListItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.customerQuery')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MS'">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.customerQuery')}}</span></b-th>
-                 </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.TerminalMessageCustSqls" :key="i">
-                      <b-td>{{c.Description1}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.TerminalMessageCustSqls" :items="custSqlItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
          <b-tab :title="$t('insert.terminalMessage.routes')" v-if="rowData.MessageType && rowData.MessageType.Code === 'RM'">
           <b-row>
-            <b-col cols="12" md="12">
-              <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.terminalMessage.branchCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.terminalMessage.branchName')}}</span></b-th>
-                 </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(c, i) in rowData.TerminalMessageRoutes" :key="i">
-                      <b-td>{{c.Code}}</b-td>
-                     <b-td>{{c.Description1}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.TerminalMessageRoutes" :items="routeItems"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
@@ -161,11 +95,20 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
   data () {
     return {
+      validDateItems: detailData.validDateItems,
+      messageBranchItems: detailData.messageBranchItems,
+      routeItems: detailData.routeItems,
+      custSqlItems: detailData.custSqlItems,
+      customerListItems: detailData.customerListItems,
+      customerCriteriaItems: detailData.customerCriteriaItems,
+      customerList: [],
+      customerCriterias: [],
       workFlowModel: {
         ControllerName: '',
         ClassName: 'TerminalMessage',
@@ -184,7 +127,10 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/TerminalMessage', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextCommonApi/api/TerminalMessage', record: this.$route.params.url}).then(() => {
+        this.customerList = this.rowData.TerminalMessageDetails.filter(t => t.ColumnName === 'RECORD_ID')
+        this.customerCriterias = this.rowData.TerminalMessageDetails.filter(t => t.ColumnName !== 'RECORD_ID')
+      })
     }
   }
 }
