@@ -24,28 +24,33 @@
         <b-tab :title="$t('get.RMA.General')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                 <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="customer"
+                @input="selectedSearchType('CustomerId', $event)"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                :searchable="true" :custom-option="true"
+                :disabled="insertReadonly.CustomerId"
+                label="Description1"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses"  @search="searchWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="warehouse"
+                @input="selectedSearchType('WarehouseId', $event)"
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+                label="Description1"
+                :disabled="insertReadonly.WarehouseId" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="representative"
+                @input="selectedSearchType('RepresentativeId', $event)"
+                :disabled="insertReadonly.RepresentativeId"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <v-select
@@ -57,46 +62,52 @@
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
-              <v-select v-model="approveEmloyee" :options="employees"  @search="searchEmployee" @input="selectedSearchType('ApproveEmployeeId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                @input="selectedSearchType('ApproveEmployeeId', $event)"
+                :disabled="insertReadonly.ApproveEmployeeId"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
+                v-model="approveEmloyee"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveNumber" :error="$v.form.ApproveNumber">
-              <b-form-input type="text" v-model="form.ApproveNumber" :readonly="insertReadonly.ApproveNumber" />
+              <NextInput type="text" v-model="form.ApproveNumber" :disabled="insertReadonly.ApproveNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
               <NextDropdown  v-model="rmaType" lookup-key="RETURN_TYPE" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveDate" :error="$v.form.ApproveDate">
-              <b-form-datepicker v-model="form.ApproveDate" />
+              <NextDatePicker :disabled="insertReadonly.ApproveDate" v-model="form.ApproveDate" />
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
-              <b-form-datepicker v-model="form.PriceDate" />
+              <NextDatePicker v-model="form.PriceDate" :disabled="insertReadonly.PriceDate" />
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <NextInput type="text" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaDate" :error="$v.form.RmaDate">
-              <b-form-datepicker v-model="form.RmaDate" />
+              <NextDatePicker v-model="form.RmaDate" :disabled="insertReadonly.RmaDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="GrvNumber" :error="$v.form.GrvNumber">
-              <b-form-input type="text" v-model="form.GrvNumber" :readonly="insertReadonly.GrvNumber" />
+              <NextInput type="text" v-model="form.GrvNumber" :disabled="insertReadonly.GrvNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <v-select :options="routes" v-model="route" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="route"
+                @input="selectedSearchType('RouteId', $event)"
+                :disabled="insertReadonly.RouteId"
+                url="VisionNextRoute/api/Route/AutoCompleteSearch"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select :options="rmaReasons" v-model="rmaReason" @input="selectedSearchType('RmaReasonId', $event)" label="Description1">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="rmaReason"
+                @input="selectedSearchType('RmaReasonId', $event)"
+                :disabled="insertReadonly.RmaReasonId"
+                url="VisionNextRma/api/RmaReason/Search"
+                label="Description1"
+              />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -113,25 +124,25 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
-              <b-form-input type="text" v-model="rmaLine.Item.Description1" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
-              <b-form-input type="text" v-model="rmaLine.Item.LastSalesQuantity" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
-              <b-form-input type="text" v-model="rmaLine.Item.LastPrice" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
-              <b-form-input type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.meanPrice')">
-              <b-form-input type="text" v-model="rmaLine.Item.MeanPrice" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.listPrice')">
-              <b-form-input type="text" v-model="rmaLine.Item.ListPrice" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.ListPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.usedPrice')">
-              <b-form-input type="text" v-model="rmaLine.Item.UsedPrice" readonly/>
+              <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -236,81 +247,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customers', 'employees', 'warehouses', 'routes', 'rmaReasons', 'items'])
+    ...mapState(['items'])
   },
   mounted () {
     this.getData().then(() => {
       this.setModel()
-      this.getInsertPage()
     })
   },
   methods: {
-    getInsertPage () {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
-    },
-    searchEmployee (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            Name: search,
-            Surname: search
-          }
-        ]
-      }
-      this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'employees', model).then(res => {
-        loading(false)
-      })
-    },
-    searchWarehouse (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/AutoCompleteSearch', 'warehouses', model).then(res => {
-        loading(false)
-      })
-    },
-    searchRoute (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextRoute/api/Route/AutoCompleteSearch', 'routes', model).then(res => {
-        loading(false)
-      })
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
     searchItem (search, loading) {
       if (search.length < 3) {
         return false
