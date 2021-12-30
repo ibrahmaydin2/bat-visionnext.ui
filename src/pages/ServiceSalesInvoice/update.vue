@@ -254,6 +254,7 @@ export default {
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
         this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
+        this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
         this.selectedPaymentType = rowData.PaymentType
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
@@ -299,12 +300,6 @@ export default {
         if (e.DefaultLocationId) {
           this.form.RecvLocationId = e.DefaultLocationId
         }
-      }
-    },
-    currencies (e) {
-      if (e && e.length > 0) {
-        this.selectedCurrency = e[0]
-        this.form.CurrencyId = e[0].RecordId
       }
     }
   }
