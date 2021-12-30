@@ -94,6 +94,9 @@
               :fields="loyaltyCategoryFields"
               :items="this.form.LoyaltyCategoryCrits ? this.form.LoyaltyCategoryCrits.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="row">
                 <div class="text-center">
                   <b-button size="sm" @click="removeLoyaltyCategory(row.item, 'LoyaltyCategoryCrits')" class="mr-2" variant="danger">
@@ -128,6 +131,9 @@
                  </b-row>
                  <b-row>
                     <b-table :items="form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails ? form.LoyaltyCategoryCrits[index].LoyaltyCategoryCritDetails.filter(i => i.RecordState !== 4) : []"  :fields="loyaltyQuestionFields">
+                      <template #head()="data">
+                        {{$t(data.label)}}
+                      </template>
                       <template #cell(operations)="row">
                         <div class="text-center">
                           <b-button size="sm" @click="removeLoyaltyQuestion(row.item, index)" class="mr-2" variant="danger">
@@ -164,6 +170,9 @@
               :fields="loyaltyCategoryFields"
               :items="this.form.LoyaltyCatSales ? this.form.LoyaltyCatSales.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="row">
                 <div class="text-center">
                   <b-button size="sm" @click="removeLoyaltyCategory(row.item, 'LoyaltyCatSales')" class="mr-2" variant="danger">

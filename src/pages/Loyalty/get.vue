@@ -59,6 +59,9 @@
                   :fields="loyaltyActiveCategoryFields"
                   :items="this.rowData.LoyaltyActiveCategories"
                   bordered responsive >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(operations)="row">
                     <div class="text-center">
                       <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="success"

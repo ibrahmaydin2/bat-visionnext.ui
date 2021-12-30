@@ -165,8 +165,6 @@ import VoucherUpdate from '@/pages/Voucher/update'
 
 import AccountTransactionIndex from '@/pages/AccountTransaction/'
 import AccountTransactionGet from '@/pages/AccountTransaction/get'
-import AccountTransactionInsert from '@/pages/AccountTransaction/insert'
-import AccountTransactionUpdate from '@/pages/AccountTransaction/update'
 
 import CreditCardIndex from '@/pages/CreditCard/'
 
@@ -176,13 +174,9 @@ import StockAdjustmentInsert from '@/pages/StockAdjustment/insert'
 
 import WarehouseStockHistoryIndex from '@/pages/WarehouseStockHistory/'
 import WarehouseStockHistoryGet from '@/pages/WarehouseStockHistory/get'
-import WarehouseStockHistoryInsert from '@/pages/WarehouseStockHistory/insert'
-import WarehouseStockHistoryUpdate from '@/pages/WarehouseStockHistory/update'
 
 import WarehouseStockIndex from '@/pages/WarehouseStock/'
 import WarehouseStockGet from '@/pages/WarehouseStock/get'
-import WarehouseStockInsert from '@/pages/WarehouseStock/insert'
-import WarehouseStockUpdate from '@/pages/WarehouseStock/update'
 
 import FixedTermIndex from '@/pages/FixedTerm/'
 import FixedTermGet from '@/pages/FixedTerm/get'
@@ -208,8 +202,6 @@ import CashCardIndex from '@/pages/CashCard/'
 
 import TerminalLogIndex from '@/pages/TerminalLog/'
 import TerminalLogGet from '@/pages/TerminalLog/get'
-import TerminalLogInsert from '@/pages/TerminalLog/insert'
-import TerminalLogUpdate from '@/pages/TerminalLog/update'
 
 import TerminalPasswordLogIndex from '@/pages/TerminalPasswordLog/'
 import TerminalPasswordLogGet from '@/pages/TerminalPasswordLog/get'
@@ -622,10 +614,7 @@ const listUpdate = [
   { path: '/Update/BankTransaction/:url', name: 'BankTransactionUpdate', component: BankTransactionUpdate, meta: { title: i18n.t('router.BankTransactionUpdate'), baseLink: 'BankTransaction' } },
   { path: '/Update/CSCard/:url', name: 'CSCardUpdate', component: CSCardUpdate, meta: { title: i18n.t('router.CSCardUpdate'), baseLink: 'CSCard' } },
   { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
-  { path: '/Update/AccountTransaction/:url', name: 'AccountTransactionUpdate', component: AccountTransactionUpdate, meta: { title: i18n.t('router.AccountTransactionUpdate'), baseLink: 'AccountTransaction' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: getTenantPage('CreditCard', 'update'), meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
-  { path: '/Update/WarehouseStockHistory/:url', name: 'WarehouseStockHistoryUpdate', component: WarehouseStockHistoryUpdate, meta: { title: i18n.t('router.WarehouseStockHistoryUpdate'), baseLink: 'WarehouseStockHistory' } },
-  { path: '/Update/WarehouseStock/:url', name: 'WarehouseStockUpdate', component: WarehouseStockUpdate, meta: { title: i18n.t('router.WarehouseStockUpdate'), baseLink: 'WarehouseStock' } },
   { path: '/Update/Order/:url', name: 'OrderUpdate', component: getTenantPage('Order', 'update'), meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
   { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldAnalysisResult/:url', name: 'FieldAnalysisResultUpdate', component: FieldAnalysisResultUpdate, meta: { title: i18n.t('router.FieldAnalysisResultUpdate'), baseLink: 'FieldAnalysisResult' } },
@@ -637,7 +626,6 @@ const listUpdate = [
   { path: '/Update/PotentialCustomer/:url', name: 'PotentialCustomerUpdate', component: PotentialCustomerUpdate, meta: { title: i18n.t('router.PotentialCustomerUpdate'), baseLink: 'PotentialCustomer' } },
   { path: '/Update/LoadingPlan/:url', name: 'LoadingPlanUpdate', component: LoadingPlanUpdate, meta: { title: i18n.t('router.LoadingPlanUpdate'), baseLink: 'LoadingPlan' } },
   { path: '/Update/CashCard/:url', name: 'CashCardUpdate', component: getTenantPage('CashCard', 'update'), meta: { title: i18n.t('router.CashCardUpdate'), baseLink: 'CashCard' } },
-  { path: '/Update/TerminalLog/:url', name: 'TerminalLogUpdate', component: TerminalLogUpdate, meta: { title: i18n.t('router.TerminalLogUpdate'), baseLink: 'TerminalLog' } },
   { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
   { path: '/Update/CycleInstruction/:url', name: 'CycleInstructionUpdate', component: CycleInstructionUpdate, meta: { title: i18n.t('router.CycleInstructionUpdate'), baseLink: 'CycleInstruction' } },
   { path: '/Update/Rma/:url', name: 'RmaUpdate', component: RmaUpdate, meta: { title: i18n.t('router.RmaUpdate'), baseLink: 'Rma' } },
@@ -701,11 +689,8 @@ const listInsert = [
   { path: '/Insert/BankTransaction', name: 'BankTransactionInsert', component: BankTransactionInsert, meta: { title: i18n.t('router.BankTransactionInsert'), baseLink: 'BankTransaction' } },
   { path: '/Insert/CSCard', name: 'CSCardInsert', component: CSCardInsert, meta: { title: i18n.t('router.CSCardInsert'), baseLink: 'CSCard' } },
   { path: '/Insert/Voucher', name: 'VoucherInsert', component: VoucherInsert, meta: { title: i18n.t('router.VoucherInsert'), baseLink: 'Voucher' } },
-  { path: '/Insert/AccountTransaction', name: 'AccountTransactionInsert', component: AccountTransactionInsert, meta: { title: i18n.t('router.AccountTransactionInsert'), baseLink: 'AccountTransaction' } },
   { path: '/Insert/CreditCard', name: 'CreditCardInsert', component: getTenantPage('CreditCard', 'insert'), meta: { title: i18n.t('router.CreditCardInsert'), baseLink: 'CreditCard' } },
   { path: '/Insert/StockAdjustment', name: 'StockAdjustmentInsert', component: StockAdjustmentInsert, meta: { title: i18n.t('router.StockAdjustmentInsert'), baseLink: 'StockAdjustment' } },
-  { path: '/Insert/WarehouseStockHistory', name: 'WarehouseStockHistoryInsert', component: WarehouseStockHistoryInsert, meta: { title: i18n.t('router.WarehouseStockHistoryInsert'), baseLink: 'WarehouseStockHistory' } },
-  { path: '/Insert/WarehouseStock', name: 'WarehouseStockInsert', component: WarehouseStockInsert, meta: { title: i18n.t('router.WarehouseStockInsert'), baseLink: 'WarehouseStock' } },
   { path: '/Insert/BranchStockTransfer', name: 'BranchStockTransferInsert', component: BranchStockTransferInsert, meta: { title: i18n.t('router.BranchStockTransferInsert'), baseLink: 'BranchStockTransfer' } },
   { path: '/Insert/Order', name: 'OrderInsert', component: getTenantPage('Order', 'insert'), meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
   { path: '/Insert/Contracts', name: 'ContractsInsert', component: ContractsInsert, meta: { title: i18n.t('router.ContractsInsert'), baseLink: 'Contracts' } },
@@ -718,7 +703,6 @@ const listInsert = [
   { path: '/Insert/PotentialCustomer', name: 'PotentialCustomerInsert', component: PotentialCustomerInsert, meta: { title: i18n.t('router.PotentialCustomerInsert'), baseLink: 'PotentialCustomer' } },
   { path: '/Insert/LoadingPlan', name: 'LoadingPlanInsert', component: LoadingPlanInsert, meta: { title: i18n.t('router.LoadingPlanInsert'), baseLink: 'LoadingPlan' } },
   { path: '/Insert/CashCard', name: 'CashCardInsert', component: getTenantPage('CashCard', 'insert'), meta: { title: i18n.t('router.CashCardInsert'), baseLink: 'CashCard' } },
-  { path: '/Insert/TerminalLog', name: 'TerminalLogInsert', component: TerminalLogInsert, meta: { title: i18n.t('router.TerminalLogInsert'), baseLink: 'TerminalLog' } },
   { path: '/Insert/TerminalPasswordLog', name: 'TerminalPasswordLogInsert', component: TerminalPasswordLogInsert, meta: { title: i18n.t('router.TerminalPasswordLogInsert'), baseLink: 'TerminalPasswordLog' } },
   { path: '/Insert/RouteBalance', name: 'RouteBalance', component: RouteBalanceInsert, meta: { title: i18n.t('router.RouteBalanceInsert'), baseLink: 'RouteBalance' } },
   { path: '/Insert/WarehouseMovement', name: 'WarehouseMovementInsert', component: WarehouseMovementInsert, meta: { title: i18n.t('router.WarehouseMovementInsert'), baseLink: 'WarehouseMovement' } },
