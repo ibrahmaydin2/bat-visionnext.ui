@@ -154,6 +154,7 @@ export default {
   },
   mounted () {
     this.getData()
+    this.getLoyaltyCustomers()
   },
   computed: {
     ...mapState(['rowData'])
@@ -163,11 +164,20 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextLoyalty/api/Loyalty', record: this.$route.params.url}).then(() => {
-        if (this.rowData.LoyaltyCustomers && this.rowData.LoyaltyCustomers.length > 0) {
-          this.customers = this.rowData.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
-          this.branchs = this.rowData.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
-          this.customerCriterias = this.rowData.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextLoyalty/api/Loyalty', record: this.$route.params.url})
+    },
+    getLoyaltyCustomers () {
+      let request = {
+        AndConditionModel: {
+          LoyaltyIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextLoyalty/api/LoyaltyCustomer/Search').then(response => {
+        if (response && response.ListModel) {
+          let list = response.ListModel.BaseModels
+          this.customers = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+          this.branchs = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
+          this.customerCriterias = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
         }
       })
     }

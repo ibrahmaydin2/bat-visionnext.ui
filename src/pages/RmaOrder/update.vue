@@ -39,36 +39,35 @@
               </v-select>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representative" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false" :disabled="disabledFields">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="representative"
+                @input="selectedSearchType('RepresentativeId', $event)"
+                :disabled="disabledFields"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                orConditionFields="Code,Description1,Name,Surname"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <b-form-input type="text" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" :disabled="disabledFields" />
+              <NextInput type="text" v-model="form.Genexp1" :disabled="disabledFields" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaOrderDate" :error="$v.form.RmaOrderDate">
-              <b-form-datepicker v-model="form.RmaOrderDate" :placeholder="$t('insert.chooseDate')" :disabled="disabledFields"/>
+              <NextDatePicker v-model="form.RmaOrderDate" :disabled="disabledFields"/>
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <v-select
-                :options="lookup.RETURN_TYPE"
-                v-model="rmaType"
-                @input="selectedType('RmaTypeId', $event)"
-                label="Label"
-                :disabled="disabledFields"
-              />
+              <NextDropdown  v-model="rmaType" lookup-key="RETURN_TYPE" :disabled="disabledFields" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
-              <b-form-datepicker v-model="form.PriceDate" :placeholder="$t('insert.chooseDate')" :disabled="disabledFields"/>
+              <NextDatePicker v-model="form.PriceDate" :disabled="disabledFields" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
-              <v-select v-model="rmaReason" :options="rmaReasons" @input="selectedSearchType('RmaReasonId', $event)" label="Description1" :disabled="disabledFields">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="rmaReason"
+                @input="selectedSearchType('RmaReasonId', $event)"
+                :disabled="disabledFields"
+                url="VisionNextRma/api/RmaReason/Search"
+                label="Description1"
+              />
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <v-select
@@ -92,11 +91,11 @@
                 </template>
               </v-select>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
-              <b-form-input type="text" v-model="rmaOrderLine.Item.Description1" readonly/>
+            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="2" lg="2">
+              <NextInput type="text" v-model="rmaOrderLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity">
-              <b-form-input type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
+              <NextInput type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
               <b-form-group>
@@ -190,7 +189,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['warehouses', 'employees', 'rmaReasons', 'items'])
+    ...mapState(['warehouses', 'items'])
   },
   mounted () {
     this.getData().then(() => {
@@ -200,39 +199,7 @@ export default {
   },
   methods: {
     getInsertPage () {
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRma/api/RmaReason/Search', name: 'rmaReasons'})
       this.getWarehouses()
-    },
-    searchEmployee (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            Name: search,
-            Surname: search
-          }
-        ]
-      }
-      this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'employees', model).then(res => {
-        loading(false)
-      })
-    },
-    searchRmaReason (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextRma/api/RmaReason/Search', 'rmaReasons', model).then(res => {
-        loading(false)
-      })
     },
     getWarehouses () {
       this.$store.dispatch('getSearchItems', {
