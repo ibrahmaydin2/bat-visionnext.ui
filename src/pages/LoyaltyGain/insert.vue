@@ -67,7 +67,7 @@
           <b-row>
             <b-table
               :fields="loyaltyGainDetailFields"
-              :items="form.LoyaltyGainDetails"
+              :items="loyaltyGainDetails"
               bordered responsive >
               <template #head()="data">
                 {{$t(data.label)}}
@@ -108,7 +108,8 @@ export default {
       employee: null,
       loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
       customer: null,
-      customers: []
+      customers: [],
+      loyaltyGainDetails: []
     }
   },
   mounted () {
@@ -126,6 +127,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.LoyaltyGainDetails = this.loyaltyGainDetails.filter(l => l.Value !== null && l.Value !== '')
         this.createData()
       }
     },
@@ -164,7 +166,7 @@ export default {
         }
         this.$api.postByUrl(model, 'VisionNextLoyalty/api/LoyaltyGain/GetGain').then((response) => {
           if (response) {
-            this.form.LoyaltyGainDetails = response.map(item => {
+            this.loyaltyGainDetails = response.map(item => {
               item.Deleted = 0
               item.System = 0
               item.RecordState = 2

@@ -57,12 +57,15 @@
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceType, 'object', 'insert.order.invoiceType')"></div>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'insert.order.currency')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
+              <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -70,30 +73,16 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.order.product')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.InvoiceLines" :key="i">
-                      <b-td>{{o.Item.Label}}</b-td>
-                      <b-td>{{o.Item.Code}}</b-td>
-                      <b-td>{{o.Quantity}}</b-td>
-                      <b-td>{{o.Price}}</b-td>
-                      <b-td>{{o.VatRate}}</b-td>
-                      <b-td>{{o.NetTotal}}</b-td>
-                      <b-td>{{o.TotalVat}}</b-td>
-                      <b-td>{{o.GrossTotal}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <b-table
+                  :items="rowData.InvoiceLines"
+                  :fields="itemFields.filter(f => f.key !== 'operations')"
+                  responsive
+                  bordered
+                  small>
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
+                </b-table>
               </b-card>
             </b-col>
           </b-row>
@@ -102,20 +91,16 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple bordered small>
-                  <b-thead>
-                    <b-th><span>{{$t('insert.order.discountReason')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.discountPercent')}}</span></b-th>
-                    <b-th><span>{{$t('insert.order.totalDiscount')}}</span></b-th>
-                  </b-thead>
-                  <b-tbody>
-                    <b-tr v-for="(o, i) in rowData.InvoiceDiscounts" :key="i">
-                      <b-td>{{o.DiscountReasonName}}</b-td>
-                      <b-td>{{o.DiscountPercent}}</b-td>
-                      <b-td>{{o.TotalDiscount}}</b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
+                <b-table
+                  :items="rowData.InvoiceDiscounts"
+                  :fields="discountFields.filter(f => f.key !== 'operations')"
+                  responsive
+                  bordered
+                  small>
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
+                </b-table>
               </b-card>
             </b-col>
           </b-row>
@@ -151,24 +136,33 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      paymentPeriod: 0,
+      itemFields: detailData.itemFields,
+      discountFields: detailData.discountFields
+    }
   },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextInvoice/api/ServiceSalesInvoice', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
+          this.paymentPeriod = response.Model.PaymentPeriod
+        })
+      })
     }
   }
 }
