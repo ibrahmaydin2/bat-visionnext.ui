@@ -140,14 +140,6 @@
               <template #head()="data">
                 {{$t(data.label)}}
               </template>
-              <template #cell(operations)="data">
-                <b-button :title="$t('list.edit')" @click="editInvoiceLine(data.item)" class="btn mr-2 btn-warning btn-sm">
-                  <i class="fa fa-pencil-alt"></i>
-                </b-button>
-                <b-button :title="$t('list.delete')" @click="removeInvoiceLine(data.item)" class="btn mr-2 btn-danger btn-sm">
-                  <i class="far fa-trash-alt ml-1"></i>
-                </b-button>
-              </template>
             </b-table>
           </b-row>
         </b-tab>
@@ -160,11 +152,6 @@
               bordered>
               <template #head()="data">
                 {{$t(data.label)}}
-              </template>
-              <template #cell(operations)="data">
-                <b-button :title="$t('list.delete')" @click="removeInvoiceDiscount(data.item)" class="btn mr-2 btn-danger btn-sm">
-                  <i class="far fa-trash-alt"></i>
-                </b-button>
               </template>
             </b-table>
           </b-row>

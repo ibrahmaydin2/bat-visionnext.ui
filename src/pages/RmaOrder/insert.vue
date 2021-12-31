@@ -144,6 +144,7 @@ export default {
   data () {
     return {
       form: {
+        Code: null,
         Deleted: 0,
         System: 0,
         RecordState: 2,
@@ -153,9 +154,9 @@ export default {
         WarehouseId: null,
         RepresentativeId: null,
         Genexp1: null,
-        RmaOrderDate: new Date(),
+        RmaOrderDate: null,
         RmaTypeId: null,
-        PriceDate: new Date(),
+        PriceDate: null,
         RmaReasonId: null,
         RmaStatusId: 2,
         RmaOrderLines: []
@@ -199,13 +200,12 @@ export default {
     ...mapState(['warehouses', 'items'])
   },
   mounted () {
-    this.createManualCode()
-    this.getInsertPage(this.routeName)
+    this.getWarehouses()
+    let date = new Date().toISOString().slice(0, 10) + 'T00:00:00.000Z'
+    this.form.RmaOrderDate = date
+    this.form.PriceDate = date
   },
   methods: {
-    getInsertPage (e) {
-      this.getWarehouses()
-    },
     getWarehouses () {
       this.$store.dispatch('getSearchItems', {
         ...this.query,
