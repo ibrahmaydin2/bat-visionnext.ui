@@ -232,6 +232,7 @@ export default {
     this.getData().then(() => {
       this.setData()
     })
+    this.getLoyaltyCustomers()
   },
   methods: {
     setData () {
@@ -252,11 +253,6 @@ export default {
         this.selectedClass = rowData.Class
         this.selectedKind = rowData.Kind
 
-        if (this.form.LoyaltyCustomers && this.form.LoyaltyCustomers.length > 0) {
-          this.customers = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
-          this.branchs = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
-          this.customerCriterias = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
-        }
         if (this.isSaveAs) {
           this.createManualCode()
         } else if (this.form.LoyaltyBeginDate) {
@@ -425,6 +421,21 @@ export default {
           id: 5
         }
       ]
+    },
+    getLoyaltyCustomers () {
+      let request = {
+        AndConditionModel: {
+          LoyaltyIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextLoyalty/api/LoyaltyCustomer/Search').then(response => {
+        if (response && response.ListModel) {
+          let list = response.ListModel.BaseModels
+          this.customers = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+          this.branchs = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
+          this.customerCriterias = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+        }
+      })
     }
   },
   validations () {
