@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'RefContract' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -25,17 +25,17 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
           <NextFormGroup item-key="IsHero" :error="$v.form.IsHero">
-            <NextCheckBox v-model="form.IsHero" type="number" toggle/>
+            <NextCheckBox v-model="form.IsHero" type="number" toggle :disabled="insertReadonly.IsHero"/>
           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.detail')" :active="!developmentMode">
+        <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <NextFormGroup item-key="SourceCustomerId" :error="$v.form.SourceCustomerId">
               <NextDropdown
@@ -43,7 +43,8 @@
                 @input="selectedSourceCustomer('SourceCustomerId', $event)"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :disabled="insertReadonly.SourceCustomerId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TargetCustomerId" :error="$v.form.TargetCustomerId">
               <NextDropdown
@@ -51,10 +52,11 @@
                 @input="selectedSearchType('TargetCustomerId', $event)"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"/>
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :disabled="insertReadonly.TargetCustomerId"/>
             </NextFormGroup>
             <NextFormGroup item-key="ContractTransferStatusId" :error="$v.form.ContractTransferStatusId">
-              <NextDropdown :disabled="true" v-model="transferLabel" lookup-key="CONTRACT_TRANSFER_STATUS" @input="selectedType('ContractTransferStatusId', $event)"/>
+              <NextDropdown v-model="contractTransferStatus" :disabled="insertReadonly.ContractTransferStatusId" lookup-key="CONTRACT_TRANSFER_STATUS" @input="selectedType('ContractTransferStatusId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractStartDate" :error="$v.form.SourceContractStartDate">
               <NextDatePicker v-model="form.SourceContractStartDate" :disabled="insertReadonly.SourceContractStartDate" />
@@ -63,10 +65,15 @@
               <NextDatePicker v-model="form.SourceContractEndDate" :disabled="insertReadonly.SourceContractEndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="TransferReasonId" :error="$v.form.TransferReasonId">
-              <NextDropdown v-model="transferReason" lookup-key="TRANSFER_REASON" @input="selectedType('TransferReasonId', $event)"/>
+              <NextDropdown v-model="transferReason" :disabled="insertReadonly.TransferReasonId" lookup-key="TRANSFER_REASON" @input="selectedType('TransferReasonId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractId" :error="$v.form.SourceContractId">
-              <v-select v-model="sourceContract" :options="sourceContracts" @input="selectedSourceContract('SourceContractId', $event)" label="Contract"></v-select>
+              <NextDropdown
+                v-model="sourceContract"
+                :source="sourceContracts"
+                :disabled="insertReadonly.SourceContractId"
+                @input="selectedSourceContract('SourceContractId', $event)"
+                label="Contract"/>
             </NextFormGroup>
           </b-row>
           <b-row v-if="contractDetail">
@@ -102,7 +109,7 @@ export default {
         Deleted: 0,
         RecordId: null
       },
-      transferLabel: null,
+      contractTransferStatus: null,
       routeName1: 'ContractManagement',
       sourceContracts: [],
       sourceContract: {},
@@ -142,6 +149,7 @@ export default {
       }
       this.sourceCustomer = this.convertLookupValueToSearchValue(this.rowData.SourceCustomer)
       this.targetCustomer = this.convertLookupValueToSearchValue(this.rowData.TargetCustomer)
+      this.contractTransferStatus = this.rowData.ContractTransferStatus
       this.transferReason = this.rowData.TransferReason
 
       if (this.rowData.SourceContractId) {
@@ -192,23 +200,6 @@ export default {
         this.form.SourceContractStartDate = this.dateConvertToISo(this.form.SourceContractStartDate)
         this.form.SourceContractEndDate = this.dateConvertToISo(this.form.SourceContractEndDate)
         this.updateData()
-      }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
-    }
-  },
-  watch: {
-    lookup (e) {
-      if (e) {
-        e.CONTRACT_TRANSFER_STATUS.map(item => {
-          if (item.DecimalValue === 31792206182) {
-            this.form.ContractTransferStatusId = item.DecimalValue
-            this.transferLabel = item.Label
-          }
-        })
       }
     }
   }
