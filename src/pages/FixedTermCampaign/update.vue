@@ -283,20 +283,24 @@ export default {
       },
       selectedCurrency: null,
       isCampaignDateNew: false,
-      currencies: []
+      currencies: [],
+      companyId: null,
+      branchId: null
     }
   },
   computed: {
     ...mapState(['routes', 'branchs', 'customers'])
   },
   mounted () {
+    this.companyId = this.$store.state.CompanyId
+    this.branchId = this.$store.state.BranchId
     this.getData().then(() => {
       this.setData()
     })
     this.getInsertPage(this.routeName)
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       let today = new Date().toISOString().slice(0, 10)
       this.form.CampaignBeginDate = today
       this.form.CampaignEndDate = today
@@ -305,134 +309,6 @@ export default {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextBranch/api/Branch/Search', name: 'branchs'})
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         me.campaignItemAreaList = res.Values
-      })
-    },
-    addFixedTermCampaignItem () {
-      this.$v.campaignItemArea.$touch()
-      this.$v.campaignItemValue.$touch()
-      if (this.$v.customerItemArea.$error || this.$v.customerItemValue.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      this.form.FixedTermCampaignItems.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CompanyId: null,
-        TableName: 'T_ITEM',
-        ColumnName: this.campaignItemArea.ForeignField,
-        ColumnValue: this.campaignItemValue.DecimalValue,
-        ColumnNameStr: this.campaignItemArea.Label,
-        ColumnValueStr: this.campaignItemValue.Label
-      })
-      this.campaignItemArea = null
-      this.campaignItemValue = null
-      this.$v.campaignItemArea.$reset()
-      this.$v.campaignItemValue.$reset()
-    },
-    removeFixedTermCampaignItem (item) {
-      this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
-    },
-    selectFixedTermCampaignDetail (data, tableName, columnName) {
-      if (data) {
-        this.fixedTermCampaignDetail.tableName = tableName
-        this.fixedTermCampaignDetail.columnName = columnName
-        this.fixedTermCampaignDetail.text = data.Description1
-        this.fixedTermCampaignDetail.columnValue = data.RecordId
-      } else {
-        this.fixedTermCampaignDetail = {}
-      }
-    },
-    addFixedTermCampaignDetail () {
-      this.$v.fixedTermCampaignDetail.$touch()
-      if (this.$v.fixedTermCampaignDetail.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.FixedTermCampaignDetails.filter(f => f.TableName === this.fixedTermCampaignDetail.tableName &&
-      f.ColumnName === this.fixedTermCampaignDetail.columnName &&
-      f.ColumnValue === this.fixedTermCampaignDetail.columnValue)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.FixedTermCampaignDetails.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CompanyId: null,
-        TableName: this.fixedTermCampaignDetail.tableName,
-        ColumnName: this.fixedTermCampaignDetail.columnName,
-        ColumnValue: this.fixedTermCampaignDetail.columnValue,
-        Text: this.fixedTermCampaignDetail.text
-      })
-      this.fixedTermCampaignDetail = {}
-      this.selectedRoute = {}
-      this.selectedCustomer = {}
-      this.selectedBranch = {}
-      this.$v.fixedTermCampaignDetail.$reset()
-    },
-    addFixedTermCustomerItem () {
-      this.$v.customerItemArea.$touch()
-      this.$v.customerItemValue.$touch()
-      if (this.$v.customerItemArea.$error || this.$v.customerItemValue.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      this.form.FixedTermCampaignDetails.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CompanyId: null,
-        TableName: 'T_CUSTOMER',
-        ColumnName: this.customerItemArea.ForeignField,
-        ColumnValue: this.customerItemValue.DecimalValue,
-        ColumnNameStr: this.customerItemArea.Label,
-        ColumnValueStr: this.customerItemValue.Label
-      })
-      this.customerItemArea = null
-      this.$v.customerItemArea.$reset()
-      this.$v.customerItemValue.$reset()
-    },
-    removeFixedTermCustomerItem (item) {
-      this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
-    },
-    removeFixedTermCampaignDetail (item) {
-      this.form.FixedTermCampaignDetails.splice(this.form.FixedTermCampaignDetails.indexOf(item), 1)
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/Search',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
       })
     },
     addFixedTermCampaignTaken () {
@@ -457,6 +333,8 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        BranchId: parseFloat(this.branchId),
+        CampaignId: this.form.RecordId,
         CompanyId: parseFloat(this.companyId),
         StartQuantity: parseFloat(this.fixedTermCampaignTaken.startQuantity),
         EndQuantity: parseFloat(this.fixedTermCampaignTaken.endQuantity),
@@ -467,44 +345,6 @@ export default {
     },
     removeFixedTermCampaignTaken (item) {
       this.form.FixedTermCampaignTakens.splice(this.form.FixedTermCampaignTakens.indexOf(item), 1)
-    },
-    addFixedTermCampaignCustomer () {
-      this.$v.fixedTermCampaignCustomer.$touch()
-      if (this.$v.fixedTermCampaignCustomer.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.FixedTermCampaignCustomers.filter(f => f.CustomerId === this.fixedTermCampaignCustomer.customerId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.FixedTermCampaignCustomers.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CompanyId: null,
-        UsedAmount: null,
-        BudgetAmount: null,
-        CustomerId: this.fixedTermCampaignCustomer.customerId,
-        CustomerName: this.fixedTermCampaignCustomer.customerName,
-        CustomerCode: this.fixedTermCampaignCustomer.customerCode,
-        LocationId: this.fixedTermCampaignCustomer.locationId,
-        LocationName: this.fixedTermCampaignCustomer.locationName,
-        BudgetId: this.fixedTermCampaignCustomer.budgetId,
-        BudgetName: this.fixedTermCampaignCustomer.budgetName
-      })
-      this.fixedTermCampaignCustomer = {}
-      this.customer = null
-      this.$v.fixedTermCampaignCustomer.$reset()
-    },
-    removeFixedTermCampaignCustomer (item) {
-      this.form.FixedTermCampaignCustomers.splice(this.form.FixedTermCampaignCustomers.indexOf(item), 1)
     },
     setData () {
       let rowData = this.rowData
@@ -578,14 +418,41 @@ export default {
           })
           return
         }
+        this.form.FixedTermCampaignBranchs = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID').map(a => {
+            return {
+              BranchId: a.ColumnValue,
+              Code: a.code,
+              CommercialTitle: a.text,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
+        this.form.FixedTermCampaignRoutes = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID').map(a => {
+            return {
+              RouteId: a.ColumnValue,
+              Code: a.code,
+              Description1: a.text,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
+        this.form.FixedTermCampaignCustomerCriterias = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID').map(a => {
+            return {
+              ColumnName: a.ColumnName,
+              ColumnValue: a.ColumnValue,
+              ColumnNameDescription: a.ColumnNameStr,
+              ColumnValueDescription: a.ColumnValueStr,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
         this.updateData()
-      }
-    },
-    getCustomerCriteriaItems () {
-      if (!this.customerItemAreaList || this.customerItemAreaList.length === 0) {
-        this.$api.postByUrl({paramId: 'CUSTOMER_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
-          this.customerItemAreaList = res.Values
-        })
       }
     }
   },

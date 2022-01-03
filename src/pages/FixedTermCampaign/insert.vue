@@ -123,7 +123,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.campaignItemArea" :required="true" md="5" lg="5">
               <NextDropdown
@@ -150,8 +150,8 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
-                  <b-td>{{f.ColumnNameStr}}</b-td>
-                  <b-td>{{f.ColumnValueStr}}</b-td>
+                  <b-td>{{f.ColumnNameDescription}}</b-td>
+                  <b-td>{{f.ColumnValueDescription}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -160,14 +160,15 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.routes')" v-if="selectedRouteCriteria && selectedRouteCriteria.Code === 'RL'">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.routes')" v-if="selectedRouteCriteria && selectedRouteCriteria.Code === 'RL'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.route')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
               <NextDropdown
                 v-model="selectedRoute"
                 url="VisionNextRoute/api/Route/Search"
                 @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')"
-                label="Description1"
+                :dynamic-and-condition="{ Deleted: 0, StatusIds : [1]}"
+                searchable
               ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
@@ -193,7 +194,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'" @click="getCustomerCriteriaItems">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'" @click="getCustomerCriteriaItems">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.customerItemArea" :required="true" md="5" lg="5">
               <NextDropdown
@@ -234,7 +235,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
               <NextDropdown
@@ -243,7 +244,7 @@
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 label="Description1"
-                :is-customer="true"/>
+                :is-customer="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customerCode')" :error="$v.fixedTermCampaignCustomer.customerCode" :required="true">
               <NextInput type="text" v-model="fixedTermCampaignCustomer.customerCode" :disabled="true"/>
@@ -278,7 +279,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
+                <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID')" :key="i">
                   <b-td>{{f.CustomerName}}</b-td>
                   <b-td>{{f.CustomerCode}}</b-td>
                   <b-td>{{f.LocationName}}</b-td>
@@ -291,13 +292,14 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.branch')" :error="$v.fixedTermCampaignDetail.columnValue" :required="true" md="6" lg="6">
               <NextDropdown
                 v-model="selectedBranch"
                 url="VisionNextBranch/api/Branch/Search"
-                @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')" label="Description1"
+                @input="selectFixedTermCampaignDetail($event, 'T_CUSTOMER', 'BRANCH_ID')"
+                searchable
               ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
@@ -357,7 +359,10 @@ export default {
         FixedTermCampaignItems: [],
         FixedTermCampaignDetails: [],
         FixedTermCampaignTakens: [],
-        FixedTermCampaignCustomers: []
+        FixedTermCampaignCustomers: [],
+        FixedTermCampaignBranchs: [],
+        FixedTermCampaignRoutes: [],
+        FixedTermCampaignCustomerCriterias: []
       },
       routeName1: 'Discount',
       selectedRouteCriteria: null,
@@ -395,19 +400,23 @@ export default {
         locationName: null,
         budgetName: null
       },
-      companyId: null
+      companyId: null,
+      branchId: null
     }
   },
   mounted () {
     this.createManualCode()
     this.getInsertPage(this.routeName)
     this.companyId = this.$store.state.CompanyId
+    this.branchId = this.$store.state.BranchId
   },
   methods: {
     getInsertPage (e) {
-      let today = new Date().toISOString().slice(0, 10)
-      this.form.CampaignBeginDate = today
-      this.form.CampaignEndDate = today
+      let today = new Date()
+      today.setDate(today.getDate() + 1)
+      let nextDate = today.toISOString().slice(0, 10)
+      this.form.CampaignBeginDate = nextDate
+      this.form.CampaignEndDate = nextDate
       let me = this
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         me.campaignItemAreaList = res.Values
@@ -433,8 +442,8 @@ export default {
         TableName: 'T_ITEM',
         ColumnName: this.campaignItemArea.ForeignField,
         ColumnValue: this.campaignItemValue.DecimalValue,
-        ColumnNameStr: this.campaignItemArea.Label,
-        ColumnValueStr: this.campaignItemValue.Label
+        ColumnNameDescription: this.campaignItemArea.Label,
+        ColumnValueDescription: this.campaignItemValue.Label
       })
       this.campaignItemArea = null
       this.campaignItemValue = null
@@ -479,6 +488,7 @@ export default {
         this.fixedTermCampaignDetail.tableName = tableName
         this.fixedTermCampaignDetail.columnName = columnName
         this.fixedTermCampaignDetail.text = data.Description1
+        this.fixedTermCampaignDetail.code = data.Code
         this.fixedTermCampaignDetail.columnValue = data.RecordId
       } else {
         this.fixedTermCampaignDetail = {}
@@ -547,6 +557,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        BranchId: parseFloat(this.branchId),
         CompanyId: parseFloat(this.companyId),
         StartQuantity: parseFloat(this.fixedTermCampaignTaken.startQuantity),
         EndQuantity: parseFloat(this.fixedTermCampaignTaken.endQuantity),
@@ -568,23 +579,23 @@ export default {
         })
         return false
       }
-      let filteredArr = this.form.FixedTermCampaignCustomers.filter(f => f.CustomerId === this.fixedTermCampaignCustomer.customerId)
+      let filteredArr = this.form.FixedTermCampaignDetails.filter(f => f.ColumnValue === this.fixedTermCampaignCustomer.customerId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      this.form.FixedTermCampaignCustomers.push({
+      this.form.FixedTermCampaignDetails.push({
         Deleted: 0,
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        CompanyId: null,
+        TableName: 'T_CUSTOMER',
+        ColumnName: 'RECORD_ID',
+        ColumnValue: this.fixedTermCampaignCustomer.customerId,
         UsedAmount: null,
         BudgetAmount: null,
-        CustomerId: this.fixedTermCampaignCustomer.customerId,
         CustomerName: this.fixedTermCampaignCustomer.customerName,
         CustomerCode: this.fixedTermCampaignCustomer.customerCode,
-        LocationId: this.fixedTermCampaignCustomer.locationId,
         LocationName: this.fixedTermCampaignCustomer.locationName,
         BudgetName: this.fixedTermCampaignCustomer.budgetName
       })
@@ -593,7 +604,7 @@ export default {
       this.$v.fixedTermCampaignCustomer.$reset()
     },
     removeFixedTermCampaignCustomer (item) {
-      this.form.FixedTermCampaignCustomers.splice(this.form.FixedTermCampaignCustomers.indexOf(item), 1)
+      this.form.FixedTermCampaignDetails.splice(this.form.FixedTermCampaignDetails.indexOf(item), 1)
     },
     save () {
       this.$v.form.$touch()
@@ -613,6 +624,40 @@ export default {
           })
           return
         }
+        this.form.FixedTermCampaignBranchs = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID').map(a => {
+            return {
+              BranchId: a.ColumnValue,
+              Code: a.code,
+              CommercialTitle: a.text,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
+        this.form.FixedTermCampaignRoutes = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_ROUTE' && f.ColumnName === 'RECORD_ID').map(a => {
+            return {
+              RouteId: a.ColumnValue,
+              Code: a.code,
+              Description1: a.text,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
+        this.form.FixedTermCampaignCustomerCriterias = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName !== 'RECORD_ID' && f.ColumnName !== 'BRANCH_ID').map(a => {
+            return {
+              ColumnName: a.ColumnName,
+              ColumnValue: a.ColumnValue,
+              ColumnNameDescription: a.ColumnNameStr,
+              ColumnValueDescription: a.ColumnValueStr,
+              RecordState: a.RecordState,
+              RecordId: a.RecordId,
+              StatusId: a.StatusId
+            }
+          })
         this.createData()
       }
     },
@@ -633,7 +678,9 @@ export default {
             StatusId: 1,
             Deleted: 0,
             System: 0,
-            CustomerId: obj.CustomerId,
+            TableName: 'T_CUSTOMER',
+            ColumnName: 'RECORD_ID',
+            ColumnValue: obj.CustomerId,
             CustomerName: obj.CustomerDescription,
             CustomerCode: obj.CustomerCode,
             LocationName: obj.CustomerLocation,
@@ -641,7 +688,7 @@ export default {
           }
           list.push(newObj)
         })
-        this.form.FixedTermCampaignCustomers = list
+        this.form.FixedTermCampaignDetails = list
       }
     }
   },
