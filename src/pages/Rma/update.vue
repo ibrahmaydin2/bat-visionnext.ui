@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Rma' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -53,13 +53,12 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
-              <v-select
-                :options="lookup.RMA_STATUS"
+              <NextDropdown
                 v-model="rmaStatus"
                 @input="selectedType('RmaStatusId', $event)"
-                label="Label"
-                disabled
-              />
+                :disabled="insertReadonly.RmaStatusId"
+                lookup-key="RMA_STATUS"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
               <NextDropdown
@@ -75,7 +74,7 @@
               <NextInput type="text" v-model="form.ApproveNumber" :disabled="insertReadonly.ApproveNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <NextDropdown  v-model="rmaType" lookup-key="RETURN_TYPE" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
+              <NextDropdown :disabled="insertReadonly.RmaTypeId" v-model="rmaType" lookup-key="RETURN_TYPE" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveDate" :error="$v.form.ApproveDate">
               <NextDatePicker :disabled="insertReadonly.ApproveDate" v-model="form.ApproveDate" />
@@ -114,14 +113,12 @@
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
-              <v-select :options="items" v-model="rmaLine.Item" @search="searchItem" label="Code" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="rmaLine.Item"
+                :search="searchItem"
+                label="Code"
+                searchable
+                :custom-option="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
@@ -174,7 +171,11 @@
                     <b-td>{{w.Item.MeanPrice ? w.Item.MeanPrice : w.MeanPrice}}</b-td>
                     <b-td>{{w.Item.ListPrice ? w.Item.ListPrice : w.ListPrice}}</b-td>
                     <b-td>{{w.Item.UsedPrice ? w.Item.UsedPrice : w.UsedPrice}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
+                        <i class="far fa-trash-alt"></i>
+                      </b-button>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -186,7 +187,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import updateMixin from '../../mixins/update'
 export default {
@@ -246,9 +246,6 @@ export default {
       routeName1: 'Rma'
     }
   },
-  computed: {
-    ...mapState(['items'])
-  },
   mounted () {
     this.getData().then(() => {
       this.setModel()
@@ -256,14 +253,7 @@ export default {
   },
   methods: {
     searchItem (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement',
-        name: 'items',
+      let model = {
         orConditionModels: [
           {
             Description1: search,
@@ -276,8 +266,9 @@ export default {
           StatusIds: [1],
           CardTypeIds: [1, 2, 8]
         }
-      }).then(res => {
-        loading(false)
+      }
+      return this.$api.postByUrl(model, 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement').then(res => {
+        return res.ListModel.BaseModels
       })
     },
     addItems () {

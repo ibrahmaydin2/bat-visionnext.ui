@@ -29,6 +29,9 @@
             selectable
             @row-selected="onRowSelected"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -77,6 +80,9 @@
             :fields="fieldsRma"
             sticky-header
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #cell(UsedQuantity)="row">
               <b-form-input type="number" :min="0" :max="row.item.UsedQuantity" v-model="row.item.UsedQuantity" />
             </template>

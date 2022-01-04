@@ -19,82 +19,89 @@
       <section>
         <b-row>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('get.RmaOrder.General')" :active="!developmentMode">
+        <b-tab :title="$t('get.RmaOrder.General')" active>
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <NextDropdown v-model="customer" :source="customers" @input="selectedType('CustomerId', $event)" label="Label" :disabled='!customerValid || disabledFields'></NextDropdown>
-            </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
-              <v-select v-model="warehouse" :options="warehouses" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :filterable="true" :disabled="disabledFields">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="warehouse"
+                @input="selectedSearchType('WarehouseId', $event)"
+                :disabled="disabledFields || insertReadonly.WarehouseId"
+                url="VisionNextWarehouse/api/Warehouse/Search"
+                :dynamic-and-condition="{ IsVehicle: 0, IsVirtualWarehouse: 0, StatusIds: [1] }"
+              />
+            </NextFormGroup>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
+              <NextDropdown
+                v-model="customer"
+                @input="selectedSearchType('CustomerId', $event)"
+                :source="customers"
+                label="Label"
+                :disabled="!customerValid || disabledFields || insertReadonly.CustomerId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
                 v-model="representative"
                 @input="selectedSearchType('RepresentativeId', $event)"
-                :disabled="disabledFields"
+                :disabled="disabledFields || insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
                 label="Description1"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1">
-              <NextInput type="text" v-model="form.Genexp1" :disabled="disabledFields" />
+              <NextInput type="text" v-model="form.Genexp1" :disabled="disabledFields || insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaOrderDate" :error="$v.form.RmaOrderDate">
-              <NextDatePicker v-model="form.RmaOrderDate" :disabled="disabledFields"/>
+              <NextDatePicker v-model="form.RmaOrderDate" :disabled="disabledFields || insertReadonly.RmaOrderDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <NextDropdown  v-model="rmaType" lookup-key="RETURN_TYPE" :disabled="disabledFields" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
+              <NextDropdown :disabled="insertReadonly.RmaTypeId" v-model="rmaType" lookup-key="RETURN_TYPE" get-lookup @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
-              <NextDatePicker v-model="form.PriceDate" :disabled="disabledFields" />
+              <NextDatePicker v-model="form.PriceDate" :disabled="disabledFields || insertReadonly.PriceDate" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaReasonId" :error="$v.form.RmaReasonId">
               <NextDropdown
                 v-model="rmaReason"
                 @input="selectedSearchType('RmaReasonId', $event)"
-                :disabled="disabledFields"
+                :disabled="disabledFields || insertReadonly.RmaReasonId"
                 url="VisionNextRma/api/RmaReason/Search"
                 label="Description1"
               />
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
-              <v-select
-                :options="lookup.RMA_STATUS"
+              <NextDropdown
                 v-model="rmaStatus"
-                @input="selectedType('RmaStatusId', $event)"
-                label="Label"
-                :disabled="disabledFields"
-              />
+                :disabled="disabledFields || insertReadonly.RmaStatusId"
+                lookup-key="RMA_STATUS" get-lookup
+                @input="selectedType('RmaStatusId', $event)"></NextDropdown>
             </NextFormGroup>
           </b-row>
           <hr />
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')">
-              <v-select :options="items" v-model="rmaOrderLine.Item.Code" @search="searchItem" @input="selectedItem" label="Code" :filterable="false" :disabled="disabledFields">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaOrderLine.item">
+              <NextDropdown
+                v-model="rmaOrderLine.item"
+                url="VisionNextItem/api/Item/AutoCompleteSearch" searchable
+                :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }"
+                or-condition-fields="Description1,Code"
+                :custom-option="true"
+                @input="selectedItem"
+                label="Code"
+                :disabled="disabledFields"
+              />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.ItemName')" md="2" lg="2">
               <NextInput type="text" v-model="rmaOrderLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
               <NextInput type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
             <b-col md="1" class="ml-auto">
@@ -117,7 +124,11 @@
                     <b-td>{{w.Item.Code}}</b-td>
                     <b-td>{{w.Item.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td v-if="!disabledFields" class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td v-if="!disabledFields" class="text-center">
+                      <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
+                        <i class="far fa-trash-alt"></i>
+                      </b-button>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -129,7 +140,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import updateMixin from '../../mixins/update'
 export default {
@@ -179,7 +189,6 @@ export default {
       customers: [],
       customer: {},
       representative: null,
-      approveEmloyee: null,
       rmaStatus: null,
       rmaType: null,
       rmaReason: null,
@@ -188,54 +197,12 @@ export default {
       firstSet: true
     }
   },
-  computed: {
-    ...mapState(['warehouses', 'items'])
-  },
   mounted () {
     this.getData().then(() => {
       this.setModel()
-      this.getInsertPage()
     })
   },
   methods: {
-    getInsertPage () {
-      this.getWarehouses()
-    },
-    getWarehouses () {
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextWarehouse/api/Warehouse/Search',
-        name: 'warehouses',
-        andConditionModel: {
-          IsVehicle: 0,
-          IsVirtualWarehouse: 0,
-          StatusIds: [1]
-        }
-      })
-    },
-    searchItem (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/AutoCompleteSearch',
-        name: 'items',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ],
-        andConditionModel: {
-          StatusIds: [1],
-          CardTypeIds: [1, 2, 8]
-        }
-      }).then(res => {
-        loading(false)
-      })
-    },
     addItems () {
       this.$v.rmaOrderLine.$touch()
       if (this.$v.rmaOrderLine.$error) {
@@ -388,7 +355,6 @@ export default {
       this.form = e
       this.warehouse = this.convertLookupValueToSearchValue(e.Warehouse)
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
-      this.approveEmloyee = this.convertLookupValueToSearchValue(e.ApproveEmployee)
       this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
       this.rmaStatus = e.RmaStatus
       this.rmaType = e.RmaType
@@ -401,16 +367,14 @@ export default {
       rmaOrderLine: {
         Quantity: {
           required
+        },
+        item: {
+          required
         }
       }
     }
   },
   watch: {
-    lookup (e) {
-      if (e.RMA_STATUS) {
-        this.rmaStatusLabel = e.RMA_STATUS[0].Label
-      }
-    },
     warehouse (e) {
       this.customerValid = false
       this.customers = []

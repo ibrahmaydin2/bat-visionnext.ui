@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Rma' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -23,7 +23,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('get.RMA.General')" :active="!developmentMode">
+        <b-tab :title="$t('get.RMA.General')" active>
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
               <NextDropdown
@@ -32,7 +32,8 @@
                 :searchable="true" :custom-option="true"
                 label="Description1"
                 or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"/>
+                :is-customer="true"
+                :disabled="insertReadonly.CustomerId"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId">
               <NextDropdown
@@ -44,7 +45,7 @@
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
                 @input="selectedSearchType('RepresentativeId', $event)"
-                :disabled="true"
+                :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
                 v-model="representativeName"
@@ -52,18 +53,16 @@
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
-              <v-select
-                disabled
-                v-model="rmaStatusLabel"
-                :options="lookup.RMA_STATUS"
+              <NextDropdown
+                :disabled="insertReadonly.RmaStatusId"
+                lookup-key="RMA_STATUS"
                 @input="selectedType('RmaStatusId', $event)"
-                label="Label"
               />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveEmployeeId" :error="$v.form.ApproveEmployeeId">
               <NextDropdown
                 @input="selectedSearchType('ApproveEmployeeId', $event)"
-                :disabled="true"
+                :disabled="insertReadonly.ApproveEmployeeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
                 v-model="approveEmployeeName"
@@ -74,10 +73,10 @@
               <NextInput type="text" v-model="form.ApproveNumber" :disabled="insertReadonly.ApproveNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <NextDropdown lookup-key="RETURN_TYPE" get-lookup  @input="selectedType('RmaTypeId', $event)"></NextDropdown>
+              <NextDropdown :disabled="insertReadonly.RmaTypeId" lookup-key="RETURN_TYPE" get-lookup  @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveDate" :error="$v.form.ApproveDate">
-              <NextDatePicker :disabled="true" v-model="form.ApproveDate" />
+              <NextDatePicker :disabled="insertReadonly.ApproveDate" v-model="form.ApproveDate" />
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
               <NextDatePicker v-model="form.PriceDate" :disabled="insertReadonly.PriceDate" />
@@ -112,14 +111,12 @@
         <b-tab :title="$t('get.RMA.Items')" :disabled="!form.CustomerId">
           <b-row>
             <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
-              <v-select v-model="rmaLine.Item" :options="items" @search="searchItem" @input="selectedItem" label="Code" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1}}
-                </template>
-              </v-select>
+              <NextDropdown
+                v-model="rmaLine.Item"
+                :search="searchItem"
+                label="Code"
+                searchable
+                :custom-option="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.ItemName')">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
@@ -172,7 +169,11 @@
                     <b-td>{{w.Item.MeanPrice}}</b-td>
                     <b-td>{{w.Item.ListPrice}}</b-td>
                     <b-td>{{w.Item.UsedPrice}}</b-td>
-                    <b-td class="text-center"><i @click="removeItems(w)" class="far fa-trash-alt text-danger"></i></b-td>
+                    <b-td class="text-center">
+                      <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
+                        <i class="far fa-trash-alt"></i>
+                      </b-button>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -231,23 +232,18 @@ export default {
         Item: {}
       },
       rmaLines: [],
-      rmaStatusLabel: null,
       approveEmployeeName: null,
       representativeName: null,
-      routeName1: 'Rma',
-      isDivUnit: null
+      routeName1: 'Rma'
     }
   },
   computed: {
-    ...mapState(['items', 'loginUser', 'UserId'])
+    ...mapState(['loginUser', 'UserId'])
   },
   mounted () {
-    this.getInsertPage()
+    this.getUserInfo()
   },
   methods: {
-    getInsertPage () {
-      this.getUserInfo()
-    },
     getUserInfo () {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       if (userModel) {
@@ -325,15 +321,8 @@ export default {
         Item: {}
       }
     },
-    searchItem (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement',
-        name: 'items',
+    searchItem (search) {
+      let model = {
         orConditionModels: [
           {
             Description1: search,
@@ -346,26 +335,10 @@ export default {
           StatusIds: [1],
           CardTypeIds: [1, 2, 8]
         }
-      }).then(res => {
-        loading(false)
-      })
-    },
-    selectedItem (e) {
-      if (e) {
-        this.rmaLine.Item = e
-        let filteredArr = null
-        let request = {
-          RecordId: e.UnitSetId
-        }
-        this.$api.postByUrl(request, 'VisionNextUnit/api/UnitSet/Get').then(res => {
-          if (res && res.IsCompleted && res.Model.Units.length > 0) {
-            filteredArr = res.Model.Units.filter(i => i.UnitId === e.UnitId)
-            this.isDivUnit = filteredArr[0].IsDivUnit
-          }
-        })
-      } else {
-        this.rmaLine.Item = {}
       }
+      return this.$api.postByUrl(model, 'VisionNextItem/api/Item/GetItemSearchForRMAProductManagement').then(res => {
+        return res.ListModel.BaseModels
+      })
     },
     save () {
       this.$v.form.$touch()
@@ -399,18 +372,6 @@ export default {
           }
         }
       }
-    }
-  },
-  watch: {
-    lookup: {
-      handler (lookupKey) {
-        if (lookupKey.RMA_STATUS) {
-          this.rmaStatusLabel = lookupKey.RMA_STATUS[0].Label
-          this.form.RmaStatusId = lookupKey.RMA_STATUS[0].DecimalValue
-        }
-      },
-      deep: true,
-      immediate: true
     }
   }
 }
