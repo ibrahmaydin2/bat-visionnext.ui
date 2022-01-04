@@ -84,10 +84,10 @@
             </b-link>
             <b-link v-else-if="showClickableColumn(data)" variant="white" size="sm" @click="columnClick(data.field.key)">
               <span>
-                {{data.field.label}}
+                {{$t(data.field.label)}}
               </span>
             </b-link>
-            <span v-else>{{data.field.label}}</span>
+            <span v-else>{{$t(data.field.label)}}</span>
           </template>
           <template #cell()="data">
             <div v-if="data.field.column && data.field.column.Enabled">

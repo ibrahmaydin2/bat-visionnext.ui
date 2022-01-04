@@ -32,6 +32,9 @@
             ref="selectableTable"
             @row-selected="onRowSelected"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #cell(selected)="{ rowSelected }">
               <template v-if="rowSelected">
                 <b><span aria-hidden="true">&check;</span></b>
@@ -65,6 +68,9 @@
                 <span class="sr-only">Not selected</span>
               </template>
             </template> -->
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>

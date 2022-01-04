@@ -75,7 +75,7 @@
                   <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
                 </span>
               </b-link>
-              <span v-else>{{data.field.label}}</span>
+              <span v-else>{{$t(data.field.label)}}</span>
             </template>
             <template #cell(Printed)="data">
               <i v-if="data.item.Printed === 1" class="fa fa-check text-success"></i>

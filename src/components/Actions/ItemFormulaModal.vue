@@ -23,6 +23,9 @@
         </b-form-group>
         <b-col cols="12">
           <b-table :items="form.ItemFormulaBranchs" :fields="fields2" striped responsive>
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
           </b-table>
         </b-col>
       </b-row>
@@ -41,6 +44,9 @@
       </b-row>
       <b-row v-if="form.ItemFormulaValidDates">
         <b-table :items="form.ItemFormulaValidDates" :fields="fields" striped responsive>
+          <template #head()="data">
+            {{$t(data.label)}}
+          </template>
           <template #cell(show_details)="row">
             <b-button size="sm" @click="row.toggleDetails" class="mr-2">
               {{$t('index.ItemFormula.Descriptions')}} {{ row.detailsShowing ? 'Gizle' : 'Göster'}}
@@ -51,6 +57,9 @@
           </template>
           <template #row-details="row">
             <b-table :items="row.item.ItemFormulaDetails" :fields="fields1" striped responsive>
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
             </b-table>
           </template>
         </b-table>

@@ -39,7 +39,7 @@
                 <i :class="allSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
               </span>
             </b-link>
-            <span v-else>{{data.field.label}}</span>
+            <span v-else>{{$t(data.field.label)}}</span>
           </template>
         <template #empty>
           <h6 class="text-center">{{$t('insert.creditBudget.customerNotFound')}}</h6>
