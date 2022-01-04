@@ -658,6 +658,21 @@ export default {
               StatusId: a.StatusId
             }
           })
+        this.form.FixedTermCampaignCustomers = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID').map(a => {
+            return {
+              Deleted: a.Deleted,
+              System: a.System,
+              RecordState: a.RecordState,
+              StatusId: a.StatusId,
+              CustomerId: a.ColumnValue,
+              CustomerName: a.CustomerName,
+              CustomerCode: a.CustomerCode,
+              LocationId: a.LocationId,
+              LocationName: a.LocationName,
+              BudgetName: a.BudgetName
+            }
+          })
         this.createData()
       }
     },
