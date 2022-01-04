@@ -50,6 +50,9 @@
                 <b-spinner class="align-middle"></b-spinner>
               </div>
             </template>
+            <template #head()="data">
+              {{$t(data.label)}}
+           </template>
             <template v-slot:head(selection)>
               <b-link variant="white" size="sm" @click="selectAll">
                 <span>

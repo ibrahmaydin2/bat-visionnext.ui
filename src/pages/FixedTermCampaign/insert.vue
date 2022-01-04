@@ -167,7 +167,7 @@
                 v-model="selectedRoute"
                 url="VisionNextRoute/api/Route/Search"
                 @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')"
-                :dynamic-and-condition="{ Deleted: 0, StatusIds : [1]}"
+                :dynamic-and-condition="getRouteAndCondition()"
                 searchable
               ></NextDropdown>
             </NextFormGroup>
@@ -705,6 +705,23 @@ export default {
         })
         this.form.FixedTermCampaignDetails = list
       }
+    },
+    getRouteAndCondition () {
+      let model = {
+        Deleted: 0,
+        StatusIds: [1]
+      }
+      if (this.selectedBranchCriteria && this.selectedBranchCriteria.Code === 'SL') {
+        let branchIds = this.form.FixedTermCampaignDetails
+          .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')
+          .map(f => f.ColumnValue)
+
+        if (branchIds.length > 0) {
+          model.BranchIds = branchIds
+        }
+      }
+
+      return model
     }
   },
   watch: {

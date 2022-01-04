@@ -9,6 +9,9 @@
             sticky-header
             :busy="tableBusy"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #cell(RejectedQuantity)="data">
               <b-form-input type="number" v-model="data.item.RejectedQuantity" />
             </template>

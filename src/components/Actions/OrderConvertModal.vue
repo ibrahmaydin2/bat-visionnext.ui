@@ -34,6 +34,9 @@
             sticky-header
             :busy="tableBusy"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>

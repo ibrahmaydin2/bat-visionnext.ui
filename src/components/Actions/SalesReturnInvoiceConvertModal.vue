@@ -17,6 +17,9 @@
             selectable
             :busy="tableBusy"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -48,6 +51,9 @@
                 :fields="detailFields"
                 sticky-header="500px"
               >
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(SalesQuantity1)="data">
                   <NextInput ref="NextTextInput" type="number" v-model="data.item.SalesQuantity1" :input-class="!data.item.UsedQuantity || data.item.UsedQuantity < 1 || data.item.UsedQuantity < data.item.SalesQuantity1 ? 'error' : ''" />
                 </template>

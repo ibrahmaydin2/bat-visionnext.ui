@@ -398,7 +398,7 @@ export default {
           customOption: true,
           isCustomer: true,
           orConditionFields: 'Code,Description1',
-          url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.discount.customerCode'),
           dynamicAndCondition: {
             BranchIds: this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).map(a => a.ColumnValue)

@@ -26,6 +26,9 @@
             :current-page="currentPage"
             :per-page="10"
           >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -43,6 +46,9 @@
                 :fields="detailFields"
                 sticky-header
               >
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(RejectedQuantity)="data">
                   <NextInput type="number" v-model="data.item.RejectedQuantity" />
                 </template>
