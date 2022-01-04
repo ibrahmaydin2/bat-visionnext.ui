@@ -498,7 +498,6 @@ export default {
   },
   watch: {
     selectedCustomer (e) {
-      debugger
       if (e) {
         this.searchPriceList()
         if (e.DefaultLocationId) {
