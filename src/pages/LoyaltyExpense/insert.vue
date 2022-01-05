@@ -25,7 +25,7 @@
             <NextInput type="text" v-model="form.Description" :disabled="insertReadonly.Description" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
