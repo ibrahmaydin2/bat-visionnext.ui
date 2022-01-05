@@ -25,7 +25,7 @@
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -38,6 +38,7 @@
               <NextDropdown
                 @input="selectedType('TciBreak1Id', $event)"
                 v-model="tciBreak1"
+                :disabled="insertReadonly.TciBreak1Id"
                 lookup-key="TCI_BREAKDOWN"
                 label="Label"
               ></NextDropdown>
@@ -78,15 +79,16 @@
               <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" label="Description1" url="VisionNextSystem/api/SysCurrency/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetId" :error="$v.form.BudgetId">
-              <v-select v-model='budget' :options="budgets" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :disabled='!useBudget' />
+              <NextDropdown v-model="budget" :disabled="!form.UseBudget" @input="selectedSearchType('BudgetId', $event)" label="CustomerDesc" :source="budgets"/>
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <v-select
-                v-model="approveState"
-                :options="lookup.APPROVE_STATE"
+              <NextDropdown
                 @input="selectedType('ApproveStateId', $event)"
+                lookup-key="APPROVE_STATE"
+                v-model="approveState"
+                :disabled="insertReadonly.ApproveStateId"
                 label="Label"
-              />
+              ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="ErpCode" :error="$v.form.ErpCode">
               <NextInput type="text" v-model="form.ErpCode" :disabled="insertReadonly.ErpCode" />
@@ -101,7 +103,7 @@
               <NextInput type="text" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="GainTypeId" :error="$v.form.GainTypeId">
-              <NextInput type="text" v-model="GainTypeName" :disabled="true" />
+              <NextInput type="text" v-model="GainTypeName" :disabled="insertReadonly.GainTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="UseBudget" :error="$v.form.UseBudget">
               <NextCheckBox v-model="useBudget" type="number" toggle :disabled="!form.CustomerId || form.CustomerId === 0" />
