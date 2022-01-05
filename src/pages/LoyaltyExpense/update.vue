@@ -18,21 +18,15 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-          <b-col v-if="insertVisible.FinanceCode != null ? insertVisible.FinanceCode : developmentMode" cols="12" md="3">
-            <b-form-group :label="insertTitle.FinanceCode + (insertRequired.FinanceCode === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.FinanceCode.$error }">
-              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.Description != null ? insertVisible.Description : developmentMode" cols="12" md="3">
-            <b-form-group :label="insertTitle.Description + (insertRequired.Description === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.Description.$error }">
-              <b-form-input type="text" v-model="form.Description" :readonly="insertReadonly.Description" />
-            </b-form-group>
-          </b-col>
-          <b-col v-if="insertVisible.StatusId != null ? insertVisible.StatusId : developmentMode" md="4" lg="3">
-            <b-form-group :label="insertTitle.StatusId + (insertRequired.StatusId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.StatusId.$error }">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle />
-            </b-form-group>
-          </b-col>
+          <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
+            <NextInput type="text" v-model="form.FinanceCode" :disabled="insertReadonly.FinanceCode" />
+          </NextFormGroup>
+          <NextFormGroup item-key="Description" :error="$v.form.Description">
+            <NextInput type="text" v-model="form.Description" :disabled="insertReadonly.Description" />
+          </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -40,44 +34,35 @@
       <b-tabs>
         <b-tab :title="$t('insert.LoyaltyExpense.title')" :active="!developmentMode">
           <b-row>
-            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.CustomerId + (insertRequired.CustomerId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.CustomerId.$error }">
-                <v-select v-model="customer" :options="customers"  @search="searchCustomer" @input="selectedSearchType('CustomerId', $event); getLoyalties" label="Description1" :filterable="false">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.TransactionDate != null ? insertVisible.TransactionDate : developmentMode" :start-weekday="1" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.TransactionDate + (insertRequired.TransactionDate === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.TransactionDate.$error }">
-                <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.LoyaltyExpense.chooseDate')" @input="getLoyalties" />
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.LoyaltyId != null ? insertVisible.LoyaltyId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.LoyaltyId + (insertRequired.LoyaltyId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.LoyaltyId.$error }">
-                <v-select v-model="loyalty" :options="loyalities" @input="selectedSearchType('LoyaltyId', $event)" label="Description1"></v-select>
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
+              <NextDropdown
+                v-model="customer"
+                @input="selectedSearchType('CustomerId', $event); getLoyalties"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                :searchable="true" :custom-option="true"
+                :disabled="insertReadonly.CustomerId" label="Description1"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
+              <NextDatePicker v-model="form.TransactionDate" @input="getLoyalties" :disabled="insertReadonly.TransactionDate"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
+              <NextDropdown
+                v-model="loyalty"
+                :disabled="insertReadonly.LoyaltyId"
+                :source="loyalities"
+                label="Description1"
+                @input="selectedSearchType('LoyaltyId', $event)"/>
+            </NextFormGroup>
           </b-row>
           <b-row>
-            <b-col v-if="insertVisible.RepresentativeId != null ? insertVisible.RepresentativeId : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.RepresentativeId + (insertRequired.RepresentativeId === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.RepresentativeId.$error }">
-                <v-select v-model="employee" :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
-              </b-form-group>
-            </b-col>
-            <b-col v-if="insertVisible.ConsumptionScore != null ? insertVisible.ConsumptionScore : developmentMode" cols="12" md="4" lg="3">
-              <b-form-group :label="insertTitle.ConsumptionScore + (insertRequired.ConsumptionScore === true ? ' *' : '')" :class="{ 'form-group--error': $v.form.ConsumptionScore.$error }">
-                <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore" />
-              </b-form-group>
-            </b-col>
+            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
+              <NextDropdown v-model="employee" label="Description1" searchable @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :disabled="insertReadonly.RepresentativeId"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ConsumptionScore" :error="$v.form.ConsumptionScore">
+              <NextInput type="text" v-model="form.ConsumptionScore" :disabled="insertReadonly.ConsumptionScore"/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -85,7 +70,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import mixin from '../../mixins/update'
 export default {
   mixins: [mixin],
@@ -108,55 +92,14 @@ export default {
       loyalities: []
     }
   },
-  computed: {
-    ...mapState(['employees', 'customers'])
-  },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.getLoyalties()
   },
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
         this.setModel()
-      })
-    },
-    searchEmployee (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            Name: search,
-            Surname: search
-          }
-        ]
-      }
-      this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'employees', model).then(res => {
-        loading(false)
-      })
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
       })
     },
     getLoyalties () {
