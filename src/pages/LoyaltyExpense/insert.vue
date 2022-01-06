@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
-            <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+            <NextInput type="text" v-model="form.FinanceCode" :disabled="insertReadonly.FinanceCode" />
           </NextFormGroup>
           <NextFormGroup item-key="Description" :error="$v.form.Description">
-            <b-form-input type="text" v-model="form.Description" :readonly="insertReadonly.Description" />
+            <NextInput type="text" v-model="form.Description" :disabled="insertReadonly.Description" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -34,36 +34,35 @@
       <b-tabs>
         <b-tab :title="$t('insert.LoyaltyExpense.title')">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select :options="customers" @search="searchCustomer" @input="selectCustomerId($event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
-              </v-select>
-            </NextFormGroup>
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
+                <NextDropdown
+                  @input="selectCustomerId($event)"
+                  url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                  :searchable="true" :custom-option="true"
+                  :disabled="insertReadonly.CustomerId" label="Description1"
+                  or-condition-fields="Code,Description1,CommercialTitle"
+                  :is-customer="true"/>
+              </NextFormGroup>
             <NextFormGroup item-key="TransactionDate" :error="$v.form.TransactionDate">
-              <b-form-datepicker v-model="form.TransactionDate" :placeholder="$t('insert.chooseDate')" @input="getLoyalties"/>
+              <NextDatePicker v-model="form.TransactionDate" @input="getLoyalties" :disabled="insertReadonly.TransactionDate"/>
             </NextFormGroup>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <v-select v-model="loyalty" :options="loyalities" @input="selectLoyaltyId($event)" label="Description1" :disabled="!form.CustomerId || form.CustomerId === 0 || !form.TransactionDate"/>
+              <NextDropdown
+                v-model="loyalty"
+                :disabled="!form.CustomerId || form.CustomerId === 0 || !form.TransactionDate"
+                :source="loyalities"
+                @input="selectLoyaltyId"/>
             </NextFormGroup>
           </b-row>
           <b-row>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select :options="employees"  @search="searchEmployee" @input="selectedSearchType('RepresentativeId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+              <NextDropdown label="Description1" searchable @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/AutoCompleteSearch" :disabled="insertReadonly.RepresentativeId"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.LoyaltyExpense.currentScore')">
-              <b-form-input type="text" v-model="currentScore" :disabled="true"/>
+              <NextInput type="text" v-model="currentScore" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="ConsumptionScore" :error="$v.form.ConsumptionScore">
-              <b-form-input type="text" v-model="form.ConsumptionScore" :readonly="insertReadonly.ConsumptionScore"/>
+              <NextInput type="text" v-model="form.ConsumptionScore" :disabled="insertReadonly.ConsumptionScore"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -95,53 +94,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['employees', 'customers', 'loyaltySummary'])
+    ...mapState(['loyaltySummary'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.getLoyalties()
   },
   methods: {
     getInsertPage (e) {
       this.createManualCode()
-    },
-    searchEmployee (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            Name: search,
-            Surname: search
-          }
-        ]
-      }
-      this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'employees', model).then(res => {
-        loading(false)
-      })
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
     },
     selectCustomerId (value) {
       this.form.CustomerId = value ? value.RecordId : null

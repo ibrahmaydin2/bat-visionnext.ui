@@ -246,8 +246,8 @@
                   <b-thead>
                     <b-th><span>{{$t('insert.customer.orderCount')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.unit')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.itemCode')}}</span></b-th>
-                    <b-th><span>{{$t('insert.customer.itemName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.ItemCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.ItemName')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.CustomerPreOrders " :key="i">
