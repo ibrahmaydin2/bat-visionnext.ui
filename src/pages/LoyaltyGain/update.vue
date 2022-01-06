@@ -32,13 +32,13 @@
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <NextDropdown :disabled="true" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+              <NextDropdown :disabled="insertReadonly.LoyaltyId" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown v-model="customer" :disabled="insertReadonly.CustomerId" @input="selectedSearchType('CustomerId', $event)" url="VisionNextCustomer/api/Customer/GetLoyaltyCustomers" :dynamic-request="{LoyaltyId: form.LoyaltyId}" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
-              <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
+              <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
               <NextDropdown v-model="employee" orConditionFields="Code,Description1,Name,Surname" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
