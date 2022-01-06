@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code" md="3" lg="3">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code"  :disabled="true"/>
+            <NextInput type="text" v-model="form.Code" :readonly="insertReadonly.Code"  :disabled="insertReadonly.Code"/>
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -35,28 +35,28 @@
         <b-tab :title="$t('insert.contract.management')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="ContractNumber" :error="$v.form.ContractNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.ContractNumber" :readonly="insertReadonly.ContractNumber" />
+              <NextInput type="text" v-model="form.ContractNumber" :disabled="insertReadonly.ContractNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
-              <NextDropdown v-model="selectedClass" lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)"/>
+              <NextDropdown v-model="selectedClass" lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)" :disabled="insertReadonly.ClassId"/>
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId" md="2" lg="2">
-              <NextDropdown v-model="selectedBrand" lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)"/>
+              <NextDropdown v-model="selectedBrand" lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)" :disabled="insertReadonly.BrandId"/>
             </NextFormGroup>
             <NextFormGroup item-key="Genexp1" :error="$v.form.Genexp1" md="2" lg="2">
-              <b-form-input type="number" v-model="form.Genexp1" :readonly="insertReadonly.Genexp1" />
+              <NextInput type="number" v-model="form.Genexp1" :disabled="insertReadonly.Genexp1" />
             </NextFormGroup>
             <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="2" lg="2">
-              <b-form-input type="text" v-model="form.FinanceCode" :readonly="insertReadonly.FinanceCode" />
+              <NextInput type="text" v-model="form.FinanceCode" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerFinanceCode" :error="$v.form.CustomerFinanceCode" md="2" lg="2">
-              <b-form-input type="text" v-model="form.CustomerFinanceCode" :readonly="insertReadonly.CustomerFinanceCode" />
+              <NextInput type="text" v-model="form.CustomerFinanceCode" :disabled="insertReadonly.CustomerFinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId" md="2" lg="2">
-              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" disabled/>
+              <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" :disabled="insertReadonly.ApproveStateId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
-              <NextDropdown v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
+              <NextDropdown :disabled="insertReadonly.TypeId" v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2">
               <NextDropdown
@@ -65,71 +65,21 @@
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 :dynamic-and-condition="{ StatusIds: [1] }"
-                :is-customer="true"/>
+                :is-customer="true"
+                :disabled="insertReadonly.CustomerId"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <!--<b-tab :title="$t('insert.contract.otherContract')" v-if="customerContracts.length > 0">
-          <b-row>
-            <b-col>
-              <b-table-simple bordered small>
-                <b-thead>
-                  <b-th>{{$t('insert.contract.Code')}}</b-th>
-                  <b-th>{{$t('insert.contract.ContractNumber')}}</b-th>
-                  <b-th>{{$t('insert.contract.Description1')}}</b-th>
-                  <b-th>{{$t('insert.contract.ApproveState')}}</b-th>
-                  <b-th>{{$t('insert.contract.StatusReason')}}</b-th>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(contract, i) in customerContracts" :key="'dl' + i">
-                    <b-td>{{contract.Code}}</b-td>
-                    <b-td>{{contract.ContractNumber}}</b-td>
-                    <b-td>{{contract.Description1}}</b-td>
-                    <b-td>{{contract.ApproveState ? contract.ApproveState.Label : ''}}</b-td>
-                    <b-td>{{contract.StatusReason ? contract.StatusReason.Label : ''}}</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-col>
-          </b-row>
-        </b-tab>-->
         <b-tab :title="$t('insert.contract.additionalCustomer')">
-          <b-row>
-            <NextFormGroup :title="insertTitle.CustomerId" :error="$v.selectedAdditionalCustomer" :required="true" md="3" lg="3">
-              <NextDropdown
-                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
-                v-model="selectedAdditionalCustomer" :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"/>
-            </NextFormGroup>
-            <b-col cols="12" md="2">
-              <b-form-group>
-                <AddDetailButton @click.native="addAdditionalCustomer" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.contract.customer')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(r, i) in (form.ContractRelatedCustomers ? form.ContractRelatedCustomers.filter(c => c.RecordState != 4) : [])" :key="i">
-                  <b-td>{{r.Customer ? r.Customer.Label : r.CustomerName}}</b-td>
-                  <b-td class="text-center"><i @click="removeAdditionalCustomer(r)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.ContractRelatedCustomers" :items="relatedCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.contract.validDates')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.startDate')" :error="$v.validDates.contractStartDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="validDates.contractStartDate" :placeholder="$t('insert.chooseDate')" disabled/>
+              <NextDatePicker v-model="validDates.contractStartDate" disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" :error="$v.validDates.contractEndDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="validDates.contractEndDate" :placeholder="$t('insert.chooseDate')" disabled/>
+              <NextDatePicker v-model="validDates.contractEndDate" disabled/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -139,17 +89,19 @@
                <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
-              <v-select
-                 :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
-                 :options="customerBudgets" label="CustomerDesc"  v-model="contractBenefits.budgetMaster"/>
+              <NextDropdown
+                :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
+                :source="customerBudgets" label="CustomerDesc"
+                v-model="contractBenefits.budgetMaster"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractBenefits.currency" :required="true" md="4" lg="4">
               <NextDropdown v-model="contractBenefits.currency" :source="currencies"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BenefitBudget')" :error="$v.contractBenefits.benefitBudget" :required="!contractBenefits.benefitType || contractBenefits.benefitType.RecordId !== 4" md="4" lg="4">
-              <b-form-input
-              :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
-              type="number" v-model="contractBenefits.benefitBudget" />
+              <NextInput
+                :disabled="contractBenefits.benefitType && contractBenefits.benefitType.RecordId === 4"
+                type="number"
+                v-model="contractBenefits.benefitBudget" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.TciBreak1Id')" :error="$v.contractBenefits.tciBreak1" :required="true" md="4" lg="4">
               <NextDropdown v-model="contractBenefits.tciBreak1" lookup-key="TCI_BREAKDOWN" :get-lookup="true"/>
@@ -178,8 +130,12 @@
                   <b-td>{{c.BenefitBudget}}</b-td>
                   <b-td>{{c.TciBreak1 ? c.TciBreak1.Label : c.TciBreak1Name}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editContractBenefits(c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractBenefits(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button :title="$t('list.edit')" @click="editContractBenefits(c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button :title="$t('list.delete')" @click="removeContractBenefits(c)" type="button" class="btn btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -187,35 +143,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.contract.assets')" v-if="showAssets">
-          <b-row>
-            <NextFormGroup :title="$t('insert.contract.assetId')" :error="$v.contractAssets.asset" :required="true" md="3" lg="3">
-              <NextDropdown v-model="contractAssets.asset" url="VisionNextAsset/api/Asset/Search"/>
-            </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.plannedServiceDate')" :error="$v.contractAssets.plannedServiceDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="contractAssets.plannedServiceDate" :placeholder="$t('insert.chooseDate')"/>
-            </NextFormGroup>
-            <b-col cols="12" md="2">
-              <b-form-group>
-                 <AddDetailButton @click.native="addContractAssets" />
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.contract.assetId')}}</span></b-th>
-                <b-th><span>{{$t('insert.contract.plannedServiceDate')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.ContractAssets ? form.ContractAssets.filter(c => c.RecordState != 4) : [])" :key="i">
-                  <b-td>{{c.Asset ? c.Asset.Label : c.AssetName}}</b-td>
-                  <b-td>{{dateConvertFromTimezone(c.PlannedServiceDate)}}</b-td>
-                  <b-td class="text-center"><i @click="removeContractAssets(c)" class="far fa-trash-alt text-danger"></i></b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
+          <NextDetailPanel v-model="form.ContractAssets" :items="assetItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.contract.contractItems')" v-if="form.TypeId && form.TypeId !== 4">
           <b-row>
@@ -227,10 +155,13 @@
               @input="getItemValues($event, 'item')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractItems.fieldValue" :required="true" md="3" lg="3">
-              <v-select :disabled="!contractItems.fieldDescription" v-model="contractItems.fieldValue" :options="fieldValues" label="Label"/>
+              <NextDropdown
+                :disabled="!contractItems.fieldDescription"
+                v-model="contractItems.fieldValue"
+                :source="fieldValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetQuantity')" :error="$v.contractItems.quotaQuantity" :required="contractItems.targetType && contractItems.targetType.Code === 'MKTR'" md="3" lg="3">
-              <b-form-input type="number" v-model="contractItems.quotaQuantity" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'TTR'"/>
+              <NextInput type="number" v-model="contractItems.quotaQuantity" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'TTR'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetType')" :error="$v.contractItems.targetType" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractItems.targetType" lookup-key="QUOTA_TYPE" :get-lookup="true"/>
@@ -239,7 +170,7 @@
               <NextDropdown v-model="contractItems.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.targetAmount')" :error="$v.contractItems.quotaAmount" :required="contractItems.targetType && contractItems.targetType.Code === 'TTR'" md="3" lg="3">
-              <b-form-input type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR'"/>
+              <NextInput type="number" v-model="contractItems.quotaAmount" :disabled="!contractItems.targetType || contractItems.targetType.Code === 'MKTR'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" :error="$v.contractItems.currency" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractItems.currency" :source="currencies" />
@@ -272,8 +203,12 @@
                   <b-td>{{c.QuotaAmount}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractItems', form.ContractItems, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractItems(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractItems', form.ContractItems, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractItems(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -289,7 +224,7 @@
               <NextInput type="number" v-model="contractPriceDiscounts.discountAmount" :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaAmount')" :error="$v.contractPriceDiscounts.quotaAmount" :required="contractPriceDiscounts.benefitCondition && contractPriceDiscounts.benefitCondition.Code === 'KOT'" md="3" lg="3">
-              <b-form-input
+              <NextInput
               :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
                 type="number" v-model="contractPriceDiscounts.quotaAmount" />
             </NextFormGroup>
@@ -300,7 +235,7 @@
                 v-model="contractPriceDiscounts.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetAmount')" md="3" lg="3">
-              <b-form-input
+              <NextInput
               :disabled="!contractPriceDiscounts.benefitCondition
               || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" type="number" v-model="contractPriceDiscounts.budgetAmount" />
             </NextFormGroup>
@@ -315,25 +250,22 @@
                 || contractPriceDiscounts.benefitCondition.Code === 'SOZ'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" md="3" lg="3" v-if="contractPriceDiscounts.quotaColumnName">
-              <v-select :disabled="!contractPriceDiscounts.quotaColumnName || !contractPriceDiscounts.quotaColumnName.Code" v-model="contractPriceDiscounts.quotaColumnValue" :options="quotaValues" label="Label"/>
+               <NextDropdown :disabled="!contractPriceDiscounts.quotaColumnName || !contractPriceDiscounts.quotaColumnName.Code" v-model="contractPriceDiscounts.quotaColumnValue" :source="quotaValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3">
-              <b-form-datepicker
-              :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && (contractPriceDiscounts.benefitCondition.Code === 'YYM' || contractPriceDiscounts.benefitCondition.Code === 'SOZ'))" v-model="contractPriceDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="!contractPriceDiscounts.benefitCondition || (contractPriceDiscounts.benefitCondition && (contractPriceDiscounts.benefitCondition.Code === 'YYM' || contractPriceDiscounts.benefitCondition.Code === 'SOZ'))" v-model="contractPriceDiscounts.quotaBeginDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3">
-              <b-form-datepicker
+              <NextDatePicker
               :disabled="!contractPriceDiscounts.benefitCondition
-                || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
-              v-model="contractPriceDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              || contractPriceDiscounts.benefitCondition.Code !== 'KOT'"
+              v-model="contractPriceDiscounts.quotaEndDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractPriceDiscounts.beginDate" :required="true">
-              <b-form-datepicker
-              v-model="contractPriceDiscounts.beginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractPriceDiscounts.beginDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" md="3" lg="3">
-              <b-form-input
-              :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
+              <NextInput :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
               <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
@@ -383,8 +315,12 @@
                   <b-td>{{c.ItemFormula ? c.ItemFormula.Label : c.ItemFormulaName}}</b-td>
                   <b-td>{{c.Currency ? c.Currency.Label : c.CurrencyName}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractPriceDiscounts', form.ContractPriceDiscounts, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractPriceDiscounts(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractPriceDiscounts', form.ContractPriceDiscounts, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractPriceDiscounts(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -397,15 +333,15 @@
               <NextDropdown v-model="contractInvestments.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractInvestments.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
-                 <v-select
-                 :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
-                 :options="customerBudgets" label="CustomerDesc"  v-model="contractInvestments.budgetMaster"/>
+              <NextDropdown
+                :disabled="contractBenefits.benefitType && (contractBenefits.benefitType.RecordId === 4)"
+                :source="customerBudgets" label="CustomerDesc" v-model="contractInvestments.budgetMaster"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.plannedInvestedAmount')" :error="$v.contractInvestments.investedAmount" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractInvestments.investedAmount" />
+              <NextInput type="number" v-model="contractInvestments.investedAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.plannedInvestmentDate')" :error="$v.contractInvestments.plannedInvestmentDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="contractInvestments.plannedInvestmentDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractInvestments.plannedInvestmentDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractInvestments.quotaColumnName" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
@@ -416,22 +352,25 @@
                 @input="getItemValues($event, 'quotaInvestment')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractInvestments.quotaColumnValue" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractInvestments.quotaColumnName || contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaColumnValue" :options="quotaInvestmentValues" label="Label"/>
+              <NextDropdown
+                :disabled="!contractInvestments.quotaColumnName || contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'"
+                v-model="contractInvestments.quotaColumnValue"
+                :source="quotaInvestmentValues" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractInvestments.quotaQuantity" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input  :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" type="number" v-model="contractInvestments.quotaQuantity" />
+              <NextInput  :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" type="number" v-model="contractInvestments.quotaQuantity" />
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.contract.startDate')" :error="$v.contractInvestments.quotaBeginDate" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'"  md="3" lg="3">
-              <b-form-datepicker  :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaBeginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" :error="$v.contractInvestments.quotaEndDate" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'"  md="3" lg="3">
-              <b-form-datepicker :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.quotaEndDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractInvestments.unit" :required="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractInvestments.benefitCondition && contractInvestments.benefitCondition.Code === 'SOZ'" v-model="contractInvestments.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.description1')" :error="$v.contractInvestments.description1" md="3" lg="3">
-              <b-form-input type="text" v-model="contractInvestments.description1" />
+              <NextInput type="text" v-model="contractInvestments.description1" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -469,8 +408,12 @@
                   <b-td>{{c.Unit ? c.Unit.Label : c.UnitName}}</b-td>
                   <b-td>{{c.Description1}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractInvestments', form.ContractInvestments, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractInvestments(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractInvestments', form.ContractInvestments, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractInvestments(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -490,10 +433,10 @@
                 @input="getItemValues($event, 'discountItem')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractDiscounts.columnValue" :required="true" md="3" lg="3">
-              <v-select :disabled="!contractDiscounts.columnName" v-model="contractDiscounts.columnValue" :options="discountItems" label="Label"/>
+              <NextDropdown :disabled="!contractDiscounts.columnName" v-model="contractDiscounts.columnValue" :source="discountItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.discountRate')" :error="$v.contractDiscounts.discountRate" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractDiscounts.discountRate" />
+              <NextInput type="number" v-model="contractDiscounts.discountRate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractDiscounts.quotaColumnName" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
@@ -504,25 +447,25 @@
                 :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractDiscounts.quotaColumnValue" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractDiscounts.quotaColumnName || contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaColumnValue" :options="discountQuotaItems" label="Label"/>
+              <NextDropdown :disabled="!contractDiscounts.quotaColumnName || contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaColumnValue" :source="discountQuotaItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetAmount')" :error="$v.contractDiscounts.budgetAmount" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractDiscounts.budgetAmount" />
+              <NextInput type="number" v-model="contractDiscounts.budgetAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractDiscounts.quotaQuantity" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" type="number" v-model="contractDiscounts.quotaQuantity" />
+              <NextInput :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" type="number" v-model="contractDiscounts.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractDiscounts.quotaUnit" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaUnit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractDiscounts.branchSharePercent" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractDiscounts.branchSharePercent" />
+              <NextInput type="number" v-model="contractDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3" :error="$v.contractDiscounts.quotaBeginDate" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaBeginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3" :error="$v.contractDiscounts.quotaEndDate" :required="!contractDiscounts.benefitCondition || contractDiscounts.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractDiscounts.benefitCondition && contractDiscounts.benefitCondition.Code === 'SOZ'" v-model="contractDiscounts.quotaEndDate" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -562,8 +505,12 @@
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractDiscounts', form.ContractDiscounts, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractDiscounts(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractDiscounts', form.ContractDiscounts, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractDiscounts(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -583,7 +530,7 @@
                 @input="getItemValues($event, 'freeItem')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractFreeItems.columnValue" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
-              <v-select :disabled="!contractFreeItems.columnName" v-model="contractFreeItems.columnValue" :options="freeItems" label="Label"/>
+              <NextDropdown :disabled="!contractFreeItems.columnName" v-model="contractFreeItems.columnValue" :source="freeItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractFreeItems.quotaColumnName" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
               <NextDropdown
@@ -594,38 +541,38 @@
                 :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractFreeItems.quotaColumnValue" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
-              <v-select :disabled="!contractFreeItems.quotaColumnName || (contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB')" v-model="contractFreeItems.quotaColumnValue" :options="quotaFreeItems" label="Label"/>
+              <NextDropdown :disabled="!contractFreeItems.quotaColumnName || (contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB')" v-model="contractFreeItems.quotaColumnValue" :source="quotaFreeItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3" :error="$v.contractFreeItems.quotaBeginDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'">
-              <b-form-datepicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaBeginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3" :error="$v.contractFreeItems.quotaEndDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'">
-              <b-form-datepicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.quotaEndDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractFreeItems.beginDate" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'">
-              <b-form-datepicker v-model="contractFreeItems.beginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractFreeItems.beginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractFreeItems.quotaQuantity" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
-              <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaQuantity" />
+              <NextInput :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractFreeItems.unit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
               <NextDropdown :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractFreeItems.branchSharePercent" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
-              <b-form-input type="number" v-model="contractFreeItems.branchSharePercent" />
+              <NextInput type="number" v-model="contractFreeItems.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.freeQuantityLimit')" :error="$v.contractFreeItems.freeQuantityLimit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" md="3" lg="3">
-              <b-form-input type="number" v-model="contractFreeItems.freeQuantityLimit" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'"/>
+              <NextInput type="number" v-model="contractFreeItems.freeQuantityLimit" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.allowOverLimit')" :error="$v.contractFreeItems.allowOverLimit" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
               <NextCheckBox :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" v-model="contractFreeItems.allowOverLimit" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaLevelTaken')" :error="$v.contractFreeItems.quotaLevelTaken" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
-              <b-form-input class="col-md-6 col-lg-6 float-left" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevelTaken" />
-              <b-form-input class="col-md-6 col-lg-6 float-left" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevel" />
+              <NextInput class="col-md-6 col-lg-6 float-left" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevelTaken" />
+              <NextInput class="col-md-6 col-lg-6 float-left" :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevel" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaLevel')" :error="$v.contractFreeItems.quotaLevel" :required="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code !== 'HB'" md="3" lg="3">
-              <b-form-input :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevel" />
+              <NextInput :disabled="contractFreeItems.contractFocType && contractFreeItems.contractFocType.Code === 'HB'" type="number" v-model="contractFreeItems.quotaLevel" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -675,8 +622,12 @@
                   <b-td>{{c.FreeQuantity}}</b-td>
                   <b-td>{{c.GivenQuantity}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractFreeItems', form.ContractFreeItems, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractFreeItems(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractFreeItems', form.ContractFreeItems, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractFreeItems(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -689,19 +640,19 @@
               <NextDropdown v-model="contractPaymentPlans.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.paymentAmount')" :error="$v.contractPaymentPlans.paymentAmount" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractPaymentPlans.paymentAmount" />
+              <NextInput type="number" v-model="contractPaymentPlans.paymentAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.plannedPaymentDate')" :error="$v.contractPaymentPlans.plannedPaymentDate" :required="true" md="3" lg="3">
-              <b-form-datepicker v-model="contractPaymentPlans.plannedPaymentDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractPaymentPlans.plannedPaymentDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractPaymentPlans.branchSharePercent" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractPaymentPlans.branchSharePercent" />
+              <NextInput type="number" v-model="contractPaymentPlans.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetBeginDate')" md="3" lg="3" :error="$v.contractPaymentPlans.budgetBeginDate" :required="true">
-              <b-form-datepicker v-model="contractPaymentPlans.budgetBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractPaymentPlans.budgetBeginDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.budgetEndDate')" md="3" lg="3" :error="$v.contractPaymentPlans.budgetEndDate" :required="true">
-              <b-form-datepicker v-model="contractPaymentPlans.budgetEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractPaymentPlans.budgetEndDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractPaymentPlans.quotaColumnName" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
@@ -712,16 +663,16 @@
                 :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractPaymentPlans.quotaColumnValue" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractPaymentPlans.quotaColumnName || contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaColumnValue" :options="quotaPaymentPlanItems" label="Label"/>
+              <NextDropdown :disabled="!contractPaymentPlans.quotaColumnName || contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaColumnValue" :source="quotaPaymentPlanItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractPaymentPlans.quotaQuantity" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" type="number" v-model="contractPaymentPlans.quotaQuantity" />
+              <NextInput :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" type="number" v-model="contractPaymentPlans.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractPaymentPlans.quotaBeginDate" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaBeginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" md="3" lg="3" :error="$v.contractPaymentPlans.quotaEndDate" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.quotaEndDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractPaymentPlans.unit" :required="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.unit" :source="lookupValues.UNIT" label="Label" />
@@ -730,10 +681,10 @@
               <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceNumber')" :error="$v.contractPaymentPlans.refInvoiceNumber" md="3" lg="3">
-              <b-form-input type="text" v-model="contractPaymentPlans.refInvoiceNumber" disabled/>
+              <NextInput type="text" v-model="contractPaymentPlans.refInvoiceNumber" disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.poNumber')" :error="$v.contractPaymentPlans.poNumber" md="3" lg="3">
-              <b-form-input type="text" v-model="contractPaymentPlans.poNumber"/>
+              <NextInput type="text" v-model="contractPaymentPlans.poNumber"/>
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -779,8 +730,12 @@
                   <b-td>{{c.RefInvoiceNumber}}</b-td>
                   <b-td>{{c.PoNumber}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractPaymentPlans', form.ContractPaymentPlans, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractPaymentPlans(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractPaymentPlans', form.ContractPaymentPlans, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractPaymentPlans(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -806,7 +761,7 @@
                 @input="getItemValues($event, 'endorsementItem')"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.fieldValue')" :error="$v.contractEndorsements.columnValue" :required="true" md="3" lg="3">
-              <v-select :disabled="!contractEndorsements.columnName" v-model="contractEndorsements.columnValue" :options="endorsementItems" label="Label"/>
+              <NextDropdown :disabled="!contractEndorsements.columnName" v-model="contractEndorsements.columnValue" :source="endorsementItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractEndorsements.quotaColumnName" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
@@ -817,19 +772,19 @@
                 :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractEndorsements.quotaColumnValue" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractEndorsements.quotaColumnName || (contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ')" v-model="contractEndorsements.quotaColumnValue" :options="quotaEndorsementItems" label="Label"/>
+              <NextDropdown :disabled="!contractEndorsements.quotaColumnName || (contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ')" v-model="contractEndorsements.quotaColumnValue" :source="quotaEndorsementItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractEndorsements.quotaQuantity" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" type="number" v-model="contractEndorsements.quotaQuantity" />
+              <NextInput :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" type="number" v-model="contractEndorsements.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractEndorsements.unit" :required="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractEndorsements.benefitCondition && contractEndorsements.benefitCondition.Code === 'SOZ'" v-model="contractEndorsements.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractEndorsements.beginDate" :required="true">
-              <b-form-datepicker v-model="contractEndorsements.beginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractEndorsements.beginDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" md="3" lg="3" :error="$v.contractEndorsements.endDate" :required="true">
-              <b-form-datepicker v-model="contractEndorsements.endDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractEndorsements.endDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endrsPaymentType')" :error="$v.contractEndorsements.endrsPaymentType" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractEndorsements.endrsPaymentType" lookup-key="ENDORSEMENT_PAYMENT_TYPE" :get-lookup="true"/>
@@ -844,13 +799,13 @@
                 :disabled="contractEndorsements.endrsPaymentType && contractEndorsements.endrsPaymentType.Code !== 'FOCP'" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.salesPercentage')" :error="$v.contractEndorsements.salesPercentage" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractEndorsements.salesPercentage" />
+              <NextInput type="number" v-model="contractEndorsements.salesPercentage" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractEndorsements.branchSharePercent" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractEndorsements.branchSharePercent" />
+              <NextInput type="number" v-model="contractEndorsements.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.executionDate')" md="3" lg="3" :error="$v.contractEndorsements.executionDate" :required="true">
-              <b-form-datepicker v-model="contractEndorsements.executionDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractEndorsements.executionDate"/>
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -898,8 +853,12 @@
                   <b-td>{{c.BranchSharePercent}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.ExecutionDate)}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractEndorsements', form.ContractEndorsements, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractEndorsements(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractEndorsements', form.ContractEndorsements, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractEndorsements(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -920,16 +879,16 @@
                 custom-option />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.customPrice')" :error="$v.contractCustomPrices.customPrice" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractCustomPrices.customPrice" />
+              <NextInput type="number" v-model="contractCustomPrices.customPrice" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.branchSharePercent')" :error="$v.contractCustomPrices.branchSharePercent" :required="true" md="3" lg="3">
-              <b-form-input type="number" v-model="contractCustomPrices.branchSharePercent" />
+              <NextInput type="number" v-model="contractCustomPrices.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.startDate')" md="3" lg="3" :error="$v.contractCustomPrices.beginDate" :required="true">
-              <b-form-datepicker v-model="contractCustomPrices.beginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractCustomPrices.beginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.endDate')" md="3" lg="3" :error="$v.contractCustomPrices.endDate" :required="true">
-              <b-form-datepicker v-model="contractCustomPrices.endDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="contractCustomPrices.endDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnName')" :error="$v.contractCustomPrices.quotaColumnName" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown
@@ -940,16 +899,16 @@
                 :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaColumnValue')" :error="$v.contractCustomPrices.quotaColumnValue" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <v-select :disabled="!contractCustomPrices.quotaColumnName || (contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ')" v-model="contractCustomPrices.quotaColumnValue" :options="quotaCustomPriceItems" label="Label"/>
+              <NextDropdown :disabled="!contractCustomPrices.quotaColumnName || (contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ')" v-model="contractCustomPrices.quotaColumnValue" :source="quotaCustomPriceItems" label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaQuantity')" :error="$v.contractCustomPrices.quotaQuantity" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
-              <b-form-input :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" type="number" v-model="contractCustomPrices.quotaQuantity" />
+              <NextInput :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" type="number" v-model="contractCustomPrices.quotaQuantity" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaBeginDate')" md="3" lg="3" :error="$v.contractCustomPrices.quotaBeginDate" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaBeginDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaBeginDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.quotaEndDate')" md="3" lg="3" :error="$v.contractCustomPrices.quotaEndDate" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'">
-              <b-form-datepicker :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaEndDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaEndDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.unitDefinitions')" :error="$v.contractCustomPrices.quotaUnit" :required="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code !== 'SOZ'" md="3" lg="3">
               <NextDropdown :disabled="contractCustomPrices.benefitCondition && contractCustomPrices.benefitCondition.Code === 'SOZ'" v-model="contractCustomPrices.quotaUnit" :source="lookupValues.UNIT" label="Label" />
@@ -994,8 +953,12 @@
                   <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : c.QuotaUnitName}}</b-td>
                   <b-td>{{c.QuotaSalesQuantity}}</b-td>
                   <b-td class="text-center">
-                    <i @click="editRow('contractCustomPrices', form.ContractCustomPrices, c)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeContractCustomPrices(c)" class="far fa-trash-alt text-danger"></i>
+                    <b-button @click="editRow('contractCustomPrices', form.ContractCustomPrices, c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeContractCustomPrices(c)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -1010,6 +973,7 @@
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/update'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   data () {
@@ -1043,11 +1007,8 @@ export default {
       },
       routeName1: 'ContractManagement',
       routeName2: 'Contract',
-      contractAssets: {
-        asset: null,
-        plannedServiceDate: null
-      },
-      selectedAdditionalCustomer: {},
+      relatedCustomerItems: detailData.relatedCustomerItems,
+      assetItems: detailData.assetItems,
       validDates: {
         contractStartDate: null,
         contractEndDate: null
@@ -1295,39 +1256,6 @@ export default {
       }
       this.getCustomerBudgets()
     },
-    addAdditionalCustomer () {
-      this.$v.selectedAdditionalCustomer.$touch()
-      if (this.$v.selectedAdditionalCustomer.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return false
-      }
-      let filteredArr = this.form.ContractRelatedCustomers.filter(i => i.CustomerId === this.selectedAdditionalCustomer.RecordId)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      this.form.ContractRelatedCustomers.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        CustomerId: this.selectedAdditionalCustomer.RecordId,
-        CustomerName: this.selectedAdditionalCustomer.Description1
-      })
-      this.selectedAdditionalCustomer = undefined
-      this.$v.selectedAdditionalCustomer.$reset()
-    },
-    removeAdditionalCustomer (item) {
-      if (item.RecordId > 0) {
-        this.form.ContractRelatedCustomers[this.form.ContractRelatedCustomers.indexOf(item)].RecordState = 4
-      } else {
-        this.form.ContractRelatedCustomers.splice(this.form.ContractRelatedCustomers.indexOf(item), 1)
-      }
-    },
     addContractBenefits () {
       this.$v.contractBenefits.$touch()
       if (this.$v.contractBenefits.$error) {
@@ -1419,31 +1347,6 @@ export default {
         isUpdated: true
       }
       this.selectedIndex = this.form.ContractBenefits.indexOf(item)
-    },
-    addContractAssets () {
-      this.$v.contractAssets.$touch()
-      if (this.$v.contractAssets.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
-        return false
-      }
-      this.form.ContractAssets.push({
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
-        AssetId: this.contractAssets.asset.RecordId,
-        AssetName: this.contractAssets.asset.Description1,
-        PlannedServiceDate: this.contractAssets.plannedServiceDate
-      })
-      this.contractAssets = {}
-      this.$v.contractAssets.$reset()
-    },
-    removeContractAssets (item) {
-      if (item.RecordId > 0) {
-        this.form.ContractAssets[this.form.ContractAssets.indexOf(item)].RecordState = 4
-      } else {
-        this.form.ContractAssets.splice(this.form.ContractAssets.indexOf(item), 1)
-      }
     },
     getItemValues (value, property) {
       switch (property) {
@@ -2548,9 +2451,6 @@ export default {
     }
     return {
       form: this.insertRules,
-      selectedAdditionalCustomer: {
-        required
-      },
       validDates: {
         contractStartDate: {
           required
@@ -2560,14 +2460,6 @@ export default {
         }
       },
       contractBenefits: contractBenefits,
-      contractAssets: {
-        asset: {
-          required
-        },
-        plannedServiceDate: {
-          required
-        }
-      },
       contractItems: contractItems,
       contractPriceDiscounts: contractPriceDiscounts,
       contractInvestments: contractInvestments,
