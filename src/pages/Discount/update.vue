@@ -335,14 +335,14 @@ export default {
     useBudgetEvent (e) {
       if (e) {
         this.form.ApproveStateId = 2100
-        this.lookup.APPROVE_STATE.map(item => {
+        this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {
             this.ApproveStateLabel = item.Label
           }
         })
       } else {
         this.form.ApproveStateId = 2102
-        this.lookup.APPROVE_STATE.map(item => {
+        this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2102) {
             this.ApproveStateLabel = item.Label
           }
