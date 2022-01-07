@@ -407,6 +407,25 @@ export default {
       if (!rowData.EInvoiceSeqs) {
         this.form.EInvoiceSeqs = []
       }
+      this.getCreditHistory(rowData.CustomerId)
+    },
+    getCreditHistory (customerId) {
+      let model = {
+        AndConditionModel: {
+          CustomerIds: [customerId]
+        },
+        OrderByColumns: [
+          {
+            column: 'CreatedDateTime',
+            orderByType: 1
+          }
+        ]
+      }
+      this.$api.postByUrl(model, 'VisionNextCustomer/api/CustomerCreditHistory/Search').then(res => {
+        if (res.ListModel) {
+          this.form.BranchCreditHistories = res.ListModel.BaseModels
+        }
+      })
     },
     selectedType (label, model) {
       this.form[label] = model.DecimalValue
