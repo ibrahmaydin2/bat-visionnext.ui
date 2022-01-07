@@ -211,7 +211,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'BankId',
-      objectKey: 'bank',
+      objectKey: 'Bank',
       url: 'VisionNextBank/api/Bank/Search',
       label: i18n.t('insert.branch.bankId'),
       required: false,
@@ -222,7 +222,7 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'CurrencyId',
-      objectKey: 'currency',
+      objectKey: 'Currency',
       url: 'VisionNextSystem/api/SysCurrency/Search',
       label: i18n.t('insert.branch.currencyId'),
       required: true,
