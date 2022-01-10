@@ -199,7 +199,7 @@ export default {
     },
     getConvert () {
       this.$api.postByUrl({invoiceNumber: this.modalItem.DocumentNumber, id: this.modalItem.RecordId}, 'VisionNextOrder/api/Order/GetConvert').then((response) => {
-        if (!response.IsCompleted) {
+        if (response.IsCompleted) {
           this.close()
           return
         }
