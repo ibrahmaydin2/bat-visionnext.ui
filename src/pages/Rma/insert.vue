@@ -110,7 +110,7 @@
         </b-tab>
         <b-tab :title="$t('get.RMA.Items')" :disabled="!form.CustomerId">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId" md="2" lg="2">
               <NextDropdown
                 v-model="rmaLine.Item"
                 :search="searchItem"
@@ -118,31 +118,41 @@
                 searchable
                 :custom-option="true" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
+             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity" md="2" lg="2">
               <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.meanPrice')">
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.listPrice')">
+            <NextFormGroup :title="$t('insert.RMA.listPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.ListPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.usedPrice')">
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
+            <b-col md="2" lg="2" class="ml-auto">
               <b-form-group>
                 <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
+            </b-col>
+            <b-col md="2" lg="2">
+              <NextMultipleSelection
+                name="RmaMultipleItem"
+                v-model="rmaLines"
+                :disabled-button="!form.CustomerId"
+                :dynamic-and-condition="{
+                  CustomerIds: [form.CustomerId],
+                  PriceDate: form.PriceDate
+                }"/>
             </b-col>
           </b-row>
           <b-row>
@@ -161,14 +171,14 @@
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in rmaLines" :key="i">
-                    <b-td>{{w.Item.Code}}</b-td>
-                    <b-td>{{w.Item.Description1}}</b-td>
-                    <b-td>{{w.Item.LastSalesQuantity}}</b-td>
-                    <b-td>{{w.Item.LastPrice}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
+                    <b-td>{{w.Item ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
+                    <b-td>{{w.Item ? w.Item.LastPrice :  w.LastPrice}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td>{{w.Item.MeanPrice}}</b-td>
-                    <b-td>{{w.Item.ListPrice}}</b-td>
-                    <b-td>{{w.Item.UsedPrice}}</b-td>
+                    <b-td>{{w.Item ? w.Item.MeanPrice : w.MeanPrice}}</b-td>
+                    <b-td>{{w.Item ? w.Item.ListPrice : w.ListPrice}}</b-td>
+                    <b-td>{{w.Item ? w.Item.UsedPrice : w.UsedPrice}}</b-td>
                     <b-td class="text-center">
                       <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
                         <i class="far fa-trash-alt"></i>
