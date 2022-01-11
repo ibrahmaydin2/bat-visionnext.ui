@@ -112,7 +112,7 @@
         </b-tab>
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId" md="2" lg="2">
               <NextDropdown
                 v-model="rmaLine.Item"
                 :search="searchItem"
@@ -120,28 +120,28 @@
                 searchable
                 :custom-option="true" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
+             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity" md="2" lg="2">
               <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.meanPrice')">
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.listPrice')">
+            <NextFormGroup :title="$t('insert.RMA.listPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.ListPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.usedPrice')">
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="2" lg="2">
               <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
+            <b-col md="2" class="ml-auto">
               <b-form-group>
                 <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
