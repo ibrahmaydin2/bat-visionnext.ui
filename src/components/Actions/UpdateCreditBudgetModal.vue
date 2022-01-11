@@ -3,13 +3,13 @@
     <section>
       <b-row>
         <NextFormGroup :title="$t('insert.creditBudget.movementCode')" md="4" lg="4">
-          <b-form-input type="text" v-model="model.code" disabled/>
+          <NextInput type="text" v-model="model.code" disabled/>
         </NextFormGroup>
         <NextFormGroup :title="$t('insert.creditBudget.description')" :required="true" :error="$v.model.description" md="4" lg="4">
-          <b-form-input type="text" v-model="model.description" />
+          <NextInput type="text" v-model="model.description" />
         </NextFormGroup>
-        <NextFormGroup :title="$t('insert.creditBudget.amount2')" :required="true" :error="$v.model.amount" md="4" lg="4">
-          <b-form-input type="number" v-model="model.amount" />
+        <NextFormGroup :title="$t('insert.creditBudget.amount2')" :required="!amountDisabled" :error="$v.model.amount" md="4" lg="4">
+          <NextInput type="number" v-model="model.amount" :disabled="amountDisabled"/>
         </NextFormGroup>
         <NextFormGroup :title="$t('insert.creditBudget.endDate')" :required="true" :error="$v.model.date" md="4" lg="4">
           <NextDatePicker v-model="model.date" />
@@ -42,7 +42,7 @@
   </b-modal>
 </template>
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required, requiredIf } from 'vuelidate/lib/validators'
 import mixin from '../../mixins/helper'
 export default {
   name: 'UpdateCreditBudgetModal',
@@ -68,7 +68,8 @@ export default {
         creditBudgetId: null
       },
       isLoading: false,
-      movementType: null
+      movementType: null,
+      amountDisabled: false
     }
   },
   validations () {
@@ -81,7 +82,9 @@ export default {
           required
         },
         amount: {
-          required
+          required: requiredIf(function () {
+            return !this.movementType || (this.movementType && this.movementType.Code !== 'HUH')
+          })
         },
         date: {
           required
@@ -98,13 +101,24 @@ export default {
         creditBudgetId: this.modalItem.RecordId
       }
       this.movementType = null
+      this.amountDisabled = false
       this.getCode()
+      this.$v.model.$reset()
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'update-credit-budget-modal')
     },
     selectMovementType (item) {
-      this.model.movementType = item ? item.DecimalValue : null
+      this.amountDisabled = false
+      if (item) {
+        this.model.movementType = item.DecimalValue
+        if (item.Code === 'HUH') {
+          this.model.amount = null
+          this.amountDisabled = true
+        }
+      } else {
+        this.model.movementType = null
+      }
       this.$forceUpdate()
     },
     getCode () {

@@ -1766,7 +1766,8 @@
       "lastSalesPrice": "Son Satış Fiyatı",
       "meanPrice": "Ortalama Satış Fiyatı",
       "listPrice":"Liste Fiyatı",
-      "usedPrice": "İade Fiyatı"
+      "usedPrice": "İade Fiyatı",
+      "UsedQuantity": "İade Edilen Miktar"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
