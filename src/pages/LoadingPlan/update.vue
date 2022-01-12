@@ -57,10 +57,16 @@
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
               <NextInput type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
             </NextFormGroup>
-            <b-col cols="12" md="2" class="ml-auto">
+            <b-col cols="12" md="1" class="ml-auto">
               <b-form-group>
                 <AddDetailButton @click.native="addItems" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <NextMultipleSelection
+                name="LoadingPlanMultipleItem "
+                v-model="form.LoadingPlanItems"
+                :hidden-values="hiddenValues" />
             </b-col>
           </b-row>
           <b-row>
@@ -112,7 +118,13 @@ export default {
         planQuantity: null
       },
       selectedRoute: null,
-      selectedIndex: 0
+      selectedIndex: 0,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ]
     }
   },
   computed: {
