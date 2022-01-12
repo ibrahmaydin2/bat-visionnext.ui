@@ -127,8 +127,17 @@
             <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')" md="3" lg="3">
+              <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.Cardboard')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
               <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="3" lg="3">
+              <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.RMA.listPrice')" md="3" lg="3">
+              <NextInput type="text" v-model="rmaLine.Item.ListPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
@@ -160,9 +169,9 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
-                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.UsedQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.usedPrice')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
@@ -170,9 +179,9 @@
                   <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
                     <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
-                    <b-td>{{w.Item && w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td>{{w.Item && w.Item.UsedQuantity ? w.Item.UsedQuantity :  w.UsedQuantity}}</b-td>
+                    <b-td>{{getReturnQuantity(w)}}</b-td>
+                    <b-td>{{w.Item && w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
                     <b-td>{{getPrice(w)}}</b-td>
                     <b-td class="text-center">
                       <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
@@ -346,7 +355,9 @@ export default {
         RmaQuantity1: null,
         RmaUnit1Id: null,
         Price: null,
-        Item: {}
+        Item: {
+          Code: ''
+        }
       }
     },
     save () {
@@ -445,16 +456,31 @@ export default {
       }
     },
     getPrice (data) {
-      if (data.item) {
-        if (data.item.Price) {
-          return data.item.Price
+      if (data.Item) {
+        if (data.Item.Price) {
+          return data.Item.Price
         } else {
-          return data.item.UsedPrice
+          return data.Item.UsedPrice
         }
       } else if (data.Price) {
         return data.Price
       } else {
         return data.UsedPrice
+      }
+    },
+    getReturnQuantity (data) {
+      if (data.Item) {
+        if (data.Item.SalesQuantity1 || data.Item.SalesQuantity1 === 0) {
+          return data.Item.SalesQuantity1
+        } else if (data.SalesQuantity1 || data.SalesQuantity1 === 0) {
+          return data.SalesQuantity1
+        } else {
+          return data.UsedQuantity
+        }
+      } else if (data.SalesQuantity1 || data.SalesQuantity1 === 0) {
+        return data.SalesQuantity1
+      } else {
+        return data.UsedQuantity
       }
     }
   },
