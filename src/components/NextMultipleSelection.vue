@@ -55,7 +55,7 @@
         <b-table
           :ref="`multipleGrid${id}`"
           :fields="fields"
-          :items="list"
+          :items="list.filter(l => l.RecordState !== 4)"
           striped
           small
           sticky-header="300px"
@@ -193,6 +193,10 @@ export default {
     filterFunc: {
       type: Function,
       description: 'Seçilen listeleri filtrelemek için kullanılır'
+    },
+    initialValuesFunc: {
+      type: Function,
+      description: 'Update ekranı için alan eşitleme işlemi için kullanılır'
     }
   },
   model: {
@@ -216,7 +220,8 @@ export default {
       pagingRequest: {},
       allList: {},
       tableBusy: false,
-      pageSelectedList: []
+      pageSelectedList: [],
+      initialList: []
     }
   },
   methods: {
@@ -366,6 +371,10 @@ export default {
     },
     show () {
       this.list = JSON.parse(JSON.stringify(this.value))
+      if (this.initialValuesFunc) {
+        this.list = this.initialValuesFunc(this.list)
+      }
+      this.initialList = [...this.list]
       this.pageSelectedList = [...this.list]
       setTimeout(() => {
         this.$refs[`multipleGrid${this.id}`].selectAllRows()
@@ -478,7 +487,12 @@ export default {
           return
         }
       }
-      this.$emit('valuechange', filteredList)
+      let removedList = this.initialList.filter(i => i.RecordId > 0 && i.RecordState > 1).map(item => {
+        item.RecordState = 4
+        return item
+      })
+      let allList = [...filteredList, ...removedList]
+      this.$emit('valuechange', allList)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {

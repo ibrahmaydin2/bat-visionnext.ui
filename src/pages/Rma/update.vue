@@ -113,7 +113,7 @@
         </b-tab>
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId" md="3" lg="3">
               <NextDropdown
                 v-model="rmaLine.Item"
                 :search="searchItem"
@@ -121,22 +121,37 @@
                 searchable
                 :custom-option="true" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
               <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
             </NextFormGroup>
-            <b-col md="2" class="ml-auto">
-              <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
+            <b-col cols="12" md="6" lg="6">
+              <b-row>
+                <b-col md="3">
+                  <b-form-group>
+                    <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <NextMultipleSelection
+                    name="RmaMultipleItem"
+                    v-model="rmaLines"
+                    :disabled-button="!form.CustomerId"
+                    :dynamic-and-condition="{
+                      CustomerIds: [form.CustomerId],
+                      PriceDate: form.PriceDate
+                    }"
+                    :initial-values-func="initialValues"/>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
           <b-row>
@@ -231,7 +246,17 @@ export default {
       rmaType: null,
       route: null,
       rmaReason: null,
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      initialValues: (values) => {
+        values.map(value => {
+          value.Code = value.Item ? value.Item.Code : value.Code
+          value.Description1 = value.Item ? value.Item.Description1 : value.Description1
+
+          return value
+        })
+
+        return values
+      }
     }
   },
   mounted () {
@@ -354,9 +379,9 @@ export default {
             RmaUnit1Id: item.RmaUnit1Id,
             Price: item.Price,
             Item: {
-              Description1: item.Item.Description1,
-              Code: item.Item.Code,
-              RecordId: item.Item.RecordId
+              Description1: item.Item ? item.Item.Description1 : item.Description1,
+              Code: item.Item ? item.Item.Code : item.Code,
+              RecordId: item.Item ? item.Item.RecordId : item.RecordId
             },
             RmaId: item.RmaId
           }
