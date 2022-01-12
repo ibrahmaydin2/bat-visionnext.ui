@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'CashCard' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -36,7 +36,7 @@
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
-                @input="selectedSearchType('CustomerId', $event); setReminder($event);"
+                @input="selectedSearchType('CustomerId', $event); setCustomer($event);"
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="customer"
@@ -93,8 +93,8 @@
             <NextFormGroup item-key="CashCardTypeId" :error="$v.form.CashCardTypeId">
               <NextDropdown
                 @input="selectedSearchType('CashCardTypeId', $event)"
-                :disabled="insertReadonly.CashCardTypeId"
-                url="VisionNextFinance/api/CashCardType/Search"
+                :disabled="!customerRecordTypeId || insertReadonly.CashCardTypeId"
+                :source="cashcardTypes"
                 v-model="cashCardType"
                 label="Description1"
                 />
@@ -147,7 +147,9 @@ export default {
       route: {},
       cashCardType: {},
       routeName1: 'Finance',
-      routeName2: 'CashCard'
+      routeName2: 'CashCard',
+      customerRecordTypeId: null,
+      cashcardTypes: []
     }
   },
   mounted () {
@@ -177,8 +179,28 @@ export default {
         this.updateData()
       }
     },
-    setReminder (customer) {
-      this.customerReminder = customer ? customer.Remainder : 0
+    setCustomer (customer) {
+      if (customer) {
+        this.customerReminder = customer.Remainder
+        this.customerRecordTypeId = customer.RecordTypeId
+
+        let model = {
+          andConditionModel: {
+            customerRecordTypeId: this.customerRecordTypeId
+          }
+        }
+
+        this.$api.postByUrl(model, 'VisionNextFinance/api/CashCardType/Search').then(res => {
+          if (res.ListModel) {
+            this.cashcardTypes = res.ListModel.BaseModels
+          }
+        })
+      } else {
+        this.customerReminder = 0
+        this.customerRecordTypeId = null
+        this.CashCardType = null
+        this.form.CashCardTypeId = null
+      }
     }
   }
 

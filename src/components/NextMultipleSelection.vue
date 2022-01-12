@@ -349,7 +349,10 @@ export default {
             return item
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
-            list = list.filter(l => !this.pageSelectedList.some(p => p.ItemId === l.ItemId))
+            list = list.filter(l =>
+              !l.RecordId ||
+              !l.ItemId ||
+              !this.pageSelectedList.some(p => p.ItemId === l.ItemId || p.ItemId === l.RecordId))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
               for (let index = 0; index < this.pageSelectedList.length; index++) {
@@ -487,9 +490,14 @@ export default {
           return
         }
       }
+
       let removedList = this.initialList.filter(i => i.RecordId > 0 && i.RecordState > 1).map(item => {
-        item.RecordState = 4
-        return item
+        let newItem = {
+          ...item,
+          RecordState: 4
+        }
+
+        return newItem
       })
       let allList = [...filteredList, ...removedList]
       this.$emit('valuechange', allList)

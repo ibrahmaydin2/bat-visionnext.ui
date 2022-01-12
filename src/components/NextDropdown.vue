@@ -69,7 +69,9 @@ export default {
     dynamicAndCondition: {},
     orConditionFields: {},
     dynamicRequest: {},
-    dynamicOrConditions: [],
+    dynamicOrConditions: {
+      type: Array
+    },
     source: {
       type: Array
     },
