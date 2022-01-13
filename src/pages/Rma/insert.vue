@@ -154,7 +154,8 @@
                     :dynamic-and-condition="{
                       CustomerIds: [form.CustomerId],
                       PriceDate: form.PriceDate
-                    }"/>
+                    }"
+                    :filter-func="(row) => row.Quantity > 0" />
                 </b-col>
               </b-row>
             </b-col>
