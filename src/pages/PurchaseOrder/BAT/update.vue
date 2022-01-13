@@ -157,6 +157,18 @@
                 <AddDetailButton @click.native="addOrderLine" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+              <NextMultipleSelection
+                name="PurchaseOrderMultipleItem"
+                v-model="form.OrderLines"
+                :hidden-values="multipleItemSearch.hiddenValues"
+                :disabled-button="!form.WarehouseId || !form.PriceListId"
+                :converted-values="multipleItemSearch.convertedValues"
+                :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                :validations="multipleItemSearch.quantityValidation"
+                :initial-values-func="multipleItemSearch.initialValue"
+              />
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -207,6 +219,7 @@
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
 import updateMixin from '../../../mixins/update'
+import { mapState } from 'vuex'
 export default {
   mixins: [updateMixin],
   data () {
@@ -279,6 +292,9 @@ export default {
   },
   mounted () {
     this.getInsertPage(this.routeName)
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     getInsertPage (e) {

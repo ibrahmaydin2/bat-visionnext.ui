@@ -310,7 +310,7 @@ export default {
         this.customerValid = false
         return
       }
-      if (this.form.BranchCriteriaId === 30 || this.form.discountDetailsBranchs.length === 0) {
+      if (this.form.BranchCriteriaId === 30 && this.form.discountDetailsBranchs.length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
@@ -404,7 +404,7 @@ export default {
             BranchIds: this.getBranchIds()
           },
           disabled (form, mainForm) {
-            return mainForm.BranchCriteriaId === 30 && mainForm.discountDetailsBranchs.length === 0
+            return !mainForm.BranchCriteriaId || (mainForm.BranchCriteriaId === 30 && mainForm.discountDetailsBranchs.length === 0)
           },
           required: true,
           visible: true,

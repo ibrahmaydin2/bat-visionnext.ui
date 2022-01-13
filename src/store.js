@@ -341,7 +341,18 @@ export const store = new Vuex.Store({
             return value > 0
           }
         }
-      ]
+      ],
+      initialValue: (values) => {
+        values.map(value => {
+          if (value.Item) {
+            value.Code = value.Item.Code
+          }
+
+          return value
+        })
+
+        return values
+      }
     }
   },
   actions: {

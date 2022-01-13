@@ -188,6 +188,7 @@
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
+                  :initial-values-func="multipleItemSearch.initialValue"
                 />
             </b-col>
           </b-row>

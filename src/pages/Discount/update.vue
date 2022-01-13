@@ -303,7 +303,7 @@ export default {
         this.customerValid = false
         return
       }
-      if (this.form.BranchCriteriaId === 30 || this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0) {
+      if (this.form.BranchCriteriaId === 30 && this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
@@ -392,6 +392,7 @@ export default {
       this.selectedDiscountType = this.convertLookupValueToSearchValue(rowData.DiscountType)
       this.selectedDiscountKind = this.convertLookupValueToSearchValue(rowData.DiscountKind)
       this.budget = this.convertLookupValueToSearchValue(rowData.Budget)
+      this.discountCategory = this.convertLookupValueToSearchValue(rowData.DiscountCategory)
 
       this.discountDetailsCustomerCriterias = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECOR_ID' && d.ColumnName !== 'BRANCH_ID')
       this.form.discountDetailsBranchs = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
@@ -425,7 +426,7 @@ export default {
             BranchIds: this.getBranchIds()
           },
           disabled (form, mainForm) {
-            return mainForm.BranchCriteriaId === 30 && mainForm.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0
+            return !mainForm.BranchCriteriaId || (mainForm.BranchCriteriaId === 30 && mainForm.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0)
           },
           required: true,
           visible: true,
