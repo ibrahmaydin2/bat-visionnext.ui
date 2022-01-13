@@ -303,7 +303,7 @@ export default {
         this.customerValid = false
         return
       }
-      if (this.form.BranchCriteriaId === null || this.form.discountDetailsBranchs.length === 0) {
+      if (this.form.BranchCriteriaId === 30 || this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
@@ -422,10 +422,10 @@ export default {
           url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.discount.customerCode'),
           dynamicAndCondition: {
-            BranchIds: this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).map(a => a.ColumnValue)
+            BranchIds: this.getBranchIds()
           },
           disabled (form, mainForm) {
-            return form.BranchCriteriaId === null || mainForm.discountDetailsBranchs.length === 0
+            return mainForm.BranchCriteriaId === 30 && mainForm.discountDetailsBranchs.filter(a => a.RecordState !== 4).length === 0
           },
           required: true,
           visible: true,
@@ -459,6 +459,10 @@ export default {
           id: 3
         }
       ]
+    },
+    getBranchIds () {
+      let branchs = this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4)
+      return this.form.BranchCriteriaId === 30 && branchs.length > 0 ? branchs.map(a => a.ColumnValue) : null
     }
   },
   watch: {
