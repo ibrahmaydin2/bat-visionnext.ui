@@ -416,7 +416,7 @@ export default {
             validCount++
           }
         })
-        if (validCount === filteredList.length) {
+        if (validCount > 0) {
           this.$refs[`multipleGrid${this.id}`].selectRow(data.index)
         } else {
           this.$refs[`multipleGrid${this.id}`].unselectRow(data.index)

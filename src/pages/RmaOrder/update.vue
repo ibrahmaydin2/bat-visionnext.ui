@@ -104,10 +104,24 @@
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
               <NextInput type="number" v-model="rmaOrderLine.Quantity" :disabled="disabledFields" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
+            <b-col md="2" class="ml-auto">
               <b-form-group>
                 <b-button @click="addItems()" class="mt-4" variant="success" size="sm" :disabled="disabledFields"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2" lg="2">
+              <NextMultipleSelection
+                name="RmaOrderMultipleItem"
+                v-model="rmaOrderLines"
+                :dynamic-and-condition="{
+                  ToWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                  FromWarehouseIds: form.WarehouseId ? [form.WarehouseId] : null,
+                }"
+                :disabled-button="!form.WarehouseId"
+                :hidden-values="hiddenValues"
+                :initial-values-func="initialValue"
+                :filter-func="(row) => row.Quantity > 0"
+              />
             </b-col>
           </b-row>
           <b-row>
@@ -194,7 +208,23 @@ export default {
       rmaReason: null,
       routeName1: 'Rma',
       disabledFields: false,
-      firstSet: true
+      firstSet: true,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ],
+      initialValue: (values) => {
+        values.map(value => {
+          value.Code = value.Item ? value.Item.Code : value.Code
+          value.Description1 = value.Item ? value.Item.Description1 : value.Description1
+
+          return value
+        })
+
+        return values
+      }
     }
   },
   mounted () {
