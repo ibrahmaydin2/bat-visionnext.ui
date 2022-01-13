@@ -66,7 +66,9 @@
               <NextMultipleSelection
                 name="LoadingPlanMultipleItem "
                 v-model="form.LoadingPlanItems"
-                :hidden-values="hiddenValues" />
+                :hidden-values="hiddenValues"
+                :filter-func="(row) => row.PlanQuantity > 0"
+                :validations="multipleValidations" />
             </b-col>
           </b-row>
           <b-row>
@@ -123,6 +125,17 @@ export default {
         {
           mainProperty: 'RecordId',
           targetProperty: 'ItemId'
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'PlanQuantity',
+          validation: (value, data) => {
+            if (!value || parseFloat(value) <= 0) {
+              return false
+            }
+            return true
+          }
         }
       ]
     }
