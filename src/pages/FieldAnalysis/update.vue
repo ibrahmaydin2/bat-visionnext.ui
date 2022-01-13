@@ -77,7 +77,12 @@
           <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true">
             <template slot="grid">
               <div cols="12" md="2">
-                  <NextMultipleSelection v-model="form.FieldAnalysisQuestions" name="FieldAnalysisMultipleQuestion" :hidden-values="hiddenValuesQuestion"></NextMultipleSelection>
+                  <NextMultipleSelection
+                    v-model="form.FieldAnalysisQuestions"
+                    name="FieldAnalysisMultipleQuestion"
+                    :hidden-values="hiddenValuesQuestion"
+                    :converted-values="convertedValuesQuestions"
+                    :initial-values-func="questionsInitialValues"></NextMultipleSelection>
               </div>
             </template>
           </NextDetailPanel>
@@ -86,7 +91,11 @@
           <NextDetailPanel v-model="form.FieldAnalysisBranchs" :items="fieldAnalysisBranchItems">
             <template slot="grid">
               <div cols="12" md="2">
-                <NextMultipleSelection v-model="form.FieldAnalysisBranchs" name="FieldAnalysisMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
+                <NextMultipleSelection
+                  v-model="form.FieldAnalysisBranchs"
+                  name="FieldAnalysisMultipleBranch"
+                  :hidden-values="hiddenValuesBranch"
+                  :initial-values-func="branchsInitialValues"></NextMultipleSelection>
               </div>
             </template>
           </NextDetailPanel>
@@ -217,7 +226,40 @@ export default {
           mainProperty: 'Code',
           targetProperty: 'QuestionIdDesc'
         }
-      ]
+      ],
+      convertedValuesQuestions: [
+        {
+          mainProperty: 'SortOrder',
+          targetProperty: 'LineNumber',
+          getValue: (value, data) => value
+        }
+      ],
+      questionsInitialValues: (values) => {
+        values.map(value => {
+          if (value.Question) {
+            value.Code = value.Question.Code
+            value.Description1 = value.Question.Description1
+            value.AnswerType = value.Question.AnswerType
+          }
+          value.SortOrder = value.LineNumber
+
+          return value
+        })
+
+        return values
+      },
+      branchsInitialValues: (values) => {
+        values.map(value => {
+          if (value.AnalysisBranch) {
+            value.Code = value.AnalysisBranch.Code
+            value.Description1 = value.AnalysisBranch.Label
+          }
+
+          return value
+        })
+
+        return values
+      }
     }
   },
   mounted () {
