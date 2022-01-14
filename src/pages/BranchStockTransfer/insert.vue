@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'BranchStockTransfer' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -26,7 +26,6 @@
               @input="selectedSearchType('RepresentativeId', $event)"
               :disabled="insertReadonly.RepresentativeId"
               url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
-              v-model="Representative"
               label="Description1"
               :searchable="true" :custom-option="true"
               or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
@@ -54,67 +53,91 @@
           <b-row>
             <NextFormGroup item-key="FromBranchId" :error="$v.form.FromBranchId">
               <NextDropdown
-                @input="selectedSearchType('FromBranchId', $event)"
+                @input="selectedSearchType('FromBranchId', $event); initWarehouse('from')"
                 url="VisionNextBranch/api/Branch/Search"
                 :dynamic-and-condition="{ StatusIds: [1]}"
                 :disabled="insertReadonly.FromBranchId" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId">
-              <NextDropdown :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
+              <NextDropdown
+                v-model="fromWarehouse"
+                :disabled="insertReadonly.FromWarehouseId || !form.FromBranchId"
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=1"
+                @input="selectedSearchType('FromWarehouseId', $event)"
+                :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromStatusId" :error="$v.form.FromStatusId" md="3" lg="3">
               <NextDropdown
                 @input="selectedSearchType('FromStatusId', $event)"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=1"
                 :disabled="insertReadonly.FromStatusId"
+                :filter="i => i.Code !== 'RZRV'"
               />
             </NextFormGroup>
+          </b-row>
+          <b-row>
             <NextFormGroup item-key="ToBranchId" :error="$v.form.ToBranchId">
               <NextDropdown
-                @input="selectedSearchType('ToBranchId', $event)"
+                @input="selectedSearchType('ToBranchId', $event); initWarehouse('to')"
                 url="VisionNextBranch/api/Branch/Search"
                 :dynamic-and-condition="{ StatusIds: [1]}"
                 :disabled="insertReadonly.ToBranchId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId">
               <NextDropdown
+                v-model="toWarehouse"
                 @input="selectedSearchType('ToWarehouseId', $event)"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
-                :dynamic-and-condition="{ StatusIds: [1]}"
-                :disabled="insertReadonly.ToWarehouseId" />
+                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=2"
+                :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"
+                :disabled="insertReadonly.ToWarehouseId || !form.ToBranchId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
               <NextDropdown
                 @input="selectedSearchType('ToStatusId', $event)"
-                url="VisionNextStockManagement/api/StockStatus/Search" />
+                url="VisionNextStockManagement/api/StockStatus/Search?v=2"
+                :filter="i => i.Code !== 'RZRV'" />
             </NextFormGroup>
           </b-row>
           <hr>
           <b-row>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.ItemCode')" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ItemCode')" :required="true" :error="$v.branchStockTransferItem.item" md="2" lg="2">
               <NextDropdown
                 searchable
-                :search="searchItem"
-                v-model="BranchStockTransferItems.item"
+                url="VisionNextItem/api/Item/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }"
+                or-condition-fields="Code,Description1"
+                v-model="branchStockTransferItem.item"
                 @input="selectedItem"
-                :custom-option="true"/>
+                :custom-option="true"
+                :disabled="!form.ToBranchId || !form.FromStatusId || !form.FromWarehouseId"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.Description1')">
-              <NextInput type="text" v-model="BranchStockTransferItems.Description1"></NextInput>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.Description1')" md="2" lg="2">
+              <NextInput type="text" v-model="branchStockTransferItem.Description1"></NextInput>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.FromWhStockQuantity')">
-              <NextInput :disabled="true" type="text" v-model="BranchStockTransferItems.FromWhStockQuantity"></NextInput>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.FromWhStockQuantity')" md="2" lg="2">
+              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.FromWhStockQuantity"></NextInput>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')">
-              <NextInput :disabled="true" type="text" v-model="BranchStockTransferItems.ToWhStockQuantity"></NextInput>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" md="2" lg="2">
+              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.ToWhStockQuantity"></NextInput>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true">
-              <NextInput v-model="BranchStockTransferItems.Quantity" type="number" min="1" @keypress="onlyForCurrencyDot($event)" :max="maxPlanQuantity"></NextInput>
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.branchStockTransferItem.Quantity" md="2" lg="2">
+              <NextInput v-model="branchStockTransferItem.Quantity" type="number" min="1" @keypress="onlyForCurrencyDot($event)" :max="maxPlanQuantity"></NextInput>
             </NextFormGroup>
-            <b-col cols="12" md="2" class="ml-auto">
+          </b-row>
+          <b-row>
+            <b-col cols="10" md="2" class="ml-auto">
               <b-form-group>
                 <AddDetailButton @click.native="addItems" />
               </b-form-group>
+            </b-col>
+            <b-col cols="10" md="2">
+              <NextMultipleSelection
+                  v-model="form.BranchStockTransferItems"
+                  name="BranchTransferMultipleItem"
+                  :hidden-values="hiddenValues"
+                  :filter-func="i => i.Quantity > 0"
+                  :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], DocumentDate: form.MovementDate}"
+                  :disabled-button="!form.FromWarehouseId || !form.MovementDate"></NextMultipleSelection>
             </b-col>
           </b-row>
           <b-row>
@@ -147,6 +170,7 @@
   </b-row>
 </template>
 <script>
+import { required, minValue } from 'vuelidate/lib/validators'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -168,7 +192,7 @@ export default {
         BranchStockTransferItems: [],
         Canceled: 0
       },
-      BranchStockTransferItems: {
+      branchStockTransferItem: {
         Deleted: 0,
         System: 0,
         RecordState: 2,
@@ -189,10 +213,20 @@ export default {
         PlanQuantity: null
       },
       routeName1: 'Branch',
-      tmpSelectedItem: [],
       maxPlanQuantity: null,
       item: null,
-      Representative: null
+      fromWarehouse: null,
+      toWarehouse: null,
+      hiddenValues: [
+        {
+          mainProperty: 'FromWHStockQuantity',
+          targetProperty: 'FromWhStockQuantity'
+        },
+        {
+          mainProperty: 'ToWHStockQuantity',
+          targetProperty: 'ToWhStockQuantity'
+        }
+      ]
     }
   },
   mounted () {
@@ -202,30 +236,6 @@ export default {
     this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
   },
   methods: {
-    async searchItem (search) {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-        this.cleanItem()
-        Promise.resolve([])
-      }
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search
-          }
-        ],
-        andConditionModel: {
-          StatusIds: [1], CardTypeIds: [1, 2, 8]
-        }
-      }
-      return this.$api.postByUrl(model, 'VisionNextItem/api/Item/AutoCompleteSearch').then((response) => {
-        if (response && response.ListModel) {
-          return response.ListModel.BaseModels
-        }
-      })
-    },
     getCode () {
       this.$api.postByUrl({}, `VisionNextBranch/api/BranchStockTransfer/GetCode`).then(response => {
         if (response.Model) {
@@ -235,12 +245,6 @@ export default {
     },
     selectedItem (e) {
       if (e) {
-        this.$v.form.$touch()
-        if (this.$v.form.$error) {
-          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
-          this.cleanItem()
-          return false
-        }
         if (this.form.FromWarehouseId && this.form.FromStatusId) {
           let request = {
             andConditionModel: {
@@ -254,15 +258,15 @@ export default {
             let fromWarehouseStocks = response.ListModel.BaseModels
             if (fromWarehouseStocks.length > 0) {
               this.maxPlanQuantity = fromWarehouseStocks[0].Quantity
-              this.BranchStockTransferItems.FromWhStockQuantity = fromWarehouseStocks[0].Quantity
+              this.branchStockTransferItem.FromWhStockQuantity = fromWarehouseStocks[0].Quantity
             } else {
               this.maxPlanQuantity = 0
-              this.BranchStockTransferItems.FromWhStockQuantity = 0
+              this.branchStockTransferItem.FromWhStockQuantity = 0
             }
           })
         } else {
           this.maxPlanQuantity = 0
-          this.BranchStockTransferItems.FromWhStockQuantity = 0
+          this.branchStockTransferItem.FromWhStockQuantity = 0
         }
 
         if (this.form.ToWarehouseId && this.form.ToStatusId) {
@@ -277,31 +281,32 @@ export default {
           this.$api.postByUrl(request, 'VisionNextWarehouse/api/WarehouseStock/Search?v=2').then((response) => {
             let toWarehouseStocks = response.ListModel.BaseModels
             if (toWarehouseStocks.length > 0) {
-              this.BranchStockTransferItems.ToWhStockQuantity = toWarehouseStocks[0].Quantity
+              this.branchStockTransferItem.ToWhStockQuantity = toWarehouseStocks[0].Quantity
             } else {
-              this.BranchStockTransferItems.ToWhStockQuantity = 0
+              this.branchStockTransferItem.ToWhStockQuantity = 0
             }
           })
         } else {
-          this.BranchStockTransferItems.ToWhStockQuantity = 0
+          this.branchStockTransferItem.ToWhStockQuantity = 0
         }
 
         this.$forceUpdate()
       }
     },
     addItems () {
-      if (this.BranchStockTransferItems.length < 1 || !this.BranchStockTransferItems.Quantity) {
+      this.$v.branchStockTransferItem.$touch()
+      if (this.$v.branchStockTransferItem.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         return false
       }
-      const filteredArr = this.form.BranchStockTransferItems.filter(i => i.ItemId === this.BranchStockTransferItems.RecordId)
+      const filteredArr = this.form.BranchStockTransferItems.filter(i => i.ItemId === this.branchStockTransferItem.RecordId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.BranchStockTransferItems.Quantity > this.maxPlanQuantity) {
+      if (this.branchStockTransferItem.Quantity > this.maxPlanQuantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.BranchStockTransferItems.Quantity = this.maxPlanQuantity
+        this.branchStockTransferItem.Quantity = this.maxPlanQuantity
         return false
       }
       this.form.BranchStockTransferItems.push({
@@ -309,37 +314,29 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        Code: this.BranchStockTransferItems.item.Code,
-        ItemId: this.BranchStockTransferItems.item.RecordId,
-        UnitSetId: this.BranchStockTransferItems.item.UnitSetId,
-        UnitId: this.BranchStockTransferItems.item.UnitId,
+        Code: this.branchStockTransferItem.item.Code,
+        ItemId: this.branchStockTransferItem.item.RecordId,
+        UnitSetId: this.branchStockTransferItem.item.UnitSetId,
+        UnitId: this.branchStockTransferItem.item.UnitId,
         ConvFact1: 1,
         ConvFact2: 1,
-        RecordId: this.BranchStockTransferItems.item.RecordId,
-        Description1: this.BranchStockTransferItems.item.Description1,
+        RecordId: this.branchStockTransferItem.item.RecordId,
+        Description1: this.branchStockTransferItem.item.Description1,
         LineNumber: 0,
-        FromWhStockQuantity: this.BranchStockTransferItems.FromWhStockQuantity,
-        FromWhUnitId: this.BranchStockTransferItems.UnitId,
-        ToWhStockQuantity: this.BranchStockTransferItems.ToWhStockQuantity,
-        ToWhUnitId: this.BranchStockTransferItems.UnitId,
-        Quantity: this.BranchStockTransferItems.Quantity
+        FromWhStockQuantity: this.branchStockTransferItem.FromWhStockQuantity,
+        FromWhUnitId: this.branchStockTransferItem.UnitId,
+        ToWhStockQuantity: this.branchStockTransferItem.ToWhStockQuantity,
+        ToWhUnitId: this.branchStockTransferItem.UnitId,
+        Quantity: this.branchStockTransferItem.Quantity
       })
       this.cleanItem()
     },
     removeItems (item) {
       this.form.BranchStockTransferItems.splice(this.form.BranchStockTransferItems.indexOf(item), 1)
     },
-    // Tablerin içerisinde eğer validasyon hatası varsa tabların kenarlarının kırmızı olmasını sağlayan fonksiyon
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
@@ -349,16 +346,33 @@ export default {
       }
     },
     cleanItem () {
-      this.BranchStockTransferItems = {}
-      this.$v.BranchStockTransferItems.$reset()
+      this.branchStockTransferItem = {}
+      this.$v.branchStockTransferItem.$reset()
+    },
+    initWarehouse (type) {
+      if (type === 'from') {
+        this.form.FromWarehouseId = null
+        this.fromWarehouse = null
+      }
+      if (type === 'to') {
+        this.form.ToWarehouseId = null
+        this.toWarehouse = null
+      }
     }
   },
   validations () {
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      branchStockTransferItem: {
+        item: {
+          required
+        },
+        Quantity: {
+          required,
+          minValue: minValue(1)
+        }
+      }
     }
   }
 }
 </script>
-<style lang="sass">
-</style>

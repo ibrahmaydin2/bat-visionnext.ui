@@ -59,7 +59,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -91,9 +90,6 @@ export default {
       assetPosition: null,
       assetLocations: []
     }
-  },
-  computed: {
-    ...mapState([''])
   },
   mounted () {
     this.getData().then(() => this.setData())
@@ -129,11 +125,6 @@ export default {
       } else {
         this.updateData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   },
   watch: {

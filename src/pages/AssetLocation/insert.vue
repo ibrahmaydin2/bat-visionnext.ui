@@ -59,7 +59,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -85,15 +84,11 @@ export default {
       contacts: []
     }
   },
-  computed: {
-    ...mapState([''])
-  },
   mounted () {
-    // this.createManualCode()
-    this.getInsertPage(this.routeName)
+    this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       this.$api.postByUrl({}, 'VisionNextCustomer/api/CustomerLocation/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
           this.assetLocations = response.ListModel.BaseModels
@@ -112,11 +107,6 @@ export default {
       } else {
         this.createData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   },
   watch: {
