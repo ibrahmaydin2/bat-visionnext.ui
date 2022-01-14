@@ -328,8 +328,6 @@ export default {
           position: 'top-center',
           duration: '5000'
         })
-        this.customers = []
-        this.form.DiscountExcludedCustomers = []
         this.form.branchs = []
         this.customerValid = true
       } else {
