@@ -2002,7 +2002,8 @@
       "routeId":"Rota Id",
       "branchId":"Şube Id",
       "paymentTypeId": "Ödeme Tipi Id",
-      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
+      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!",
+      "customersAndRoutesWillBeDeleted": "Seçmiş olduğunuz Rota ve Müşteriler silinecektir. Devam etmek istiyor musunuz?"
     },
     "discountPackage": {
       "PackageKindId": "uygulama Türü",

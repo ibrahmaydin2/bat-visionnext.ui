@@ -2,35 +2,27 @@ import i18n from '../../i18n'
 export const detailData = {
   discountTakenItems: [
     {
-      type: 'Dropdown',
-      modelProperty: 'ColumnName',
-      labelProperty: 'Label',
-      valueProperty: 'ForeignField',
-      objectKey: 'ColumnNameDesc',
-      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
-      label: i18n.t('insert.discount.columnName'),
-      required: true,
-      visible: true,
-      isUnique: true,
-      dynamicRequest: {paramId: 'ITEM_CRITERIA'},
-      id: 1
-    },
-    {
-      type: 'Dropdown',
+      type: 'Autocomplete',
       modelProperty: 'ColumnValue',
-      parentProperty: 'Label',
-      labelProperty: 'Label',
       objectKey: 'ColumnValueDesc',
-      request: JSON.stringify({ParamName: 'val'}),
-      url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
-      label: i18n.t('insert.discount.columnValue'),
+      customOption: true,
+      orConditionFields: 'Code,Description1',
+      url: 'VisionNextItem/api/Item/AutoCompleteSearch',
+      label: i18n.t('insert.item.product'),
       disabled (form, mainForm) {
         return !form.ColumnName
       },
       required: true,
       visible: true,
       isUnique: true,
-      parentId: 1,
+      id: 1
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      hideOnTable: true,
+      defaultValue: 'RECORD_ID',
       id: 2
     },
     {
@@ -163,6 +155,20 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
+      modelProperty: 'GivenQuantity',
+      label: i18n.t('insert.discount.takenQuantity'),
+      disabled (form, mainForm) {
+        return mainForm.DiscountTypeId !== 1
+      },
+      required (form, mainForm) {
+        return mainForm.DiscountTypeId === 1
+      },
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
       modelProperty: 'DiscountRate',
       label: i18n.t('insert.discount.discountRate'),
       disabled (form, mainForm) {
@@ -172,7 +178,7 @@ export const detailData = {
         return mainForm.DiscountKindId === 1 || mainForm.DiscountKindId === 7
       },
       visible: true,
-      id: 4
+      id: 5
     },
     {
       type: 'Text',
@@ -186,7 +192,7 @@ export const detailData = {
         return mainForm.DiscountKindId === 2 || mainForm.DiscountKindId === 8
       },
       visible: true,
-      id: 5
+      id: 6
     },
     {
       type: 'Text',
@@ -200,7 +206,7 @@ export const detailData = {
         return mainForm.DiscountKindId && mainForm.DiscountKindId !== 6
       },
       visible: true,
-      id: 6
+      id: 7
     },
     {
       type: 'Text',
@@ -214,20 +220,20 @@ export const detailData = {
         return mainForm.DiscountKindId && mainForm.DiscountKindId !== 6
       },
       visible: true,
-      id: 7
+      id: 8
     }
   ],
   discountCustomerItems: [
     {
       type: 'Autocomplete',
-      modelProperty: 'CustomerId',
-      objectKey: 'Customer',
+      modelProperty: 'ColumnValue',
+      objectKey: 'ColumnNameDesc',
       labelProperty: 'Code',
       customOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-      label: i18n.t('insert.discount.customerCode'),
+      url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
+      label: 'insert.discount.customerCode',
       required: true,
       visible: true,
       isUnique: true,
@@ -237,9 +243,9 @@ export const detailData = {
       type: 'Label',
       inputType: 'text',
       modelProperty: 'CommercialTitle',
-      objectKey: 'Customer',
+      objectKey: 'ColumnValueDesc',
       parentProperty: 'Description1',
-      label: i18n.t('insert.discount.customerName'),
+      label: 'insert.discount.customerName',
       visible: true,
       disabled: true,
       parentId: 1,
@@ -250,14 +256,33 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Location',
       valueProperty: 'AddressDetail',
-      objectKey: 'Customer',
+      objectKey: 'ColumnValueDesc2',
       parentProperty: 'DefaultLocationId',
       url: 'VisionNextCustomer/api/CustomerLocation/Get',
-      label: i18n.t('insert.discount.location'),
+      label: 'insert.discount.location',
       visible: true,
       disabled: true,
       parentId: 1,
       id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_CUSTOMER',
+      parentId: null,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      parentProperty: null,
+      hideOnTable: true,
+      defaultValue: 'RECORD_ID',
+      parentId: null,
+      id: 5
     }
   ],
   discountExcludedCustomerItems: [
