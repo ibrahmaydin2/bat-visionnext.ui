@@ -36,11 +36,6 @@
               <div v-html="getFormatDataByType(rowData.ToStatus, 'object', 'insert.BranchStockTransfer.ToStatusId')"></div>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
-              <!-- <b-table responsive :items="rowData.BranchStockTransferItems" :fields="fields">
-                <template #cell(Item)="data">
-                  {{data.value.Label}}
-                </template>
-              </b-table> -->
               <b-table-simple responsive hover small>
                 <b-thead>
                   <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>
@@ -73,23 +68,11 @@ import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
-  data () {
-    return {
-      fields: [
-        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
-        {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
-        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
-        {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
-      ]
-    }
-  },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
@@ -101,5 +84,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>
