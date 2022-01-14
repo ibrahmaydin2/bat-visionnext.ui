@@ -77,11 +77,11 @@
           <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true">
           <template slot="grid">
             <div cols="12" md="2">
-                <NextMultipleSelection
-                  v-model="form.FieldAnalysisQuestions"
-                  name="FieldAnalysisMultipleQuestion"
-                  :hidden-values="hiddenValuesQuestion"
-                  :converted-values="convertedValuesQuestions"></NextMultipleSelection>
+              <NextMultipleSelection
+                v-model="form.FieldAnalysisQuestions"
+                name="FieldAnalysisMultipleQuestion"
+                :hidden-values="hiddenValuesQuestion"
+                :converted-values="convertedValuesQuestions"></NextMultipleSelection>
             </div>
           </template>
           </NextDetailPanel>

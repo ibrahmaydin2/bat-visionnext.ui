@@ -340,7 +340,7 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: true,
-      dynamicRequest: {paramId: 'T_CUSTOMER'},
+      dynamicRequest: {paramId: 'CUSTOMER_CRITERIA'},
       id: 1
     },
     {
