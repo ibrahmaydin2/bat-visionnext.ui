@@ -2003,7 +2003,8 @@
       "branchId":"Şube Id",
       "paymentTypeId": "Ödeme Tipi Id",
       "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!",
-      "customersAndRoutesWillBeDeleted": "The Routes and Customers you have selected will be deleted. Do you want to continue?"
+      "customersAndRoutesWillBeDeleted": "The Routes and Customers you have selected will be deleted. Do you want to continue?",
+      "sharePercent": "Share Percent"
     },
     "discountPackage": {
       "PackageKindId": "uygulama Türü",

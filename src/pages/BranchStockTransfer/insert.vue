@@ -53,7 +53,7 @@
           <b-row>
             <NextFormGroup item-key="FromBranchId" :error="$v.form.FromBranchId">
               <NextDropdown
-                @input="selectedSearchType('FromBranchId', $event); initWarehouse('from')"
+                @input="selectedSearchType('FromBranchId', $event); initWarehouse('from', $event);"
                 url="VisionNextBranch/api/Branch/Search"
                 :dynamic-and-condition="{ StatusIds: [1]}"
                 :disabled="insertReadonly.FromBranchId" searchable/>
@@ -62,15 +62,15 @@
               <NextDropdown
                 v-model="fromWarehouse"
                 :disabled="insertReadonly.FromWarehouseId || !form.FromBranchId"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=1"
-                @input="selectedSearchType('FromWarehouseId', $event)"
-                :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"/>
+                :source="fromWarehouses"
+                @input="selectedSearchType('FromWarehouseId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="FromStatusId" :error="$v.form.FromStatusId" md="3" lg="3">
               <NextDropdown
+                v-model="fromStatus"
                 @input="selectedSearchType('FromStatusId', $event)"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=1"
-                :disabled="insertReadonly.FromStatusId"
+                :disabled="insertReadonly.FromStatusId || !form.FromWarehouseId"
                 :filter="i => i.Code !== 'RZRV'"
               />
             </NextFormGroup>
@@ -78,10 +78,10 @@
           <b-row>
             <NextFormGroup item-key="ToBranchId" :error="$v.form.ToBranchId">
               <NextDropdown
-                @input="selectedSearchType('ToBranchId', $event); initWarehouse('to')"
-                url="VisionNextBranch/api/Branch/Search"
-                :dynamic-and-condition="{ StatusIds: [1]}"
-                :disabled="insertReadonly.ToBranchId" />
+                v-model="toBranch"
+                @input="selectedSearchType('ToBranchId', $event); initWarehouse('to', $event)"
+                :source="toBranchs"
+                :disabled="insertReadonly.ToBranchId || !form.FromBranchId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId">
               <NextDropdown
@@ -93,8 +93,10 @@
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
               <NextDropdown
+                v-model="toStatus"
                 @input="selectedSearchType('ToStatusId', $event)"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=2"
+                :disabled="insertReadonly.ToStatusId || !form.ToWarehouseId"
                 :filter="i => i.Code !== 'RZRV'" />
             </NextFormGroup>
           </b-row>
@@ -136,8 +138,13 @@
                   name="BranchTransferMultipleItem"
                   :hidden-values="hiddenValues"
                   :filter-func="i => i.Quantity > 0"
-                  :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], DocumentDate: form.MovementDate}"
-                  :disabled-button="!form.FromWarehouseId || !form.MovementDate"></NextMultipleSelection>
+                  :dynamic-and-condition="{
+                    FromWarehouseIds: [form.FromWarehouseId],
+                    ToWarehouseIds: [form.ToWarehouseId],
+                    FromWarehouseStatus: [form.FromStatusId],
+                    ToWarehouseStatus: [form.ToStatusId],
+                    MovementType: [1]}"
+                  :disabled-button="!form.FromWarehouseId || !form.ToWarehouseId || !form.FromStatusId || !form.ToStatusId"></NextMultipleSelection>
             </b-col>
           </b-row>
           <b-row>
@@ -217,6 +224,11 @@ export default {
       item: null,
       fromWarehouse: null,
       toWarehouse: null,
+      toBranch: null,
+      fromStatus: null,
+      toStatus: null,
+      fromWarehouses: [],
+      toBranchs: [],
       hiddenValues: [
         {
           mainProperty: 'FromWHStockQuantity',
@@ -349,14 +361,64 @@ export default {
       this.branchStockTransferItem = {}
       this.$v.branchStockTransferItem.$reset()
     },
-    initWarehouse (type) {
+    initWarehouse (type, value) {
       if (type === 'from') {
         this.form.FromWarehouseId = null
+        this.form.FromStatusId = null
         this.fromWarehouse = null
+        this.fromStatus = null
+        this.getFromWarehouses(value)
+        this.getToBranchs(value)
+        if (!value) {
+          this.form.ToWarehouseId = null
+          this.form.ToStatusId = null
+          this.toWarehouse = null
+          this.toStatus = null
+        }
       }
       if (type === 'to') {
         this.form.ToWarehouseId = null
+        this.form.ToStatusId = null
         this.toWarehouse = null
+        this.toStatus = null
+      }
+    },
+    getFromWarehouses (branch) {
+      this.form.FromWarehouseId = null
+      this.fromWarehouse = null
+
+      if (branch) {
+        let request = {
+          branchId: branch.RecordId,
+          andConditionModel: {
+            StatusIds: [1],
+            IsVehicle: 0
+          }
+        }
+
+        this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=1').then(res => {
+          if (res && res.ListModel) {
+            this.fromWarehouses = res.ListModel.BaseModels
+          }
+        })
+      }
+    },
+    getToBranchs (branch) {
+      this.form.ToBranchId = null
+      this.toBranch = null
+
+      if (branch) {
+        let request = {
+          andConditionModel: {
+            RecordIds: [branch.RecordId],
+            StatusIds: [1]
+          }}
+
+        this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/WithUpperSearch').then(res => {
+          if (res && res.ListModel) {
+            this.toBranchs = res.ListModel.BaseModels
+          }
+        })
       }
     }
   },
