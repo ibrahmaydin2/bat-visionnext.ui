@@ -87,8 +87,7 @@
               <NextDropdown
                 v-model="toWarehouse"
                 @input="selectedSearchType('ToWarehouseId', $event)"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=2"
-                :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"
+                :source="toWarehouses"
                 :disabled="insertReadonly.ToWarehouseId || !form.ToBranchId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
@@ -229,13 +228,14 @@ export default {
       toStatus: null,
       fromWarehouses: [],
       toBranchs: [],
+      toWarehouses: [],
       hiddenValues: [
         {
-          mainProperty: 'FromWHStockQuantity',
+          mainProperty: 'FromQuantity',
           targetProperty: 'FromWhStockQuantity'
         },
         {
-          mainProperty: 'ToWHStockQuantity',
+          mainProperty: 'ToQuantity',
           targetProperty: 'ToWhStockQuantity'
         }
       ]
@@ -363,9 +363,7 @@ export default {
     },
     initWarehouse (type, value) {
       if (type === 'from') {
-        this.form.FromWarehouseId = null
         this.form.FromStatusId = null
-        this.fromWarehouse = null
         this.fromStatus = null
         this.getFromWarehouses(value)
         this.getToBranchs(value)
@@ -377,10 +375,9 @@ export default {
         }
       }
       if (type === 'to') {
-        this.form.ToWarehouseId = null
         this.form.ToStatusId = null
-        this.toWarehouse = null
         this.toStatus = null
+        this.getToWarehouses(value)
       }
     },
     getFromWarehouses (branch) {
@@ -417,6 +414,26 @@ export default {
         this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/WithUpperSearch').then(res => {
           if (res && res.ListModel) {
             this.toBranchs = res.ListModel.BaseModels
+          }
+        })
+      }
+    },
+    getToWarehouses (branch) {
+      this.form.ToWarehouseId = null
+      this.toWarehouse = null
+
+      if (branch) {
+        let request = {
+          branchId: branch.RecordId,
+          andConditionModel: {
+            StatusIds: [1],
+            IsVehicle: 0
+          }
+        }
+
+        this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=2').then(res => {
+          if (res && res.ListModel) {
+            this.toWarehouses = res.ListModel.BaseModels
           }
         })
       }
