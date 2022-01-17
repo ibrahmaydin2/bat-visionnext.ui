@@ -166,7 +166,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.discount.discountTakens')">
+        <b-tab lazy :title="$t('insert.discount.discountTakens')" :disabled="!form.DiscountKindId">
           <NextDetailPanel v-model="form.DiscountTakens" :items="discountTakenItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountGivens')" :disabled="form.DiscountKindId === 6">

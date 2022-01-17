@@ -40,7 +40,9 @@ export class ApiManager {
     if (!request) {
       request = {}
     }
-    request.branchId = store.state.BranchId
+    if (!request.branchId) {
+      request.branchId = store.state.BranchId
+    }
     request.companyId = store.state.CompanyId
     if (!request.andConditionModel) {
       request.andConditionModel = {}

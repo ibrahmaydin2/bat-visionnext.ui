@@ -2,27 +2,35 @@ import i18n from '../../i18n'
 export const detailData = {
   discountTakenItems: [
     {
-      type: 'Autocomplete',
+      type: 'Dropdown',
+      modelProperty: 'ColumnName',
+      labelProperty: 'Label',
+      valueProperty: 'ForeignField',
+      objectKey: 'ColumnNameDesc',
+      url: 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams?v=1',
+      label: i18n.t('insert.discount.columnName'),
+      required: true,
+      visible: true,
+      isUnique: true,
+      dynamicRequest: {paramId: 'ITEM_CRITERIA'},
+      id: 1
+    },
+    {
+      type: 'Dropdown',
       modelProperty: 'ColumnValue',
+      parentProperty: 'Label',
+      labelProperty: 'Label',
       objectKey: 'ColumnValueDesc',
-      customOption: true,
-      orConditionFields: 'Code,Description1',
-      url: 'VisionNextItem/api/Item/AutoCompleteSearch',
-      label: i18n.t('insert.item.product'),
+      request: JSON.stringify({ParamName: 'val'}),
+      url: 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues',
+      label: i18n.t('insert.discount.columnValue'),
       disabled (form, mainForm) {
         return !form.ColumnName
       },
       required: true,
       visible: true,
       isUnique: true,
-      id: 1
-    },
-    {
-      type: 'Text',
-      inputType: 'text',
-      modelProperty: 'ColumnName',
-      hideOnTable: true,
-      defaultValue: 'RECORD_ID',
+      parentId: 1,
       id: 2
     },
     {
@@ -39,10 +47,10 @@ export const detailData = {
       modelProperty: 'TakenQuantity',
       label: i18n.t('insert.discount.takenQuantity'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
+        return mainForm.DiscountKindId !== 6
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
+        return mainForm.DiscountKindId === 6
       },
       visible: true,
       id: 4
@@ -50,27 +58,13 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'MinTakenQuantity',
-      label: i18n.t('insert.discount.minTakenQuantity'),
+      modelProperty: 'SharePercent',
+      label: i18n.t('insert.discount.sharePercent'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
+        return mainForm.DiscountKindId !== 6
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
-      },
-      visible: true,
-      id: 5
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
-      modelProperty: 'EndTakenQuantity',
-      label: i18n.t('insert.discount.endTakenQuantity'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
+        return mainForm.DiscountKindId === 6
       },
       visible: true,
       id: 6
@@ -78,30 +72,16 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'MinTakenAmount',
-      label: i18n.t('insert.discount.minTakenAmount'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 2
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountTypeId === 2
-      },
-      visible: true,
-      id: 7
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
       modelProperty: 'MaxTakenAmount',
       label: i18n.t('insert.discount.maxTakenAmount'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 2
+        return mainForm.DiscountKindId !== 7 && mainForm.DiscountKindId !== 8
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 2
+        return mainForm.DiscountKindId === 7 || mainForm.DiscountKindId === 8
       },
       visible: true,
-      id: 8
+      id: 5
     }
   ],
   discountGivenItems: [
