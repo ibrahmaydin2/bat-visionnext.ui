@@ -416,16 +416,28 @@ export default {
               case 'Label':
                 if (item.url) {
                   if (!model[item.parentProperty]) { return }
-                  this.$api.postByUrl({RecordId: model[item.parentProperty]}, item.url).then((res) => {
-                    if (res && res.Model) {
+                  let request = {}
+                  if (item.request) {
+                    request = JSON.parse(item.request.replace('"val"', model[item.parentProperty]))
+                  } else {
+                    request = { RecordId: model[item.parentProperty] }
+                  }
+                  this.$api.postByUrl(request, item.url).then((res) => {
+                    let value = null
+                    if (res.Model) {
+                      value = res.Model
+                    } else if (res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+                      value = res.ListModel.BaseModels[0]
+                    }
+                    if (value) {
                       if (item.valueProperty) {
-                        if (res.Model[item.valueProperty] && res.Model[item.valueProperty][item.modelProperty]) {
-                          this.label[item.modelProperty] = res.Model[item.valueProperty][item.modelProperty]
+                        if (value[item.valueProperty] && value[item.valueProperty][item.modelProperty]) {
+                          this.label[item.modelProperty] = value[item.valueProperty][item.modelProperty]
                         } else {
-                          this.label[item.modelProperty] = res.Model[item.valueProperty]
+                          this.label[item.modelProperty] = value[item.valueProperty]
                         }
                       } else {
-                        this.label[item.modelProperty] = res.Model.Description1 ? res.Model.Description1 : null
+                        this.label[item.modelProperty] = value.Description1 ? value.Description1 : null
                       }
                     } else {
                       this.label[item.modelProperty] = null
