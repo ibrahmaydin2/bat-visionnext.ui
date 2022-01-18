@@ -101,28 +101,36 @@
           </b-row>
           <hr>
           <b-row>
-            <NextFormGroup :title="$t('insert.BranchStockTransfer.ItemCode')" :required="true" :error="$v.branchStockTransferItem.item" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.BranchStockTransfer.ItemCode')" :required="true" :error="$v.item" md="2" lg="2">
               <NextDropdown
                 searchable
-                url="VisionNextItem/api/Item/AutoCompleteSearch"
-                :dynamic-and-condition="{ StatusIds: [1], CardTypeIds: [1, 2, 8] }"
+                url="VisionNextItem/api/Item/SearchWithMovementStock"
+                :dynamic-and-condition="{
+                  StatusIds: [1],
+                  CardTypeIds: [1, 2, 8],
+                  FromWarehouseIds: [form.FromWarehouseId],
+                  ToWarehouseIds: [form.ToWarehouseId],
+                  FromWarehouseStatus: [form.FromStatusId],
+                  ToWarehouseStatus: [form.ToStatusId],
+                  MovementType: [1]
+                }"
                 or-condition-fields="Code,Description1"
-                v-model="branchStockTransferItem.item"
+                v-model="item"
                 @input="selectedItem"
                 :custom-option="true"
-                :disabled="!form.ToBranchId || !form.FromStatusId || !form.FromWarehouseId"/>
+                :disabled="!form.FromWarehouseId || !form.ToWarehouseId || !form.FromStatusId || !form.ToStatusId"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.Description1')" md="2" lg="2">
               <NextInput type="text" v-model="branchStockTransferItem.Description1"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.FromWhStockQuantity')" md="2" lg="2">
-              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.FromWhStockQuantity"></NextInput>
+              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.FromQuantity"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.ToWhStockQuantity')" md="2" lg="2">
-              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.ToWhStockQuantity"></NextInput>
+              <NextInput :disabled="true" type="text" v-model="branchStockTransferItem.ToQuantity"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.branchStockTransferItem.Quantity" md="2" lg="2">
-              <NextInput v-model="branchStockTransferItem.Quantity" type="number" min="1" @keypress="onlyForCurrencyDot($event)" :max="maxPlanQuantity"></NextInput>
+              <NextInput v-model="branchStockTransferItem.Quantity" type="number" min="1" @keypress="onlyForCurrencyDot($event)"></NextInput>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -135,15 +143,15 @@
               <NextMultipleSelection
                   v-model="form.BranchStockTransferItems"
                   name="BranchTransferMultipleItem"
-                  :hidden-values="hiddenValues"
-                  :filter-func="i => i.Quantity > 0"
+                  :filter-func="i => i.Quantity > 0 && i.Quantity < i.FromQuantity"
                   :dynamic-and-condition="{
                     FromWarehouseIds: [form.FromWarehouseId],
                     ToWarehouseIds: [form.ToWarehouseId],
                     FromWarehouseStatus: [form.FromStatusId],
                     ToWarehouseStatus: [form.ToStatusId],
                     MovementType: [1]}"
-                  :disabled-button="!form.FromWarehouseId || !form.ToWarehouseId || !form.FromStatusId || !form.ToStatusId"></NextMultipleSelection>
+                  :disabled-button="!form.FromWarehouseId || !form.ToWarehouseId || !form.FromStatusId || !form.ToStatusId"
+                  :validations="multipleValidations"></NextMultipleSelection>
             </b-col>
           </b-row>
           <b-row>
@@ -161,8 +169,8 @@
                   <b-tr v-for="(r, i) in form.BranchStockTransferItems" :key="i">
                     <b-td>{{r.Code}}</b-td>
                     <b-td>{{r.Description1}}</b-td>
-                    <b-td>{{r.FromWhStockQuantity}}</b-td>
-                    <b-td>{{r.ToWhStockQuantity}}</b-td>
+                    <b-td>{{r.FromQuantity}}</b-td>
+                    <b-td>{{r.ToQuantity}}</b-td>
                     <b-td>{{r.Quantity}}</b-td>
                     <b-td class="text-center"><i @click="removeItems(r)" class="far fa-trash-alt text-danger"></i></b-td>
                   </b-tr>
@@ -199,27 +207,14 @@ export default {
         Canceled: 0
       },
       branchStockTransferItem: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
-        StatusId: 1,
         Code: null,
         Description1: null,
         ItemId: null,
-        LineNumber: 0,
-        UnitSetId: null,
-        UnitId: null,
-        ConvFact1: null,
-        ConvFact2: null,
-        FromWhStockQuantity: null,
-        FromWhUnitId: null,
-        ToWhStockQuantity: null,
-        ToWhUnitId: null,
-        Quantity: null,
-        PlanQuantity: null
+        FromQuantity: null,
+        ToQuantity: null,
+        Quantity: null
       },
       routeName1: 'Branch',
-      maxPlanQuantity: null,
       item: null,
       fromWarehouse: null,
       toWarehouse: null,
@@ -229,14 +224,17 @@ export default {
       fromWarehouses: [],
       toBranchs: [],
       toWarehouses: [],
-      hiddenValues: [
+      multipleValidations: [
         {
-          mainProperty: 'FromQuantity',
-          targetProperty: 'FromWhStockQuantity'
-        },
-        {
-          mainProperty: 'ToQuantity',
-          targetProperty: 'ToWhStockQuantity'
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value > data.FromQuantity) {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
+              return false
+            }
+
+            return true
+          }
         }
       ]
     }
@@ -256,69 +254,27 @@ export default {
       })
     },
     selectedItem (e) {
+      this.branchStockTransferItem.FromQuantity = 0
+      this.branchStockTransferItem.ToQuantity = 0
       if (e) {
-        if (this.form.FromWarehouseId && this.form.FromStatusId) {
-          let request = {
-            andConditionModel: {
-              BranchIds: [this.form.ToBranchId],
-              WarehouseIds: [this.form.FromWarehouseId],
-              ItemIds: [e.RecordId],
-              StatusIds: [this.form.FromStatusId]
-            }
-          }
-          this.$api.postByUrl(request, 'VisionNextWarehouse/api/WarehouseStock/Search?v=1').then((response) => {
-            let fromWarehouseStocks = response.ListModel.BaseModels
-            if (fromWarehouseStocks.length > 0) {
-              this.maxPlanQuantity = fromWarehouseStocks[0].Quantity
-              this.branchStockTransferItem.FromWhStockQuantity = fromWarehouseStocks[0].Quantity
-            } else {
-              this.maxPlanQuantity = 0
-              this.branchStockTransferItem.FromWhStockQuantity = 0
-            }
-          })
-        } else {
-          this.maxPlanQuantity = 0
-          this.branchStockTransferItem.FromWhStockQuantity = 0
-        }
-
-        if (this.form.ToWarehouseId && this.form.ToStatusId) {
-          let request = {
-            andConditionModel: {
-              BranchIds: [this.form.ToBranchId],
-              WarehouseIds: [this.form.ToWarehouseId],
-              ItemIds: [e.RecordId],
-              StatusIds: [this.form.ToStatusId]
-            }
-          }
-          this.$api.postByUrl(request, 'VisionNextWarehouse/api/WarehouseStock/Search?v=2').then((response) => {
-            let toWarehouseStocks = response.ListModel.BaseModels
-            if (toWarehouseStocks.length > 0) {
-              this.branchStockTransferItem.ToWhStockQuantity = toWarehouseStocks[0].Quantity
-            } else {
-              this.branchStockTransferItem.ToWhStockQuantity = 0
-            }
-          })
-        } else {
-          this.branchStockTransferItem.ToWhStockQuantity = 0
-        }
-
-        this.$forceUpdate()
+        this.branchStockTransferItem = e
       }
     },
     addItems () {
       this.$v.branchStockTransferItem.$touch()
-      if (this.$v.branchStockTransferItem.$error) {
+      this.$v.item.$touch()
+      if (this.$v.branchStockTransferItem.$error || this.$v.item.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         return false
       }
-      const filteredArr = this.form.BranchStockTransferItems.filter(i => i.ItemId === this.branchStockTransferItem.RecordId)
+      const filteredArr = this.form.BranchStockTransferItems.filter(i => i.ItemId === this.branchStockTransferItem.ItemId)
       if (filteredArr.length > 0) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      if (this.branchStockTransferItem.Quantity > this.maxPlanQuantity) {
+      if (this.branchStockTransferItem.Quantity > this.branchStockTransferItem.FromQuantity) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
-        this.branchStockTransferItem.Quantity = this.maxPlanQuantity
+        this.branchStockTransferItem.Quantity = this.branchStockTransferItem.FromQuantity
         return false
       }
       this.form.BranchStockTransferItems.push({
@@ -326,20 +282,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
-        Code: this.branchStockTransferItem.item.Code,
-        ItemId: this.branchStockTransferItem.item.RecordId,
-        UnitSetId: this.branchStockTransferItem.item.UnitSetId,
-        UnitId: this.branchStockTransferItem.item.UnitId,
-        ConvFact1: 1,
-        ConvFact2: 1,
-        RecordId: this.branchStockTransferItem.item.RecordId,
-        Description1: this.branchStockTransferItem.item.Description1,
-        LineNumber: 0,
-        FromWhStockQuantity: this.branchStockTransferItem.FromWhStockQuantity,
-        FromWhUnitId: this.branchStockTransferItem.UnitId,
-        ToWhStockQuantity: this.branchStockTransferItem.ToWhStockQuantity,
-        ToWhUnitId: this.branchStockTransferItem.UnitId,
-        Quantity: this.branchStockTransferItem.Quantity
+        ...this.branchStockTransferItem
       })
       this.cleanItem()
     },
@@ -359,7 +302,9 @@ export default {
     },
     cleanItem () {
       this.branchStockTransferItem = {}
+      this.item = null
       this.$v.branchStockTransferItem.$reset()
+      this.$v.item.$reset()
     },
     initWarehouse (type, value) {
       if (type === 'from') {
@@ -443,13 +388,13 @@ export default {
     return {
       form: this.insertRules,
       branchStockTransferItem: {
-        item: {
-          required
-        },
         Quantity: {
           required,
           minValue: minValue(1)
         }
+      },
+      item: {
+        required
       }
     }
   }

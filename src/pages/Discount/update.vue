@@ -487,7 +487,12 @@ export default {
           valueProperty: 'AddressDetail',
           objectKey: 'ColumnValueDesc2',
           parentProperty: 'DefaultLocationId',
-          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          url: 'VisionNextCustomer/api/CustomerLocation/CustomSearch',
+          request: JSON.stringify({
+            andConditionModel: {
+              RecordIds: ['val']
+            }
+          }),
           label: this.$t('insert.discount.location'),
           visible: true,
           disabled: true,
