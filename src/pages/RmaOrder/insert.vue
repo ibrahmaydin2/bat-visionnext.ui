@@ -115,6 +115,7 @@
                 :disabled-button="!form.WarehouseId"
                 :hidden-values="hiddenValues"
                 :filter-func="(row) => row.Quantity > 0"
+                :order-by-columns="[{column: 'SortOrder', orderByType: 0}]"
               />
             </b-col>
           </b-row>

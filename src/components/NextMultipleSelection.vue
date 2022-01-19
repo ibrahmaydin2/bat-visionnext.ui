@@ -216,6 +216,10 @@ export default {
       type: Boolean,
       default: false,
       description: 'BranchId filtresi varsa isteklerde base de giden branchId değiştirilsin mi özelliği'
+    },
+    orderByColumns: {
+      type: Object,
+      description: 'Liste çekilirken sıralama opsiyonu gönderir'
     }
   },
   model: {
@@ -347,6 +351,10 @@ export default {
           orConditionModel: this.getCondtionModel(this.action.OrConditionModels)
         }
 
+        if (this.orderByColumns) {
+          request.OrderByColumns = this.orderByColumns
+        }
+
         if (this.changeBranchId && form.BranchIds && form.BranchIds.length > 0) {
           request.branchId = form.BranchIds[0]
         }
@@ -395,9 +403,8 @@ export default {
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
             list = list.filter(l =>
-              !l.RecordId ||
-              !l.ItemId ||
-              !this.pageSelectedList.some(p => p.ItemId === l.ItemId || p.ItemId === l.RecordId))
+              (l.RecordId && !this.pageSelectedList.some(p => p.ItemId === l.RecordId)) ||
+              (l.ItemId && !this.pageSelectedList.some(p => p.ItemId === l.ItemId)))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
               for (let index = 0; index < this.pageSelectedList.length; index++) {
