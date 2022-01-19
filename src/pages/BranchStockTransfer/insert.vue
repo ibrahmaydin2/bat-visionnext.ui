@@ -282,6 +282,7 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        ItemId: this.item.RecordId,
         ...this.branchStockTransferItem
       })
       this.cleanItem()
