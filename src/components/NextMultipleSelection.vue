@@ -55,7 +55,7 @@
         <b-table
           :ref="`multipleGrid${id}`"
           :fields="fields"
-          :items="list"
+          :items="list.filter(l => l.RecordState !== 4)"
           striped
           small
           sticky-header="300px"
@@ -193,6 +193,10 @@ export default {
     filterFunc: {
       type: Function,
       description: 'Seçilen listeleri filtrelemek için kullanılır'
+    },
+    initialValuesFunc: {
+      type: Function,
+      description: 'Update ekranı için alan eşitleme işlemi için kullanılır'
     }
   },
   model: {
@@ -216,7 +220,8 @@ export default {
       pagingRequest: {},
       allList: {},
       tableBusy: false,
-      pageSelectedList: []
+      pageSelectedList: [],
+      initialList: []
     }
   },
   methods: {
@@ -344,7 +349,10 @@ export default {
             return item
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
-            list = list.filter(l => !this.pageSelectedList.some(p => p.ItemId === l.ItemId))
+            list = list.filter(l =>
+              !l.RecordId ||
+              !l.ItemId ||
+              !this.pageSelectedList.some(p => p.ItemId === l.ItemId || p.ItemId === l.RecordId))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
               for (let index = 0; index < this.pageSelectedList.length; index++) {
@@ -366,6 +374,10 @@ export default {
     },
     show () {
       this.list = JSON.parse(JSON.stringify(this.value))
+      if (this.initialValuesFunc) {
+        this.list = this.initialValuesFunc(this.list)
+      }
+      this.initialList = [...this.list]
       this.pageSelectedList = [...this.list]
       setTimeout(() => {
         this.$refs[`multipleGrid${this.id}`].selectAllRows()
@@ -404,7 +416,7 @@ export default {
             validCount++
           }
         })
-        if (validCount === filteredList.length) {
+        if (validCount > 0) {
           this.$refs[`multipleGrid${this.id}`].selectRow(data.index)
         } else {
           this.$refs[`multipleGrid${this.id}`].unselectRow(data.index)
@@ -478,7 +490,17 @@ export default {
           return
         }
       }
-      this.$emit('valuechange', filteredList)
+
+      let removedList = this.initialList.filter(i => i.RecordId > 0 && i.RecordState > 1).map(item => {
+        let newItem = {
+          ...item,
+          RecordState: 4
+        }
+
+        return newItem
+      })
+      let allList = [...filteredList, ...removedList]
+      this.$emit('valuechange', allList)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {

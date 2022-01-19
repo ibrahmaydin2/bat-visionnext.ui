@@ -159,7 +159,7 @@ export default {
           key: 'DocumentDate',
           label: this.$t('insert.ediOrder.documentDate'),
           formatter: (value, key, item) => {
-            return this.dateConvertFromTimezone(item.DocumentDate)
+            return item.DocumentDate ? item.DocumentDate.slice(0, 10).split('-').reverse().join('/') : '-'
           }
         },
         {

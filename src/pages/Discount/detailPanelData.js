@@ -47,10 +47,10 @@ export const detailData = {
       modelProperty: 'TakenQuantity',
       label: i18n.t('insert.discount.takenQuantity'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
+        return mainForm.DiscountKindId !== 6
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
+        return mainForm.DiscountKindId === 6
       },
       visible: true,
       id: 4
@@ -58,27 +58,13 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'MinTakenQuantity',
-      label: i18n.t('insert.discount.minTakenQuantity'),
+      modelProperty: 'SharePercent',
+      label: i18n.t('insert.discount.sharePercent'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
+        return mainForm.DiscountKindId !== 6
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
-      },
-      visible: true,
-      id: 5
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
-      modelProperty: 'EndTakenQuantity',
-      label: i18n.t('insert.discount.endTakenQuantity'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 1
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountTypeId === 1
+        return mainForm.DiscountKindId === 6
       },
       visible: true,
       id: 6
@@ -86,30 +72,16 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'MinTakenAmount',
-      label: i18n.t('insert.discount.minTakenAmount'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 2
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountTypeId === 2
-      },
-      visible: true,
-      id: 7
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
       modelProperty: 'MaxTakenAmount',
       label: i18n.t('insert.discount.maxTakenAmount'),
       disabled (form, mainForm) {
-        return mainForm.DiscountTypeId !== 2
+        return mainForm.DiscountKindId !== 7 && mainForm.DiscountKindId !== 8
       },
       required (form, mainForm) {
-        return mainForm.DiscountTypeId === 2
+        return mainForm.DiscountKindId === 7 || mainForm.DiscountKindId === 8
       },
       visible: true,
-      id: 8
+      id: 5
     }
   ],
   discountGivenItems: [
@@ -163,6 +135,20 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'number',
+      modelProperty: 'GivenQuantity',
+      label: i18n.t('insert.discount.takenQuantity'),
+      disabled (form, mainForm) {
+        return mainForm.DiscountTypeId !== 1
+      },
+      required (form, mainForm) {
+        return mainForm.DiscountTypeId === 1
+      },
+      visible: true,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
       modelProperty: 'DiscountRate',
       label: i18n.t('insert.discount.discountRate'),
       disabled (form, mainForm) {
@@ -172,7 +158,7 @@ export const detailData = {
         return mainForm.DiscountKindId === 1 || mainForm.DiscountKindId === 7
       },
       visible: true,
-      id: 4
+      id: 5
     },
     {
       type: 'Text',
@@ -186,7 +172,7 @@ export const detailData = {
         return mainForm.DiscountKindId === 2 || mainForm.DiscountKindId === 8
       },
       visible: true,
-      id: 5
+      id: 6
     },
     {
       type: 'Text',
@@ -200,7 +186,7 @@ export const detailData = {
         return mainForm.DiscountKindId && mainForm.DiscountKindId !== 6
       },
       visible: true,
-      id: 6
+      id: 7
     },
     {
       type: 'Text',
@@ -214,20 +200,20 @@ export const detailData = {
         return mainForm.DiscountKindId && mainForm.DiscountKindId !== 6
       },
       visible: true,
-      id: 7
+      id: 8
     }
   ],
   discountCustomerItems: [
     {
       type: 'Autocomplete',
-      modelProperty: 'CustomerId',
-      objectKey: 'Customer',
+      modelProperty: 'ColumnValue',
+      objectKey: 'ColumnNameDesc',
       labelProperty: 'Code',
       customOption: true,
       isCustomer: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-      label: i18n.t('insert.discount.customerCode'),
+      url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
+      label: 'insert.discount.customerCode',
       required: true,
       visible: true,
       isUnique: true,
@@ -237,9 +223,9 @@ export const detailData = {
       type: 'Label',
       inputType: 'text',
       modelProperty: 'CommercialTitle',
-      objectKey: 'Customer',
+      objectKey: 'ColumnValueDesc',
       parentProperty: 'Description1',
-      label: i18n.t('insert.discount.customerName'),
+      label: 'insert.discount.customerName',
       visible: true,
       disabled: true,
       parentId: 1,
@@ -250,14 +236,33 @@ export const detailData = {
       inputType: 'text',
       modelProperty: 'Location',
       valueProperty: 'AddressDetail',
-      objectKey: 'Customer',
+      objectKey: 'ColumnValueDesc2',
       parentProperty: 'DefaultLocationId',
       url: 'VisionNextCustomer/api/CustomerLocation/Get',
-      label: i18n.t('insert.discount.location'),
+      label: 'insert.discount.location',
       visible: true,
       disabled: true,
       parentId: 1,
       id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'TableName',
+      hideOnTable: true,
+      defaultValue: 'T_CUSTOMER',
+      parentId: null,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'ColumnName',
+      parentProperty: null,
+      hideOnTable: true,
+      defaultValue: 'RECORD_ID',
+      parentId: null,
+      id: 5
     }
   ],
   discountExcludedCustomerItems: [
@@ -315,7 +320,7 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: true,
-      dynamicRequest: {paramId: 'T_CUSTOMER'},
+      dynamicRequest: {paramId: 'CUSTOMER_CRITERIA'},
       id: 1
     },
     {

@@ -1760,13 +1760,15 @@
     "RMA": {
       "Item": "Ürün Kodu",
       "ItemName": "Ürün Adı",
-      "Quantity": "İade Miktarı",
+      "Quantity": "Talep Edilen İade Miktarı",
       "Price": "Liste Miktarı",
       "lastSalesQuantity": "Son Satış Miktarı",
       "lastSalesPrice": "Son Satış Fiyatı",
       "meanPrice": "Ortalama Satış Fiyatı",
       "listPrice":"Liste Fiyatı",
-      "usedPrice": "İade Fiyatı"
+      "usedPrice": "İade Fiyatı",
+      "UsedQuantity": "İade Edilen Miktar",
+      "Cardboard": "Karton"
     },
     "RmaOrder": {
       "Item": "Ürün Kodu",
@@ -2000,7 +2002,9 @@
       "routeId":"Rota Id",
       "branchId":"Şube Id",
       "paymentTypeId": "Ödeme Tipi Id",
-      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!"
+      "listWillBeDeleted": "Seçili Kampanyalı Ürünler ve Kampanya Sonuçları silinecektir!",
+      "customersAndRoutesWillBeDeleted": "Seçmiş olduğunuz Rota ve Müşteriler silinecektir. Devam etmek istiyor musunuz?",
+      "sharePercent": "Dağıtım Oranı"
     },
     "discountPackage": {
       "PackageKindId": "uygulama Türü",

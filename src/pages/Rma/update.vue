@@ -21,7 +21,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('get.RMA.General')" :active="!developmentMode">
+        <b-tab :title="$t('get.RMA.General')" active>
           <b-row>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
               <NextDropdown
@@ -39,8 +39,9 @@
                 v-model="warehouse"
                 @input="selectedSearchType('WarehouseId', $event)"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"
                 label="Description1"
-                :disabled="insertReadonly.WarehouseId" searchable/>
+                :disabled="insertReadonly.WarehouseId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
@@ -112,7 +113,7 @@
         </b-tab>
         <b-tab :title="$t('get.RMA.Items')">
           <b-row>
-            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId">
+            <NextFormGroup :title="$t('insert.RMA.Item')" :required="true" :error="$v.rmaLine.Item.ItemId" md="3" lg="3">
               <NextDropdown
                 v-model="rmaLine.Item"
                 :search="searchItem"
@@ -120,31 +121,47 @@
                 searchable
                 :custom-option="true" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.ItemName')">
+            <NextFormGroup :title="$t('insert.RMA.ItemName')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesQuantity')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.LastSalesQuantity" :disabled="true"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')">
+            <NextFormGroup :title="$t('insert.RMA.lastSalesPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaLine.Quantity">
+            <NextFormGroup :title="$t('insert.RMA.Cardboard')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
               <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.meanPrice')">
+            <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.listPrice')">
+            <NextFormGroup :title="$t('insert.RMA.listPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.ListPrice" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.RMA.usedPrice')">
+            <NextFormGroup :title="$t('insert.RMA.usedPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.UsedPrice" :disabled="true"/>
             </NextFormGroup>
-            <b-col md="1" class="ml-auto">
-              <b-form-group>
-                <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
-              </b-form-group>
+            <b-col cols="12" md="6" lg="6">
+              <b-row>
+                <b-col md="3">
+                  <b-form-group>
+                    <b-button @click="addItems()" class="mt-4" variant="success" size="sm"><i class="fa fa-plus"></i>{{$t('insert.add')}}</b-button>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6">
+                  <NextMultipleSelection
+                    name="RmaMultipleItem"
+                    v-model="rmaLines"
+                    :disabled-button="!form.CustomerId"
+                    :dynamic-and-condition="{
+                      CustomerIds: [form.CustomerId],
+                      PriceDate: form.PriceDate
+                    }"
+                    :initial-values-func="initialValues"
+                    :filter-func="(row) => row.Quantity > 0"/>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
           <b-row>
@@ -153,24 +170,20 @@
                 <b-thead>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
-                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
-                  <b-th><span>{{$t('insert.RMA.lastSalesPrice')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
-                  <b-th><span>{{$t('insert.RMA.meanPrice')}}</span></b-th>
-                  <b-th><span>{{$t('insert.RMA.listPrice')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.UsedQuantity')}}</span></b-th>
+                  <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
                   <b-th><span>{{$t('insert.RMA.usedPrice')}}</span></b-th>
                   <b-th><span>{{$t('list.operations')}}</span></b-th>
                 </b-thead>
                 <b-tbody>
                   <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
-                    <b-td>{{w.Item.Code}}</b-td>
-                    <b-td>{{w.Item.Description1}}</b-td>
-                    <b-td>{{w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
-                    <b-td>{{w.Item.LastPrice ? w.Item.LastPrice : w.LastPrice}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
+                    <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
                     <b-td>{{w.Quantity}}</b-td>
-                    <b-td>{{w.Item.MeanPrice ? w.Item.MeanPrice : w.MeanPrice}}</b-td>
-                    <b-td>{{w.Item.ListPrice ? w.Item.ListPrice : w.ListPrice}}</b-td>
-                    <b-td>{{w.Item.UsedPrice ? w.Item.UsedPrice : w.UsedPrice}}</b-td>
+                    <b-td>{{getReturnQuantity(w)}}</b-td>
+                    <b-td>{{w.Item && w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
+                    <b-td>{{getPrice(w)}}</b-td>
                     <b-td class="text-center">
                       <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
                         <i class="far fa-trash-alt"></i>
@@ -243,7 +256,17 @@ export default {
       rmaType: null,
       route: null,
       rmaReason: null,
-      routeName1: 'Rma'
+      routeName1: 'Rma',
+      initialValues: (values) => {
+        values.map(value => {
+          value.Code = value.Item ? value.Item.Code : value.Code
+          value.Description1 = value.Item ? value.Item.Description1 : value.Description1
+
+          return value
+        })
+
+        return values
+      }
     }
   },
   mounted () {
@@ -313,6 +336,8 @@ export default {
       this.rmaLine.RmaQuantity1 = this.rmaLine.Quantity
       this.rmaLine.RmaUnit1Id = this.rmaLine.UnitId
       this.rmaLine.RmaReasonId = this.form.RmaReasonId
+      this.rmaLine.Code = value.Code
+      this.rmaLine.Description1 = value.Description1
     },
     initNullRmaLine () {
       this.rmaLine = {
@@ -331,7 +356,9 @@ export default {
         RmaQuantity1: null,
         RmaUnit1Id: null,
         Price: null,
-        Item: {}
+        Item: {
+          Code: ''
+        }
       }
     },
     save () {
@@ -364,9 +391,9 @@ export default {
             RmaUnit1Id: item.RmaUnit1Id,
             Price: item.Price,
             Item: {
-              Description1: item.Item.Description1,
-              Code: item.Item.Code,
-              RecordId: item.Item.RecordId
+              Description1: item.Item ? item.Item.Description1 : item.Description1,
+              Code: item.Item ? item.Item.Code : item.Code,
+              RecordId: item.Item ? item.Item.RecordId : item.RecordId
             },
             RmaId: item.RmaId
           }
@@ -427,6 +454,34 @@ export default {
         this.rmaReason = this.convertLookupValueToSearchValue(e.RmaReason)
         this.rmaStatus = e.RmaStatus
         this.rmaType = e.RmaType
+      }
+    },
+    getPrice (data) {
+      if (data.Item) {
+        if (data.Item.Price) {
+          return data.Item.Price
+        } else {
+          return data.Item.UsedPrice
+        }
+      } else if (data.Price) {
+        return data.Price
+      } else {
+        return data.UsedPrice
+      }
+    },
+    getReturnQuantity (data) {
+      if (data.Item) {
+        if (data.Item.SalesQuantity1 || data.Item.SalesQuantity1 === 0) {
+          return data.Item.SalesQuantity1
+        } else if (data.SalesQuantity1 || data.SalesQuantity1 === 0) {
+          return data.SalesQuantity1
+        } else {
+          return data.UsedQuantity
+        }
+      } else if (data.SalesQuantity1 || data.SalesQuantity1 === 0) {
+        return data.SalesQuantity1
+      } else {
+        return data.UsedQuantity
       }
     }
   },

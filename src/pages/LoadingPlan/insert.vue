@@ -56,10 +56,18 @@
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
               <NextInput type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
             </NextFormGroup>
-            <b-col cols="12" md="2" class="ml-auto">
+            <b-col cols="12" md="1">
               <b-form-group>
                 <AddDetailButton @click.native="addItems" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <NextMultipleSelection
+                name="LoadingPlanMultipleItem "
+                v-model="form.LoadingPlanItems"
+                :hidden-values="hiddenValues"
+                :filter-func="(row) => row.PlanQuantity > 0"
+                :validations="multipleValidations" />
             </b-col>
           </b-row>
           <b-row>
@@ -105,7 +113,24 @@ export default {
       detailPanel: {
         item: null,
         planQuantity: null
-      }
+      },
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'PlanQuantity',
+          validation: (value, data) => {
+            if (!value || parseFloat(value) <= 0) {
+              return false
+            }
+            return true
+          }
+        }
+      ]
     }
   },
   computed: {
