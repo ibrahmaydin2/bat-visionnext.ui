@@ -110,7 +110,10 @@
                   :hidden-values="hiddenValues"
                   :dynamic-and-condition="multipleDynamicAndCondition">
                 </NextMultipleSelection>
-                <NextCustomerMultipleSearch v-model="customers" :dynamic-and-condition="multipleDynamicAndCondition" />
+                <NextCustomerMultipleSearch
+                  v-model="customers"
+                  :dynamic-and-condition="multipleDynamicAndCondition"
+                  :convertedValues="customerConvertedValues" />
               </div>
             </template>
           </NextDetailPanel>
@@ -231,6 +234,32 @@ export default {
           mainProperty: 'SortOrder',
           targetProperty: 'LineNumber',
           getValue: (value, data) => value
+        }
+      ],
+      customerConvertedValues: [
+        {
+          mainProperty: 'TableName',
+          convert: () => 'T_CUSTOMER'
+        },
+        {
+          mainProperty: 'ColumnName',
+          convert: () => 'RECORD_ID'
+        },
+        {
+          mainProperty: 'ColumnValue',
+          convert: (data) => data.RecordId
+        },
+        {
+          mainProperty: 'ColumnNameDesc',
+          convert: (data) => data.Code
+        },
+        {
+          mainProperty: 'CustomerName',
+          convert: (data) => data.CommercialTitle
+        },
+        {
+          mainProperty: 'Location',
+          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
         }
       ]
     }

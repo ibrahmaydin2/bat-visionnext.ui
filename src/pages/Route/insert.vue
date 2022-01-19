@@ -111,7 +111,19 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  name="RouteMultipleCustomer"
+                  v-model="form.RouteDetails"
+                  :hidden-values="hiddenValues"
+                  :dynamic-required-filters="dynamicRequiredFilters"
+                  :dynamic-disabled-filters="dynamicDisabledFilters"
+                  :change-branch-id="true" />
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -172,7 +184,37 @@ export default {
         }
       ],
       selectedLocation: null,
-      selectedLocationIndex: null
+      selectedLocationIndex: null,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'CustomerId'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'Location'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'Customer'
+        }
+      ],
+      dynamicDisabledFilters: [
+        {
+          mainProperty: 'BranchId',
+          disabled: () => this.form.IsSuperRoute !== 1
+        }
+      ],
+      dynamicRequiredFilters: [
+        {
+          mainProperty: 'BranchId',
+          required: () => this.form.IsSuperRoute === 1
+        }
+      ]
     }
   },
   computed: {
