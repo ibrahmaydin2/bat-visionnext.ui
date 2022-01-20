@@ -168,7 +168,9 @@ export default {
           this.setLang('en', 'Türkçe')
           break
       }
-      location.reload()
+      this.resetCache().then(() => {
+        location.reload()
+      })
     },
     openModal (title, content) {
       this.modalContent = null
@@ -181,6 +183,14 @@ export default {
       this.toggleLang = toggleLang
       localStorage.setItem('selectedLang', lang)
       localStorage.setItem('LanguageId', !lang || lang === 'tr' ? 1 : 2)
+    },
+    async resetCache () {
+      let request = {
+        Model: {
+          DBNumber: 15
+        }
+      }
+      return this.$api.postByUrl(request, 'VisionNextCommonApi/api/RedisSettings/RedisCacheReset')
     }
   },
   watch: {

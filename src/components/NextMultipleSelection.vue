@@ -10,37 +10,52 @@
         {{action.Title}}
       </template>
       <b-row>
-        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.Label" :required="item.Required" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]">
+        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
           <div v-if="item.modelControlUtil != null">
             <NextDropdown
               v-if="item.modelControlUtil.InputType === 'AutoComplete'"
+              v-model="selectModel[item.EntityProperty]"
               :default-value="item.DefaultValue"
-              :url="item.modelControlUtil.ServiceUrl" searchable :disabled="item.disabled"
+              :url="item.modelControlUtil.ServiceUrl" searchable :disabled="getDisabled(item)"
               @input="selectDropdown($event, item)"
               custom-option
               :dynamic-and-condition="getCondtionModel(item.modelControlUtil.AndConditions)">
             </NextDropdown>
              <NextDropdown
               v-else-if="item.modelControlUtil.IsLookupTable"
+              v-model="selectModel[item.EntityProperty]"
               :default-value="item.DefaultValue"
-              :lookup-key="item.modelControlUtil.Code" :disabled="item.disabled"
+              :lookup-key="item.modelControlUtil.Code" :disabled="getDisabled(item)"
               :get-lookup="true"
               @input="selectDropdown($event, item)">
             </NextDropdown>
              <NextDropdown
               v-else
+              v-model="selectModel[item.EntityProperty]"
               :default-value="item.DefaultValue"
-              :url="item.modelControlUtil.ServiceUrl" :disabled="item.disabled"
+              :url="item.modelControlUtil.ServiceUrl" :disabled="getDisabled(item)"
               @input="selectDropdown($event, item)"
               custom-option
               :dynamic-and-condition="getCondtionModel(item.modelControlUtil.AndConditions)">
             </NextDropdown>
           </div>
-          <NextCheckBox v-if="item.ColumnType === 'Boolean'" v-model="form[item.EntityProperty]" type="number" toggle ></NextCheckBox>
-          <NextDatePicker v-if="item.ColumnType === 'DateTime'" v-model="form[item.EntityProperty]"></NextDatePicker>
-          <NextTimePicker v-if="item.ColumnType === 'Time'" v-model="form[item.EntityProperty]"></NextTimePicker>
-          <NextInput v-if="item.ColumnType === 'String'" type="text" v-model="form[item.EntityProperty]"></NextInput>
-          <NextInput v-if="item.ColumnType === 'Decimal'" type="number" v-model="form[item.EntityProperty]"></NextInput>
+          <NextCheckBox v-if="item.ColumnType === 'Boolean'" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)" type="number" toggle></NextCheckBox>
+          <NextDatePicker v-if="item.ColumnType === 'DateTime'" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextDatePicker>
+          <NextTimePicker v-if="item.ColumnType === 'Time'" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextTimePicker>
+          <NextInput v-if="item.ColumnType === 'String'" type="text" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextInput>
+          <NextInput v-if="item.ColumnType === 'Decimal'" type="number" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextInput>
+          <div class="accordion" role="tablist" v-if="item.ColumnType === 'CodeText'">
+            <b-card no-body class="mb-1" :active="false">
+              <b-card-header header-tag="header" class="p-1" role="tab">
+                <b-button block v-b-toggle.code-accordion variant="info">{{item.Label}}</b-button>
+              </b-card-header>
+              <b-collapse id="code-accordion" accordion="code-accordion" role="tabpanel">
+                <b-card-body class="code-text">
+                  <NextTextArea v-model="form[item.EntityProperty]" :rows="6" :disabled="getDisabled(item)"></NextTextArea>
+                </b-card-body>
+              </b-collapse>
+            </b-card>
+          </div>
         </NextFormGroup>
         <b-col cols="12" md="12">
           <b-form-group class="float-right">
@@ -111,7 +126,13 @@
                 </NextDropdown>
               </div>
               <NextCheckBox :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Boolean'" type="number" toggle v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextCheckBox>
-              <NextDatePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'DateTime'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextDatePicker>
+              <NextDatePicker
+                class="min-width"
+                :tabindex="data.index+1"
+                v-if="data.field.column.ColumnType === 'DateTime'"
+                v-model="data.item[data.field.key]"
+                @input="setConvertedValues($event, data)"
+                :format-option="{ year: 'numeric', month: '2-digit', day: '2-digit' }"></NextDatePicker>
               <NextTimePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Time'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextTimePicker>
               <NextInput
                 :tabindex="data.index+1"
@@ -119,7 +140,7 @@
                 v-if="data.field.column.ColumnType === 'String' || data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                type="number"
+                :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
                 :input-class="data.item.class"
                 @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
@@ -129,7 +150,7 @@
         <b-pagination
           :total-rows="totalRowCount"
           v-model="currentPage"
-          :per-page="100"
+          :per-page="recordCount"
           :aria-controls="id"
           :disabled="tableBusy"
         ></b-pagination>
@@ -197,6 +218,30 @@ export default {
     initialValuesFunc: {
       type: Function,
       description: 'Update ekranı için alan eşitleme işlemi için kullanılır'
+    },
+    dynamicDisabledFilters: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Filtre alanlarının dinamik disabled bilgisi'
+    },
+    dynamicRequiredFilters: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Filtre alanlarının dinamik required bilgisi'
+    },
+    changeBranchId: {
+      type: Boolean,
+      default: false,
+      description: 'BranchId filtresi varsa isteklerde base de giden branchId değiştirilsin mi özelliği'
+    },
+    orderByColumns: {
+      type: Object,
+      description: 'Liste çekilirken sıralama opsiyonu gönderir'
+    },
+    recordCount: {
+      type: Number,
+      default: 100,
+      description: 'Listenin pageRecordCount değerini setler'
     }
   },
   model: {
@@ -221,7 +266,9 @@ export default {
       allList: {},
       tableBusy: false,
       pageSelectedList: [],
-      initialList: []
+      initialList: [],
+      selectModel: {},
+      dynamicValidations: {}
     }
   },
   methods: {
@@ -229,6 +276,15 @@ export default {
       this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
         this.action = response.Action
         this.searchItems = response.SearchItems
+        let items = {}
+        this.searchItems.map(s => {
+          if (s.modelControlUtil) {
+            items[s.modelControlUtil.ModelProperty] = null
+          }
+        })
+        this.form = {
+          ...items
+        }
         this.listItems = response.ListItems
         this.fields = this.listItems.sort((a, b) => {
           return a.UiControlOrder < b.UiControlOrder
@@ -277,11 +333,14 @@ export default {
     selectDropdown (data, item) {
       let isLookupTable = item.modelControlUtil.IsLookupTable
       let valueProperty = isLookupTable ? 'DecimalValue' : 'RecordId'
-      if (data) {
-        this.form[item.modelControlUtil.ModelProperty] = [data[valueProperty]]
-      } else {
-        this.form[item.modelControlUtil.ModelProperty] = null
-      }
+      this.$nextTick(() => {
+        if (data) {
+          this.form[item.modelControlUtil.ModelProperty] = [data[valueProperty]]
+        } else {
+          this.form[item.modelControlUtil.ModelProperty] = null
+        }
+        this.$forceUpdate()
+      })
     },
     getList (isPaging) {
       this.$v.form.$touch()
@@ -296,14 +355,30 @@ export default {
           })
           return
         }
-
+        let form = {...this.form}
+        let textProperties = this.searchItems.filter(s => s.ColumnType === 'CodeText')
+        if (textProperties.length > 0) {
+          textProperties.map(t => {
+            if (this.form[t.EntityProperty]) {
+              form[t.EntityProperty] = this.form[t.EntityProperty].split(/\r?\n/)
+            }
+          })
+        }
         request = {
           andConditionModel: {
-            ...this.form,
+            ...form,
             ...this.dynamicAndCondition,
             ...this.getCondtionModel(this.action.AndConditionModels)
           },
           orConditionModel: this.getCondtionModel(this.action.OrConditionModels)
+        }
+
+        if (this.orderByColumns) {
+          request.OrderByColumns = this.orderByColumns
+        }
+
+        if (this.changeBranchId && form.BranchIds && form.BranchIds.length > 0) {
+          request.branchId = form.BranchIds[0]
         }
 
         this.isLoading = true
@@ -330,7 +405,7 @@ export default {
 
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
-      this.$api.postByUrl(request, this.action.ActionUrl, 100).then((response) => {
+      this.$api.postByUrl(request, this.action.ActionUrl, this.recordCount).then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
         this.tableBusy = false
@@ -350,9 +425,8 @@ export default {
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
             list = list.filter(l =>
-              !l.RecordId ||
-              !l.ItemId ||
-              !this.pageSelectedList.some(p => p.ItemId === l.ItemId || p.ItemId === l.RecordId))
+              (l.RecordId && !this.pageSelectedList.some(p => p.ItemId === l.RecordId || p.CustomerId === l.RecordId)) ||
+              (l.ItemId && !this.pageSelectedList.some(p => p.ItemId === l.ItemId)))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
               for (let index = 0; index < this.pageSelectedList.length; index++) {
@@ -370,9 +444,9 @@ export default {
       this.form = {}
       this.currentPage = 1
       this.totalRowCount = this.value.length
-      this.$v.form.$reset()
     },
     show () {
+      this.$v.form.$reset()
       this.list = JSON.parse(JSON.stringify(this.value))
       if (this.initialValuesFunc) {
         this.list = this.initialValuesFunc(this.list)
@@ -382,6 +456,11 @@ export default {
       setTimeout(() => {
         this.$refs[`multipleGrid${this.id}`].selectAllRows()
       }, 10)
+      if (this.dynamicRequiredFilters.length > 0) {
+        this.dynamicRequiredFilters.map(d => {
+          this.dynamicValidations[d.mainProperty] = d.required()
+        })
+      }
     },
     showModal () {
       this.getFormFields()
@@ -537,6 +616,38 @@ export default {
         }
         event.preventDefault()
       }
+    },
+    getRequired (item) {
+      let filteredArr = this.dynamicRequiredFilters.length > 0
+        ? this.dynamicRequiredFilters.filter(r => r.mainProperty === item.EntityProperty)
+        : []
+
+      if (filteredArr.length > 0) {
+        return filteredArr[0].required()
+      } else {
+        return item.Required
+      }
+    },
+    getDisabled (item) {
+      let filteredArr = this.dynamicDisabledFilters.length > 0
+        ? this.dynamicDisabledFilters.filter(r => r.mainProperty === item.EntityProperty)
+        : []
+
+      if (filteredArr.length > 0) {
+        let disabled = filteredArr[0].disabled()
+        if (disabled) {
+          if (this.selectModel[item.EntityProperty]) {
+            this.selectModel[item.EntityProperty] = null
+          }
+          let property = item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty
+          if (this.form[property]) {
+            this.form[property] = null
+          }
+        }
+        return filteredArr[0].disabled()
+      } else {
+        return item.disabled
+      }
     }
   },
   validations () {
@@ -545,6 +656,9 @@ export default {
       let property = item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty
       form[property] = {
         required: requiredIf(function () {
+          if (this.dynamicValidations[item.EntityProperty] === true || this.dynamicValidations[item.EntityProperty] === false) {
+            return this.dynamicValidations[item.EntityProperty]
+          }
           return item.Required
         })
       }
@@ -582,5 +696,12 @@ export default {
 .error, .error input {
   border-color: red;
   border-width: 2px;
+}
+.min-width {
+  min-width: 125px;
+}
+.code-text {
+  padding: 0.25rem !important;
+  height: 100%;
 }
 </style>

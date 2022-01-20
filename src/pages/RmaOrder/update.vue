@@ -121,6 +121,7 @@
                 :hidden-values="hiddenValues"
                 :initial-values-func="initialValue"
                 :filter-func="(row) => row.Quantity > 0"
+                :order-by-columns="[{column: 'SortOrder', orderByType: 0}]"
               />
             </b-col>
           </b-row>

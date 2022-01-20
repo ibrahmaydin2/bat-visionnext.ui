@@ -120,7 +120,21 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons"/>
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">7
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  name="RouteMultipleCustomer"
+                  v-model="form.RouteDetails"
+                  :hidden-values="hiddenValues"
+                  :initial-values-func="initialValues"
+                  :dynamic-required-filters="dynamicRequiredFilters"
+                  :dynamic-disabled-filters="dynamicDisabledFilters"
+                  :change-branch-id="true"
+                  :record-count="20" />
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -197,6 +211,36 @@ export default {
           getDetail: (data) => {
             this.showMap(data)
           }
+        }
+      ],
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'CustomerId'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'Location'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'Customer'
+        }
+      ],
+      dynamicDisabledFilters: [
+        {
+          mainProperty: 'BranchId',
+          disabled: () => this.form.IsSuperRoute !== 1
+        }
+      ],
+      dynamicRequiredFilters: [
+        {
+          mainProperty: 'BranchId',
+          required: () => this.form.IsSuperRoute === 1
         }
       ]
     }
@@ -419,6 +463,22 @@ export default {
         model.RecordState = 3
       }
       this.form.RouteDetails[index] = model
+    },
+    initialValues: (values) => {
+      values.map(value => {
+        if (value.Location) {
+          value.DefaultLocation = value.Location
+        }
+        if (value.Customer) {
+          value.Code = value.Customer.Code
+          value.Description1 = value.Customer.Label
+        }
+        if (value.AddressDesc) {
+          value.AdressDetail = value.AddressDesc
+        }
+        return value
+      })
+      return values
     }
   },
   validations () {
