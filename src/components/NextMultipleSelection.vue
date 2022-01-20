@@ -115,7 +115,13 @@
                 </NextDropdown>
               </div>
               <NextCheckBox :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Boolean'" type="number" toggle v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextCheckBox>
-              <NextDatePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'DateTime'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextDatePicker>
+              <NextDatePicker
+                class="min-width"
+                :tabindex="data.index+1"
+                v-if="data.field.column.ColumnType === 'DateTime'"
+                v-model="data.item[data.field.key]"
+                @input="setConvertedValues($event, data)"
+                :format-option="{ year: 'numeric', month: '2-digit', day: '2-digit' }"></NextDatePicker>
               <NextTimePicker :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Time'" v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextTimePicker>
               <NextInput
                 :tabindex="data.index+1"
@@ -133,7 +139,7 @@
         <b-pagination
           :total-rows="totalRowCount"
           v-model="currentPage"
-          :per-page="100"
+          :per-page="recordCount"
           :aria-controls="id"
           :disabled="tableBusy"
         ></b-pagination>
@@ -220,6 +226,11 @@ export default {
     orderByColumns: {
       type: Object,
       description: 'Liste çekilirken sıralama opsiyonu gönderir'
+    },
+    recordCount: {
+      type: Number,
+      default: 100,
+      description: 'Listenin pageRecordCount değerini setler'
     }
   },
   model: {
@@ -383,7 +394,7 @@ export default {
 
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
-      this.$api.postByUrl(request, this.action.ActionUrl, 100).then((response) => {
+      this.$api.postByUrl(request, this.action.ActionUrl, this.recordCount).then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
         this.tableBusy = false
@@ -674,5 +685,8 @@ export default {
 .error, .error input {
   border-color: red;
   border-width: 2px;
+}
+.min-width {
+  min-width: 125px;
 }
 </style>

@@ -11,7 +11,7 @@
       format="YYYY-MM-DD"
       value-type="format"
       :disabled="disabled" ></date-picker>
-      <b-form-datepicker v-else @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
+      <b-form-datepicker :date-format-options="formatOption" v-else @input="input($event)" v-model="selectedValue" locale="tr" :disabled="disabled" :placeholder="$t('insert.chooseDate')"/>
   </div>
 </template>
 <script>
@@ -26,7 +26,8 @@ export default {
   props: {
     value: null,
     disabled: null,
-    range: false
+    range: false,
+    formatOption: null
   },
   data () {
     return {
