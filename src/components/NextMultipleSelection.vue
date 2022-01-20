@@ -10,7 +10,7 @@
         {{action.Title}}
       </template>
       <b-row>
-        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.Label" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]">
+        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
           <div v-if="item.modelControlUtil != null">
             <NextDropdown
               v-if="item.modelControlUtil.InputType === 'AutoComplete'"
@@ -44,7 +44,18 @@
           <NextTimePicker v-if="item.ColumnType === 'Time'" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextTimePicker>
           <NextInput v-if="item.ColumnType === 'String'" type="text" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextInput>
           <NextInput v-if="item.ColumnType === 'Decimal'" type="number" v-model="form[item.EntityProperty]" :disabled="getDisabled(item)"></NextInput>
-          <NextTextArea v-if="item.ColumnType === 'Text'" v-model="form[item.EntityProperty]" :rows="4" :disabled="getDisabled(item)"></NextTextArea>
+          <div class="accordion" role="tablist" v-if="item.ColumnType === 'CodeText'">
+            <b-card no-body class="mb-1" :active="false">
+              <b-card-header header-tag="header" class="p-1" role="tab">
+                <b-button block v-b-toggle.code-accordion variant="info">{{item.Label}}</b-button>
+              </b-card-header>
+              <b-collapse id="code-accordion" accordion="code-accordion" role="tabpanel">
+                <b-card-body class="code-text">
+                  <NextTextArea v-model="form[item.EntityProperty]" :rows="6" :disabled="getDisabled(item)"></NextTextArea>
+                </b-card-body>
+              </b-collapse>
+            </b-card>
+          </div>
         </NextFormGroup>
         <b-col cols="12" md="12">
           <b-form-group class="float-right">
@@ -129,7 +140,7 @@
                 v-if="data.field.column.ColumnType === 'String' || data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                type="number"
+                :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
                 :input-class="data.item.class"
                 @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
@@ -345,7 +356,7 @@ export default {
           return
         }
         let form = {...this.form}
-        let textProperties = this.searchItems.filter(s => s.ColumnType === 'Text')
+        let textProperties = this.searchItems.filter(s => s.ColumnType === 'CodeText')
         if (textProperties.length > 0) {
           textProperties.map(t => {
             if (this.form[t.EntityProperty]) {
@@ -414,7 +425,7 @@ export default {
           })
           if (this.currentPage === 1 && this.pageSelectedList.length > 0) {
             list = list.filter(l =>
-              (l.RecordId && !this.pageSelectedList.some(p => p.ItemId === l.RecordId)) ||
+              (l.RecordId && !this.pageSelectedList.some(p => p.ItemId === l.RecordId || p.CustomerId === l.RecordId)) ||
               (l.ItemId && !this.pageSelectedList.some(p => p.ItemId === l.ItemId)))
             list = [...this.pageSelectedList, ...list]
             setTimeout(() => {
@@ -688,5 +699,9 @@ export default {
 }
 .min-width {
   min-width: 125px;
+}
+.code-text {
+  padding: 0.25rem !important;
+  height: 100%;
 }
 </style>
