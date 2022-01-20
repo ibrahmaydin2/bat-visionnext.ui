@@ -120,7 +120,8 @@
                   :hidden-values="hiddenValues"
                   :dynamic-required-filters="dynamicRequiredFilters"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
-                  :change-branch-id="true" />
+                  :change-branch-id="true"
+                  :record-count="20" />
               </div>
             </template>
           </NextDetailPanel>
