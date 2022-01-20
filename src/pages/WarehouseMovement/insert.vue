@@ -71,14 +71,14 @@
                 :dynamic-and-condition="{ StatusIds: [1] } && getFromWarehouseAndCondition()"
                 @input="selectFromWarehouse($event)"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :disabled="(movementType && movementType.Code === '04') || isItemAdded || insertReadonly.FromWarehouseId" />
+                :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || insertReadonly.FromWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
               <NextDropdown
                 v-model="fromWarehouse"
                 @input="selectFromWarehouse($event)"
                 :source="fromWarehouses"
-                :disabled="(movementType && movementType.Code === '04') || isItemAdded || insertReadonly.FromWarehouseId" />
+                :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || insertReadonly.FromWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="FromStatusId" :error="$v.form.FromStatusId" md="3" lg="3">
               <NextDropdown
