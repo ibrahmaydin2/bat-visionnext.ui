@@ -229,6 +229,10 @@ export default {
         {
           mainProperty: 'Code',
           targetProperty: 'Customer'
+        },
+        {
+          mainProperty: 'DefaultLocationId',
+          targetProperty: 'LocationId'
         }
       ],
       dynamicDisabledFilters: [
