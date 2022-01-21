@@ -127,7 +127,7 @@
               </div>
               <NextCheckBox :tabindex="data.index+1" v-if="data.field.column.ColumnType === 'Boolean'" type="number" toggle v-model="data.item[data.field.key]" @input="setConvertedValues($event, data)"></NextCheckBox>
               <NextDatePicker
-                class="min-width"
+                class="min-date-width"
                 :tabindex="data.index+1"
                 v-if="data.field.column.ColumnType === 'DateTime'"
                 v-model="data.item[data.field.key]"
@@ -141,7 +141,7 @@
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
                 :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
-                :input-class="data.item.class"
+                :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
             <span v-else v-html="data.value"></span>
@@ -276,6 +276,7 @@ export default {
       this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
         this.action = response.Action
         this.searchItems = response.SearchItems
+        this.setDefaultValues()
         let items = {}
         this.searchItems.map(s => {
           if (s.modelControlUtil) {
@@ -636,17 +637,34 @@ export default {
       if (filteredArr.length > 0) {
         let disabled = filteredArr[0].disabled()
         if (disabled) {
-          if (this.selectModel[item.EntityProperty]) {
+          if (this.selectModel[item.EntityProperty] && !this.changeBranchId) {
             this.selectModel[item.EntityProperty] = null
           }
           let property = item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty
-          if (this.form[property]) {
+          if (this.form[property] && !this.changeBranchId) {
             this.form[property] = null
           }
         }
         return filteredArr[0].disabled()
       } else {
         return item.disabled
+      }
+    },
+    setDefaultValues () {
+      if (this.changeBranchId) {
+        let fiteredList = this.dynamicDisabledFilters.filter(r => r.mainProperty === 'BranchId')
+        if (fiteredList.length > 0 && fiteredList[0].disabled()) {
+          let branchId = this.$store.state.BranchId
+          let branchName = localStorage.getItem('branchName')
+
+          this.$nextTick(() => {
+            this.selectModel.BranchId = {
+              RecordId: branchId,
+              Description1: branchName
+            }
+            this.form.BranchIds = [parseInt(branchId)]
+          })
+        }
       }
     }
   },
@@ -697,8 +715,11 @@ export default {
   border-color: red;
   border-width: 2px;
 }
-.min-width {
+.min-date-width {
   min-width: 125px;
+}
+.min-input-width {
+  min-width: 75px;
 }
 .code-text {
   padding: 0.25rem !important;
