@@ -155,6 +155,7 @@
                   v-model="form.WarehouseMovementItems"
                   :disabled-button="disabledMultipleSelection"
                   :hidden-values="multipleHiddenValues"
+                  :validations="multipleValidations"
                   :dynamic-and-condition="{
                     FromWarehouseIds: form.FromWarehouseId ? [form.FromWarehouseId] : null,
                     ToWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
@@ -258,6 +259,19 @@ export default {
         {
           mainProperty: 'ToQuantity',
           targetProperty: 'ToWhStockQuantity'
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value > data.FromQuantity) {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
+              return false
+            }
+
+            return true
+          }
         }
       ]
     }
