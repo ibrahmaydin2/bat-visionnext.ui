@@ -144,6 +144,12 @@
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDot($event)"></NextInput>
             </div>
+            <span
+              v-else-if="data.value && data.value.toString().length > 20"
+              v-b-tooltip.hover
+              :title="data.value"
+              v-html="`${data.value.toString().substring(0, 20)}...`">
+            </span>
             <span v-else v-html="data.value"></span>
           </template>
         </b-table>
