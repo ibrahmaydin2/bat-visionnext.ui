@@ -114,7 +114,7 @@
           <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">
             <template slot="grid">
               <div cols="12" md="2">
-                <NextMultipleSelection
+                <NextMultipleSelection2
                   name="RouteMultipleCustomer"
                   v-model="form.RouteDetails"
                   :hidden-values="hiddenValues"
