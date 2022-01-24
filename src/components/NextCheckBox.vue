@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-checkbox v-if="inputType === 'Boolean'" v-model="model" name="check-button" :switch="toggle" :disabled="disabled" @input="input($event)">
+    <b-form-checkbox :class="inputClass" v-if="inputType === 'Boolean'" v-model="model" name="check-button" :switch="toggle" :disabled="disabled" @input="input($event)">
       <span v-if="showText">{{model ? textActive : textPassive}}</span>
     </b-form-checkbox>
     <b-form-radio-group
@@ -35,7 +35,8 @@ export default {
       type: Boolean,
       default: true
     },
-    radio: Boolean
+    radio: Boolean,
+    inputClass: String
   },
   model: {
     prop: 'value',

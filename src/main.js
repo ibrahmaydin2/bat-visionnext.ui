@@ -75,6 +75,7 @@ import CommonInfoModal from './components/Actions/CommonInfoModal'
 import NextMultipleSelection from './components/NextMultipleSelection'
 import CommonExcelModal from './components/Actions/CommonExcelModal'
 import NextCustomerMultipleSearch from './components/NextCustomerMultipleSearch'
+import NextMultipleSelection2 from './components/NextMultipleSelection2'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -157,6 +158,7 @@ Vue.component('NextMultipleSelection', NextMultipleSelection)
 Vue.component('CommonExcelModal', CommonExcelModal)
 Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
 Vue.component('DateRangePicker', DateRangePicker)
+Vue.component('NextMultipleSelection2', NextMultipleSelection2)
 
 let apiManager = new ApiManager()
 Vue.prototype.$api = apiManager
