@@ -121,7 +121,8 @@
                   :dynamic-required-filters="dynamicRequiredFilters"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
                   :change-branch-id="true"
-                  :record-count="20" />
+                  :record-count="20"
+                  :after-func="editForm" />
               </div>
             </template>
           </NextDetailPanel>
@@ -319,6 +320,7 @@ export default {
       }
     },
     editForm (form) {
+      debugger
       form.Day1FreStartDate = form.DayFreStartDate
       form.Day2FreStartDate = form.DayFreStartDate
       form.Day3FreStartDate = form.DayFreStartDate

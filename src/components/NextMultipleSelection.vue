@@ -242,6 +242,10 @@ export default {
       type: Number,
       default: 100,
       description: 'Listenin pageRecordCount değerini setler'
+    },
+    afterFunc: {
+      type: Function,
+      description: 'Eklemeden Önce data manipülasyonu yapar'
     }
   },
   model: {
@@ -580,6 +584,9 @@ export default {
         return newItem
       })
       let allList = [...filteredList, ...removedList]
+      if (this.afterFunc) {
+        allList = allList.map(a => this.afterFunc(a))
+      }
       this.$emit('valuechange', allList)
       this.closeModal()
     },
