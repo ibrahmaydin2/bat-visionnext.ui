@@ -59,7 +59,11 @@
                   bordered
                   :current-page="currentPage"
                   :per-page="0"
-                ></b-table>
+                >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
+                </b-table>
                 <b-pagination
                   :total-rows="totalRowCount"
                   v-model="currentPage"
@@ -89,24 +93,24 @@ export default {
       },
       customerGuarantees: [],
       customerGuaranteeFields: [
-        {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
+        {key: 'AppStatus', label: 'insert.creditBudget.status', sortable: false},
         {
           key: 'CustomerDesc',
-          label: this.$t('insert.creditBudget.customer'),
+          label: 'insert.creditBudget.customer',
           sortable: false,
           formatter (value, key, obj) {
             return `${obj.CustomerCode} - ${obj.CustomerDesc}`
           }
         },
-        {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
-        {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
-        {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
-        {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
-        {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
-        {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
-        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
-        {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
-        {key: 'PaymentPeriodDesc', label: this.$t('insert.creditBudget.paymentPeriod'), sortable: false}
+        {key: 'CreditLimit', label: 'insert.creditBudget.creditLimit', sortable: false},
+        {key: 'RiskLimit', label: 'insert.creditBudget.riskLimit', sortable: false},
+        {key: 'CurrentCredit', label: 'insert.creditBudget.currentCredit', sortable: false},
+        {key: 'CurrentRisk', label: 'insert.creditBudget.currentRisk', sortable: false},
+        {key: 'CreditAccountRemainder', label: 'insert.creditBudget.creditAccountRemainder', sortable: false},
+        {key: 'DebitAccountRemainder', label: 'insert.creditBudget.debitAccountRemainder', sortable: false},
+        {key: 'CreditAmount', label: 'insert.creditBudget.creditAmountCentral', sortable: false},
+        {key: 'Amount', label: 'insert.creditBudget.amount', sortable: false},
+        {key: 'PaymentPeriodDesc', label: 'insert.creditBudget.paymentPeriod', sortable: false}
       ],
       currentPage: 1,
       totalRowCount: 0,

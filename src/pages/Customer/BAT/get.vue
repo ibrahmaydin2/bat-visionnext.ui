@@ -168,6 +168,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
                 <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(CreditDescription)="data">
                     {{data.value.Label}}
                   </template>
@@ -200,6 +203,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
                 <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields">
+                    <template #head()="data">
+                      {{$t(data.label)}}
+                    </template>
                    <template #cell(PaymentType)="data">
                     {{data.value.Label}}
                   </template>
@@ -210,6 +216,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
                 <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields">
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                 </b-table>
               </b-card>
             </b-col>
@@ -221,6 +230,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.tag')}}</h6>
                 <b-table responsive :items="rowData.CustomerLabels" :fields="customerLabelFields">
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(Label)="data">
                     {{data.value.Label}}
                   </template>
@@ -238,6 +250,9 @@
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.customerTouchpoints')}}</h6>
                 <b-table responsive :items="rowData.CustomerTouchpoints" :fields="customerTouchpointsFields">
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                   <template #cell(TouchpointPriority)="data">
                     {{data.value.Label}}
                   </template>

@@ -61,6 +61,9 @@
         <b-row>
           <b-col cols="12">
             <b-table responsive autoWidth bordered small id="product-list" :per-page="20" :current-page="currentPage" :items="products" :fields="fields">
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(IsVatIncluded)="data">
                 <NextCheckBox v-model="data.item.IsVatIncluded" type="number" toggle/>
               </template>

@@ -48,6 +48,9 @@
           </b-row>
           <b-row v-if="form.LabelDetails">
             <b-table :items="form.LabelDetails" :fields="fields" striped responsive>
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(Operations)="r">
                 <i @click="removeLabelDetails(r.item)" class="far fa-trash-alt text-danger"></i>
               </template>
@@ -78,9 +81,9 @@ export default {
         Description1: null
       },
       fields: [
-        {key: 'Code', label: this.$t('insert.Label.Code'), sortable: false},
-        {key: 'Description1', label: this.$t('insert.Label.Description1'), sortable: false},
-        {key: 'Operations', label: this.$t('list.operations'), sortable: false}
+        {key: 'Code', label: 'insert.Label.Code', sortable: false},
+        {key: 'Description1', label: 'insert.Label.Description1', sortable: false},
+        {key: 'Operations', label: 'list.operations', sortable: false}
       ]
     }
   },

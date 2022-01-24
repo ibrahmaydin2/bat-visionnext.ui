@@ -42,6 +42,9 @@
           <b-row class="p-4" v-if="contractDetail">
             <b-col>
               <b-table :items="contractDetail" :fields="fields" striped responsive sticky-header="500px">
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
               </b-table>
             </b-col>
           </b-row>
