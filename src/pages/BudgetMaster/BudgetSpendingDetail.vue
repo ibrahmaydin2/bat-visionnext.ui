@@ -7,8 +7,11 @@
         :fields="fields"
         bordered responsive
         :current-page="currentPage"
-        :per-page="10"
-      />
+        :per-page="10">
+        <template #head()="data">
+            {{$t(data.label)}}
+          </template>
+      </b-table>
       <b-pagination
         :total-rows="list ? list.length : 0"
         v-model="currentPage"
@@ -30,15 +33,15 @@ export default {
       fields: [
         {
           key: 'MovementTypeo.Label',
-          label: this.$t('insert.budgetMaster.movementType')
+          label: 'insert.budgetMaster.movementType'
         },
         {
           key: 'Amount',
-          label: this.$t('insert.budgetMaster.amount')
+          label: 'insert.budgetMaster.amount'
         },
         {
           key: 'TransactionDate',
-          label: this.$t('insert.budgetMaster.transactionDate'),
+          label: 'insert.budgetMaster.transactionDate',
           formatter: (value, key, obj) => {
             return this.dateConvertFromTimezone(value)
           }

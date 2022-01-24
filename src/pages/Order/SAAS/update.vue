@@ -367,6 +367,9 @@
           tbody-tr-class="bg-white"
           @row-selected="onCampaignSelected"
         >
+        <template #head()="data">
+          {{$t(data.label)}}
+        </template>
         <template #cell(selection)="row" v-if="campaignSelectable">
           <span>
             <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
