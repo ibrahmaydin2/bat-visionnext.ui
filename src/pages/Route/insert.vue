@@ -320,7 +320,6 @@ export default {
       }
     },
     editForm (form) {
-      debugger
       form.Day1FreStartDate = form.DayFreStartDate
       form.Day2FreStartDate = form.DayFreStartDate
       form.Day3FreStartDate = form.DayFreStartDate
