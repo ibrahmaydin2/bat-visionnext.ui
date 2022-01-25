@@ -378,6 +378,9 @@ export default {
             labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
             model[valueProperty] = data[i.modelProperty]
             model[labelProperty] = this.getObjectLabel(i, data)
+            if (i.isCustomer && valueProperty !== 'Code' && labelProperty !== 'Code' && !model.Code) {
+              model.Code = data.CustomerCode
+            }
             this.$set(this.model, i.modelProperty, model)
             this.additionalSearchTypeFirst = true
             this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
