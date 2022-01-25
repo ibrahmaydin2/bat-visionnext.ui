@@ -67,6 +67,9 @@
               small
               :items="assetPropertyValues"
               :fields="assetPropertyValueFields">
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(Description1)="{item}">
                   {{item.Property ? item.Property.Label : item.Description1}}
                 </template>
@@ -119,11 +122,11 @@ export default {
       assetPropertyValueFields: [
         {
           key: 'Description1',
-          label: this.$t('get.asset.propertyName')
+          label: 'get.asset.propertyName'
         },
         {
           key: 'Value',
-          label: this.$t('get.asset.propertyValue')
+          label: 'get.asset.propertyValue'
         }
       ]
     }

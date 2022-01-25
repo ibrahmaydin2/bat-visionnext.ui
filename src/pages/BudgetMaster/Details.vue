@@ -60,8 +60,11 @@
         id="budget-transaction-list"
         :items="budgetTransactions"
         :fields="fields"
-        bordered responsive
-      />
+        bordered responsive>
+        <template #head()="data">
+            {{$t(data.label)}}
+          </template>
+      </b-table>
       <b-pagination
         :total-rows="budgetTransactions ? budgetTransactions.length : 0"
         v-model="currentPage"
@@ -104,26 +107,26 @@ export default {
       fields: [
         {
           key: 'Code',
-          label: this.$t('insert.budgetMaster.movementCode')
+          label: 'insert.budgetMaster.movementCode'
         },
         {
           key: 'Description1',
-          label: this.$t('insert.budgetMaster.description')
+          label: 'insert.budgetMaster.description'
         },
         {
           key: 'BudgetId',
-          label: this.$t('insert.budgetMaster.budget'),
+          label: 'insert.budgetMaster.budget',
           formatter: (value, key, item) => {
             return item.Budget ? item.Budget.Label : '-'
           }
         },
         {
           key: 'Amount',
-          label: this.$t('insert.budgetMaster.amount')
+          label: 'insert.budgetMaster.amount'
         },
         {
           key: 'MovementType',
-          label: this.$t('insert.budgetMaster.budgetMovementType'),
+          label: 'insert.budgetMaster.budgetMovementType',
           formatter: (value, key, item) => {
             return item.MovementTypeo ? item.MovementTypeo.Label : '-'
           }

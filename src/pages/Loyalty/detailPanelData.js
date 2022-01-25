@@ -309,36 +309,36 @@ export const detailData = {
   loyaltyActiveCategoryFields: [
     {
       key: 'LoyaltyCategoryIdDesc',
-      label: i18n.t('insert.loyalty.categoryDefinition'),
+      label: 'insert.loyalty.categoryDefinition',
       formatter: (value, key, obj) => {
         return obj.LoyaltyCategory ? obj.LoyaltyCategory.Label : value
       }
     },
     {
       key: 'DatePlanTypeIdDesc',
-      label: i18n.t('insert.loyalty.datePlanType'),
+      label: 'insert.loyalty.datePlanType',
       formatter: (value, key, obj) => {
         return obj.DatePlanType ? obj.DatePlanType.Label : value
       }
     },
     {
       key: 'DatePlanFreq',
-      label: i18n.t('insert.loyalty.datePlanFreq')
+      label: 'insert.loyalty.datePlanFreq'
     },
     {
       key: 'CustomerCriteriaIdDesc',
-      label: i18n.t('insert.loyalty.customerCriteria'),
+      label: 'insert.loyalty.customerCriteria',
       formatter: (value, key, obj) => {
         return obj.CustomerCriteria ? obj.CustomerCriteria.Label : value
       }
     },
     {
       key: 'Genexp1',
-      label: i18n.t('insert.loyalty.description')
+      label: 'insert.loyalty.description'
     },
     {
       key: 'operations',
-      label: i18n.t('list.operations')
+      label: 'list.operations'
     }
   ],
   loyaltyActiveCtCritItems: [
@@ -427,21 +427,21 @@ export const detailData = {
     },
     {
       key: 'ColumnNameDesc',
-      label: i18n.t('insert.loyalty.customerCode'),
+      label: 'insert.loyalty.customerCode',
       formatter: (value, key, obj) => {
         return obj.ColumnNameDesc ? obj.ColumnNameDesc : obj.ColumnValueDesc
       }
     },
     {
       key: 'ColumnValueDesc',
-      label: i18n.t('insert.loyalty.commercialTitle'),
+      label: 'insert.loyalty.commercialTitle',
       formatter: (value, key, obj) => {
         return obj.CommercialTitle ? obj.CommercialTitle : value
       }
     },
     {
       key: 'ColumnValueDesc2',
-      label: i18n.t('insert.loyalty.location'),
+      label: 'insert.loyalty.location',
       formatter: (value, key, obj) => {
         return obj.Location ? obj.Location : value
       }

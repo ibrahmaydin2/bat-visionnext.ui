@@ -35,6 +35,9 @@
           </b-row>
           <b-row class="p-4">
             <b-table responsive autoWidth bordered small id="product-list" :per-page="20" :current-page="currentPage" :items="rowData.PriceListItems" :fields="fields">
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(IsVatIncluded)="data">
                 <i :class="data.item.IsVatIncluded === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
               </template>

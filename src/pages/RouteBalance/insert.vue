@@ -59,7 +59,9 @@
                 tbody-tr-class="bg-white"
                 @row-selected="onRowFromSelected"
               >
-                <!-- Example scoped slot for select state illustrative purposes -->
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
@@ -121,7 +123,9 @@
                 bordered
                 @row-selected="onRowToSelected"
               >
-                <!-- Example scoped slot for select state illustrative purposes -->
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
