@@ -225,11 +225,15 @@ export default {
         },
         {
           mainProperty: 'Description1',
+          targetProperty: 'Customer'
+        },
+        {
+          mainProperty: 'Description1',
           targetProperty: 'CustomerName'
         },
         {
           mainProperty: 'Code',
-          targetProperty: 'Customer'
+          targetProperty: 'CustomerCode'
         },
         {
           mainProperty: 'DefaultLocationId',
@@ -264,7 +268,7 @@ export default {
       this.form = e
       this.form.RouteDetails = e.RouteDetails.map((item) => {
         item.DayFrequency = item.Day1Frequency
-
+        item.CustomerCode = item.Customer ? item.Customer.Code : ''
         return item
       })
       this.representative = this.convertLookupValueToSearchValue(e.Representative)
@@ -458,6 +462,10 @@ export default {
         this.form.RouteDetails.map(item => {
           delete item['Customer']
           delete item['Location']
+          item.Code = null
+          item.Description1 = null
+
+          return item
         })
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.updateData()
