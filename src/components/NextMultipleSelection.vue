@@ -311,7 +311,9 @@ export default {
                   let filteredArr = this.hiddenValues.filter(h => h.mainProperty === item.EntityProperty)
                   let value = ''
                   filteredArr.forEach(f => {
-                    if (obj[f.targetProperty]) {
+                    if (obj[f.targetProperty] && obj[f.targetProperty].Label) {
+                      value = obj[f.targetProperty].Label
+                    } else {
                       value = obj[f.targetProperty]
                     }
                   })

@@ -198,11 +198,15 @@ export default {
         },
         {
           mainProperty: 'Description1',
+          targetProperty: 'Customer'
+        },
+        {
+          mainProperty: 'Description1',
           targetProperty: 'CustomerName'
         },
         {
           mainProperty: 'Code',
-          targetProperty: 'Customer'
+          targetProperty: 'CustomerCode'
         },
         {
           mainProperty: 'DefaultLocationId',
@@ -364,6 +368,12 @@ export default {
           return
         }
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
+        this.form.RouteDetails = this.form.RouteDetails.map(r => {
+          r.Code = null
+          r.Description1 = null
+
+          return r
+        })
         this.createData()
       }
     },

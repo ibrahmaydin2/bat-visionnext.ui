@@ -308,6 +308,8 @@ export default {
                   filteredArr.forEach(f => {
                     if (obj[f.targetProperty] && obj[f.targetProperty].Label) {
                       value = obj[f.targetProperty].Label
+                    } else {
+                      value = obj[f.targetProperty]
                     }
                   })
                   return value
@@ -487,6 +489,10 @@ export default {
     show () {
       this.$v.form.$reset()
       this.pageSelectedList = JSON.parse(JSON.stringify(this.value))
+      if (this.initialValuesFunc) {
+        this.pageSelectedList = this.initialValuesFunc(this.pageSelectedList)
+      }
+
       this.list = this.pageSelectedList.map(v => {
         let item = {
           ...v,
@@ -495,10 +501,6 @@ export default {
 
         return item
       })
-
-      if (this.initialValuesFunc) {
-        this.list = this.initialValuesFunc(this.list)
-      }
 
       if (this.dynamicRequiredFilters.length > 0) {
         this.dynamicRequiredFilters.map(d => {
