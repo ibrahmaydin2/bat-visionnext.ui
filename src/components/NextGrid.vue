@@ -179,7 +179,7 @@
               </b-dropdown>
             </span>
             <span v-else-if="h.columnType === 'LabelValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Label')">
-              {{ labelFormat(item[h.dataField], 'Label') }}
+              {{ getLabelValueFormat(item, h) }}
             </span>
             <span v-else-if="h.columnType === 'CodeValue'" class="d-block w-100 grid-wrap-text" v-b-tooltip.hover :title="labelFormat(item[h.dataField], 'Code')">
               {{ labelFormat(item[h.dataField], 'Code') }}
@@ -597,6 +597,16 @@ export default {
         return e[type]
       }
     },
+    getLabelValueFormat (item, header) {
+      if (!item || !header) { return '' }
+
+      const obj = item[header.dataField]
+      if (header.modelControlUtil && header.modelControlUtil.InputType === 'AutoComplete' && obj && obj.Code) {
+        return `${obj.Code} - ${obj.Label}`
+      }
+
+      return this.labelFormat(obj, 'Label')
+    },
     linkGen (pageNum) {
       let paginationQ = ''
       const rt = this.$route.query
@@ -743,7 +753,11 @@ export default {
       })
     },
     getResultValue (result) {
-      return this.selectedHeader.columnType === 'CodeValue' ? result.Code : result.Description1
+      if (this.selectedHeader.columnType === 'CodeValue') {
+        return result.Code
+      } else {
+        return result.Code ? `${result.Code} - ${result.Description1}` : result.Description1
+      }
     },
     handleSubmit (label, model) {
       if (!model) {
@@ -1186,6 +1200,7 @@ export default {
         .autocomplete
           text-align: center
         .autocomplete-input
+          font-size: 12px
           outline: none
           padding-left: 10px
           background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Ik0yMSAyMWwtNC00Ii8+PC9zdmc+)
@@ -1208,6 +1223,7 @@ export default {
           text-align: left
           border-bottom: 0.5px solid rgba(0,0,0,.16)
           background: none
+          font-size: 12px
     .router-link-exact-active
       background: #007bff
       color: #fff
