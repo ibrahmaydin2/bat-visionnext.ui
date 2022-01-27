@@ -1,6 +1,3 @@
-export const ideaName = 'İdea Teknoloji Çözümleri'
-export const copyright = '© 2020 İdea Teknoloji Çözümler Bilgisayar San. ve Tic. A.Ş.'
-
 export const now = new Date()
 export const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 var dd = now.getDate()
@@ -19,3 +16,5 @@ export const mmMinDate = new Date(today)
 export const mmMaxDate = new Date(today)
 export let mmToday = dd + '-' + mm + '-' + yyyy
 export let mmNow = hh + ':' + ii + ':' + ss
+export const ideaName = 'İdea Teknoloji Çözümleri'
+export const copyright = `© ${yyyy} İdea Teknoloji Çözümler Bilgisayar San. ve Tic. A.Ş.`
