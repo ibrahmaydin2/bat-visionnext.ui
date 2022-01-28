@@ -143,8 +143,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" v-if="this.$route.query.salesWaybillCopy === 1" @click.prevent="tabValidation()">
-          <b-row>
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+          <b-row v-if="salesWaybillCopy">
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <NextDropdown
                     v-model="selectedInvoiceLine.selectedItem"
@@ -188,6 +188,7 @@
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
+                  :initial-values-func="multipleItemSearch.initialValue"
                 />
             </b-col>
           </b-row>
@@ -202,43 +203,10 @@
                 <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
                 <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
+                <b-th v-if="salesWaybillCopy"><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(o, i) in form.InvoiceLines" :key="i">
-                  <b-td>{{o.Description1}}</b-td>
-                  <b-td>{{o.ItemCode}}</b-td>
-                  <b-td>{{o.Quantity}}</b-td>
-                  <b-td>{{o.Price}}</b-td>
-                  <b-td>{{o.VatRate}}</b-td>
-                  <b-td>{{o.NetTotal}}</b-td>
-                  <b-td>{{o.TotalVat}}</b-td>
-                  <b-td>{{o.GrossTotal}}</b-td>
-                  <b-td class="text-center">
-                    <i @click="editInvoiceLine(o)" class="fa fa-edit text-warning"></i>
-                    <i @click="removeInvoiceLine(o)" class="far fa-trash-alt text-danger"></i>
-                  </b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" v-if="!(this.$route.query.salesWaybillCopy === 1)" @click.prevent="tabValidation()">
-          <b-row>
-            <b-table-simple bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.order.product')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.quantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.price')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.vatRate')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.netTotal')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.vatTotal')}}</span></b-th>
-                <b-th><span>{{$t('insert.order.grossTotal')}}</span></b-th>
-                <b-th><span>{{$t('list.operations')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(o, i) in (form.InvoiceLines ? form.InvoiceLines.filter(x => x.RecordState != 4) : [])" :key="i">
                   <b-td>{{o.Item ? o.Item.Label : o.Description1}}</b-td>
                   <b-td>{{o.Item ? o.Item.Code : o.ItemCode}}</b-td>
                   <b-td>{{o.Quantity}}</b-td>
@@ -247,12 +215,20 @@
                   <b-td>{{o.NetTotal}}</b-td>
                   <b-td>{{o.TotalVat}}</b-td>
                   <b-td>{{o.GrossTotal}}</b-td>
+                  <b-td class="text-center" v-if="salesWaybillCopy">
+                    <b-button :title="$t('list.edit')" @click="editInvoiceLine(o)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button :title="$t('list.delete')" @click="removeInvoiceLine(o)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt ml-1"></i>
+                    </b-button>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && this.$route.query.salesWaybillCopy === 1" :disabled="form.VehicleId > 0">
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && salesWaybillCopy" :disabled="form.VehicleId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
               <NextInput type="text" v-model="selectedInvoiceLogisticCompany.companyName"></NextInput>
@@ -298,7 +274,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && !(this.$route.query.salesWaybillCopy === 1)" :disabled="form.VehicleId > 0">
+        <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" v-if="selectedBranch.UseEDispatch !== 0 && !salesWaybillCopy" :disabled="form.VehicleId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
               <NextInput type="text" v-model="selectedInvoiceLogisticCompany.companyName"></NextInput>
@@ -473,7 +449,8 @@ export default {
       priceList: [],
       items: [],
       priceListItems: [],
-      stocks: []
+      stocks: [],
+      salesWaybillCopy: false
     }
   },
   computed: {
@@ -483,12 +460,14 @@ export default {
     }
   },
   mounted () {
+    // eslint-disable-next-line eqeqeq
+    this.salesWaybillCopy = this.$route.query.salesWaybillCopy == 1
     this.getInsertPage(this.routeName)
   },
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1 && !(this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy)) {
+        if (this.rowData.Printed === 1 && !this.salesWaybillCopy) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
           setTimeout(() => {
             this.$router.push({ name: 'SalesWaybill' })
@@ -795,7 +774,7 @@ export default {
             return item
           })
         }
-        if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
+        if (this.salesWaybillCopy) {
           this.$api.postByUrl({}, '/VisionNextInvoice/api/SalesWaybill/GetCode').then(res => {
             this.form.InvoiceNumber = res.Model.Code
           })
@@ -914,7 +893,7 @@ export default {
         let model = {
           'model': this.form
         }
-        if (typeof this.$route.query.salesWaybillCopy !== 'undefined' && this.$route.query.salesWaybillCopy) {
+        if (this.salesWaybillCopy) {
           model.RecordId = this.form.RecordId
           model.model.RecordId = null
           model.model.RecordState = 2

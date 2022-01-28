@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid class="asc__auth">
+  <b-container fluid class="asc__auth" :style="`background-image: url(/static/${bgFile})`">
     <b-row>
       <b-col cols="12" sm="2" md="4" lg="6" xl="8">
       </b-col>
@@ -32,12 +32,19 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  computed: mapState(['logo', 'title', 'system'])
+  data () {
+    return {
+      bgFile: ''
+    }
+  },
+  computed: mapState(['logo', 'title', 'system']),
+  mounted () {
+    this.bgFile = !process.env.VUE_APP_BG_FILE ? 'loginbg.jpg' : process.env.VUE_APP_BG_FILE
+  }
 }
 </script>
 <style lang="sass">
   .asc__auth
-    background-image: url('../../../static/loginbg.jpg')
     background-size: cover
     background-position: center center
     background-color: #000000

@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'AssetLocation' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -23,13 +23,13 @@
               <NextDropdown v-model="location" :source="assetLocations" @input="selectedSearchType('LocationId', $event)" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="LastMovementDate" :error="$v.form.LastMovementDate">
-              <b-form-datepicker v-model="form.LastMovementDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.LastMovementDate" :disabled="insertReadonly.LastMovementDate" />
             </NextFormGroup>
             <NextFormGroup item-key="AssetId" :error="$v.form.AssetId">
               <NextDropdown url="VisionNextAsset/api/Asset/Search" @input="selectedSearchType('AssetId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="LastOperationDate" :error="$v.form.LastOperationDate">
-              <b-form-datepicker v-model="form.LastOperationDate" :placeholder="$t('insert.chooseDate')"/>
+              <NextDatePicker v-model="form.LastOperationDate" :disabled="insertReadonly.LastOperationDate" />
             </NextFormGroup>
             <NextFormGroup item-key="ConditionId" :error="$v.form.ConditionId">
               <NextDropdown lookup-key="ASSET_CONDITION" @input="selectedType('ConditionId', $event)"/>
@@ -38,7 +38,7 @@
               <NextDropdown url="VisionNextAsset/api/AssetState/Search" @input="selectedSearchType('StateId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="SerialNumber" :error="$v.form.SerialNumber">
-              <b-form-input type="text" v-model="form.SerialNumber" :readonly="insertReadonly.SerialNumber" />
+              <NextInput v-model="form.SerialNumber" type="text" :disabled="insertReadonly.SerialNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="ContactId" :error="$v.form.ContactId">
               <NextDropdown :source="contacts" @input="selectedSearchType('ContactId', $event)"/>
@@ -47,10 +47,10 @@
               <NextDropdown lookup-key="ASSET_POSITION" @input="selectedType('AssetPositionId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Quantity" :error="$v.form.Quantity">
-              <b-form-input type="text" v-model="form.Quantity" :readonly="insertReadonly.Quantity" />
+              <NextInput v-model="form.Quantity" type="text" :disabled="insertReadonly.Quantity" />
             </NextFormGroup>
             <NextFormGroup item-key="SerialNumber2" :error="$v.form.SerialNumber2">
-              <b-form-input type="text" v-model="form.SerialNumber2" :readonly="insertReadonly.SerialNumber2" />
+              <NextInput v-model="form.SerialNumber2" type="text" :disabled="insertReadonly.SerialNumber2" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -59,7 +59,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import insertMixin from '../../mixins/insert'
 export default {
   mixins: [insertMixin],
@@ -85,15 +84,11 @@ export default {
       contacts: []
     }
   },
-  computed: {
-    ...mapState([''])
-  },
   mounted () {
-    // this.createManualCode()
-    this.getInsertPage(this.routeName)
+    this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       this.$api.postByUrl({}, 'VisionNextCustomer/api/CustomerLocation/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
           this.assetLocations = response.ListModel.BaseModels
@@ -112,11 +107,6 @@ export default {
       } else {
         this.createData()
       }
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
     }
   },
   watch: {

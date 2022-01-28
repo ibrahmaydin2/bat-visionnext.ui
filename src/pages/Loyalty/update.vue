@@ -106,6 +106,9 @@
               :fields="loyaltyActiveCategoryFields"
               :items="this.form.LoyaltyActiveCategories ? this.form.LoyaltyActiveCategories.filter(i => i.RecordState !== 4) : []"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(operations)="row">
                 <div class="text-center">
                   <b-button v-if="!datePassed" size="sm" @click="removeLoyaltyActiveCategory(row.item)" class="mr-2" variant="danger">
@@ -229,6 +232,7 @@ export default {
     this.getData().then(() => {
       this.setData()
     })
+    this.getLoyaltyCustomers()
   },
   methods: {
     setData () {
@@ -249,11 +253,6 @@ export default {
         this.selectedClass = rowData.Class
         this.selectedKind = rowData.Kind
 
-        if (this.form.LoyaltyCustomers && this.form.LoyaltyCustomers.length > 0) {
-          this.customers = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
-          this.branchs = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
-          this.customerCriterias = this.form.LoyaltyCustomers.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
-        }
         if (this.isSaveAs) {
           this.createManualCode()
         } else if (this.form.LoyaltyBeginDate) {
@@ -422,6 +421,21 @@ export default {
           id: 5
         }
       ]
+    },
+    getLoyaltyCustomers () {
+      let request = {
+        AndConditionModel: {
+          LoyaltyIds: [this.$route.params.url]
+        }
+      }
+      this.$api.postByUrl(request, 'VisionNextLoyalty/api/LoyaltyCustomer/Search').then(response => {
+        if (response && response.ListModel) {
+          let list = response.ListModel.BaseModels
+          this.customers = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+          this.branchs = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'BRANCH_ID')
+          this.customerCriterias = list.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName !== 'RECORD_ID')
+        }
+      })
     }
   },
   validations () {

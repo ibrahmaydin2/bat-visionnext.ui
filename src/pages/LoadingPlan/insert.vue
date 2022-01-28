@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code" md="2" lg="2">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2" lg="2">
-            <b-form-datepicker v-model="form.LoadingDate" :placeholder="$t('insert.chooseDate')"/>
+            <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
           </NextFormGroup>
           <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
              <NextDropdown
@@ -54,12 +54,20 @@
                 custom-option/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.loadingplan.PlanQuantity')" :error="$v.detailPanel.planQuantity" :required="true">
-              <b-form-input type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
+              <NextInput type="number" @keypress="onlyForCurrencyDot($event)" min="1" v-model="detailPanel.planQuantity" />
             </NextFormGroup>
-            <b-col cols="12" md="2" class="ml-auto">
+            <b-col cols="12" md="1">
               <b-form-group>
                 <AddDetailButton @click.native="addItems" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <NextMultipleSelection
+                name="LoadingPlanMultipleItem "
+                v-model="form.LoadingPlanItems"
+                :hidden-values="hiddenValues"
+                :filter-func="(row) => row.PlanQuantity > 0"
+                :validations="multipleValidations" />
             </b-col>
           </b-row>
           <b-row>
@@ -105,7 +113,24 @@ export default {
       detailPanel: {
         item: null,
         planQuantity: null
-      }
+      },
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ItemId'
+        }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'PlanQuantity',
+          validation: (value, data) => {
+            if (!value || parseFloat(value) <= 0) {
+              return false
+            }
+            return true
+          }
+        }
+      ]
     }
   },
   computed: {

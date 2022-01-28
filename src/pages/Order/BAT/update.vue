@@ -213,6 +213,17 @@
                 <AddDetailButton @click.native="addOrderLine" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+              <NextMultipleSelection
+                name="OrderMultipleItem"
+                v-model="form.OrderLines"
+                :disabled-button="!form.WarehouseId || !form.PriceListId"
+                :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                :hidden-values="multipleItemSearch.hiddenValues"
+                :converted-values="multipleItemSearch.convertedValues"
+                :validations="multipleItemSearch.quantityValidation"
+                :initial-values-func="multipleItemSearch.initialValue" />
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -349,6 +360,9 @@
           tbody-tr-class="bg-white"
           @row-selected="onCampaignSelected"
         >
+        <template #head()="data">
+          {{$t(data.label)}}
+        </template>
         <template #cell(selection)="row" v-if="campaignSelectable">
           <span>
             <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
@@ -379,6 +393,7 @@
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
 import updateMixin from '../../../mixins/update'
+import { mapState } from 'vuex'
 export default {
   mixins: [updateMixin],
   data () {
@@ -467,6 +482,7 @@ export default {
     this.getInsertPage(this.routeName)
   },
   computed: {
+    ...mapState(['multipleItemSearch']),
     customerSearchUrl () {
       return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
     }

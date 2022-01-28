@@ -106,7 +106,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.BranchCreditHistories" :items="customerCreditHistoriesItems" />
+                <NextDetailPanel type="get" v-model="branchCreditHistories" :items="customerCreditHistoriesItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -160,7 +160,8 @@ export default {
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
       customerEInvoiceSeqsItems: detailData.customerEInvoiceSeqsItems,
       customerItemDiscountCrtItems: detailData.customerItemDiscountCrtItems,
-      branchLocations: []
+      branchLocations: [],
+      branchCreditHistories: []
     }
   },
   mounted () {
@@ -178,6 +179,25 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextBranch/api/Branch', record: this.$route.params.url}).then(() => {
         if (this.rowData.CustomerItemDiscountCrts && this.rowData.CustomerItemDiscountCrts.length > 0) {
           this.customerItemDiscounts = this.rowData.CustomerItemDiscountCrts[0]
+        }
+        this.getCreditHistory(this.rowData.CustomerId)
+      })
+    },
+    getCreditHistory (customerId) {
+      let model = {
+        AndConditionModel: {
+          CustomerIds: [customerId]
+        },
+        OrderByColumns: [
+          {
+            column: 'CreatedDateTime',
+            orderByType: 1
+          }
+        ]
+      }
+      this.$api.postByUrl(model, 'VisionNextCustomer/api/CustomerCreditHistory/Search').then(res => {
+        if (res.ListModel) {
+          this.branchCreditHistories = res.ListModel.BaseModels
         }
       })
     },

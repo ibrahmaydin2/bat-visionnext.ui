@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Asset' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
         </b-row>
       </section>
@@ -67,6 +67,9 @@
               small
               :items="assetPropertyValues"
               :fields="assetPropertyValueFields">
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(Description1)="{item}">
                   {{item.Property ? item.Property.Label : item.Description1}}
                 </template>
@@ -119,11 +122,11 @@ export default {
       assetPropertyValueFields: [
         {
           key: 'Description1',
-          label: this.$t('get.asset.propertyName')
+          label: 'get.asset.propertyName'
         },
         {
           key: 'Value',
-          label: this.$t('get.asset.propertyValue')
+          label: 'get.asset.propertyValue'
         }
       ]
     }

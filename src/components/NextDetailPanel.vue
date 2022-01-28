@@ -21,7 +21,7 @@
       </template>
     </b-modal>
     <b-row v-if="editable">
-      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="item.label" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
+      <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="$t(item.label)" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields" :is-employee="item.isEmployee" :is-vehicle="item.isVehicle"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :onAfter="item.onAfter" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" :is-prefix="item.isPrefix"/>
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
@@ -149,9 +149,8 @@ export default {
     editForm: {
       type: Function
     },
-    errorOperations: {
-      type: Boolean,
-      default: false
+    changeValidation: {
+      type: Function
     }
   },
   model: {
@@ -191,7 +190,7 @@ export default {
         if (!item.hideOnTable) {
           fields.push({
             key: item.modelProperty,
-            label: item.label,
+            label: this.$t(item.label),
             formatter: (value, key, obj) => {
               if (item.type === 'Check') {
                 value = value === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
@@ -343,85 +342,68 @@ export default {
       this.$v.form.$reset()
     },
     removeItem () {
-      if (this.errorOperations) {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        const index = this.values.indexOf(data)
-        if (data.CreditDescriptionId === 100) {
-          this.$toasted.show(this.$t('insert.CustomerCreditNotDeleted'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        } else {
-          this.values.splice(index, 1)
-        }
-        this.$emit('valuechange', this.values)
-      } else {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        const index = this.values.indexOf(data)
-        if (data.RecordId) {
-          this.values[index].RecordState = 4
-        } else {
-          this.values.splice(index, 1)
-        }
-        this.$emit('valuechange', this.values)
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
+
+      if (this.changeValidation && !this.changeValidation(data)) {
+        return
       }
+      const index = this.values.indexOf(data)
+      if (data.RecordId) {
+        this.values[index].RecordState = 4
+      } else {
+        this.values.splice(index, 1)
+      }
+      this.$emit('valuechange', this.values)
     },
     editItem () {
-      if (this.errorOperations) {
-        let data = this.selectedItem
-        this.$bvModal.hide(`confirm-delete-modal${this.unique}`)
-        if (data.CreditDescriptionId === 100) {
-          this.$toasted.show(this.$t('insert.CustomerCreditNotEdited'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-        } else {
-          let data = this.selectedItem
-          this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
-          this.form = {...data}
-          this.isUpdated = true
-          this.selectedIndex = this.values.indexOf(data)
-          this.$set(this.form, 'RecordId', data.RecordId)
-          this.items.map(i => {
-            let labelProperty = ''
-            let valueProperty = ''
-            let model = {}
-            switch (i.type) {
-              case 'Autocomplete':
-              case 'Dropdown':
-                valueProperty = i.valueProperty ? i.valueProperty : 'RecordId'
-                labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
-                model[valueProperty] = data[i.modelProperty]
-                model[labelProperty] = this.getObjectLabel(i, data)
-                this.$set(this.model, i.modelProperty, model)
-                this.additionalSearchTypeFirst = true
-                this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
-                break
-              case 'Lookup':
-                valueProperty = i.valueProperty ? i.valueProperty : 'DecimalValue'
-                labelProperty = i.labelProperty ? i.labelProperty : 'Label'
-                model[valueProperty] = data[i.modelProperty]
-                model[labelProperty] = this.getObjectLabel(i, data)
-                this.$set(this.model, i.modelProperty, model)
-                this.additionalSearchTypeFirst = true
-                this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
-                break
-              case 'Label':
-                this.$set(this.label, i.modelProperty, data[i.modelProperty])
-                break
-              case 'Text':
-              case 'Check':
-              case 'Date':
-                this.$set(this.form, i.modelProperty, data[i.modelProperty])
-                break
-            }
-          })
-        }
+      let data = this.selectedItem
+      this.$bvModal.hide(`confirm-edit-modal${this.unique}`)
+
+      if (this.changeValidation && !this.changeValidation(data)) {
+        return
       }
+      this.form = {...data}
+      this.isUpdated = true
+      this.selectedIndex = this.values.indexOf(data)
+      this.$set(this.form, 'RecordId', data.RecordId)
+      this.items.map(i => {
+        let labelProperty = ''
+        let valueProperty = ''
+        let model = {}
+        switch (i.type) {
+          case 'Autocomplete':
+          case 'Dropdown':
+            valueProperty = i.valueProperty ? i.valueProperty : 'RecordId'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Description1'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            if (i.isCustomer && valueProperty !== 'Code' && labelProperty !== 'Code' && !model.Code) {
+              model.Code = data.CustomerCode
+            }
+            this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Lookup':
+            valueProperty = i.valueProperty ? i.valueProperty : 'DecimalValue'
+            labelProperty = i.labelProperty ? i.labelProperty : 'Label'
+            model[valueProperty] = data[i.modelProperty]
+            model[labelProperty] = this.getObjectLabel(i, data)
+            this.$set(this.model, i.modelProperty, model)
+            this.additionalSearchTypeFirst = true
+            this.additionalSearchType(i.id, i.modelProperty, this.model[i.modelProperty], i.valueProperty)
+            break
+          case 'Label':
+            this.$set(this.label, i.modelProperty, data[i.modelProperty])
+            break
+          case 'Text':
+          case 'Check':
+          case 'Date':
+            this.$set(this.form, i.modelProperty, data[i.modelProperty])
+            break
+        }
+      })
     },
     additionalSearchType (id, label, model, valueProperty) {
       if (model) {
@@ -437,16 +419,28 @@ export default {
               case 'Label':
                 if (item.url) {
                   if (!model[item.parentProperty]) { return }
-                  this.$api.postByUrl({RecordId: model[item.parentProperty]}, item.url).then((res) => {
-                    if (res && res.Model) {
+                  let request = {}
+                  if (item.request) {
+                    request = JSON.parse(item.request.replace('"val"', model[item.parentProperty]))
+                  } else {
+                    request = { RecordId: model[item.parentProperty] }
+                  }
+                  this.$api.postByUrl(request, item.url).then((res) => {
+                    let value = null
+                    if (res.Model) {
+                      value = res.Model
+                    } else if (res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+                      value = res.ListModel.BaseModels[0]
+                    }
+                    if (value) {
                       if (item.valueProperty) {
-                        if (res.Model[item.valueProperty] && res.Model[item.valueProperty][item.modelProperty]) {
-                          this.label[item.modelProperty] = res.Model[item.valueProperty][item.modelProperty]
+                        if (value[item.valueProperty] && value[item.valueProperty][item.modelProperty]) {
+                          this.label[item.modelProperty] = value[item.valueProperty][item.modelProperty]
                         } else {
-                          this.label[item.modelProperty] = res.Model[item.valueProperty]
+                          this.label[item.modelProperty] = value[item.valueProperty]
                         }
                       } else {
-                        this.label[item.modelProperty] = res.Model.Description1 ? res.Model.Description1 : null
+                        this.label[item.modelProperty] = value.Description1 ? value.Description1 : null
                       }
                     } else {
                       this.label[item.modelProperty] = null

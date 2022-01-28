@@ -41,11 +41,8 @@
                   :fields="loyaltyGainDetailFields"
                   :items="(rowData && rowData.LoyaltyGainDetails ? rowData.LoyaltyGainDetails.filter(l => l.Value > 0) : [])"
                   bordered responsive >
-                  <template #cell(ActiveCategoryId)="{item}">
-                    {{item.ActiveCategory && item.ActiveCategory.LoyaltyCategory ? item.ActiveCategory.LoyaltyCategory.Label : '-'}}
-                  </template>
-                   <template #cell(Description)="{item}">
-                   {{item.ActiveCategory ? item.ActiveCategory.Genexp1 : '-'}}
+                  <template #head()="data">
+                    {{$t(data.label)}}
                   </template>
                 </b-table>
               </b-card>

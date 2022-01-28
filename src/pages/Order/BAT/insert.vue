@@ -284,6 +284,9 @@
           tbody-tr-class="bg-white"
           @row-selected="onCampaignSelected"
         >
+        <template #head()="data">
+          {{$t(data.label)}}
+        </template>
         <template #cell(selection)="row" v-if="campaignSelectable">
           <span>
             <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
@@ -419,7 +422,7 @@ export default {
         this.selectedBranch = response ? response.Model : {}
       })
       let currentDate = new Date()
-      this.documentDate = currentDate.toISOString().slice(0, 10)
+      this.documentDate = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
       this.form.DocumentTime = currentDate.toTimeString().slice(0, 5)
     },
     searchPriceList () {

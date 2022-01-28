@@ -19,11 +19,11 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
-           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-              <NextCheckBox v-model="form.StatusId" type="number" toggle />
-           </NextFormGroup>
+          <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+            <NextCheckBox v-model="form.StatusId" type="number" toggle />
+          </NextFormGroup>
         </b-row>
       </section>
     </b-col>
@@ -32,37 +32,21 @@
         <b-tab :title="$t('insert.FieldSurvey.FieldSurveyDefinitions')" :active="!developmentMode">
           <b-row>
             <NextFormGroup item-key="AnalysisTypeId" :error="$v.form.AnalysisTypeId">
-              <v-select
-                v-model="analysisType"
-                :options="lookup.FIELD_SURVEY_TYPE"
-                @input="selectedType('AnalysisTypeId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="analysisType" label="Label" lookup-key="FIELD_SURVEY_TYPE" @input="selectedType('AnalysisTypeId', $event)" :disabled="insertReadonly.AnalysisTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="ValidityTypeId" :error="$v.form.ValidityTypeId">
-              <v-select
-                v-model="validityType"
-                :options="lookup.ANALYSIS_VALIDITY_TYPE"
-                @input="selectedType('ValidityTypeId', $event)"
-                label="Label"
-              />
+              <NextDropdown v-model="validityType" label="Label" lookup-key="ANALYSIS_VALIDITY_TYPE" @input="selectedType('ValidityTypeId', $event)" :disabled="insertReadonly.ValidityTypeId" />
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-                 <b-form-input type="text" v-model="form.Description1"/>
+                <NextInput type="text" v-model="form.Description1"/>
              </NextFormGroup>
           </b-row>
           <b-row>
              <NextFormGroup item-key="SortOrder" :error="$v.form.SortOrder">
-                <b-form-input @input="changeSortOrder" min="0" max="99" type="number" v-model="form.SortOrder" :readonly="insertReadonly.SortOrder" />
+              <NextInput @input="changeSortOrder" min="0" max="99" type="number" v-model="form.SortOrder" :disabled="insertReadonly.SortOrder" />
              </NextFormGroup>
             <NextFormGroup item-key="ApproveStateId" :error="$v.form.ApproveStateId">
-              <v-select
-                  disabled
-                  v-model="selectedApproveState"
-                  :options="lookup.APPROVE_STATE"
-                  @input="selectedType('ApproveStateId', $event)"
-                  label="Label"
-                />
+              <NextDropdown v-model="selectedApproveState" label="Label" lookup-key="APPROVE_STATE" @input="selectedType('ApproveStateId', $event)" :disabled="insertReadonly.ApproveStateId" />
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
                <NextCheckBox v-model="form.IsNecessary" type="number" toggle />
@@ -72,14 +56,7 @@
         <b-tab :title="$t('insert.FieldSurvey.Branches')">
           <b-row>
             <NextFormGroup :title="$t('insert.FieldSurvey.surveyBranchId')" :error="$v.selectedBranch" :required="true">
-              <v-select v-model="selectedBranch" label="BranchCommercialTitle" :filterable="false" :options="branchs" @search="onBranchSearch">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template slot="option" slot-scope="option">
-                    {{ option.BranchCommercialTitle }}
-                  </template>
-                </v-select>
+              <NextDropdown v-model="selectedBranch" label="BranchCommercialTitle" url="VisionNextBranch/api/Branch/AutoCompleteSearch"/>
             </NextFormGroup>
             <b-col cols="12" md="2" class="text-right">
               <b-form-group>
@@ -131,14 +108,10 @@
         <b-tab :title="$t('insert.FieldSurvey.questions')">
           <b-row>
             <NextFormGroup :title="$t('insert.FieldSurvey.questionId')" :error="$v.selectedQuestion.question" :required="true">
-              <v-select v-model="selectedQuestion.question" label="Description1" :filterable="false" :options="analysisQuestions" @search="onAnalysisQuestions">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                </v-select>
+              <NextDropdown v-model="selectedQuestion.question" label="Description1" url="VisionNextFieldAnalysis/api/AnalysisQuestions/AutoCompleteSearch"/>
             </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionLineId')" :error="$v.selectedQuestion.lineNumber" :required="true">
-                <b-form-input type="number" v-model="selectedQuestion.lineNumber" :maxLength="4" :oninput="maxLengthControl" />
+                <NextInput type="number" v-model="selectedQuestion.lineNumber" :maxLength="4" :oninput="maxLengthControl" />
              </NextFormGroup>
              <NextFormGroup :title="$t('insert.FieldSurvey.questionIsNecessary')" :error="$v.selectedQuestion.isNecessary" :required="true">
                <NextCheckBox v-model="selectedQuestion.isNecessary" type="number" />
@@ -173,13 +146,13 @@
         <b-tab :title="$t('insert.FieldSurvey.validDates')" v-if="validDatesReq">
           <b-row>
             <NextFormGroup :title="$t('insert.fieldSurveyValidDates.description1')" :error="$v.selectedValidDates.description1" :required="true">
-              <b-form-input type="text" v-model="selectedValidDates.description1" />
+              <NextInput type="text" v-model="selectedValidDates.description1" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fieldSurveyValidDates.startDate')" :error="$v.selectedValidDates.startDate" :required="true">
-              <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.startDate')" size="sm" v-model="selectedValidDates.startDate" />
+              <NextDatePicker v-model="selectedValidDates.startDate" size="sm" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fieldSurveyValidDates.endDate')" :error="$v.selectedValidDates.endDate" :required="true">
-              <b-form-datepicker :placeholder="$t('insert.fieldSurveyValidDates.endDate')" size="sm" v-model="selectedValidDates.endDate" />
+              <NextDatePicker v-model="selectedValidDates.endDate"/>
             </NextFormGroup>
           </b-row>
           <b-row>
@@ -261,7 +234,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['detailLookup', 'branchs', 'analysisQuestions'])
+    ...mapState(['detailLookup'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
@@ -300,26 +273,6 @@ export default {
         })
       } else {
         this.updateData()
-      }
-    },
-    onBranchSearch (search, loading) {
-      if (search.length >= 3) {
-        let model = {
-          BranchCommercialTitle: search
-        }
-        this.searchItemsByModel('VisionNextBranch/api/Branch/AutoCompleteSearch', 'branchs', model).then(res => {
-          loading(false)
-        })
-      }
-    },
-    onAnalysisQuestions (search, loading) {
-      if (search.length >= 3) {
-        let model = {
-          Description1: search
-        }
-        this.searchItemsByModel('VisionNextFieldAnalysis/api/AnalysisQuestions/AutoCompleteSearch', 'analysisQuestions', model).then(res => {
-          loading(false)
-        })
       }
     },
     addFieldSurveyBranchs () {

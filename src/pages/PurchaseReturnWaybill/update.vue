@@ -21,30 +21,27 @@
           <b-col cols="8">
             <b-row>
               <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate" md="3" lg="3">
-                <b-form-datepicker v-model="documentDate" :placeholder="$t('insert.chooseDate')" :disabled="true"/>
+                <NextDatePicker v-model="documentDate" :disabled="insertReadonly.DocumentDate" />
               </NextFormGroup>
               <NextFormGroup item-key="DocumentTime" :error="$v.form.DocumentTime" md="3" lg="3">
-                <b-form-timepicker
-                  :placeholder="$t('insert.chooseTime')"
-                  :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
-                  :label-no-time-selected="$t('insert.chooseTime')"
-                  :label-close-button="$t('insert.close')"
-                  close-button-variant="outline-danger"
-                  v-model="form.DocumentTime"
-                  :disabled="true"/>
+                <NextTimePicker v-model="form.DocumentTime" :disabled="insertReadonly.DocumentTime" />
               </NextFormGroup>
               <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
-                <v-select v-model="selectedCustomer" :options="customers" @search="searchCustomer" :filterable="false" @input="selectedSearchType('CustomerId', $event)" label="Description1" :disabled="true">
-                  <template slot="no-options">
-                    {{$t('insert.min3')}}
-                  </template>
-                  <template v-slot:option="option">
-                    {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                  </template>
-                </v-select>
+                <NextDropdown
+                  v-model="selectedCustomer"
+                  @input="selectedSearchType('CustomerId', $event)"
+                  url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                  :searchable="true" :custom-option="true"
+                  :disabled="insertReadonly.CustomerId" label="Description1"
+                  or-condition-fields="Code,Description1,CommercialTitle"
+                  :is-customer="true"/>
               </NextFormGroup>
               <NextFormGroup item-key="PriceListId" :error="$v.form.PriceListId" md="3" lg="3">
-                <v-select :disabled="true" v-model="selectedPrice" :options="priceList" :filterable="false" label="Description1"></v-select>
+                <NextDropdown
+                  v-model="selectedPrice"
+                  :source="priceList"
+                  label="Description1"
+                  :disabled="insertReadonly.PriceListId"/>
               </NextFormGroup>
             </b-row>
           </b-col>
@@ -74,57 +71,52 @@
         <b-tab :title="$t('insert.order.enterWaybill')" active @click.prevent="tabValidation()">
           <b-row>
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.InvoiceNumber" :readonly="insertReadonly.InvoiceNumber" :disabled="true"/>
+              <NextInput type="text" v-model="form.InvoiceNumber" :disabled="insertReadonly.InvoiceNumber"/>
             </NextFormGroup>
             <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.PrintedDispatchNumber" :readonly="insertReadonly.PrintedDispatchNumber" :disabled="true"/>
+              <NextInput type="text" v-model="form.PrintedDispatchNumber" :disabled="insertReadonly.PrintedDispatchNumber"/>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
-              <v-select v-model="selectedInvoiceKind" label="Description1" :options="invoiceKinds" :filterable="false" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="true"></v-select>
+              <NextDropdown v-model="selectedInvoiceKind" @input="selectedSearchType('InvoiceKindId', $event)" label="Description1" :disabled="insertReadonly.InvoiceKindId" url="VisionNextInvoice/api/InvoiceKind/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
-              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
+              <NextInput type="text" v-model="form.DocumentNumber" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1"/>
+              <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"/>
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedRepresentative" label="Description1" :options="representatives" orConditionFields="Code,Description1,Name,Surname" :filterable="false" @input="selectedSearchType('RepresentativeId', $event)" :disabled="true"></v-select>
+              <NextDropdown v-model="selectedRepresentative" label="Description1" @input="selectedSearchType('RepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/Search" :disabled="insertReadonly.RepresentativeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="DeliveryRepresentativeId" :error="$v.form.DeliveryRepresentativeId" md="2" lg="2">
-              <v-select v-model="selectedDeliveryRepresentative" label="Description1" :options="representatives" :filterable="false" @input="selectedSearchType('DeliveryRepresentativeId', $event)" :disabled="true"></v-select>
+              <NextDropdown v-model="selectedDeliveryRepresentative" @input="selectedSearchType('DeliveryRepresentativeId', $event)" orConditionFields="Code,Description1,Name,Surname" url="VisionNextEmployee/api/Employee/Search" :disabled="insertReadonly.DeliveryRepresentativeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
-              <v-select v-model="selectedCurrency" label="Description1" :options="currencies" :filterable="false" :disabled="true"></v-select>
+              <NextDropdown v-model="selectedCurrency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
             </NextFormGroup>
-            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
-              <v-select v-model="selectedWarehouse" :options="warehouses" :filterable="false" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true">
-              </v-select>
+            <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="3" lg="3">
+              <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true" url="VisionNextWarehouse/api/Warehouse/Search" :dynamic-and-condition="{ IsVehicle: 1 }"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
             </NextFormGroup>
-            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <v-select label="Description1" :options="routes" @search="searchRoute" :filterable="false" @input="selectedSearchType('RouteId', $event)" :disabled="true">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
+              <NextDropdown
+                @input="selectedSearchType('RouteId', $event)"
+                :disabled="insertReadonly.RouteId"
+                url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                v-model="selectedRoute"
+                label="Description1"
+                />
             </NextFormGroup>
             <NextFormGroup item-key="EDocumentStatusId" :error="$v.form.EDocumentStatusId" md="2" lg="2">
-              <v-select v-model="selectedEDocumentStatus" label="Description1" :options="eDocumentStatus" :filterable="false" :disabled="true" ></v-select>
+              <NextDropdown v-model="selectedEDocumentStatus" label="Description1" :source="eDocumentStatus" :disabled="insertReadonly.EDocumentStatusId" ></NextDropdown>
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2">
-              <b-form-datepicker v-model="form.ActualDeliveryDate" :placeholder="$t('insert.chooseDate')"/>
+             <NextFormGroup item-key="ActualDeliveryDate" :error="$v.form.ActualDeliveryDate" md="2" lg="2">
+              <NextDatePicker v-model="form.ActualDeliveryDate" :disabled="insertReadonly.ActualDeliveryDate" />
             </NextFormGroup>
-            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2">
-                <b-form-timepicker
-                  :placeholder="$t('insert.chooseTime')"
-                  :locale="($i18n.locale === 'tr') ? 'tr-Tr' : 'en-US'"
-                  :label-no-time-selected="$t('insert.chooseTime')"
-                  :label-close-button="$t('insert.close')"
-                  close-button-variant="outline-danger"
-                  v-model="form.ActualDeliveryTime"/>
+            <NextFormGroup item-key="ActualDeliveryTime" :error="$v.form.ActualDeliveryTime" md="2" lg="2" >
+              <NextTimePicker v-model="form.ActualDeliveryTime" :disabled="insertReadonly.ActualDeliveryTime" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -159,10 +151,10 @@
         <b-tab :title="$t('insert.order.logisticCompanies')" @click.prevent="tabValidation()" :disabled="form.VehicleId > 0">
           <b-row>
             <NextFormGroup :title="$t('insert.order.companyName')" :error="$v.selectedInvoiceLogisticCompany.companyName" :required="true" md="4" lg="3">
-              <b-form-input type="text" v-model="selectedInvoiceLogisticCompany.companyName"/>
+              <NextInput type="text" v-model="selectedInvoiceLogisticCompany.companyName"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.taxNumber')" :error="$v.selectedInvoiceLogisticCompany.taxNumber" :required="true" md="4" lg="3">
-              <b-form-input type="number" v-model="selectedInvoiceLogisticCompany.taxNumber" :maxLength="10" :oninput="maxLengthControl"/>
+              <NextInput type="number" v-model="selectedInvoiceLogisticCompany.taxNumber" :maxLength="10" :oninput="maxLengthControl"/>
             </NextFormGroup>
           </b-row>
           <NextAddress
@@ -298,14 +290,20 @@ export default {
         taxNumber: null
       },
       selectedInvoiceKind: null,
-      address: {}
+      address: {},
+      priceList: [],
+      selectedRoute: null,
+      currencies: [],
+      eDocumentStatus: []
     }
   },
   computed: {
-    ...mapState(['representatives', 'warehouses', 'customers', 'priceList', 'paymentTypes', 'currencies', 'priceListItems', 'stocks', 'routes', 'eDocumentStatus', 'invoiceKinds'])
+    ...mapState(['paymentTypes', 'priceListItems', 'stocks'])
   },
   mounted () {
     this.getInsertPage(this.routeName)
+    this.getCurrencies()
+    this.getEDocumentStatus()
   },
   methods: {
     getInsertPage (e) {
@@ -319,33 +317,8 @@ export default {
         this.setData()
       })
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/PaymentType/Search', name: 'paymentTypes'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextEmployee/api/Employee/Search', name: 'representatives'})
-      this.searchItemsByModel('VisionNextWarehouse/api/Warehouse/Search', 'warehouses', {IsVehicle: 1})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextCommonApi/api/EDocumentStatus/Search', name: 'eDocumentStatus'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextInvoice/api/InvoiceKind/Search', name: 'invoiceKinds'})
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
-      })
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
       })
     },
     searchPriceList () {
@@ -371,6 +344,22 @@ export default {
         } else {
           this.selectedPrice = {}
           this.form.PriceListId = null
+        }
+      })
+    },
+    getCurrencies () {
+      this.$api.postByUrl({}, 'VisionNextSystem/api/SysCurrency/Search').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.currencies = response.ListModel.BaseModels
+        }
+      })
+    },
+    getEDocumentStatus () {
+      this.$api.postByUrl({}, 'VisionNextCommonApi/api/EDocumentStatus/Search').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.eDocumentStatus = response.ListModel.BaseModels
+          this.selectedEDocumentStatus = response.ListModel.BaseModels[0]
+          this.form.EDocumentStatusId = this.selectedEDocumentStatus.RecordId
         }
       })
     },
@@ -496,27 +485,13 @@ export default {
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
         this.selectedEDocumentStatus = this.convertLookupValueToSearchValue(rowData.EDocumentStatus)
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
+        this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
             item.RecordState = 3
             return item
           })
         }
-      }
-    },
-    searchRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
-          name: 'routes',
-          andConditionModel: {
-            Description1: search
-          }
-        }).then(res => {
-          loading(false)
-        })
       }
     },
     addInvoiceLogisticCompany () {
@@ -646,12 +621,6 @@ export default {
       if (e) {
         this.form.DocumentDate = e
         this.searchPriceList()
-      }
-    },
-    currencies (e) {
-      if (e && e.length > 0) {
-        this.selectedCurrency = e[0]
-        this.form.CurrencyId = e[0].RecordId
       }
     },
     address (e) {

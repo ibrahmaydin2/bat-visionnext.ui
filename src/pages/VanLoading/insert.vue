@@ -19,7 +19,11 @@
       <section>
         <b-row>
           <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId">
-            <NextDropdown :disabled="insertReadonly.FromWarehouseId" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" @input="selectedSearchType('FromWarehouseId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
+            <NextDropdown
+              :disabled="insertReadonly.FromWarehouseId"
+              url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
+              :dynamic-and-condition="{ StatusIds: [1], IsVehicle: 0 }"
+              @input="selectedSearchType('FromWarehouseId', $event)" />
           </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
               <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>

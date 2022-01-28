@@ -26,7 +26,9 @@
             :current-page="mainCurrentPage"
             :per-page="10"
             >
-          >
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
             <template #cell(UpdateSummary)="row">
               <span v-b-tooltip.hover :title="row.item.UpdateSummary" class="summary-span">{{row.item.UpdateSummary}}</span>
               <b-link class="detail-button" variant="success" v-b-toggle="`header-collapse-${row.index}`" @click="getFirstDetail(row);">
@@ -39,7 +41,11 @@
                   :fields="firstDetailHeaderFields"
                   bordered
                   responsive>
-                ></b-table>
+                >
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
+                </b-table>
               </b-collapse>
             </template>
             <template #cell(show_details)="row">
@@ -59,6 +65,9 @@
                      bordered
                      responsive>
                    >
+                     <template #head()="data">
+                      {{$t(data.label)}}
+                     </template>
                      <template #cell(show_details)="detailRow">
                        <div>
                          <b-link class="detail-button" variant="success" @click="getSecondDetail(detailRow, row.index); detailRow.toggleDetails();">
@@ -75,7 +84,11 @@
                                :fields="firstDetailHeaderFields"
                                striped
                                responsive>
-                             ></b-table>
+                             >
+                             <template #head()="data">
+                                {{$t(data.label)}}
+                              </template>
+                             </b-table>
                             </b-col>
                           </b-row>
                         </div>

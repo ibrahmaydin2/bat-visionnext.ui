@@ -32,27 +32,17 @@
         <b-tab :title="$t('insert.loyaltyGain.title')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="LoyaltyId" :error="$v.form.LoyaltyId">
-              <NextDropdown :disabled="insertReadonly.LoyaltyId" @input="selectLoyalty($event)" url="VisionNextLoyalty/api/Loyalty/Search" :dynamic-and-condition="{StatusId: 1}" searchable/>
+              <NextDropdown
+                :disabled="insertReadonly.LoyaltyId"
+                url="VisionNextLoyalty/api/Loyalty/Search"
+                :dynamic-and-condition="{StatusId: 1}" searchable
+                @input="selectLoyalty"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select
-                v-model="customer"
-                :disabled="!form.LoyaltyId"
-                @input="selectedSearchType('CustomerId', $event)"
-                @search="searchCustomer"
-                :options="customers"
-                :filterable="false"
-                label="Description1">
-              <template slot="no-options">
-                {{$t('insert.min3')}}
-              </template>
-              <template v-slot:option="option">
-                <span>{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
-              </template>
-              </v-select>
+              <NextDropdown v-model="customer" :disabled="!form.LoyaltyId" @input="selectCustomer" url="VisionNextCustomer/api/Customer/GetLoyaltyCustomers" :dynamic-request="{model: {loyaltyId: this.form.LoyaltyId}}" searchable/>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
-              <NextDatePicker v-model="form.DocumentDate" :disabled="true" />
+              <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
             </NextFormGroup>
             <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
               <NextDropdown v-model="employee" orConditionFields="Code,Description1,Name,Surname" :disabled="insertReadonly.EmployeeId" @input="selectedSearchType('EmployeeId', $event)" url="VisionNextEmployee/api/Employee/Search" searchable/>
@@ -63,8 +53,11 @@
           <b-row>
             <b-table
               :fields="loyaltyGainDetailFields"
-              :items="form.LoyaltyGainDetails"
+              :items="loyaltyGainDetails"
               bordered responsive >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(Value)="data">
                 <NextInput type="number" v-model="data.item.Value"/>
               </template>
@@ -101,7 +94,8 @@ export default {
       employee: null,
       loyaltyGainDetailFields: detailData.loyaltyGainDetailFields,
       customer: null,
-      customers: []
+      customers: [],
+      loyaltyGainDetails: []
     }
   },
   mounted () {
@@ -119,6 +113,7 @@ export default {
         })
         this.tabValidation()
       } else {
+        this.form.LoyaltyGainDetails = this.loyaltyGainDetails.filter(l => l.Value !== null && l.Value !== '')
         this.createData()
       }
     },
@@ -144,49 +139,32 @@ export default {
       this.form.CustomerId = null
       if (loyalty) {
         this.form.LoyaltyId = loyalty.RecordId
+      } else {
+        this.form.LoyaltyId = null
+      }
+    },
+    selectCustomer (customer) {
+      if (customer) {
+        this.form.CustomerId = customer.RecordId
         let model = {
-          RecordId: this.form.LoyaltyId
+          LoyaltyId: this.form.LoyaltyId,
+          CustomerId: this.form.CustomerId
         }
-        this.$api.postByUrl(model, 'VisionNextLoyalty/api/Loyalty/Get').then((response) => {
-          if (response.Model) {
-            this.form.LoyaltyGainDetails = response.Model.LoyaltyActiveCategories.map(item => {
-              let loyaltyGainDetail = {
-                ActiveCategoryId: item.LoyaltyCategoryId,
-                ActiveCategory: item.LoyaltyCategory,
-                Genexp1: item.Genexp1,
-                Deleted: 0,
-                System: 0,
-                RecordState: 2,
-                Value: null
-              }
-              return loyaltyGainDetail
+        this.$api.postByUrl(model, 'VisionNextLoyalty/api/LoyaltyGain/GetGain').then((response) => {
+          if (response) {
+            this.loyaltyGainDetails = response.map(item => {
+              item.Deleted = 0
+              item.System = 0
+              item.RecordState = 2
+              item.Value = null
+
+              return item
             })
           }
         })
+      } else {
+        this.form.CustomerId = null
       }
-    },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      if (search === '%%%') {
-        search = undefined
-      } else if ((typeof search === 'string' || search instanceof String) && search.includes('%')) {
-        search = search.replaceAll('%', '')
-      }
-      let request = {
-        model: {
-          loyaltyId: this.form.LoyaltyId,
-          description: search
-        }
-      }
-      loading(true)
-      this.$api.postByUrl(request, 'VisionNextCustomer/api/Customer/GetLoyaltyCustomers').then((response) => {
-        loading(false)
-        if (response && response.ListModel) {
-          this.customers = response.ListModel.BaseModels
-        }
-      })
     }
   }
 }

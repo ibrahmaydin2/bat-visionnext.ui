@@ -46,15 +46,21 @@
               <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
                   <b-thead>
-                    <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
                     <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.ItemName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.lastSalesQuantity')}}</span></b-th>
                     <b-th><span>{{$t('insert.RMA.Quantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.UsedQuantity')}}</span></b-th>
+                    <b-th><span>{{$t('insert.RMA.usedPrice')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                   <b-tr v-for="(w, i) in (rowData.RmaLines != null ? rowData.RmaLines.filter(f => f.RecordState !== 4) : [])" :key="i">
-                      <b-td>{{w.Item.Label}}</b-td>
                       <b-td>{{w.Item.Code}}</b-td>
+                      <b-td>{{w.Item.Label}}</b-td>
+                      <b-td>{{w.LastSalesQuantity}}</b-td>
                       <b-td>{{w.Quantity}}</b-td>
+                      <b-td>{{w.UsedQuantity}}</b-td>
+                      <b-td>{{w.Price}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

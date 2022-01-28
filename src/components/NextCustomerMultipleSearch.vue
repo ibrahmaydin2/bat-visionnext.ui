@@ -34,6 +34,9 @@
           :current-page="currentPage"
           :per-page="100"
           :busy="tableBusy">
+          <template #head()="data">
+            {{$t(data.label)}}
+          </template>
           <template #table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -78,6 +81,11 @@ export default {
       type: Object,
       default: () => { return {} },
       description: 'Search apisi için sayfaya özel and condition bilgisi'
+    },
+    convertedValues: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Liste set ederken alanların belirlenmesi'
     }
   },
   model: {
@@ -192,18 +200,21 @@ export default {
     },
     addItems () {
       let list = this.list.map(l => {
-        return {
-          TableName: 'T_CUSTOMER',
-          ColumnName: 'RECORD_ID',
+        let data = {
+          ...l,
           Deleted: 0,
           System: 0,
           RecordState: 2,
-          StatusId: 1,
-          ColumnValue: l.RecordId,
-          ColumnNameDesc: l.Code,
-          CustomerName: l.CommercialTitle,
-          Location: l.DefaultLocation ? l.DefaultLocation.Label : '-'
+          StatusId: 1
         }
+
+        if (this.convertedValues.length > 0) {
+          this.convertedValues.map(c => {
+            data[c.mainProperty] = c.convert(l)
+          })
+        }
+
+        return data
       })
       this.$emit('valuechange', list)
       this.closeModal()

@@ -65,13 +65,20 @@
                 @input="selectRoute"
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.RouteId" />
             </NextFormGroup>
-            <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" md="3" lg="3">
+            <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="!(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
               <NextDropdown
                 v-model="fromWarehouse"
-                :dynamic-and-condition="{ StatusIds: [1] } || getFromWarehouseAndCondition()"
+                :dynamic-and-condition="{ StatusIds: [1] } && getFromWarehouseAndCondition()"
                 @input="selectFromWarehouse($event)"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :disabled="(movementType && movementType.Code === '04') || isItemAdded || insertReadonly.FromWarehouseId" />
+                :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || insertReadonly.FromWarehouseId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
+              <NextDropdown
+                v-model="fromWarehouse"
+                @input="selectFromWarehouse($event)"
+                :source="fromWarehouses"
+                :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || insertReadonly.FromWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="FromStatusId" :error="$v.form.FromStatusId" md="3" lg="3">
               <NextDropdown
@@ -79,7 +86,7 @@
                 @input="selectFromStatus($event)"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=1"
-                :disabled="(movementType && movementType.Code === '04') || isItemAdded || disabledStatus || insertReadonly.FromStatusId"
+                :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || disabledStatus || insertReadonly.FromStatusId"
                 v-on:all-source="setStockStatus" />
             </NextFormGroup>
           </b-row>
@@ -93,13 +100,21 @@
                 url="VisionNextVehicle/api/Vehicle/Search" searchable
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.VehicleId" />
             </NextFormGroup>
-            <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" md="3" lg="3">
+            <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" v-if="!(movementType && (movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '04'))" md="3" lg="3">
               <NextDropdown
                 v-model="toWarehouse"
                 url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :dynamic-and-condition="{StatusIds: [1] } || getToWarehouseAndCondition()"
+                :dynamic-and-condition="{StatusIds: [1] } && getToWarehouseAndCondition()"
                 @input="selectToWarehouse($event)"
-                :disabled="(movementType && movementType.Code === '05') || isItemAdded || insertReadonly.ToWarehouseId" />
+                :disabled="(movementType && movementType.Code === '05') || movementType === null || isItemAdded || insertReadonly.ToWarehouseId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" v-if="(movementType && (movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '04'))" md="3" lg="3">
+              <NextDropdown
+                v-model="toWarehouse"
+                :source="toWarehouses"
+                :dynamic-and-condition="{StatusIds: [1] } && getToWarehouseAndCondition()"
+                @input="selectToWarehouse($event)"
+                :disabled="(movementType && movementType.Code === '05') || movementType === null || isItemAdded || insertReadonly.ToWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToStatusId" :error="$v.form.ToStatusId" md="3" lg="3">
               <NextDropdown
@@ -107,7 +122,7 @@
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectedSearchType('ToStatusId', $event)"
                 url="VisionNextStockManagement/api/StockStatus/Search?v=2"
-                :disabled="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')) || isItemAdded || disabledStatus" />
+                :disabled="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '10')) || movementType === null || isItemAdded || disabledStatus" />
             </NextFormGroup>
           </b-row>
           <hr>
@@ -140,6 +155,7 @@
                   v-model="form.WarehouseMovementItems"
                   :disabled-button="disabledMultipleSelection"
                   :hidden-values="multipleHiddenValues"
+                  :validations="multipleValidations"
                   :dynamic-and-condition="{
                     FromWarehouseIds: form.FromWarehouseId ? [form.FromWarehouseId] : null,
                     ToWarehouseIds: form.ToWarehouseId ? [form.ToWarehouseId] : null,
@@ -233,6 +249,8 @@ export default {
       disabledStatus: false,
       stockStatus: [],
       selectedIndex: null,
+      toWarehouses: [],
+      fromWarehouses: [],
       multipleHiddenValues: [
         {
           mainProperty: 'FromQuantity',
@@ -242,6 +260,19 @@ export default {
           mainProperty: 'ToQuantity',
           targetProperty: 'ToWhStockQuantity'
         }
+      ],
+      multipleValidations: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            if (value > data.FromQuantity) {
+              this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.BranchStockTransfer.errorPlanQuantity') })
+              return false
+            }
+
+            return true
+          }
+        }
       ]
     }
   },
@@ -250,6 +281,8 @@ export default {
     let currentDate = new Date()
     this.form.MovementDate = currentDate.toISOString().slice(0, 10)
     this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
+    this.getToWarehouses()
+    this.getFromWarehouses()
   },
   computed: {
     disabledMultipleSelection () {
@@ -510,15 +543,53 @@ export default {
         this.form.ToWarehouseId = null
       }
     },
+    getFromWarehouses () {
+      this.form.FromWarehouseId = null
+      this.fromWarehouse = null
+
+      let request = {
+        andConditionModel: {
+          StatusIds: [1],
+          IsVehicle: 0
+        }
+      }
+
+      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=3').then(res => {
+        if (res && res.ListModel) {
+          this.fromWarehouses = res.ListModel.BaseModels
+        }
+      })
+    },
+    getToWarehouses () {
+      this.form.ToWarehouseId = null
+      this.toWarehouse = null
+
+      let request = {
+        andConditionModel: {
+          StatusIds: [1],
+          IsVehicle: 0
+        }
+      }
+
+      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=2').then(res => {
+        if (res && res.ListModel) {
+          this.toWarehouses = res.ListModel.BaseModels
+        }
+      })
+    },
     getFromWarehouseAndCondition () {
       if (this.movementType) {
         switch (this.movementType.Code) {
           case '01':
-            return {IsVehicle: 0}
+            return {StatusIds: [1], IsVehicle: 0}
+          case '05':
+            return {StatusIds: [1], IsVehicle: 0}
+          case '07':
+            return {StatusIds: [1], IsVehicle: 0}
           case '10':
-            return {IsVehicle: 1}
+            return {StatusIds: [1], IsVehicle: 1}
           case '12':
-            return {IsVehicle: 0}
+            return {StatusIds: [1], IsVehicle: 0}
           default:
             return {}
         }
@@ -528,11 +599,15 @@ export default {
       if (this.movementType) {
         switch (this.movementType.Code) {
           case '01':
-            return {IsVehicle: 0}
+            return {StatusIds: [1], IsVehicle: 0}
+          case '04':
+            return {StatusIds: [1], IsVehicle: 0}
+          case '07':
+            return {StatusIds: [1], IsVehicle: 0}
           case '10':
-            return {IsVehicle: 1}
+            return {StatusIds: [1], IsVehicle: 1}
           case '12':
-            return {IsVehicle: 1}
+            return {StatusIds: [1], IsVehicle: 1}
           default:
             return {}
         }

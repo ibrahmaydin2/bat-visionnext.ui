@@ -73,15 +73,6 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountCustomers')">
-          <b-row>
-            <b-col>
-              <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.DiscountCustomers" :items="discountCustomerItems" :main-form="{}"></NextDetailPanel>
-              </b-card>
-            </b-col>
-          </b-row>
-        </b-tab>
         <b-tab :title="$t('insert.discount.discountExcludedCustomers')">
           <b-row>
             <b-col>
@@ -91,43 +82,52 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.customerCriterias')">
+        <b-tab :title="$t('insert.discount.customerCriterias')" v-if="rowData.CustomerCriteriaId === 21">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get"  v-model="discountDetailsCustomerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="{}"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="customerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.branchs')">
+        <b-tab :title="$t('insert.discount.branchs')" v-if="rowData.BranchCriteriaId === 30">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get"  v-model="discountDetailsBranchs" :items="discountDetailsBranchItems" :main-form="{}"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="branchs" :items="discountDetailsBranchItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.routes')">
+        <b-tab :title="$t('insert.discount.discountCustomers')" v-if="rowData.CustomerCriteriaId === 22">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="discountDetailsRoutes" :items="discountDetailsRouteItems" :main-form="{}"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="customers" :items="discountCustomerItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.payments')">
+        <b-tab :title="$t('insert.discount.routes')" v-if="rowData.RouteCriteriaId === 33">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="discountDetailsPaymentTypes" :items="discountDetailsPaymentTypeItems" :main-form="{}"></NextDetailPanel>
+                <NextDetailPanel type="get" v-model="routes" :items="discountDetailsRouteItems" :main-form="{}"></NextDetailPanel>
               </b-card>
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.discount.discountCustomerSqls')">
+        <b-tab :title="$t('insert.discount.payments')" v-if="rowData.PaymentCriteriaId === 36">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="paymentTypes" :items="discountDetailsPaymentTypeItems" :main-form="{}"></NextDetailPanel>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.discount.discountCustomerSqls')" v-if="rowData.CustomerCriteriaId === 29">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -158,10 +158,11 @@ export default {
       discountDetailsPaymentTypeItems: detailData.discountDetailsPaymentTypeItems,
       discountCustomerSqlItems: detailData.discountCustomerSqlItems,
       discountDetailsBranchItems: detailData.discountDetailsBranchItems,
-      discountDetailsCustomerCriterias: [],
-      discountDetailsBranchs: [],
-      discountDetailsRoutes: [],
-      discountDetailsPaymentTypes: []
+      customers: [],
+      customerCriterias: [],
+      branchs: [],
+      routes: [],
+      paymentTypes: []
     }
   },
   mounted () {
@@ -176,10 +177,11 @@ export default {
     },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextDiscount/api/Discount', record: this.$route.params.url}).then(() => {
-        this.discountDetailsCustomerCriterias = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECOR_ID' && d.ColumnName !== 'BRANCH_ID')
-        this.discountDetailsBranchs = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
-        this.discountDetailsRoutes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECOR_ID')
-        this.discountDetailsPaymentTypes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECOR_ID')
+        this.customers = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'RECORD_ID')
+        this.customerCriterias = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECORD_ID' && d.ColumnName !== 'BRANCH_ID')
+        this.branchs = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
+        this.routes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECORD_ID')
+        this.paymentTypes = this.rowData.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECORD_ID')
       })
     }
   }

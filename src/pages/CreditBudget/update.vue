@@ -52,7 +52,7 @@
       <section>
         <b-row>
           <NextFormGroup :title="$t('insert.code')">
-            <b-form-input type="text" v-model="form.Code" disabled />
+            <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -68,25 +68,25 @@
         <b-tab :title="$t('insert.creditBudget.title')" active>
           <b-row>
             <NextFormGroup item-key="BeginDate" :error="$v.form.BeginDate">
-              <b-form-datepicker v-model="form.BeginDate" :placeholder="$t('insert.chooseDate')" disabled />
+              <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
             </NextFormGroup>
             <NextFormGroup item-key="EndDate" :error="$v.form.EndDate">
-              <b-form-datepicker v-model="form.EndDate" :placeholder="$t('insert.chooseDate')" disabled />
+              <NextDatePicker v-model="form.EndDate" :disabled="insertReadonly.EndDate" />
             </NextFormGroup>
             <NextFormGroup item-key="CreditBranchId" :error="$v.form.CreditBranchId">
               <NextDropdown v-model="selectedBranch" url="VisionNextBranch/api/Branch/AutoCompleteSearch" @input="selectedSearchType('CreditBranchId', $event)" disabled searchable />
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <b-form-input type="number" v-model="form.BudgetAmount" :readonly="true" @input="changedBudgetAmount" />
+              <NextInput v-model="form.BudgetAmount" type="number" :disabled="insertReadonly.BudgetAmount" @input="changedBudgetAmount" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
-              <b-form-input type="text" v-model="form.UsedAmount" :readonly="insertReadonly.UsedAmount"/>
+              <NextInput type="text" v-model="form.UsedAmount" :disabled="insertReadonly.UsedAmount"/>
             </NextFormGroup>
             <NextFormGroup item-key="ReservedAmount" :error="$v.form.ReservedAmount">
-              <b-form-input type="text" v-model="form.ReservedAmount" :readonly="insertReadonly.ReservedAmount" />
+              <NextInput type="text" v-model="form.ReservedAmount" :disabled="insertReadonly.ReservedAmount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.remainingBudget')">
-              <b-form-input type="text" v-model="form.LeftAmount" disabled />
+              <NextInput type="text" v-model="form.LeftAmount" :disabled="true" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -102,28 +102,28 @@
                 :is-customer="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditLimit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditLimit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditLimit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.riskLimit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.RiskLimit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.RiskLimit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.currentCredit')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CurrentCredit" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CurrentCredit" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.currentRisk')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CurrentRisk" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CurrentRisk" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditAccountRemainder')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAccountRemainder" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditAccountRemainder" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.debitAccountRemainder')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.DebitAccountRemainder" disabled />
+              <NextInput type="text" v-model="customerGuarantees.DebitAccountRemainder" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.creditAmountCentral')" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.CreditAmountCentral" disabled />
+              <NextInput type="text" v-model="customerGuarantees.CreditAmountCentral" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.amount')" :required="true" :error="$v.customerGuarantees.Amount" md="2" lg="2">
-              <b-form-input type="text" v-model="customerGuarantees.Amount" />
+              <NextInput type="text" v-model="customerGuarantees.Amount" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditBudget.paymentPeriod')" :required="false" md="2" lg="2">
               <NextDropdown
@@ -175,6 +175,9 @@
               :current-page="currentPage"
               :per-page="0"
             >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
               <template #cell(selection)="row">
                 <span>
                   <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
@@ -247,31 +250,31 @@ export default {
       selectedItems: [],
       customerGuaranteeFields: [
         {key: 'selection', label: '', sortable: false},
-        {key: 'AppStatus', label: this.$t('insert.creditBudget.status'), sortable: false},
+        {key: 'AppStatus', label: 'insert.creditBudget.status', sortable: false},
         {
           key: 'CustomerDesc',
-          label: this.$t('insert.creditBudget.customer'),
+          label: 'insert.creditBudget.customer',
           sortable: false,
           formatter (value, key, obj) {
             return `${obj.CustomerCode} - ${obj.CustomerDesc}`
           }
         },
-        {key: 'CreditLimit', label: this.$t('insert.creditBudget.creditLimit'), sortable: false},
-        {key: 'RiskLimit', label: this.$t('insert.creditBudget.riskLimit'), sortable: false},
-        {key: 'CurrentCredit', label: this.$t('insert.creditBudget.currentCredit'), sortable: false},
-        {key: 'CurrentRisk', label: this.$t('insert.creditBudget.currentRisk'), sortable: false},
-        {key: 'CreditAccountRemainder', label: this.$t('insert.creditBudget.creditAccountRemainder'), sortable: false},
-        {key: 'DebitAccountRemainder', label: this.$t('insert.creditBudget.debitAccountRemainder'), sortable: false},
-        {key: 'CreditAmount', label: this.$t('insert.creditBudget.creditAmountCentral'), sortable: false},
-        {key: 'Amount', label: this.$t('insert.creditBudget.amount'), sortable: false},
+        {key: 'CreditLimit', label: 'insert.creditBudget.creditLimit', sortable: false},
+        {key: 'RiskLimit', label: 'insert.creditBudget.riskLimit', sortable: false},
+        {key: 'CurrentCredit', label: 'insert.creditBudget.currentCredit', sortable: false},
+        {key: 'CurrentRisk', label: 'insert.creditBudget.currentRisk', sortable: false},
+        {key: 'CreditAccountRemainder', label: 'insert.creditBudget.creditAccountRemainder', sortable: false},
+        {key: 'DebitAccountRemainder', label: 'insert.creditBudget.debitAccountRemainder', sortable: false},
+        {key: 'CreditAmount', label: 'insert.creditBudget.creditAmountCentral', sortable: false},
+        {key: 'Amount', label: 'insert.creditBudget.amount', sortable: false},
         {
           key: 'PaymentPeriod',
-          label: this.$t('insert.creditBudget.paymentPeriod'),
+          label: 'insert.creditBudget.paymentPeriod',
           sortable: false,
           formatter (value, key, obj) {
             return obj.paymentPeriodO ? obj.paymentPeriodO.Description1 : '-'
           }},
-        {key: 'operations', label: this.$t('list.operations'), sortable: false}
+        {key: 'operations', label: 'list.operations', sortable: false}
       ],
       selectedIndex: 0,
       paymentPeriods: [],

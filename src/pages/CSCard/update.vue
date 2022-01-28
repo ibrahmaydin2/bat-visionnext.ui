@@ -19,13 +19,13 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-              <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput v-model="form.Code" type="text" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-              <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle />
           </NextFormGroup>
         </b-row>
       </section>
@@ -34,104 +34,76 @@
       <b-tabs>
         <b-tab :title="$t('get.CsCard.CsCard')" :active="!developmentMode">
           <b-row>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
-              <v-select v-model="customer" label="Description1" :filterable="false" :options="customers" @search="searchCustomer" @input="selectedSearchType('CustomerId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template v-slot:option="option">
-                  {{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber">
-              <b-form-input type="text" v-model="form.DocumentNumber" :readonly="insertReadonly.DocumentNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
-                <b-form-datepicker v-model="form.DocumentDate" :placeholder="$t('insert.chooseDate')"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="DueDate" :error="$v.form.DueDate">
-                <b-form-datepicker v-model="form.DueDate" :placeholder="$t('insert.chooseDate')" />
-            </NextFormGroup>
-            <NextFormGroup item-key="SerialNumber" :error="$v.form.SerialNumber">
-                <b-form-input type="text" v-model="form.SerialNumber" :readonly="insertReadonly.SerialNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="Owner" :error="$v.form.Owner">
-                <b-form-input type="text" v-model="form.Owner" :readonly="insertReadonly.Owner" />
-            </NextFormGroup>
-            <NextFormGroup item-key="PayCity" :error="$v.form.PayCity">
-                <v-select v-model="payCity" :options="lookup.CITY" @input="selectedType('PayCity', $event)" label="Label"></v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="BankId" :error="$v.form.BankId">
-              <v-select v-model="bank" label="Description1" :filterable="false" :options="banks" @search="searchBank" @input="selectedSearchType('BankId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.Description1 }}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="CorrespondentBranchId" :error="$v.form.CorrespondentBranchId">
-                <v-select :disabled="!branchsValid" :options="branchs" v-model="branch" @input="selectedSearchType('CorrespondentBranchId', $event)" label="Description1"></v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
-                <v-select v-model="currency" :options="currencies" @input="selectedSearchType('CurrencyId', $event)" label="Description1"></v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="CsTotal" :error="$v.form.CsTotal">
-                <b-form-input type="number" v-model="form.CsTotal" :readonly="insertReadonly.CsTotal" />
-            </NextFormGroup>
-            <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
-              <v-select v-model="representative" label="Description1" :filterable="false" :options="representatives" @search="searchRepresentative" @input="selectedSearchType('RepresentativeId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.Description1 }}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <v-select v-model="route" label="Description1" :filterable="false" :options="routes" @search="searchRoute" @input="selectedSearchType('RouteId', $event)" >
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-                <template slot="option" slot-scope="option">
-                  {{ option.Description1 }}
-                </template>
-              </v-select>
-            </NextFormGroup>
-            <b-col v-if="insertVisible.CustomerId != null ? insertVisible.CustomerId : developmentMode" cols="12" md="3">
-              <b-form-group :label="$t('insert.creditcard.reminder')">
-                <b-form-input type="text" v-model="customerReminder" :disabled="true"/>
-              </b-form-group>
-            </b-col>
-          </b-row>
-        </b-tab>
-        <b-tab v-if="developmentMode" :active="developmentMode" title="all inputs">
-          <b-row>
-            <b-col>
-              <pre v-if="developmentMode" class="asc__codeHTML">
-                <span v-for="(codeInCode, i) in insertHTML" :key="'codeInCode' + i">
-                  {{codeInCode}}
-                </span>
-              </pre>
-            </b-col>
-          </b-row>
-          <b-row>
-          </b-row>
-          <b-row>
-            <b-col>
-              <code>{{form}}</code>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="12">
-              <h3>Form Elements</h3>
-              <p>
-                {{insertFormdata}}
-              </p>
-            </b-col>
+              <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
+                <NextDropdown
+                  @input="selectedSearchType('CustomerId', $event)"
+                  url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                  :searchable="true" :custom-option="true"
+                  v-model="customer"
+                  or-condition-fields="Code,Description1,CommercialTitle"
+                  :is-customer="true"/>
+              </NextFormGroup>
+              <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber">
+                <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
+              </NextFormGroup>
+              <NextFormGroup item-key="DocumentDate" :error="$v.form.DocumentDate">
+                <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
+              </NextFormGroup>
+              <NextFormGroup item-key="DueDate" :error="$v.form.DueDate">
+                <NextDatePicker v-model="form.DueDate" :disabled="insertReadonly.DueDate" />
+              </NextFormGroup>
+              <NextFormGroup item-key="SerialNumber" :error="$v.form.SerialNumber">
+                <NextInput v-model="form.SerialNumber" type="text" :disabled="insertReadonly.SerialNumber" />
+              </NextFormGroup>
+              <NextFormGroup item-key="Owner" :error="$v.form.Owner">
+                <NextInput type="text" v-model="form.Owner" :readonly="insertReadonly.Owner" />
+              </NextFormGroup>
+              <NextFormGroup item-key="PayCity" :error="$v.form.PayCity">
+                <NextDropdown v-model="payCity" :disabled="insertReadonly.PayCity" lookup-key="CITY" label="Label" @input="selectedType('PayCity', $event)"/>
+              </NextFormGroup>
+              <NextFormGroup item-key="BankId" :error="$v.form.BankId">
+                <NextDropdown
+                  @input="selectedSearchType('BankId', $event)"
+                  :disabled="insertReadonly.BankId"
+                  v-model="bank"
+                  url="VisionNextBank/api/Bank/AutoCompleteSearch"
+                  label="Description1"
+                  />
+              </NextFormGroup>
+              <NextFormGroup item-key="CorrespondentBranchId" :error="$v.form.CorrespondentBranchId">
+                <NextDropdown v-model="branch" :source="branchs" :disabled="!branchsValid" label="Description1" @input="selectedSearchType('CorrespondentBranchId', $event)"/>
+              </NextFormGroup>
+              <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId">
+                <NextDropdown v-model="currency" :disabled="insertReadonly.CurrencyId" @input="selectedSearchType('CurrencyId', $event)" :source="currencies" />
+              </NextFormGroup>
+              <NextFormGroup item-key="CsTotal" :error="$v.form.CsTotal">
+                  <NextInput type="number" v-model="form.CsTotal" :readonly="insertReadonly.CsTotal" />
+              </NextFormGroup>
+              <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
+                <NextDropdown
+                  @input="selectedSearchType('RepresentativeId', $event)"
+                  :disabled="insertReadonly.RepresentativeId"
+                  url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
+                  label="Description1"
+                  v-model="representative"
+                  :searchable="true" :custom-option="true"
+                  or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
+                  :is-customer="true"
+                  />
+              </NextFormGroup>
+              <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
+                <NextDropdown
+                  @input="selectedSearchType('RouteId', $event)"
+                  :disabled="insertReadonly.RouteId"
+                  v-model="route"
+                  url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                  label="Description1"
+                  searchable
+                  />
+              </NextFormGroup>
+              <NextFormGroup :title="$t('insert.creditcard.reminder')">
+                  <NextInput type="text" v-model="customerReminder" :disabled="true" />
+              </NextFormGroup>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -139,7 +111,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import updateMixin from '../../mixins/update'
 export default {
   mixins: [updateMixin],
@@ -173,7 +144,6 @@ export default {
         CorrespondentBranch: null
       },
       customerReminder: null,
-      routeName: this.$route.meta.baseLink,
       branchs: [],
       branchsValid: false,
       customer: null,
@@ -183,22 +153,38 @@ export default {
       bank: null,
       payCity: null,
       branch: null,
-      routeName1: 'Finance'
+      routeName1: 'Finance',
+      currencies: []
     }
-  },
-  computed: {
-    ...mapState(['customers', 'currencies', 'banks', 'routes', 'representatives'])
   },
   mounted () {
     this.getData().then(() => {
       this.setModel()
     })
     this.getInsertPage()
+    this.getCurrencies()
   },
   methods: {
     getInsertPage (e) {
+      // bu fonksiyonda güncelleme yapılmayacak!
+      // her insert ekranının kuralları ve createCode değerini alır.
       this.$store.dispatch('getInsertRules', {...this.query, api: 'CSCard'})
-      this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextSystem/api/SysCurrency/Search', name: 'currencies'})
+    },
+    getCurrencies () {
+      this.$api.postByUrl({}, 'VisionNextSystem/api/SysCurrency/Search').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.currencies = response.ListModel.BaseModels
+          this.currency = response.ListModel.BaseModels[0]
+          this.form.CurrencyId = this.currency.RecordId
+        }
+      })
+    },
+    getCode () {
+      this.$api.postByUrl({}, `VisionNextFinance/api/CsCard/GetCode`).then(response => {
+        if (response.Model) {
+          this.form.Code = response.Model.Code
+        }
+      })
     },
     selectedSearchType (label, model) {
       if (model) {
@@ -233,69 +219,6 @@ export default {
         })
       }
     },
-    searchCustomer (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      this.$store.dispatch('getSearchItems', {
-        ...this.query,
-        api: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-        name: 'customers',
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            CommercialTitle: search
-          }
-        ]
-      }).then(res => {
-        loading(false)
-      })
-    },
-    searchRepresentative (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        orConditionModels: [
-          {
-            Description1: search,
-            Code: search,
-            Name: search,
-            Surname: search
-          }
-        ]
-      }
-      this.searchItemsByModel('VisionNextEmployee/api/Employee/AutoCompleteSearch', 'representatives', model).then(res => {
-        loading(false)
-      })
-    },
-    searchRoute (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextRoute/api/Route/AutoCompleteSearch', 'routes', model).then(res => {
-        loading(false)
-      })
-    },
-    searchBank (search, loading) {
-      if (search.length < 3) {
-        return false
-      }
-      loading(true)
-      let model = {
-        Description1: search
-      }
-      this.searchItemsByModel('VisionNextBank/api/Bank/AutoCompleteSearch', 'banks', model).then(res => {
-        loading(false)
-      })
-    },
     save () {
       this.$v.$touch()
       if (this.$v.$error) {
@@ -303,10 +226,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CurrencyCsTotal = this.form.CsTotal
-        let model = {
-          'model': this.form
-        }
-        this.$store.dispatch('updateData', {...this.query, api: `VisionNextFinance/api/CSCard`, formdata: model, return: this.routeName})
+        this.updateData()
       }
     },
     setModel () {

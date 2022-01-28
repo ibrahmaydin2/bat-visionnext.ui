@@ -77,7 +77,11 @@
           <NextDetailPanel v-model="form.FieldAnalysisQuestions" :items="fieldAnalysisQuestionItems" :has-line-number="true">
           <template slot="grid">
             <div cols="12" md="2">
-                <NextMultipleSelection v-model="form.FieldAnalysisQuestions" name="FieldAnalysisMultipleQuestion" :hidden-values="hiddenValuesQuestion"></NextMultipleSelection>
+              <NextMultipleSelection
+                v-model="form.FieldAnalysisQuestions"
+                name="FieldAnalysisMultipleQuestion"
+                :hidden-values="hiddenValuesQuestion"
+                :converted-values="convertedValuesQuestions"></NextMultipleSelection>
             </div>
           </template>
           </NextDetailPanel>
@@ -106,7 +110,10 @@
                   :hidden-values="hiddenValues"
                   :dynamic-and-condition="multipleDynamicAndCondition">
                 </NextMultipleSelection>
-                <NextCustomerMultipleSearch v-model="customers" :dynamic-and-condition="multipleDynamicAndCondition" />
+                <NextCustomerMultipleSearch
+                  v-model="customers"
+                  :dynamic-and-condition="multipleDynamicAndCondition"
+                  :convertedValues="customerConvertedValues" />
               </div>
             </template>
           </NextDetailPanel>
@@ -220,6 +227,39 @@ export default {
         {
           mainProperty: 'Code',
           targetProperty: 'Question'
+        }
+      ],
+      convertedValuesQuestions: [
+        {
+          mainProperty: 'SortOrder',
+          targetProperty: 'LineNumber',
+          getValue: (value, data) => value
+        }
+      ],
+      customerConvertedValues: [
+        {
+          mainProperty: 'TableName',
+          convert: () => 'T_CUSTOMER'
+        },
+        {
+          mainProperty: 'ColumnName',
+          convert: () => 'RECORD_ID'
+        },
+        {
+          mainProperty: 'ColumnValue',
+          convert: (data) => data.RecordId
+        },
+        {
+          mainProperty: 'ColumnNameDesc',
+          convert: (data) => data.Code
+        },
+        {
+          mainProperty: 'CustomerName',
+          convert: (data) => data.CommercialTitle
+        },
+        {
+          mainProperty: 'Location',
+          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
         }
       ]
     }

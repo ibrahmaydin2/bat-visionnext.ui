@@ -132,6 +132,9 @@
                   responsive
                   :current-page="currentPage"
                   :per-page="10">
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                 </b-table>
                 <b-pagination
                   v-if="sapPrices.length > 0"

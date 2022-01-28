@@ -20,17 +20,20 @@ import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import Sortable from 'vue-sortable'
 import { ApiManager } from './managers/api-manager'
+import { LocalizationManager } from './managers/localization-manager'
 import { Map, TileLayer, OsmSource, Geoloc, Feature, PointGeom, StyleBox, IconStyle } from 'vuelayers'
 import 'vuelayers/lib/style.css' // needs css-loader
 
 import draggable from 'vuedraggable'
 
 import {VueMasonryPlugin} from 'vue-masonry'
+import DateRangePicker from 'vue2-daterange-picker'
 
 // multiple date datepicker
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import 'vue2-datepicker/locale/tr'
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import VueLazyload from 'vue-lazyload'
 
 import Nextgrid from './components/NextGrid'
@@ -59,6 +62,7 @@ import NextDropdown from './components/NextDropdown'
 import NextDetailPanel from './components/NextDetailPanel'
 import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
+import NextDatePicker2 from './components/NextDatePicker2'
 import NextTimePicker from './components/NextTimePicker'
 import NextInput from './components/NextInput'
 import NextTextArea from './components/NextTextArea'
@@ -71,6 +75,7 @@ import CommonInfoModal from './components/Actions/CommonInfoModal'
 import NextMultipleSelection from './components/NextMultipleSelection'
 import CommonExcelModal from './components/Actions/CommonExcelModal'
 import NextCustomerMultipleSearch from './components/NextCustomerMultipleSearch'
+import NextMultipleSelection2 from './components/NextMultipleSelection2'
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV !== 'local') {
   window.addEventListener('load', () => {
@@ -139,6 +144,7 @@ Vue.component('NextDetailPanel', NextDetailPanel)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)
+Vue.component('NextDatePicker2', NextDatePicker2)
 Vue.component('NextTimePicker', NextTimePicker)
 Vue.component('NextInput', NextInput)
 Vue.component('NextTextArea', NextTextArea)
@@ -151,16 +157,25 @@ Vue.component('CommonInfoModal', CommonInfoModal)
 Vue.component('NextMultipleSelection', NextMultipleSelection)
 Vue.component('CommonExcelModal', CommonExcelModal)
 Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
+Vue.component('DateRangePicker', DateRangePicker)
+Vue.component('NextMultipleSelection2', NextMultipleSelection2)
 
-Vue.prototype.$api = new ApiManager()
+let apiManager = new ApiManager()
+Vue.prototype.$api = apiManager
+window.$api = apiManager
+let localization = new LocalizationManager()
+Vue.prototype.$localization = localization
 
 Vue.config.productionTip = false
-// eslint-disable-next-line no-new
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  i18n,
-  template: '<App/>'
+
+localization.setLocalization().then(() => {
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    components: { App },
+    i18n,
+    template: '<App/>'
+  })
 })

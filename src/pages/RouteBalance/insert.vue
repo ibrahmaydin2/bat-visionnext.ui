@@ -14,24 +14,22 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col cols="12" md="3">
-            <b-form-group :label="$t('insert.RouteBalance.Route')" :class="{ 'form-group--error': $v.form.FromRouteId.$error }">
-              <v-select :options="fromRoutes" @search="onSearchFromRoute" @input="selectedSearchType('FromRouteId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12" md="3">
-            <b-form-group :label="$t('insert.RouteBalance.Route')" :class="{ 'form-group--error': $v.form.ToRouteId.$error }">
-              <v-select :options="toRoutes" @search="onSearchToRoute" @input="selectedSearchType('ToRouteId', $event)" label="Description1" :filterable="false">
-                <template slot="no-options">
-                  {{$t('insert.min3')}}
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
+          <NextFormGroup :title="$t('insert.RouteBalance.Route')" :error="$v.form.FromRouteId">
+            <NextDropdown
+              @input="selectedSearchType('FromRouteId', $event)"
+              label="Description1"
+              url="VisionNextRoute/api/Route/AutoCompleteSearch?v=1"
+              :dynamic-and-condition="{ StatusIds: [1]}"
+              :disabled="insertReadonly.FromRouteId" searchable/>
+          </NextFormGroup>
+          <NextFormGroup :title="$t('insert.RouteBalance.Route')" :error="$v.form.ToRouteId">
+            <NextDropdown
+              @input="selectedSearchType('ToRouteId', $event)"
+              label="Description1"
+              url="VisionNextRoute/api/Route/AutoCompleteSearch"
+              :dynamic-and-condition="{ StatusIds: [1]}"
+              :disabled="insertReadonly.ToRouteId" searchable/>
+          </NextFormGroup>
         </b-row>
       </header>
     </b-col>
@@ -61,7 +59,9 @@
                 tbody-tr-class="bg-white"
                 @row-selected="onRowFromSelected"
               >
-                <!-- Example scoped slot for select state illustrative purposes -->
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
@@ -123,7 +123,9 @@
                 bordered
                 @row-selected="onRowToSelected"
               >
-                <!-- Example scoped slot for select state illustrative purposes -->
+                <template #head()="data">
+                  {{$t(data.label)}}
+                </template>
                 <template #cell(selected)="{ rowSelected }">
                   <template v-if="rowSelected">
                     <span aria-hidden="true">&check;</span>
@@ -207,7 +209,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fromRoutes', 'toRoutes', 'fromRouteBalances', 'toRouteBalances']),
+    ...mapState(['fromRouteBalances', 'toRouteBalances']),
     filteredFromRoutes () {
       if (this.fromText.length > 0) {
         return this.fromRouteBalances.filter((route) => {
@@ -231,38 +233,6 @@ export default {
   methods: {
     getDatas () {
       this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextRoute/api/Route/Search', name: 'routes'})
-    },
-    onSearchFromRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
-          name: 'fromRoutes',
-          andConditionModel: {
-            Description1: search,
-            StatusIds: [1]
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
-    },
-    onSearchToRoute (search, loading) {
-      if (search.length >= 3) {
-        loading(true)
-        this.$store.dispatch('getSearchItems', {
-          ...this.query,
-          api: 'VisionNextRoute/api/Route/AutoCompleteSearch',
-          name: 'toRoutes',
-          andConditionModel: {
-            Description1: search,
-            StatusIds: [1]
-          }
-        }).then(res => {
-          loading(false)
-        })
-      }
     },
     selectedSearchType (label, model) {
       if (model) {

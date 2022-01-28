@@ -24,6 +24,9 @@
           ref="selectableTable"
           @row-selected="onRowSelected"
         >
+          <template #head()="data">
+            {{$t(data.label)}}
+          </template>
           <template #cell(selected)="{ rowSelected }">
             <template v-if="rowSelected">
               <span aria-hidden="true">&check;</span>

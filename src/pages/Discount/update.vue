@@ -10,6 +10,16 @@
         <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectedItems">{{$t('insert.okay')}}</b-button>
       </template>
     </b-modal>
+    <b-modal id="confirm-branch-modal" no-close-on-backdrop hide-header-close>
+      <template #modal-title>
+        {{$t('insert.order.doYouConfirm')}}
+      </template>
+      {{$t('insert.discount.customersAndRoutesWillBeDeleted')}}
+      <template #modal-footer>
+        <CancelButton class="float-right ml-2" @click.native="cancelSelectBranchCriteria" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmSelectBranchCriteria">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -28,13 +38,19 @@
     <b-col cols="12" class="asc__insertPage-content-head">
       <section>
         <b-row>
-        <NextFormGroup item-key="Code" :error="$v.form.Code">
+        <NextFormGroup item-key="Code" :error="$v.form.Code" lg="2">
           <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
         </NextFormGroup>
-        <NextFormGroup item-key="Description1" :error="$v.form.Description1">
+        <NextFormGroup item-key="Description1" :error="$v.form.Description1" lg="2">
           <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
         </NextFormGroup>
-        <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
+        <NextFormGroup item-key="DiscountBeginDate" :error="$v.form.DiscountBeginDate" lg="2">
+          <NextDatePicker v-model="form.DiscountBeginDate" :disabled="insertReadonly.DiscountBeginDate" />
+        </NextFormGroup>
+        <NextFormGroup item-key="DiscountEndDate" :error="$v.form.DiscountEndDate" lg="2">
+          <NextDatePicker v-model="form.DiscountEndDate" :disabled="insertReadonly.DiscountEndDate"/>
+        </NextFormGroup>
+        <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" lg="2">
           <NextCheckBox v-model="form.StatusId" type="number" toggle/>
         </NextFormGroup>
         </b-row>
@@ -44,12 +60,6 @@
       <b-tabs>
         <b-tab :title="$t('insert.discount.general')" active>
           <b-row>
-            <NextFormGroup item-key="DiscountBeginDate" :error="$v.form.DiscountBeginDate">
-              <NextDatePicker v-model="form.DiscountBeginDate" :disabled="insertReadonly.DiscountBeginDate" />
-            </NextFormGroup>
-            <NextFormGroup item-key="DiscountEndDate" :error="$v.form.DiscountEndDate">
-              <NextDatePicker v-model="form.DiscountEndDate" :disabled="insertReadonly.DiscountEndDate"/>
-            </NextFormGroup>
             <NextFormGroup item-key="DiscountTypeId" :error="$v.form.DiscountTypeId">
               <NextDropdown
                 v-model="selectedDiscountType"
@@ -70,7 +80,7 @@
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <NextDropdown
                 v-model="branchCriteria"
-                @input="selectedType('BranchCriteriaId', $event)"
+                @input="selectedType('BranchCriteriaId', $event); setBranchCriteria($event)"
                 lookup-key="BRANCH_CRITERIA"
                 :disabled="distributionTypeControl"
               ></NextDropdown>
@@ -156,29 +166,29 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.discount.discountTakens')">
+        <b-tab lazy :title="$t('insert.discount.discountTakens')" :disabled="!form.DiscountKindId">
           <NextDetailPanel v-model="form.DiscountTakens" :items="discountTakenItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountGivens')" :disabled="form.DiscountKindId === 6">
           <NextDetailPanel v-model="form.DiscountGivens" :items="discountGivenItems" :main-form="form" :show-edit="false" :before-add="beforeAddDiscountGivens"></NextDetailPanel>
         </b-tab>
-        <b-tab lazy :title="$t('insert.discount.discountCustomers')" v-if="customerTabValid" @click="DiscountCustomersValid()">
-          <NextDetailPanel v-model="form.DiscountCustomers" :items="getDiscountCustomerItems()" :main-form="form" :show-edit="false"></NextDetailPanel>
-        </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountExcludedCustomers')">
           <NextDetailPanel v-model="form.DiscountExcludedCustomers" :items="discountExcludedCustomerItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.customerCriterias')" v-if="customerCriterTabValid">
-          <NextDetailPanel v-model="discountDetailsCustomerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+          <NextDetailPanel v-model="customerCriterias" :items="discountDetailsCustomerCriteriaItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.branchs')" v-if="branchTabValid">
-          <NextDetailPanel v-model="form.discountDetailsBranchs" :items="discountDetailsBranchItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+          <NextDetailPanel v-model="form.branchs" :items="discountDetailsBranchItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
-        <b-tab lazy :title="$t('insert.discount.routes')" v-if="routeTabValid">
-          <NextDetailPanel v-model="discountDetailsRoutes" :items="discountDetailsRouteItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+        <b-tab lazy :title="$t('insert.discount.discountCustomers')" :disabled="!form.BranchCriteriaId" v-if="customerTabValid" @click="DiscountCustomersValid()">
+          <NextDetailPanel v-model="customers" :items="getDiscountCustomerItems()" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
-        <b-tab lazy :title="$t('insert.discount.payments')" v-if="paymentTabValid">
-          <NextDetailPanel v-model="discountDetailsPaymentTypes" :items="discountDetailsPaymentTypeItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+        <b-tab lazy :title="$t('insert.discount.routes')" :disabled="!form.BranchCriteriaId" v-if="routeTabValid">
+          <NextDetailPanel v-model="routes" :items="discountDetailsRouteItems" :main-form="form" :show-edit="false"></NextDetailPanel>
+        </b-tab>
+        <b-tab lazy :title="$t('insert.discount.payments')" :disabled="!form.BranchCriteriaId" v-if="paymentTabValid">
+          <NextDetailPanel v-model="paymentTypes" :items="discountDetailsPaymentTypeItems" :main-form="form" :show-edit="false"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.discount.discountCustomerSqls')" v-if="customerSqlsTabValid">
           <NextDetailPanel v-model="form.DiscountCustomerSqls" :items="discountCustomerSqlItems" :main-form="form" :show-edit="false"></NextDetailPanel>
@@ -236,12 +246,8 @@ export default {
         DiscountCustomers: [],
         DiscountExcludedCustomers: [],
         DiscountDetails: [],
-        discountDetailsBranchs: []
+        branchs: []
       },
-      discountDetailsCustomerCriterias: [],
-      discountDetailsRoutes: [],
-      discountDetailsPaymentTypes: [],
-      discountCustomerSqls: [],
       ApproveStateLabel: null,
       branchCriteria: null,
       customerCriteria: null,
@@ -273,7 +279,12 @@ export default {
       discountDetailsRouteItems: detailData.discountDetailsRouteItems,
       discountDetailsPaymentTypeItems: detailData.discountDetailsPaymentTypeItems,
       discountCustomerSqlItems: detailData.discountCustomerSqlItems,
-      discountDetailsBranchItems: detailData.discountDetailsBranchItems
+      discountDetailsBranchItems: detailData.discountDetailsBranchItems,
+      customers: [],
+      customerCriterias: [],
+      routes: [],
+      paymentTypes: [],
+      allBranchCriterias: []
     }
   },
   mounted () {
@@ -303,16 +314,14 @@ export default {
         this.customerValid = false
         return
       }
-      if (this.form.BranchCriteriaId === null || this.form.discountDetailsBranchs.length === 0) {
+      if (this.form.BranchCriteriaId === 30 && this.form.branchs.filter(a => a.RecordState !== 4).length === 0) {
         this.$toasted.show(this.$t('insert.discount.requiredBranchCriteria'), {
           type: 'error',
           keepOnHover: true,
           position: 'top-center',
           duration: '5000'
         })
-        this.form.DiscountCustomers = []
-        this.form.DiscountExcludedCustomers = []
-        this.form.discountDetailsBranchs = []
+        this.form.branchs = []
         this.customerValid = true
       } else {
         this.customerValid = false
@@ -328,21 +337,21 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.DiscountDetails = [...this.discountDetailsCustomerCriterias, ...this.form.discountDetailsBranchs, ...this.discountDetailsRoutes, ...this.discountDetailsPaymentTypes]
-        this.createData()
+        this.form.DiscountDetails = [...this.customers, ...this.customerCriterias, ...this.form.branchs, ...this.routes, ...this.paymentTypes]
+        this.updateData()
       }
     },
     useBudgetEvent (e) {
       if (e) {
         this.form.ApproveStateId = 2100
-        this.lookup.APPROVE_STATE.map(item => {
+        this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2100) {
             this.ApproveStateLabel = item.Label
           }
         })
       } else {
         this.form.ApproveStateId = 2102
-        this.lookup.APPROVE_STATE.map(item => {
+        this.lookup.APPROVE_STATE && this.lookup.APPROVE_STATE.map(item => {
           if (item.DecimalValue === 2102) {
             this.ApproveStateLabel = item.Label
           }
@@ -369,6 +378,27 @@ export default {
         this.form.DiscountKindId = this.currentDiscountKind ? this.currentDiscountKind.RecordId : null
       }
     },
+    confirmSelectBranchCriteria () {
+      this.$bvModal.hide('confirm-branch-modal')
+      this.customers = this.customers.filter(c => c.RecordId > 0).map(c => {
+        c.RecordState = 4
+        return c
+      })
+      this.routes = this.routes.filter(r => r.RecordId > 0).map(r => {
+        r.RecordState = 4
+        return r
+      })
+    },
+    cancelSelectBranchCriteria () {
+      this.$bvModal.hide('confirm-branch-modal')
+      this.form.BranchCriteriaId = 31
+      this.branchCriteria = this.allBranchCriterias.find(b => b.DecimalValue === 31)
+    },
+    setBranchCriteria (model) {
+      if (model && model.Code === 'SL' && (this.customers.filter(c => c.RecordId > 0).length > 0 || this.routes.filter(c => c.RecordId > 0).length > 0)) {
+        this.$bvModal.show('confirm-branch-modal')
+      }
+    },
     beforeAddDiscountGivens () {
       if (this.form.DiscountTypeId == null || this.form.DiscountKindId == null) {
         this.$toasted.show(this.$t('insert.discount.requiredFields'), {
@@ -392,11 +422,17 @@ export default {
       this.selectedDiscountType = this.convertLookupValueToSearchValue(rowData.DiscountType)
       this.selectedDiscountKind = this.convertLookupValueToSearchValue(rowData.DiscountKind)
       this.budget = this.convertLookupValueToSearchValue(rowData.Budget)
+      this.discountCategory = this.convertLookupValueToSearchValue(rowData.DiscountCategory)
 
-      this.discountDetailsCustomerCriterias = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECOR_ID' && d.ColumnName !== 'BRANCH_ID')
-      this.form.discountDetailsBranchs = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
-      this.discountDetailsRoutes = this.form.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECOR_ID')
-      this.discountDetailsPaymentTypes = this.form.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECOR_ID')
+      if (!this.form.DiscountCustomers) {
+        this.form.DiscountCustomers = []
+      }
+
+      this.customers = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'RECORD_ID')
+      this.customerCriterias = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName !== 'RECORD_ID' && d.ColumnName !== 'BRANCH_ID')
+      this.form.branchs = this.form.DiscountDetails.filter(d => d.TableName === 'T_CUSTOMER' && d.ColumnName === 'BRANCH_ID')
+      this.routes = this.form.DiscountDetails.filter(d => d.TableName === 'T_ROUTE' && d.ColumnName === 'RECORD_ID')
+      this.paymentTypes = this.form.DiscountDetails.filter(d => d.TableName === 'T_PAYMENT_TYPE' && d.ColumnName === 'RECORD_ID')
       let request = {
         RecordId: this.$store.state.BranchId
       }
@@ -413,19 +449,19 @@ export default {
       return [
         {
           type: 'Autocomplete',
-          modelProperty: 'CustomerId',
-          objectKey: 'Customer',
+          modelProperty: 'ColumnValue',
+          objectKey: 'ColumnNameDesc',
           labelProperty: 'Code',
           customOption: true,
           isCustomer: true,
           orConditionFields: 'Code,Description1',
-          url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
           label: this.$t('insert.discount.customerCode'),
           dynamicAndCondition: {
-            BranchIds: this.form.discountDetailsBranchs.filter(a => a.RecordState !== 4).map(a => a.ColumnValue)
+            BranchIds: this.getBranchIds()
           },
           disabled (form, mainForm) {
-            return form.BranchCriteriaId === null || mainForm.discountDetailsBranchs.length === 0
+            return !mainForm.BranchCriteriaId || (mainForm.BranchCriteriaId === 30 && mainForm.branchs.filter(a => a.RecordState !== 4).length === 0)
           },
           required: true,
           visible: true,
@@ -436,7 +472,7 @@ export default {
           type: 'Label',
           inputType: 'text',
           modelProperty: 'CommercialTitle',
-          objectKey: 'Customer',
+          objectKey: 'ColumnValueDesc',
           parentProperty: 'Description1',
           label: this.$t('insert.discount.customerName'),
           visible: true,
@@ -449,16 +485,44 @@ export default {
           inputType: 'text',
           modelProperty: 'Location',
           valueProperty: 'AddressDetail',
-          objectKey: 'Customer',
+          objectKey: 'ColumnValueDesc2',
           parentProperty: 'DefaultLocationId',
-          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          url: 'VisionNextCustomer/api/CustomerLocation/CustomSearch',
+          request: JSON.stringify({
+            andConditionModel: {
+              RecordIds: ['val']
+            }
+          }),
           label: this.$t('insert.discount.location'),
           visible: true,
           disabled: true,
           parentId: 1,
           id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          parentId: null,
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          parentProperty: null,
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          parentId: null,
+          id: 5
         }
       ]
+    },
+    getBranchIds () {
+      let branchs = this.form.branchs.filter(a => a.RecordState !== 4)
+      return this.form.BranchCriteriaId === 30 && branchs.length > 0 ? branchs.map(a => a.ColumnValue) : null
     }
   },
   watch: {
@@ -472,6 +536,7 @@ export default {
         })
       }
       if (e.BRANCH_CRITERIA) {
+        this.allBranchCriterias = e.BRANCH_CRITERIA
         let request = {
           RecordId: this.$store.state.BranchId
         }
@@ -527,7 +592,6 @@ export default {
     },
     selectedDiscountType (newValue, oldValue) {
       if (this.discountTypeFirstSet) {
-        this.confirmSelectedItems()
         this.discountTypeFirstSet = false
         return
       }
@@ -540,7 +604,6 @@ export default {
     },
     selectedDiscountKind (newValue, oldValue) {
       if (this.discountKindFirstSet) {
-        this.confirmSelectedItems()
         this.discountKindFirstSet = false
         return
       }

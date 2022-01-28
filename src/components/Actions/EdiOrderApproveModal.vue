@@ -50,6 +50,9 @@
                 <b-spinner class="align-middle"></b-spinner>
               </div>
             </template>
+            <template #head()="data">
+              {{$t(data.label)}}
+           </template>
             <template v-slot:head(selection)>
               <b-link variant="white" size="sm" @click="selectAll">
                 <span>
@@ -156,7 +159,7 @@ export default {
           key: 'DocumentDate',
           label: this.$t('insert.ediOrder.documentDate'),
           formatter: (value, key, item) => {
-            return this.dateConvertFromTimezone(item.DocumentDate)
+            return item.DocumentDate ? item.DocumentDate.slice(0, 10).split('-').reverse().join('/') : '-'
           }
         },
         {

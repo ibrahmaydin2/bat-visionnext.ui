@@ -17,7 +17,8 @@
       <!--<div v-else-if="isCustomSlot">
         <slot name="option" :option="option"></slot>
       </div>-->
-      <span v-else>{{option.Code + ' - ' + option.Description1}}</span>
+      <span v-else-if="option.Code">{{option.Code + (option.Description1 ? ' - ' + option.Description1 : '')}}</span>
+      <span v-else>{{option.Description1}}</span>
     </template>
     <template v-slot:option="option" v-if="customOption">
       <span v-if="isCustomer">{{option.Code + ' - ' + option.Description1 + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
@@ -69,7 +70,9 @@ export default {
     dynamicAndCondition: {},
     orConditionFields: {},
     dynamicRequest: {},
-    dynamicOrConditions: [],
+    dynamicOrConditions: {
+      type: Array
+    },
     source: {
       type: Array
     },
@@ -112,6 +115,10 @@ export default {
       default: null
     },
     isCustomSlot: {
+      type: Boolean,
+      default: false
+    },
+    firstItemSelected: {
       type: Boolean,
       default: false
     }
@@ -331,10 +338,13 @@ export default {
     },
     setDefaultValue (source) {
       if (this.itemKey && (this.insertDefaultValue[this.itemKey] || this.insertDefaultValue[this.itemKey] === 0) && !this.selectedValue && source) {
-        let defaultValue = this.insertDefaultValue[this.itemKey]
+        let defaultValue = parseInt(this.insertDefaultValue[this.itemKey])
         this.findDefaultValue(defaultValue, source)
       } else if (this.defaultValue) {
         this.findDefaultValue(this.defaultValue, source)
+      } else if (this.firstItemSelected && source.length > 0) {
+        this.selectedValue = source[0]
+        this.$emit('input', this.selectedValue)
       }
     },
     findDefaultValue (defaultValue, source) {

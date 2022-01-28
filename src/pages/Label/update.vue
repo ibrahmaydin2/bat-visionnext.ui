@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Dashboard' }">
+            <router-link :to="{name: 'Label' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -19,10 +19,10 @@
       <section>
         <b-row>
           <NextFormGroup item-key="Code" :error="$v.form.Code">
-            <b-form-input type="text" v-model="form.Code" :readonly="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
           </NextFormGroup>
           <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-            <b-form-input type="text" v-model="form.Description1" :readonly="insertReadonly.Description1" />
+            <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" toggle/>
@@ -35,10 +35,10 @@
         <b-tab :title="$t('insert.values')" :active="!developmentMode">
           <b-row>
             <NextFormGroup :title="$t('insert.Label.Code')" :error="$v.LabelDetails.Code" :required="true" md="3" lg="3">
-              <b-form-input type="text" v-model="LabelDetails.Code" />
+              <NextInput type="text" v-model="LabelDetails.Code" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.Label.Description1')" :error="$v.LabelDetails.Description1" :required="true" md="3" lg="3">
-              <b-form-input type="text" v-model="LabelDetails.Description1" />
+              <NextInput type="text" v-model="LabelDetails.Description1" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -49,6 +49,9 @@
           <b-row v-if="filteredLabels">
             <b-col>
               <b-table :items="filteredLabels" :fields="fields" striped responsive>
+                <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
                 <template #cell(Operations)="r">
                   <i @click="removeLabelDetails(r.item)" class="far fa-trash-alt text-danger"></i>
                 </template>
@@ -81,9 +84,9 @@ export default {
         Description1: null
       },
       fields: [
-        {key: 'Code', label: this.$t('insert.Label.Code'), sortable: false},
-        {key: 'Description1', label: this.$t('insert.Label.Description1'), sortable: false},
-        {key: 'Operations', label: this.$t('list.operations'), sortable: false}
+        {key: 'Code', label: 'insert.Label.Code', sortable: false},
+        {key: 'Description1', label: 'insert.Label.Description1', sortable: false},
+        {key: 'Operations', label: 'list.operations', sortable: false}
       ]
     }
   },

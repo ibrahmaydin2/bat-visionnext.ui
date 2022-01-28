@@ -528,6 +528,7 @@ export default {
   mounted () {
     this.createManualCode()
     this.getPaymentTypes()
+    this.setLicenseValidDate()
   },
   methods: {
     selectedType (label, model) {
@@ -551,6 +552,11 @@ export default {
     },
     selectedSearchType (label, model) {
       this.form[label] = model.RecordId
+    },
+    setLicenseValidDate () {
+      let now = new Date()
+      let setDate = now.setFullYear(now.getFullYear() + 1, '4', '1')
+      this.form.LicenseValidDate = setDate
     },
     save () {
       this.$v.form.$touch()

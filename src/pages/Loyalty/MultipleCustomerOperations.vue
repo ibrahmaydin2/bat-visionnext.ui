@@ -75,6 +75,9 @@
           @row-selected="searchSelected"
           :current-page="searchedCurrentPage"
           :per-page="perPage">
+          <template #head()="data">
+            {{$t(data.label)}}
+          </template>
           <template #cell(selection)="row">
             <span>
               <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>
@@ -115,6 +118,9 @@
           @row-selected="currentSelected"
           :current-page="currentCurrentPage"
           :per-page="perPage">
+          <template #head()="data">
+            {{$t(data.label)}}
+          </template>
           <template #cell(selection)="row">
             <span>
               <i :class="row.rowSelected ? 'fa fa-check-circle success-color' : 'fa fa-check-circle gray-color'"></i>

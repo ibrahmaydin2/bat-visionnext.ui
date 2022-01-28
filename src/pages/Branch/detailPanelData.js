@@ -211,7 +211,7 @@ export const detailData = {
     {
       type: 'Autocomplete',
       modelProperty: 'BankId',
-      objectKey: 'bank',
+      objectKey: 'Bank',
       url: 'VisionNextBank/api/Bank/Search',
       label: i18n.t('insert.branch.bankId'),
       required: false,
@@ -222,7 +222,7 @@ export const detailData = {
     {
       type: 'Dropdown',
       modelProperty: 'CurrencyId',
-      objectKey: 'currency',
+      objectKey: 'Currency',
       url: 'VisionNextSystem/api/SysCurrency/Search',
       label: i18n.t('insert.branch.currencyId'),
       required: true,
@@ -521,7 +521,7 @@ export const detailData = {
       objectKey: 'LastSequence',
       label: i18n.t('insert.branch.LastSequence'),
       required: false,
-      visible: true,
+      visible: false,
       id: 6
     },
     {
@@ -531,7 +531,7 @@ export const detailData = {
       objectKey: 'Employee',
       label: i18n.t('insert.branch.EmployeeId'),
       required: false,
-      visible: true,
+      visible: false,
       isUnique: false,
       id: 7
     },
@@ -542,7 +542,7 @@ export const detailData = {
       objectKey: 'Year',
       label: i18n.t('insert.branch.Year'),
       required: false,
-      visible: true,
+      visible: false,
       isUnique: false,
       id: 8
     }

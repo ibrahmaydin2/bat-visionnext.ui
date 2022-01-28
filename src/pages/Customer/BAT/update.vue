@@ -313,7 +313,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerCreditHistories')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerCreditHistories" :errorOperations="true" :items="customerCreditHistoriesItemsBAT" />
+          <NextDetailPanel v-model="form.CustomerCreditHistories" :changeValidation="changeValidation" :items="customerCreditHistoriesItemsBAT" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerPaymentTypes" :items="paymentTypesItems" />
@@ -720,6 +720,19 @@ export default {
           this.paymentTypes = this.allPaymentTypes
         }
       })
+    },
+    changeValidation (data) {
+      let isError = data.CreditDescriptionId === 100
+
+      if (isError) {
+        this.$toasted.show(this.$t('insert.CustomerCreditNotDeleted'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      }
+
+      return !isError
     }
   },
   watch: {
