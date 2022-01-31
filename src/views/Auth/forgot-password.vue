@@ -1,9 +1,11 @@
 <template>
   <b-form @submit.prevent="submitForm()">
     <b-alert v-if="isSuccess" show variant="success">{{$t('auth.successForgotPassword')}}</b-alert>
-    <b-form-group :label="$t('auth.email')" :class="{ 'form-group--error': $v.model.userName.$error}">
-      <b-form-input v-model="model.userName" type="text" :placeholder="$t('auth.email')" />
-    </b-form-group>
+    <b-row>
+      <NextFormGroup :title="$t('auth.email')" :error="$v.model.userName" md="12" lg="12">
+        <NextInput v-model="model.userName" type="text" :placeholder="$t('auth.email')" @enter="submitForm"></NextInput>
+      </NextFormGroup>
+    </b-row>
     <b-row class="text-center">
       <b-col cols="12">
         <b-button id="forgot-password-button" type="submit" :disabled="isLoading">

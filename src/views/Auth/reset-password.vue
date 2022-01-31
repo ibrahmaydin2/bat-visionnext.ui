@@ -1,12 +1,14 @@
 <template>
   <b-form @submit.prevent="submitForm()">
     <b-alert v-if="isSuccess" show variant="success">{{$t('auth.successResetPassword')}}</b-alert>
-    <b-form-group v-if="!isSuccess" :label="$t('auth.password')" :class="{ 'form-group--error': $v.model.password.$error}">
-      <b-form-input v-model="model.password" type="password" :placeholder="$t('auth.newPassword')" />
-    </b-form-group>
-    <b-form-group v-if="!isSuccess" :label="$t('auth.rePassword')" :class="{ 'form-group--error': $v.model.rePassword.$error}">
-      <b-form-input v-model="model.rePassword" type="password" :placeholder="$t('auth.reNewPassword')" />
-    </b-form-group>
+    <b-row v-if="!isSuccess">
+      <NextFormGroup :title="$t('auth.password')" :error="$v.model.password" md="12" lg="12">
+        <NextInput v-model="model.password" type="password" :placeholder="$t('auth.newPassword')"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('auth.rePassword')" :error="$v.model.rePassword" md="12" lg="12">
+        <NextInput v-model="model.rePassword" type="password" :placeholder="$t('auth.reNewPassword')"></NextInput>
+      </NextFormGroup>
+    </b-row>
     <b-row class="text-center">
       <b-col cols="12" v-if="!isSuccess">
         <b-button id="forgot-password-button" type="submit" :disabled="isLoading">

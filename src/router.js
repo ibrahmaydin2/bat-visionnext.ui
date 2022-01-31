@@ -293,7 +293,6 @@ import OverDueDebitSearchIndex from '@/pages/OverDueDebitSearch/'
 
 import Auth from '@/views/Auth'
 import Login from '@/views/Auth/login'
-import Register from '@/views/Auth/register'
 import ForgotPassword from '@/views/Auth/forgot-password'
 import ResetPassword from '@/views/Auth/reset-password'
 
@@ -795,11 +794,6 @@ const routes = [
       path: 'Login',
       name: 'Login',
       component: Login
-    },
-    {
-      path: 'Register',
-      name: 'Register',
-      component: Register
     },
     {
       path: 'ForgotPassword',

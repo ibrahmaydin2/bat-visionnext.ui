@@ -28,7 +28,7 @@
             <NextDatePicker v-model="form.DocumentDate" :disabled="insertReadonly.DocumentDate" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -38,10 +38,16 @@
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
             <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('BankId', $event)" url="VisionNextBank/api/Bank/AutoCompleteSearch" searchable/>
+              <NextDropdown
+                @input="getBranchs($event, 'BankId', 'bankBranch', 'bankBranches')"
+                url="VisionNextBank/api/Bank/AutoCompleteSearch" searchable
+                :disabled="insertReadonly.BankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankBranchId" :error="$v.form.BankBranchId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('BankBranchId', $event)" :source="bankBranches"/>
+              <NextDropdown
+                v-model="bankBranch"
+                @input="selectedSearchType('BankBranchId', $event)"
+                :source="bankBranches" :disabled="insertReadonly.BankBranchId || !form.BankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankAccountNumber" :error="$v.form.BankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.BankAccountNumber" type="text" :disabled="insertReadonly.BankAccountNumber" />
@@ -52,13 +58,21 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"/>
+                :is-customer="true"
+                :disabled="insertReadonly.CustomerId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankId" :error="$v.form.CustomerBankId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('CustomerBankId', $event)" url="VisionNextBank/api/Bank/AutoCompleteSearch" searchable/>
+              <NextDropdown
+                @input="getBranchs($event, 'CustomerBankId', 'customerBankBranch', 'customerBankBranches')"
+                url="VisionNextBank/api/Bank/AutoCompleteSearch" searchable
+                :disabled="insertReadonly.CustomerBankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankBranchId" :error="$v.form.CustomerBankBranchId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('CustomerBankBranchId', $event)" :source="customerBankBranches"/>
+              <NextDropdown
+                v-model="customerBankBranch"
+                @input="selectedSearchType('CustomerBankBranchId', $event)"
+                :source="customerBankBranches"
+                :disabled="insertReadonly.CustomerBankBranchId || !form.CustomerBankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankAccountNumber" :error="$v.form.CustomerBankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.CustomerBankAccountNumber" type="text" :disabled="insertReadonly.CustomerBankAccountNumber" />
@@ -67,13 +81,19 @@
               <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('CurrencyId', $event)" url="VisionNextSystem/api/SysCurrency/Search"/>
+              <NextDropdown
+                @input="selectedSearchType('CurrencyId', $event)"
+                url="VisionNextSystem/api/SysCurrency/Search"
+                :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTypeId" :error="$v.form.TransactionTypeId" md="3" lg="3">
-              <NextDropdown @input="selectedSearchType('TransactionTypeId', $event)" url="VisionNextBank/api/BankTransactionType/Search"/>
+              <NextDropdown
+                @input="selectedSearchType('TransactionTypeId', $event)"
+                url="VisionNextBank/api/BankTransactionType/Search"
+                :disabled="insertReadonly.TransactionTypeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTotal" :error="$v.form.TransactionTotal" md="3" lg="3">
-              <NextInput v-model="form.TransactionTotal" type="text" :disabled="insertReadonly.TransactionTotal" />
+              <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrency($event)" min=1 :disabled="insertReadonly.TransactionTotal" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -82,7 +102,6 @@
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import mixin from '../../mixins/insert'
 export default {
   mixins: [mixin],
@@ -110,6 +129,8 @@ export default {
         DocumentCreationTypeId: 621
       },
       routeName1: 'Bank',
+      bankBranch: null,
+      customerBankBranch: null,
       bankBranches: [],
       customerBankBranches: []
     }
@@ -117,43 +138,29 @@ export default {
   mounted () {
     this.createManualCode()
   },
-  computed: {
-    ...mapState(['bankItems', 'customerBankItems'])
-  },
   methods: {
-    selectedSearchType (label, model) {
+    getBranchs (model, label, modelKey, ListKey) {
+      this[modelKey] = null
+      this[ListKey] = []
+
       if (model) {
         this.form[label] = model.RecordId
-        if (label === 'BankId') {
-          this.$store.dispatch('getAllData', {...this.query, api: 'VisionNextBank/api/Bank/Get', record: model.RecordId, name: 'bankItems'})
-        } else if (label === 'CustomerBankId') {
-          this.$store.dispatch('getAllData', {...this.query, api: 'VisionNextBank/api/Bank/Get', record: model.RecordId, name: 'customerBankItems'})
-        }
+        this.$api.postByUrl({RecordId: model.RecordId}, 'VisionNextBank/api/Bank/Get').then(res => {
+          this[ListKey] = res.Model ? res.Model.BankBranches : []
+        })
       } else {
         this.form[label] = null
       }
     },
     save () {
-      this.$v.$touch()
-      if (this.$v.$error) {
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
-        this.form.DocumentDate = this.form.DocumentDate
+        this.form.TransactionTotal = parseFloat(this.form.TransactionTotal)
         this.form.CurrencyTransactionTotal = this.form.TransactionTotal
         this.createData()
-      }
-    }
-  },
-  watch: {
-    bankItems (e) {
-      if (e) {
-        this.bankBranches = e.BankBranches
-      }
-    },
-    customerBankItems (e) {
-      if (e) {
-        this.customerBankBranches = e.BankBranches
       }
     }
   }
