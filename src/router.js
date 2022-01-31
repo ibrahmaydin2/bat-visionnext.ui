@@ -385,6 +385,16 @@ import AssetServiceInsert from '@/pages/AssetService/insert'
 
 import NewOrderIndex from '@/pages/NewOrder'
 
+import CustomerTargetIndex from '@/pages/CustomerTarget/'
+import CustomerTargetGet from '@/pages/CustomerTarget/get'
+import CustomerTargetInsert from '@/pages/CustomerTarget/insert'
+import CustomerTargetUpdate from '@/pages/CustomerTarget/update'
+
+import BATLeagueTargetIndex from '@/pages/BATLeagueTarget/'
+import BATLeagueTargetGet from '@/pages/BATLeagueTarget/get'
+import BATLeagueTargetInsert from '@/pages/BATLeagueTarget/insert'
+import BATLeagueTargetUpdate from '@/pages/BATLeagueTarget/update'
+
 Vue.use(Router)
 
 // TenantBase Pages
@@ -482,7 +492,9 @@ const listIndex = [
   {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert', keepAlive: true }},
   {path: '/Sao', name: 'Sao', component: SaoIndex, meta: { title: i18n.t('router.Sao'), createLink: 'SaoInsert', keepAlive: true }},
   {path: '/AssetService', name: 'AssetService', component: AssetServiceIndex, meta: { title: i18n.t('router.AssetService'), createLink: 'AssetServiceInsert', keepAlive: true }},
-  {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }}
+  {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }},
+  {path: '/CustomerTarget', name: 'CustomerTarget', component: CustomerTargetIndex, meta: { title: i18n.t('router.CustomerTarget'), createLink: 'CustomerTargetInsert', keepAlive: true }},
+  {path: '/BATLeagueTarget', name: 'BATLeagueTarget', component: BATLeagueTargetIndex, meta: { title: i18n.t('router.BATLeagueTarget'), createLink: 'BATLeagueTargetInsert', keepAlive: true }}
 
 ]
 
@@ -570,7 +582,9 @@ const listGet = [
   { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } },
   { path: '/Sao/:url', name: 'SaoGet', component: SaoGet, meta: { title: i18n.t('router.SaoGet'), baseLink: 'Sao' } },
   { path: '/AssetService/:url', name: 'AssetServiceGet', component: AssetServiceGet, meta: { title: i18n.t('router.AssetServiceGet'), baseLink: 'AssetService' } },
-  { path: '/NewOrder/:url', name: 'NewOrderGet', component: getTenantPage('NewOrder', 'get'), meta: { title: i18n.t('router.NewOrderGet'), baseLink: 'NewOrder' } }
+  { path: '/NewOrder/:url', name: 'NewOrderGet', component: getTenantPage('NewOrder', 'get'), meta: { title: i18n.t('router.NewOrderGet'), baseLink: 'NewOrder' } },
+  { path: '/CustomerTarget/:url', name: 'CustomerTargetGet', component: CustomerTargetGet, meta: { title: i18n.t('router.CustomerTargetGet'), baseLink: 'CustomerTarget' } },
+  { path: '/BATLeagueTarget/:url', name: 'BATLeagueTargetGet', component: BATLeagueTargetGet, meta: { title: i18n.t('router.BATLeagueTargetGet'), baseLink: 'BATLeagueTarget' } }
 ]
 
 const listUpdate = [
@@ -641,7 +655,9 @@ const listUpdate = [
   { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
   { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
   { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } },
-  { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } }
+  { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } },
+  { path: '/Update/CustomerTarget/:url', name: 'CustomerTargetUpdate', component: CustomerTargetUpdate, meta: { title: i18n.t('router.CustomerTargetUpdate'), baseLink: 'CustomerTarget' } },
+  { path: '/Update/BATLeagueTarget/:url', name: 'BATLeagueTargetUpdate', component: BATLeagueTargetUpdate, meta: { title: i18n.t('router.BATLeagueTargetUpdate'), baseLink: 'BATLeagueTarget' } }
 ]
 
 const listInsert = [
@@ -713,7 +729,9 @@ const listInsert = [
   { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
   { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } },
   { path: '/Insert/AssetService', name: 'AssetServiceInsert', component: AssetServiceInsert, meta: { title: i18n.t('router.AssetServiceInsert'), baseLink: 'AssetService' } },
-  { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } }
+  { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } },
+  { path: '/Insert/CustomerTarget', name: 'CustomerTargetInsert', component: CustomerTargetInsert, meta: { title: i18n.t('router.CustomerTargetInsert'), baseLink: 'CustomerTarget' } },
+  { path: '/Insert/BATLeagueTarget', name: 'BATLeagueTargetInsert', component: BATLeagueTargetInsert, meta: { title: i18n.t('router.BATLeagueTargetInsert'), baseLink: 'BATLeagueTarget' } }
 ]
 
 const routes = [
