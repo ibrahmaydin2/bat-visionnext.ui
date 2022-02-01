@@ -53,7 +53,7 @@
               <NextDropdown v-model="trackType" @input="selectedSearchType('TrackTypeId', $event)" url="VisionNextAsset/api/AssetTrackType/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
-              <b-form-input type="text" v-model="form.Barcode" :readonly="insertReadonly.Barcode" />
+              <NextInput type="text" v-model="form.Barcode" :disabled="insertReadonly.Barcode" />
             </NextFormGroup>
           </b-row>
         </b-tab>
