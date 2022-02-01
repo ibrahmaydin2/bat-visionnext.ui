@@ -49,7 +49,7 @@
                 v-model="bankBranch"
                 @input="selectedSearchType('BankBranchId', $event)"
                 :source="bankBranches"
-                :disabled="insertReadonly.BankBranchId"/>
+                :disabled="insertReadonly.BankBranchId || !form.BankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="BankAccountNumber" :error="$v.form.BankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.BankAccountNumber" type="text" :disabled="insertReadonly.BankAccountNumber" />
@@ -76,7 +76,7 @@
                 v-model="customerBankBranch"
                 @input="selectedSearchType('CustomerBankBranchId', $event)"
                 :source="customerBankBranches"
-                :disabled="insertReadonly.CustomerBankBranchId"/>
+                :disabled="insertReadonly.CustomerBankBranchId || !form.CustomerBankId"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankAccountNumber" :error="$v.form.CustomerBankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.CustomerBankAccountNumber" type="text" :disabled="insertReadonly.CustomerBankAccountNumber" />
@@ -99,7 +99,7 @@
                 :disabled="insertReadonly.TransactionTypeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTotal" :error="$v.form.TransactionTotal" md="3" lg="3">
-              <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrency($event)" min=1 :disabled="insertReadonly.TransactionTotal" />
+              <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrencyDotOrComma($event)" min=1 :disabled="insertReadonly.TransactionTotal" />
             </NextFormGroup>
           </b-row>
         </b-tab>
