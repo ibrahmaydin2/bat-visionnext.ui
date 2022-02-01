@@ -25,7 +25,7 @@
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate" md="2" lg="2">
-            <b-form-datepicker v-model="form.LoadingDate" />
+            <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />
           </NextFormGroup>
           <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
              <NextDropdown
