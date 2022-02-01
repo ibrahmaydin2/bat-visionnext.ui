@@ -1,5 +1,16 @@
 <template>
-  <b-form-input :type="type" :readonly="disabled" v-model="selectedValue" @input="input" @keypress="keypress($event)" :oninput="oninput"  :maxLength="maxLength" :min="minLength" :class="inputClass"/>
+  <b-form-input
+    :type="type"
+    :readonly="disabled"
+    v-model="selectedValue"
+    @input="input"
+    @keypress="keypress($event)"
+    :oninput="oninput"
+    :maxLength="maxLength"
+    :min="minLength"
+    :class="inputClass"
+    :placeholder="placeholder"
+    @keyup.enter="keyupEnter"/>
 </template>
 <script>
 export default {
@@ -18,7 +29,8 @@ export default {
     oninput: null,
     maxLength: '',
     inputClass: '',
-    minLength: ''
+    minLength: '',
+    placeholder: ''
   },
   data () {
     return {
@@ -31,6 +43,9 @@ export default {
     },
     keypress (value) {
       this.$emit('keypress', value)
+    },
+    keyupEnter (value) {
+      this.$emit('enter', value)
     }
   },
   watch: {

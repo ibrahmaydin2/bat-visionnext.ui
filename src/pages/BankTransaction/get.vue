@@ -16,7 +16,8 @@
         <b-col cols="12">
           <section>
             <span><i class="fas fa-code" />  <b>{{$t('get.code')}}:</b> {{rowData.Code}}</span>
-            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId) ? $t('insert.active') : $t('insert.passive')}}</span>
+            <span><i class="far fa-circle" />  <b>{{$t('get.description1')}}:</b> {{rowData.Description1}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('get.status')}}:</b> {{(rowData.StatusId === 2) ? $t('insert.passive') : $t('insert.active')}}</span>
           </section>
         </b-col>
       </b-row>
@@ -24,16 +25,20 @@
         <b-tab :title="$t('insert.customer.Customer')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.TransactionType')}}</span><p>{{rowData.TransactionType && rowData.TransactionType.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.Bank')}}</span><p>{{rowData.Bank && rowData.Bank.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.CustomerBank')}}</span><p>{{rowData.CustomerBank && rowData.CustomerBank.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.Currency')}}</span><p>{{rowData.Currency && rowData.Currency.Label }}</p>
+              <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'get.BankTransaction.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.Bank, 'object', 'get.BankTransaction.Bank')"></div>
+              <div v-html="getFormatDataByType(rowData.BankBranch, 'object', 'get.BankTransaction.BankBranch')"></div>
+              <div v-html="getFormatDataByType(rowData.BankAccountNumber, 'text', 'get.BankTransaction.BankAccountNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.BankTransaction.Customer')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerBank, 'object', 'get.BankTransaction.CustomerBank')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.DocumentNumber')}}</span><p>{{rowData.DocumentNumber1}}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.Customer')}}</span><p>{{rowData.Customer && rowData.Customer.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.CustomerBankBranch')}}</span><p>{{rowData.CustomerBankBranch && rowData.CustomerBankBranch.Label }}</p>
-              <span><i class="far fa-circle" /> {{$t('get.BankTransaction.DocumentDate')}}</span><p>{{dateConvertFromTimezone(rowData.DocumentDate)}}</p>
+              <div v-html="getFormatDataByType(rowData.CustomerBankBranch, 'object', 'get.BankTransaction.CustomerBankBranch')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerBankAccountNumber, 'text', 'get.BankTransaction.CustomerBankAccountNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'get.BankTransaction.DocumentNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.BankTransaction.Currency')"></div>
+              <div v-html="getFormatDataByType(rowData.TransactionType, 'object', 'get.BankTransaction.TransactionType')"></div>
+              <div v-html="getFormatDataByType(rowData.TransactionTotal, 'text', 'get.BankTransaction.TransactionTotal')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -46,23 +51,11 @@ import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
 export default {
   mixins: [mixin],
-  props: ['dataKey'],
-  data () {
-    return {
-      fields: [
-        {key: 'Item', label: this.$t('insert.BranchStockTransfer.ItemCode'), sortable: true},
-        {key: 'Description1', label: this.$t('insert.BranchStockTransfer.Items'), sortable: true},
-        {key: 'FromWhStockQuantity', label: this.$t('insert.BranchStockTransfer.FromWhStockQuantity'), sortable: true},
-        {key: 'ToWhStockQuantity', label: this.$t('insert.BranchStockTransfer.ToWhStockQuantity'), sortable: true},
-        {key: 'Quantity', label: this.$t('insert.BranchStockTransfer.PlanQuantity'), sortable: true}
-      ]
-    }
-  },
   mounted () {
     this.getData()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData'])
   },
   methods: {
     closeQuick () {
@@ -74,5 +67,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>

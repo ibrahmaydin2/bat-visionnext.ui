@@ -14,6 +14,7 @@ export const detailData = {
       hideOnTable: true,
       required: true,
       visible: true,
+      isUnique: true,
       id: 1
     },
     {
@@ -197,6 +198,7 @@ export const detailData = {
       required: true,
       visible: true,
       hideOnTable: true,
+      isUnique: true,
       id: 1,
       parentId: 12
     },

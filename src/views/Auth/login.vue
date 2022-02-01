@@ -1,11 +1,13 @@
 <template>
   <b-form v-if="loginEnabled">
-    <b-form-group :label="$t('auth.email')" :class="{ 'form-group--error': $v.user.UserName.$error}">
-      <b-form-input v-model="user.UserName" type="email" :placeholder="$t('auth.email')" @keyup.enter="submitForm" />
-    </b-form-group>
-    <b-form-group :label="$t('auth.password')" :class="{ 'form-group--error': $v.user.Password.$error}">
-      <b-form-input v-model="user.Password" type="password" :placeholder="$t('auth.password')" @keyup.enter="submitForm" />
-    </b-form-group>
+    <b-row>
+      <NextFormGroup :title="$t('auth.email')" :error="$v.user.UserName" md="12" lg="12">
+        <NextInput v-model="user.UserName" type="text" :placeholder="$t('auth.email')" @enter="submitForm"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('auth.password')" :error="$v.user.Password" md="12" lg="12">
+        <NextInput v-model="user.Password" type="password" :placeholder="$t('auth.password')" @enter="submitForm"></NextInput>
+      </NextFormGroup>
+    </b-row>
     <b-row class="text-center">
       <b-col cols="12">
         <b-button id="loginButton" @click="submitForm()" type="button">
@@ -26,7 +28,7 @@
   </b-form>
 </template>
 <script>
-import { required, email } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -43,7 +45,7 @@ export default {
   validations () {
     return {
       user: {
-        UserName: {required, email},
+        UserName: {required},
         Password: {required}
       }
     }
