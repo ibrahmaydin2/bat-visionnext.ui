@@ -93,7 +93,7 @@
                 :disabled="insertReadonly.TransactionTypeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTotal" :error="$v.form.TransactionTotal" md="3" lg="3">
-              <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrency($event)" min=1 :disabled="insertReadonly.TransactionTotal" />
+              <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrencyDotOrComma($event)" min=1 :disabled="insertReadonly.TransactionTotal" />
             </NextFormGroup>
           </b-row>
         </b-tab>
