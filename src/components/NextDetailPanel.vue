@@ -51,6 +51,10 @@
         responsive
         :current-page="currentPage"
         :per-page="10">
+        <template #head()="data">
+          <div>{{$t(data.label)}}</div>
+          <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]"></NextInput>
+        </template>
         <template #cell()="data">
           <span v-html="data.value"></span>
         </template>
@@ -173,7 +177,8 @@ export default {
       isUpdated: false,
       selectedItem: null,
       unique: Math.random().toString(16).slice(2),
-      additionalSearchTypeFirst: false
+      additionalSearchTypeFirst: false,
+      searchableItems: {}
     }
   },
   computed: {
@@ -592,6 +597,11 @@ export default {
         }
       }
       return value
+    },
+    getItemSearchable (modelProperty) {
+      debugger
+      let filteredList = this.items.filter(i => i.modelProperty === modelProperty)
+      return filteredList.length > 0 ? filteredList[0].searchable : false
     }
   },
   validations () {
