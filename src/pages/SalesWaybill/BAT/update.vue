@@ -467,11 +467,24 @@ export default {
   methods: {
     getInsertPage (e) {
       this.getData().then(() => {
-        if (this.rowData.Printed === 1 && !this.salesWaybillCopy) {
+        if (this.rowData.Canceled === 1) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.dispatchRefDocumentStatusError') })
+          setTimeout(() => {
+            this.$router.push({ name: 'SalesWaybill' })
+          }, 2000)
+          return
+        } else if (this.rowData.Printed === 1 && !this.salesWaybillCopy) {
+          this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentIsPrintedError') })
+          setTimeout(() => {
+            this.$router.push({ name: 'SalesWaybill' })
+          }, 2000)
+          return
+        } else if (this.rowData.EDocumentStatus && this.rowData.EDocumentStatus.Code !== 'ReadyForSendToEFU') {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.order.eDocumentStatusNotUpdated') })
           setTimeout(() => {
             this.$router.push({ name: 'SalesWaybill' })
           }, 2000)
+          return
         }
         this.setData()
       })
