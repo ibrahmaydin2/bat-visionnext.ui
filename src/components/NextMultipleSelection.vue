@@ -5,11 +5,11 @@
         <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
       </b-button>
     </b-form-group>
-    <b-modal :id="`modal${id}`" size="xl" @hide="hide" @show="show" no-close-on-backdrop>
+    <b-modal :id="`modal${id}`" header-class="multiple-selection-header" size="xl" @hide="hide" @show="show" no-close-on-backdrop hide-footer>
       <template #modal-title>
         {{action.Title}}
       </template>
-      <b-row>
+      <b-row class="filter-area">
         <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
           <div v-if="item.modelControlUtil != null">
             <NextDropdown
@@ -68,12 +68,13 @@
       </b-row>
       <b-row>
         <b-table
+          class="multiple-selection-grid"
           :ref="`multipleGrid${id}`"
           :fields="fields"
           :items="list.filter(l => l.RecordState !== 4)"
           striped
           small
-          sticky-header="300px"
+          sticky-header="60vh"
           responsive
           :current-page="currentPage"
           select-mode="multi"
@@ -142,7 +143,7 @@
                 @input="setConvertedValues($event, data)"
                 :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
                 :input-class="`min-input-width ${data.item.class}`"
-                @keypress="onlyForCurrencyDot($event)"></NextInput>
+                @keypress="onlyForCurrencyDot($event); keypress($event);"></NextInput>
             </div>
             <span
               v-else-if="data.value && data.value.toString().length > 20"
@@ -160,10 +161,10 @@
           :aria-controls="id"
           :disabled="tableBusy"
         ></b-pagination>
+        <div class="cancel-multiple-modal-button">
+          <b-button size="sm" class="ml-2 foat-right"  variant="outline-danger" @click="$bvModal.hide(`modal${id}`)">{{$t('insert.cancel')}}</b-button>
+        </div>
       </b-row>
-      <template #modal-footer>
-        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide(`modal${id}`)">{{$t('insert.cancel')}}</b-button>
-      </template>
     </b-modal>
   </div>
 </template>
@@ -303,6 +304,7 @@ export default {
           return {
             key: item.EntityProperty,
             label: item.Label,
+            thStyle: item.minLength ? {'min-width': `${item.minLength}px`} : undefined,
             formatter: (value, key, obj) => {
               if (item.ColumnType === 'Object') {
                 if (obj[item.EntityProperty]) {
@@ -740,4 +742,31 @@ export default {
   padding: 0.25rem !important;
   height: 100%;
 }
+</style>
+<style lang="sass">
+.multiple-selection-grid
+  table
+    td
+      padding: 1px !important;
+      font-size: 10px;
+    th
+      padding: 1px !important;
+      font-size: 10px;
+    .form-control
+      height: 25px;
+      font-size: 10px !important;
+      width: auto;
+.filter-area
+  .form-group
+    margin-bottom: 3px;
+    .form-control
+      height: 25px;
+    .vs__dropdown-toggle
+      height: 26px;
+.multiple-selection-header
+  padding: 0.5rem 0.5rem;
+.cancel-multiple-modal-button
+  bottom: 30px;
+  right: 10px;
+  position: absolute;
 </style>

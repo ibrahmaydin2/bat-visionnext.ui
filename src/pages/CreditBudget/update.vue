@@ -55,10 +55,13 @@
             <NextInput v-model="form.Code" type="text" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" toggle/>
+            <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
           <b-col md="4" lg="6">
-            <b-button v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+            <b-button-group class="float-right">
+              <b-button :disabled="selectedItems.length === 0" class="mt-3 mr-1" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
+              <b-button v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+            </b-button-group>
           </b-col>
         </b-row>
       </section>
@@ -141,11 +144,6 @@
             <b-col cols="12" md="2">
               <b-form-group>
                 <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
-              </b-form-group>
-            </b-col>
-             <b-col cols="12" md="2" v-if="selectedItems.length > 0">
-              <b-form-group>
-                <b-button class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
