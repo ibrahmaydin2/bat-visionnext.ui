@@ -254,11 +254,12 @@ export default {
     overflow: hidden
     width: 60vh
     display: inline-block
-  table
-    th
-      padding: 5px !important
-    td
-      padding: 5px !important
+  #info-list
+    table
+      th
+        padding: 5px !important
+      td
+        padding: 5px !important
   .detail-button
     padding-right: 5px
     float: right

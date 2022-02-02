@@ -599,7 +599,6 @@ export default {
       return value
     },
     getItemSearchable (modelProperty) {
-      debugger
       let filteredList = this.items.filter(i => i.modelProperty === modelProperty)
       return filteredList.length > 0 ? filteredList[0].searchable : false
     }
