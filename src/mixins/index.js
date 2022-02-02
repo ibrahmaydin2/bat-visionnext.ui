@@ -185,7 +185,7 @@ export default {
       if ((keyCode < 48 || keyCode > 57) && ((keyCode !== 44 && keyCode !== 46) || model.indexOf('.') !== -1)) {
         $event.preventDefault()
       }
-      if (model !== null && model.indexOf('.') > -1 && (model.split('.')[1].length > 0)) {
+      if (model !== null && model.indexOf('.') > -1 && (model.split('.')[1].length > 1)) {
         $event.preventDefault()
       }
     },
