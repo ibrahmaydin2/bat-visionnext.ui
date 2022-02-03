@@ -215,7 +215,9 @@ export default {
         fields.push({
           key: 'operations',
           label: this.$t('list.operations'),
-          thStyle: this.detailButtons && this.detailButtons.length > 0 ? {'min-width': `${96 + (48 * this.detailButtons.length)}px`} : {'min-width': '108px'}
+          thStyle: this.detailButtons && this.detailButtons.length > 0
+            ? {'min-width': `${96 + (48 * this.detailButtons.length)}px`}
+            : {'min-width': '108px'}
         })
       }
 
@@ -413,6 +415,10 @@ export default {
           case 'Date':
             this.$set(this.form, i.modelProperty, data[i.modelProperty])
             break
+        }
+
+        if (i.objectKey && this.form[i.objectKey]) {
+          delete this.form[i.objectKey]
         }
       })
     },
