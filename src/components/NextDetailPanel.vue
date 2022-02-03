@@ -46,14 +46,14 @@
       <b-table
         :id="id"
         :fields="fields"
-        :items="values ? values.filter(i => i.RecordState !== 4) : []"
+        :items="filteredValues ? filteredValues.filter(i => i.RecordState !== 4) : []"
         bordered
         responsive
         :current-page="currentPage"
         :per-page="10">
         <template #head()="data">
           <div>{{$t(data.label)}}</div>
-          <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]"></NextInput>
+          <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]" @input="filterList($event, data.column)"></NextInput>
         </template>
         <template #cell()="data">
           <span v-html="data.value"></span>
@@ -86,7 +86,7 @@
         </template>
       </b-table>
       <b-pagination
-        :total-rows="values ? values.length : 0"
+        :total-rows="filteredValues ? filteredValues.length : 0"
         v-model="currentPage"
         :per-page="10"
         :aria-controls="id"
@@ -168,6 +168,7 @@ export default {
       label: {},
       source: {},
       values: [],
+      filteredValues: [],
       objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
       editable: this.type === 'insert' || this.type === 'update',
       lineNumber: 1,
@@ -345,6 +346,8 @@ export default {
       this.model = {}
       this.label = {}
       this.$v.form.$reset()
+      this.searchableItems = {}
+      this.filteredValues = this.values
     },
     removeItem () {
       let data = this.selectedItem
@@ -360,6 +363,8 @@ export default {
         this.values.splice(index, 1)
       }
       this.$emit('valuechange', this.values)
+      this.filteredValues = this.values
+      this.searchableItems = {}
     },
     editItem () {
       let data = this.selectedItem
@@ -599,8 +604,28 @@ export default {
       return value
     },
     getItemSearchable (modelProperty) {
-      let filteredList = this.items.filter(i => i.modelProperty === modelProperty)
+      const filteredList = this.items.filter(i => i.modelProperty === modelProperty)
       return filteredList.length > 0 ? filteredList[0].searchable : false
+    },
+    filterList (value, modelProperty) {
+      this.searchableItems = {}
+      this.searchableItems[modelProperty] = value
+
+      if (value) {
+        const filteredArr = this.items.filter(i => i.modelProperty === modelProperty)
+        if (filteredArr.length > 0) {
+          const item = filteredArr[0]
+          const lowerCaseValue = value.toLowerCase()
+
+          this.filteredValues = this.values.filter(v => (v[item.modelProperty] && v[item.modelProperty].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (v[`${item.modelProperty}Desc`] && v[`${item.modelProperty}Desc`].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (item.objectKey && v[item.objectKey] &&
+            ((item.labelProperty && v[item.objectKey][item.labelProperty] && v[item.objectKey][item.labelProperty].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (!item.labelProperty && v[item.objectKey].Label && v[item.objectKey].Label.toString().toLowerCase().includes(lowerCaseValue)))))
+        }
+      } else {
+        this.filteredValues = this.values
+      }
     }
   },
   validations () {
@@ -621,6 +646,7 @@ export default {
       handler (newValue, oldValue) {
         if (newValue !== oldValue) {
           this.values = newValue
+          this.filteredValues = this.values
         }
       },
       deep: true,
