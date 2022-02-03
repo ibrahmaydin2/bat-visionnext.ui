@@ -24,6 +24,7 @@ export const detailData = {
       parentProperty: 'Code',
       disabled: true,
       label: i18n.t('insert.route.CustomerId'),
+      searchable: true,
       id: 2,
       parentId: 1
     },
@@ -35,6 +36,7 @@ export const detailData = {
       objectKey: 'Customer',
       disabled: true,
       label: i18n.t('insert.route.CustomerName'),
+      searchable: true,
       id: 2,
       parentId: 1
     },
@@ -209,6 +211,7 @@ export const detailData = {
       parentProperty: 'Code',
       disabled: true,
       label: i18n.t('insert.route.CustomerId'),
+      searchable: true,
       id: 2,
       parentId: 1
     },
@@ -220,6 +223,7 @@ export const detailData = {
       objectKey: 'Customer',
       disabled: true,
       label: i18n.t('insert.route.CustomerName'),
+      searchable: true,
       id: 2,
       parentId: 1
     },
