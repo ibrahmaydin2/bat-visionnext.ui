@@ -59,14 +59,14 @@
           <span v-html="data.value"></span>
         </template>
         <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mt-1 mr-1 btn-warning operations-button">
             <i class="fa fa-pencil-alt"></i>
           </b-button>
-          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
-            <i class="far fa-trash-alt ml-1"></i>
+          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mt-1 mr-1 btn-danger operations-button">
+            <i class="far fa-trash-alt"></i>
           </b-button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
-          <b-button class="btn mr-2 btn-success btn-sm" v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item, data.index)" :title="detail.title">
+          <b-button class="btn mt-1 mr-1 btn-success operations-button" v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item, data.index)" :title="detail.title">
             <i :class="`text-light ${detail.icon}`"></i>
           </b-button>
         </template>
@@ -214,7 +214,8 @@ export default {
       if ((this.editable || this.getDetail || this.detailButtons) && !this.hideOperations) {
         fields.push({
           key: 'operations',
-          label: this.$t('list.operations')
+          label: this.$t('list.operations'),
+          thStyle: this.detailButtons && this.detailButtons.length > 0 ? {'min-width': `${96 + (48 * this.detailButtons.length)}px`} : {'min-width': '108px'}
         })
       }
 
@@ -664,3 +665,8 @@ export default {
   }
 }
 </script>
+<style>
+.operations-button {
+  font-size: 10px;
+}
+</style>
