@@ -681,10 +681,11 @@ export default {
 
         let request = {
           andConditionModel: {
-            RouteTypeIds: [value.RecordId]
+            RouteTypeIds: [value.RecordId],
+            StatusIds: [1]
           }
         }
-        this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search').then(res => {
+        this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 300).then(res => {
           if (res && res.ListModel) {
             this.routes = res.ListModel.BaseModels
             this.representatives = res.ListModel.BaseModels.map(b => {
