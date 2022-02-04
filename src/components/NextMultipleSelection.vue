@@ -741,6 +741,7 @@ export default {
 </style>
 <style lang="sass">
 .multiple-selection-grid
+  min-height: 330px;
   table
     td
       padding: 1px !important;
