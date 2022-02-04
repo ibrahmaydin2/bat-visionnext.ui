@@ -44,6 +44,7 @@
     </b-row>
     <b-row>
       <b-table
+        class="detail-panel-table"
         :id="id"
         :fields="fields"
         :items="filteredValues ? filteredValues.filter(i => i.RecordState !== 4) : []"
@@ -56,7 +57,7 @@
           <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]" @input="filterList($event, data.column)"></NextInput>
         </template>
         <template #cell()="data">
-          <span v-html="data.value"></span>
+          <div class="detail-panel-data-view" v-html="data.value"></div>
         </template>
         <template #cell(operations)="data">
           <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mt-1 mr-1 btn-warning operations-button">
@@ -216,7 +217,7 @@ export default {
           key: 'operations',
           label: this.$t('list.operations'),
           thStyle: this.detailButtons && this.detailButtons.length > 0
-            ? {'min-width': `${96 + (48 * this.detailButtons.length)}px`}
+            ? {'min-width': `${96 + (54 * this.detailButtons.length)}px`}
             : {'min-width': '108px'}
         })
       }
@@ -674,5 +675,12 @@ export default {
 <style>
 .operations-button {
   font-size: 10px;
+}
+.detail-panel-table td {
+ padding: 0px;
+}
+.detail-panel-data-view {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
 }
 </style>
