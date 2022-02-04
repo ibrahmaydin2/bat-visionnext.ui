@@ -1114,7 +1114,8 @@
       "SAASsapCustomerId": "SAP Müşteri ID",
       "CustomerAlias": "Alias",
       "IsDefaultAlias": "Varsayılan Alias",
-      "ECustomerAliases": "Müşteri Alias"
+      "ECustomerAliases": "Müşteri Alias",
+      "salesRepresentative": "Satış Temsilcisi"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

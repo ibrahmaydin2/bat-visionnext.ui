@@ -44,29 +44,30 @@
     </b-row>
     <b-row>
       <b-table
+        class="detail-panel-table"
         :id="id"
         :fields="fields"
-        :items="values ? values.filter(i => i.RecordState !== 4) : []"
+        :items="filteredValues ? filteredValues.filter(i => i.RecordState !== 4) : []"
         bordered
         responsive
         :current-page="currentPage"
         :per-page="10">
         <template #head()="data">
           <div>{{$t(data.label)}}</div>
-          <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]"></NextInput>
+          <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]" @input="filterList($event, data.column)"></NextInput>
         </template>
         <template #cell()="data">
-          <span v-html="data.value"></span>
+          <div class="detail-panel-data-view" v-html="data.value"></div>
         </template>
         <template #cell(operations)="data">
-          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mr-2 btn-warning btn-sm">
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mt-1 mr-1 btn-warning operations-button">
             <i class="fa fa-pencil-alt"></i>
           </b-button>
-          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mr-2 btn-danger btn-sm">
-            <i class="far fa-trash-alt ml-1"></i>
+          <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mt-1 mr-1 btn-danger operations-button">
+            <i class="far fa-trash-alt"></i>
           </b-button>
           <i v-if="getDetail" @click="getDetail(data.item)" :title="$t('get.detail')" class="ml-3 fa fa-arrow-down text-success"></i>
-          <b-button class="btn mr-2 btn-success btn-sm" v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item, data.index)" :title="detail.title">
+          <b-button class="btn mt-1 mr-1 btn-success operations-button" v-for="(detail,i) in detailButtons" :key="i" @click="detail.getDetail(data.item, data.index)" :title="detail.title">
             <i :class="`text-light ${detail.icon}`"></i>
           </b-button>
         </template>
@@ -86,7 +87,7 @@
         </template>
       </b-table>
       <b-pagination
-        :total-rows="values ? values.length : 0"
+        :total-rows="filteredValues ? filteredValues.length : 0"
         v-model="currentPage"
         :per-page="10"
         :aria-controls="id"
@@ -168,6 +169,7 @@ export default {
       label: {},
       source: {},
       values: [],
+      filteredValues: [],
       objectTypes: ['Autocomplete', 'Dropdown', 'Lookup', 'Label'],
       editable: this.type === 'insert' || this.type === 'update',
       lineNumber: 1,
@@ -213,7 +215,10 @@ export default {
       if ((this.editable || this.getDetail || this.detailButtons) && !this.hideOperations) {
         fields.push({
           key: 'operations',
-          label: this.$t('list.operations')
+          label: this.$t('list.operations'),
+          thStyle: this.detailButtons && this.detailButtons.length > 0
+            ? {'min-width': `${96 + (54 * this.detailButtons.length)}px`}
+            : {'min-width': '108px'}
         })
       }
 
@@ -345,6 +350,8 @@ export default {
       this.model = {}
       this.label = {}
       this.$v.form.$reset()
+      this.searchableItems = {}
+      this.filteredValues = this.values
     },
     removeItem () {
       let data = this.selectedItem
@@ -360,6 +367,8 @@ export default {
         this.values.splice(index, 1)
       }
       this.$emit('valuechange', this.values)
+      this.filteredValues = this.values
+      this.searchableItems = {}
     },
     editItem () {
       let data = this.selectedItem
@@ -407,6 +416,10 @@ export default {
           case 'Date':
             this.$set(this.form, i.modelProperty, data[i.modelProperty])
             break
+        }
+
+        if (i.objectKey && this.form[i.objectKey]) {
+          delete this.form[i.objectKey]
         }
       })
     },
@@ -599,8 +612,28 @@ export default {
       return value
     },
     getItemSearchable (modelProperty) {
-      let filteredList = this.items.filter(i => i.modelProperty === modelProperty)
+      const filteredList = this.items.filter(i => i.modelProperty === modelProperty)
       return filteredList.length > 0 ? filteredList[0].searchable : false
+    },
+    filterList (value, modelProperty) {
+      this.searchableItems = {}
+      this.searchableItems[modelProperty] = value
+
+      if (value) {
+        const filteredArr = this.items.filter(i => i.modelProperty === modelProperty)
+        if (filteredArr.length > 0) {
+          const item = filteredArr[0]
+          const lowerCaseValue = value.toLowerCase()
+
+          this.filteredValues = this.values.filter(v => (v[item.modelProperty] && v[item.modelProperty].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (v[`${item.modelProperty}Desc`] && v[`${item.modelProperty}Desc`].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (item.objectKey && v[item.objectKey] &&
+            ((item.labelProperty && v[item.objectKey][item.labelProperty] && v[item.objectKey][item.labelProperty].toString().toLowerCase().includes(lowerCaseValue)) ||
+            (!item.labelProperty && v[item.objectKey].Label && v[item.objectKey].Label.toString().toLowerCase().includes(lowerCaseValue)))))
+        }
+      } else {
+        this.filteredValues = this.values
+      }
     }
   },
   validations () {
@@ -621,6 +654,7 @@ export default {
       handler (newValue, oldValue) {
         if (newValue !== oldValue) {
           this.values = newValue
+          this.filteredValues = this.values
         }
       },
       deep: true,
@@ -638,3 +672,15 @@ export default {
   }
 }
 </script>
+<style>
+.operations-button {
+  font-size: 10px;
+}
+.detail-panel-table td {
+ padding: 0px;
+}
+.detail-panel-data-view {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+}
+</style>

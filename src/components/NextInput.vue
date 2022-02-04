@@ -10,7 +10,9 @@
     :min="minLength"
     :class="inputClass"
     :placeholder="placeholder"
-    @keyup.enter="keyupEnter"/>
+    @keyup.enter="keyupEnter"
+    :style="inputStyle"
+    @focus="onFocus"/>
 </template>
 <script>
 export default {
@@ -30,7 +32,13 @@ export default {
     maxLength: '',
     inputClass: '',
     minLength: '',
-    placeholder: ''
+    placeholder: '',
+    inputStyle: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
   },
   data () {
     return {
@@ -46,6 +54,9 @@ export default {
     },
     keyupEnter (value) {
       this.$emit('enter', value)
+    },
+    onFocus (value) {
+      this.$emit('onFocus', value)
     }
   },
   watch: {

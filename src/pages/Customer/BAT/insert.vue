@@ -356,14 +356,88 @@
           <NextDetailPanel v-model="form.CustomerItemDiscounts" :items="customerDiscountsItems" />
         </b-tab>
         <b-tab :title="$t('insert.customer.RouteDetails')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.RouteDetails" :items="routeDetailsItems" />
+          <b-row>
+            <NextFormGroup :title="$t('insert.customer.routeType')" :error="$v.routeDetailsObj.routeType" required>
+              <NextDropdown v-model="routeDetailsObj.routeType" url="VisionNextRoute/api/RouteType/Search" @input="selectRouteType"></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.routeCode')" :error="$v.routeDetailsObj.route" required>
+              <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode" custom-option></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.salesRepresentative')" :error="$v.routeDetailsObj.representative" required>
+              <NextDropdown v-model="routeDetailsObj.representative" :disabled="!routeDetailsObj.routeType" :source="representatives" label="Label" @input="selectRepresentative"></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day1VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day1VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day2VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day2VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day3VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day3VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day4VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day4VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day5VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day5VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day6VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day6VisitOrder"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.Day7VisitOrder')">
+              <NextInput type="number" v-model="routeDetails.Day7VisitOrder"></NextInput>
+            </NextFormGroup>
+             <b-col cols="12" md="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addRouteDetails" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.routeType')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.routeCode')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.salesRepresentative')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day1VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day2VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day3VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day4VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day5VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day6VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.Day7VisitOrder')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(r, i) in form.RouteDetails" :key="i">
+                  <b-td>{{r.RouteTypeIdDesc}}</b-td>
+                  <b-td>{{r.RouteIdDesc}}</b-td>
+                  <b-td>{{r.RepresentativeIdDesc}}</b-td>
+                  <b-td>{{r.Day1VisitOrder}}</b-td>
+                  <b-td>{{r.Day2VisitOrder}}</b-td>
+                  <b-td>{{r.Day3VisitOrder}}</b-td>
+                  <b-td>{{r.Day4VisitOrder}}</b-td>
+                  <b-td>{{r.Day5VisitOrder}}</b-td>
+                  <b-td>{{r.Day6VisitOrder}}</b-td>
+                  <b-td>{{r.Day7VisitOrder}}</b-td>
+                  <b-td class="text-center">
+                    <b-button :title="$t('list.edit')" @click="editRouteDetails(r)" class="mt-1 mr-1 btn-warning operations-button">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button :title="$t('list.delete')" @click="removeRouteDetails(r)" class="mt-1 mr-1 btn-danger operations-button">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
-import { mapState } from 'vuex'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
 import { detailData } from './../detailPanelData'
@@ -482,7 +556,6 @@ export default {
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
       customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
-      routeDetailsItems: detailData.routeDetailsItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -516,11 +589,19 @@ export default {
       customerRegion4: null,
       customerRegion3: null,
       customerRegion2: null,
-      customerRegion1: null
+      customerRegion1: null,
+      routeDetailsObj: {
+        routeType: null,
+        route: null,
+        representative: null
+      },
+      routeDetails: {},
+      routes: [],
+      representatives: [],
+      selectedIndex: -1
     }
   },
   computed: {
-    ...mapState(['developmentMode', 'insertHTML', 'insertDefaultValue', 'insertRules', 'insertRequired', 'insertVisible', 'insertTitle', 'insertReadonly', 'lookup', 'distiricts', 'banks', 'currency', 'items', 'customerLabels', 'credits', 'touchpoints', 'touchpoint_types']),
     customerBlackReason: function () {
       return this.lookup && this.lookup.CUSTOMER_BLOCK_REASON ? this.lookup.CUSTOMER_BLOCK_REASON[0] : {}
     }
@@ -532,8 +613,6 @@ export default {
   },
   methods: {
     selectedType (label, model) {
-      // bu fonksiyonda güncelleme yapılmayacak!
-      // standart dropdownların select işleminde alacağı değeri belirler.
       if (model) {
         this.form[label] = model.DecimalValue
         if (label === 'TaxCustomerTypeId') {
@@ -549,9 +628,6 @@ export default {
       } else {
         this.form[label] = null
       }
-    },
-    selectedSearchType (label, model) {
-      this.form[label] = model.RecordId
     },
     setLicenseValidDate () {
       let now = new Date()
@@ -576,13 +652,6 @@ export default {
         this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
       }
     },
-    tabValidation () {
-      if (this.$v.form.$invalid) {
-        this.$nextTick(() => {
-          this.tabValidationHelper()
-        })
-      }
-    },
     selectedPaymentTypeArr (e) {
       if (e) {
         this.customerPaymentTypes.paymentType = e.Description1
@@ -599,16 +668,149 @@ export default {
           this.paymentTypes = this.allPaymentTypes
         }
       })
+    },
+    selectRouteType (value) {
+      this.routeDetailsObj.route = null
+      this.routeDetailsObj.representative = null
+      this.routes = []
+      this.representatives = []
+
+      if (value) {
+        this.routeDetails.RouteTypeId = value.RecordId
+        this.routeDetails.RouteTypeIdDesc = value.Description1
+
+        let request = {
+          andConditionModel: {
+            RouteTypeIds: [value.RecordId],
+            StatusIds: [1]
+          }
+        }
+        this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 300).then(res => {
+          if (res && res.ListModel) {
+            this.routes = res.ListModel.BaseModels
+            this.representatives = res.ListModel.BaseModels.map(b => {
+              return {
+                ...b.Representative,
+                Route: {
+                  Code: b.Code,
+                  Description1: b.Description1,
+                  RecordId: b.RecordId
+                }
+              }
+            })
+          }
+        })
+      } else {
+        this.routeDetails.RouteTypeId = null
+        this.routeDetails.RouteTypeIdDesc = null
+      }
+    },
+    selectRouteCode (value) {
+      this.routeDetailsObj.representative = value ? value.Representative : null
+      this.setRouteValues(value)
+      this.setRepresentativeValues(this.routeDetailsObj.representative)
+    },
+    setRouteValues (value) {
+      if (value) {
+        this.routeDetails.RouteId = value.RecordId
+        this.routeDetails.RouteIdDesc = value.Description1
+        this.routeDetails.RouteIdCode = value.Code
+      } else {
+        this.routeDetails.RouteId = null
+        this.routeDetails.RouteIdDesc = null
+        this.routeDetails.RouteIdCode = null
+      }
+    },
+    selectRepresentative (value) {
+      this.routeDetailsObj.route = value ? value.Route : null
+      this.setRepresentativeValues(value)
+      this.setRouteValues(this.routeDetailsObj.route)
+    },
+    setRepresentativeValues (value) {
+      if (value) {
+        this.routeDetails.RepresentativeId = value.DecimalValue
+        this.routeDetails.RepresentativeIdDesc = value.Label
+        this.routeDetails.RepresentativeIdCode = value.Code
+      } else {
+        this.routeDetails.RepresentativeId = null
+        this.routeDetails.RepresentativeIdDesc = null
+        this.routeDetails.RepresentativeIdCode = null
+      }
+    },
+    addRouteDetails () {
+      this.$v.routeDetailsObj.$touch()
+      if (this.$v.routeDetailsObj.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+
+      let filteredArr = this.form.RouteDetails.filter(i => i.RouteId === this.routeDetailsObj.route.RecordId && !this.routeDetailsObj.isUpdated)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
+
+      this.routeDetails.Deleted = 0
+      this.routeDetails.System = 0
+      this.routeDetails.RecordState = 2
+      this.routeDetails.StatusId = 1
+
+      if (this.selectedIndex > -1) {
+        this.form.RouteDetails[this.selectedIndex] = this.routeDetails
+        this.selectedIndex = -1
+      } else {
+        this.form.RouteDetails.push(this.routeDetails)
+      }
+      this.routeDetailsObj = {}
+      this.routeDetails = {}
+      this.$v.routeDetailsObj.$reset()
+    },
+    removeRouteDetails (value) {
+      this.form.RouteDetails.splice(this.form.RouteDetails.indexOf(value), 1)
+      this.selectedIndex = -1
+    },
+    editRouteDetails (value) {
+      this.selectedIndex = this.form.RouteDetails.indexOf(value)
+      this.routeDetails = value
+      this.routeDetailsObj = {
+        routeType: {
+          Description1: value.RouteTypeIdDesc,
+          RecordId: value.RouteTypeId,
+          Code: value.RouteTypeIdCode
+        },
+        route: {
+          Description1: value.RouteIdDesc,
+          RecordId: value.RouteId,
+          Code: value.RouteIdCode
+        },
+        representative: {
+          Label: value.RepresentativeIdDesc,
+          DecimalValue: value.RepresentativeId,
+          Code: value.RepresentativeIdCode
+        },
+        isUpdated: true
+      }
     }
   },
   validations () {
-    // bu fonksiyonda güncelleme yapılmayacak!
-    // servisten tanımlanmış olan validation kurallarını otomatik olarak içeriye alır.
-    // insertRequireds
-    let validation = {
-      form: this.insertRules
+    return {
+      form: this.insertRules,
+      routeDetailsObj: {
+        routeType: {
+          required
+        },
+        route: {
+          required
+        },
+        representative: {
+          required
+        }
+      }
     }
-    return validation
   },
   watch: {
     customerBlackReason (value) {
@@ -666,5 +868,3 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-</style>
