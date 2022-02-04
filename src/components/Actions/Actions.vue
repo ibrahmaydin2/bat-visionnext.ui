@@ -269,7 +269,9 @@ export default {
       w.document.write(html)
       w.document.close()
       w.focus()
-      w.print()
+      setTimeout(() => {
+        w.print()
+      }, 1000)
     },
     multiPrint (action) {
       this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
