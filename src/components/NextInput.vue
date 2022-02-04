@@ -10,7 +10,8 @@
     :min="minLength"
     :class="inputClass"
     :placeholder="placeholder"
-    @keyup.enter="keyupEnter"/>
+    @keyup.enter="keyupEnter"
+    :style="inputStyle"/>
 </template>
 <script>
 export default {
@@ -30,7 +31,13 @@ export default {
     maxLength: '',
     inputClass: '',
     minLength: '',
-    placeholder: ''
+    placeholder: '',
+    inputStyle: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
   },
   data () {
     return {

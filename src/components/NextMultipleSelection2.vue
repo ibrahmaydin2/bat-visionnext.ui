@@ -5,7 +5,7 @@
         <i class="fa fa-plus"></i> {{$t('insert.multipleGrid.title')}}
       </b-button>
     </b-form-group>
-    <b-modal :id="`modal${id}`" header-class="multiple-selection-header" size="xl" @hide="hide" @show="show" no-close-on-backdrop hide-footer>
+    <b-modal :id="`modal${id}`" dialog-class="multiple-selection-dialog" header-class="multiple-selection-header" size="xl" @hide="hide" @show="show" no-close-on-backdrop hide-footer>
       <template #modal-title>
         {{action.Title}}
       </template>
@@ -139,15 +139,10 @@
                 @input="setConvertedValues($event, data)"
                 :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
                 :input-class="`min-input-width ${data.item.class}`"
+                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined"
                 @keypress="onlyForCurrencyDot($event); keypress($event);"></NextInput>
             </div>
-            <span
-              v-else-if="data.value && data.value.toString().length > 25"
-              v-b-tooltip.hover
-              :title="data.value"
-              v-html="`${data.value.toString().substring(0, 25)}...`">
-            </span>
-            <span v-else v-html="data.value"></span>
+            <div v-else class="table-data-view" :style="data.field.thStyle" v-b-tooltip.hover :title="data.value" v-html="data.value"></div>
           </template>
         </b-table>
         <b-pagination
@@ -299,7 +294,7 @@ export default {
           return {
             key: item.EntityProperty,
             label: item.Label,
-            thStyle: item.minLength ? {'min-width': `${item.minLength}px`} : undefined,
+            thStyle: item.minLength ? {'min-width': `${item.minLength}px`, 'width': `${item.minLength}px`} : undefined,
             formatter: (value, key, obj) => {
               if (item.ColumnType === 'Object') {
                 if (obj[item.EntityProperty]) {
@@ -851,4 +846,13 @@ export default {
     height: 25px;
     font-size: 12px;
     padding: 0px;
+.multiple-selection-dialog
+  @media screen and (min-width: 575px)
+    max-width: 100%;
+  @media screen and (min-width: 576px)
+    max-width: 90%;
+.table-data-view
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 </style>
