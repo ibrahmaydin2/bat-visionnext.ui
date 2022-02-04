@@ -11,7 +11,8 @@
     :class="inputClass"
     :placeholder="placeholder"
     @keyup.enter="keyupEnter"
-    :style="inputStyle"/>
+    :style="inputStyle"
+    @focus="onFocus"/>
 </template>
 <script>
 export default {
@@ -53,6 +54,9 @@ export default {
     },
     keyupEnter (value) {
       this.$emit('enter', value)
+    },
+    onFocus (value) {
+      this.$emit('onFocus', value)
     }
   },
   watch: {

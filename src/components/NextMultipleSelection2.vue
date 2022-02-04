@@ -140,6 +140,7 @@
                 :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
                 :input-class="`min-input-width ${data.item.class}`"
                 :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined"
+                @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
                 @keypress="onlyForCurrencyDot($event); keypress($event);"></NextInput>
             </div>
             <div v-else class="table-data-view" :style="data.field.thStyle" v-b-tooltip.hover :title="data.value" v-html="data.value"></div>
