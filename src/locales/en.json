@@ -3222,7 +3222,8 @@
     },
     "tokenExpired": "The session has been terminated.",
     "noResult": "No Result",
-    "warningTitle": "Warning"
+    "warningTitle": "Warning",
+    "copied": "Copied!"
   },
   "index": {
     "today": "Today",

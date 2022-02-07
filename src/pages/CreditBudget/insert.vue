@@ -57,7 +57,7 @@
         </b-tab>
         <b-tab :title="$t('insert.creditBudget.customerGuarantees')">
           <b-row>
-            <NextFormGroup :title="$t('insert.creditBudget.customer')" :required="true" :error="$v.customerGuarantees.CustomerId" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.creditBudget.customer')" :required="true" :error="$v.customerGuarantees.CustomerId" md="2" lg="2" show-copy>
               <NextDropdown
                 :disabled="!form.CreditBranchId || form.CreditBranchId === 0"
                 v-model="selectedCustomer"

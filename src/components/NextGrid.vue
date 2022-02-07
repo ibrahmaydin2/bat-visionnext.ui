@@ -15,7 +15,7 @@
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
             <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}
-              <span v-if="header.allowSort === true" class="asc__nextgrid-table-header-sort">
+              <span class="asc__nextgrid-table-header-sort">
                 <b-button
                   @click="sortable(header.dataField, sortableColumns[header.dataField] === 'ASC' ? 'DESC' : 'ASC')"
                   size="sm"
