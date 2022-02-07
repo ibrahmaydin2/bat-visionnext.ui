@@ -3223,7 +3223,8 @@
     },
     "tokenExpired": "Oturum sonlandırılmıştır.",
     "noResult": "Sonuç bulunamadı",
-    "warningTitle": "Uyarı"
+    "warningTitle": "Uyarı",
+    "copied": "Kopyalandı!"
   },
   "index": {
     "today": "Bugün",
