@@ -14,17 +14,18 @@
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
-            <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}</span>
-            <div v-if="header.allowSort !== false" class="asc__nextgrid-table-header-sort">
-              <b-button
-                @click="sortable(header.dataField, sort === 'ASC' ? 'DESC' : 'ASC')"
-                size="sm"
-                variant="light"
-                class="py-0"
-              >
-                <i :class="sort === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
-              </b-button>
-            </div>
+            <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}
+              <span v-if="header.allowSort === true" class="asc__nextgrid-table-header-sort">
+                <b-button
+                  @click="sortable(header.dataField, sortableColumns[header.dataField] === 'ASC' ? 'DESC' : 'ASC')"
+                  size="sm"
+                  variant="light"
+                  class="py-0"
+                >
+                  <i :class="sortableColumns[header.dataField] === 'ASC' ? 'fas fa-sort-up' : 'fas fa-sort-down'" />
+                </b-button>
+              </span>
+            </span>
             <div class="asc__nextgrid-table-header-filter" :style="header.width ? 'width: ' + header.width : ''">
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.InputType === 'AutoComplete'">
@@ -378,7 +379,8 @@ export default {
       showBudgetMasterApproveModal: false,
       showAssignEmployeeModal: false,
       showCommonInfoModal: false,
-      showCreditBulkBudgetModal: false
+      showCreditBulkBudgetModal: false,
+      sortableColumns: {}
     }
   },
   mounted () {
@@ -631,6 +633,7 @@ export default {
     },
     sortable (field, sort) {
       this.sort = sort
+      this.sortableColumns[field] = sort
       this.sortField = field
       const rt = this.$route.query
       let routeQ = {}
@@ -807,6 +810,18 @@ export default {
         delete searchQ[tableField]
       }
       this.disabledAutoComplete = true
+      let sortOpt = {}
+      if (this.$route.query.sort) {
+        this.sort = this.$route.query.sort
+        this.sortField = this.$route.query.field
+        sortOpt = {
+          table: this.sortField,
+          sort: this.sort
+        }
+      } else {
+        sortOpt = null
+      }
+
       this.$store.dispatch('getTableData', {
         ...this.query,
         apiUrl: this.apiurl,
@@ -815,7 +830,8 @@ export default {
         count: this.perPage,
         search: searchQ,
         andConditionalModel: this.AndConditionalModel,
-        OrderByColumns: this.OrderByColumns
+        OrderByColumns: this.OrderByColumns,
+        sort: sortOpt
       }).then(() => {
         this.disabledAutoComplete = false
       }).catch(() => {
@@ -1257,18 +1273,17 @@ export default {
         display: inline-block
         cursor: move
       .asc__nextgrid-table-header-sort
-        display: block
         cursor: pointer
-        position: absolute
-        top: 5px
-        right: 5px
         z-index: 2
+        overflow: none
         & button
           color: #8a8a8a
           background: none
           border: none
+          margin-top: -7px
         .asc__nextgrid-table-header-sort-active
           color: #000
+          border: none
       .asc__nextgrid-table-header-filter
         position: relative
         input
