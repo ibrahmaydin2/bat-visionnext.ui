@@ -39,6 +39,10 @@ export default {
     showCopy: {
       type: Boolean,
       default: false
+    },
+    copyValues: {
+      type: String,
+      default: undefined
     }
   },
   data () {
@@ -63,9 +67,16 @@ export default {
       if (this.$children && this.$children.length > 0 && this.$children[0].$children && this.$children[0].$children.length > 1) {
         let value = this.$children[0].$children[1].selectedValue
         if (value) {
-          this.copiedMessage = `${this.$t('general.copied')} ${value.Code}`
+          let copiedValue = ''
+          if (this.copyValues) {
+            const valueArr = this.copyValues.split(',').map(v => value[v])
+            copiedValue = valueArr.join(' - ')
+          } else {
+            copiedValue = value
+          }
+          this.copiedMessage = `${this.$t('general.copied')} ${copiedValue}`
           this.showCopiedMessage = true
-          navigator.clipboard.writeText(value.Code)
+          navigator.clipboard.writeText(copiedValue)
           setTimeout(() => {
             this.showCopiedMessage = false
           }, 2000)

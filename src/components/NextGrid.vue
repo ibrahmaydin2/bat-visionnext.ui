@@ -15,7 +15,7 @@
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
             <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}
-              <span class="asc__nextgrid-table-header-sort">
+              <span class="asc__nextgrid-table-header-sort" v-if="header.columnType !== 'operations' && header.columnType !== 'selection'">
                 <b-button
                   @click="sortable(header.dataField, sortableColumns[header.dataField] === 'ASC' ? 'DESC' : 'ASC')"
                   size="sm"
@@ -633,6 +633,7 @@ export default {
     },
     sortable (field, sort) {
       this.sort = sort
+      this.sortableColumns = {}
       this.sortableColumns[field] = sort
       this.sortField = field
       const rt = this.$route.query

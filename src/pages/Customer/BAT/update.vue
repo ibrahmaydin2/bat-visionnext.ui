@@ -117,8 +117,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()" v-if="form.Code">
-          <NextDetailPanel v-model="form.CustomerLocations" :items="locationItemsBAT" :main-form="form"/>
+        <b-tab lazy :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()" v-if="form.Code">
+          <NextDetailPanel v-model="form.CustomerLocations" :items="getLocalizationItems()" :main-form="form"/>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
@@ -941,6 +941,12 @@ export default {
         },
         isUpdated: true
       }
+    },
+    getLocalizationItems () {
+      let index = this.locationItemsBAT.findIndex(l => l.modelProperty === 'Description1')
+      this.locationItemsBAT[index].defaultValue = this.form.Description1
+
+      return this.locationItemsBAT
     }
   },
   watch: {
