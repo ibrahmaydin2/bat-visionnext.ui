@@ -7,7 +7,7 @@
           <b-th
             v-for="header in head"
             :key="header.dataField+header.columnType"
-            :style="header.width ? 'width: ' + header.width : ''"
+            :style="header.minLength ? `min-width: ${header.minLength}px` : ''"
             :class="
               header.align == null ?
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-left'
@@ -26,7 +26,7 @@
                 </b-button>
               </span>
             </span>
-            <div class="asc__nextgrid-table-header-filter" :style="header.width ? 'width: ' + header.width : ''">
+            <div class="asc__nextgrid-table-header-filter">
               <div v-if="header.modelControlUtil != null">
                 <div v-if="header.modelControlUtil.InputType === 'AutoComplete'">
                   <autocomplete
@@ -1023,8 +1023,8 @@ export default {
         }
         return requiredField
       })
-      const selection = { columnType: 'selection', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
-      const opt = { columnType: 'operations', dataField: null, label: null, width: '30px', allowHide: false, allowSort: false }
+      const selection = { columnType: 'selection', dataField: null, label: null, minLength: 30, allowHide: false, allowSort: false }
+      const opt = { columnType: 'operations', dataField: null, label: null, minLength: 30, allowHide: false, allowSort: false }
       if (this.selectionMode === 'multi') {
         this.head.push(selection)
       }
