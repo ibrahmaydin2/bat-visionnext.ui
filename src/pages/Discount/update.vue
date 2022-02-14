@@ -80,7 +80,7 @@
             <NextFormGroup item-key="BranchCriteriaId" :error="$v.form.BranchCriteriaId">
               <NextDropdown
                 v-model="branchCriteria"
-                @input="selectedType('BranchCriteriaId', $event); setBranchCriteria($event)"
+                @input="selectedType('BranchCriteriaId', $event); setBranchCriteria($event);"
                 lookup-key="BRANCH_CRITERIA"
                 :disabled="distributionTypeControl"
               ></NextDropdown>
@@ -88,21 +88,21 @@
             <NextFormGroup item-key="CustomerCriteriaId" :error="$v.form.CustomerCriteriaId">
               <NextDropdown
                 v-model="customerCriteria"
-                @input="selectedType('CustomerCriteriaId', $event)"
+                @input="selectedType('CustomerCriteriaId', $event); setCustomerCriteria($event);"
                 lookup-key="CUSTOMER_CRITERIA"
               ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="RouteCriteriaId" :error="$v.form.RouteCriteriaId">
               <NextDropdown
                 v-model="routeCriteria"
-                @input="selectedType('RouteCriteriaId', $event)"
+                @input="selectedType('RouteCriteriaId', $event); setRouteCriteria($event);"
                 lookup-key="ROUTE_CRITERIA"
               ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentCriteriaId" :error="$v.form.PaymentCriteriaId">
               <NextDropdown
                 v-model="paymentCriteria"
-                @input="selectedType('PaymentCriteriaId', $event)"
+                @input="selectedType('PaymentCriteriaId', $event); setPaymentCriteria($event);"
                 lookup-key="PAYMENT_CRITERIA"
               ></NextDropdown>
             </NextFormGroup>
@@ -397,6 +397,51 @@ export default {
     setBranchCriteria (model) {
       if (model && model.Code === 'SL' && (this.customers.filter(c => c.RecordId > 0).length > 0 || this.routes.filter(c => c.RecordId > 0).length > 0)) {
         this.$bvModal.show('confirm-branch-modal')
+      } else if (model && model.Code === 'TS') {
+        let branchs = this.form.branchs.filter(b => b.RecordId > 0)
+        this.form.branchs = branchs.map(b => {
+          b.RecordState = 4
+          return b
+        })
+      }
+    },
+    setCustomerCriteria (model) {
+      if (model) {
+        let customerCriterias = this.customerCriterias.filter(b => b.RecordId > 0)
+        this.customerCriterias = customerCriterias.map(b => {
+          b.RecordState = 4
+          return b
+        })
+
+        let discountCustomerSqls = this.form.DiscountCustomerSqls.filter(b => b.RecordId > 0)
+        this.form.DiscountCustomerSqls = discountCustomerSqls.map(b => {
+          b.RecordState = 4
+          return b
+        })
+
+        let customers = this.customers.filter(b => b.RecordId > 0)
+        this.customers = customers.map(b => {
+          b.RecordState = 4
+          return b
+        })
+      }
+    },
+    setRouteCriteria (model) {
+      if (model) {
+        let routes = this.routes.filter(b => b.RecordId > 0)
+        this.routes = routes.map(b => {
+          b.RecordState = 4
+          return b
+        })
+      }
+    },
+    setPaymentCriteria (model) {
+      if (model) {
+        let paymentTypes = this.paymentTypes.filter(b => b.RecordId > 0)
+        this.paymentTypes = paymentTypes.map(b => {
+          b.RecordState = 4
+          return b
+        })
       }
     },
     beforeAddDiscountGivens () {

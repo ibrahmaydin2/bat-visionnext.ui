@@ -411,7 +411,7 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails" :key="i">
                   <b-td>{{r.RouteTypeIdDesc}}</b-td>
-                  <b-td>{{r.RouteIdDesc}}</b-td>
+                  <b-td>{{`${r.RouteIdCode} - ${r.RouteIdDesc}`}}</b-td>
                   <b-td>{{r.RepresentativeIdDesc}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>

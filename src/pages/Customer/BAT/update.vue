@@ -411,7 +411,7 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails ? form.RouteDetails.filter(r => r.RecordState !== 4) : []" :key="i">
                   <b-td>{{r.RouteType ? r.RouteType.Label : r.RouteTypeIdDesc}}</b-td>
-                  <b-td>{{r.Route ? r.Route.Label : r.RouteIdDesc}}</b-td>
+                  <b-td>{{r.Route ? `${r.Route.Code} - ${r.Route.Label}` : `${r.RouteIdCode} - ${r.RouteIdDesc}`}}</b-td>
                   <b-td>{{r.Representative ? r.Representative.Label : r.RepresentativeIdDesc}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
