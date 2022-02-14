@@ -144,10 +144,14 @@ export default {
     selectedSourceContract (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this.getCustomerDetail(model.RecorId)
+        this.getCustomerDetail(model.RecordId)
+        this.form.SourceContractStartDate = model.StartDate
+        this.form.SourceContractEndDate = model.EndDate
       } else {
         this.form[label] = null
         this.contractDetail = []
+        this.form.SourceContractStartDate = null
+        this.form.SourceContractEndDate = null
       }
     },
     getCustomerDetail (id) {
