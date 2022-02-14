@@ -51,7 +51,8 @@
         bordered
         responsive
         :current-page="currentPage"
-        :per-page="10">
+        :per-page="10"
+        small>
         <template #head()="data">
           <div>{{$t(data.label)}}</div>
           <NextInput v-if="getItemSearchable(data.column)" v-model="searchableItems[data.column]" @input="filterList($event, data.column)"></NextInput>

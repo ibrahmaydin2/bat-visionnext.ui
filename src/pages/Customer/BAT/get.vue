@@ -167,7 +167,7 @@
             <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.CustomerCreditHistories')}}</h6>
-                <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields">
+                <b-table responsive :items="rowData.CustomerCreditHistories" :fields="creditHistoriesFields" small>
                   <template #head()="data">
                     {{$t(data.label)}}
                   </template>
@@ -202,7 +202,7 @@
             <b-col cols="12" md="6">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_PaymentTypeId')}}</h6>
-                <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields">
+                <b-table responsive :items="rowData.CustomerPaymentTypes" :fields="paymentTypeFields" small>
                     <template #head()="data">
                       {{$t(data.label)}}
                     </template>
@@ -215,7 +215,7 @@
             <b-col cols="12" md="6">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.Model_FixedTermId')}}</h6>
-                <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields">
+                <b-table responsive :items="rowData.CustomFixedTerms" :fields="fixedTermFields" small>
                   <template #head()="data">
                     {{$t(data.label)}}
                   </template>
@@ -229,7 +229,7 @@
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.tag')}}</h6>
-                <b-table responsive :items="rowData.CustomerLabels" :fields="customerLabelFields">
+                <b-table responsive :items="rowData.CustomerLabels" :fields="customerLabelFields" small>
                   <template #head()="data">
                     {{$t(data.label)}}
                   </template>
@@ -249,7 +249,7 @@
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.customer.customerTouchpoints')}}</h6>
-                <b-table responsive :items="rowData.CustomerTouchpoints" :fields="customerTouchpointsFields">
+                <b-table responsive :items="rowData.CustomerTouchpoints" :fields="customerTouchpointsFields" small>
                   <template #head()="data">
                     {{$t(data.label)}}
                   </template>
@@ -265,13 +265,13 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.customerRegion')">
-         <b-row class="p-4">
-          <b-card class="col-md-6 col-12 asc__showPage-card">
-                <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.customer.Model_CustomerRegion5Id')"></div>
-              </b-card>
-          <b-card class="col-md-6 col-12 asc__showPage-card">
-                <div v-html="getFormatDataByType(rowData.marketingRegion5, 'object', 'insert.customer.marketingRegion5')"></div>
-              </b-card>
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.CustomerRegion5, 'object', 'insert.customer.Model_CustomerRegion5Id')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.marketingRegion5, 'object', 'insert.customer.marketingRegion5')"></div>
+            </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerItemDiscountCrts')" @click.prevent="tabValidation()">
@@ -287,7 +287,34 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.RouteDetails" :items="routeDetailsItems" />
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.routeType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.routeCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.salesRepresentative')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day1VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day2VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day3VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day4VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day5VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day6VisitOrder')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Day7VisitOrder')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(r, i) in rowData.RouteDetails" :key="i">
+                      <b-td>{{r.RouteType ? r.RouteType.Label : '-'}}</b-td>
+                      <b-td>{{r.Route ? `${r.Route.Code} - ${r.Route.Label}` : '-'}}</b-td>
+                      <b-td>{{r.Representative ? r.Representative.Label : '-'}}</b-td>
+                      <b-td>{{r.Day1VisitOrder}}</b-td>
+                      <b-td>{{r.Day2VisitOrder}}</b-td>
+                      <b-td>{{r.Day3VisitOrder}}</b-td>
+                      <b-td>{{r.Day4VisitOrder}}</b-td>
+                      <b-td>{{r.Day5VisitOrder}}</b-td>
+                      <b-td>{{r.Day6VisitOrder}}</b-td>
+                      <b-td>{{r.Day7VisitOrder}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </b-card>
             </b-col>
           </b-row>
