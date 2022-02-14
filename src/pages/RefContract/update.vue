@@ -167,6 +167,7 @@ export default {
         this.$api.get('ContractManagement', `RefContract/GetResourceContract?customerId=${model.RecordId}`).then((res) => {
           this.sourceContracts = res
         })
+        this.checkIsHero(model.RecordId)
       } else {
         this.form[label] = null
         this.form.SourceContractId = null
@@ -188,6 +189,11 @@ export default {
     getCustomerDetail (id) {
       this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
         this.contractDetail = res
+      })
+    },
+    checkIsHero (customerId) {
+      this.$api.get('ContractManagement', `Contract/CheckHeroStatus?customerId=${customerId}`).then((res) => {
+        this.form.IsHero = res && res.IsHero === true ? 1 : 0
       })
     },
     save () {
