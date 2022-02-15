@@ -43,7 +43,7 @@
               </div>
             </template>
             <template #cell(Count)="data">
-              <b-form-input type="number" v-model="data.item.ConversionQuantity" />
+              <b-form-input type="number" v-model="data.item.ConversionQuantity" min="0" oninput="this.value = Math.abs(this.value)" />
             </template>
           </b-table>
         </b-col>
@@ -266,13 +266,9 @@ export default {
         })
         return
       }
-      let checkQuantity = false
-      this.orderLines.map(item => {
-        if (item.ConversionQuantity > 0) {
-          checkQuantity = true
-        }
-      })
-      if (!checkQuantity) {
+
+      let orderLines = this.orderLines.filter(o => o.ConversionQuantity > 0)
+      if (orderLines.length === 0) {
         this.$toasted.show(this.$t('insert.checkQuantity'), {
           type: 'error',
           keepOnHover: true,
@@ -281,7 +277,7 @@ export default {
         return
       }
 
-      if (this.orderLines.some(o => o.ConversionQuantity > o.Quantity)) {
+      if (orderLines.some(o => o.ConversionQuantity > o.Quantity)) {
         this.$toasted.show(this.$t('insert.checkQuantityCount'), {
           type: 'error',
           keepOnHover: true,
@@ -289,11 +285,12 @@ export default {
         })
         return
       }
+
       this.getConvertData.InvoiceKindId = this.form.InvoiceKindId
       this.getConvertData.DocumentNumber = this.form.DocumentNumber
       this.getConvertData.InvoiceNumber = this.form.Code
       if (this.getConvertData.OrderLines) {
-        this.getConvertData.OrderLines = this.orderLines
+        this.getConvertData.OrderLines = orderLines
       }
       if (this.form.documentDate) {
         this.getConvertData.DocumentDate = this.dateConvertToISo(this.form.documentDate)
