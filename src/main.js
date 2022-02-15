@@ -168,14 +168,12 @@ Vue.prototype.$localization = localization
 
 Vue.config.productionTip = false
 
-localization.setLocalization().then(() => {
-  // eslint-disable-next-line no-new
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    components: { App },
-    i18n,
-    template: '<App/>'
-  })
+// eslint-disable-next-line no-new
+new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  i18n,
+  template: '<App/>'
 })

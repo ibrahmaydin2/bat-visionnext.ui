@@ -60,7 +60,7 @@
           <b-col md="4" lg="6">
             <b-button-group class="float-right">
               <b-button :disabled="selectedItems.length === 0" class="mt-3 mr-1" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
-              <b-button v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+              <b-button v-if="showUpdateBudget" v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
             </b-button-group>
           </b-col>
         </b-row>
@@ -282,12 +282,14 @@ export default {
       filterCustomer: null,
       insertedDetails: [],
       updatedDetails: [],
-      importedExcel: false
+      importedExcel: false,
+      showUpdateBudget: false
     }
   },
   mounted () {
     this.getData().then(() => this.setData())
     this.getCreditBudgetDetails()
+    this.setUpdateBudgetVisible()
   },
   methods: {
     save () {
@@ -558,6 +560,17 @@ export default {
     successBulkApprove () {
       this.currentPage = 1
       this.getCreditBudgetDetails()
+    },
+    setUpdateBudgetVisible () {
+      this.$api.getByUrl('VisionNextUIOperations/api/UIOperationGroupUser/GetFormFields?name=CreditBudget').then(res => {
+        if (res && res.UIPageModels && res.UIPageModels.length > 0) {
+          let actions = res.UIPageModels[0].RowActions
+
+          if (actions && actions.length > 0) {
+            this.showUpdateBudget = actions.some(a => a.Action === 'BudgetUpdate')
+          }
+        }
+      })
     }
   },
   validations () {

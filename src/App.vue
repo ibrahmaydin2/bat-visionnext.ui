@@ -1,9 +1,21 @@
 <template>
   <div id="app">
+    <b-overlay class="main-loading" :show="!localizationLoaded" rounded="sm" spinner-variant="warning">
+      <template #overlay>
+        <div class="loading-icon">
+          <b-icon
+            icon="three-dots"
+            animation="cylon"
+            scale="8"
+            variant="warning"
+          ></b-icon>
+        </div>
+      </template>
+    </b-overlay>
     <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
+      <router-view v-if="$route.meta.keepAlive && localizationLoaded"></router-view>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <router-view v-if="!$route.meta.keepAlive && localizationLoaded"></router-view>
   </div>
 </template>
 
@@ -12,10 +24,16 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      localizationLoaded: false
     }
   },
   created () {
     document.title = process.env.SITE_NAME
+  },
+  mounted () {
+    this.$localization.setLocalization().then(() => {
+      this.localizationLoaded = true
+    })
   },
   computed: {
     ...mapState(['modalLoad'])
@@ -182,4 +200,7 @@ export default {
   .tr-disabled
     pointer-events: none !important
     opacity: 0.7 !important
+  .main-loading
+    .position-absolute
+      margin-top: 10%
   </style>
