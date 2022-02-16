@@ -17,7 +17,7 @@
             <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}
               <span class="asc__nextgrid-table-header-sort" v-if="header.columnType !== 'operations' && header.columnType !== 'selection'">
                 <b-button
-                  @click="sortable(header.dataField, sortableColumns[header.dataField] === 'ASC' ? 'DESC' : 'ASC')"
+                  @click="sortable(header.dataField, sortableColumns[header.dataField] === 'ASC' ? 'DESC' : 'ASC', header.columnType)"
                   size="sm"
                   variant="light"
                   class="py-0"
@@ -631,11 +631,19 @@ export default {
         this.$router.push({name: this.$route.name, query: {'page': 1, 'count': p}})
       }
     },
-    sortable (field, sort) {
+    sortable (field, sort, columnType) {
+      let convertedField = ''
+      if (columnType === 'LabelValue') {
+        convertedField = `${field}.Description1`
+      } else if (columnType === 'CodeValue') {
+        convertedField = `${field}.Code`
+      } else {
+        convertedField = field
+      }
       this.sort = sort
       this.sortableColumns = {}
       this.sortableColumns[field] = sort
-      this.sortField = field
+      this.sortField = convertedField
       const rt = this.$route.query
       let routeQ = {}
       routeQ['page'] = 1
