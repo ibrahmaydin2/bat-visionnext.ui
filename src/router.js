@@ -26,6 +26,7 @@ import DashboardIndex from '@/pages/Dashboard/Default'
 import ChangePassword from '@/pages/Dashboard/ChangePassword'
 import StockChangePassword from '@/pages/Dashboard/StockChangePassword'
 import i18n from './i18n'
+import { store } from './store'
 
 import LayoutIndex from '@/pages/layout/'
 import LayoutGet from '@/pages/layout/get'
@@ -817,6 +818,7 @@ const router = new Router({
   routes, // yukarıdaki linkleri çalıştırır.
   mode: 'history', // url yapısını history olarak çalıştıracaktır.
   scrollBehavior (to, from, savedPosition) {
+    store.commit('gtagPageView')
     if (savedPosition) {
       return savedPosition // önceki sayfaya geri dönüldüğünde scroll edilmiş alana geri dönmesini sağlar.
     } else {
