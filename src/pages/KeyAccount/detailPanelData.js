@@ -201,6 +201,7 @@ export const detailData = {
     },
     {
       type: 'Text',
+      inputType: 'text',
       modelProperty: 'CreditDescriptionCode',
       parentProperty: 'Code',
       required: false,
