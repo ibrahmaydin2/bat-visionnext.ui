@@ -2070,6 +2070,11 @@ export const store = new Vuex.Store({
     },
     setIsMultipleGrid (state, payload) {
       state.isMultipleGrid = payload
+    },
+    gtagPageView () {
+      if (process.env.VUE_APP_GOOGLE_ANALYTICS) {
+        this._vm.$gtag.event('page_view', { method: 'Google' })
+      }
     }
   }
 })
