@@ -238,7 +238,7 @@ export default {
       description: 'BranchId filtresi varsa isteklerde base de giden branchId değiştirilsin mi özelliği'
     },
     orderByColumns: {
-      type: Object,
+      type: Array,
       description: 'Liste çekilirken sıralama opsiyonu gönderir'
     },
     recordCount: {
