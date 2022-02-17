@@ -65,13 +65,10 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CashCard', record: this.$route.params.url})
-    }
-  },
-  watch: {
-    rowData: function (e) {
-      this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        this.customerReminder = res.Model.Remainder
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CashCard', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       })
     }
   }

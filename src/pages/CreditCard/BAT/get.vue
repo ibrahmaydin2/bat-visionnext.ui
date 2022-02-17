@@ -34,9 +34,8 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CreditCard.CurrencyId')"></div>
               <div v-html="getFormatDataByType(rowData.CardNumber, 'text', 'get.CreditCard.CardNumber')"></div>
-              <div v-html="getFormatDataByType(rowData.RepresentativeId, 'object', 'get.CreditCard.RepresentativeId')"></div>
+              <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.cashcard.Representative')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CreditCard.RouteId')"></div>
-              <div v-html="getFormatDataByType(rowData.CustomerId, 'text', 'get.CreditCard.CustomerId')"></div>
               <div v-html="getFormatDataByType(customerReminder, 'text', 'get.CreditCard.reminder')"></div>
               <div v-html="getFormatDataByType(rowData.IsBatcardTransaction, 'check', 'get.CreditCard.IsBatcardTransaction')"></div>
             </b-card>
@@ -68,17 +67,12 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CreditCard', record: this.$route.params.url})
-    }
-  },
-  watch: {
-    rowData: function (e) {
-      this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        this.customerReminder = res.Model.Remainder
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CreditCard', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       })
     }
   }
 }
 </script>
-<style lang="sass">
-</style>
