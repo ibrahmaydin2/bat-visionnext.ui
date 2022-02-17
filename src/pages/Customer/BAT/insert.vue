@@ -830,8 +830,16 @@ export default {
         this.form.Category2Id = this.customerCategory2.DecimalValue
         this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
         this.form.Category1Id = this.customerCategory1.DecimalValue
-        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x => x.Value === value.UpperValue)
-        this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+
+        if (this.lookup.CUSTOMER_DISCOUNT_GROUP_3) {
+          this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
+            if (response && response.RecordValue) {
+              let recordValue = parseFloat(response.RecordValue)
+              this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(l => l.DecimalValue === recordValue)
+              this.form.DiscountGroup3Id = recordValue
+            }
+          })
+        }
       } else {
         this.discountGroup3 = null
         this.customerCategory1 = null

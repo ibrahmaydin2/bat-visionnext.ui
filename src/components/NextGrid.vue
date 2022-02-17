@@ -42,8 +42,7 @@
                   >
                     <template #result="{ result, props }">
                       <li v-bind="props">
-                        <span v-if="result.Code">{{`${result.Code} - ${result.Description1}`}}</span>
-                        <span v-if="!result.Code">{{result.Description1}}</span>
+                        <span>{{getResultValue(result)}}</span>
                       </li>
                     </template>
                   </autocomplete>
@@ -767,6 +766,11 @@ export default {
     getResultValue (result) {
       if (this.selectedHeader.columnType === 'CodeValue') {
         return result.Code
+      } else if (this.selectedHeader.dataField === 'Customer') {
+        const status = result.StatusId === 2 ? this.$t('insert.passive') : this.$t('insert.active')
+        return result.Code
+          ? `${result.Code} - ${result.Description1} - ${status}`
+          : `${result.Description1} - ${status}`
       } else {
         return result.Code ? `${result.Code} - ${result.Description1}` : result.Description1
       }
@@ -867,6 +871,15 @@ export default {
     },
     onClickAutoComplete (header) {
       this.selectedHeader = header.modelControlUtil
+      const headerProps = {
+        dataField: header.dataField,
+        columnType: header.columnType
+      }
+      if (!this.selectedHeader) {
+        this.selectedHeader = headerProps
+      } else {
+        this.selectedHeader = {...this.selectedHeader, ...headerProps}
+      }
       this.autoCompleteAndConditions = header.AndConditions
     },
     isSelectable () {

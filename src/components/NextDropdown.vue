@@ -194,7 +194,9 @@ export default {
       handler (newValue) {
         if (newValue) {
           let source = this.getSource()
-          this.setDefaultValue(source)
+          if (source && source.length > 0) {
+            this.setDefaultValue(source)
+          }
         }
       },
       deep: true,

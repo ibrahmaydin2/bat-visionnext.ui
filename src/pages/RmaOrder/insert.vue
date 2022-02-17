@@ -60,7 +60,7 @@
               <NextDatePicker v-model="form.RmaOrderDate" :disabled="insertReadonly.RmaOrderDate" />
             </NextFormGroup>
             <NextFormGroup item-key="RmaTypeId" :error="$v.form.RmaTypeId">
-              <NextDropdown :disabled="insertReadonly.RmaTypeId" lookup-key="RETURN_TYPE" get-lookup  @input="selectedType('RmaTypeId', $event)"></NextDropdown>
+              <NextDropdown :disabled="insertReadonly.RmaTypeId" lookup-key="RETURN_TYPE"  @input="selectedType('RmaTypeId', $event)"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="PriceDate" :error="$v.form.PriceDate">
               <NextDatePicker v-model="form.PriceDate" :disabled="insertReadonly.PriceDate" />
@@ -76,7 +76,7 @@
             <NextFormGroup item-key="RmaStatusId" :error="$v.form.RmaStatusId">
               <NextDropdown
                 :disabled="insertReadonly.RmaStatusId"
-                lookup-key="RMA_STATUS" get-lookup
+                lookup-key="RMA_STATUS"
                 @input="selectedType('RmaStatusId', $event)"></NextDropdown>
             </NextFormGroup>
           </b-row>
