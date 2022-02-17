@@ -521,7 +521,9 @@ export default {
         OutSourceOrder: null,
         TCIBreak1: null,
         TCIBreak2: null,
-        AssetLocations: []
+        AssetLocations: [],
+        DebitAccountRemainder: null,
+        CreditAccountRemainder: null
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
@@ -1003,14 +1005,13 @@ export default {
         }
 
         if (this.lookup.CUSTOMER_DISCOUNT_GROUP_3) {
-          this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x =>
-            this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
-              if (response) {
-                x.Value = response.RecordValue
-              }
-            })
-          )
-          this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+          this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
+            if (response && response.RecordValue) {
+              let recordValue = parseFloat(response.RecordValue)
+              this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(l => l.DecimalValue === recordValue)
+              this.form.DiscountGroup3Id = recordValue
+            }
+          })
         }
       } else {
         this.discountGroup3 = null
