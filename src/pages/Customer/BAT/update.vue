@@ -433,6 +433,19 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()">
+          <b-table id="asset-locations" :items="form.AssetLocations" :fields="assetLocationFields" bordered responsive small>
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
+          </b-table>
+          <b-pagination
+            :total-rows="form.AssetLocations ? form.AssetLocations.length : 0"
+            v-model="assetLocationCurrentPage"
+            :per-page="20"
+            aria-controls="asset-locations"
+          ></b-pagination>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -507,7 +520,8 @@ export default {
         Activity2: null,
         OutSourceOrder: null,
         TCIBreak1: null,
-        TCIBreak2: null
+        TCIBreak2: null,
+        AssetLocations: []
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
@@ -572,7 +586,21 @@ export default {
       routeDetails: {},
       routes: [],
       representatives: [],
-      selectedIndex: -1
+      selectedIndex: -1,
+      assetLocationFields: [
+        { key: 'Asset.Code', label: 'insert.customer.AssetId' },
+        { key: 'Asset.Label', label: 'insert.customer.assetName' },
+        { key: 'SerialNumber2', label: 'insert.customer.SerialNumber' },
+        { key: 'Quantity', label: 'insert.customer.Quantity' },
+        {
+          key: 'LocationId',
+          label: this.$t('insert.customer.LocationId'),
+          formatter: (value, key, obj) => {
+            return obj.Location ? `${obj.Location.Code} - ${obj.Location.Label}` : '-'
+          }
+        }
+      ],
+      assetLocationCurrentPage: 1
     }
   },
   computed: {
@@ -651,7 +679,6 @@ export default {
             this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
           })
         } else {
-          // this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
           this.updateData()
         }
       }
@@ -968,18 +995,23 @@ export default {
     },
     customerCategory3 (value) {
       if (value) {
-        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
-        this.form.Category2Id = this.customerCategory2.DecimalValue
-        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
-        this.form.Category1Id = this.customerCategory1.DecimalValue
-        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x =>
-          this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
-            if (response) {
-              x.Value = response.RecordValue
-            }
-          })
-        )
-        this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2 ? this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue) : null
+        if (this.customerCategory2) {
+          this.form.Category2Id = this.customerCategory2.DecimalValue
+          this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
+          this.form.Category1Id = this.customerCategory1.DecimalValue
+        }
+
+        if (this.lookup.CUSTOMER_DISCOUNT_GROUP_3) {
+          this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x =>
+            this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
+              if (response) {
+                x.Value = response.RecordValue
+              }
+            })
+          )
+          this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+        }
       } else {
         this.discountGroup3 = null
         this.customerCategory1 = null

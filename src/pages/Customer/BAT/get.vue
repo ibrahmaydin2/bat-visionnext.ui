@@ -319,6 +319,25 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <b-table id="asset-locations" :items="rowData.AssetLocations" :fields="assetLocationFields" bordered responsive small>
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
+                </b-table>
+                <b-pagination
+                  :total-rows="rowData.AssetLocations ? rowData.AssetLocations.length : 0"
+                  v-model="assetLocationCurrentPage"
+                  :per-page="20"
+                  aria-controls="asset-locations"
+                ></b-pagination>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -390,7 +409,21 @@ export default {
       Location: {},
       customerDiscountsItems: detailData.customerDiscountsItems,
       routeDetailsItems: detailData.routeDetailsItems,
-      showWorkFlow: false
+      showWorkFlow: false,
+      assetLocationFields: [
+        { key: 'Asset.Code', label: 'insert.customer.AssetId' },
+        { key: 'Asset.Label', label: 'insert.customer.assetName' },
+        { key: 'SerialNumber2', label: 'insert.customer.SerialNumber' },
+        { key: 'Quantity', label: 'insert.customer.Quantity' },
+        {
+          key: 'LocationId',
+          label: this.$t('insert.customer.LocationId'),
+          formatter: (value, key, obj) => {
+            return obj.Location ? `${obj.Location.Code} - ${obj.Location.Label}` : '-'
+          }
+        }
+      ],
+      assetLocationCurrentPage: 1
     }
   },
   mounted () {
