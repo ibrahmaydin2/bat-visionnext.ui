@@ -346,6 +346,7 @@ export const store = new Vuex.Store({
         {
           label: i18n.t('insert.order.grossTotal'),
           modelProperty: 'GrossTotal',
+          type: 'decimal',
           summaryFunc: (list) => {
             return list.reduce((a, b) => a + parseFloat(b.GrossTotal), 0)
           }
