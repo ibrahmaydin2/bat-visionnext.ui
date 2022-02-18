@@ -67,6 +67,11 @@
           </b-form-group>
         </b-col>
       </b-row>
+      <b-row v-if="summaryItems.length > 0">
+        <NextFormGroup v-for="(item,i) in summaryItems" :key="i" :title="$t(item.label)">
+          <NextInput v-model="summary[item.modelProperty]" type="text" disabled></NextInput>
+        </NextFormGroup>
+      </b-row>
       <b-row>
         <b-table
           :ref="`multipleGrid${id}`"
@@ -245,6 +250,11 @@ export default {
     afterFunc: {
       type: Function,
       description: 'Eklemeden Önce data manipülasyonu yapar'
+    },
+    summaryItems: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Özet bilgileri göstermek için kullanılır'
     }
   },
   model: {
@@ -270,7 +280,8 @@ export default {
       tableBusy: false,
       pageSelectedList: [],
       selectModel: {},
-      dynamicValidations: {}
+      dynamicValidations: {},
+      summary: {}
     }
   },
   methods: {
@@ -586,6 +597,10 @@ export default {
         this.list[data.index].RecordId = null
       }
       this.list[data.index].SelectedRow = !selectedRow
+
+      this.$nextTick(() => {
+        this.calculateSummary()
+      })
     },
     addItems () {
       let isError = false
@@ -738,6 +753,15 @@ export default {
           })
         }
       }
+    },
+    calculateSummary () {
+      let selectedList = this.list.filter(l => l.SelectedRow)
+      this.summaryItems.map(s => {
+        const list = selectedList.filter(l => l.RecordState !== 4)
+        const summary = s.summaryFunc(list)
+        this.summary[s.modelProperty] = s.type === 'decimal' ? this.roundNumber(summary) : summary
+      })
+      this.$forceUpdate()
     }
   },
   validations () {

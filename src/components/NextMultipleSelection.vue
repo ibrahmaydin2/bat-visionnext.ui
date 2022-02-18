@@ -533,6 +533,10 @@ export default {
           }
         })
       }
+
+      this.$nextTick(() => {
+        this.calculateSummary()
+      })
     },
     rowSelected (data) {
       this.selectedList = data
@@ -699,8 +703,10 @@ export default {
     calculateSummary () {
       this.summaryItems.map(s => {
         const list = this.selectedList.filter(l => l.RecordState !== 4)
-        this.summary[s.modelProperty] = s.summaryFunc(list)
+        const summary = s.summaryFunc(list)
+        this.summary[s.modelProperty] = s.type === 'decimal' ? this.roundNumber(summary) : summary
       })
+      this.$forceUpdate()
     }
   },
   validations () {
