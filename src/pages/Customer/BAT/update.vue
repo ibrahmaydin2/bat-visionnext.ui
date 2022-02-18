@@ -272,7 +272,7 @@
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.DeliveryDayParam" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.PaymentPeriod">
-              <NextDropdown v-model="paymentPeriod" :disabled="!(paymentType && paymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown v-model="paymentPeriod" :disabled="!(defaultPaymentType && defaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <NextDropdown :disabled="insertReadonly.TciBreak1Id" v-model="tciBreak1" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
@@ -287,7 +287,7 @@
               <NextDropdown
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
-                v-model="paymentType"
+                v-model="defaultPaymentType"
                 :source="paymentTypes"
                 label="Description1"
                 />
@@ -558,7 +558,7 @@ export default {
       tciBreak1: {},
       tciBreak2: {},
       statementDay: {},
-      paymentType: {},
+      defaultPaymentType: {},
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -739,7 +739,6 @@ export default {
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.statementDay = this.convertLookupValueToSearchValue(rowData.StatementDay)
-      this.paymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
