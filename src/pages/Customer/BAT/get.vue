@@ -323,7 +323,9 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <b-table id="asset-locations" :items="rowData.AssetLocations" :fields="assetLocationFields" bordered responsive small>
+                <b-table id="asset-locations"
+                  :items="rowData.AssetLocations ? rowData.AssetLocations.filter(r => r.Quantity > 0) : []"
+                  :fields="assetLocationFields" bordered responsive small>
                   <template #head()="data">
                     {{$t(data.label)}}
                   </template>
