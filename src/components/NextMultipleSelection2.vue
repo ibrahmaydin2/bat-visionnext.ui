@@ -67,6 +67,11 @@
           </b-form-group>
         </b-col>
       </b-row>
+      <b-row v-if="summaryItems.length > 0">
+        <NextFormGroup v-for="(item,i) in summaryItems" :key="i" :title="$t(item.label)">
+          <NextInput v-model="summary[item.modelProperty]" type="text" disabled></NextInput>
+        </NextFormGroup>
+      </b-row>
       <b-row>
         <b-table
           :ref="`multipleGrid${id}`"
@@ -245,6 +250,11 @@ export default {
     afterFunc: {
       type: Function,
       description: 'Eklemeden Önce data manipülasyonu yapar'
+    },
+    summaryItems: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Özet bilgileri göstermek için kullanılır'
     }
   },
   model: {
@@ -270,12 +280,14 @@ export default {
       tableBusy: false,
       pageSelectedList: [],
       selectModel: {},
-      dynamicValidations: {}
+      dynamicValidations: {},
+      summary: {},
+      listSearched: false
     }
   },
   methods: {
     getFormFields () {
-      this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
+      return this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
         this.action = response.Action
         this.searchItems = response.SearchItems
         this.setDefaultValues()
@@ -354,6 +366,10 @@ export default {
     getList (isPaging) {
       this.$v.form.$touch()
       let request = null
+
+      if (!this.listSearched) {
+        this.listSearched = true
+      }
 
       if (!isPaging) {
         if (this.$v.form.$error) {
@@ -482,33 +498,26 @@ export default {
       this.list = []
       this.form = {}
       this.currentPage = 1
-      this.totalRowCount = this.value.length
     },
     show () {
       this.$v.form.$reset()
-      this.pageSelectedList = JSON.parse(JSON.stringify(this.value))
+      this.pageSelectedList = [...this.value]
       if (this.initialValuesFunc) {
         this.pageSelectedList = this.initialValuesFunc(this.pageSelectedList)
       }
-
-      this.list = this.pageSelectedList.map(v => {
-        let item = {
-          ...v,
-          SelectedRow: true
-        }
-
-        return item
-      })
-
+      this.list = [...this.pageSelectedList]
       if (this.dynamicRequiredFilters.length > 0) {
         this.dynamicRequiredFilters.map(d => {
           this.dynamicValidations[d.mainProperty] = d.required()
         })
       }
+
+      this.totalRowCount = parseInt(this.list.length / this.recordCount)
     },
     showModal () {
-      this.getFormFields()
-      this.$bvModal.show(`modal${this.id}`)
+      this.getFormFields().then(() => {
+        this.$bvModal.show(`modal${this.id}`)
+      })
     },
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
@@ -586,6 +595,10 @@ export default {
         this.list[data.index].RecordId = null
       }
       this.list[data.index].SelectedRow = !selectedRow
+
+      this.$nextTick(() => {
+        this.calculateSummary()
+      })
     },
     addItems () {
       let isError = false
@@ -738,6 +751,15 @@ export default {
           })
         }
       }
+    },
+    calculateSummary () {
+      let selectedList = this.list.filter(l => l.SelectedRow)
+      this.summaryItems.map(s => {
+        const list = selectedList.filter(l => l.RecordState !== 4)
+        const summary = s.summaryFunc(list)
+        this.summary[s.modelProperty] = s.type === 'decimal' ? this.roundNumber(summary) : summary
+      })
+      this.$forceUpdate()
     }
   },
   validations () {
@@ -769,7 +791,9 @@ export default {
     },
     currentPage () {
       this.allSelected = false
-      this.getList(true)
+      if (this.listSearched) {
+        this.getList(true)
+      }
     }
   }
 }
