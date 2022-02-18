@@ -286,7 +286,7 @@ export default {
   },
   methods: {
     getFormFields () {
-      this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
+      return this.$api.getByUrl(`VisionNextUIOperations/api/UiOperationGroupUser/GetFormMultipleSelectFields?name=${this.name}`).then(response => {
         this.action = response.Action
         this.searchItems = response.SearchItems
         this.setDefaultValues()
@@ -495,22 +495,13 @@ export default {
       this.currentPage = 1
       this.totalRowCount = this.value.length
     },
-    show () {
+    async show () {
       this.$v.form.$reset()
-      this.pageSelectedList = JSON.parse(JSON.stringify(this.value))
+      this.pageSelectedList = [...this.value]
       if (this.initialValuesFunc) {
         this.pageSelectedList = this.initialValuesFunc(this.pageSelectedList)
       }
-
-      this.list = this.pageSelectedList.map(v => {
-        let item = {
-          ...v,
-          SelectedRow: true
-        }
-
-        return item
-      })
-
+      this.list = [...this.pageSelectedList]
       if (this.dynamicRequiredFilters.length > 0) {
         this.dynamicRequiredFilters.map(d => {
           this.dynamicValidations[d.mainProperty] = d.required()
@@ -518,8 +509,9 @@ export default {
       }
     },
     showModal () {
-      this.getFormFields()
-      this.$bvModal.show(`modal${this.id}`)
+      this.getFormFields().then(() => {
+        this.$bvModal.show(`modal${this.id}`)
+      })
     },
     closeModal () {
       this.$bvModal.hide(`modal${this.id}`)
