@@ -154,6 +154,7 @@
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>

@@ -1977,7 +1977,8 @@
       "EDocumentStatusId": "E-Belge Durumu",
       "CustomerOrderNumber": "Müşteri Sipariş No",
       "IsDBSOffline": "Online DBS Ödeme",
-      "IsDBS": "DBS Kullanılsın Mı?"
+      "IsDBS": "DBS Kullanılsın Mı?",
+      "grossQuantity": "Toplam Adet"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

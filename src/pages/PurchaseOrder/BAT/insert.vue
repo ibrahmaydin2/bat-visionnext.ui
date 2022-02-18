@@ -163,6 +163,8 @@
                   :converted-values="multipleItemSearch.convertedValues"
                   :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                   :validations="multipleItemSearch.quantityValidation"
+                  :summary-items="multipleItemSearch.summaryItems"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>
