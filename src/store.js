@@ -342,6 +342,22 @@ export const store = new Vuex.Store({
           }
         }
       ],
+      summaryItems: [
+        {
+          label: i18n.t('insert.order.grossTotal'),
+          modelProperty: 'GrossTotal',
+          summaryFunc: (list) => {
+            return list.reduce((a, b) => a + parseFloat(b.GrossTotal), 0)
+          }
+        },
+        {
+          label: i18n.t('insert.order.grossQuantity'),
+          modelProperty: 'GrossQuantity',
+          summaryFunc: (list) => {
+            return list.reduce((a, b) => a + parseFloat(b.Quantity), 0)
+          }
+        }
+      ],
       initialValue: (values) => {
         values.map(value => {
           if (value.Item) {

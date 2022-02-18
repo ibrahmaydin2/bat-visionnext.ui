@@ -66,6 +66,11 @@
           </b-form-group>
         </b-col>
       </b-row>
+      <b-row v-if="summaryItems.length > 0">
+        <NextFormGroup v-for="(item,i) in summaryItems" :key="i" :title="$t(item.label)">
+          <NextInput v-model="summary[item.modelProperty]" type="text" disabled></NextInput>
+        </NextFormGroup>
+      </b-row>
       <b-row>
         <b-table
           class="multiple-selection-grid"
@@ -249,6 +254,11 @@ export default {
     afterFunc: {
       type: Function,
       description: 'Eklemeden Önce data manipülasyonu yapar'
+    },
+    summaryItems: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Özet bilgileri göstermek için kullanılır'
     }
   },
   model: {
@@ -275,7 +285,8 @@ export default {
       pageSelectedList: [],
       initialList: [],
       selectModel: {},
-      dynamicValidations: {}
+      dynamicValidations: {},
+      summary: {}
     }
   },
   methods: {
@@ -525,6 +536,8 @@ export default {
     },
     rowSelected (data) {
       this.selectedList = data
+
+      this.calculateSummary()
     },
     selectAll () {
       if (this.allSelected) {
@@ -594,6 +607,9 @@ export default {
         allList = allList.map(a => this.afterFunc(a))
       }
       this.$emit('valuechange', allList)
+      setTimeout(() => {
+        this.$emit('input', allList)
+      }, 100)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {
@@ -679,6 +695,12 @@ export default {
           })
         }
       }
+    },
+    calculateSummary () {
+      this.summaryItems.map(s => {
+        const list = this.selectedList.filter(l => l.RecordState !== 4)
+        this.summary[s.modelProperty] = s.summaryFunc(list)
+      })
     }
   },
   validations () {
