@@ -286,7 +286,8 @@ export default {
       initialList: [],
       selectModel: {},
       dynamicValidations: {},
-      summary: {}
+      summary: {},
+      listSearched: false
     }
   },
   methods: {
@@ -367,6 +368,10 @@ export default {
     getList (isPaging) {
       this.$v.form.$touch()
       let request = null
+
+      if (!this.listSearched) {
+        this.listSearched = true
+      }
 
       if (!isPaging) {
         if (this.$v.form.$error) {
@@ -465,7 +470,6 @@ export default {
       this.list = []
       this.form = {}
       this.currentPage = 1
-      this.totalRowCount = this.value.length
     },
     show () {
       this.$v.form.$reset()
@@ -483,6 +487,7 @@ export default {
           this.dynamicValidations[d.mainProperty] = d.required()
         })
       }
+      this.totalRowCount = parseInt(this.list.length / this.recordCount)
     },
     showModal () {
       this.getFormFields()
@@ -738,7 +743,9 @@ export default {
     },
     currentPage () {
       this.allSelected = false
-      this.getList(true)
+      if (this.listSearched) {
+        this.getList(true)
+      }
     }
   }
 }
