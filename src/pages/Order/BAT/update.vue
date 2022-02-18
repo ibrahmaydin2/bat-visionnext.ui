@@ -222,7 +222,8 @@
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
                 :validations="multipleItemSearch.quantityValidation"
-                :initial-values-func="multipleItemSearch.initialValue" />
+                :initial-values-func="multipleItemSearch.initialValue"
+                @input="calculateTotalPrices()" />
             </b-col>
           </b-row>
           <b-row>

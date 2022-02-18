@@ -189,6 +189,7 @@
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
                   :initial-values-func="multipleItemSearch.initialValue"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>

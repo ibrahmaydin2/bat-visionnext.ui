@@ -1976,7 +1976,8 @@
       "EDocumentStatusId": "E-Docuemnt Status",
       "CustomerOrderNumber": "Customer Order Number",
       "IsDBSOffline": "Online DBS Payment",
-      "IsDBS": "Use DBS?"
+      "IsDBS": "Use DBS?",
+      "grossQuantity": "Total Quantity"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
