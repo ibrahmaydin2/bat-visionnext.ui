@@ -9,8 +9,8 @@
       <template #modal-title>
         {{action.Title}}
       </template>
-      <b-row class="filter-area">
-        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
+      <b-row class="filter-area" v-if="searchItems.length > 0">
+        <NextFormGroup v-for="(item,i) in searchItems" :key="i" v-once :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
           <div v-if="item.modelControlUtil != null">
             <NextDropdown
               v-if="item.modelControlUtil.InputType === 'AutoComplete'"
@@ -362,7 +362,6 @@ export default {
         } else {
           this.form[item.modelControlUtil.ModelProperty] = null
         }
-        this.$forceUpdate()
       })
     },
     getList (isPaging) {
