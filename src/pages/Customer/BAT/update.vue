@@ -434,7 +434,9 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()">
-          <b-table id="asset-locations" :items="form.AssetLocations" :fields="assetLocationFields" bordered responsive small>
+          <b-table id="asset-locations"
+            :items="form.AssetLocations ? form.AssetLocations.filter(r => r.Quantity > 0) : []"
+            :fields="assetLocationFields" bordered responsive small>
             <template #head()="data">
               {{$t(data.label)}}
             </template>
@@ -1025,14 +1027,16 @@ export default {
     },
     customerRegion5 (value) {
       if (value) {
-        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue)
-        this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
-        this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
-        this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
-        this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
-        this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
-        this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
-        this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4 ? this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue) : null
+        if (this.customerRegion4) {
+          this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
+          this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
+          this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
+          this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
+          this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
+          this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
+          this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+        }
       } else {
         this.customerRegion1 = null
         this.customerRegion2 = null
