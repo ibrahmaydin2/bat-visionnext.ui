@@ -26,13 +26,16 @@
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.CommercialTitle, 'text', 'insert.customer.Model_CommercialTitle')"></div>
+              <div v-if="rowData.TaxCustomerType && rowData.TaxCustomerType.Code === 'GRK'" v-html="getFormatDataByType(rowData.TextField6, 'text', 'insert.customer.name')"></div>
+              <div v-if="rowData.TaxCustomerType && rowData.TaxCustomerType.Code === 'GRK'" v-html="getFormatDataByType(rowData.TextField7, 'text', 'insert.customer.surname')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.customer.Model_Description1')"></div>
+              <div v-html="getFormatDataByType(rowData.TaxCustomerType, 'object', 'insert.customer.Model_TaxCustomerTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.customer.Model_TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
-              <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
               <div v-html="getFormatDataByType(rowData.CardType, 'object', 'insert.customer.Model_CardTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.customer.Model_TypeId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesType, 'object', 'insert.customer.Model_SalesTypeId')"></div>
