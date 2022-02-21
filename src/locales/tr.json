@@ -1115,7 +1115,9 @@
       "CustomerAlias": "Alias",
       "IsDefaultAlias": "Varsayılan Alias",
       "ECustomerAliases": "Müşteri Alias",
-      "salesRepresentative": "Satış Temsilcisi"
+      "salesRepresentative": "Satış Temsilcisi",
+      "name": "İsim",
+      "surname": "Soysim"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
