@@ -222,6 +222,7 @@ export default {
     let pages = ['PurchaseWaybill', 'PurchaseInvoice', 'SalesReturnInvoice', 'Contracts', 'PurchaseReturnInvoice', 'PurchaseReturnWaybill', 'Order', 'PriceList', 'SalesReturnWaybill']
     if (pages.includes(this.thisRoute)) {
       this.showManualActions = true
+      this.$forceUpdate()
     }
   },
   computed: {
