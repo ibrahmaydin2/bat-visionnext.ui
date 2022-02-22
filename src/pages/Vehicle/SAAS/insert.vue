@@ -111,19 +111,19 @@
                 @input="selectedType('WeightCpUnitId', $event)"
                 :disabled="insertReadonly.WeightCpUnitId" />
             </NextFormGroup>
-            <NextFormGroup item-key="Category1Id" :error="$v.form.Category1Id">
+            <NextFormGroup :title="$t('insert.vehicles.SAASvehicleCategory1')" item-key="Category1Id" :error="$v.form.Category1Id">
               <NextDropdown
                 lookup-key="VEHICLE_CATEGORY_1"
                 @input="selectedType('Category1Id', $event)"
                 :disabled="insertReadonly.Category1Id" />
             </NextFormGroup>
-            <NextFormGroup item-key="Category2Id" :error="$v.form.Category2Id">
+            <NextFormGroup :title="$t('insert.vehicles.SAASvehicleCategory2')" item-key="Category2Id" :error="$v.form.Category2Id">
               <NextDropdown
                 lookup-key="VEHICLE_CATEGORY_2"
                 @input="selectedType('Category2Id', $event)"
                 :disabled="insertReadonly.Category2Id" />
             </NextFormGroup>
-            <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
+            <NextFormGroup :title="$t('insert.vehicles.SAASvehicleCategory3')" item-key="Category3Id" :error="$v.form.Category3Id">
               <NextDropdown
                 lookup-key="VEHICLE_CATEGORY_3"
                 @input="selectedType('Category2Id', $event)"
@@ -142,8 +142,8 @@
   </b-row>
 </template>
 <script>
-import { detailData } from './detailPanelData'
-import insertMixin from '../../mixins/insert'
+import { detailData } from '../detailPanelData'
+import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
   data () {

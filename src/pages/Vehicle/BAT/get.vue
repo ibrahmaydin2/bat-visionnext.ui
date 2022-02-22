@@ -100,8 +100,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/index'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
