@@ -56,15 +56,16 @@
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'insert.order.documentDate')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentTime, 'text', 'insert.order.documentTime')"></div>
-              <div v-html="getFormatDataByType(rowData.Route, 'object', 'insert.order.route')"></div>
+              <div v-html="getFormatDataByType(rowData.InvoiceType, 'object', 'insert.order.invoiceType')"></div>
               <div v-html="getFormatDataByType(rowData.Currency, 'object', 'insert.order.currency')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
-              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.InvoiceKind, 'object', 'insert.order.invoiceKind')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
+              <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -108,7 +109,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-                <b-table-simple responsive bordered small>
+                <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.order.paymentDate')}}</span></b-th>
                     <b-th><span>{{$t('insert.order.PeriodDay')}}</span></b-th>
@@ -134,9 +135,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
-import { detailData } from './detailPanelData'
-
+import mixin from '../../../mixins/index'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
