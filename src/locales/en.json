@@ -1977,7 +1977,12 @@
       "CustomerOrderNumber": "Customer Order Number",
       "IsDBSOffline": "Online DBS Payment",
       "IsDBS": "Use DBS?",
-      "grossQuantity": "Total Quantity"
+      "grossQuantity": "Total Quantity",
+      "GrantProduct": "Hizmet Faturaları",
+      "TurnoverPremium": "Ciro Primi",
+      "ContractCash": "Nakit Katkı",
+      "ServiceInvoice": "Raf Tabela Kazanımı",
+      "Tpr": "Kasa Çıktısı"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

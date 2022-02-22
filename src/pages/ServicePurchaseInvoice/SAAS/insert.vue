@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'ServiceSalesInvoice' }">
+            <router-link :to="{name: 'ServicePurchaseInvoice' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -38,6 +38,15 @@
                   isCustomer
                   searchable />
               </NextFormGroup>
+              <NextFormGroup item-key="TotalItemDiscount" :error="$v.form.TotalItemDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalItemDiscount" :disabled="insertReadonly.TotalItemDiscount" ></NextInput>
+              </NextFormGroup>
+              <NextFormGroup item-key="TotalOtherDiscount" :error="$v.form.TotalOtherDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalOtherDiscount" :disabled="insertReadonly.TotalOtherDiscount" ></NextInput>
+              </NextFormGroup>
+              <NextFormGroup item-key="TotalDiscount" :error="$v.form.TotalDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalDiscount" :disabled="insertReadonly.TotalDiscount"></NextInput>
+              </NextFormGroup>
             </b-row>
           </b-col>
           <b-col cols="4">
@@ -53,6 +62,18 @@
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
               </div>
@@ -73,7 +94,7 @@
                 url="VisionNextInvoice/api/InvoiceKind/Search"
                 :filter="i => i.Code === 'FAT'"
                 @input="selectedSearchType('InvoiceKindId', $event)"
-                :disabled="insertReadonly.InvoiceKindId" />
+                :disabled="insertReadonly.InvoiceKindId"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.DocumentNumber" :disabled="insertReadonly.DocumentNumber"></NextInput>
@@ -83,9 +104,10 @@
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceTypeId" :error="$v.form.InvoiceTypeId" md="2" lg="2">
               <NextDropdown
+                v-model="invoiceType"
                 url="VisionNextInvoice/api/InvoiceType/Search"
                 @input="selectedSearchType('InvoiceTypeId', $event)"
-                :disabled="insertReadonly.InvoiceTypeId" />
+                 />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
@@ -109,7 +131,10 @@
                 label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
+              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId || (selectedPaymentType && selectedPaymentType.Code !== 'AH')"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup item-key="AsEArchive" :error="$v.form.AsEArchive">
+              <NextCheckBox v-model="AsEArchive" type="number" :disabled="form.GrossTotal > 5000" raido/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -167,6 +192,7 @@
           </b-row>
           <b-row>
             <b-table
+              ref="invoiceTable"
               :items="form.InvoiceLines"
               :fields="itemFields"
               responsive
@@ -221,6 +247,21 @@
             </b-table>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.order.GrantProduct')" v-if="invoiceType && invoiceType.Code === 'HF'">
+          <NextDetailPanel v-model="form.GrantProduct" :items="grantProductItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.TurnoverPremium')" v-if="invoiceType && invoiceType.Code === 'CP'">
+          <NextDetailPanel v-model="form.TurnoverPremium" :items="turnoverPremiumItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ContractCash')" v-if="invoiceType && invoiceType.Code === 'NK'">
+          <NextDetailPanel v-model="form.ContractCash" :items="contractCashItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ServiceInvoice')" v-if="invoiceType && invoiceType.Code === 'RTK'">
+          <NextDetailPanel v-model="form.ServiceInvoice" :items="serviceInvoiceItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.Tpr')" v-if="invoiceType && invoiceType.Code === 'TPR'">
+          <NextDetailPanel v-model="form.Tpr" :items="tprItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="confirm-modal">
@@ -238,8 +279,8 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/insert'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -247,7 +288,7 @@ export default {
       form: {
         Deleted: 0,
         System: 0,
-        StatusId: 1,
+        StatusId: null,
         RecordState: 2,
         InvoiceNumber: null,
         DocumentNumber: null,
@@ -285,11 +326,17 @@ export default {
         IsCanceled: 0,
         InvoiceTypeId: null,
         InvoiceLines: [],
-        InvoiceDiscounts: []
+        InvoiceDiscounts: [],
+        AsEArchive: null
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,
       discountFields: detailData.discountFields,
+      grantProductItems: detailData.grantProductItems,
+      turnoverPremiumItems: detailData.turnoverPremiumItems,
+      contractCashItems: detailData.contractCashItems,
+      serviceInvoiceItems: detailData.serviceInvoiceItems,
+      tprItems: detailData.tprItems,
       selectedInvoiceDiscount: {
         discountReason: null,
         totalDiscount: null,
@@ -315,7 +362,9 @@ export default {
       currentCustomer: {},
       customerSelectCancelled: false,
       selectedPaymentType: {},
-      paymentTypes: []
+      paymentTypes: [],
+      invoiceType: null,
+      AsEArchive: null
     }
   },
   computed: {
@@ -380,6 +429,11 @@ export default {
       this.selectedInvoiceLine.netTotal = this.roundNumber(this.selectedInvoiceLine.price * this.selectedInvoiceLine.quantity)
       this.selectedInvoiceLine.totalVat = this.roundNumber(this.selectedInvoiceLine.netTotal * vatRate / 100)
       this.selectedInvoiceLine.grossTotal = this.roundNumber(parseFloat(this.selectedInvoiceLine.netTotal) + parseFloat(this.selectedInvoiceLine.totalVat))
+      if (this.selectedInvoiceLine.grossTotal && this.selectedInvoiceLine.grossTotal > 5000) {
+        this.AsEArchive = 1
+      } else {
+        this.AsEArchive = 0
+      }
     },
     resetTotalPrice () {
       this.selectedInvoiceLine.vatRate = 0
@@ -460,6 +514,7 @@ export default {
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
         this.selectedInvoiceLine.isUpdated = false
+        this.$refs.invoiceTable.refresh()
       } else {
         this.form.InvoiceLines.push(order)
       }
@@ -641,7 +696,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;
