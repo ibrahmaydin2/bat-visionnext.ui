@@ -24,14 +24,14 @@
         <b-tab :title="$t('insert.cashcard.CashCard')" active>
            <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.CashCard.CustomerId')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'get.CashCard.DocumentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'get.CashCard.DocumentDate')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.PaymentDate')"></div>
               <div v-html="getFormatDataByType(rowData.CashTotal, 'text', 'get.CashCard.CashTotal')"></div>
-              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
-
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CashCard.RouteId')"></div>
               <div v-html="getFormatDataByType(rowData.CashCardType, 'object', 'get.CashCard.CashCardTypeId')"></div>

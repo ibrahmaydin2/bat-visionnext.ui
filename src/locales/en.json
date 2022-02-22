@@ -1114,7 +1114,9 @@
       "SAASsapCustomerId": "SAP Customer ID",
       "CustomerAlias": "Alias",
       "IsDefaultAlias": "Default Alias",
-      "ECustomerAliases": "Customer Alias"
+      "ECustomerAliases": "Customer Alias",
+      "name": "Name",
+      "surname": "Surname"
     },
     "fixedTerm": {
       "code": "Paymet Period Code",
