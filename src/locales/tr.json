@@ -742,7 +742,10 @@
       "replacementDriver": "Yedek Sürücü",
       "oldKm": "Önceki KM",
       "newKm": "Yeni KM",
-      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!"
+      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!",
+      "SAASvehicleCategory1": "Yan Tente Tipi",
+      "SAASvehicleCategory2": "Aralık",
+      "SAASvehicleCategory3": "Kamyon Logosu"
     },
     "employee": {
       "Model_Code": "Personel Kodu",

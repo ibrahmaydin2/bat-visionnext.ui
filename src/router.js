@@ -39,9 +39,6 @@ import RouteInsert from '@/pages/Route/insert' // yeni kayıt
 import RouteUpdate from '@/pages/Route/update' // güncelleme
 
 import VehicleIndex from '@/pages/Vehicle/' // liste ekranı
-import VehicleGet from '@/pages/Vehicle/get' // fullpage görünümü
-import VehicleInsert from '@/pages/Vehicle/insert' // yeni kayıt
-import VehicleUpdate from '@/pages/Vehicle/update' // güncelleme
 
 import EmployeeIndex from '@/pages/Employee/' // liste ekranı
 
@@ -494,7 +491,7 @@ const listIndex = [
 
 const listGet = [
   { path: '/Route/:url', name: 'RouteGet', component: RouteGet, meta: { title: i18n.t('router.RouteGet'), baseLink: 'Route' } },
-  { path: '/Vehicle/:url', name: 'VehicleGet', component: VehicleGet, meta: { title: i18n.t('router.VehicleGet'), baseLink: 'Vehicle' } },
+  { path: '/Vehicle/:url', name: 'VehicleGet', component: getTenantPage('Vehicle', 'get'), meta: { title: i18n.t('router.VehicleGet'), baseLink: 'Vehicle' } },
   { path: '/Employee/:url', name: 'EmployeeGet', component: getTenantPage('Employee', 'get'), meta: { title: i18n.t('router.EmployeeGet'), baseLink: 'Employee' } },
   { path: '/Item/:url', name: 'ItemGet', component: getTenantPage('Item', 'get'), meta: { title: i18n.t('router.ItemGet'), baseLink: 'Item' } },
   { path: '/Branch/:url', name: 'BranchGet', component: getTenantPage('Branch', 'get'), meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
@@ -583,7 +580,7 @@ const listGet = [
 
 const listUpdate = [
   { path: '/Update/Route/:url', name: 'RouteUpdate', component: RouteUpdate, meta: { title: i18n.t('router.RouteUpdate'), baseLink: 'Route' } },
-  { path: '/Update/Vehicle/:url', name: 'VehicleUpdate', component: VehicleUpdate, meta: { title: i18n.t('router.VehicleUpdate'), baseLink: 'Vehicle' } },
+  { path: '/Update/Vehicle/:url', name: 'VehicleUpdate', component: getTenantPage('Vehicle', 'update'), meta: { title: i18n.t('router.VehicleUpdate'), baseLink: 'Vehicle' } },
   { path: '/Update/Employee/:url', name: 'EmployeeUpdate', component: getTenantPage('Employee', 'update'), meta: { title: i18n.t('router.EmployeeUpdate'), baseLink: 'Employee' } },
   { path: '/Update/Item/:url', name: 'ItemUpdate', component: getTenantPage('Item', 'update'), meta: { title: i18n.t('router.ItemUpdate'), baseLink: 'Item' } },
   { path: '/Update/Branch/:url', name: 'BranchUpdate', component: getTenantPage('Branch', 'update'), meta: { title: i18n.t('router.BranchUpdate'), baseLink: 'Branch' } },
@@ -656,7 +653,7 @@ const listUpdate = [
 
 const listInsert = [
   { path: '/Insert/Route', name: 'RouteInsert', component: RouteInsert, meta: { title: i18n.t('router.RouteInsert'), baseLink: 'Route' } },
-  { path: '/Insert/Vehicle', name: 'VehicleInsert', component: VehicleInsert, meta: { title: i18n.t('router.VehicleInsert'), baseLink: 'Vehicle' } },
+  { path: '/Insert/Vehicle', name: 'VehicleInsert', component: getTenantPage('Vehicle', 'insert'), meta: { title: i18n.t('router.VehicleInsert'), baseLink: 'Vehicle' } },
   { path: '/Insert/Employee', name: 'EmployeeInsert', component: getTenantPage('Employee', 'insert'), meta: { title: i18n.t('router.EmployeeInsert'), baseLink: 'Employee' } },
   { path: '/Insert/Item', name: 'ItemInsert', component: getTenantPage('Item', 'insert'), meta: { title: i18n.t('router.ItemInsert'), baseLink: 'Item' } },
   { path: '/Insert/Branch', name: 'BranchInsert', component: getTenantPage('Branch', 'insert'), meta: { title: i18n.t('router.BranchInsert'), baseLink: 'Branch' } },
