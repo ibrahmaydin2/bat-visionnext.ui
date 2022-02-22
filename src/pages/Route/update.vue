@@ -489,6 +489,7 @@ export default {
         if (value.AddressDesc) {
           value.AdressDetail = value.AddressDesc
         }
+        value.SelectedRow = true
         return value
       })
       return values

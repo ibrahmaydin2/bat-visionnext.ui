@@ -342,6 +342,23 @@ export const store = new Vuex.Store({
           }
         }
       ],
+      summaryItems: [
+        {
+          label: i18n.t('insert.order.grossTotal'),
+          modelProperty: 'GrossTotal',
+          type: 'decimal',
+          summaryFunc: (list) => {
+            return list.reduce((a, b) => a + parseFloat(b.GrossTotal), 0)
+          }
+        },
+        {
+          label: i18n.t('insert.order.grossQuantity'),
+          modelProperty: 'GrossQuantity',
+          summaryFunc: (list) => {
+            return list.reduce((a, b) => a + parseFloat(b.Quantity), 0)
+          }
+        }
+      ],
       initialValue: (values) => {
         values.map(value => {
           if (value.Item) {
@@ -2070,6 +2087,11 @@ export const store = new Vuex.Store({
     },
     setIsMultipleGrid (state, payload) {
       state.isMultipleGrid = payload
+    },
+    gtagPageView () {
+      if (process.env.VUE_APP_GOOGLE_ANALYTICS) {
+        this._vm.$gtag.event('page_view', { method: 'Google' })
+      }
     }
   }
 })

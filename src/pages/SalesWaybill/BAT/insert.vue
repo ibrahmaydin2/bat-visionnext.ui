@@ -72,7 +72,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterWaybill')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.InvoiceNumber" :disabled="insertReadonly.InvoiceNumber"></NextInput>
@@ -182,6 +182,7 @@
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>

@@ -158,6 +158,7 @@
                   :dynamic-and-condition="{CustomerIds: [form.CustomerId], CardTypeIds: [9]}"
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>

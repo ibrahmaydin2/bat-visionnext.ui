@@ -38,7 +38,13 @@
         <b-tab :title="$t('insert.customer.Customer')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CommercialTitle" :error="$v.form.CommercialTitle">
-              <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle" />
+              <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle || (taxCustomerType && taxCustomerType.Code === 'GRK')" />
+            </NextFormGroup>
+             <NextFormGroup item-key="TextField6" :error="$v.form.TextField6" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
+              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" @input="setCommercialTitle" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField7" :error="$v.form.TextField7" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
+              <NextInput v-model="form.TextField7" type="text" :disabled="insertReadonly.TextField7" @input="setCommercialTitle" />
             </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
               <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
@@ -47,7 +53,7 @@
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
-              <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
+              <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event); selectTaxCustomerType($event);"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
               <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
@@ -185,9 +191,6 @@
             <NextFormGroup item-key="Field5" :error="$v.form.Field5">
               <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="TextField6" :error="$v.form.TextField6">
-              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" />
-            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.AdditionalClassInformation')" @click.prevent="tabValidation()">
@@ -272,7 +275,7 @@
               <NextInput v-model="form.DeliveryDayParam" type="text" :disabled="insertReadonly.DeliveryDayParam" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriod" :error="$v.form.PaymentPeriod">
-              <NextDropdown v-model="paymentPeriod" :disabled="!(paymentType && paymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
+              <NextDropdown v-model="paymentPeriod" :disabled="!(defaultPaymentType && defaultPaymentType.Code == 'AH')"  url="VisionNextCommonApi/api/FixedTerm/Search" @input="selectedSearchType('PaymentPeriod', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="TciBreak1Id" :error="$v.form.TciBreak1Id">
               <NextDropdown :disabled="insertReadonly.TciBreak1Id" v-model="tciBreak1" lookup-key="TCI_BREAKDOWN" @input="selectedType('TciBreak1Id', $event)"/>
@@ -287,7 +290,7 @@
               <NextDropdown
                 @input="selectedSearchType('DefaultPaymentTypeId', $event)"
                 :disabled="insertReadonly.DefaultPaymentTypeId"
-                v-model="paymentType"
+                v-model="defaultPaymentType"
                 :source="paymentTypes"
                 label="Description1"
                 />
@@ -411,7 +414,7 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails ? form.RouteDetails.filter(r => r.RecordState !== 4) : []" :key="i">
                   <b-td>{{r.RouteType ? r.RouteType.Label : r.RouteTypeIdDesc}}</b-td>
-                  <b-td>{{r.Route ? r.Route.Label : r.RouteIdDesc}}</b-td>
+                  <b-td>{{r.Route ? `${r.Route.Code} - ${r.Route.Label}` : `${r.RouteIdCode} - ${r.RouteIdDesc}`}}</b-td>
                   <b-td>{{r.Representative ? r.Representative.Label : r.RepresentativeIdDesc}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
@@ -432,6 +435,21 @@
               </b-tbody>
             </b-table-simple>
           </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()">
+          <b-table id="asset-locations"
+            :items="form.AssetLocations ? form.AssetLocations.filter(r => r.Quantity > 0) : []"
+            :fields="assetLocationFields" bordered responsive small>
+            <template #head()="data">
+              {{$t(data.label)}}
+            </template>
+          </b-table>
+          <b-pagination
+            :total-rows="form.AssetLocations ? form.AssetLocations.length : 0"
+            v-model="assetLocationCurrentPage"
+            :per-page="20"
+            aria-controls="asset-locations"
+          ></b-pagination>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -464,6 +482,7 @@ export default {
         Field4: null,
         Field5: null,
         TextField6: null,
+        TextField7: null,
         Class: null,
         Category1: null,
         Category2: null,
@@ -507,7 +526,10 @@ export default {
         Activity2: null,
         OutSourceOrder: null,
         TCIBreak1: null,
-        TCIBreak2: null
+        TCIBreak2: null,
+        AssetLocations: [],
+        DebitAccountRemainder: null,
+        CreditAccountRemainder: null
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
@@ -540,7 +562,7 @@ export default {
       tciBreak1: {},
       tciBreak2: {},
       statementDay: {},
-      paymentType: {},
+      defaultPaymentType: {},
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -572,7 +594,21 @@ export default {
       routeDetails: {},
       routes: [],
       representatives: [],
-      selectedIndex: -1
+      selectedIndex: -1,
+      assetLocationFields: [
+        { key: 'Asset.Code', label: 'insert.customer.AssetId' },
+        { key: 'Asset.Label', label: 'insert.customer.assetName' },
+        { key: 'SerialNumber2', label: 'insert.customer.SerialNumber' },
+        { key: 'Quantity', label: 'insert.customer.Quantity' },
+        {
+          key: 'LocationId',
+          label: this.$t('insert.customer.LocationId'),
+          formatter: (value, key, obj) => {
+            return obj.Location ? `${obj.Location.Code} - ${obj.Location.Label}` : '-'
+          }
+        }
+      ],
+      assetLocationCurrentPage: 1
     }
   },
   computed: {
@@ -651,7 +687,6 @@ export default {
             this.$store.dispatch('createData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
           })
         } else {
-          // this.$store.dispatch('updateData', {...this.query, api: 'VisionNextCustomer/api/Customer', formdata: model, return: this.$route.meta.baseLink})
           this.updateData()
         }
       }
@@ -708,7 +743,6 @@ export default {
       this.statementday = this.convertLookupValueToSearchValue(rowData.Statementday)
       this.defaultPaymentType = this.convertLookupValueToSearchValue(rowData.DefaultPaymentType)
       this.statementDay = this.convertLookupValueToSearchValue(rowData.StatementDay)
-      this.paymentType = this.convertLookupValueToSearchValue(rowData.PaymentType)
       this.cardType = this.convertLookupValueToSearchValue(rowData.CardType)
       this.distributionType = rowData.DistributionType
       this.invoiceCombineRule = rowData.InvoiceCombineRule
@@ -947,6 +981,19 @@ export default {
       this.locationItemsBAT[index].defaultValue = this.form.Description1
 
       return this.locationItemsBAT
+    },
+    selectTaxCustomerType (value) {
+      if (value && value.Code === 'TZK') {
+        this.form.TextField6 = null
+        this.form.TextField7 = null
+      } else {
+        this.form.CommercialTitle = null
+      }
+    },
+    setCommercialTitle () {
+      this.$nextTick(() => {
+        this.form.CommercialTitle = `${this.form.TextField6}${this.form.TextField7 ? ' - ' + this.form.TextField7 : ''}`
+      })
     }
   },
   watch: {
@@ -968,18 +1015,22 @@ export default {
     },
     customerCategory3 (value) {
       if (value) {
-        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue)
-        this.form.Category2Id = this.customerCategory2.DecimalValue
-        this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
-        this.form.Category1Id = this.customerCategory1.DecimalValue
-        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x =>
+        this.customerCategory2 = this.lookup.CUSTOMER_CATEGORY_2 ? this.lookup.CUSTOMER_CATEGORY_2.find(x => x.Value === value.UpperValue) : null
+        if (this.customerCategory2) {
+          this.form.Category2Id = this.customerCategory2.DecimalValue
+          this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
+          this.form.Category1Id = this.customerCategory1.DecimalValue
+        }
+
+        if (this.lookup.CUSTOMER_DISCOUNT_GROUP_3) {
           this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
-            if (response) {
-              x.Value = response.RecordValue
+            if (response && response.RecordValue) {
+              let recordValue = parseFloat(response.RecordValue)
+              this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(l => l.DecimalValue === recordValue)
+              this.form.DiscountGroup3Id = recordValue
             }
           })
-        )
-        this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+        }
       } else {
         this.discountGroup3 = null
         this.customerCategory1 = null
@@ -992,14 +1043,16 @@ export default {
     },
     customerRegion5 (value) {
       if (value) {
-        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue)
-        this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
-        this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
-        this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
-        this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
-        this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
-        this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
-        this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+        this.customerRegion4 = this.lookup.CUSTOMER_REGION_4 ? this.lookup.CUSTOMER_REGION_4.find(x => x.Value === value.UpperValue) : null
+        if (this.customerRegion4) {
+          this.form.CustomerRegion4Id = this.customerRegion4.DecimalValue
+          this.customerRegion3 = this.lookup.CUSTOMER_REGION_3.find(x => x.Value === this.customerRegion4.UpperValue)
+          this.form.CustomerRegion3Id = this.customerRegion3.DecimalValue
+          this.customerRegion2 = this.lookup.CUSTOMER_REGION_2.find(x => x.Value === this.customerRegion3.UpperValue)
+          this.form.CustomerRegion2Id = this.customerRegion2.DecimalValue
+          this.customerRegion1 = this.lookup.CUSTOMER_REGION_1.find(x => x.Value === this.customerRegion2.UpperValue)
+          this.form.CustomerRegion1Id = this.customerRegion1.DecimalValue
+        }
       } else {
         this.customerRegion1 = null
         this.customerRegion2 = null
@@ -1021,8 +1074,29 @@ export default {
     }
   },
   validations () {
+    let form = this.insertRules
+    const isGrk = this.taxCustomerType && this.taxCustomerType.Code === 'GRK'
+
+    if (isGrk) {
+      form.TextField6 = {
+        required
+      }
+      this.insertRequired.TextField6 = true
+
+      form.TextField7 = {
+        required
+      }
+
+      this.insertRequired.TextField7 = true
+    } else {
+      form.TextField6 = {}
+      this.insertRequired.TextField6 = false
+      form.TextField7 = {}
+      this.insertRequired.TextField7 = false
+    }
+
     return {
-      form: this.insertRules,
+      form: form,
       routeDetailsObj: {
         routeType: {
           required

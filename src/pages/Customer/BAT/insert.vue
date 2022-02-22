@@ -38,7 +38,13 @@
         <b-tab :title="$t('insert.customer.Customer')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="CommercialTitle" :error="$v.form.CommercialTitle">
-              <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle" />
+              <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle || (taxCustomerType && taxCustomerType.Code === 'GRK')" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField6" :error="$v.form.TextField6" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
+              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" @input="setCommercialTitle" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TextField7" :error="$v.form.TextField7" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
+              <NextInput v-model="form.TextField7" type="text" :disabled="insertReadonly.TextField7" @input="setCommercialTitle" />
             </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
               <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
@@ -47,7 +53,7 @@
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
-              <NextDropdown :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event)"/>
+              <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event); selectTaxCustomerType($event);"/>
             </NextFormGroup>
             <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
               <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
@@ -184,9 +190,6 @@
             </NextFormGroup>
             <NextFormGroup item-key="Field5" :error="$v.form.Field5">
               <NextDropdown :disabled="insertReadonly.Field5" lookup-key="FIELD_5" @input="selectedType('Field5', $event)"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="TextField6" :error="$v.form.TextField6">
-              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -411,7 +414,7 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails" :key="i">
                   <b-td>{{r.RouteTypeIdDesc}}</b-td>
-                  <b-td>{{r.RouteIdDesc}}</b-td>
+                  <b-td>{{`${r.RouteIdCode} - ${r.RouteIdDesc}`}}</b-td>
                   <b-td>{{r.RepresentativeIdDesc}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
@@ -503,6 +506,7 @@ export default {
         Field4: null,
         Field5: null,
         TextField6: null,
+        TextField7: null,
         SalesVisitFrequency: null,
         BlockReasonId: null,
         TaxCustomerTypeId: null,
@@ -598,7 +602,8 @@ export default {
       routeDetails: {},
       routes: [],
       representatives: [],
-      selectedIndex: -1
+      selectedIndex: -1,
+      taxCustomerType: null
     }
   },
   computed: {
@@ -800,11 +805,45 @@ export default {
       this.locationItemsBAT[index].defaultValue = this.form.Description1
 
       return this.locationItemsBAT
+    },
+    selectTaxCustomerType (value) {
+      if (value && value.Code === 'TZK') {
+        this.form.TextField6 = null
+        this.form.TextField7 = null
+      } else {
+        this.form.CommercialTitle = null
+      }
+    },
+    setCommercialTitle () {
+      this.$nextTick(() => {
+        this.form.CommercialTitle = `${this.form.TextField6}${this.form.TextField7 ? ' - ' + this.form.TextField7 : ''}`
+      })
     }
   },
   validations () {
+    let form = this.insertRules
+    const isGrk = this.taxCustomerType && this.taxCustomerType.Code === 'GRK'
+
+    if (isGrk) {
+      form.TextField6 = {
+        required
+      }
+      this.insertRequired.TextField6 = true
+
+      form.TextField7 = {
+        required
+      }
+
+      this.insertRequired.TextField7 = true
+    } else {
+      form.TextField6 = {}
+      this.insertRequired.TextField6 = false
+      form.TextField7 = {}
+      this.insertRequired.TextField7 = false
+    }
+
     return {
-      form: this.insertRules,
+      form: form,
       routeDetailsObj: {
         routeType: {
           required
@@ -830,8 +869,16 @@ export default {
         this.form.Category2Id = this.customerCategory2.DecimalValue
         this.customerCategory1 = this.lookup.CUSTOMER_CATEGORY_1.find(x => x.Value === this.customerCategory2.UpperValue)
         this.form.Category1Id = this.customerCategory1.DecimalValue
-        this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(x => x.Value === value.UpperValue)
-        this.form.DiscountGroup3Id = this.discountGroup3.DecimalValue
+
+        if (this.lookup.CUSTOMER_DISCOUNT_GROUP_3) {
+          this.$api.postByUrl({model: {recordIds: [value.DecimalValue], 'functionName': 'GET_SHOPPER_CHANNEL'}}, 'VisionNextCommonApi/api/LookupValue/GetSingleRowFunction').then((response) => {
+            if (response && response.RecordValue) {
+              let recordValue = parseFloat(response.RecordValue)
+              this.discountGroup3 = this.lookup.CUSTOMER_DISCOUNT_GROUP_3.find(l => l.DecimalValue === recordValue)
+              this.form.DiscountGroup3Id = recordValue
+            }
+          })
+        }
       } else {
         this.discountGroup3 = null
         this.customerCategory1 = null

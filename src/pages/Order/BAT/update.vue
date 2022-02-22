@@ -222,7 +222,8 @@
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
                 :validations="multipleItemSearch.quantityValidation"
-                :initial-values-func="multipleItemSearch.initialValue" />
+                :initial-values-func="multipleItemSearch.initialValue"
+                @input="calculateTotalPrices()" />
             </b-col>
           </b-row>
           <b-row>
@@ -664,9 +665,9 @@ export default {
       this.form.TotalDiscount = 0
       for (let index = 0; index < this.form.OrderLines.filter(o => o.RecordState !== 4).length; index++) {
         this.form.OrderLines[index].LineNumber = index
-        this.form.NetTotal += this.form.OrderLines[index].NetTotal
-        this.form.TotalVat += this.form.OrderLines[index].TotalVat
-        this.form.GrossTotal += this.form.OrderLines[index].GrossTotal
+        this.form.NetTotal += parseFloat(this.form.OrderLines[index].NetTotal)
+        this.form.TotalVat += parseFloat(this.form.OrderLines[index].TotalVat)
+        this.form.GrossTotal += parseFloat(this.form.OrderLines[index].GrossTotal)
       }
 
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)

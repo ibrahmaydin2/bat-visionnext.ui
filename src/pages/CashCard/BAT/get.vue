@@ -24,14 +24,14 @@
         <b-tab :title="$t('insert.cashcard.CashCard')" active>
            <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Customer, 'object', 'get.CashCard.CustomerId')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'get.CashCard.DocumentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentDate, 'date', 'get.CashCard.DocumentDate')"></div>
-              <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.DocumentDate')"></div>
+              <div v-html="getFormatDataByType(rowData.PaymentDate, 'date', 'get.CashCard.PaymentDate')"></div>
               <div v-html="getFormatDataByType(rowData.CashTotal, 'text', 'get.CashCard.CashTotal')"></div>
-              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
-
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Currency, 'object', 'get.CashCard.CurrencyId')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'get.CashCard.RepresentativeId')"></div>
               <div v-html="getFormatDataByType(rowData.Route, 'object', 'get.CashCard.RouteId')"></div>
               <div v-html="getFormatDataByType(rowData.CashCardType, 'object', 'get.CashCard.CashCardTypeId')"></div>
@@ -65,13 +65,10 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CashCard', record: this.$route.params.url})
-    }
-  },
-  watch: {
-    rowData: function (e) {
-      this.$api.post({RecordId: e.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        this.customerReminder = res.Model.Remainder
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextFinance/api/CashCard', record: this.$route.params.url}).then(() => {
+        this.$api.post({RecordId: this.rowData.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
+          this.customerReminder = res.Model.Remainder
+        })
       })
     }
   }

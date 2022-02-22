@@ -28,7 +28,7 @@
             <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
           <NextFormGroup item-key="IsHero" :error="$v.form.IsHero">
-            <NextCheckBox v-model="form.IsHero" type="number" toggle :disabled="insertReadonly.StatusId"/>
+            <NextCheckBox v-model="form.IsHero" type="number" toggle :disabled="insertReadonly.IsHero"/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -39,6 +39,7 @@
           <b-row>
             <NextFormGroup item-key="SourceCustomerId" :error="$v.form.SourceCustomerId">
               <NextDropdown
+                v-model="sourceCustomer"
                 @input="selectedSourceCustomer('SourceCustomerId', $event)"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
@@ -67,6 +68,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="SourceContractId" :error="$v.form.SourceContractId">
               <NextDropdown
+                v-model="sourceContract"
                 :source="sourceContracts"
                 :disabled="insertReadonly.SourceContractId"
                 @input="selectedSourceContract('SourceContractId', $event)"
@@ -105,14 +107,17 @@ export default {
         SourceContractEndDate: null,
         TransferReasonId: null,
         SourceContractId: null,
-        RecordState: 1
+        RecordState: 1,
+        sourceContract: {},
+        sourceCustomer: {}
       },
       routeName1: 'ContractManagement',
       sourceContracts: [],
       contractDetail: [],
       fields: [
         {key: 'OperationDesc', label: this.$t('get.RefContract.OperationDesc'), sortable: false},
-        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalAmount'), sortable: false}
+        {key: 'TotalAmount', label: this.$t('get.RefContract.TotalBudget'), sortable: false},
+        {key: 'UsedAmount', label: this.$t('get.RefContract.UseBudget'), sortable: false}
       ]
     }
   },
@@ -126,22 +131,38 @@ export default {
         this.$api.get('ContractManagement', `RefContract/GetResourceContract?customerId=${model.RecordId}`).then((res) => {
           this.sourceContracts = res
         })
+        this.checkIsHero(model.RecordId)
       } else {
         this.form[label] = null
         this.form.SourceContractId = null
         this.sourceContracts = []
+        this.sourceCustomer = {}
+        this.sourceContract = {}
         this.contractDetail = []
       }
     },
     selectedSourceContract (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${model.RecordId}`).then((res) => {
-          this.contractDetail = res
-        })
+        this.getCustomerDetail(model.RecordId)
+        this.form.SourceContractStartDate = model.StartDate
+        this.form.SourceContractEndDate = model.EndDate
       } else {
         this.form[label] = null
+        this.contractDetail = []
+        this.form.SourceContractStartDate = null
+        this.form.SourceContractEndDate = null
       }
+    },
+    getCustomerDetail (id) {
+      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
+        this.contractDetail = res
+      })
+    },
+    checkIsHero (customerId) {
+      this.$api.get('ContractManagement', `Contract/CheckHeroStatus?customerId=${customerId}`).then((res) => {
+        this.form.IsHero = res && res.IsHero === true ? 1 : 0
+      })
     },
     save () {
       this.$v.form.$touch()

@@ -9,8 +9,8 @@
       <template #modal-title>
         {{action.Title}}
       </template>
-      <b-row class="filter-area">
-        <NextFormGroup v-for="(item,i) in searchItems" :key="i" :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
+      <b-row class="filter-area" v-if="searchItems.length > 0">
+        <NextFormGroup v-for="(item,i) in searchItems" :key="i" v-once :title="item.ColumnType !== 'CodeText' ? item.Label : ' '" :required="getRequired(item)" :error="$v.form[item.modelControlUtil ? item.modelControlUtil.ModelProperty : item.EntityProperty]" :md="item.ColumnType === 'CodeText' ? '6' : '4'" :lg="item.ColumnType === 'CodeText' ? '6' : '3'">
           <div v-if="item.modelControlUtil != null">
             <NextDropdown
               v-if="item.modelControlUtil.InputType === 'AutoComplete'"
@@ -65,6 +65,11 @@
             <b-button :disabled="selectedList.length === 0" class="ml-2" size="sm" variant="success" @click="addItems()"><i class="fa fa-plus"></i> {{$t('insert.multipleGrid.add')}}</b-button>
           </b-form-group>
         </b-col>
+      </b-row>
+      <b-row v-if="summaryItems.length > 0">
+        <NextFormGroup v-for="(item,i) in summaryItems" :key="i" :title="$t(item.label)">
+          <NextInput v-model="summary[item.modelProperty]" type="text" disabled></NextInput>
+        </NextFormGroup>
       </b-row>
       <b-row>
         <b-table
@@ -238,7 +243,7 @@ export default {
       description: 'BranchId filtresi varsa isteklerde base de giden branchId değiştirilsin mi özelliği'
     },
     orderByColumns: {
-      type: Object,
+      type: Array,
       description: 'Liste çekilirken sıralama opsiyonu gönderir'
     },
     recordCount: {
@@ -249,6 +254,11 @@ export default {
     afterFunc: {
       type: Function,
       description: 'Eklemeden Önce data manipülasyonu yapar'
+    },
+    summaryItems: {
+      type: Array,
+      default: () => { return [] },
+      description: 'Özet bilgileri göstermek için kullanılır'
     }
   },
   model: {
@@ -275,7 +285,9 @@ export default {
       pageSelectedList: [],
       initialList: [],
       selectModel: {},
-      dynamicValidations: {}
+      dynamicValidations: {},
+      summary: {},
+      listSearched: false
     }
   },
   methods: {
@@ -350,12 +362,15 @@ export default {
         } else {
           this.form[item.modelControlUtil.ModelProperty] = null
         }
-        this.$forceUpdate()
       })
     },
     getList (isPaging) {
       this.$v.form.$touch()
       let request = null
+
+      if (!this.listSearched) {
+        this.listSearched = true
+      }
 
       if (!isPaging) {
         if (this.$v.form.$error) {
@@ -454,7 +469,6 @@ export default {
       this.list = []
       this.form = {}
       this.currentPage = 1
-      this.totalRowCount = this.value.length
     },
     show () {
       this.$v.form.$reset()
@@ -472,6 +486,7 @@ export default {
           this.dynamicValidations[d.mainProperty] = d.required()
         })
       }
+      this.totalRowCount = parseInt(this.list.length / this.recordCount)
     },
     showModal () {
       this.getFormFields()
@@ -522,9 +537,15 @@ export default {
           }
         })
       }
+
+      this.$nextTick(() => {
+        this.calculateSummary()
+      })
     },
     rowSelected (data) {
       this.selectedList = data
+
+      this.calculateSummary()
     },
     selectAll () {
       if (this.allSelected) {
@@ -594,6 +615,9 @@ export default {
         allList = allList.map(a => this.afterFunc(a))
       }
       this.$emit('valuechange', allList)
+      setTimeout(() => {
+        this.$emit('input', allList)
+      }, 100)
       this.closeModal()
     },
     getCondtionModel (conditionModel) {
@@ -679,6 +703,14 @@ export default {
           })
         }
       }
+    },
+    calculateSummary () {
+      this.summaryItems.map(s => {
+        const list = this.selectedList.filter(l => l.RecordState !== 4)
+        const summary = s.summaryFunc(list)
+        this.summary[s.modelProperty] = s.type === 'decimal' ? this.roundNumber(summary) : summary
+      })
+      this.$forceUpdate()
     }
   },
   validations () {
@@ -710,7 +742,9 @@ export default {
     },
     currentPage () {
       this.allSelected = false
-      this.getList(true)
+      if (this.listSearched) {
+        this.getList(true)
+      }
     }
   }
 }

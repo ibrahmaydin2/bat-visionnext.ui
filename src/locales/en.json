@@ -1114,7 +1114,9 @@
       "SAASsapCustomerId": "SAP Customer ID",
       "CustomerAlias": "Alias",
       "IsDefaultAlias": "Default Alias",
-      "ECustomerAliases": "Customer Alias"
+      "ECustomerAliases": "Customer Alias",
+      "name": "Name",
+      "surname": "Surname"
     },
     "fixedTerm": {
       "code": "Paymet Period Code",
@@ -1976,7 +1978,8 @@
       "EDocumentStatusId": "E-Docuemnt Status",
       "CustomerOrderNumber": "Customer Order Number",
       "IsDBSOffline": "Online DBS Payment",
-      "IsDBS": "Use DBS?"
+      "IsDBS": "Use DBS?",
+      "grossQuantity": "Total Quantity"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

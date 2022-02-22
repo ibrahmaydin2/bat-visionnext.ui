@@ -485,9 +485,9 @@ export default {
       this.form.TotalDiscount = 0
       for (let index = 0; index < this.form.InvoiceLines.filter(o => o.RecordState !== 4).length; index++) {
         this.form.InvoiceLines[index].LineNumber = index
-        this.form.NetTotal += this.form.InvoiceLines[index].NetTotal
-        this.form.TotalVat += this.form.InvoiceLines[index].TotalVat
-        this.form.GrossTotal += this.form.InvoiceLines[index].GrossTotal
+        this.form.NetTotal += parseFloat(this.form.InvoiceLines[index].NetTotal)
+        this.form.TotalVat += parseFloat(this.form.InvoiceLines[index].TotalVat)
+        this.form.GrossTotal += parseFloat(this.form.InvoiceLines[index].GrossTotal)
       }
 
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)

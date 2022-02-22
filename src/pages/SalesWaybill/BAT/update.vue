@@ -81,7 +81,7 @@
     </b-col>
     <b-col cols="12" class="">
       <b-tabs>
-        <b-tab :title="$t('insert.order.enterInvoice')" active @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterWaybill')" active @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.InvoiceNumber" :disabled="insertReadonly.InvoiceNumber"></NextInput>
@@ -189,6 +189,7 @@
                   :converted-values="multipleItemSearch.convertedValues"
                   :validations="multipleItemSearch.multipleValidations"
                   :initial-values-func="multipleItemSearch.initialValue"
+                  @input="calculateTotalPrices()"
                 />
             </b-col>
           </b-row>
@@ -656,9 +657,9 @@ export default {
       this.form.TotalDiscount = 0
       for (let index = 0; index < this.form.InvoiceLines.filter(o => o.RecordState !== 4).length; index++) {
         this.form.InvoiceLines[index].LineNumber = index
-        this.form.NetTotal += this.form.InvoiceLines[index].NetTotal
-        this.form.TotalVat += this.form.InvoiceLines[index].TotalVat
-        this.form.GrossTotal += this.form.InvoiceLines[index].GrossTotal
+        this.form.NetTotal += parseFloat(this.form.InvoiceLines[index].NetTotal)
+        this.form.TotalVat += parseFloat(this.form.InvoiceLines[index].TotalVat)
+        this.form.GrossTotal += parseFloat(this.form.InvoiceLines[index].GrossTotal)
       }
 
       this.form.NetTotal = this.roundNumber(this.form.NetTotal)
