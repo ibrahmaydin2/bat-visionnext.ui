@@ -167,6 +167,7 @@
           </b-row>
           <b-row>
             <b-table
+              ref="invoiceTable"
               :items="form.InvoiceLines"
               :fields="itemFields"
               responsive
@@ -460,6 +461,7 @@ export default {
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
         this.selectedInvoiceLine.isUpdated = false
+        this.$refs.invoiceTable.refresh()
       } else {
         this.form.InvoiceLines.push(order)
       }
