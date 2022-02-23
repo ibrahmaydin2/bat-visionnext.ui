@@ -58,7 +58,7 @@
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
               <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" :disabled="insertReadonly.TypeId" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2" show-copy copy-values="Code,Description1">
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4" show-copy copy-values="Code,Description1">
               <NextDropdown
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 @input="selectedCustomer" :searchable="true" :custom-option="true"
