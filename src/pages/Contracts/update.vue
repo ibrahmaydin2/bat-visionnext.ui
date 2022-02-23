@@ -58,7 +58,7 @@
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
               <NextDropdown :disabled="insertReadonly.TypeId" v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="2" lg="2" show-copy copy-values="Code,Description1">
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4" show-copy copy-values="Code,Description1">
               <NextDropdown
                 v-model="customer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
@@ -678,7 +678,7 @@
               <NextDropdown :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceTaken')" :error="$v.contractPaymentPlans.refInvoiceTaken" md="3" lg="3">
-              <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle disabled/>
+              <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceNumber')" :error="$v.contractPaymentPlans.refInvoiceNumber" md="3" lg="3">
               <NextInput type="text" v-model="contractPaymentPlans.refInvoiceNumber" disabled/>
