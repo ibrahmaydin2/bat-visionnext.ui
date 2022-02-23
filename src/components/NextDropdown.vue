@@ -121,6 +121,10 @@ export default {
     firstItemSelected: {
       type: Boolean,
       default: false
+    },
+    pageCount: {
+      type: Number,
+      default: 50
     }
   },
   model: {
@@ -174,6 +178,7 @@ export default {
     value (newValue, oldValue) {
       if (newValue !== oldValue) {
         this.selectedValue = newValue
+        this.$forceUpdate()
       }
     },
     source: {
@@ -273,7 +278,7 @@ export default {
           ...this.dynamicAndCondition
         }
       }
-      this.$api.postByUrl(request, this.url, 50).then((response) => {
+      this.$api.postByUrl(request, this.url, this.pageCount).then((response) => {
         if (response) {
           if (response.ListModel) {
             this.values = response.ListModel.BaseModels
