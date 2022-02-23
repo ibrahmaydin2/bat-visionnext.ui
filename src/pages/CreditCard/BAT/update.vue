@@ -92,6 +92,7 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="Route"
                 :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
