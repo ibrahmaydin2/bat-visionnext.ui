@@ -584,17 +584,15 @@ export const store = new Vuex.Store({
       let OrderByColumns = []
       let AndConditionModel = {}
 
-      if (query.OrderByColumns && query.OrderByColumns.length > 0) {
-        OrderByColumns = query.OrderByColumns
-      } else if (query.sort) {
-        // sıralama özelliği şuan tek sütunda geçerli.
-        // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
+      if (query.sort) {
         OrderByColumns = [
           {
             Column: query.sort.table,
             OrderByType: query.sort.sort === 'ASC' ? 'Ascending' : 'Descending'
           }
         ]
+      } else if (query.OrderByColumns && query.OrderByColumns.length > 0) {
+        OrderByColumns = query.OrderByColumns
       } else {
         OrderByColumns = [
           {
@@ -603,8 +601,7 @@ export const store = new Vuex.Store({
           }
         ]
       }
-      // search özelliği şuan tek sütunda geçerli.
-      // ilerleyen vakitlerde birden çok sütunda geçerli hale getirilebilir.
+
       if (query.search) {
         state.isFiltered = true
         AndConditionModel = {
@@ -630,7 +627,6 @@ export const store = new Vuex.Store({
         OrderByColumns
       }
       commit('setLastGridModel', {AndConditionModel: AndConditionModel, OrderByColumns: OrderByColumns})
-      // return axios.post('VisionNext' + query.api + '/api/' + query.api + '/Search', dataQuery) -> dinamikken bunu kullanıyorduk
       commit('showAlert', { type: 'info', msg: i18n.t('form.pleaseWait') })
       return axios.post(query.apiUrl, dataQuery, authHeader)
         .then(res => {
