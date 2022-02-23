@@ -742,7 +742,10 @@
       "replacementDriver": "Yedek Sürücü",
       "oldKm": "Önceki KM",
       "newKm": "Yeni KM",
-      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!"
+      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!",
+      "SAASvehicleCategory1": "Yan Tente Tipi",
+      "SAASvehicleCategory2": "Aralık",
+      "SAASvehicleCategory3": "Kamyon Logosu"
     },
     "employee": {
       "Model_Code": "Personel Kodu",
@@ -1980,7 +1983,12 @@
       "CustomerOrderNumber": "Müşteri Sipariş No",
       "IsDBSOffline": "Online DBS Ödeme",
       "IsDBS": "DBS Kullanılsın Mı?",
-      "grossQuantity": "Toplam Adet"
+      "grossQuantity": "Toplam Adet",
+      "GrantProduct": "Hizmet Faturaları",
+      "TurnoverPremium": "Ciro Primi",
+      "ContractCash": "Nakit Katkı",
+      "ServiceInvoice": "Raf Tabela Kazanımı",
+      "Tpr": "Kasa Çıktısı"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",

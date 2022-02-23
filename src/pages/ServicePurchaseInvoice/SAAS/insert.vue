@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'ServiceSalesInvoice' }">
+            <router-link :to="{name: 'ServicePurchaseInvoice' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -38,6 +38,15 @@
                   isCustomer
                   searchable />
               </NextFormGroup>
+              <NextFormGroup item-key="TotalItemDiscount" :error="$v.form.TotalItemDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalItemDiscount" :disabled="insertReadonly.TotalItemDiscount" ></NextInput>
+              </NextFormGroup>
+              <NextFormGroup item-key="TotalOtherDiscount" :error="$v.form.TotalOtherDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalOtherDiscount" :disabled="insertReadonly.TotalOtherDiscount" ></NextInput>
+              </NextFormGroup>
+              <NextFormGroup item-key="TotalDiscount" :error="$v.form.TotalDiscount" md="2" lg="2">
+                <NextInput type="text" v-model="form.TotalDiscount" :disabled="insertReadonly.TotalDiscount"></NextInput>
+              </NextFormGroup>
             </b-row>
           </b-col>
           <b-col cols="4">
@@ -53,6 +62,18 @@
                 <hr class="summary-hr"/>
                 <span class="summary-title">{{$t('insert.order.grossTotal')}}</span>
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
               </div>
@@ -73,7 +94,7 @@
                 url="VisionNextInvoice/api/InvoiceKind/Search"
                 :filter="i => i.Code === 'FAT'"
                 @input="selectedSearchType('InvoiceKindId', $event)"
-                :disabled="insertReadonly.InvoiceKindId" />
+                :disabled="insertReadonly.InvoiceKindId"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.DocumentNumber" :disabled="insertReadonly.DocumentNumber"></NextInput>
@@ -81,12 +102,12 @@
             <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
+            <NextFormGroup item-key="InvoiceTypeId" :error="$v.form.InvoiceTypeId" md="2" lg="2">
               <NextDropdown
-                url="VisionNextRoute/api/Route/AutoCompleteSearch"
-                @input="selectedSearchType('RouteId', $event)"
-                :disabled="insertReadonly.RouteId"
-                searchable />
+                v-model="invoiceType"
+                url="VisionNextInvoice/api/InvoiceType/Search"
+                @input="selectedSearchType('InvoiceTypeId', $event)"
+                 />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
@@ -95,7 +116,7 @@
                 :disabled="insertReadonly.RepresentativeId"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable />
             </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="2" lg="2">
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
                 @input="selectedSearchType('CurrencyId', $event)"
                 :disabled="insertReadonly.CurrencyId"
@@ -110,29 +131,36 @@
                 label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
+              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId || (selectedPaymentType && selectedPaymentType.Code !== 'AH')"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup item-key="AsEArchive" :error="$v.form.AsEArchive">
+              <NextCheckBox v-model="AsEArchive" type="number" :disabled="form.GrossTotal > 5000" raido/>
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup :title="$t('insert.order.productCode')" :error="$v.selectedInvoiceLine.selectedItem" :required="true" md="2" lg="2">
               <NextDropdown
-                v-model="selectedInvoiceLine.selectedItem"
-                @input="selectItem"
-                :dynamicAndCondition="{ CardTypeIds: [9] }"
-                orConditionFields="Code,Description1"
-                url="VisionNextItem/api/Item/AutoCompleteSearch" searchable />
+                  v-model="selectedInvoiceLine.selectedItem"
+                  url="VisionNextItem/api/Item/AutoCompleteSearch"
+                  @input="selectItem"
+                  :searchable="true"
+                  or-condition-fields="Description1,Code"
+                  :dynamic-and-condition="{CardTypeIds: [9]}"
+                  :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrency($event)" min=1></NextInput>
+              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrency($event)" min=1 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedInvoiceLine.price" @input="selectPrice"></NextInput>
+              <NextInput type="number" v-model="selectedInvoiceLine.price" @input="selectPrice"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.description1')" :error="$v.selectedInvoiceLine.description1" :required="true" md="2" lg="2">
-              <NextInput type="text" v-model="selectedInvoiceLine.description1"></NextInput>
+              <NextInput type="text" v-model="selectedInvoiceLine.description1" />
             </NextFormGroup>
+          </b-row>
+          <b-row>
             <NextFormGroup :title="$t('insert.order.vatRate')" :error="$v.selectedInvoiceLine.vatRate" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedInvoiceLine.vatRate" disabled />
             </NextFormGroup>
@@ -152,7 +180,7 @@
             </b-col>
             <b-col cols="12" md="2">
                 <NextMultipleSelection
-                  name="ServiceSalesInvoiceMultipleItem"
+                  name="ServicePurchaseInvoiceMultipleItem"
                   v-model="form.InvoiceLines"
                   :disabled-button="!form.CustomerId"
                   :dynamic-and-condition="{CustomerIds: [form.CustomerId], CardTypeIds: [9]}"
@@ -164,6 +192,7 @@
           </b-row>
           <b-row>
             <b-table
+              ref="invoiceTable"
               :items="form.InvoiceLines"
               :fields="itemFields"
               responsive
@@ -218,6 +247,21 @@
             </b-table>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.order.GrantProduct')" v-if="invoiceType && invoiceType.Code === 'HF'">
+          <NextDetailPanel v-model="form.GrantProduct" :items="grantProductItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.TurnoverPremium')" v-if="invoiceType && invoiceType.Code === 'CP'">
+          <NextDetailPanel v-model="form.TurnoverPremium" :items="turnoverPremiumItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ContractCash')" v-if="invoiceType && invoiceType.Code === 'NK'">
+          <NextDetailPanel v-model="form.ContractCash" :items="contractCashItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ServiceInvoice')" v-if="invoiceType && invoiceType.Code === 'RTK'">
+          <NextDetailPanel v-model="form.ServiceInvoice" :items="serviceInvoiceItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.Tpr')" v-if="invoiceType && invoiceType.Code === 'TPR'">
+          <NextDetailPanel v-model="form.Tpr" :items="tprItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
     <b-modal id="confirm-modal">
@@ -235,8 +279,8 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import insertMixin from '../../../mixins/insert'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [insertMixin],
   data () {
@@ -244,11 +288,11 @@ export default {
       form: {
         Deleted: 0,
         System: 0,
-        StatusId: 1,
+        StatusId: null,
         RecordState: 2,
         InvoiceNumber: null,
         DocumentNumber: null,
-        DocumentClassId: 10,
+        DocumentClassId: 9,
         InvoiceKindId: 1,
         CustomerId: null,
         DocumentDate: null,
@@ -280,13 +324,19 @@ export default {
         IsValid: 0,
         IsPrinted: 0,
         IsCanceled: 0,
+        InvoiceTypeId: null,
         InvoiceLines: [],
         InvoiceDiscounts: [],
-        RouteId: null
+        AsEArchive: null
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,
       discountFields: detailData.discountFields,
+      grantProductItems: detailData.grantProductItems,
+      turnoverPremiumItems: detailData.turnoverPremiumItems,
+      contractCashItems: detailData.contractCashItems,
+      serviceInvoiceItems: detailData.serviceInvoiceItems,
+      tprItems: detailData.tprItems,
       selectedInvoiceDiscount: {
         discountReason: null,
         totalDiscount: null,
@@ -294,6 +344,7 @@ export default {
       },
       selectedCustomer: null,
       documentDate: null,
+      selectedCurrency: {},
       selectedInvoiceLine: {
         selectedItem: null,
         quantity: null,
@@ -311,7 +362,9 @@ export default {
       currentCustomer: {},
       customerSelectCancelled: false,
       selectedPaymentType: {},
-      paymentTypes: []
+      paymentTypes: [],
+      invoiceType: null,
+      AsEArchive: null
     }
   },
   computed: {
@@ -322,7 +375,7 @@ export default {
     this.getInsertPage()
   },
   methods: {
-    getInsertPage (e) {
+    getInsertPage () {
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
       this.documentDate = date
@@ -376,6 +429,11 @@ export default {
       this.selectedInvoiceLine.netTotal = this.roundNumber(this.selectedInvoiceLine.price * this.selectedInvoiceLine.quantity)
       this.selectedInvoiceLine.totalVat = this.roundNumber(this.selectedInvoiceLine.netTotal * vatRate / 100)
       this.selectedInvoiceLine.grossTotal = this.roundNumber(parseFloat(this.selectedInvoiceLine.netTotal) + parseFloat(this.selectedInvoiceLine.totalVat))
+      if (this.selectedInvoiceLine.grossTotal && this.selectedInvoiceLine.grossTotal > 5000) {
+        this.AsEArchive = 1
+      } else {
+        this.AsEArchive = 0
+      }
     },
     resetTotalPrice () {
       this.selectedInvoiceLine.vatRate = 0
@@ -420,8 +478,8 @@ export default {
       let selectedItem = this.selectedInvoiceLine.selectedItem
       let quantity = this.selectedInvoiceLine.quantity
       let order = {
-        Description1: this.selectedInvoiceLine.description1,
         ItemName: selectedItem.Description1,
+        Description1: this.selectedInvoiceLine.description1,
         Deleted: 0,
         System: 0,
         RecordState: 2,
@@ -456,6 +514,7 @@ export default {
       if (this.selectedInvoiceLine.isUpdated) {
         this.form.InvoiceLines[this.selectedIndex] = order
         this.selectedInvoiceLine.isUpdated = false
+        this.$refs.invoiceTable.refresh()
       } else {
         this.form.InvoiceLines.push(order)
       }
@@ -515,6 +574,7 @@ export default {
       }
       this.form.InvoiceDiscounts.push({
         DiscountClassId: 1,
+        IsItemLineDiscount: 0,
         RecordState: 2,
         DiscountReasonId: this.selectedInvoiceDiscount.discountReason.RecordId,
         DiscountReasonName: this.selectedInvoiceDiscount.discountReason.Description1,
@@ -549,11 +609,10 @@ export default {
       }
     },
     getPaymentTypes () {
-      let me = this
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
-        me.selectedPaymentType = res.Model.DefaultPaymentType
-        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
+        this.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        this.selectedPaymentType = res.Model.DefaultPaymentType
+        this.form.PaymentTypeId = this.selectedPaymentType.DecimalValue
       })
     }
   },
@@ -637,7 +696,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;

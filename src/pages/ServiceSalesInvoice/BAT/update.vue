@@ -7,7 +7,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="4" class="text-right">
-            <router-link :to="{name: 'ServicePurchaseInvoice' }">
+            <router-link :to="{name: 'ServiceSalesInvoice' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -94,12 +94,13 @@
              <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="2" lg="2">
               <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="InvoiceTypeId" :error="$v.form.InvoiceTypeId" md="2" lg="2">
+            <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <NextDropdown
-                v-model="selectedInvoiceType"
-                url="VisionNextInvoice/api/InvoiceType/Search"
-                @input="selectedSearchType('InvoiceTypeId', $event)"
-                :disabled="insertReadonly.InvoiceTypeId" />
+                v-model="selectedRoute"
+                url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                @input="selectedSearchType('RouteId', $event)"
+                :disabled="insertReadonly.RouteId"
+                searchable />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
@@ -125,15 +126,15 @@
                 label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
+               <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
           <b-row>
-           <b-table
+            <b-table
               :items="form.InvoiceLines"
-              :fields="itemFields.filter(i => i.key !== 'operations')"
+              :fields="itemFields.filter(f => f.key !== 'operations')"
               responsive
               bordered>
               <template #head()="data">
@@ -146,7 +147,7 @@
           <b-row>
             <b-table
               :items="form.InvoiceDiscounts"
-              :fields="discountFields.filter(i => i.key !== 'operations')"
+              :fields="discountFields.filter(f => f.key !== 'operations')"
               responsive
               bordered>
               <template #head()="data">
@@ -160,8 +161,8 @@
   </b-row>
 </template>
 <script>
-import updateMixin from '../../mixins/update'
-import { detailData } from './detailPanelData'
+import updateMixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [updateMixin],
   data () {
@@ -206,8 +207,8 @@ export default {
         IsPrinted: null,
         IsCanceled: null,
         InvoiceLines: [],
-        InvoiceTypeId: null,
-        InvoiceDiscounts: []
+        InvoiceDiscounts: [],
+        RouteId: null
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,
@@ -216,8 +217,8 @@ export default {
       selectedCurrency: {},
       selectedRepresentative: null,
       selectedPaymentType: null,
-      selectedInvoiceType: null,
       paymentTypes: [],
+      selectedRoute: null,
       selectedInvoiceKind: null
     }
   },
@@ -227,20 +228,6 @@ export default {
     })
   },
   methods: {
-    getItem (recordId) {
-      let request = {
-        andConditionModel: {
-          RecordIds: [recordId]
-        }
-      }
-      var me = this
-      this.$api.post(request, 'Item', 'Item/Search').then((res) => {
-        if (res.ListModel && res.ListModel.BaseModels) {
-          me.selectedInvoiceLine.selectedItem = res.ListModel.BaseModels[0]
-          me.$forceUpdate()
-        }
-      })
-    },
     setData () {
       let rowData = this.rowData
       if (rowData) {
@@ -252,8 +239,9 @@ export default {
           this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
         })
         this.selectedRepresentative = this.convertLookupValueToSearchValue(rowData.Representative)
-        this.selectedInvoiceType = this.convertLookupValueToSearchValue(rowData.InvoiceType)
+        this.selectedRoute = this.convertLookupValueToSearchValue(rowData.Route)
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
+        this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
         this.selectedPaymentType = rowData.PaymentType
         if (this.form.InvoiceLines) {
           this.form.InvoiceLines.map(item => {
@@ -270,6 +258,7 @@ export default {
       }
     },
     save () {
+      this.form.StatusId = this.form.StatusId ? this.form.StatusId : 1
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
