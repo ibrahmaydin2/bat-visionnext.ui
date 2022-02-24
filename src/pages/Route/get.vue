@@ -124,16 +124,8 @@ export default {
       })
     },
     exportData () {
-      this.$api.downloadByUrl({RecordId: this.$route.params.url}, 'VisionNextRoute/api/Route/ExportRouteDetail').then(response => {
-        if (!response) {
-          return
-        }
-        const url = window.URL.createObjectURL(new Blob([response]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', `${this.$t('insert.route.routeDetail')}-${this.$route.params.url}.xlsx`)
-        document.body.appendChild(link)
-        link.click()
+      this.$api.downloadByUrl('VisionNextRoute/api/Route/ExportRouteDetail', 'post', {RecordId: this.$route.params.url}).then(response => {
+        this.downloadResponse(response, `${this.$t('insert.route.routeDetail')}-${this.$route.params.url}`)
       })
     }
   }
