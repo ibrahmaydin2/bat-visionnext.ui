@@ -55,8 +55,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { detailData } from './detailPanelData'
-import mixin from '../../mixins/index'
+import { detailData } from '../detailPanelData'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
   data () {

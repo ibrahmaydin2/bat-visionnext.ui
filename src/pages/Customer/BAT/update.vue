@@ -41,13 +41,13 @@
               <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle || (taxCustomerType && taxCustomerType.Code === 'GRK')" />
             </NextFormGroup>
              <NextFormGroup item-key="TextField6" :error="$v.form.TextField6" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
-              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" @input="setCommercialTitle" />
+              <NextInput v-model="form.TextField6" type="text" :disabled="insertReadonly.TextField6" @input="setCommercialTitle()" />
             </NextFormGroup>
             <NextFormGroup item-key="TextField7" :error="$v.form.TextField7" v-if="taxCustomerType && taxCustomerType.Code === 'GRK'">
-              <NextInput v-model="form.TextField7" type="text" :disabled="insertReadonly.TextField7" @input="setCommercialTitle" />
+              <NextInput v-model="form.TextField7" type="text" :disabled="insertReadonly.TextField7" @input="setCommercialTitle()" />
             </NextFormGroup>
             <NextFormGroup item-key="Description1" :error="$v.form.Description1">
-              <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
+              <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" @input="setCommercialTitle()" />
             </NextFormGroup>
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
               <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
@@ -990,9 +990,18 @@ export default {
         this.form.CommercialTitle = null
       }
     },
-    setCommercialTitle () {
+    async setCommercialTitle () {
+      if (this.taxCustomerType && this.taxCustomerType.Code !== 'GRK') { return }
+      if (!this.form.TextField6) {
+        this.form.TextField6 = ''
+      }
+      if (!this.form.TextField7) {
+        this.form.TextField7 = ''
+      }
       this.$nextTick(() => {
-        this.form.CommercialTitle = `${this.form.TextField6}${this.form.TextField7 ? ' - ' + this.form.TextField7 : ''}`
+        this.form.CommercialTitle = `${this.form.Description1
+          ? `${this.form.Description1} - `
+          : ''}${this.form.TextField6} ${this.form.TextField7}`
       })
     }
   },

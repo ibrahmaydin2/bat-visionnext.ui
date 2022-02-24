@@ -85,8 +85,8 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/update'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {

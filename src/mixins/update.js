@@ -36,8 +36,9 @@ export default {
       this.$store.commit('setRowData', {})
       return this.$api.postByUrl({RecordId: this.$route.params.url}, `VisionNext${this.routeName1}/api/${this.routeName2}${path}`).then((res) => {
         if (res.IsCompleted) {
-          this.$store.commit('setRowData', res.Model)
-          this.$forceUpdate()
+          this.$nextTick(() => {
+            this.$store.commit('setRowData', res.Model)
+          })
           if (res.Model && res.Model.System === 1) {
             this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.systemRecordCanNotUpdate') })
             document.getElementById('submitButton').disabled = true

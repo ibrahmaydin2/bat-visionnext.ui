@@ -2799,7 +2799,10 @@
       "LicenseNumber": "Lisans Numarası",
       "Address": "Adres",
       "CityId": "İl",
-      "DistrictId": "İlçe"
+      "DistrictId": "İlçe",
+      "WarehouseTypeId": "Depo Tipi",
+      "IsCenterWarehouse": "Varsayılan Depo",
+      "WarehouseCapacity":"Depo Kapasitesi (m2)"
     },
     "CashCard": {
       "title":"Nakit Ödeme Ana Kayıtları",

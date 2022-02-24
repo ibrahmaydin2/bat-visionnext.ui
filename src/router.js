@@ -57,9 +57,6 @@ import AnalysisQuestionsInsert from '@/pages/AnalysisQuestions/insert' // yeni k
 import AnalysisQuestionsUpdate from '@/pages/AnalysisQuestions/update' // güncelleme
 
 import WarehouseIndex from '@/pages/Warehouse/' // liste ekranı
-import WarehouseGet from '@/pages/Warehouse/get' // fullpage görünümü
-import WarehouseInsert from '@/pages/Warehouse/insert' // yeni kayıt
-import WarehouseUpdate from '@/pages/Warehouse/update' // güncelleme
 
 import CustomerIndex from '@/pages/Customer/' // liste ekranı
 
@@ -497,7 +494,7 @@ const listGet = [
   { path: '/Branch/:url', name: 'BranchGet', component: getTenantPage('Branch', 'get'), meta: { title: i18n.t('router.BranchGet'), baseLink: 'Branch' } },
   { path: '/Bcp/:url', name: 'BcpGet', component: BcpGet, meta: { title: i18n.t('router.BcpGet'), baseLink: 'Bcp' } },
   { path: '/AnalysisQuestions/:url', name: 'AnalysisQuestionsGet', component: AnalysisQuestionsGet, meta: { title: i18n.t('router.AnalysisQuestionsGet'), baseLink: 'AnalysisQuestions' } },
-  { path: '/Warehouse/:url', name: 'WarehouseGet', component: WarehouseGet, meta: { title: i18n.t('router.WarehouseGet'), baseLink: 'Warehouse' } },
+  { path: '/Warehouse/:url', name: 'WarehouseGet', component: getTenantPage('Warehouse', 'get'), meta: { title: i18n.t('router.WarehouseGet'), baseLink: 'Warehouse' } },
   { path: '/Customer/:url', name: 'CustomerGet', component: getTenantPage('Customer', 'get'), meta: { title: i18n.t('router.CustomerGet'), baseLink: 'Customer' } },
   { path: '/KeyAccount/:url', name: 'KeyAccountGet', component: KeyAccountGet, meta: { title: i18n.t('router.KeyAccountGet'), baseLink: 'KeyAccount' } },
   { path: '/UnitSet/:url', name: 'UnitSetGet', component: getTenantPage('UnitSet', 'get'), meta: { title: i18n.t('router.UnitSetGet'), baseLink: 'UnitSet' } },
@@ -586,7 +583,7 @@ const listUpdate = [
   { path: '/Update/Branch/:url', name: 'BranchUpdate', component: getTenantPage('Branch', 'update'), meta: { title: i18n.t('router.BranchUpdate'), baseLink: 'Branch' } },
   { path: '/Update/Bcp/:url', name: 'BcpUpdate', component: BcpUpdate, meta: { title: i18n.t('router.BcpUpdate'), baseLink: 'Bcp' } },
   { path: '/Update/AnalysisQuestions/:url', name: 'AnalysisQuestionsUpdate', component: AnalysisQuestionsUpdate, meta: { title: i18n.t('router.AnalysisQuestionsUpdate'), baseLink: 'AnalysisQuestions' } },
-  { path: '/Update/Warehouse/:url', name: 'WarehouseUpdate', component: WarehouseUpdate, meta: { title: i18n.t('router.WarehouseUpdate'), baseLink: 'Warehouse' } },
+  { path: '/Update/Warehouse/:url', name: 'WarehouseUpdate', component: getTenantPage('Warehouse', 'update'), meta: { title: i18n.t('router.WarehouseUpdate'), baseLink: 'Warehouse' } },
   { path: '/Update/Customer/:url', name: 'CustomerUpdate', component: getTenantPage('Customer', 'update'), meta: { title: i18n.t('router.CustomerUpdate'), baseLink: 'Customer' } },
   { path: '/Update/KeyAccount/:url', name: 'KeyAccountUpdate', component: KeyAccountUpdate, meta: { title: i18n.t('router.KeyAccountUpdate'), baseLink: 'KeyAccount' } },
   { path: '/Update/UnitSet/:url', name: 'UnitSetUpdate', component: getTenantPage('UnitSet', 'update'), meta: { title: i18n.t('router.UnitSetUpdate'), baseLink: 'UnitSet' } },
@@ -659,7 +656,7 @@ const listInsert = [
   { path: '/Insert/Branch', name: 'BranchInsert', component: getTenantPage('Branch', 'insert'), meta: { title: i18n.t('router.BranchInsert'), baseLink: 'Branch' } },
   { path: '/Insert/Bcp', name: 'BcpInsert', component: BcpInsert, meta: { title: i18n.t('router.BcpInsert'), baseLink: 'Bcp' } },
   { path: '/Insert/AnalysisQuestions', name: 'AnalysisQuestionsInsert', component: AnalysisQuestionsInsert, meta: { title: i18n.t('router.AnalysisQuestionsInsert'), baseLink: 'AnalysisQuestions' } },
-  { path: '/Insert/Warehouse', name: 'WarehouseInsert', component: WarehouseInsert, meta: { title: i18n.t('router.WarehouseInsert'), baseLink: 'Warehouse' } },
+  { path: '/Insert/Warehouse', name: 'WarehouseInsert', component: getTenantPage('Warehouse', 'insert'), meta: { title: i18n.t('router.WarehouseInsert'), baseLink: 'Warehouse' } },
   { path: '/Insert/Customer', name: 'CustomerInsert', component: getTenantPage('Customer', 'insert'), meta: { title: i18n.t('router.CustomerInsert'), baseLink: 'Customer' } },
   { path: '/Insert/KeyAccount', name: 'KeyAccountInsert', component: KeyAccountInsert, meta: { title: i18n.t('router.KeyAccountInsert'), baseLink: 'KeyAccount' } },
   { path: '/Insert/UnitSet', name: 'UnitSetInsert', component: getTenantPage('UnitSet', 'insert'), meta: { title: i18n.t('router.UnitSetInsert'), baseLink: 'UnitSet' } },
