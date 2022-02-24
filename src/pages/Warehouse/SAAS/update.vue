@@ -1,5 +1,15 @@
 <template>
   <b-row class="asc__insertPage">
+    <b-modal id="vehicle-confirm-modal" no-close-on-backdrop>
+      <template #modal-title>
+        {{$t('insert.warehouse.doYouConfirm')}}
+      </template>
+      {{$t('insert.warehouse.vehicleConfirmMessage')}}
+      <template #modal-footer>
+        <CancelButton class="float-right ml-2" @click.native="cancelVehicleSelection" />
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="confirmVehicleSelection">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -7,7 +17,7 @@
             <Breadcrumb />
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{name: 'Warehouse' }">
+            <router-link :to="{name: 'Dashboard' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -32,15 +42,15 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.warehouse.Warehouse')" :active="true" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.warehouse.Warehouse')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="NonSapWarehouse" :error="$v.form.NonSapWarehouse" md="3" lg="3">
+            <NextFormGroup item-key="NonSapWarehouse" :error="$v.form.NonSapWarehouse">
               <NextCheckBox v-model="form.NonSapWarehouse" type="number" toggle :disabled="insertReadonly.NonSapWarehouse" />
             </NextFormGroup>
-            <NextFormGroup item-key="IsVehicle" :error="$v.form.IsVehicle" md="3" lg="3">
-              <NextCheckBox v-model="form.IsVehicle" type="number" toggle :disabled="insertReadonly.IsVehicle" @input="checkVehicle($event)"/>
+            <NextFormGroup item-key="IsVehicle" :error="$v.form.IsVehicle">
+              <NextCheckBox v-model="form.IsVehicle" type="number" toggle :disabled="insertReadonly.IsVehicle" @input="checkVehicle($event)" />
             </NextFormGroup>
-            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="3" lg="3">
+            <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
                 v-model="selectedVehicle"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
@@ -49,24 +59,33 @@
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 orConditionFields="Code,VehiclePlateNumber,Description1"
                 label="VehiclePlateNumber" :searchable="true"
-                @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle"/>
+                @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || form.IsVehicle === '0' || form.IsVehicle === 0"/>
             </NextFormGroup>
-            <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse" md="3" lg="3">
+            <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse">
               <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle :disabled="insertReadonly.IsVirtualWarehouse || form.IsVehicle === 1" />
             </NextFormGroup>
-            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber" md="3" lg="3">
+            <NextFormGroup item-key="IsCenterWarehouse" :error="$v.form.IsCenterWarehouse" md="3" lg="3">
+              <NextCheckBox v-model="form.IsCenterWarehouse" type="number" toggle :disabled="insertReadonly.IsVirtualWarehouse" />
+            </NextFormGroup>
+            <NextFormGroup item-key="WarehouseTypeId" :error="$v.form.WarehouseTypeId" md="3" lg="3">
+              <NextDropdown
+                v-model="warehouseType"
+                url=""
+                @input="selectedSearchType('WarehouseTypeId', $event)" :disabled="insertReadonly.WarehouseTypeId || selectedVehicle"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
               <NextInput type="text" v-model="form.LicenseNumber" :disabled="insertReadonly.LicenseNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode" md="3" lg="3">
+            <NextFormGroup item-key="FinanceCode" :error="$v.form.FinanceCode">
               <NextInput type="text" v-model="form.FinanceCode" :disabled="insertReadonly.FinanceCode"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2" md="3" lg="3">
+            <NextFormGroup item-key="FinanceCode2" :error="$v.form.FinanceCode2">
               <NextInput type="text" v-model="form.FinanceCode2" :disabled="insertReadonly.FinanceCode2"></NextInput>
             </NextFormGroup>
           </b-row>
-          <NextAddress v-show="!form.IsVehicle && !form.IsVirtualWarehouse" v-model="address"/>
+          <NextAddress v-show="form.IsVehicle === '0' || form.IsVehicle === 0 && !form.IsVirtualWarehouse" v-model="address" />
         </b-tab>
-        <b-tab :title="$t('insert.warehouse.locations')" v-if="!form.IsVehicle" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.warehouse.locations')" v-if="form.IsVehicle === '0' || form.IsVehicle === 0" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.WarehouseSuppliers" :items="locationItems" :before-add="beforeAdd"/>
         </b-tab>
       </b-tabs>
@@ -75,20 +94,17 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {
     return {
       form: {
-        Deleted: 0,
-        System: 0,
-        RecordState: 2,
         Code: null,
         Description1: null,
         StatusId: 1,
-        IsVehicle: Number,
+        IsVehicle: 0,
         VehicleId: null,
         LicenseNumber: null,
         FinanceCode: null,
@@ -96,23 +112,27 @@ export default {
         Address: null,
         CityId: null,
         DistrictId: null,
-        IsVirtualWarehouse: Number,
-        NonSapWarehouse: Number,
-        WarehouseSuppliers: []
+        IsVirtualWarehouse: 0,
+        NonSapWarehouse: 0,
+        WarehouseSuppliers: [],
+        WarehouseTypeId: null,
+        WarehouseCapacity: null,
+        IsCenterWarehouse: null
       },
-      address: {},
       selectedVehicle: null,
-      locationItems: detailData.locationItems
+      address: {},
+      locationItems: detailData.locationItems,
+      warehouseType: null
     }
   },
   mounted () {
-    this.createManualCode()
-    this.setLicenseNumber()
+    this.getData().then(() => {
+      this.setData()
+    })
   },
   methods: {
     save () {
       this.$v.form.$touch()
-
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
           type: 'error',
@@ -136,13 +156,35 @@ export default {
           this.form.DistrictId = this.address.DistrictId
           this.form.AddressDetail = this.address.Address
         }
-        this.createData()
+        this.updateData()
       }
     },
     checkVehicle (value) {
-      if (value !== 1) {
-        this.form.VehicleId = null
-        this.selectedVehicle = null
+      if (value !== 1 && this.form.VehicleId > 0) {
+        this.$bvModal.show('vehicle-confirm-modal')
+      }
+    },
+    confirmVehicleSelection () {
+      this.form.VehicleId = null
+      this.selectedVehicle = null
+      this.$bvModal.hide('vehicle-confirm-modal')
+    },
+    cancelVehicleSelection () {
+      this.form.IsVehicle = 1
+      this.$bvModal.hide('vehicle-confirm-modal')
+    },
+    setData () {
+      let rowData = this.rowData
+      this.form = rowData
+      this.form.IsVirtualWarehouse = rowData.IsVirtualWareHouse
+      this.warehouseType = rowData.WarehouseType
+      if (rowData.Vehicle) {
+        this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
+      }
+      this.address = {
+        CityId: rowData.CityId,
+        DistrictId: rowData.DistrictId,
+        Address: rowData.AddressDetail
       }
     },
     beforeAdd (form) {
@@ -155,30 +197,6 @@ export default {
         return false
       }
       return true
-    },
-    setLicenseNumber () {
-      let request = {
-        andConditionModel: {
-          IsVehicle: 0,
-          IsCustomerWarehouse: 0,
-          StatusIds: [1],
-          IsVirtualWareHouse: 0,
-          NonSapWarehouse: 0
-        },
-        page: 1,
-        OrderByColumns: [
-          {
-            column: 'CreatedDateTime',
-            orderByType: 0
-          }
-        ]
-      }
-
-      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/Search', 1).then(response => {
-        if (response && response.ListModel && response.ListModel.BaseModels) {
-          this.form.LicenseNumber = response.ListModel.BaseModels[0].LicenseNumber
-        }
-      })
     }
   },
   validations () {
