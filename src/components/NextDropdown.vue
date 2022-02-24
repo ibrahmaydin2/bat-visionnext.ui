@@ -1,5 +1,5 @@
 <template>
-  <v-select
+<v-select
     :disabled="disabled" v-model="selectedValue"
     :options="getSource()" @search="searchValue"
     @input="selectValue($event)" :filterable="searchable ? false : true"
@@ -177,8 +177,9 @@ export default {
     },
     value (newValue, oldValue) {
       if (newValue !== oldValue) {
-        this.selectedValue = newValue
-        this.$forceUpdate()
+        this.$nextTick(() => {
+          this.selectedValue = newValue
+        })
       }
     },
     source: {
