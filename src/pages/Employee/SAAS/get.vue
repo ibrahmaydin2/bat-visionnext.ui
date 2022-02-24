@@ -39,6 +39,9 @@
               <div v-html="getFormatDataByType(rowData.ScoreCardClass, 'object', 'insert.employee.scoreCardClasses')"></div>
               <div v-html="getFormatDataByType(rowData.SapHrCode, 'text', 'insert.employee.Model_SAPSrCode')"></div>
               <div v-html="getFormatDataByType(rowData.IsRepresentative, 'check', 'insert.employee.Model_IsRepresentative')"></div>
+              <div v-html="getFormatDataByType(rowData.EArchivePrinterType, 'object', 'insert.employee.EArchivePrinterType')"></div>
+              <div v-html="getFormatDataByType(rowData.ScoreClass, 'object', 'insert.employee.scoreCardClasses')"></div>
+              <div v-html="getFormatDataByType(rowData.UpperEmployee, 'object', 'insert.employee.UpperEmployee')"></div>
             </b-card>
           </b-row>
          </b-tab>
@@ -57,6 +60,7 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.EmploymentStartDate, 'date', 'insert.employee.Model_EmploymentStartDate')"></div>
               <div v-html="getFormatDataByType(rowData.EmploymentEndDate, 'date', 'insert.employee.Model_EmploymentEndDate')"></div>
+              <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.employee.TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.employee.Model_Identificationnumber')"></div>
                <div v-html="getFormatDataByType(rowData.BirthDate, 'date', 'insert.employee.Model_BirthDate')"></div>
               <div v-html="getFormatDataByType(rowData.TShirtSize, 'text', 'insert.employee.Model_TShirtSize')"></div>
@@ -94,7 +98,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.employee.EmployeePrefix')">
+        <b-tab :title="$t('insert.employee.EmployeePrefixSAAS')">
            <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
