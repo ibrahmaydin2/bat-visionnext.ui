@@ -60,7 +60,7 @@
           <b-col md="4" lg="6">
             <b-button-group class="float-right">
               <b-button :disabled="selectedItems.length === 0" class="mt-3 mr-1" size="sm" variant="success" v-b-modal.credit-budget-bulk-approve-modal><i class="fas fa-check"/> {{$t('insert.creditBudget.bulkCustomerApprove')}}</b-button>
-              <b-button v-if="showUpdateBudget" v-b-modal.update-budget-confirm-modal size="sm" variant="success" class="mt-3 float-right">{{$t('insert.creditBudget.updateBudget')}}</b-button>
+              <GetFormField class="mt-3" :hide-edit="true" v-model="workFlowModel" :items="actions" />
             </b-button-group>
           </b-col>
         </b-row>
@@ -283,7 +283,27 @@ export default {
       insertedDetails: [],
       updatedDetails: [],
       importedExcel: false,
-      showUpdateBudget: false
+      showUpdateBudget: false,
+      workFlowModel: {
+        ControllerName: '',
+        ClassName: 'CreditBudget',
+        PageName: 'pg_CreditBudget'
+      },
+      actions: [
+        {
+          Description1: this.$t('insert.creditBudget.updateBudget'),
+          callback: () => { this.$bvModal.show('update-budget-confirm-modal') }
+        },
+        {
+          Description1: this.$t('insert.creditBudget.exportExcel'),
+          callback: () => {
+            const recordId = this.$route.params.url
+            this.$api.downloadByUrl(`VisionNextBudget/api/CreditBudget/ExcelExportItems?CreditBudgetId=${recordId}`, 'get').then((response) => {
+              this.downloadResponse(response, `${this.$t('insert.creditBudget.customers')}-${recordId}`)
+            })
+          }
+        }
+      ]
     }
   },
   mounted () {
