@@ -40,7 +40,6 @@
                 :disabled="insertReadonly.CustomerId"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="Customer"
-                label="Description1"
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 :is-customer="true"
@@ -61,7 +60,6 @@
                 :disabled="insertReadonly.BankId"
                 url="VisionNextBank/api/Bank/AutoCompleteSearch"
                 v-model="Bank"
-                label="Description1"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CreditCardTotal" :error="$v.form.CreditCardTotal">
@@ -73,7 +71,6 @@
                 :disabled="insertReadonly.CurrencyId"
                 url="VisionNextSystem/api/SysCurrency/Search"
                 v-model="Currency"
-                label="Description1"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CardNumber" :error="$v.form.CardNumber">
@@ -86,7 +83,6 @@
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
                 v-model="Representative"
-                label="Description1"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
@@ -95,7 +91,8 @@
                 :disabled="insertReadonly.RouteId"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="Route"
-                label="Description1"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">

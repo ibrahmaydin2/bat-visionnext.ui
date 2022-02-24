@@ -216,6 +216,20 @@ export default {
           return $event.preventDefault()
         }
       }
+    },
+    isMobile () {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    },
+    downloadResponse (response, fileName) {
+      if (!response) {
+        return
+      }
+      const url = window.URL.createObjectURL(new Blob([response]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${fileName}.xlsx`)
+      document.body.appendChild(link)
+      link.click()
     }
   }
 }
