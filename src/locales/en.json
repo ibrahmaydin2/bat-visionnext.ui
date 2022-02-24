@@ -742,7 +742,10 @@
       "replacementDriver": "Yedek Sürücü",
       "oldKm": "Önceki KM",
       "newKm": "Yeni KM",
-      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!"
+      "noVehicleKmInfo": "Araç Km Bilgisi bulunamadı!",
+      "SAASvehicleCategory1": "Yan Tente Tipi",
+      "SAASvehicleCategory2": "Aralık",
+      "SAASvehicleCategory3": "Kamyon Logosu"
     },
     "employee": {
       "Model_Code": "Personel Kodu",
@@ -1979,7 +1982,12 @@
       "CustomerOrderNumber": "Customer Order Number",
       "IsDBSOffline": "Online DBS Payment",
       "IsDBS": "Use DBS?",
-      "grossQuantity": "Total Quantity"
+      "grossQuantity": "Total Quantity",
+      "GrantProduct": "Hizmet Faturaları",
+      "TurnoverPremium": "Ciro Primi",
+      "ContractCash": "Nakit Katkı",
+      "ServiceInvoice": "Raf Tabela Kazanımı",
+      "Tpr": "Kasa Çıktısı"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
@@ -2790,7 +2798,10 @@
       "LicenseNumber": "Lisans Numarası",
       "Address": "Adres",
       "CityId": "İl",
-      "DistrictId": "İlçe"
+      "DistrictId": "İlçe",
+      "WarehouseTypeId": "Depo Tipi",
+      "IsCenterWarehouse": "Varsayılan Depo",
+      "WarehouseCapacity":"Depo Kapasitesi (m2)"
     },
     "CashCard": {
       "title":"Nakit Ödeme Ana Kayıtları",

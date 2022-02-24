@@ -1,5 +1,5 @@
 <template>
-  <v-select
+<v-select
     :disabled="disabled" v-model="selectedValue"
     :options="getSource()" @search="searchValue"
     @input="selectValue($event)" :filterable="searchable ? false : true"
@@ -121,6 +121,10 @@ export default {
     firstItemSelected: {
       type: Boolean,
       default: false
+    },
+    pageCount: {
+      type: Number,
+      default: 50
     }
   },
   model: {
@@ -173,7 +177,9 @@ export default {
     },
     value (newValue, oldValue) {
       if (newValue !== oldValue) {
-        this.selectedValue = newValue
+        this.$nextTick(() => {
+          this.selectedValue = newValue
+        })
       }
     },
     source: {
@@ -273,7 +279,7 @@ export default {
           ...this.dynamicAndCondition
         }
       }
-      this.$api.postByUrl(request, this.url, 50).then((response) => {
+      this.$api.postByUrl(request, this.url, this.pageCount).then((response) => {
         if (response) {
           if (response.ListModel) {
             this.values = response.ListModel.BaseModels

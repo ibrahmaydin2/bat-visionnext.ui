@@ -16,9 +16,9 @@
     </b-button-toolbar>
     <b-dropdown v-if="value" size="sm" variant="link" no-caret no-flip offset="-100" class="bat__workflow-dropdown" toggle-class="bat__workflow-dropdown-btn">
       <template #button-content>
-        <span class=" text-dark font-weight-bold">İşlemler <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
+        <span class=" text-dark font-weight-bold">{{$t('general.actions')}} <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon></span>
       </template>
-      <Workflow v-model="value"/>
+      <Workflow v-model="value" :items="items"/>
     </b-dropdown>
   </div>
 </template>
@@ -32,6 +32,10 @@ export default {
     hideEdit: {
       type: Boolean,
       default: false
+    },
+    items: {
+      type: Array,
+      default: () => []
     }
   },
   model: {

@@ -3,7 +3,7 @@
     <span v-if="this.requiredFields && this.requiredFields.length > 0 && this.showRequiredInfo">{{`${this.requiredFields.map(x => x.label).join()} ${$t('list.requiredFieldsMessage')}`}}</span>
     <b-table-simple hover bordered small responsive class="asc__nextgrid-table">
       <b-thead>
-        <draggable tag="tr" :list="head" :disabled="disabledDraggable">
+        <draggable tag="tr" :list="head" :disabled="disabledDraggable || mobileDragDisabled">
           <b-th
             v-for="header in head"
             :key="header.dataField+header.columnType"
@@ -379,12 +379,15 @@ export default {
       showAssignEmployeeModal: false,
       showCommonInfoModal: false,
       showCreditBulkBudgetModal: false,
-      sortableColumns: {}
+      sortableColumns: {},
+      mobileDragDisabled: false
     }
   },
   mounted () {
+    this.mobileDragDisabled = this.isMobile()
     searchQ = {}
     this.$store.commit('setIsMultipleGrid', this.selectionMode === 'multi')
+    this.$forceUpdate()
     this.$store.commit('setLastGridItem', null)
     this.$store.commit('setLastGridModel', {})
     let sortOpt = {}

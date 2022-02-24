@@ -26,8 +26,8 @@ export class ApiManager {
     return this.call('delete', request, basePath, secondPath)
   }
 
-  async downloadByUrl (request, url) {
-    return this.call('post', request, null, null, url, 100, 'blob')
+  async downloadByUrl (url, type, request) {
+    return this.call(type, request, null, null, url, 100, 'blob')
   }
 
   async call (methodType, request, basePath, secondPath, url, pagerecordCount, responseType = 'json') {

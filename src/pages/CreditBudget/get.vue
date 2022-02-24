@@ -8,7 +8,7 @@
         <b-col cols="12">
           <header>
             <Breadcrumb :title="rowData.Description1" />
-            <GetFormField v-model="workFlowModel" />
+            <GetFormField v-model="workFlowModel" :items="actions" />
           </header>
         </b-col>
       </b-row>
@@ -114,7 +114,18 @@ export default {
       ],
       currentPage: 1,
       totalRowCount: 0,
-      filterCustomer: null
+      filterCustomer: null,
+      actions: [
+        {
+          Description1: this.$t('insert.creditBudget.exportExcel'),
+          callback: () => {
+            const recordId = this.$route.params.url
+            this.$api.downloadByUrl(`VisionNextBudget/api/CreditBudget/ExcelExportItems?CreditBudgetId=${recordId}`, 'get').then((response) => {
+              this.downloadResponse(response, `${this.$t('insert.creditBudget.customers')}-${recordId}`)
+            })
+          }
+        }
+      ]
     }
   },
   mounted () {
