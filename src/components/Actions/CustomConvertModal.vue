@@ -1,5 +1,5 @@
 <template>
-  <b-modal @show="show" v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" @hide="hide" v-if="modalAction" id="customConvertModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.branchId')" md="4" lg="4">
@@ -276,8 +276,23 @@ export default {
       }
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
+  methods: {
+    show () {
+      let userModel = JSON.parse(localStorage.getItem('UserModel'))
+      this.employee = userModel.Name + ' ' + userModel.Surname
+      if (this.modalAction.Action === 'CustomConvert') {
+        this.form.RepresentativeIds = [userModel.UserId]
+      } else {
+        this.form.RepresentativeIds = null
+      }
+
+      this.documentClass = this.documentClasses.find(d => d.RecordId === 3)
+      this.form.DocumentClassIds = [3]
+      this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
+      this.allSelected = false
+      this.selected = []
+    },
+    hide () {
       this.documents = []
       this.selectedDocuments = []
       this.selected = []
@@ -292,24 +307,6 @@ export default {
       this.employee = null
       this.$v.form.$reset()
       this.clearProgress()
-    })
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      let userModel = JSON.parse(localStorage.getItem('UserModel'))
-      this.employee = userModel.Name + ' ' + userModel.Surname
-      if (this.modalAction.Action === 'CustomConvert') {
-        this.form.RepresentativeIds = [userModel.UserId]
-      } else {
-        this.form.RepresentativeIds = null
-      }
-    })
-  },
-  methods: {
-    show () {
-      this.documentClass = this.documentClasses.find(d => d.RecordId === 3)
-      this.form.DocumentClassIds = [3]
-      this.actionUrl = 'VisionNextInvoice/api/SalesWaybill/KeyAccountDispatchTransformSearch'
-      this.allSelected = false
-      this.selected = []
     },
     getCode (index) {
       this.$api.postByUrl({}, `VisionNextInvoice/api/SalesWaybill/GetCode?v=${index}`).then(response => {
@@ -348,9 +345,6 @@ export default {
       }
     },
     closeModal () {
-      this.close()
-    },
-    close () {
       this.$root.$emit('bv::hide::modal', 'customConvertModal')
     },
     search () {
