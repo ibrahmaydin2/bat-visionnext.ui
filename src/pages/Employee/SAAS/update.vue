@@ -73,11 +73,20 @@
             <NextFormGroup item-key="IsRepresentative" :error="$v.form.IsRepresentative">
               <NextCheckBox v-model="form.IsRepresentative" type="number" toggle :disabled="insertReadonly.IsRepresentative" />
             </NextFormGroup>
+            <NextFormGroup item-key="EArchivePrinterType" :error="$v.form.EArchivePrinterType">
+              <NextDropdown v-model="eArchivePrinterType" lookup-key="" @input="selectedType('EArchivePrinterType', $event)" :disabled="insertReadonly.EArchivePrinterType" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ScoreClass" :error="$v.form.ScoreClass">
+              <NextDropdown v-model="form.ScoreClass" lookup-key="" @input="selectedType('ScoreClass', $event)" :disabled="insertReadonly.ScoreClass" />
+            </NextFormGroup>
+            <NextFormGroup item-key="UpperEmployee" :error="$v.form.UpperEmployee">
+              <NextDropdown v-model="form.UpperEmployee" lookup-key="" @input="selectedType('UpperEmployee', $event)" :disabled="insertReadonly.UpperEmployee" />
+            </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.groupInfo')" @click.prevent="tabValidation()">
         <b-row>
-          <NextFormGroup item-key="TypeId" :error="$v.form.TypeId">
+          <NextFormGroup :title="$t('insert.employee.PersonalType')" item-key="TypeId" :error="$v.form.TypeId">
             <NextDropdown v-model="employeeType" lookup-key="EMPLOYEE_TYPE" @input="selectedType('TypeId', $event)" :disabled="insertReadonly.TypeId" />
           </NextFormGroup>
           <NextFormGroup item-key="UserGroupId" :error="$v.form.UserGroupId">
@@ -92,6 +101,9 @@
           </NextFormGroup>
           <NextFormGroup item-key="EmploymentEndDate" :error="$v.form.EmploymentEndDate">
             <NextDatePicker v-model="form.EmploymentEndDate" :disabled="insertReadonly.EmploymentEndDate" />
+          </NextFormGroup>
+          <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
+            <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
           </NextFormGroup>
           <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
             <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
@@ -147,7 +159,7 @@
       <b-tab :title="$t('insert.employee.Model_Team')" @click.prevent="tabValidation()" v-if="form.IsTeam">
         <NextDetailPanel v-model="form.EmployeeTeams" :items="teamItems"></NextDetailPanel>
       </b-tab>
-      <b-tab :title="$t('insert.employee.EmployeePrefix')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
+      <b-tab :title="$t('insert.employee.EmployeePrefixSAAS')" @click.prevent="tabValidation()" v-if="prefixItems.length > 0">
         <NextDetailPanel v-model="form.EInvoiceSeqs" :items="prefixItems"></NextDetailPanel>
       </b-tab>
       <b-tab :title="$t('insert.employee.employeeBanks')" @click.prevent="tabValidation()">
@@ -205,7 +217,10 @@ export default {
         ScoreCardClassId: null,
         IsRepresentative: null,
         EmployeeTeams: [],
-        EInvoiceSeqs: []
+        EInvoiceSeqs: [],
+        EArchivePrinterType: null,
+        TaxOffice: null,
+        UpperEmployee: null
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
@@ -230,7 +245,8 @@ export default {
       employeeType: null,
       userGroup: null,
       education: null,
-      bloodType: null
+      bloodType: null,
+      eArchivePrinterType: null
     }
   },
   computed: {

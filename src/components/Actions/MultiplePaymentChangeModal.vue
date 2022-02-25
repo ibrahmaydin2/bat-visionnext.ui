@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="multiplePaymentChangeModal" :title="modalAction.Title" size="xl" hide-footer no-close-on-backdrop>
+  <b-modal @hide="hide" v-if="modalAction" id="multiplePaymentChangeModal" :title="modalAction.Title" size="xl" hide-footer no-close-on-backdrop>
     <b-container>
       <b-row>
         <NextFormGroup :title="$t('insert.customer.CustomerPaymentTypes')" :error="$v.TypeId" md="6" lg="6">
@@ -133,18 +133,6 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-      this.TypeId = null
-      this.OperationTypeId = null
-      this.customerList = []
-      this.selectedItems = []
-      this.tableBusy = false
-      if (this.$v) {
-        this.$v.$reset()
-      }
-    })
-  },
   validations () {
     return {
       TypeId: {
@@ -156,6 +144,16 @@ export default {
     }
   },
   methods: {
+    hide () {
+      this.TypeId = null
+      this.OperationTypeId = null
+      this.customerList = []
+      this.selectedItems = []
+      this.tableBusy = false
+      if (this.$v) {
+        this.$v.$reset()
+      }
+    },
     control () {
       this.customerList = []
       this.$v.$touch()
@@ -295,9 +293,6 @@ export default {
       return status
     },
     closeModal () {
-      this.close()
-    },
-    close () {
       this.$root.$emit('bv::hide::modal', 'multiplePaymentChangeModal')
     }
   }

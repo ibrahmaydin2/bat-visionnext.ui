@@ -1,5 +1,5 @@
 <template>
-  <b-modal class="asc__insertPage-content-head" v-if="modalAction" :id="id" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" class="asc__insertPage-content-head" v-if="modalAction" :id="id" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.route')" :error="$v.form.route" md="3" lg="3" :required="true">
@@ -77,21 +77,18 @@ export default {
       id: 'multipleLoadingPlanModal'
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      if (modalId === this.id) {
-        this.form = {
-          route: null,
-          day: null,
-          beginDate: null,
-          endDate: null
-        }
-        this.selectedItem = {}
-        this.showLoading = false
-      }
-    })
-  },
   methods: {
+    show () {
+      this.form = {
+        route: null,
+        day: null,
+        beginDate: null,
+        endDate: null
+      }
+      this.selectedItem = {}
+      this.showLoading = false
+      this.$v.form.$reset()
+    },
     closeModal () {
       this.$root.$emit('bv::hide::modal', this.id)
     },
