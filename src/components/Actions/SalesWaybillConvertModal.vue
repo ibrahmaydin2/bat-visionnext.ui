@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="salesWaybillConvertModal" :title="modalAction.Title" @hide="hideModal" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="salesWaybillConvertModal" :title="modalAction.Title" @show="show" @hide="hide" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4">
@@ -138,29 +138,6 @@ export default {
       }
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
-      this.orderLines = []
-      this.form = {
-        InvoiceKindId: null,
-        RepresentativeId: null,
-        Code: null,
-        DocumentNumber: null
-      }
-      this.documentType = null
-      this.employee = null
-    })
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      this.tableBusy = true
-      this.isLoading = false
-      this.orderLines = []
-      this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
-      this.form.DocumentNumber = this.modalItem.DocumentNumber
-      this.getUserInfo()
-      this.getCode()
-      this.getConvert()
-    })
-  },
   methods: {
     getUserInfo () {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
@@ -214,6 +191,29 @@ export default {
         this.form[label] = null
         this.employee = null
       }
+    },
+    show () {
+      this.tableBusy = true
+      this.isLoading = false
+      this.orderLines = []
+      this.warehouse = this.modalItem.Warehouse ? this.modalItem.Warehouse.Label : '-'
+      this.form.DocumentNumber = this.modalItem.DocumentNumber
+      this.getUserInfo()
+      this.getCode()
+      this.getConvert()
+    },
+    hide () {
+      this.orderLines = []
+      this.form = {
+        InvoiceKindId: null,
+        RepresentativeId: null,
+        Code: null,
+        DocumentNumber: null
+      }
+      this.employee = null
+      this.warehouse = null
+      this.invoiceType = null
+      this.$v.form.$reset()
     },
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'salesWaybillConvertModal')
@@ -277,12 +277,6 @@ export default {
           })
         }
       })
-    },
-    hideModal () {
-      this.form = {}
-      this.warehouse = null
-      this.invoiceType = null
-      this.$v.form.$reset()
     }
   },
   watch: {
