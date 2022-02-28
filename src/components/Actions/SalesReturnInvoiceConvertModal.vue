@@ -1,5 +1,5 @@
 <template>
-  <b-modal class="modalZIndex" v-if="modalAction" :id="id" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" class="modalZIndex" v-if="modalAction" :id="id" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4">
@@ -215,18 +215,14 @@ export default {
       warehouse: null
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      if (modalId === this.id) {
-        this.list = []
-        this.form = {}
-        this.selectedItem = {}
-        this.showLoading = false
-        this.documentNumber = null
-      }
-    })
-  },
   methods: {
+    show () {
+      this.list = []
+      this.form = {}
+      this.selectedItem = {}
+      this.showLoading = false
+      this.documentNumber = null
+    },
     getList () {
       this.form = {}
       this.list = []

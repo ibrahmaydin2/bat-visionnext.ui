@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="createSalesWaybillModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="createSalesWaybillModal" @show="show" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <b-col>
@@ -101,16 +101,12 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      if (modalId === this.id) {
-        this.list = []
-        this.showLoading = false
-        this.getList()
-      }
-    })
-  },
   methods: {
+    show () {
+      this.list = []
+      this.showLoading = false
+      this.getList()
+    },
     getList () {
       let request = {
         invoiceId: this.modalItem.RecordId

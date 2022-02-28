@@ -796,6 +796,7 @@
       "EmployeeBanks": "Banka",
       "Model_BankBranchId": "Banka Şube Adı",
       "EmployeePrefix": "Önek",
+      "EmployeePrefixSAAS": "Prefix",
       "Model_Prefix": "Önek",
       "Model_UserGroupId": "Kullanıcı Grubu",
       "category1": "Personel Kategorisi 1",
@@ -820,7 +821,11 @@
       "deviceUseAraeId": "Cihaz Kullanım Alanı",
       "year": "Yıl",
       "EInvoiceType": "E-Belge Tipi",
-      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez"
+      "sameEInvoiceError": "Aynı E-Belge Tipinden Birden Fazla Eklenemez",
+      "PersonalType": "Personel Tipi",
+      "EArchivePrinterType": "E-Arşiv Yazıcı",
+      "TaxOffice":"Vergi Dairesi",
+      "UpperEmployee": "Personel Yöneticisi"
     },
     "customer": {
       "Contracted": "Contract State",

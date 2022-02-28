@@ -1,6 +1,6 @@
 <template>
 <!-- Rma apisi bulunmadığı için sonra yapılacak -->
-  <b-modal v-if="modalAction" id="rmaInvoiceModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" @hide="hide" v-if="modalAction" id="rmaInvoiceModal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" :error="$v.form.DocumentNumber" md="4" lg="4">
@@ -72,17 +72,15 @@ export default {
       }
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
+  methods: {
+    show () {
+      this.form.DocumentNumber = this.modalItem.DocumentNumber
+    },
+    hide () {
       this.form = {
         DocumentNumber: null
       }
-    })
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      this.form.DocumentNumber = this.modalItem.DocumentNumber
-    })
-  },
-  methods: {
+    },
     find () {
     },
     clear () {
