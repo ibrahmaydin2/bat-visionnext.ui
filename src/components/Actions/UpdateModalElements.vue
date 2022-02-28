@@ -97,8 +97,16 @@ export default {
     })
   },
   props: {
-    actionUrl: String,
-    recordId: Array
+    actionUrl: {
+      type: String,
+      default: '',
+      description: 'Çağıralacak olan actionın url bilgisi'
+    },
+    recordId: {
+      type: Array,
+      default: () => [],
+      description: 'Seçilen listenin RecordId bilgileri'
+    }
   },
   methods: {
     onRowSelected (items) {

@@ -106,7 +106,8 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     openModal: {
       type: Boolean,
@@ -114,11 +115,24 @@ export default {
     },
     id: {
       type: String,
-      default: 'convertModal'
+      default: 'convertModal',
+      description: 'Modal id bilgisi'
     },
-    listUrl: '',
-    detailUrl: '',
-    convertUrl: ''
+    listUrl: {
+      type: String,
+      default: '',
+      description: 'Listeleme apisi için url bilgisi'
+    },
+    detailUrl: {
+      type: String,
+      default: '',
+      description: 'Detay apisi için url bilgisi'
+    },
+    convertUrl: {
+      type: String,
+      default: '',
+      description: 'Convert apisi için url bilgisi'
+    }
   },
   data () {
     return {

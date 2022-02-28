@@ -22,21 +22,48 @@ export default {
         'boolean',
         'number'
       ].includes(prop),
-      default: 'boolean'
+      default: 'boolean',
+      description: 'Modelin number veya boolean olarak geri dönüşünü sağlar'
     },
-    activeText: String,
-    passiveText: String,
+    activeText: {
+      type: String,
+      default: '',
+      description: 'Checkbox seçili olduğunda çıkan yazı bilgisi'
+    },
+    passiveText: {
+      type: String,
+      default: '',
+      description: 'Checkbox seçili olmadığında çıkan yazı bilgisi'
+    },
     value: {
-      type: Number | Boolean
+      type: Number | Boolean,
+      description: 'v-model bilgisi'
     },
-    toggle: Boolean,
-    disabled: Boolean,
+    toggle: {
+      type: Boolean,
+      default: false,
+      description: 'Toggle şeklinde görünüp görünmeme bilgisi'
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      description: 'Disabled bilgisi'
+    },
     showText: {
       type: Boolean,
-      default: true
+      default: true,
+      description: 'Checkboxın abel bilgisinin görünürlüğü bilgisi'
     },
-    radio: Boolean,
-    inputClass: String
+    radio: {
+      type: Boolean,
+      default: false,
+      description: 'radio button şeklinde görünüp görünmeme bilgisi'
+    },
+    inputClass: {
+      type: String,
+      default: '',
+      description: 'Checkbox inputunun css class bilgisi'
+    }
   },
   model: {
     prop: 'value',

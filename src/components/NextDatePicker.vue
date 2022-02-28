@@ -24,10 +24,26 @@ export default {
     event: 'valuechange'
   },
   props: {
-    value: null,
-    disabled: null,
-    range: false,
-    formatOption: null
+    value: {
+      type: String | Date,
+      default: null,
+      description: 'v-model bilgisi'
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      description: 'Disabled bilgisi'
+    },
+    range: {
+      type: Boolean,
+      default: false,
+      description: 'Tarih aralığı şeklinde görünüp görünmeme bilgisi'
+    },
+    formatOption: {
+      type: Object,
+      default: () => null,
+      description: 'Tarih formatı bilgisi'
+    }
   },
   data () {
     return {

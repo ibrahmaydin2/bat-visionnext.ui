@@ -24,20 +24,50 @@ export default {
   name: 'NextAddress',
   mixins: [mixin],
   props: {
-    value: {},
-    addressError: false,
-    cityError: false,
-    districtError: false,
-    required: null,
-    hideAddress: false,
-    init: {},
+    value: {
+      type: Object,
+      default: () => {},
+      description: 'v-model bilgisi'
+    },
+    addressError: {
+      type: Boolean,
+      default: false,
+      description: 'Adres textinde validasyon hatası olup olmadığı bilgisi'
+    },
+    cityError: {
+      type: Boolean,
+      default: false,
+      description: 'İl listesinde validasyon hatası olup olmadığı bilgisi'
+    },
+    districtError: {
+      type: Boolean,
+      default: false,
+      description: 'İlçe listesinde validasyon hatası olup olmadığı bilgisi'
+    },
+    required: {
+      type: Boolean,
+      default: false,
+      description: 'Zorunlu olup olmadığı bilgisi'
+    },
+    hideAddress: {
+      type: Boolean,
+      default: false,
+      description: 'Adres textinin görünürlük bilgisi'
+    },
+    init: {
+      type: Object,
+      default: () => {},
+      description: 'Sayfa açılışında setlenmesi gereken model bilgisi'
+    },
     md: {
       type: String,
-      default: '4'
+      default: '4',
+      description: 'Componentlerin md kolon bilgisi'
     },
     lg: {
       type: String,
-      default: '3'
+      default: '3',
+      description: 'Componentlerin lg kolon bilgisi'
     }
   },
   model: {

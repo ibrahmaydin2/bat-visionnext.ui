@@ -636,8 +636,8 @@ export default {
     },
     setLicenseValidDate () {
       let now = new Date()
-      let setDate = now.setFullYear(now.getFullYear() + 1, '4', '1')
-      this.form.LicenseValidDate = setDate
+      now.setFullYear(now.getFullYear() + 1, '4', '1')
+      this.form.LicenseValidDate = now
     },
     save () {
       this.$v.form.$touch()

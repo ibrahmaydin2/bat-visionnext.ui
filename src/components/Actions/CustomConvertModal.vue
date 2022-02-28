@@ -133,11 +133,13 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     modalItem: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Listeden seçilen eleman bilgisi'
     }
   },
   data () {

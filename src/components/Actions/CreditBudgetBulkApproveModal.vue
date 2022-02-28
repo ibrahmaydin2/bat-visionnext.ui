@@ -98,19 +98,23 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     modalItem: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Listeden seçilen eleman bilgisi'
     },
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
+      description: 'Manual olarak verilen liste bilgisi. Bu boş ise action bilgisine göre liste çekilir.'
     },
     size: {
       type: String,
-      default: 'lg'
+      default: 'lg',
+      description: 'Modal size bilgisi'
     }
   },
   data () {

@@ -108,55 +108,74 @@ export default {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'v-model bilgisi'
     },
     type: {
       type: String,
-      default: 'insert'
+      validator: (prop) => [
+        'insert',
+        'update',
+        'get'
+      ].includes(prop),
+      default: 'insert',
+      description: 'Hangi sayfada kullanılıyorsa o sayfanın tipi bilgisi'
     },
     hasDetail: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Gridde detay bilgisinin olup olmaması bilgisi'
     },
     detailButtonText: {
       type: String,
-      default: 'Detay'
+      default: 'Detay',
+      description: 'Gridde detay bilgisi varsa detayı açmak için kullanılan butonun text bilgisi'
     },
     items: {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'Dinamik olarak oluşturulacak componentlerin json list olarak bilgisi'
     },
     hasLineNumber: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Gridde satır numarasının görünüp görünmeme bilgisi'
     },
     beforeAdd: {
-      type: Function
+      type: Function,
+      description: 'Yeni bir eleman eklenmeden önce validasyon yapılabimesi için kullanılır. Valid ise true dönmesi beklenmektedir. Parametereler: item, list, isUpdated'
     },
     getDetail: {
-      type: Function
+      type: Function,
+      description: 'Detay butonuna tıklandığında çalışan metoddur'
     },
     detailButtons: {
-      type: Array
+      type: Array,
+      description: 'Grid satırları için birden fazla aksiyon butonu eklemeyi sağlar'
     },
     showEdit: {
       type: Boolean,
-      default: true
+      default: true,
+      description: 'Grid satırında güncelle butonunun görünürlük bilgisi'
     },
     hideOperations: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Grid satırında tüm operasyonların görünürlük bilgisi'
     },
     mainForm: {
-      type: Object
+      type: Object,
+      description: 'İlgili sayfanın form bilgisi. Detay panelde sayfa ile ilgili kontrolleri yapmak için kullanılır'
     },
     editForm: {
-      type: Function
+      type: Function,
+      description: 'Yeni eleman eklenmeden önce eklenen elemana manipülasyon yapılabilmesi için kullanılır'
     },
     changeValidation: {
-      type: Function
+      type: Function,
+      description: 'Dinamik validasyonlar için kullanılır'
     }
   },
   model: {

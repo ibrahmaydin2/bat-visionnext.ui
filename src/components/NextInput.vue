@@ -23,21 +23,45 @@ export default {
   },
   props: {
     value: null,
-    disabled: null,
+    disabled: {
+      type: Boolean,
+      default: false,
+      descripton: 'Disabled bilgisi'
+    },
     type: {
       type: String,
-      default: 'text'
+      default: 'text',
+      descripton: 'Input tipi bilgisi'
     },
-    oninput: null,
-    maxLength: '',
-    inputClass: '',
-    minLength: '',
-    placeholder: '',
+    oninput: {
+      type: String,
+      descripton: 'oninput function bilgisi'
+    },
+    maxLength: {
+      type: String | Number,
+      descripton: 'inputun maxLength bilgisi'
+    },
+    inputClass: {
+      type: String,
+      default: '',
+      descripton: 'inputun css class bilgisi'
+    },
+    minLength: {
+      type: String,
+      default: '',
+      descripton: 'inputun minLength bilgisi'
+    },
+    placeholder: {
+      type: String,
+      default: '',
+      descripton: 'inputun placeholder bilgisi'
+    },
     inputStyle: {
       type: Object,
       default: () => {
         return {}
-      }
+      },
+      descripton: 'Input style bilgisi'
     }
   },
   data () {
