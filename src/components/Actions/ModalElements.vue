@@ -143,8 +143,14 @@ export default {
     })
   },
   props: {
-    actionUrl: String,
-    recordId: Array
+    actionUrl: {
+      type: String,
+      description: 'Çağıralarak actionın url bilgisi'
+    },
+    recordId: {
+      type: Array,
+      description: 'Seçilen listenin RecordId bilgileri'
+    }
   },
   methods: {
     selectedValue (label, model, type) {

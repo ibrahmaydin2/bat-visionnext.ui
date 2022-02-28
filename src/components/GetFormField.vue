@@ -27,15 +27,25 @@ import { mapState } from 'vuex'
 import Workflow from './Workflow'
 export default {
   props: {
-    value: {},
-    routeName: String,
+    value: {
+      type: Object,
+      default: () => {},
+      description: 'Workflow model bilgisi'
+    },
+    routeName: {
+      type: String,
+      default: '',
+      description: 'Route name bilgisi'
+    },
     hideEdit: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Güncelleme sayfası linkinin görünürlüğü bilgisi'
     },
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
+      description: 'Manual olarak verilen liste bilgisi. Bu boş ise routeName bilgisine göre liste çekilir.'
     }
   },
   model: {

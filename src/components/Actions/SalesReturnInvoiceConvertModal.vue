@@ -106,7 +106,8 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     openModal: {
       type: Boolean,
@@ -114,7 +115,8 @@ export default {
     },
     type: {
       type: String,
-      default: 'Invoice'
+      default: 'Invoice',
+      description: 'Fatura Tipi (Invoice, Waybill)'
     }
   },
   data () {
