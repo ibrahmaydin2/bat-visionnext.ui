@@ -143,14 +143,27 @@
               <NextInput
                 :tabindex="data.index+1"
                 :ref="`NextInput${data.index}`"
-                v-if="data.field.column.ColumnType === 'String' || data.field.column.ColumnType === 'Decimal'"
+                v-if="data.field.column.ColumnType === 'String'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                :type="data.field.column.ColumnType === 'String' ? 'text' : 'number'"
+                type="text"
+                :input-class="`min-input-width ${data.item.class}`"
+                @keypress="keypress($event);"
+                @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
+                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined">
+              </NextInput>
+              <NextInput
+                :tabindex="data.index+1"
+                :ref="`NextInput${data.index}`"
+                v-if="data.field.column.ColumnType === 'Decimal'"
+                v-model="data.item[data.field.key]"
+                @input="setConvertedValues($event, data)"
+                type="text"
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDot($event); keypress($event);"
                 @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
-                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined"></NextInput>
+                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined">
+              </NextInput>
             </div>
             <div v-else class="table-data-view" :style="data.field.thStyle" v-b-tooltip.hover :title="data.value" v-html="data.value"></div>
           </template>
