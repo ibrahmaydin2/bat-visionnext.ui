@@ -230,6 +230,13 @@ export default {
       link.setAttribute('download', `${fileName}.xlsx`)
       document.body.appendChild(link)
       link.click()
+    },
+    onlyNumber ($event) {
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      if (keyCode > 31 && (keyCode < 48 || keyCode > 57)) {
+        return false
+      }
+      return true
     }
   }
 }

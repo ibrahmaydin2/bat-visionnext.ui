@@ -121,15 +121,18 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     modalItem: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Listeden seçilen eleman bilgisi'
     },
     type: {
       type: String,
-      default: 'Invoice'
+      default: 'Invoice',
+      description: 'Fatura Tipi (Invoice, Waybill)'
     }
   },
   mounted () {

@@ -67,17 +67,20 @@ export default {
   },
   props: {
     actions: {
-      type: Array
+      type: Array,
+      description: 'Sayfa aksiyonlarının listesi'
     },
     row: {},
     isMultiple: {
-      default: 0
+      default: 0,
+      description: 'Çoklu seçim olup olmama durumu'
     },
     RecordIds: {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'Listeden seçilenlerin RecordId bilgileri'
     }
   },
   methods: {

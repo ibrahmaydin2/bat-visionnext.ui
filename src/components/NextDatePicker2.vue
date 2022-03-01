@@ -28,10 +28,26 @@ export default {
     event: 'valuechange'
   },
   props: {
-    value: null,
-    disabled: null,
-    range: false,
-    timePicker: false
+    value: {
+      type: String | Date,
+      default: null,
+      description: 'v-model bilgisi'
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      description: 'Disabled bilgisi'
+    },
+    range: {
+      type: Boolean,
+      default: false,
+      description: 'Tarih aralığı şeklinde görünüp görünmeme bilgisi'
+    },
+    timePicker: {
+      type: Boolean,
+      default: false,
+      description: 'Saat seçimi olup olmaması bilgisi'
+    }
   },
   data () {
     return {

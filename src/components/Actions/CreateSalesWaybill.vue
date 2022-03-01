@@ -60,7 +60,8 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     openModal: {
       type: Boolean,
@@ -68,7 +69,8 @@ export default {
     },
     modalItem: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Listeden seçilen eleman bilgisi'
     }
   },
   data () {

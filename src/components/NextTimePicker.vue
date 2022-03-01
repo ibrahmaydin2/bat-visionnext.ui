@@ -49,14 +49,18 @@ export default {
   },
   props: {
     value: null,
-    disabled: null,
+    disabled: {
+      type: Boolean,
+      description: 'Disabled bilgisi'
+    },
     type: {
       type: String,
       validator: (prop) => [
         'dropdown',
         'textbox'
       ].includes(prop),
-      default: 'dropdown'
+      default: 'dropdown',
+      description: 'Input tipi'
     }
   },
   data () {

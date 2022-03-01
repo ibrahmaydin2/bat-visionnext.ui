@@ -291,19 +291,29 @@ export default {
     MultipleLoadingPlanModal
   },
   props: {
-    apiurl: String,
-    apiparams: String,
+    apiurl: {
+      type: String,
+      default: '',
+      description: 'Listeleme için kullanacak api url bilgisi'
+    },
+    apiparams: {
+      type: String,
+      default: '',
+      description: 'Api parametre bilgisi'
+    },
     andConditionalModel: {
       type: Object,
       default: function () {
         return {}
-      }
+      },
+      description: 'Listeleme için andCondition bilgisi'
     },
     workFlowModel: {
       type: Object,
       default: function () {
         return {}
-      }
+      },
+      description: 'Index ekranları için workFlow bilgisi'
     },
     selectionMode: {
       type: String,
@@ -312,13 +322,19 @@ export default {
         'single',
         'multi'
       ].includes(prop),
-      default: 'none'
+      default: 'none',
+      description: 'Grid satırlarının seçilebilirlik ayarları'
     },
     OrderByColumns: {
       type: Array,
-      default: () => []
+      default: () => [],
+      description: 'Listeleme için orderByColumns bilgisi'
     },
-    actionCondition: null
+    actionCondition: {
+      type: Object,
+      default: null,
+      description: 'Listeleme için andCondition bilgisi'
+    }
   },
   mixins: [mixin],
   data () {
