@@ -83,6 +83,8 @@
                 orConditionFields="Code,Description1,Name,Surname"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 v-model="Representative"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
