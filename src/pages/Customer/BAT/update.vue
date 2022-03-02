@@ -841,7 +841,7 @@ export default {
             StatusIds: [1]
           }
         }
-        this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 300).then(res => {
+        this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 500).then(res => {
           if (res && res.ListModel) {
             this.routes = res.ListModel.BaseModels
             this.representatives = res.ListModel.BaseModels.map(b => {
