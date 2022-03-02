@@ -73,14 +73,20 @@
             <NextFormGroup item-key="IsRepresentative" :error="$v.form.IsRepresentative">
               <NextCheckBox v-model="form.IsRepresentative" type="number" toggle :disabled="insertReadonly.IsRepresentative" />
             </NextFormGroup>
-            <NextFormGroup item-key="EArchivePrinterType" :error="$v.form.EArchivePrinterType">
-              <NextDropdown v-model="eArchivePrinterType" lookup-key="" @input="selectedType('EArchivePrinterType', $event)" :disabled="insertReadonly.EArchivePrinterType" />
-            </NextFormGroup>
             <NextFormGroup item-key="ScoreClass" :error="$v.form.ScoreClass">
               <NextDropdown v-model="form.ScoreClass" lookup-key="" @input="selectedType('ScoreClass', $event)" :disabled="insertReadonly.ScoreClass" />
             </NextFormGroup>
             <NextFormGroup item-key="UpperEmployee" :error="$v.form.UpperEmployee">
               <NextDropdown v-model="form.UpperEmployee" lookup-key="" @input="selectedType('UpperEmployee', $event)" :disabled="insertReadonly.UpperEmployee" />
+            </NextFormGroup>
+            <NextFormGroup item-key="EArchivePrinterTypeId" :error="$v.form.EArchivePrinterTypeId">
+              <NextDropdown v-model="eArchivePrinterType" :get-lookup="true" label="Label" lookup-key="E_ARCHIVE_PRINTER_TYPE" @input="selectedType('EArchivePrinterTypeId', $event)" :disabled="insertReadonly.EArchivePrinterTypeId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.employee.TaxNumber')" item-key="TaxNumber" :error="$v.form.TaxNumber">
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
             </NextFormGroup>
         </b-row>
       </b-tab>
@@ -101,12 +107,6 @@
           </NextFormGroup>
           <NextFormGroup item-key="EmploymentEndDate" :error="$v.form.EmploymentEndDate">
             <NextDatePicker v-model="form.EmploymentEndDate" :disabled="insertReadonly.EmploymentEndDate" />
-          </NextFormGroup>
-          <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
-            <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
-          </NextFormGroup>
-          <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-            <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
           </NextFormGroup>
           <NextFormGroup item-key="BirthDate" :error="$v.form.BirthDate">
             <NextDatePicker v-model="form.BirthDate" :disabled="insertReadonly.BirthDate" />
@@ -218,7 +218,7 @@ export default {
         IsRepresentative: null,
         EmployeeTeams: [],
         EInvoiceSeqs: [],
-        EArchivePrinterType: null,
+        EArchivePrinterTypeId: null,
         TaxOffice: null,
         UpperEmployee: null
       },
@@ -291,7 +291,7 @@ export default {
       }
     },
     getLists () {
-      let allLookups = 'EMPLOYEE_GROUP,EMPLOYEE_CATEGORY_1,PRICE_LIST_CATEGORY_TYPE,SCORE_CARD_CLASS,EMPLOYEE_TYPE,EDUCATION,BLOOD_TYPE'
+      let allLookups = 'EMPLOYEE_GROUP,EMPLOYEE_CATEGORY_1,PRICE_LIST_CATEGORY_TYPE,SCORE_CARD_CLASS,EMPLOYEE_TYPE,EDUCATION,BLOOD_TYPE,E_ARCHIVE_PRINTER_TYPE'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
     },
     emailEntered (value) {
@@ -308,6 +308,7 @@ export default {
       this.education = rowData.Education
       this.bloodType = rowData.BloodType
       this.priceListCategory = rowData.PriceListCategory
+      this.eArchivePrinterType = rowData.EArchivePrinterType
     }
   },
   validations () {
