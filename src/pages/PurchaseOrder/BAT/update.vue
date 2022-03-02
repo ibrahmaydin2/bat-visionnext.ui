@@ -97,13 +97,13 @@
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <NextDropdown
-                searchable
                 v-model="selectedRoute"
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :disabled="insertReadonly.RouteId"
-                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :page-count="500"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown

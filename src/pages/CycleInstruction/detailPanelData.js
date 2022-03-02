@@ -104,12 +104,14 @@ export const detailData = {
   ],
   routeItems: [
     {
-      type: 'Autocomplete',
+      type: 'Dropdown',
       inputType: null,
       modelProperty: 'ColumnValue',
       objectKey: 'ColumnValueDesc',
       parentProperty: null,
       url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
+      dynamicAndCondition: { StatusIds: [1] },
+      pageCount: 500,
       label: i18n.t('insert.CycleInstruction.Route'),
       required: true,
       disabled: false,

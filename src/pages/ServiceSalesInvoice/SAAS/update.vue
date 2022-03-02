@@ -100,7 +100,8 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"
-                searchable />
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500" />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown

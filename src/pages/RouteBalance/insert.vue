@@ -17,11 +17,11 @@
           <NextFormGroup :title="$t('insert.RouteBalance.Route')" :error="$v.form.FromRouteId">
             <NextDropdown
               @input="selectedSearchType('FromRouteId', $event)"
-              label="Description1"
               url="VisionNextRoute/api/Route/AutoCompleteSearch?v=1"
               :dynamic-and-condition="{ StatusIds: [1]}"
-              :disabled="insertReadonly.FromRouteId" searchable
-              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
+              :disabled="insertReadonly.FromRouteId"
+              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+              :page-count="500"/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.RouteBalance.Route')" :error="$v.form.ToRouteId">
             <NextDropdown
@@ -29,8 +29,9 @@
               label="Description1"
               url="VisionNextRoute/api/Route/AutoCompleteSearch"
               :dynamic-and-condition="{ StatusIds: [1]}"
-              :disabled="insertReadonly.ToRouteId" searchable
-              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
+              :disabled="insertReadonly.ToRouteId"
+              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+              :page-count="500"/>
           </NextFormGroup>
         </b-row>
       </header>

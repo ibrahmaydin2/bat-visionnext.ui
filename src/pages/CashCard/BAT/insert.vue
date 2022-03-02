@@ -91,11 +91,10 @@
                 :disabled="insertReadonly.RouteId"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="Route"
-                label="Description1"
-                :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"
                 :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CashCardTypeId" :error="$v.form.CashCardTypeId">

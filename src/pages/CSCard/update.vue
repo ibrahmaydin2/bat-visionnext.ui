@@ -97,9 +97,9 @@
                   :disabled="insertReadonly.RouteId"
                   v-model="route"
                   url="VisionNextRoute/api/Route/AutoCompleteSearch"
-                  label="Description1"
-                  searchable
                   :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                  :dynamic-and-condition="{ StatusIds: [1] }"
+                  :page-count="500"
                   />
               </NextFormGroup>
               <NextFormGroup :title="$t('insert.creditcard.reminder')">
