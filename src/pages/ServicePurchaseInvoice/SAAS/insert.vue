@@ -251,7 +251,7 @@
           <NextDetailPanel v-model="form.GrantProduct" :items="grantProductItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.order.TurnoverPremium')" v-if="invoiceType && invoiceType.Code === 'CP'">
-          <NextDetailPanel v-model="form.TurnoverPremium" :items="turnoverPremiumItems" />
+          <NextDetailPanel v-model="form.ContractEndorsementModels" :items="turnoverPremiumItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.order.ContractCash')" v-if="invoiceType && invoiceType.Code === 'NK'">
           <NextDetailPanel v-model="form.ContractCash" :items="contractCashItems" />
@@ -260,7 +260,7 @@
           <NextDetailPanel v-model="form.ServiceInvoice" :items="serviceInvoiceItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.order.Tpr')" v-if="invoiceType && invoiceType.Code === 'TPR'">
-          <NextDetailPanel v-model="form.Tpr" :items="tprItems" />
+          <NextDetailPanel v-model="form.ContractTempPriceRedModels" :items="tprItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -327,7 +327,9 @@ export default {
         InvoiceTypeId: null,
         InvoiceLines: [],
         InvoiceDiscounts: [],
-        AsEArchive: null
+        AsEArchive: null,
+        ContractEndorsementModels: [],
+        ContractTempPriceRedModels: []
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,

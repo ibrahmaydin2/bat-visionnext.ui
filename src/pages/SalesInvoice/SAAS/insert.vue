@@ -64,6 +64,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -77,9 +89,6 @@
             <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.InvoiceNumber" :disabled="insertReadonly.InvoiceNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
-              <NextInput type="text" v-model="form.PrintedDispatchNumber" :disabled="insertReadonly.PrintedDispatchNumber"></NextInput>
-            </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
               <NextDropdown
                 url="VisionNextInvoice/api/InvoiceKind/Search"
@@ -87,7 +96,7 @@
                 :disabled="insertReadonly.InvoiceKindId"
                 :filter="item => item.Code === 'FAI'"></NextDropdown>
             </NextFormGroup>
-            <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.order.customerOrderNo')" item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <NextInput type="text" v-model="form.Genexp2" :disabled="insertReadonly.Genexp2"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
@@ -156,6 +165,18 @@
             </NextFormGroup>
             <NextFormGroup item-key="IsDBSOffline" :error="$v.form.IsDBSOffline">
               <NextCheckBox v-model="form.IsDBSOffline" type="number" toggle :disabled="insertReadonly.IsDBSOffline"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="IsDbs" :error="$v.form.IsDbs">
+              <NextCheckBox v-model="form.IsDbs" type="number" toggle :disabled="insertReadonly.IsDbs || !selectedCustomer"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
+              <NextDropdown @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbs"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="EDocumentScenario" :error="$v.form.EDocumentScenario" md="2" lg="2">
+              <NextDropdown url="" @input="selectedSearchType('EDocumentScenario', $event)" :disabled="insertReadonly.EDocumentScenario"></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup item-key="ValidProduct" :error="$v.form.ValidProduct" md="2" lg="2">
+              <NextDropdown url="" @input="selectedSearchType('ValidProduct', $event)" :disabled="insertReadonly.ValidProduct"></NextDropdown>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -402,7 +423,7 @@ export default {
         ConversionCounter: 0,
         IsDeliveryInvoice: 0,
         IsManuelClosure: 0,
-        IsDbs: 0,
+        IsDbs: null,
         IsProforma: 0,
         IsContractFocInvoice: 0,
         IsEndorsementReturn: 0,
@@ -420,7 +441,10 @@ export default {
         CustomerOrderNumber: null,
         InvoiceDiscounts: [],
         InvoiceLogisticCompanies: [],
-        EDocumentStatusId: null
+        EDocumentStatusId: null,
+        BankId: null,
+        EDocumentScenario: null,
+        ValidProduct: null
       },
       routeName1: 'Invoice',
       campaignFields: [
@@ -1053,7 +1077,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;

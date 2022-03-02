@@ -825,7 +825,8 @@
       "PersonalType": "Personel Tipi",
       "EArchivePrinterType": "E-Arşiv Yazıcı",
       "TaxOffice":"Vergi Dairesi",
-      "UpperEmployee": "Personel Yöneticisi"
+      "UpperEmployee": "Personel Yöneticisi",
+      "TaxNumber": "Vergi Numarası"
     },
     "customer": {
       "Contracted": "Kontrat Durumu",
@@ -1993,7 +1994,11 @@
       "TurnoverPremium": "Ciro Primi",
       "ContractCash": "Nakit Katkı",
       "ServiceInvoice": "Raf Tabela Kazanımı",
-      "Tpr": "Kasa Çıktısı"
+      "Tpr": "Kasa Çıktısı",
+      "customerOrderNo": "Müşteri Sipariş No",
+      "BankId": "Banka",
+      "EDocumentScenario": "Müşteri Kullanılan E-Fatura Tipi",
+      "ValidProduct": "Geçerli Ürün Kart Tipi"
     },
     "fixedTermCampaign": {
       "title": "Tanımlar",
