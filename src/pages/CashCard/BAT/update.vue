@@ -88,6 +88,7 @@
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 :is-customer="true"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CashCardTypeId" :error="$v.form.CashCardTypeId">
@@ -176,6 +177,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.updateData()
       }
     },

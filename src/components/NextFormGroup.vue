@@ -17,32 +17,41 @@ export default {
   name: 'NextFormGroup',
   props: {
     itemKey: {
-      type: String
+      type: String,
+      description: 'Initsden gelen alanın EntityProperty bilgisi'
     },
     error: {
-      type: Object
+      type: Object,
+      default: () => {},
+      description: 'Validasyon için $v üzerindeki object bilgisi'
     },
     title: {
-      type: String
+      type: String,
+      description: 'İlgili input için title bilgisi'
     },
     required: {
-      type: Boolean
+      type: Boolean,
+      description: 'Zorunlu olup olmama bilgisi'
     },
     md: {
       type: String,
-      default: '4'
+      default: '4',
+      description: 'Inputun md kolon bilgisi'
     },
     lg: {
       type: String,
-      default: '3'
+      default: '3',
+      description: 'Inputun lg kolon bilgisi'
     },
     showCopy: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Title bilgisinin kopyalanabilmesi bilgisi'
     },
     copyValues: {
       type: String,
-      default: undefined
+      default: undefined,
+      description: 'Kopyalanacak değer obje ise properylerinin virgül ile ayrılmış olarak verilmesi gerekir'
     }
   },
   data () {

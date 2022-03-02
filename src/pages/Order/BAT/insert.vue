@@ -115,7 +115,8 @@
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
-                :disabled="insertReadonly.RouteId"/>
+                :disabled="insertReadonly.RouteId"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
@@ -768,6 +769,7 @@ export default {
             this.$bvModal.show('campaign-modal')
           } else {
             this.campaigns = []
+            this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
             this.createData()
           }
         })

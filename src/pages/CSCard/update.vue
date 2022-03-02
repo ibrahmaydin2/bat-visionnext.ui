@@ -99,6 +99,7 @@
                   url="VisionNextRoute/api/Route/AutoCompleteSearch"
                   label="Description1"
                   searchable
+                  :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                   />
               </NextFormGroup>
               <NextFormGroup :title="$t('insert.creditcard.reminder')">
@@ -226,6 +227,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CurrencyCsTotal = this.form.CsTotal
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.updateData()
       }
     },

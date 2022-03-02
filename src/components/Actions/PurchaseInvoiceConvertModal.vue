@@ -1,5 +1,5 @@
 <template>
-  <b-modal class="modalZIndex" v-if="modalAction" :id="id" ref="'purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal @show="show" class="modalZIndex" v-if="modalAction" :id="id" ref="'purchase-invoice-convert-modal'" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.Convert.SupplierId')" md="3" lg="3">
@@ -106,7 +106,8 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     openModal: {
       type: Boolean,
@@ -114,11 +115,24 @@ export default {
     },
     id: {
       type: String,
-      default: 'convertModal'
+      default: 'convertModal',
+      description: 'Modal id bilgisi'
     },
-    listUrl: '',
-    detailUrl: '',
-    convertUrl: ''
+    listUrl: {
+      type: String,
+      default: '',
+      description: 'Listeleme apisi için url bilgisi'
+    },
+    detailUrl: {
+      type: String,
+      default: '',
+      description: 'Detay apisi için url bilgisi'
+    },
+    convertUrl: {
+      type: String,
+      default: '',
+      description: 'Convert apisi için url bilgisi'
+    }
   },
   data () {
     return {
@@ -198,23 +212,19 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-      if (modalId === this.id) {
-        this.list = []
-        this.form = {}
-        this.selectedItem = {}
-        this.showLoading = false
-        this.supplier = null
-        this.warehouse = null
-        this.documentNumber = null
-        this.invoiceNumber = null
-        this.representativeId = null
-        this.getUserInfo()
-      }
-    })
-  },
   methods: {
+    show () {
+      this.list = []
+      this.form = {}
+      this.selectedItem = {}
+      this.showLoading = false
+      this.supplier = null
+      this.warehouse = null
+      this.documentNumber = null
+      this.invoiceNumber = null
+      this.representativeId = null
+      this.getUserInfo()
+    },
     getList () {
       this.form = {}
       this.list = []

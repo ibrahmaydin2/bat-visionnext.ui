@@ -103,7 +103,7 @@
               <NextDropdown :disabled="insertReadonly.VehicleId" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.RouteId" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable />
+              <NextDropdown :disabled="insertReadonly.RouteId" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -597,6 +597,7 @@ export default {
           })
           return
         }
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.form.ActualDeliveryDate = this.form.DocumentDate
         this.form.ActualDeliveryTime = this.form.DocumentTime
         this.createData()

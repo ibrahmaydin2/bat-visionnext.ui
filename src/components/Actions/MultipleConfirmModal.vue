@@ -24,11 +24,13 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
     recordIds: {
       type: Array,
-      default: () => {}
+      default: () => {},
+      description: 'Seçilen listenin RecordId bilgileri'
     }
   },
   data () {

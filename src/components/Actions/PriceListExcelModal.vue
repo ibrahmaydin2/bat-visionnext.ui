@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="price-list-excel-modal" :title="$t('insert.PriceList.uploadExcel')" size="lg" hide-footer no-close-on-backdrop>
+  <b-modal @hide="hide" id="price-list-excel-modal" :title="$t('insert.PriceList.uploadExcel')" size="lg" hide-footer no-close-on-backdrop>
     <div class="container">
       <b-row>
         <template>
@@ -62,7 +62,8 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     }
   },
   data () {
@@ -77,13 +78,11 @@ export default {
     return {
     }
   },
-  mounted () {
-    this.$root.$on('bv::modal::hide', (bvEvent, modalId) => {
+  methods: {
+    hide () {
       this.datas = []
       this.files = null
-    })
-  },
-  methods: {
+    },
     submitFile () {
       var file = document.querySelector('input[type="file"]').files[0]
       this.getBase64(file)
@@ -135,7 +134,6 @@ export default {
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'price-list-excel-modal')
     }
-
   }
 }
 </script>

@@ -57,6 +57,14 @@ export default {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
       return today
     },
+    getNowDateStr () {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      return `${today.toISOString().substr(0, 10)}T00:00:00.000Z`
+    },
+    getDateWithoutTime (date) {
+      return `${date.substr(0, 10)}T00:00:00.000Z`
+    },
     tabValidationHelper () {
       const tabs = document.querySelectorAll('.nav-tabs .nav-item')
       tabs.forEach((tab, item) => {
@@ -230,6 +238,13 @@ export default {
       link.setAttribute('download', `${fileName}.xlsx`)
       document.body.appendChild(link)
       link.click()
+    },
+    onlyNumber ($event) {
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      if (keyCode > 31 && (keyCode < 48 || keyCode > 57)) {
+        return false
+      }
+      return true
     }
   }
 }

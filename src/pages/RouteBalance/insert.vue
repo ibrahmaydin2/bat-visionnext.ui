@@ -20,7 +20,8 @@
               label="Description1"
               url="VisionNextRoute/api/Route/AutoCompleteSearch?v=1"
               :dynamic-and-condition="{ StatusIds: [1]}"
-              :disabled="insertReadonly.FromRouteId" searchable/>
+              :disabled="insertReadonly.FromRouteId" searchable
+              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.RouteBalance.Route')" :error="$v.form.ToRouteId">
             <NextDropdown
@@ -28,7 +29,8 @@
               label="Description1"
               url="VisionNextRoute/api/Route/AutoCompleteSearch"
               :dynamic-and-condition="{ StatusIds: [1]}"
-              :disabled="insertReadonly.ToRouteId" searchable/>
+              :disabled="insertReadonly.ToRouteId" searchable
+              :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
           </NextFormGroup>
         </b-row>
       </header>
