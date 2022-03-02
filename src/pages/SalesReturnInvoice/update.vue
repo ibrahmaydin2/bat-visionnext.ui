@@ -106,6 +106,7 @@
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">

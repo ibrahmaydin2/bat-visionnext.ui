@@ -168,6 +168,10 @@ export default {
       type: Number,
       default: 50,
       description: 'Liste için atılan isteğin totalPageRecord bilgisi'
+    },
+    orderByColumns: {
+      type: Array,
+      description: 'Apiden listenin sıralı olarak çekilmesini sağlar'
     }
   },
   model: {
@@ -304,6 +308,11 @@ export default {
         orConditionModels: orConditionModels,
         ...dynamicRequest
       }
+
+      if (this.orderByColumns) {
+        request.OrderByColumns = this.orderByColumns
+      }
+
       this.$api.postByUrl(request, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
@@ -322,6 +331,11 @@ export default {
           ...this.dynamicAndCondition
         }
       }
+
+      if (this.orderByColumns) {
+        request.OrderByColumns = this.orderByColumns
+      }
+
       this.$api.postByUrl(request, this.url, this.pageCount).then((response) => {
         if (response) {
           if (response.ListModel) {

@@ -95,6 +95,7 @@
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 :is-customer="true"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CashCardTypeId" :error="$v.form.CashCardTypeId">

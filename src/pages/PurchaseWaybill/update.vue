@@ -98,7 +98,7 @@
               <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <NextDropdown v-model="route" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" searchable :disabled="insertReadonly.RouteId" />
+              <NextDropdown v-model="route" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" searchable :disabled="insertReadonly.RouteId" :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
             </NextFormGroup>
           </b-row>
         </b-tab>

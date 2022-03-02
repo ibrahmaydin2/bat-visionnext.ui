@@ -27,7 +27,7 @@
               @input="selectedSearchType('FromWarehouseId', $event)"/>
           </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <NextDropdown v-model="route" :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
+              <NextDropdown v-model="route" :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
             </NextFormGroup>
           <NextFormGroup item-key="IsDone" :error="$v.form.IsDone">
             <NextDropdown v-model="selectedDone" :disabled="insertReadonly.IsDone" url="VisionNextStockManagement/api/VanLoadingStatu/Search"   @input="selectedSearchType('IsDone', $event)"/>

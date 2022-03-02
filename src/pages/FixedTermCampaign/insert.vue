@@ -169,6 +169,7 @@
                 @input="selectFixedTermCampaignDetail($event, 'T_ROUTE', 'RECORD_ID')"
                 :dynamic-and-condition="getRouteAndCondition()"
                 searchable
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
               ></NextDropdown>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
