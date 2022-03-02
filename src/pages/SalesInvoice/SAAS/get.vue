@@ -60,7 +60,7 @@
               <div v-html="getFormatDataByType(rowData.EDocumentStatusId, 'object', 'insert.order.EDocumentStatusId')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.order.customer')"></div>
               <div v-html="getFormatDataByType(rowData.PriceList, 'object', 'insert.order.priceList')"></div>
-              <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.genexp2')"></div>
+              <div v-html="getFormatDataByType(rowData.Genexp2, 'text', 'insert.order.customerOrderNo')"></div>
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.documentNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.order.description1')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerOrderNumber, 'text', 'insert.order.CustomerOrderNumber')"></div>
@@ -68,7 +68,6 @@
               <div v-html="getFormatDataByType(rowData.IsDBSOffline, 'check', 'insert.order.IsDBSOffline')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
               <div v-html="getFormatDataByType(rowData.State, 'object', 'insert.order.state')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
@@ -80,6 +79,9 @@
               <div v-html="getFormatDataByType(rowData.IsCashCollection , 'check', 'insert.order.isCashCollection')"></div>
               <div v-html="getFormatDataByType(rowData.isCanceled, 'check', 'insert.order.isCanceled')"></div>
               <div v-html="getFormatDataByType(rowData.IsDBS, 'check', 'insert.order.IsDBS')"></div>
+              <div v-html="getFormatDataByType(rowData.Bank, 'object', 'insert.order.BankId')"></div>
+              <div v-html="getFormatDataByType(rowData.EDocumentScenario, 'object', 'insert.order.EDocumentScenario')"></div>
+              <div v-html="getFormatDataByType(rowData.ValidProduct, 'object', 'insert.order.ValidProduct')"></div>
             </b-card>
           </b-row>
         </b-tab>
