@@ -54,12 +54,14 @@ export const detailData = {
   ],
   routeItems: [
     {
-      type: 'Autocomplete',
+      type: 'Dropdown',
       modelProperty: 'RouteId',
       labelProperty: 'Code',
       objectKey: 'Code',
       url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
       label: 'insert.terminalMessage.routeCode',
+      dynamicAndCondition: { StatusIds: [1] },
+      pageCount: 500,
       required: true,
       visible: true,
       id: 1

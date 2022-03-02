@@ -76,13 +76,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="3" lg="3">
               <NextDropdown
-                :searchable="true"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
-                :custom-option="true"
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"
-                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :page-count="500"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')" md="3" lg="3">
               <NextInput v-model="customerReminder" type="text" :disabled="true" />

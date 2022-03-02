@@ -60,11 +60,12 @@
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="3" lg="3">
               <NextDropdown
                 v-model="route"
-                url="VisionNextRoute/api/Route/Search" searchable
+                url="VisionNextRoute/api/Route/Search"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectRoute"
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.RouteId"
-                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :page-count="500" />
             </NextFormGroup>
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="!(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
               <NextDropdown

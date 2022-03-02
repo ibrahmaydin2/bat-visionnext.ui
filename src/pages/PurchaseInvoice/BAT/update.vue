@@ -110,12 +110,12 @@
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <NextDropdown
                 v-model="selectedRoute"
-                searchable
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 :disabled="insertReadonly.RouteId"
-                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :page-count="500"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0}" />
