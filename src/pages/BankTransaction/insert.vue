@@ -111,7 +111,7 @@ export default {
         StatusId: null,
         Code: null,
         CustomerId: null,
-        DocumentDate: null,
+        DocumentDate: this.getNowDateStr(),
         DocumentNumber: null,
         CurrencyId: null,
         TransactionTypeId: null,
@@ -160,6 +160,7 @@ export default {
       } else {
         this.form.TransactionTotal = parseFloat(this.form.TransactionTotal)
         this.form.CurrencyTransactionTotal = this.form.TransactionTotal
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.createData()
       }
     }

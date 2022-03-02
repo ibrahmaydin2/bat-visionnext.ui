@@ -57,6 +57,14 @@ export default {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
       return today
     },
+    getNowDateStr () {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      return `${today.toISOString().substr(0, 10)}T00:00:00.000Z`
+    },
+    getDateWithoutTime (date) {
+      return `${date.substr(0, 10)}T00:00:00.000Z`
+    },
     tabValidationHelper () {
       const tabs = document.querySelectorAll('.nav-tabs .nav-item')
       tabs.forEach((tab, item) => {

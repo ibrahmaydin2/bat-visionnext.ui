@@ -32,7 +32,8 @@
                   url="VisionNextRoute/api/Route/Search"
                   @input="selectedSearchType('RouteId', $event)"
                   searchable
-                  :dynamic-and-condition="{RouteTypeIds: [1], StatusIds: [1]}" />
+                  :dynamic-and-condition="{RouteTypeIds: [1], StatusIds: [1]}"
+                  :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="2" lg="2">
             <NextCheckBox v-model="form.StatusId" type="number" toggle />

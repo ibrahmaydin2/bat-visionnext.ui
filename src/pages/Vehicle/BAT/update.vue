@@ -216,6 +216,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.Description1 = this.form.VehiclePlateNumber
+        this.form.StatusId = this.form.StatusId !== 1 ? 2 : this.form.StatusId
         this.updateData()
       }
     },

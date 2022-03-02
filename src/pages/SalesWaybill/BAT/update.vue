@@ -122,7 +122,7 @@
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <NextDropdown v-model="selectedRoute" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.RouteId" searchable />
+              <NextDropdown v-model="selectedRoute" @input="selectedSearchType('RouteId', $event)" label="Description1" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.RouteId" searchable :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.WarehouseId" searchable />
@@ -919,6 +919,7 @@ export default {
           model.model.InvoiceId = null
           return this.$store.dispatch('createSalesWaybill', {...this.query, api: `VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs`, formdata: model, return: this.routeName})
         } else {
+          this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
           this.updateData()
         }
       }

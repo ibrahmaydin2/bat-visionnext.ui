@@ -95,6 +95,7 @@
                 v-model="Route"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :page-count="500"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
@@ -131,7 +132,7 @@ export default {
         CustomerId: null,
         ApproveNumber: null,
         DocumentNumber: null,
-        DocumentDate: new Date(),
+        DocumentDate: this.getNowDate(),
         BankId: null,
         CreditCardTotal: null,
         CurrencyId: null,

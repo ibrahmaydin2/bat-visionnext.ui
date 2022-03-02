@@ -26,7 +26,7 @@
               @input="selectedSearchType('FromWarehouseId', $event)" />
           </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
-              <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable/>
+              <NextDropdown :disabled="insertReadonly.RouteId" url="VisionNextRoute/api/Route/AutoCompleteSearch" @input="selectedSearchType('RouteId', $event)" :dynamic-and-condition="{ StatusIds: [1] }" searchable :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
             </NextFormGroup>
           <NextFormGroup item-key="LoadingDate" :error="$v.form.LoadingDate">
             <NextDatePicker v-model="form.LoadingDate" :disabled="insertReadonly.LoadingDate" />

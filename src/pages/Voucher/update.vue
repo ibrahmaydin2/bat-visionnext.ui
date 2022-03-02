@@ -83,7 +83,8 @@
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :custom-option="true"
                 @input="selectedSearchType('RouteId', $event)"
-                :disabled="insertReadonly.RouteId"/>
+                :disabled="insertReadonly.RouteId"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.creditcard.reminder')" md="3" lg="3">
               <NextInput v-model="customerReminder" type="text" :disabled="true" />

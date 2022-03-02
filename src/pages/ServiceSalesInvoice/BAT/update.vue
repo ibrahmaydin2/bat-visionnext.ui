@@ -100,7 +100,8 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 @input="selectedSearchType('RouteId', $event)"
                 :disabled="insertReadonly.RouteId"
-                searchable />
+                searchable
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]" />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
@@ -276,6 +277,7 @@ export default {
           })
           return
         }
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.updateData()
       }
     }
