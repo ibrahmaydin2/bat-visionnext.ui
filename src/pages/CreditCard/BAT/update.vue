@@ -189,6 +189,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate).substr(0, 10)
         this.updateData()
       }
     }

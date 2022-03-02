@@ -890,6 +890,7 @@ export default {
             this.$bvModal.show('campaign-modal')
           } else {
             this.campaigns = []
+            this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
             this.createData()
           }
         })

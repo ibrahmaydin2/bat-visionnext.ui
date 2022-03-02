@@ -165,7 +165,7 @@ export default {
         Description1: null,
         CustomerId: null,
         DocumentNumber: null,
-        DocumentDate: new Date(),
+        DocumentDate: this.getNowDateStr(),
         PaymentDate: new Date(),
         CashTotal: null,
         CurrencyId: null,
@@ -341,7 +341,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CurrencyCashTotal = this.form.CashTotal
-        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate)
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.form.PaymentDate = this.dateConvertToISo(this.form.PaymentDate)
         this.createData()
       }

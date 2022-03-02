@@ -132,7 +132,7 @@ export default {
         CustomerId: null,
         ApproveNumber: null,
         DocumentNumber: null,
-        DocumentDate: new Date(),
+        DocumentDate: this.getNowDate(),
         BankId: null,
         CreditCardTotal: null,
         CurrencyId: null,

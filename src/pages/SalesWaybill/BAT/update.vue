@@ -919,6 +919,7 @@ export default {
           model.model.InvoiceId = null
           return this.$store.dispatch('createSalesWaybill', {...this.query, api: `VisionNextInvoice/api/SalesWaybill/CopyDispatchSaveAs`, formdata: model, return: this.routeName})
         } else {
+          this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
           this.updateData()
         }
       }

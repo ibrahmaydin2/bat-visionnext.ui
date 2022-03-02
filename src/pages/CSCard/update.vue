@@ -227,6 +227,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.CurrencyCsTotal = this.form.CsTotal
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.updateData()
       }
     },

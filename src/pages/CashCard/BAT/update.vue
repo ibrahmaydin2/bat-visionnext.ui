@@ -177,6 +177,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.updateData()
       }
     },

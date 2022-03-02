@@ -813,6 +813,7 @@ export default {
             this.createData()
           })
       } else {
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.createData()
       }
     },

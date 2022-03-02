@@ -294,6 +294,7 @@ export default {
           })
           return
         }
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.form.ActualDeliveryDate = this.form.DocumentDate
         this.form.ActualDeliveryTime = this.form.DocumentTime
         this.updateData()
