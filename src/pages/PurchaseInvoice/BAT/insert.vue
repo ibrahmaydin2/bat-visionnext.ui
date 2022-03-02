@@ -111,7 +111,8 @@
                 searchable
                 @input="selectedSearchType('RouteId', $event)"
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
-                :disabled="insertReadonly.RouteId"/>
+                :disabled="insertReadonly.RouteId"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"/>
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0}" />

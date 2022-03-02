@@ -187,6 +187,7 @@ export default {
       } else {
         this.form.TransactionTotal = parseFloat(this.form.TransactionTotal)
         this.form.CurrencyTransactionTotal = this.form.TransactionTotal
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
 
         this.updateData()
       }
