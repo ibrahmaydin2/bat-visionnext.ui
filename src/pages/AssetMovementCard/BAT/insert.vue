@@ -301,7 +301,7 @@ export default {
     removeAssetMovementCardDetails (item) {
       this.form.AssetMovementCardDetails.splice(this.form.AssetMovementCardDetails.indexOf(item), 1)
     },
-    save () {
+    async save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -311,8 +311,17 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.ToCustomerId = this.toLocation ? this.toLocation.CustomerId : undefined
-        this.form.FromCustomerId = this.fromLocation ? this.fromLocation.CustomerId : undefined
+        this.form.ToCustomerId = null
+        this.form.FromCustomerId = null
+
+        if (this.toLocation) {
+          this.form.ToCustomerId = !this.toLocation.CustomerId ? await this.geCustomerIdFromBranchId(this.toLocation.BranchId) : this.toLocation.CustomerId
+        }
+
+        if (this.fromLocation) {
+          this.form.FromCustomerId = !this.fromLocation.CustomerId ? await this.geCustomerIdFromBranchId(this.fromLocation.BranchId) : this.fromLocation.CustomerId
+        }
+
         this.createData()
       }
     },
@@ -342,6 +351,18 @@ export default {
     setAssetConditions (value) {
       this.defaultAssetCondition = value && value.length > 0 ? value.find(a => a.Code === 'AKT') : null
       this.assetMovementCardDetail.condition = this.defaultAssetCondition
+    },
+    async geCustomerIdFromBranchId (branchId) {
+      const request = {
+        andConditionModel: {
+          RecordIds: [branchId]
+        }
+      }
+      return this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then(res => {
+        if (res && res.ListModel && res.ListModel.BaseModels) {
+          return res.ListModel.BaseModels[0].CustomerId
+        }
+      })
     }
   },
   watch: {
