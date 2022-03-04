@@ -83,6 +83,8 @@
                 orConditionFields="Code,Description1,Name,Surname"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 v-model="Representative"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
@@ -93,6 +95,7 @@
                 v-model="Route"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :page-count="500"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId">
@@ -186,6 +189,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.DocumentDate = this.dateConvertToISo(this.form.DocumentDate).substr(0, 10)
         this.updateData()
       }
     }

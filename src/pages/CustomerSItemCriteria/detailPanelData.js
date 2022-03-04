@@ -176,13 +176,15 @@ export const detailData = {
   ],
   routeItems: [
     {
-      type: 'Autocomplete',
+      type: 'Dropdown',
       modelProperty: 'ColumnValue',
       objectKey: 'ColumnNameDesc',
       labelProperty: 'Code',
       customOption: true,
       orConditionFields: 'Code,Description1',
       url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
+      dynamicAndCondition: { StatusIds: [1] },
+      pageCount: 500,
       label: i18n.t('insert.customerSItemCriteria.routeCode'),
       required: true,
       visible: true,

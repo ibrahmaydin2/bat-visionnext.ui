@@ -552,6 +552,7 @@ export default {
           })
           return
         }
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.createData()
       }
     },

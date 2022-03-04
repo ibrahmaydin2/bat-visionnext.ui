@@ -39,92 +39,139 @@ export default {
   name: 'NextDropdown',
   mixins: [mixin],
   props: {
-    value: {},
-    disabled: null,
+    value: {
+      type: Object,
+      default: () => {},
+      description: 'v-model bilgisi'
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      description: 'Disabled bilgisi'
+    },
     searchable: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Dropdownın autocomplete olup olmama bilgisi'
     },
     onAfter: {
-      type: Function
+      type: Function,
+      description: 'Dropdown için source bilgisi apiden alındığında çalışacak olan metod'
     },
     customOption: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Gösterim şekli label dışında bir gösterim olacak ise kullanılır'
     },
     label: {
       type: String,
-      default: 'Description1'
+      default: 'Description1',
+      description: 'Dropdownda görünen label bilgisi'
     },
     url: {
-      type: String
+      type: String,
+      default: '',
+      description: 'Çağrılacak olan api url bilgisi'
     },
     lookupKey: {
       type: String,
-      default: undefined
+      default: undefined,
+      description: 'Dropdown lookup value ise çekilecek olan lookup ismi'
     },
     getLookup: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Bu alan true ise lookup bilgisi için api isteğinde bulunur. Aksi durumda statedeki lookup objesinde arar'
     },
-    dynamicAndCondition: {},
-    orConditionFields: {},
-    dynamicRequest: {},
+    dynamicAndCondition: {
+      type: Object,
+      default: () => {},
+      description: 'Api çağrılırken andCondition bilgisi eklemek için kullanılır'
+    },
+    orConditionFields: {
+      type: String,
+      default: '',
+      description: 'Autocompletede api çağrılırken orCondition da gönderilecek alanların virgül ile ayrılarak gönderilen bilgisi'
+    },
+    dynamicRequest: {
+      type: Object,
+      default: () => {},
+      description: 'Api çağrılırken dinamik olarak oluşturulan request bilgisi'
+    },
     dynamicOrConditions: {
-      type: Array
+      type: Array,
+      description: 'Dinamik olarak gönderilecek orConditions bilgisi'
     },
     source: {
-      type: Array
+      type: Array,
+      description: 'Manual olarak dropdowna liste verilmesini için kullanılır'
     },
     andConditionSearchField: {
       type: String,
-      default: 'Description1'
+      default: 'Description1',
+      description: 'Autocompletede andConditiona gönderilecek alan bilgisi'
     },
     isCustomer: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Müşteri dropdownı ise true setlenmelidir'
     },
     isEmployee: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Çalışan dropdownı ise true setlenmelidir'
     },
     isVehicle: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Araç dropdownı ise true setlenmelidir'
     },
     isPrefix: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Prefix bilgisi var ise true setlenmelidir'
     },
     filter: {
-      type: Function
+      type: Function,
+      description: 'Dropdown listesinin client-side filtrelenmesi için kullanılır'
     },
     search: {
-      type: Function
+      type: Function,
+      description: 'Manual olarak search fonksiyonun verilebilmesini sağlar'
     },
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Çoklu seçim olup olmama bilgisi'
     },
     reduceValue: {
       type: String,
-      default: null
+      default: null,
+      description: 'v-modeli object olanlar için object içinden alınacak alanı belirler'
     },
     defaultValue: {
       type: Number,
-      default: null
+      default: null,
+      description: 'Varsayılan değer bilgisi'
     },
     isCustomSlot: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'option adındaki slot ile custom template verilmes sağlanır'
     },
     firstItemSelected: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Listenin ilk elemanı varsayılan olarak seçili getirir'
     },
     pageCount: {
       type: Number,
-      default: 50
+      default: 50,
+      description: 'Liste için atılan isteğin totalPageRecord bilgisi'
+    },
+    orderByColumns: {
+      type: Array,
+      description: 'Apiden listenin sıralı olarak çekilmesini sağlar'
     }
   },
   model: {
@@ -261,6 +308,11 @@ export default {
         orConditionModels: orConditionModels,
         ...dynamicRequest
       }
+
+      if (this.orderByColumns) {
+        request.OrderByColumns = this.orderByColumns
+      }
+
       this.$api.postByUrl(request, this.url, pagerecordCount).then((response) => {
         loading(false)
         if (response && response.ListModel) {
@@ -279,6 +331,11 @@ export default {
           ...this.dynamicAndCondition
         }
       }
+
+      if (this.orderByColumns) {
+        request.OrderByColumns = this.orderByColumns
+      }
+
       this.$api.postByUrl(request, this.url, this.pageCount).then((response) => {
         if (response) {
           if (response.ListModel) {
@@ -367,6 +424,9 @@ export default {
       } else {
         return (item) => item
       }
+    },
+    resetSource () {
+      this.values = []
     }
   }
 }

@@ -60,8 +60,10 @@
             <NextFormGroup item-key="WarehouseTypeId" :error="$v.form.WarehouseTypeId" md="3" lg="3">
               <NextDropdown
                 v-model="form.WarehouseTypeId"
-                url=""
-                @input="selectedSearchType('WarehouseTypeId', $event)" :disabled="insertReadonly.WarehouseTypeId || selectedVehicle"/>
+                lookup-key="WAREHOUSE_TYPE"
+                :get-lookup="true"
+                label="Label"
+                @input="selectedType('WarehouseTypeId', $event)" :disabled="insertReadonly.WarehouseTypeId || selectedVehicle"/>
             </NextFormGroup>
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber" md="3" lg="3">
               <NextInput type="text" v-model="form.LicenseNumber" :disabled="insertReadonly.LicenseNumber"></NextInput>
@@ -197,15 +199,15 @@ export default {
     }
   },
   validations () {
-    if (this.form.IsVehicle === 0 && this.form.IsVirtualWarehouse === 0) {
-      this.insertRequired.LicenseNumber = true
-      this.insertRules.LicenseNumber = {
-        required
-      }
-    } else {
-      this.insertRules.LicenseNumber = {}
-      this.insertRequired.LicenseNumber = false
-    }
+    // if (this.form.IsVehicle === 0 && this.form.IsVirtualWarehouse === 0) {
+    //   this.insertRequired.LicenseNumber = true
+    //   this.insertRules.LicenseNumber = {
+    //     required
+    //   }
+    // } else {
+    //   this.insertRules.LicenseNumber = {}
+    //   this.insertRequired.LicenseNumber = false
+    // }
     if (this.form.IsVehicle === 0) {
       this.insertRequired.VehicleId = false
       this.insertRules.VehicleId = {}

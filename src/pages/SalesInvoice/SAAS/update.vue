@@ -86,9 +86,6 @@
            <NextFormGroup item-key="InvoiceNumber" :error="$v.form.InvoiceNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.InvoiceNumber" :disabled="insertReadonly.InvoiceNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
-              <NextInput type="text" v-model="form.PrintedDispatchNumber" :disabled="insertReadonly.PrintedDispatchNumber"></NextInput>
-            </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
               <NextDropdown
                 v-model="selectedInvoiceKind"
@@ -97,7 +94,7 @@
                 :disabled="insertReadonly.InvoiceKindId"
                 :filter="item => item.Code === 'FAI'"></NextDropdown>
             </NextFormGroup>
-            <NextFormGroup item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.order.customerOrderNo')" item-key="Genexp2" :error="$v.form.Genexp2" md="2" lg="2">
               <NextInput type="text" v-model="form.Genexp2" :disabled="insertReadonly.Genexp2"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="2" lg="2">
@@ -162,8 +159,8 @@
             <NextFormGroup item-key="CustomerOrderNumber" :error="$v.form.CustomerOrderNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.CustomerOrderNumber" :disabled="insertReadonly.CustomerOrderNumber"></NextInput>
             </NextFormGroup>
-            <NextFormGroup item-key="IsDBS" :error="$v.form.IsDBS">
-              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDBS"/>
+            <NextFormGroup item-key="IsDbs" :error="$v.form.IsDbs">
+              <NextCheckBox v-model="form.IsDbs" type="number" toggle :disabled="insertReadonly.IsDbs || !selectedCustomer"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDBSOffline" :error="$v.form.IsDBSOffline">
               <NextCheckBox v-model="form.IsDBSOffline" type="number" toggle :disabled="insertReadonly.IsDBSOffline"/>
@@ -173,6 +170,15 @@
             </NextFormGroup>
             <NextFormGroup item-key="isCanceled" :error="$v.form.isCanceled">
               <NextCheckBox v-model="form.isCanceled" type="number" toggle :disabled="insertReadonly.isCanceled"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
+              <NextDropdown v-model="bank" @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbs"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="EDocumentScenario" :error="$v.form.EDocumentScenario" md="2" lg="2">
+              <NextDropdown v-model="eDocumentScenario" url="" @input="selectedSearchType('EDocumentScenario', $event)" :disabled="insertReadonly.EDocumentScenario"></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup item-key="ValidProduct" :error="$v.form.ValidProduct" md="2" lg="2">
+              <NextDropdown v-model="validProduct" url="" @input="selectedSearchType('ValidProduct', $event)" :disabled="insertReadonly.ValidProduct"></NextDropdown>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -347,7 +353,10 @@ export default {
         InvoiceDiscounts: [],
         InvoiceLogisticCompanies: [],
         EDocumentStatusId: null,
-        InvoicePaymentPlans: []
+        InvoicePaymentPlans: [],
+        BankId: null,
+        EDocumentScenario: null,
+        ValidProduct: null
       },
       routeName1: 'Invoice',
       campaignFields: [
@@ -390,7 +399,10 @@ export default {
       priceListItems: [],
       stocks: [],
       invoicePaymentPlansItems: detailData.invoicePaymentPlansItems,
-      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems
+      InvoiceLogisticCompaniesItems: detailData.InvoiceLogisticCompaniesItems,
+      bank: null,
+      eDocumentScenario: null,
+      validProduct: null
     }
   },
   mounted () {
@@ -600,6 +612,8 @@ export default {
         this.selectedInvoiceKind = this.convertLookupValueToSearchValue(rowData.InvoiceKind)
         this.selectedPaymentType = rowData.PaymentType
         this.selectedDeliveryRepresentative = this.convertLookupValueToSearchValue(rowData.DeliveryRepresentative)
+        this.bank = this.convertLookupValueToSearchValue(rowData.BankId)
+        this.eDocumentScenario = this.convertLookupValueToSearchValue(rowData.EDocumentScenario)
         this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
         this.setIsCashCollection(this.selectedPaymentType)
         if (this.form.InvoiceLines) {

@@ -111,7 +111,13 @@
                 :disabled="insertReadonly.CurrencyId"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
-              <NextDropdown @input="selectedSearchType('RouteId', $event)" url="VisionNextRoute/api/Route/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable :disabled="insertReadonly.RouteId" />
+              <NextDropdown
+                @input="selectedSearchType('RouteId', $event)"
+                url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :disabled="insertReadonly.RouteId"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :page-count="500" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown
@@ -813,6 +819,7 @@ export default {
             this.createData()
           })
       } else {
+        this.form.DocumentDate = this.getDateWithoutTime(this.form.DocumentDate)
         this.createData()
       }
     },

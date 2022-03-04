@@ -68,14 +68,17 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Import Excel'
+      default: 'Import Excel',
+      description: 'Modal title bilgisi'
     },
     buttonTitle: {
       type: String,
-      default: 'Import Excel'
+      default: 'Import Excel',
+      description: 'Buton title bilgisi'
     },
     integrationType: {
-      type: String | Number
+      type: String | Number,
+      description: 'Her excel import için backend tarafında tanımlanan unique değer'
     }
   },
   data () {

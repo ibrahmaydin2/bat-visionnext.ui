@@ -103,8 +103,11 @@
               <NextDropdown
                 v-model="selectedRoute"
                 @input="selectedSearchType('RouteId', $event)"
-                 url="VisionNextRoute/api/Route/AutoCompleteSearch" searchable
-                 :disabled="insertReadonly.RouteId" />
+                url="VisionNextRoute/api/Route/AutoCompleteSearch"
+                :disabled="insertReadonly.RouteId"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="500" />
             </NextFormGroup>
             <NextFormGroup item-key="WarehouseId" :error="$v.form.WarehouseId" md="2" lg="2">
               <NextDropdown

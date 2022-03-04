@@ -123,9 +123,13 @@ export default {
   props: {
     modalAction: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      description: 'Sayfadan seçilen action bilgisi'
     },
-    documentDate: null
+    documentDate: {
+      type: String,
+      description: 'Döküman Tarihi bilgisi'
+    }
   },
   data () {
     return {

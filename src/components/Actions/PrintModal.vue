@@ -34,7 +34,8 @@ export default {
   },
   props: {
     documents: {
-      type: Array
+      type: Array,
+      description: 'Döküman Listesi'
     }
   },
   data () {

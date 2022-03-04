@@ -104,6 +104,7 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="route"
                 label="Description1"
+                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="CardOwner" :error="$v.form.CardOwner">

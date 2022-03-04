@@ -23,8 +23,8 @@
     <b-row v-if="editable">
       <NextFormGroup v-for="(item,i) in (items ? items.filter(i => i.visible === true): [])" :key="i" :title="$t(item.label)" :required="isRequired(item)" :error="isRequired(item) ? $v.form[item.modelProperty] : {}">
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Autocomplete'" :url="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :searchable="true" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :label="item.labelProperty ? item.labelProperty : 'Description1'" :custom-option="item.customOption" :is-customer="item.isCustomer" :or-condition-fields="item.orConditionFields" :is-employee="item.isEmployee" :is-vehicle="item.isVehicle"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :onAfter="item.onAfter" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" :is-prefix="item.isPrefix"/>
-        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" />
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && !item.parentId" :onAfter="item.onAfter" :source="item.source" :url="item.url" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :filter="item.filter" :custom-option="item.customOption" :is-prefix="item.isPrefix" :page-count="item.pageCount"/>
+        <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Dropdown' && item.parentId" :source="source[item.modelProperty]" :label="item.labelProperty ? item.labelProperty : 'Description1'" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :dynamic-and-condition="item.dynamicAndCondition" :dynamic-request="item.dynamicRequest" :page-count="item.pageCount" />
         <NextDropdown v-model="model[item.modelProperty]" v-if="item.type === 'Lookup'" :lookup-key="item.url" @input="additionalSearchType(item.id, item.modelProperty, $event, item.valueProperty)" :disabled="isDisabled(item)" :get-lookup="true" :label="item.labelProperty ? item.labelProperty : 'Label'" :filter="item.filter" />
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :minLength="item.minLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
@@ -108,55 +108,74 @@ export default {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'v-model bilgisi'
     },
     type: {
       type: String,
-      default: 'insert'
+      validator: (prop) => [
+        'insert',
+        'update',
+        'get'
+      ].includes(prop),
+      default: 'insert',
+      description: 'Hangi sayfada kullanılıyorsa o sayfanın tipi bilgisi'
     },
     hasDetail: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Gridde detay bilgisinin olup olmaması bilgisi'
     },
     detailButtonText: {
       type: String,
-      default: 'Detay'
+      default: 'Detay',
+      description: 'Gridde detay bilgisi varsa detayı açmak için kullanılan butonun text bilgisi'
     },
     items: {
       type: Array,
       default: () => {
         return []
-      }
+      },
+      description: 'Dinamik olarak oluşturulacak componentlerin json list olarak bilgisi'
     },
     hasLineNumber: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Gridde satır numarasının görünüp görünmeme bilgisi'
     },
     beforeAdd: {
-      type: Function
+      type: Function,
+      description: 'Yeni bir eleman eklenmeden önce validasyon yapılabimesi için kullanılır. Valid ise true dönmesi beklenmektedir. Parametereler: item, list, isUpdated'
     },
     getDetail: {
-      type: Function
+      type: Function,
+      description: 'Detay butonuna tıklandığında çalışan metoddur'
     },
     detailButtons: {
-      type: Array
+      type: Array,
+      description: 'Grid satırları için birden fazla aksiyon butonu eklemeyi sağlar'
     },
     showEdit: {
       type: Boolean,
-      default: true
+      default: true,
+      description: 'Grid satırında güncelle butonunun görünürlük bilgisi'
     },
     hideOperations: {
       type: Boolean,
-      default: false
+      default: false,
+      description: 'Grid satırında tüm operasyonların görünürlük bilgisi'
     },
     mainForm: {
-      type: Object
+      type: Object,
+      description: 'İlgili sayfanın form bilgisi. Detay panelde sayfa ile ilgili kontrolleri yapmak için kullanılır'
     },
     editForm: {
-      type: Function
+      type: Function,
+      description: 'Yeni eleman eklenmeden önce eklenen elemana manipülasyon yapılabilmesi için kullanılır'
     },
     changeValidation: {
-      type: Function
+      type: Function,
+      description: 'Dinamik validasyonlar için kullanılır'
     }
   },
   model: {

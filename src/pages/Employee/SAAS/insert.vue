@@ -82,6 +82,15 @@
             <NextFormGroup item-key="UpperEmployee" :error="$v.form.UpperEmployee">
               <NextDropdown v-model="form.UpperEmployee" lookup-key="" @input="selectedType('UpperEmployee', $event)" :disabled="insertReadonly.UpperEmployee" />
             </NextFormGroup>
+            <NextFormGroup item-key="EArchivePrinterTypeId" :error="$v.form.EArchivePrinterTypeId">
+              <NextDropdown v-model="form.EArchivePrinterTypeId" label="Label" :get-lookup="true" lookup-key="E_ARCHIVE_PRINTER_TYPE" @input="selectedType('EArchivePrinterTypeId', $event)" :disabled="insertReadonly.EArchivePrinterTypeId" />
+            </NextFormGroup>
+            <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
+              <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.employee.TaxNumber')" item-key="TaxNumber" :error="$v.form.TaxNumber">
+              <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
+            </NextFormGroup>
         </b-row>
       </b-tab>
       <b-tab :title="$t('insert.employee.groupInfo')" @click.prevent="tabValidation()">
@@ -101,12 +110,6 @@
           </NextFormGroup>
           <NextFormGroup item-key="EmploymentEndDate" :error="$v.form.EmploymentEndDate">
             <NextDatePicker v-model="form.EmploymentEndDate" :disabled="insertReadonly.EmploymentEndDate" />
-          </NextFormGroup>
-          <NextFormGroup item-key="TaxOffice" :error="$v.form.TaxOffice">
-            <NextInput v-model="form.TaxOffice" type="text" :disabled="insertReadonly.TaxOffice" />
-          </NextFormGroup>
-          <NextFormGroup item-key="TaxNumber" :error="$v.form.TaxNumber">
-            <NextInput v-model="form.TaxNumber" type="number" :disabled="insertReadonly.TaxNumber" maxLength="11" :oninput="maxLengthControl"/>
           </NextFormGroup>
           <NextFormGroup item-key="BirthDate" :error="$v.form.BirthDate">
             <NextDatePicker v-model="form.BirthDate" :disabled="insertReadonly.BirthDate" />
@@ -221,7 +224,8 @@ export default {
         EArchivePrinterType: null,
         TaxOffice: null,
         ScoreClass: null,
-        UpperEmployee: null
+        UpperEmployee: null,
+        EArchivePrinterTypeId: null
       },
       priceListCategory: null,
       teamItems: detailData.teamItems,
@@ -284,7 +288,7 @@ export default {
       }
     },
     getLists () {
-      let allLookups = 'EMPLOYEE_GROUP,EMPLOYEE_CATEGORY_1,PRICE_LIST_CATEGORY_TYPE,SCORE_CARD_CLASS,EMPLOYEE_TYPE,EDUCATION,BLOOD_TYPE'
+      let allLookups = 'EMPLOYEE_GROUP,EMPLOYEE_CATEGORY_1,PRICE_LIST_CATEGORY_TYPE,SCORE_CARD_CLASS,EMPLOYEE_TYPE,EDUCATION,BLOOD_TYPE,E_ARCHIVE_PRINTER_TYPE'
       this.$store.dispatch('getAllLookups', {...this.query, type: allLookups})
     },
     emailEntered (value) {

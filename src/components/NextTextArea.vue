@@ -9,11 +9,18 @@ export default {
     event: 'valuechange'
   },
   props: {
-    value: null,
-    disabled: null,
+    value: {
+      type: String,
+      description: 'v-model bilgisi'
+    },
+    disabled: {
+      type: Boolean,
+      description: 'Disabled bilgisi'
+    },
     rows: {
       type: Number,
-      default: 2
+      default: 2,
+      description: 'Textarea görünen satır sayısı bilgisi'
     }
   },
   data () {

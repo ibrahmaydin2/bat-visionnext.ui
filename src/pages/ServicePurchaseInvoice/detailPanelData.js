@@ -92,12 +92,12 @@ export const detailData = {
   ],
   turnoverPremiumItems: [
     {
-      type: 'Dropdown',
+      type: 'Autocomplete',
       modelProperty: 'EndorsementBonus',
       objectKey: 'EndorsementBonus',
-      url: '',
+      url: 'VisionNextContractManagement/api/ContractEndorsement/SearchEndorsement',
       label: i18n.t('insert.order.EndorsementBonus'),
-      required: true,
+      required: false,
       visible: true,
       id: 1
     },
@@ -161,7 +161,7 @@ export const detailData = {
       labelProperty: 'Code',
       customOption: true,
       orConditionFields: 'Code,Description1',
-      url: 'VisionNextItem/api/Item/AutoCompleteSearch',
+      url: 'VisionNextContractManagement/api/Contract/SearchTempPriceRed',
       label: i18n.t('insert.itemAnalysis.itemCode'),
       required: true,
       visible: true,
