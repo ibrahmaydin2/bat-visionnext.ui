@@ -24,7 +24,7 @@
                 <NextInput v-model="form.CardNumber" maxLength="16" :oninput="maxLengthControl" type="number" :disabled="insertReadonly.CardNumber" />
               </NextFormGroup>
               <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId">
-                <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
+                <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event); resetSources();"/>
               </NextFormGroup>
               <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
                 <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />
@@ -43,6 +43,7 @@
           <b-row>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
               <NextDropdown
+                ref="fromLocation"
                 v-model="fromLocation"
                 :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
@@ -70,6 +71,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
               <NextDropdown
+                ref="toLocation"
                 v-model="toLocation"
                 :disabled="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ASR')"
                 @input="selectedSearchType('ToLocationId', $event)"
@@ -363,6 +365,10 @@ export default {
           return res.ListModel.BaseModels[0].CustomerId
         }
       })
+    },
+    resetSources () {
+      this.$refs.fromLocation.resetSource()
+      this.$refs.toLocation.resetSource()
     }
   },
   watch: {
