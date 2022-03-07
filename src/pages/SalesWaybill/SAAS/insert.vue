@@ -64,6 +64,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -137,10 +149,16 @@
               <NextInput type="text" v-model="form.CustomerOrderNumber" :disabled="insertReadonly.CustomerOrderNumber"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="IsDBS" :error="$v.form.IsDBS">
-              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDBS"/>
+              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDbs || !selectedCustomer"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDBSOffline" :error="$v.form.IsDBSOffline">
               <NextCheckBox v-model="form.IsDBSOffline" type="number" toggle :disabled="insertReadonly.IsDBSOffline"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
+              <NextDropdown @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbs"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ValidProduct" :error="$v.form.ValidProduct" md="2" lg="2">
+              <NextDropdown url="" @input="selectedSearchType('ValidProduct', $event)" :disabled="insertReadonly.ValidProduct"></NextDropdown>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -189,6 +207,18 @@
               <b-form-group>
                 <AddDetailButton @click.native="addInvoiceLine" />
               </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+                <NextMultipleSelection
+                  name="SalesWaybillMultipleItem"
+                  v-model="form.InvoiceLines"
+                  :disabled-button="!form.WarehouseId || !form.PriceListId"
+                  :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
+                  :hidden-values="multipleItemSearch.hiddenValues"
+                  :converted-values="multipleItemSearch.convertedValues"
+                  :validations="multipleItemSearch.multipleValidations"
+                  @input="calculateTotalPrices()"
+                />
             </b-col>
           </b-row>
           <b-row>
@@ -376,6 +406,7 @@
 import { required, minValue, minLength, maxLength, requiredIf } from 'vuelidate/lib/validators'
 import insertMixin from '../../../mixins/insert'
 import { detailData } from '../detailPanelData'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -436,7 +467,9 @@ export default {
         IsDBS: null,
         IsDBSOffline: null,
         ReferenceNumber: null,
-        CustomerOrderNumber: null
+        CustomerOrderNumber: null,
+        BankId: null,
+        ValidProduct: null
       },
       routeName1: 'Invoice',
       campaignFields: [
@@ -495,6 +528,9 @@ export default {
   mounted () {
     this.createManualCode('InvoiceNumber')
     this.getInsertPage(this.routeName)
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     getInsertPage (e) {
@@ -1097,7 +1133,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;
