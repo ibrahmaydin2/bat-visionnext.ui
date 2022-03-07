@@ -57,6 +57,18 @@
                 <span class="summary-value text-muted">: {{form.GrossTotal}}</span>
                 <div class="clearfix"></div>
                 <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.itemDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalItemDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.otherDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalOtherDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
+                <span class="summary-title">{{$t('insert.order.totalDiscount')}}</span>
+                <span class="summary-value text-muted">: {{form.TotalDiscount}}</span>
+                <div class="clearfix"></div>
+                <hr class="summary-hr"/>
               </div>
             </b-card>
           </b-col>
@@ -72,6 +84,9 @@
             </NextFormGroup>
             <NextFormGroup item-key="PrintedDispatchNumber" :error="$v.form.PrintedDispatchNumber" md="2" lg="2">
               <NextInput type="text" v-model="form.PrintedDispatchNumber" :disabled="insertReadonly.PrintedDispatchNumber" />
+            </NextFormGroup>
+            <NextFormGroup item-key="ReferenceNumber" :error="$v.form.ReferenceNumber" md="2" lg="2">
+              <NextInput type="text" v-model="form.ReferenceNumber" :disabled="insertReadonly.ReferenceNumber"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="InvoiceKindId" :error="$v.form.InvoiceKindId" md="2" lg="2">
               <NextDropdown v-model="selectedInvoiceKind" @input="selectedSearchType('InvoiceKindId', $event)" :disabled="insertReadonly.InvoiceKindId" label="Description1" url="VisionNextInvoice/api/InvoiceKind/Search" :dynamic-and-condition="{ StatusIds: [1] , RecordIds: [2] }"/>
@@ -137,13 +152,17 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.InvoiceDiscounts" :items="invoiceDiscountsItems"></NextDetailPanel>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
 </template>
 <script>
 import { mapState } from 'vuex'
-import updateMixin from '../../mixins/update'
+import updateMixin from '../../../mixins/update'
+import { detailData } from '../../AnalysisQuestions/detailPanelData'
 export default {
   mixins: [updateMixin],
   data () {
@@ -193,7 +212,8 @@ export default {
         Canceled: null,
         ConversionCounter: null,
         InvoiceLines: [],
-        RouteId: null
+        RouteId: null,
+        ReferenceNumber: null
       },
       routeName1: 'Invoice',
       selectedCustomer: null,
@@ -207,7 +227,8 @@ export default {
       selectedPaymentType: null,
       selectedDeliveryRepresentative: null,
       selectedInvoiceKind: null,
-      route: null
+      route: null,
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems
     }
   },
   computed: {
@@ -329,7 +350,6 @@ export default {
 .summary-card {
   width: 240px;
   float: right;
-  height: 90px;
 }
 .card-body  {
   padding: none !important;

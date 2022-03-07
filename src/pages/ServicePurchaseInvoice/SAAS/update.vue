@@ -125,7 +125,10 @@
                 label="Label" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentPeriodId" :error="$v.form.PaymentPeriodId" md="2" lg="2">
-              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId"></NextInput>
+              <NextInput type="text" v-model="form.PaymentPeriodId" :disabled="insertReadonly.PaymentPeriodId || (selectedPaymentType && selectedPaymentType.Code !== 'AH')"></NextInput>
+            </NextFormGroup>
+            <NextFormGroup item-key="AsEArchive" :error="$v.form.AsEArchive">
+              <NextCheckBox v-model="form.AsEArchive" type="number" :disabled="form.GrossTotal > 5000" raido/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -154,6 +157,21 @@
               </template>
             </b-table>
           </b-row>
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.GrantProduct')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'HF'">
+          <NextDetailPanel v-model="form.GrantProduct" :items="grantProductItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.TurnoverPremium')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'CP'">
+          <NextDetailPanel v-model="form.ContractEndorsementModels" :items="turnoverPremiumItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ContractCash')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'NK'">
+          <NextDetailPanel v-model="form.ContractCash" :items="contractCashItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.ServiceInvoice')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'RTK'">
+          <NextDetailPanel v-model="form.ServiceInvoice" :items="serviceInvoiceItems" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.order.Tpr')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'TPR'">
+          <NextDetailPanel v-model="form.ContractTempPriceRedModels" :items="tprItems" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -207,11 +225,17 @@ export default {
         IsCanceled: null,
         InvoiceLines: [],
         InvoiceTypeId: null,
-        InvoiceDiscounts: []
+        InvoiceDiscounts: [],
+        AsEArchive: null
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,
       discountFields: detailData.discountFields,
+      grantProductItems: detailData.grantProductItems,
+      turnoverPremiumItems: detailData.turnoverPremiumItems,
+      contractCashItems: detailData.contractCashItems,
+      serviceInvoiceItems: detailData.serviceInvoiceItems,
+      tprItems: detailData.tprItems,
       selectedCustomer: null,
       selectedCurrency: {},
       selectedRepresentative: null,

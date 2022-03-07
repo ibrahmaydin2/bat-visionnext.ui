@@ -66,6 +66,7 @@
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.PaymentType, 'object', 'insert.order.paymentType')"></div>
               <div v-html="getFormatDataByType(paymentPeriod, 'text', 'insert.order.paymentPeriod')"></div>
+              <div v-html="getFormatDataByType(rowData.AsEArchive, 'check', 'insert.order.AsEArchive')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -129,6 +130,51 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.GrantProduct')" v-if="rowData.InvoiceTypeId === 1">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.GrantProduct" :items="grantProductItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.TurnoverPremium')" v-if="rowData.InvoiceTypeId === 2">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ContractEndorsementModels" :items="turnoverPremiumItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.ContractCash')" v-if="rowData.InvoiceTypeId === 3">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ContractCash" :items="contractCashItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.ServiceInvoice')" v-if="rowData.InvoiceTypeId === 4">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ServiceInvoice" :items="serviceInvoiceItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.order.Tpr')" v-if="rowData.InvoiceTypeId === 5">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ContractTempPriceRedModels" :items="tprItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -144,7 +190,12 @@ export default {
     return {
       paymentPeriod: 0,
       itemFields: detailData.itemFields,
-      discountFields: detailData.discountFields
+      discountFields: detailData.discountFields,
+      grantProductItems: detailData.grantProductItems,
+      turnoverPremiumItems: detailData.turnoverPremiumItems,
+      contractCashItems: detailData.contractCashItems,
+      serviceInvoiceItems: detailData.serviceInvoiceItems,
+      tprItems: detailData.tprItems
     }
   },
   mounted () {
