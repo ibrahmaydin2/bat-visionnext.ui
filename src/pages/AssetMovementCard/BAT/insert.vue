@@ -24,7 +24,7 @@
                 <NextInput v-model="form.CardNumber" maxLength="16" :oninput="maxLengthControl" type="number" :disabled="insertReadonly.CardNumber" />
               </NextFormGroup>
               <NextFormGroup item-key="MovementTypeId" :error="$v.form.MovementTypeId">
-                <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event)"/>
+                <NextDropdown v-model="assetMovementType" url="VisionNextAsset/api/AssetMovementType/Search" @input="selectedSearchType('MovementTypeId', $event); resetSources();"/>
               </NextFormGroup>
               <NextFormGroup item-key="OperationDate" :error="$v.form.OperationDate">
                 <NextDatePicker v-model="form.OperationDate" :disabled="insertReadonly.OperationDate" />
@@ -43,6 +43,7 @@
           <b-row>
             <NextFormGroup item-key="FromLocationId" :error="$v.form.FromLocationId">
               <NextDropdown
+                ref="fromLocation"
                 v-model="fromLocation"
                 :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
@@ -70,6 +71,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="ToLocationId" :error="$v.form.ToLocationId">
               <NextDropdown
+                ref="toLocation"
                 v-model="toLocation"
                 :disabled="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ASR')"
                 @input="selectedSearchType('ToLocationId', $event)"
@@ -301,7 +303,7 @@ export default {
     removeAssetMovementCardDetails (item) {
       this.form.AssetMovementCardDetails.splice(this.form.AssetMovementCardDetails.indexOf(item), 1)
     },
-    save () {
+    async save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -311,8 +313,17 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.form.ToCustomerId = this.toLocation ? this.toLocation.CustomerId : undefined
-        this.form.FromCustomerId = this.fromLocation ? this.fromLocation.CustomerId : undefined
+        this.form.ToCustomerId = null
+        this.form.FromCustomerId = null
+
+        if (this.toLocation) {
+          this.form.ToCustomerId = !this.toLocation.CustomerId ? await this.geCustomerIdFromBranchId(this.toLocation.BranchId) : this.toLocation.CustomerId
+        }
+
+        if (this.fromLocation) {
+          this.form.FromCustomerId = !this.fromLocation.CustomerId ? await this.geCustomerIdFromBranchId(this.fromLocation.BranchId) : this.fromLocation.CustomerId
+        }
+
         this.createData()
       }
     },
@@ -342,6 +353,22 @@ export default {
     setAssetConditions (value) {
       this.defaultAssetCondition = value && value.length > 0 ? value.find(a => a.Code === 'AKT') : null
       this.assetMovementCardDetail.condition = this.defaultAssetCondition
+    },
+    async geCustomerIdFromBranchId (branchId) {
+      const request = {
+        andConditionModel: {
+          RecordIds: [branchId]
+        }
+      }
+      return this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then(res => {
+        if (res && res.ListModel && res.ListModel.BaseModels) {
+          return res.ListModel.BaseModels[0].CustomerId
+        }
+      })
+    },
+    resetSources () {
+      this.$refs.fromLocation.resetSource()
+      this.$refs.toLocation.resetSource()
     }
   },
   watch: {

@@ -424,6 +424,9 @@ export default {
       } else {
         return (item) => item
       }
+    },
+    resetSource () {
+      this.values = []
     }
   }
 }
