@@ -36,5 +36,25 @@ export const detailData = {
       isUnique: true,
       id: 2
     }
+  ],
+  assetItemsBAT: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'AssetId',
+      objectKey: 'Asset',
+      url: 'VisionNextAsset/api/Asset/Search',
+      label: 'insert.contract.assetId',
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Date',
+      modelProperty: 'PlannedServiceDate',
+      label: 'insert.contract.plannedServiceDate',
+      required: true,
+      visible: true,
+      id: 2
+    }
   ]
 }
