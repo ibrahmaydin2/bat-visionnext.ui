@@ -73,8 +73,6 @@ import OrderIndex from '@/pages/Order/'
 
 import ContractsIndex from '@/pages/Contracts/'
 import ContractsGet from '@/pages/Contracts/get'
-import ContractsInsert from '@/pages/Contracts/insert'
-import ContractsUpdate from '@/pages/Contracts/update'
 
 import FieldAnalysisResultIndex from '@/pages/FieldAnalysisResult/'
 import FieldAnalysisResultGet from '@/pages/FieldAnalysisResult/get'
@@ -599,7 +597,7 @@ const listUpdate = [
   { path: '/Update/Voucher/:url', name: 'VoucherUpdate', component: VoucherUpdate, meta: { title: i18n.t('router.VoucherUpdate'), baseLink: 'Voucher' } },
   { path: '/Update/CreditCard/:url', name: 'CreditCardUpdate', component: getTenantPage('CreditCard', 'update'), meta: { title: i18n.t('router.CreditCardUpdate'), baseLink: 'CreditCard' } },
   { path: '/Update/Order/:url', name: 'OrderUpdate', component: getTenantPage('Order', 'update'), meta: { title: i18n.t('router.OrderUpdate'), baseLink: 'Order' } },
-  { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: ContractsUpdate, meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
+  { path: '/Update/Contracts/:url', name: 'ContractsUpdate', component: getTenantPage('Contracts', 'update'), meta: { title: i18n.t('router.ContractsUpdate'), baseLink: 'Contracts' } },
   { path: '/Update/FieldSurvey/:url', name: 'FieldSurveyUpdate', component: FieldSurveyUpdate, meta: { title: i18n.t('router.FieldSurveyUpdate'), baseLink: 'FieldSurvey' } },
   { path: '/Update/FixedTerm/:url', name: 'FixedTermUpdate', component: FixedTermUpdate, meta: { title: i18n.t('router.FixedTermUpdate'), baseLink: 'FixedTerm' } },
   { path: '/Update/VanLoading/:url', name: 'VanLoadingUpdate', component: VanLoadingUpdate, meta: { title: i18n.t('router.VanLoadingUpdate'), baseLink: 'VanLoading' } },
@@ -673,7 +671,7 @@ const listInsert = [
   { path: '/Insert/StockAdjustment', name: 'StockAdjustmentInsert', component: StockAdjustmentInsert, meta: { title: i18n.t('router.StockAdjustmentInsert'), baseLink: 'StockAdjustment' } },
   { path: '/Insert/BranchStockTransfer', name: 'BranchStockTransferInsert', component: BranchStockTransferInsert, meta: { title: i18n.t('router.BranchStockTransferInsert'), baseLink: 'BranchStockTransfer' } },
   { path: '/Insert/Order', name: 'OrderInsert', component: getTenantPage('Order', 'insert'), meta: { title: i18n.t('router.OrderInsert'), baseLink: 'Order' } },
-  { path: '/Insert/Contracts', name: 'ContractsInsert', component: ContractsInsert, meta: { title: i18n.t('router.ContractsInsert'), baseLink: 'Contracts' } },
+  { path: '/Insert/Contracts', name: 'ContractsInsert', component: getTenantPage('Contracts', 'insert'), meta: { title: i18n.t('router.ContractsInsert'), baseLink: 'Contracts' } },
   { path: '/Insert/FieldSurvey', name: 'FieldSurveyInsert', component: FieldSurveyInsert, meta: { title: i18n.t('router.FieldSurveyInsert'), baseLink: 'FieldSurvey' } },
   { path: '/Insert/FixedTerm', name: 'FixedTermInsert', component: FixedTermInsert, meta: { title: i18n.t('router.FixedTermInsert'), baseLink: 'FixedTerm' } },
   { path: '/Insert/VanLoading', name: 'VanLoadingInsert', component: VanLoadingInsert, meta: { title: i18n.t('router.VanLoadingInsert'), baseLink: 'VanLoading' } },
