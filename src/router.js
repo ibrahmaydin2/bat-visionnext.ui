@@ -72,7 +72,6 @@ import BranchStockTransferInsert from '@/pages/BranchStockTransfer/insert'
 import OrderIndex from '@/pages/Order/'
 
 import ContractsIndex from '@/pages/Contracts/'
-import ContractsGet from '@/pages/Contracts/get'
 
 import FieldAnalysisResultIndex from '@/pages/FieldAnalysisResult/'
 import FieldAnalysisResultGet from '@/pages/FieldAnalysisResult/get'
@@ -513,7 +512,7 @@ const listGet = [
   { path: '/WarehouseStock/:url', name: 'WarehouseStockGet', component: WarehouseStockGet, meta: { title: i18n.t('router.WarehouseStockGet'), baseLink: 'WarehouseStock' } },
   { path: '/BranchStockTransfer/:url', name: 'BranchStockTransferGet', component: BranchStockTransferGet, meta: { title: i18n.t('router.BranchStockTransferGet'), baseLink: 'BranchStockTransfer' } },
   { path: '/Order/:url', name: 'OrderGet', component: getTenantPage('Order', 'get'), meta: { title: i18n.t('router.OrderGet'), baseLink: 'Order' } },
-  { path: '/Contracts/:url', name: 'ContractsGet', component: ContractsGet, meta: { title: i18n.t('router.ContractsGet'), baseLink: 'Contracts' } },
+  { path: '/Contracts/:url', name: 'ContractsGet', component: getTenantPage('Contracts', 'get'), meta: { title: i18n.t('router.ContractsGet'), baseLink: 'Contracts' } },
   { path: '/FieldAnalysisResult/:url', name: 'FieldAnalysisResultGet', component: FieldAnalysisResultGet, meta: { title: i18n.t('router.FieldAnalysisResultGet'), baseLink: 'FieldAnalysisResult' } },
   { path: '/ItemAnalysisResult/:url', name: 'ItemAnalysisResultGet', component: ItemAnalysisResultGet, meta: { title: i18n.t('router.ItemAnalysisResultGet'), baseLink: 'ItemAnalysisResult' } },
   { path: '/IntegrationDataPark/:url', name: 'IntegrationDataParkGet', component: IntegrationDataParkGet, meta: { title: i18n.t('router.IntegrationDataParkGet'), baseLink: 'IntegrationDataPark' } },

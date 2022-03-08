@@ -1029,7 +1029,7 @@ export default {
       routeName1: 'ContractManagement',
       routeName2: 'Contract',
       relatedCustomerItems: detailData.relatedCustomerItems,
-      assetItems: detailData.assetItems,
+      assetItems: detailData.assetItemsBAT,
       validDates: {
         contractStartDate: null,
         contractEndDate: null
