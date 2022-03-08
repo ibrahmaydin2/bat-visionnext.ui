@@ -223,7 +223,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
+import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
   data () {

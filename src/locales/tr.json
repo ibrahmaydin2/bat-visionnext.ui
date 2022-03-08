@@ -1835,6 +1835,8 @@
       "completeError": "Onaylandı durumundaki belge tekrar onaylanamaz."
     },
     "order": {
+      "SAASGenexp2": "Müşteri Sipariş No",
+      "ReferenceNumber": "Referans No",
       "title": "Sipariş Girişi",
       "enterProducts": "Ürün Girişi",
       "productCode": "Ürün Kodu",

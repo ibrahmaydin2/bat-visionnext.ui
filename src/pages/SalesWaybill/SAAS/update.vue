@@ -147,7 +147,7 @@
               <NextInput type="text" v-model="form.CustomerOrderNumber" :disabled="insertReadonly.CustomerOrderNumber"></NextInput>
             </NextFormGroup>
             <NextFormGroup item-key="IsDBS" :error="$v.form.IsDBS">
-              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDBS"/>
+              <NextCheckBox v-model="form.IsDBS" type="number" toggle :disabled="insertReadonly.IsDbs || !selectedCustomer"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsDBSOffline" :error="$v.form.IsDBSOffline">
               <NextCheckBox v-model="form.IsDBSOffline" type="number" toggle :disabled="insertReadonly.IsDBSOffline"/>
@@ -157,6 +157,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="isCanceled" :error="$v.form.isCanceled">
               <NextCheckBox v-model="form.isCanceled" type="number" toggle :disabled="insertReadonly.isCanceled"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="2" lg="2">
+              <NextDropdown v-model="bank" @input="selectedSearchType('BankId')" url="VisionNextBank/api/Bank/Search" :disabled="!form.IsDbs"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="ValidProduct" :error="$v.form.ValidProduct" md="2" lg="2">
+              <NextDropdown v-model="validProduct" url="" @input="selectedSearchType('ValidProduct', $event)" :disabled="insertReadonly.ValidProduct"></NextDropdown>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -339,7 +345,9 @@ export default {
         IsDBSOffline: null,
         ReferenceNumber: null,
         isCanceled: null,
-        CustomerOrderNumber: null
+        CustomerOrderNumber: null,
+        BankId: null,
+        ValidProduct: null
       },
       routeName1: 'Invoice',
       campaignFields: [
@@ -390,7 +398,9 @@ export default {
       priceListItems: [],
       stocks: [],
       invoicePaymentPlansItems: detailData.invoicePaymentPlansItems,
-      invoiceDiscountsItems: detailData.invoiceDiscountsItems
+      invoiceDiscountsItems: detailData.invoiceDiscountsItems,
+      bank: null,
+      validProduct: null
     }
   },
   mounted () {

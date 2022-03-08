@@ -993,8 +993,8 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
+import mixin from '../../../mixins/insert'
+import { detailData } from '../detailPanelData'
 export default {
   mixins: [mixin],
   data () {
