@@ -47,12 +47,12 @@
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
-                searchable
                 label="VehiclePlateNumber"
                 @input="selectedSearchType('VehicleId', $event)"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
                 :disabled="insertReadonly.VehicleId"
-                or-condition-fields="VehiclePlateNumber,Code"/>
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
               <NextDropdown
