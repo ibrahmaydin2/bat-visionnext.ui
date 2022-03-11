@@ -694,7 +694,8 @@
       "locationDetail": "Lokasyon Detayı",
       "BranchId": "Şube",
       "BranchName": "Şube Adı",
-      "WeeklyFrequency": "Haftalık Frekans"
+      "WeeklyFrequency": "Haftalık Frekans",
+      "vehicleStockErrorMessage": "The vehicle has products in stock. Record cannot be deactivated."
     },
     "vehicles": {
       "code": "Araç Kodu",

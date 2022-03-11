@@ -144,9 +144,9 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import updateMixin from '../../mixins/update'
-import { detailData } from './detailPanelData'
-import RouteLocationDetail from './RouteLocationDetail'
+import updateMixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
+import RouteLocationDetail from '../RouteLocationDetail'
 
 export default {
   mixins: [updateMixin],
