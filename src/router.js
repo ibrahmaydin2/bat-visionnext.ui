@@ -36,7 +36,6 @@ import LayoutUpdate from '@/pages/layout/update'
 import RouteIndex from '@/pages/Route/' // liste ekranı
 import RouteGet from '@/pages/Route/get' // fullpage görünümü
 import RouteInsert from '@/pages/Route/insert' // yeni kayıt
-import RouteUpdate from '@/pages/Route/update' // güncelleme
 
 import VehicleIndex from '@/pages/Vehicle/' // liste ekranı
 
@@ -570,7 +569,7 @@ const listGet = [
 ]
 
 const listUpdate = [
-  { path: '/Update/Route/:url', name: 'RouteUpdate', component: RouteUpdate, meta: { title: i18n.t('router.RouteUpdate'), baseLink: 'Route' } },
+  { path: '/Update/Route/:url', name: 'RouteUpdate', component: getTenantPage('Route', 'update'), meta: { title: i18n.t('router.RouteUpdate'), baseLink: 'Route' } },
   { path: '/Update/Vehicle/:url', name: 'VehicleUpdate', component: getTenantPage('Vehicle', 'update'), meta: { title: i18n.t('router.VehicleUpdate'), baseLink: 'Vehicle' } },
   { path: '/Update/Employee/:url', name: 'EmployeeUpdate', component: getTenantPage('Employee', 'update'), meta: { title: i18n.t('router.EmployeeUpdate'), baseLink: 'Employee' } },
   { path: '/Update/Item/:url', name: 'ItemUpdate', component: getTenantPage('Item', 'update'), meta: { title: i18n.t('router.ItemUpdate'), baseLink: 'Item' } },
