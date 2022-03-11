@@ -120,7 +120,9 @@
               <NextDropdown
                 v-model="selectedVehicle"
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" orConditionFields="Code,Description1" searchable
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
                 :disabled="insertReadonly.VehicleId || (form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0)" />
             </NextFormGroup>
           </b-row>

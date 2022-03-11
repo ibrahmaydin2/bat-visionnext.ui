@@ -128,7 +128,12 @@
               <NextDropdown @input="selectedSearchType('WarehouseId', $event)" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.WarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" searchable />
+              <NextDropdown
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
+                :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <NextDropdown

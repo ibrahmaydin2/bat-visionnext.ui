@@ -121,7 +121,12 @@
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0}" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable />
+              <NextDropdown
+                v-model="selectedVehicle"
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000" />
             </NextFormGroup>
           </b-row>
         </b-tab>

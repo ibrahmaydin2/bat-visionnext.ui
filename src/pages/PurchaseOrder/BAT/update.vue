@@ -107,11 +107,11 @@
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
               <NextDropdown
-                searchable
                 v-model="selectedVehicle"
                 @input="selectedSearchType('VehicleId', $event)"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
                 :disabled="insertReadonly.VehicleId" />
             </NextFormGroup>
             <NextFormGroup v-if="false" item-key="Canceled" :error="$v.form.Canceled" md="2" lg="2">
