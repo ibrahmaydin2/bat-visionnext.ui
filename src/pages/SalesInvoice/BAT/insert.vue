@@ -127,7 +127,12 @@
                 :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown @input="selectedSearchType('VehicleId', $event)" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" :disabled="insertReadonly.VehicleId" searchable />
+              <NextDropdown
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :disabled="insertReadonly.VehicleId"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000" />
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
               <NextDropdown

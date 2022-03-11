@@ -96,10 +96,10 @@
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="3" lg="3">
               <NextDropdown
                 v-model="selectedVehicle"
-                orConditionFields="Code,VehiclePlateNumber"
                 :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/Search" searchable
+                url="VisionNextVehicle/api/Vehicle/Search"
                 :disabled="(movementType && (movementType.Code === '10' || movementType.Code === '04' || movementType.Code === '05')) || isItemAdded || insertReadonly.VehicleId" />
             </NextFormGroup>
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" v-if="!(movementType && (movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '04'))" md="3" lg="3">
