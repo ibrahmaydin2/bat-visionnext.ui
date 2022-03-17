@@ -694,7 +694,8 @@
       "locationDetail": "Lokasyon Detayı",
       "BranchId": "Şube",
       "BranchName": "Şube Adı",
-      "WeeklyFrequency": "Haftalık Frekans"
+      "WeeklyFrequency": "Haftalık Frekans",
+      "vehicleStockErrorMessage": "Araç stoğunda ürün var. Kayıt pasife alınamaz."
     },
     "vehicles": {
       "code": "Araç Kodu",
