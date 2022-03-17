@@ -208,6 +208,7 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
+      disabled: true,
       id: 1
     },
     {
