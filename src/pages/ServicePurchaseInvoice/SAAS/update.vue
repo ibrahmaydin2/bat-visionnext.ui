@@ -99,7 +99,7 @@
                 v-model="selectedInvoiceType"
                 url="VisionNextInvoice/api/InvoiceType/Search"
                 @input="selectedSearchType('InvoiceTypeId', $event)"
-                :disabled="insertReadonly.InvoiceTypeId" />
+                />
             </NextFormGroup>
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId" md="2" lg="2">
               <NextDropdown
@@ -162,7 +162,7 @@
           <NextDetailPanel v-model="form.GrantProduct" :items="grantProductItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.order.TurnoverPremium')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'CP'">
-          <NextDetailPanel v-model="form.ContractEndorsementModels" :items="turnoverPremiumItems" />
+          <NextDetailPanel v-model="form.InvoiceEndorsements" :items="turnoverPremiumItems" />
         </b-tab>
         <b-tab lazy :title="$t('insert.order.ContractCash')" v-if="selectedInvoiceType && selectedInvoiceType.Code === 'NK'">
           <NextDetailPanel v-model="form.ContractCash" :items="contractCashItems" />
@@ -226,7 +226,11 @@ export default {
         InvoiceLines: [],
         InvoiceTypeId: null,
         InvoiceDiscounts: [],
-        AsEArchive: null
+        AsEArchive: null,
+        InvoiceEndorsements: [],
+        InvoiceRefDocuments: [],
+        InvoicePriceReds: [],
+        InvoiceContractPayments: []
       },
       routeName1: 'Invoice',
       itemFields: detailData.itemFields,
@@ -290,6 +294,18 @@ export default {
             item.RecordState = 3
             return item
           })
+        }
+        if (!rowData.InvoiceEndorsements) {
+          this.form.InvoiceEndorsements = []
+        }
+        if (!rowData.InvoiceRefDocuments) {
+          this.form.InvoiceRefDocuments = []
+        }
+        if (!rowData.InvoicePriceReds) {
+          this.form.InvoicePriceReds = []
+        }
+        if (!rowData.InvoiceContractPayments) {
+          this.form.InvoiceContractPayments = []
         }
       }
     },

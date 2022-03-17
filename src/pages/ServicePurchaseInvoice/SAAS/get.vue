@@ -134,7 +134,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.GrantProduct" :items="grantProductItems" />
+                <NextDetailPanel type="get" v-model="rowData.InvoiceRefDocuments" :items="grantProductItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -143,7 +143,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ContractEndorsementModels" :items="turnoverPremiumItems" />
+                <NextDetailPanel type="get" v-model="rowData.InvoiceEndorsements" :items="turnoverPremiumItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -152,7 +152,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ContractCash" :items="contractCashItems" />
+                <NextDetailPanel type="get" v-model="rowData.InvoiceContractPayments" :items="contractCashItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -161,7 +161,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ServiceInvoice" :items="serviceInvoiceItems" />
+                <NextDetailPanel type="get" v-model="rowData.InvoiceEndorsements" :items="serviceInvoiceItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -170,7 +170,7 @@
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
-                <NextDetailPanel type="get" v-model="rowData.ContractTempPriceRedModels" :items="tprItems" />
+                <NextDetailPanel type="get" v-model="rowData.InvoicePriceReds" :items="tprItems" />
               </b-card>
             </b-col>
           </b-row>
