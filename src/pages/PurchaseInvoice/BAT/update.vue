@@ -168,6 +168,12 @@
             </b-col>
           </b-row>
           <b-row>
+            <NextExportDetail
+              url="VisionNextInvoice/api/PurchaseInvoice/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="invoiceId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>

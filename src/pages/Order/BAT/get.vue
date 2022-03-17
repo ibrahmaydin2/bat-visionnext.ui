@@ -77,6 +77,12 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
+                <NextExportDetail
+                  url="VisionNextOrder/api/Order/ExcelExportItems"
+                  :record-id="rowData.RecordId"
+                  record-key="orderId"
+                  :file-name="$t('insert.order.enterProducts')">
+                </NextExportDetail>
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.order.product')}}</span></b-th>
