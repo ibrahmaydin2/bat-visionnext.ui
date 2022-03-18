@@ -47,18 +47,62 @@ export default {
   },
   data () {
     return {
-      selectedValue: null
+      selectedValue: null,
+      itemKey: null,
+      defaultValues: ['first', 'last', 'today', 'firsttoday', 'todaylast']
+    }
+  },
+  mounted () {
+    if (this.$parent && this.$parent.$parent && this.$parent.$parent.itemKey) {
+      this.itemKey = this.$parent.$parent.itemKey
+      this.setDefaultValue()
     }
   },
   methods: {
     input (value) {
       let val = this.dateConvertToISo(value)
       this.$emit('input', val)
+    },
+    setDefaultValue () {
+      let defaultValue = null
+
+      if (this.itemKey) {
+        defaultValue = this.insertDefaultValue[this.itemKey]
+      }
+
+      if (!defaultValue) { return }
+
+      let model = ''
+      let today = new Date()
+      let todayDate = new Date(today)
+      let firstDayOfMonth = new Date(todayDate.setDate(1))
+      let firstDate = new Date(firstDayOfMonth)
+      let nextMonth = new Date(firstDate.setMonth(firstDate.getMonth() + 1))
+      let lastDayOfMonth = new Date(nextMonth.setDate(0))
+      switch (defaultValue) {
+        case 'first':
+          model = this.dateConvertToISo(firstDayOfMonth)
+          break
+        case 'last':
+          model = this.dateConvertToISo(lastDayOfMonth)
+          break
+        case 'today':
+          model = this.dateConvertToISo(today)
+          break
+        case 'firsttoday':
+          model = this.dateConvertToISo(firstDayOfMonth)
+          break
+        case 'todaylast':
+          model = this.dateConvertToISo(lastDayOfMonth)
+          break
+      }
+
+      this.selectedValue = model
     }
   },
   watch: {
     selectedValue (newValue, oldValue) {
-      if (newValue !== oldValue) {
+      if (newValue !== oldValue && !this.defaultValues.includes(newValue)) {
         if (!this.range) {
           newValue = this.dateConvertToISo(newValue)
         }
@@ -67,7 +111,7 @@ export default {
     },
     value: {
       handler (newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if (newValue !== oldValue && !this.defaultValues.includes(newValue)) {
           if (!this.range && newValue && newValue.includes && !newValue.includes('Z')) {
             newValue = `${newValue}Z`
           }

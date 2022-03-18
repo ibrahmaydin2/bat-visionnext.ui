@@ -100,7 +100,12 @@
               <NextDropdown v-model="selectedCurrency" :disabled="insertReadonly.CurrencyId"  label="Description1" @input="selectedSearchType('CurrencyId', $event)" url="VisionNextSystem/api/SysCurrency/Search" />
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.VehicleId" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" :dynamic-and-condition="{ StatusIds: [1] }" searchable />
+              <NextDropdown
+                :disabled="insertReadonly.VehicleId"
+                @input="selectedSearchType('VehicleId', $event)"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId" md="2" lg="2">
               <NextDropdown
@@ -223,7 +228,7 @@
 <script>
 import { mapState } from 'vuex'
 import { required, minValue } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
+import insertMixin from '../../../mixins/insert'
 export default {
   mixins: [insertMixin],
   data () {

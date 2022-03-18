@@ -154,8 +154,9 @@
               <NextDropdown
                 v-model="selectedVehicle"
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
                 :disabled="insertReadonly.VehicleId"/>
             </NextFormGroup>
             <NextFormGroup item-key="PaymentTypeId" :error="$v.form.PaymentTypeId" md="2" lg="2">
@@ -228,6 +229,12 @@
             </b-col>
           </b-row>
           <b-row>
+            <NextExportDetail
+              url="VisionNextOrder/api/Order/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="orderId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>

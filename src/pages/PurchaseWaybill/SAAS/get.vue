@@ -51,6 +51,7 @@
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DocumentNumber, 'text', 'insert.order.belgeNo')"></div>
               <div v-html="getFormatDataByType(rowData.PrintedDispatchNumber, 'text', 'insert.order.printedDispatchNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.ReferenceNumber, 'text', 'insert.order.ReferenceNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Representative, 'object', 'insert.order.representative')"></div>
               <div v-html="getFormatDataByType(rowData.DeliveryRepresentative, 'object', 'insert.order.deliveryRepresentative')"></div>
               <div v-html="getFormatDataByType(rowData.Warehouse, 'object', 'insert.order.warehouse')"></div>
@@ -90,13 +91,45 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.order.discounts')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.order.discountName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountRate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.DiscountReasonId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.LoyaltyId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.ContractId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.SalesVolumeId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.order.discountAmount')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(o, i) in (rowData.InvoiceDiscounts)" :key="i">
+                      <b-td>{{o.DiscountClass ? o.DiscountClass.Label : ''}}</b-td>
+                      <b-td>{{o.DiscountClass ? o.DiscountClass.Code : ''}}</b-td>
+                      <b-td>{{o.DiscountPercent ? `% ${o.DiscountPercent}` : '-'}}</b-td>
+                      <b-td>{{o.DiscountReason ? o.DiscountReason.Label : ''}}</b-td>
+                      <b-td>{{o.LoyaltyId}}</b-td>
+                      <b-td>{{o.ContractId}}</b-td>
+                      <b-td>{{o.SalesVolumeId}}</b-td>
+                      <b-td>{{o.TotalDiscount}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   mixins: [mixin],
   props: ['dataKey'],

@@ -98,7 +98,14 @@
               <NextDropdown v-model="selectedWarehouse" @input="selectedSearchType('WarehouseId', $event)" label="Description1" :disabled="true" url="VisionNextWarehouse/api/Warehouse/Search" :dynamic-and-condition="{ IsVehicle: 1 }"/>
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId" md="2" lg="2">
-              <NextDropdown v-model="selectedVehicle" @input="selectedSearchType('VehicleId', $event)" label="Description1" url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" searchable :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
+              <NextDropdown
+                v-model="selectedVehicle"
+                @input="selectedSearchType('VehicleId', $event)"
+                label="Description1"
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
+                :disabled="form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0" />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
               <NextDropdown
@@ -124,6 +131,12 @@
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()">
           <b-row>
+            <NextExportDetail
+              url="VisionNextInvoice/api/PurchaseReturnWaybill/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="invoiceId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>

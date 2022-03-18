@@ -40,7 +40,7 @@ export default {
   mixins: [mixin],
   props: {
     value: {
-      type: Object,
+      type: Object | Array,
       default: () => {},
       description: 'v-model bilgisi'
     },

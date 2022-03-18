@@ -44,6 +44,12 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
+                <NextExportDetail
+                  url="VisionNextRma/api/Rma/ExcelExportItems"
+                  :record-id="rowData.RecordId"
+                  record-key="rmaId"
+                  :file-name="$t('get.RMA.Items')">
+                </NextExportDetail>
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>

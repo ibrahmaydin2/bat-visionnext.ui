@@ -174,6 +174,8 @@
                     <b-th><span>{{$t('insert.contract.branchSharePercent')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.itemFormula')}}</span></b-th>
                     <b-th><span>{{$t('insert.contract.currency')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.usedAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.quotaSalesQuantity')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in rowData.ContractPriceDiscounts" :key="i">
@@ -190,6 +192,8 @@
                       <b-td>{{c.BranchSharePercent}}</b-td>
                       <b-td>{{c.ItemFormula ? c.ItemFormula.Label : ''}}</b-td>
                       <b-td>{{c.Currency ? c.Currency.Label : ''}}</b-td>
+                      <b-td>{{c.GivenAmount}}</b-td>
+                      <b-td>{{c.QuotaSalesQuantity}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -465,7 +469,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mixin from '../../mixins/index'
+import mixin from '../../../mixins/index'
 export default {
   props: ['dataKey'],
   mixins: [mixin],

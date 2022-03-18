@@ -47,8 +47,7 @@
                 :customOption="true"
                 :is-vehicle="true"
                 :dynamic-and-condition="{ StatusIds: [1] }"
-                orConditionFields="Code,VehiclePlateNumber,Description1"
-                label="VehiclePlateNumber" :searchable="true"
+                :page-count="1000"
                 @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse" md="3" lg="3">

@@ -120,13 +120,21 @@
               <NextDropdown
                 v-model="selectedVehicle"
                 @input="selectedSearchType('VehicleId', $event)"
-                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch" orConditionFields="Code,Description1" searchable
+                url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
+                :page-count="1000"
                 :disabled="insertReadonly.VehicleId || (form.InvoiceLogisticCompanies && form.InvoiceLogisticCompanies.length > 0)" />
             </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.order.products')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && (selectedRefDocumentType.Code === 'WarehouseMovement' || selectedRefDocumentType.Code === 'VanLoading')">
           <b-row>
+            <NextExportDetail
+              url="VisionNextCommonApi/api/DispatchRefDocument/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="recordId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>

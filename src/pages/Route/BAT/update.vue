@@ -1,6 +1,9 @@
 <template>
   <b-row class="asc__insertPage">
     <RouteLocationDetail :detail="selectedLocation" :index="selectedLocationIndex" @save="setLocationDetail" />
+    <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
+      <NextLocation :Location='Location' />
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -38,6 +41,7 @@
             <NextFormGroup item-key="RepresentativeId" :error="$v.form.RepresentativeId">
               <NextDropdown
                 searchable
+                v-model="representative"
                 @input="selectedSearchType('RepresentativeId', $event)"
                 url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
                 orConditionFields="Code,Description1,Name,Surname"
@@ -47,26 +51,29 @@
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
+                v-model="vehicle"
                 label="VehiclePlateNumber"
                 @input="selectedSearchType('VehicleId', $event)"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
-                :disabled="insertReadonly.VehicleId"
+                :disabled="insertReadonly.VehicleId || vehicleHasStock"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :page-count="1000"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
               <NextDropdown
+                v-model="routeType"
                 @input="selectedSearchType('RouteTypeId', $event)"
                 url="VisionNextRoute/api/RouteType/Search"
                 :disabled="insertReadonly.RouteTypeId" />
             </NextFormGroup>
             <NextFormGroup item-key="VisitStartControlId" :error="$v.form.VisitStartControlId">
               <NextDropdown
+                v-model="visitStartControl"
                 @input="selectedType('VisitStartControlId', $event)"
                 lookup-key="VISIT_START_CONTROL"
                 :disabled="insertReadonly.VisitStartControlId" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
+            <NextFormGroup  :title="$t('insert.route.customerArea')" :required="!!showCustomerRegion" :error="$v.form.CustomerRegion5Id">
               <NextDropdown
                 v-model="CustomerRegion5Id"
                 @input="selectedLabelType('CustomerRegion5Id', $event)"
@@ -82,6 +89,7 @@
             </NextFormGroup>
             <NextFormGroup item-key="CityId" :error="$v.form.CityId">
               <NextDropdown
+                v-model="city"
                 @input="selectedCity"
                 lookup-key="CITY"
                 :disabled="insertReadonly.CityId" />
@@ -97,6 +105,7 @@
             <NextFormGroup item-key="ParishIds" :error="$v.form.ParishIds">
               <NextDropdown
                 multiple
+                v-model="parishes"
                 @input="selectedParish"
                 :source="avenues"
                 :disabled="insertReadonly.ParishIds"
@@ -111,13 +120,14 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">7
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection2
                   name="RouteMultipleCustomer"
                   v-model="form.RouteDetails"
                   :hidden-values="hiddenValues"
+                  :initial-values-func="initialValues"
                   :dynamic-required-filters="dynamicRequiredFilters"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
                   :change-branch-id="true"
@@ -134,12 +144,12 @@
 <script>
 import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import insertMixin from '../../mixins/insert'
-import { detailData } from './detailPanelData'
-import RouteLocationDetail from './RouteLocationDetail'
+import updateMixin from '../../../mixins/update'
+import { detailData } from '../detailPanelData'
+import RouteLocationDetail from '../RouteLocationDetail'
 
 export default {
-  mixins: [insertMixin],
+  mixins: [updateMixin],
   components: {
     RouteLocationDetail
   },
@@ -149,7 +159,7 @@ export default {
         VisitStartControlId: null,
         IsSuperRoute: null,
         DistrictId: null,
-        ParishIds: [],
+        ParishIds: null,
         Code: null,
         Description1: null,
         RepresentativeId: null,
@@ -157,7 +167,7 @@ export default {
         RouteTypeId: null,
         RouteClassId: null,
         RouteGroupId: null,
-        StatusId: 1,
+        StatusId: null,
         CustomerRegion5Id: null,
         MarketingRegion5Id: null,
         IsMultidayRoute: null,
@@ -173,6 +183,19 @@ export default {
       district: null,
       CustomerRegion5Id: null,
       MarketingRegion5Id: null,
+      parishes: [],
+      showCustomer: true,
+      representative: null,
+      vehicle: null,
+      routeClass: null,
+      routeGroup: null,
+      visitStartControl: null,
+      city: null,
+      parish: null,
+      routeType: null,
+      Location: {},
+      selectedLocation: null,
+      selectedLocationIndex: null,
       detailButtons: [
         {
           icon: 'fa fa-search',
@@ -183,10 +206,14 @@ export default {
               this.$bvModal.show('route-location-modal')
             })
           }
+        },
+        {
+          icon: 'fa fa-map-marker-alt text-primary mr-1',
+          getDetail: (data) => {
+            this.showMap(data)
+          }
         }
       ],
-      selectedLocation: null,
-      selectedLocationIndex: null,
       hiddenValues: [
         {
           mainProperty: 'RecordId',
@@ -224,16 +251,71 @@ export default {
           mainProperty: 'BranchId',
           required: () => this.form.IsSuperRoute === 1
         }
-      ]
+      ],
+      vehicleHasStock: false,
+      initialStatus: null,
+      initialVehicleId: null
     }
   },
   computed: {
     ...mapState(['distiricts'])
   },
   mounted () {
-    this.createManualCode()
+    this.getData().then(() => {
+      this.setData()
+    })
   },
   methods: {
+    async setData () {
+      const e = this.rowData
+      this.form = e
+      this.initialStatus = this.form.StatusId
+      this.initialVehicleId = this.form.VehicleId
+
+      this.form.RouteDetails = e.RouteDetails.map((item) => {
+        item.DayFrequency = item.Day1Frequency
+        item.CustomerCode = item.Customer ? item.Customer.Code : ''
+        return item
+      })
+      this.representative = this.convertLookupValueToSearchValue(e.Representative)
+      this.visitStartControl = e.VisitStartControl
+      this.CustomerRegion5Id = e.CustomerRegion5
+      this.MarketingRegion5Id = e.MarketingRegion5
+      if (e.Vehicle) {
+        this.vehicle = {
+          RecordId: e.Vehicle.DecimalValue,
+          VehiclePlateNumber: e.Vehicle.Label
+        }
+      }
+      if (e.City) {
+        this.city = e.City
+        this.selectedCity(e.City)
+      }
+      if (e.District) {
+        this.district = e.District
+        this.selectedDistirict(e.City)
+      }
+      if (e.Parish) {
+        this.parish = e.Parish
+      }
+      if (e.RouteType) {
+        this.routeType = this.convertLookupValueToSearchValue(e.RouteType)
+        if (e.RouteType.DecimalValue === 1 || e.RouteType.DecimalValue === 6) {
+          this.showCustomerRegion = true
+          this.showMarketingRegion = false
+        } else if (e.RouteType.DecimalValue === 5) {
+          this.showMarketingRegion = true
+          this.showCustomerRegion = false
+        } else {
+          this.showCustomerRegion = false
+          this.showMarketingRegion = false
+        }
+      }
+
+      if (this.form.VehicleId) {
+        this.vehicleHasStock = await this.checkVehicleStock()
+      }
+    },
     selectedCity (e) {
       if (e) {
         this.form.CityId = e.DecimalValue
@@ -241,8 +323,8 @@ export default {
       } else {
         this.form.CityId = null
         this.form.DistrictId = null
+        this.form.ParishIds = null
         this.district = null
-        this.avenues = []
       }
     },
     selectedDistirict (e) {
@@ -310,17 +392,13 @@ export default {
     selectedLabelType (label, model) {
       if (label === 'CustomerRegion5Id') {
         this.form.MarketingRegion5Id = null
-        this.CustomerRegion5Id = null
       } else {
         this.form.CustomerRegion5Id = null
-        this.MarketingRegion5Id = null
       }
       if (model) {
         this.form[label] = model.DecimalValue
-        this[label] = model.Label
       } else {
         this.form[label] = null
-        this[label] = null
       }
     },
     editForm (form) {
@@ -349,7 +427,31 @@ export default {
 
       return form
     },
-    save () {
+    showMap (item) {
+      this.$api.post({RecordId: item.LocationId}, 'Customer', 'CustomerLocation/Get').then((res) => {
+        this.Location = res.Model
+        if (res.Model) {
+          if (res.Model.XPosition == null || res.Model.YPosition == null) {
+            this.$toasted.show(this.$t('index.errorLocation'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          this.$nextTick(() => {
+            this.$root.$emit('bv::show::modal', 'location-modal', res.Model)
+          })
+        } else {
+          this.$toasted.show(this.$t('index.errorLocation'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
+    },
+    async save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -367,23 +469,88 @@ export default {
           })
           return
         }
-        this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
-        this.form.RouteDetails = this.form.RouteDetails.map(r => {
-          r.Code = null
-          r.Description1 = null
+        if (this.initialStatus === 1 && this.form.StatusId !== 1) {
+          const hasStock = await this.checkVehicleStock(this.form.VehicleId)
 
-          return r
+          if (hasStock) {
+            this.$toasted.show(this.$t('insert.route.vehicleStockErrorMessage'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'})
+            return
+          }
+        }
+
+        this.form.RouteDetails.map(item => {
+          delete item['Customer']
+          delete item['Location']
+          item.Code = null
+          item.Description1 = null
+
+          return item
         })
-        this.createData()
+        this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
+        this.updateData()
       }
     },
     setLocationDetail (model, index) {
+      if (model.RecordState === 1) {
+        model.RecordState = 3
+      }
       this.form.RouteDetails[index] = model
-    }
-  },
-  validations () {
-    return {
-      form: this.insertRules
+    },
+    initialValues: (values) => {
+      values.map(value => {
+        if (value.Location) {
+          value.DefaultLocation = value.Location
+        }
+        if (value.Customer) {
+          value.Code = value.Customer.Code
+          value.Description1 = value.Customer.Label
+        }
+        if (value.AddressDesc) {
+          value.AdressDetail = value.AddressDesc
+        }
+        value.SelectedRow = true
+        return value
+      })
+      return values
+    },
+    async checkVehicleStock (vehicleId) {
+      if (vehicleId === this.initialVehicleId) {
+        return this.vehicleHasStock
+      }
+
+      const recordId = !vehicleId ? this.form.VehicleId : vehicleId
+      const searchRequest = {
+        andConditionModel: {
+          VehicleIds: [recordId],
+          IsVehicle: 1
+        }
+      }
+      const searchResponse = await this.$api.postByUrl(searchRequest, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch').then(res => {
+        if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+          return res.ListModel.BaseModels[0]
+        }
+
+        return false
+      })
+
+      if (searchResponse) {
+        const stockRequest = {
+          andConditionModel: {
+            WarehouseIds: [searchResponse.RecordId]
+          }
+        }
+
+        return this.$api.postByUrl(stockRequest, 'VisionNextWarehouse/api/WarehouseStock/AutoCompleteSearch').then(res => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            return res.ListModel.BaseModels.some(r => r.Quantity > 0)
+          }
+        })
+      }
+
+      return false
     }
   }
 }
