@@ -46,6 +46,12 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
+              <NextExportDetail
+                url="VisionNextCommonApi/api/DispatchRefDocument/ExcelExportItems"
+                :record-id="rowData.RecordId"
+                record-key="recordId"
+                :file-name="$t('insert.order.enterProducts')">
+              </NextExportDetail>
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>

@@ -134,6 +134,12 @@
         </b-tab>
         <b-tab :title="$t('insert.order.enterProducts')" @click.prevent="tabValidation()" v-if="form.CustomerId > 0">
           <b-row>
+            <NextExportDetail
+              url="VisionNextInvoice/api/ServiceSalesInvoice/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="invoiceId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table
               :items="form.InvoiceLines"
               :fields="itemFields.filter(f => f.key !== 'operations')"
