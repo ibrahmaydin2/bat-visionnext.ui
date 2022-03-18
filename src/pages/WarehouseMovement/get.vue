@@ -38,6 +38,13 @@
               <div v-html="getFormatDataByType(rowData.ToStatus, 'object', 'insert.BranchStockTransfer.ToStatusId')"></div>
             </b-card>
             <b-card class="col-12 asc__showPage-card">
+              <NextExportDetail
+                v-if="rowData.WarehouseMovementItems && rowData.WarehouseMovementItems.length > 0"
+                url="VisionNextWarehouse/api/WarehouseMovement/ExcelExportItems"
+                :record-id="rowData.RecordId"
+                record-key="warehouseMovementId"
+                :file-name="$t('get.RMA.Items')">
+              </NextExportDetail>
               <b-table-simple responsive hover small>
                 <b-thead>
                   <b-th><span>{{$t('insert.BranchStockTransfer.ItemCode')}}</span></b-th>

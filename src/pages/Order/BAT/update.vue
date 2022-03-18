@@ -229,6 +229,12 @@
             </b-col>
           </b-row>
           <b-row>
+            <NextExportDetail
+              url="VisionNextOrder/api/Order/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="orderId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.product')}}</span></b-th>

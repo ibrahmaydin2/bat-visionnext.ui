@@ -127,6 +127,12 @@
           </b-row>
           <b-row>
             <b-col cols="12">
+              <NextExportDetail
+                url="VisionNextRma/api/RmaOrder/ExcelExportItems"
+                :record-id="form.RecordId"
+                record-key="rmaOrderId"
+                :file-name="$t('get.RMA.Items')">
+              </NextExportDetail>
               <b-table-simple responsive bordered small>
                 <b-thead>
                   <b-th><span>{{$t('insert.RMA.Item')}}</span></b-th>

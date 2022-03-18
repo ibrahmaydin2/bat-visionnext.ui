@@ -73,6 +73,12 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
+                <NextExportDetail
+                  url="VisionNextInvoice/api/ServicePurchaseInvoice/ExcelExportItems"
+                  :record-id="rowData.RecordId"
+                  record-key="invoiceId"
+                  :file-name="$t('insert.order.enterProducts')">
+                </NextExportDetail>
                 <b-table
                   :items="rowData.InvoiceLines"
                   :fields="itemFields.filter(f => f.key !== 'operations')"

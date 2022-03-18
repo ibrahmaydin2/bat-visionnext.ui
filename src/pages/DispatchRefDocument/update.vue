@@ -129,6 +129,12 @@
         </b-tab>
         <b-tab :title="$t('insert.order.products')" @click.prevent="tabValidation()" v-if="selectedRefDocumentType && (selectedRefDocumentType.Code === 'WarehouseMovement' || selectedRefDocumentType.Code === 'VanLoading')">
           <b-row>
+            <NextExportDetail
+              url="VisionNextCommonApi/api/DispatchRefDocument/ExcelExportItems"
+              :record-id="form.RecordId"
+              record-key="recordId"
+              :file-name="$t('insert.order.enterProducts')">
+            </NextExportDetail>
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.order.productCode')}}</span></b-th>
