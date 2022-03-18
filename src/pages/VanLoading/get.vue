@@ -29,6 +29,13 @@
             <b-col cols="12" md="12">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.loadingplan.items')}}</h6>
+                <NextExportDetail
+                  v-if="rowData.VanLoadingItems && rowData.VanLoadingItems.length > 0"
+                  url="VisionNextStockManagement/api/VanLoading/ExcelExportItems"
+                  :record-id="rowData.RecordId"
+                  record-key="vanLoadingId"
+                  :file-name="$t('insert.loadingplan.items')">
+                </NextExportDetail>
                 <b-table-simple responsive bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.vanLoading.items')}}</span></b-th>

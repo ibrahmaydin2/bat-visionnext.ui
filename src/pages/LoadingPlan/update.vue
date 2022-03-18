@@ -74,6 +74,13 @@
           </b-row>
           <b-row>
             <b-col cols="12">
+              <NextExportDetail
+                v-if="form.LoadingPlanItems && form.LoadingPlanItems.length > 0"
+                url="VisionNextStockManagement/api/LoadingPlan/ExcelExportItems"
+                :record-id="form.RecordId"
+                record-key="loadingPlanId"
+                :file-name="$t('insert.loadingplan.items')">
+              </NextExportDetail>
               <b-table-simple responsive bordered small>
                 <b-thead>
                   <b-th><span>{{$t('insert.loadingplan.items')}}</span></b-th>
