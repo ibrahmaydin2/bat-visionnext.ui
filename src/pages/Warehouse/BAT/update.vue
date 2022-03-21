@@ -142,6 +142,7 @@ export default {
           this.form.DistrictId = this.address.DistrictId
           this.form.AddressDetail = this.address.Address
         }
+        this.form.StatusId = this.form.StatusId === 1 ? 1 : 2
         this.updateData()
       }
     },
