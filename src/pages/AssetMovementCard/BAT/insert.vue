@@ -48,7 +48,7 @@
                 :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
-                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? {System: 1} : {}"
+                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? { System: 1, StatusIds : [1] } : { StatusIds : [1] }"
                 :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
                 :is-custom-slot="true"
                 :custom-option="true"
@@ -78,7 +78,7 @@
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
                 :is-custom-slot="true"
                 :custom-option="true"
-                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ADF' ? {StatusIds: [1]} : {}"
+                :dynamic-and-condition="{ StatusIds : [1] }"
                 :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
                 or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">>
                   <template v-slot:option="{option}">
