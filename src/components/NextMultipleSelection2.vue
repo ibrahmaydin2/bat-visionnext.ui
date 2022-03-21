@@ -613,7 +613,6 @@ export default {
       })
     },
     addItems () {
-      debugger
       let isError = false
       let selectedList = this.list.filter(l => l.SelectedRow)
       if (this.validations.length > 0) {
