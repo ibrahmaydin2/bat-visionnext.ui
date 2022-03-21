@@ -513,11 +513,11 @@ export default {
     },
     show () {
       this.$v.form.$reset()
-      this.pageSelectedList = [...this.value]
+      this.pageSelectedList = JSON.parse(JSON.stringify(this.value.filter(v => v.RecordState !== 4)))
       if (this.initialValuesFunc) {
         this.pageSelectedList = this.initialValuesFunc(this.pageSelectedList)
       }
-      this.list = [...this.pageSelectedList]
+      this.list = JSON.parse(JSON.stringify(this.pageSelectedList))
       if (this.dynamicRequiredFilters.length > 0) {
         this.dynamicRequiredFilters.map(d => {
           this.dynamicValidations[d.mainProperty] = d.required()
@@ -613,6 +613,7 @@ export default {
       })
     },
     addItems () {
+      debugger
       let isError = false
       let selectedList = this.list.filter(l => l.SelectedRow)
       if (this.validations.length > 0) {
