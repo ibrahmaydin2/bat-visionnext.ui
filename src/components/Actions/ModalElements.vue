@@ -73,8 +73,14 @@
       <b-button size="md" variant="warning" @click="closeModal">
         {{$t('header.cancel')}}
       </b-button>
-      <b-button v-for="(action, i) in formActions" :key="i" size="md" :variant="action.Action === 'Approve' ? 'success': 'danger'" @click="save(action)">
-        {{action.Title}}
+      <b-button
+        v-for="(action, i) in formActions"
+        :key="i" size="md"
+        :variant="action.Action === 'Approve' ? 'success': 'danger'"
+        @click="save(action, i)"
+        :disabled="loadings[i]">
+        <span v-if="loadings[i]"><b-spinner small></b-spinner> {{action.Title}}</span>
+        <span v-else>{{action.Title}}</span>
       </b-button>
     </div>
   </b-container>
@@ -92,7 +98,9 @@ export default {
       autoLookups: '',
       insertRules: [],
       formActions: [],
-      selectedElement: null
+      selectedElement: null,
+      loadings: [],
+      dateDefaultValues: ['first', 'last', 'today', 'firsttoday', 'todaylast']
     }
   },
   validations () {
@@ -119,7 +127,13 @@ export default {
       this.formActions = res.RowActions
       this.formElements.map(item => {
         const fieldName = item.EntityProperty
-        this.$set(this.form, fieldName, item.DefaultValue)
+
+        if (item.ColumnType === 'DateTime' && item.DefaultValue && this.dateDefaultValues.includes(item.DefaultValue.toLowerCase())) {
+          this.$set(this.form, fieldName, this.setDateDefaultValue(item.DefaultValue.toLowerCase()))
+        } else {
+          this.$set(this.form, fieldName, item.DefaultValue)
+        }
+
         if (item.Visible) {
           this.insertRules[fieldName] = item.Required === true ? { required } : { not }
         }
@@ -203,7 +217,7 @@ export default {
         this.form[label] = null
       }
     },
-    save (action) {
+    save (action, index) {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -216,6 +230,9 @@ export default {
           model: this.form,
           RecordIds: this.recordId
         }
+        this.loadings[index] = true
+        this.$store.commit('setDisabledLoading', true)
+        this.$forceUpdate()
         this.$api.postByUrl(model, action.ActionUrl).then(res => {
           if (res && res.IsCompleted === true) {
             this.$toasted.show(this.$t('insert.success'), {
@@ -236,6 +253,10 @@ export default {
               duration: '3000'
             })
           }
+        }).finally(() => {
+          this.loadings[index] = false
+          this.$store.commit('setDisabledLoading', false)
+          this.$forceUpdate()
         })
       }
     },
@@ -249,6 +270,36 @@ export default {
     closeModal () {
       this.$root.$emit('bv::hide::modal', 'confirmModal')
       this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
+    },
+    setDateDefaultValue (defaultValue) {
+      if (!defaultValue) { return }
+
+      let model = ''
+      let today = new Date()
+      let todayDate = new Date(today)
+      let firstDayOfMonth = new Date(todayDate.setDate(1))
+      let firstDate = new Date(firstDayOfMonth)
+      let nextMonth = new Date(firstDate.setMonth(firstDate.getMonth() + 1))
+      let lastDayOfMonth = new Date(nextMonth.setDate(0))
+      switch (defaultValue) {
+        case 'first':
+          model = this.dateConvertToISo(firstDayOfMonth)
+          break
+        case 'last':
+          model = this.dateConvertToISo(lastDayOfMonth)
+          break
+        case 'today':
+          model = this.dateConvertToISo(today)
+          break
+        case 'firsttoday':
+          model = this.dateConvertToISo(firstDayOfMonth)
+          break
+        case 'todaylast':
+          model = this.dateConvertToISo(lastDayOfMonth)
+          break
+      }
+
+      return model
     }
   }
 }
