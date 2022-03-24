@@ -106,8 +106,6 @@ import SalesReturnInvoiceUpdate from '@/pages/SalesReturnInvoice/update'
 
 import ServiceSalesInvoiceIndex from '@/pages/ServiceSalesInvoice/'
 
-import SalesInvoiceIndex from '@/pages/SalesInvoice/'
-
 import PurchaseOrderIndex from '@/pages/PurchaseOrder/'
 
 import PurchaseInvoiceIndex from '@/pages/PurchaseInvoice/'
@@ -404,7 +402,7 @@ const listIndex = [
   {path: '/PurchaseReturnInvoice', name: 'PurchaseReturnInvoice', component: PurchaseReturnInvoiceIndex, meta: { title: i18n.t('router.PurchaseReturnInvoice'), keepAlive: true }},
   {path: '/SalesReturnInvoice', name: 'SalesReturnInvoice', component: SalesReturnInvoiceIndex, meta: { title: i18n.t('router.SalesReturnInvoice'), createLink: 'SalesReturnInvoiceInsert', keepAlive: true }},
   {path: '/ServiceSalesInvoice', name: 'ServiceSalesInvoice', component: ServiceSalesInvoiceIndex, meta: { title: i18n.t('router.ServiceSalesInvoice'), createLink: 'ServiceSalesInvoiceInsert', keepAlive: true }},
-  {path: '/SalesInvoice', name: 'SalesInvoice', component: SalesInvoiceIndex, meta: { title: i18n.t('router.SalesInvoice'), createLink: 'SalesInvoiceInsert', keepAlive: true }},
+  {path: '/SalesInvoice', name: 'SalesInvoice', component: getTenantPage('SalesInvoice', 'index'), meta: { title: i18n.t('router.SalesInvoice'), createLink: 'SalesInvoiceInsert', keepAlive: true }},
   {path: '/PurchaseOrder', name: 'PurchaseOrder', component: PurchaseOrderIndex, meta: { title: i18n.t('router.PurchaseOrder'), createLink: 'PurchaseOrderInsert', keepAlive: true }},
   {path: '/PurchaseInvoice', name: 'PurchaseInvoice', component: PurchaseInvoiceIndex, meta: { title: i18n.t('router.PurchaseInvoice'), createLink: 'PurchaseInvoiceInsert', keepAlive: true }},
   {path: '/Discount', name: 'Discount', component: DiscountIndex, meta: { title: i18n.t('router.Discount'), createLink: 'DiscountInsert', keepAlive: true }},

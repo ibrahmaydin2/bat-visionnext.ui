@@ -244,7 +244,7 @@
     <b-modal id="location-modal" ref="LocationModal" hide-footer hide-header>
       <NextLocation v-if='showLocationModal' :Location="modalItem"/>
     </b-modal>
-    <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <ConfirmModal v-if="showConfirmModal" :modalAction="modalAction" :modalItem="modalItem" :after-action="afterAction" />
     <CustomConvertModal v-if="showCustomConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <OrderConvertModal v-if="showConvertModal" :openModal="showConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
     <SalesWaybillConvertModal v-if="showWaybillConvertModal" :modalAction="modalAction" :modalItem="modalItem" />
@@ -334,6 +334,11 @@ export default {
       type: Object,
       default: null,
       description: 'Listeleme için andCondition bilgisi'
+    },
+    afterActions: {
+      type: Array,
+      default: () => [],
+      description: 'Ortak actionların ardından çağrılacak action listesi'
     }
   },
   mixins: [mixin],
@@ -396,7 +401,8 @@ export default {
       showCommonInfoModal: false,
       showCreditBulkBudgetModal: false,
       sortableColumns: {},
-      mobileDragDisabled: false
+      mobileDragDisabled: false,
+      afterAction: null
     }
   },
   mounted () {
@@ -579,6 +585,9 @@ export default {
           this.$root.$emit('bv::show::modal', 'credit-budget-bulk-approve-modal')
         })
       } else {
+        let findedAction = this.afterActions.find(a => a.action === action.Action)
+        this.afterAction = findedAction ? findedAction.actionMethod : null
+
         this.showConfirmModal = true
         this.$nextTick(() => {
           this.$root.$emit('bv::show::modal', 'confirmModal')
