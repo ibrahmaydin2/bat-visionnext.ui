@@ -164,7 +164,8 @@
                     searchable
                     :custom-option="true"
                     @input="selectItem($event)"
-                    :search="searchItems"/>
+                    :search="searchItems"
+                    :disabled="!form.WarehouseId || form.WarehouseId === 0"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)" min="1"></NextInput>
@@ -468,7 +469,6 @@ export default {
       selectedInvoiceKind: null,
       priceList: [],
       items: [],
-      priceListItems: [],
       stocks: [],
       salesWaybillCopy: false
     }
@@ -594,30 +594,32 @@ export default {
       if (!this.selectedPrice || !this.selectedPrice.RecordId || !this.selectedInvoiceLine.selectedItem) {
         return false
       }
-      let model = {
+
+      let request = {
         andConditionModel: {
-          PriceListIds: [this.selectedPrice.RecordId],
+          WarehouseIds: [this.form.WarehouseId],
+          PriceListIds: [this.form.PriceListId],
+          CustomerIds: [this.form.CustomerId],
+          CurrencyIds: [1],
+          StatusIds: [1],
           ItemIds: [this.selectedInvoiceLine.selectedItem.RecordId]
         }
       }
-      var me = this
-      me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
-        if (response && response.ListModel) {
-          me.priceListItems = response.ListModel.BaseModels
-        }
-        if (me.priceListItems && me.priceListItems.length > 0) {
-          me.priceListItem = me.priceListItems[0]
-          if (me.priceListItem.UseConsumerPrice === 1) {
-            me.selectedInvoiceLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
-          } else {
-            me.selectedInvoiceLine.price = this.roundNumber(me.priceListItem.SalesPrice)
-          }
+
+      this.$api.postByUrl(request, 'VisionNextItem/api/Item/SearchWithPriceStock').then((response) => {
+        let priceListItems = response && response.ListModel ? response.ListModel.BaseModels : []
+
+        if (priceListItems && priceListItems.length > 0) {
+          this.priceListItem = priceListItems[0]
+          this.selectedInvoiceLine.vatRate = this.priceListItem.VatRate
+          this.selectedInvoiceLine.price = this.roundNumber(this.priceListItem.Price)
         } else {
-          me.priceListItem = null
-          me.selectedInvoiceLine.price = null
-          me.selectedInvoiceLine.grossTotal = null
-          me.selectedInvoiceLine.netTotal = null
-          me.$toasted.show(this.$t('insert.order.noPriceException'), {
+          this.priceListItem = null
+          this.selectedInvoiceLine.price = null
+          this.selectedInvoiceLine.grossTotal = null
+          this.selectedInvoiceLine.netTotal = null
+          this.selectedInvoiceLine.vatRate = null
+          this.$toasted.show(this.$t('insert.order.noPriceException'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
@@ -626,7 +628,10 @@ export default {
         this.setTotalPrice()
       })
     },
-    selectItem () {
+    selectItem (value) {
+      if (value) {
+        this.selectedInvoiceLine.selectedItem = value
+      }
       this.searchPriceListItem()
       this.setStock()
     },
@@ -634,7 +639,7 @@ export default {
       if (!this.selectedInvoiceLine.quantity || !this.selectedInvoiceLine.selectedItem || !this.selectedInvoiceLine.price) {
         return false
       }
-      let vatRate = this.selectedInvoiceLine.selectedItem.Vat
+      let vatRate = this.priceListItem.VatRate
       this.selectedInvoiceLine.vatRate = vatRate
       this.selectedInvoiceLine.grossTotal = this.roundNumber(this.selectedInvoiceLine.price * this.selectedInvoiceLine.quantity)
       this.selectedInvoiceLine.totalVat = this.roundNumber(this.selectedInvoiceLine.grossTotal * vatRate / 100)

@@ -240,16 +240,17 @@ export default {
         this.$forceUpdate()
         this.$api.postByUrl(model, action.ActionUrl).then(res => {
           if (res && res.IsCompleted === true) {
-            this.$toasted.show(this.$t('insert.success'), {
-              type: 'success',
-              keepOnHover: true,
-              duration: '3000'
-            })
             this.$root.$emit('bv::hide::modal', 'confirmModal')
             this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
+
             if (this.afterAction) {
               this.afterAction(this.recordId, this.form)
             } else {
+              this.$toasted.show(this.$t('insert.success'), {
+                type: 'success',
+                keepOnHover: true,
+                duration: '3000'
+              })
               setTimeout(() => {
                 this.$store.commit('setReloadGrid', true)
               }, 1000)
