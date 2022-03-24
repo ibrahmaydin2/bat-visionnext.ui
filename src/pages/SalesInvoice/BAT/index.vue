@@ -23,7 +23,8 @@ export default {
       afterActions: null,
       cashCardId: null,
       message: null,
-      loading: null
+      loading: null,
+      model: null
     }
   },
   mounted () {
@@ -35,7 +36,8 @@ export default {
     ]
   },
   methods: {
-    cashCardIsCancel (invoiceId) {
+    cashCardIsCancel (invoiceId, model) {
+      this.model = model
       let id = invoiceId.length > 0 ? invoiceId[0] : invoiceId
       this.$api.postByUrl({invoiceId: id}, 'VisionNextInvoice/api/SalesInvoice/IsCancelCashCard').then(res => {
         if (res.IsMessage & !res.IsConfirm) {
@@ -60,7 +62,8 @@ export default {
     },
     cashCardCancel () {
       let request = {
-        recordIds: [this.cashCardId]
+        recordIds: [this.cashCardId],
+        model: this.model
       }
       this.loading = true
       this.$api.postByUrl(request, 'VisionNextFinance/api/CashCard/Cancel').then(res => {

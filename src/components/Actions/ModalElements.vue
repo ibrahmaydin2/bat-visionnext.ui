@@ -248,7 +248,7 @@ export default {
             this.$root.$emit('bv::hide::modal', 'confirmModal')
             this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
             if (this.afterAction) {
-              this.afterAction(this.recordId)
+              this.afterAction(this.recordId, this.form)
             } else {
               setTimeout(() => {
                 this.$store.commit('setReloadGrid', true)
