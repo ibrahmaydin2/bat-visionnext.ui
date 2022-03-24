@@ -46,7 +46,7 @@ export default {
           })
         } else if (res.IsMessage & res.IsConfirm) {
           this.cashCardId = res.CachCardId
-          this.message = res.message
+          this.message = res.Message
           this.$bvModal.show('cancelCashCardModal')
         } else {
           this.refreshGrid()
