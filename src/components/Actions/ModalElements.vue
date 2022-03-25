@@ -164,6 +164,11 @@ export default {
     recordId: {
       type: Array,
       description: 'Seçilen listenin RecordId bilgileri'
+    },
+    afterAction: {
+      type: Function,
+      default: null,
+      description: 'Ortak actionların ardından çağrılacak action'
     }
   },
   methods: {
@@ -235,16 +240,21 @@ export default {
         this.$forceUpdate()
         this.$api.postByUrl(model, action.ActionUrl).then(res => {
           if (res && res.IsCompleted === true) {
-            this.$toasted.show(this.$t('insert.success'), {
-              type: 'success',
-              keepOnHover: true,
-              duration: '3000'
-            })
             this.$root.$emit('bv::hide::modal', 'confirmModal')
             this.$root.$emit('bv::hide::modal', 'multipleConfirmModal')
-            setTimeout(() => {
-              this.$store.commit('setReloadGrid', true)
-            }, 1000)
+
+            if (this.afterAction) {
+              this.afterAction(this.recordId, this.form)
+            } else {
+              this.$toasted.show(this.$t('insert.success'), {
+                type: 'success',
+                keepOnHover: true,
+                duration: '3000'
+              })
+              setTimeout(() => {
+                this.$store.commit('setReloadGrid', true)
+              }, 1000)
+            }
           }
           if (res.IsCompleted === false) {
             this.$toasted.show(this.$t(res.Message), {

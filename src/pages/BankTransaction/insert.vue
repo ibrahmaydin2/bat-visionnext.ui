@@ -37,6 +37,27 @@
       <b-tabs>
         <b-tab :title="$t('insert.detail')" active>
           <b-row>
+            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="6" lg="6">
+              <NextDropdown
+                @input="selectedSearchType('CustomerId', $event)"
+                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                :searchable="true" :custom-option="true"
+                or-condition-fields="Code,Description1,CommercialTitle"
+                :is-customer="true"
+                :disabled="insertReadonly.CustomerId"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="3" lg="3">
+              <NextDropdown
+                @input="selectedSearchType('CurrencyId', $event)"
+                url="VisionNextSystem/api/SysCurrency/Search"
+                :disabled="insertReadonly.CurrencyId"/>
+            </NextFormGroup>
+            <NextFormGroup item-key="TransactionTypeId" :error="$v.form.TransactionTypeId" md="3" lg="3">
+              <NextDropdown
+                @input="selectedSearchType('TransactionTypeId', $event)"
+                url="VisionNextBank/api/BankTransactionType/Search"
+                :disabled="insertReadonly.TransactionTypeId"/>
+            </NextFormGroup>
             <NextFormGroup item-key="BankId" :error="$v.form.BankId" md="3" lg="3">
               <NextDropdown
                 @input="getBranchs($event, 'BankId', 'bankBranch', 'bankBranches')"
@@ -52,14 +73,8 @@
             <NextFormGroup item-key="BankAccountNumber" :error="$v.form.BankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.BankAccountNumber" type="text" :disabled="insertReadonly.BankAccountNumber" />
             </NextFormGroup>
-            <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="3" lg="3">
-              <NextDropdown
-                @input="selectedSearchType('CustomerId', $event)"
-                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
-                :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
-                :is-customer="true"
-                :disabled="insertReadonly.CustomerId"/>
+            <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="3" lg="3">
+              <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankId" :error="$v.form.CustomerBankId" md="3" lg="3">
               <NextDropdown
@@ -76,21 +91,6 @@
             </NextFormGroup>
             <NextFormGroup item-key="CustomerBankAccountNumber" :error="$v.form.CustomerBankAccountNumber" md="3" lg="3">
               <NextInput v-model="form.CustomerBankAccountNumber" type="text" :disabled="insertReadonly.CustomerBankAccountNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="DocumentNumber" :error="$v.form.DocumentNumber" md="3" lg="3">
-              <NextInput v-model="form.DocumentNumber" type="text" :disabled="insertReadonly.DocumentNumber" />
-            </NextFormGroup>
-            <NextFormGroup item-key="CurrencyId" :error="$v.form.CurrencyId" md="3" lg="3">
-              <NextDropdown
-                @input="selectedSearchType('CurrencyId', $event)"
-                url="VisionNextSystem/api/SysCurrency/Search"
-                :disabled="insertReadonly.CurrencyId"/>
-            </NextFormGroup>
-            <NextFormGroup item-key="TransactionTypeId" :error="$v.form.TransactionTypeId" md="3" lg="3">
-              <NextDropdown
-                @input="selectedSearchType('TransactionTypeId', $event)"
-                url="VisionNextBank/api/BankTransactionType/Search"
-                :disabled="insertReadonly.TransactionTypeId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TransactionTotal" :error="$v.form.TransactionTotal" md="3" lg="3">
               <NextInput v-model="form.TransactionTotal" type="number" @keypress="onlyForCurrencyDotOrComma($event)" min=1 :disabled="insertReadonly.TransactionTotal" />

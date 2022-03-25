@@ -7,7 +7,7 @@
         </b-col>
       </b-row>
     </b-container>
-    <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" />
+    <ModalElements :actionUrl="modalAction.ActionUrl" :recordId="[modalItem.RecordId]" :after-action="afterAction" />
   </b-modal>
 </template>
 <script>
@@ -29,6 +29,11 @@ export default {
       type: Object,
       default: () => {},
       description: 'Listeden seçilen eleman bilgisi'
+    },
+    afterAction: {
+      type: Function,
+      default: null,
+      description: 'Ortak actionların ardından çağrılacak action'
     }
   },
   computed: {
