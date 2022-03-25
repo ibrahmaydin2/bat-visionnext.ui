@@ -47,7 +47,7 @@ export default {
       descripton: 'inputun css class bilgisi'
     },
     minLength: {
-      type: String,
+      type: String | Number,
       default: '',
       descripton: 'inputun minLength bilgisi'
     },
