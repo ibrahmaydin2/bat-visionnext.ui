@@ -481,7 +481,6 @@ export default {
       selectedState: null,
       priceList: [],
       items: [],
-      priceListItems: [],
       stocks: [],
       disabledItems: false,
       selectedBranch: {}
@@ -587,31 +586,32 @@ export default {
       if (!this.selectedPrice || !this.selectedPrice.RecordId || !this.selectedOrderLine.selectedItem) {
         return false
       }
-      let model = {
+
+      let request = {
         andConditionModel: {
-          PriceListIds: [this.selectedPrice.RecordId],
+          WarehouseIds: [this.form.WarehouseId],
+          PriceListIds: [this.form.PriceListId],
+          CustomerIds: [this.form.CustomerId],
+          CurrencyIds: [1],
+          StatusIds: [1],
           ItemIds: [this.selectedOrderLine.selectedItem.RecordId]
         }
       }
-      var me = this
-      me.$api.postByUrl(model, 'VisionNextFinance/api/PriceListItem/Search').then((response) => {
-        if (response && response.ListModel) {
-          me.priceListItems = response.ListModel.BaseModels
-        }
-        if (me.priceListItems && me.priceListItems.length > 0) {
-          me.priceListItem = me.priceListItems[0]
-          me.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? me.priceListItem.Vat : 0
-          if (me.priceListItem.UseConsumerPrice === 1) {
-            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.ConsumerPrice)
-          } else {
-            me.selectedOrderLine.price = this.roundNumber(me.priceListItem.SalesPrice)
-          }
+
+      this.$api.postByUrl(request, 'VisionNextItem/api/Item/SearchWithPriceStock').then((response) => {
+        let priceListItems = response && response.ListModel ? response.ListModel.BaseModels : []
+
+        if (priceListItems && priceListItems.length > 0) {
+          this.priceListItem = priceListItems[0]
+          this.selectedOrderLine.vatRate = this.priceListItem.VatRate
+          this.selectedOrderLine.price = this.roundNumber(this.priceListItem.Price)
         } else {
-          me.priceListItem = null
-          me.selectedOrderLine.price = null
-          me.selectedOrderLine.grossTotal = null
-          me.selectedOrderLine.netTotal = null
-          me.$toasted.show(this.$t('insert.order.noPriceException'), {
+          this.priceListItem = null
+          this.selectedOrderLine.price = null
+          this.selectedOrderLine.grossTotal = null
+          this.selectedOrderLine.netTotal = null
+          this.selectedOrderLine.vatRate = null
+          this.$toasted.show(this.$t('insert.order.noPriceException'), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
@@ -635,7 +635,7 @@ export default {
       if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price) {
         return false
       }
-      let vatRate = this.selectedOrderLine.selectedItem.Vat
+      let vatRate = this.priceListItem.VatRate
       this.selectedOrderLine.vatRate = vatRate
       this.selectedOrderLine.grossTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
       this.selectedOrderLine.vatTotal = this.roundNumber(this.selectedOrderLine.grossTotal * vatRate / 100)
