@@ -48,11 +48,11 @@
                 :disabled="assetMovementType && assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
-                :dynamic-and-condition="assetMovementType && assetMovementType.Code === 'ASR' ? { System: 1, StatusIds : [1] } : { StatusIds : [1] }"
-                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
+                :dynamic-and-condition="locationAndCondition"
+                :dynamic-or-conditions="locationOrConditions"
                 :is-custom-slot="true"
                 :custom-option="true"
-                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">
+                or-condition-fields="Description1,CustomerDesc,CustomerCode">
                 <template v-slot:option="{option}">
                    <table class="bordered-table">
                      <tr>
@@ -78,9 +78,9 @@
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
                 :is-custom-slot="true"
                 :custom-option="true"
-                :dynamic-and-condition="{ StatusIds : [1] }"
-                :dynamic-or-conditions="assetMovementType && (assetMovementType.Code === 'STS' || assetMovementType.Code === 'ADF' || assetMovementType.Code === 'TRA') ? [{System:1, IsVehicleLocation: 1}] : []"
-                or-condition-fields="Description1,CustomerDesc,CustomerCode,CustomerCommercialTitle">>
+                :dynamic-and-condition="locationAndCondition"
+                :dynamic-or-conditions="locationOrConditions"
+                or-condition-fields="Description1,CustomerDesc,CustomerCode">>
                   <template v-slot:option="{option}">
                    <table class="bordered-table">
                       <tr>
@@ -271,6 +271,25 @@ export default {
       }
 
       return {}
+    },
+    locationOrConditions () {
+      return this.assetMovementType && this.assetMovementType.Code === 'ASR'
+        ? []
+        : [{
+          IsDefaultLocation: 1,
+          IsVehicleLocation: 1,
+          IsWarehouseLocation: 1
+        },
+        {
+          System: 1,
+          IsWarehouseLocation: 1,
+          IsVehicleLocation: 1
+        }]
+    },
+    locationAndCondition () {
+      return this.assetMovementType && this.assetMovementType.Code === 'ASR'
+        ? { StatusIds: [1], System: 1, IsDefaultLocation: 1 }
+        : { StatusIds: [1] }
     }
   },
   methods: {

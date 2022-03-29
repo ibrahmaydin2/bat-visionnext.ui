@@ -74,6 +74,7 @@
       </b-row>
       <b-row>
         <b-table
+          :id="id"
           :ref="`multipleGrid${id}`"
           class="multiple-selection-grid"
           :fields="fields"
@@ -82,7 +83,7 @@
           sticky-header="60vh"
           responsive
           :current-page="currentPage"
-          :per-page="0"
+          :per-page="perPage"
           :tbody-tr-class="tbodyTrClass"
           :busy="tableBusy">
           <template #table-busy>
@@ -295,7 +296,8 @@ export default {
       selectModel: {},
       dynamicValidations: {},
       summary: {},
-      listSearched: false
+      listSearched: false,
+      perPage: 0
     }
   },
   methods: {
@@ -458,6 +460,7 @@ export default {
 
       this.$store.commit('setDisabledLoading', true)
       this.tableBusy = true
+      this.perPage = 0
       this.$api.postByUrl(request, this.action.ActionUrl, this.recordCount).then((response) => {
         this.isLoading = false
         this.$store.commit('setDisabledLoading', false)
@@ -513,6 +516,7 @@ export default {
     },
     show () {
       this.$v.form.$reset()
+      this.perPage = this.recordCount
       this.pageSelectedList = JSON.parse(JSON.stringify(this.value.filter(v => v.RecordState !== 4)))
       if (this.initialValuesFunc) {
         this.pageSelectedList = this.initialValuesFunc(this.pageSelectedList)
@@ -524,7 +528,7 @@ export default {
         })
       }
 
-      this.totalRowCount = parseInt(this.list.length / this.recordCount)
+      this.totalRowCount = this.list.length
     },
     showModal () {
       this.getFormFields().then(() => {
@@ -580,6 +584,10 @@ export default {
     },
     selectAll () {
       this.list.map(l => {
+        l.SelectedRow = !this.allSelected
+      })
+
+      this.pageSelectedList.map(l => {
         l.SelectedRow = !this.allSelected
       })
 
@@ -660,7 +668,7 @@ export default {
       }
 
       let pageSelectedList = []
-      this.pageSelectedList.forEach(p => {
+      this.pageSelectedList.filter(f => f.SelectedRow).forEach(p => {
         let isExist = false
         if (p.ItemId) {
           isExist = selectedList.some(l => l.ItemId === p.ItemId && p.RecordState !== 4)
