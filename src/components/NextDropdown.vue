@@ -281,8 +281,7 @@ export default {
         ...this.dynamicAndCondition,
         ...this.dynamicRequest ? this.dynamicRequest.andConditionModel : {}
       }
-      let orConditionModels = this.dynamicOrConditions && this.dynamicOrConditions.length > 0 ? this.dynamicOrConditions : []
-
+      let orConditionModels = this.dynamicOrConditions && this.dynamicOrConditions.length > 0 ? [...this.dynamicOrConditions] : []
       if (search) {
         if (this.orConditionFields) {
           let fields = this.orConditionFields.split(',')
