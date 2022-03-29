@@ -126,6 +126,7 @@ export default {
         this.$store.commit('showAlert', { type: 'error', msg: this.$t('insert.requiredFields') })
         this.tabValidation()
       } else {
+        this.form.StatusId = this.form.StatusId !== 1 ? 2 : this.form.StatusId
         this.updateData()
       }
     }
