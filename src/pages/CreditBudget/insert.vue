@@ -312,10 +312,15 @@ export default {
         let list = []
         Object.keys(data).map(d => {
           let obj = data[d]
+          let existIndex = this.form.CustomerGuarantees.findIndex(c => c.CustomerId === obj.CustomerId)
+          if (existIndex > -1) {
+            this.form.CustomerGuarantees.splice(existIndex, 1)
+          }
           obj.RecordState = 2
           obj.StatusId = 1
           obj.Deleted = 0
           obj.System = 0
+          obj.ApproveStateId = 51
           obj.CreditAmount = obj.CreditAmountCentral
           if (obj.Period) {
             obj.PaymentPeriod = obj.Period
@@ -323,7 +328,7 @@ export default {
           obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
           list.push(obj)
         })
-        this.form.CustomerGuarantees = list
+        this.form.CustomerGuarantees = [...list, ...this.form.CustomerGuarantees]
       }
     },
     setPaymentPeriods (value) {
