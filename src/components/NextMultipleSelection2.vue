@@ -87,10 +87,10 @@
           :tbody-tr-class="tbodyTrClass"
           :busy="tableBusy">
           <template #table-busy>
-              <div class="text-center text-danger my-2">
-                <b-spinner class="align-middle"></b-spinner>
-              </div>
-            </template>
+            <div class="text-center text-danger my-2">
+              <b-spinner class="align-middle"></b-spinner>
+            </div>
+          </template>
           <template #cell(selection)="row">
             <b-link variant="white" size="sm" @click="selectItem(row)">
               <NextCheckBox input-class="multiple-checkbox" v-model="row.item.SelectedRow" :show-text="false"></NextCheckBox>
@@ -589,6 +589,9 @@ export default {
 
       this.pageSelectedList.map(l => {
         l.SelectedRow = !this.allSelected
+        if (l.RecordId > 0 && !l.SelectedRow) {
+          l.RecordState = 4
+        }
       })
 
       this.allSelected = !this.allSelected
@@ -668,7 +671,7 @@ export default {
       }
 
       let pageSelectedList = []
-      this.pageSelectedList.filter(f => f.SelectedRow).forEach(p => {
+      this.pageSelectedList.filter(f => f.SelectedRow || f.RecordState === 4).forEach(p => {
         let isExist = false
         if (p.ItemId) {
           isExist = selectedList.some(l => l.ItemId === p.ItemId && p.RecordState !== 4)
