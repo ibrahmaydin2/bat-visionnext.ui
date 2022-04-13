@@ -301,9 +301,7 @@
               <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" md="3" lg="3">
-              <NextDropdown
-              :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code === 'YYM'"
-              v-model="contractPriceDiscounts.currency" :source="currencies" />
+              <NextDropdown v-model="contractPriceDiscounts.currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2" class="ml-auto">
               <b-form-group>
@@ -1919,7 +1917,7 @@ export default {
         plannedInvestmentDate: item.PlannedInvestmentDate,
         description1: item.Description1,
         discountAmount: item.DiscountAmount,
-        quotaAmount: item.QuotaQuantity,
+        quotaAmount: item.QuotaAmount,
         itemFormula: {
           RecordId: item.ItemFormulaId,
           Description1: item.ItemFormula ? item.ItemFormula.Label : item.ItemFormulaName
