@@ -38,7 +38,7 @@
               <NextInput type="text" v-model="form.ContractNumber" :disabled="insertReadonly.ContractNumber || isGeneralDisabled" />
             </NextFormGroup>
             <NextFormGroup item-key="ClassId" :error="$v.form.ClassId" md="2" lg="2">
-              <NextDropdown v-model="selectedClass" lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)" :disabled="insertReadonly.ClassId || isGeneralDisabled"/>
+              <NextDropdown v-model="selectedClass" lookup-key="CONTRACT_CLASS"  @input="selectedType('ClassId', $event)" :disabled="insertReadonly.ClassId"/>
             </NextFormGroup>
             <NextFormGroup item-key="BrandId" :error="$v.form.BrandId" md="2" lg="2">
               <NextDropdown v-model="selectedBrand" lookup-key="ITEM_TYPE"  @input="selectedType('BrandId', $event)" :disabled="insertReadonly.BrandId || isGeneralDisabled"/>
