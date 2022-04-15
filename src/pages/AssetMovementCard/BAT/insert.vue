@@ -48,9 +48,7 @@
                 :disabled="!assetMovementType || assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
-                :dynamic-and-condition="locationAndCondition"
-                :dynamic-or-conditions="locationOrConditions"
-                :order-by-columns="[{ column: 'System', orderByType: 1 }]"
+                :order-by-columns="[{ column: 'IsDefaultLocation', orderByType: 1 }]"
                 :is-custom-slot="true"
                 :custom-option="true"
                 or-condition-fields="Description1,CustomerDesc,CustomerCode">
@@ -79,9 +77,7 @@
                 url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
                 :is-custom-slot="true"
                 :custom-option="true"
-                :dynamic-and-condition="locationAndCondition"
-                :dynamic-or-conditions="locationOrConditions"
-                :order-by-columns="[{ column: 'System', orderByType: 1 }]"
+                :order-by-columns="[{ column: 'IsDefaultLocation', orderByType: 1 }]"
                 or-condition-fields="Description1,CustomerDesc,CustomerCode">>
                   <template v-slot:option="{option}">
                    <table class="bordered-table">
