@@ -13,10 +13,9 @@
       <span v-else-if="isVehicle">{{option.Code + ' - ' + (option.VehiclePlateNumber ? option.VehiclePlateNumber : option.Description1) + ' - ' + (option.StatusId === 2 ? $t('insert.passive'): $t('insert.active'))}}</span>
       <span v-else-if="isEmployee">{{option.Code + ' - ' + (option.Name && option.Surname ? option.Name + ' ' + option.Surname : option.Description1)}}</span>
       <span v-else-if="isPrefix">{{option.Prefix + ' - ' + option.Year + ' ' + (option.EInvoiceType ? option.EInvoiceType.Label : '')}}</span>
-
-      <!--<div v-else-if="isCustomSlot">
-        <slot name="option" :option="option"></slot>
-      </div>-->
+      <div v-else-if="isCustomSlot">
+        <slot name="selected-option" :option="option"></slot>
+      </div>
       <span v-else-if="option.Code">{{option.Code + (option.Description1 ? ' - ' + option.Description1 : '')}}</span>
       <span v-else>{{option.Description1}}</span>
     </template>
