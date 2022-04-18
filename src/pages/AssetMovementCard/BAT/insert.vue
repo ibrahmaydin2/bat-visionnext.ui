@@ -51,17 +51,20 @@
                 searchable
                 :is-custom-slot="true"
                 :custom-option="true">
+                <template v-slot:selected-option="{option}">
+                  <span>{{option.CustomerCode}} - {{option.Description_1}}</span>
+                </template>
                 <template v-slot:option="{option}">
-                   <table class="bordered-table">
-                     <tr>
-                        <td>{{option.Description1}}</td>
-                        <td>{{option.CustomerDesc}}</td>
-                        <td>{{option.CustomerCode}}</td>
-                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
-                        <td>{{option.CustomerCommercialTitle}}</td>
-                     </tr>
+                  <table class="bordered-table">
+                    <tr>
+                      <td>{{option.Description_1}}</td>
+                      <td>{{option.CustomerDesc}}</td>
+                      <td>{{option.CustomerCode}}</td>
+                      <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                      <td>{{option.CustomerCommercialTitle}}</td>
+                    </tr>
                    </table>
-                  </template>
+                </template>
               </NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
@@ -77,16 +80,19 @@
                 searchable
                 :is-custom-slot="true"
                 :custom-option="true">
+                  <template v-slot:selected-option="{option}">
+                    <span>{{option.CustomerCode}} - {{option.Description_1}}</span>
+                  </template>
                   <template v-slot:option="{option}">
-                   <table class="bordered-table">
+                    <table class="bordered-table">
                       <tr>
-                        <td>{{option.Description1}}</td>
+                        <td>{{option.Description_1}}</td>
                         <td>{{option.CustomerDesc}}</td>
                         <td>{{option.CustomerCode}}</td>
                         <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
                         <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
-                   </table>
+                    </table>
                   </template>
               </NextDropdown>
             </NextFormGroup>
