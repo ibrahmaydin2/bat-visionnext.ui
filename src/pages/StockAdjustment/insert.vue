@@ -102,6 +102,7 @@
                   MovementType: [form.MovementTypeId]
                 }"
                 :disabled-button="!form.ToStatusId || !form.ToWarehouseId || !form.MovementTypeId"
+                :initial-data="initialData"
               />
             </b-col>
           </b-row>
@@ -187,7 +188,13 @@ export default {
             return true
           }
         }
-      ]
+      ],
+      initialData: {
+        targetProperty: 'Quantity',
+        func: (item) => {
+          return item.ToQuantity
+        }
+      }
     }
   },
   mounted () {
