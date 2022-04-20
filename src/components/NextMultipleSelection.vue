@@ -272,6 +272,10 @@ export default {
       type: Array,
       default: () => { return [] },
       description: 'Özet bilgileri göstermek için kullanılır'
+    },
+    initialData: {
+      type: Object,
+      description: 'Apiden gelen response alanlarına default value vermek için kullanılır.'
     }
   },
   model: {
@@ -452,6 +456,10 @@ export default {
         if (response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
           let list = response.ListModel.BaseModels.map(item => {
+            if (this.initialData) {
+              item[this.initialData.targetProperty] = this.initialData.func(item)
+            }
+
             this.hiddenValues.forEach(h => {
               if (h.defaultValue) {
                 item[h.targetProperty] = h.defaultValue
