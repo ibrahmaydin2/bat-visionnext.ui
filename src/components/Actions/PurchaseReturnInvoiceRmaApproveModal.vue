@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-if="modalAction" id="purchaseReturnInvoiceRmaApproveModal" ref="purchase-return-invoice-rma-approve-modal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
+  <b-modal v-if="modalAction" id="purchaseReturnInvoiceRmaApproveModal" @close="closed" ref="purchase-return-invoice-rma-approve-modal" :title="modalAction.Title" size="xl" no-close-on-backdrop>
     <section>
       <b-row>
         <NextFormGroup :title="$t('index.PurchaseReturnInvoice.ApproveNumber')" md="4" lg="4">
@@ -148,7 +148,7 @@ export default {
       form: {
         InvoiceNumber: null,
         DocumentNumber: null,
-        Warehouse: null,
+        WarehouseId: null,
         DocumentClassId: null
       },
       invoiceType: null,
@@ -238,15 +238,6 @@ export default {
         this.invoiceType = null
       }
     },
-    selectedSearchType (label, model) {
-      if (model) {
-        this.employee = model.Description1
-        this.form[label] = [model.RecordId]
-      } else {
-        this.form[label] = null
-        this.employee = null
-      }
-    },
     selectedWarehouse (e) {
       if (e) {
         this.form.WarehouseId = e.RecordId
@@ -254,10 +245,14 @@ export default {
         this.form.WarehouseId = null
       }
     },
-    closeModal () {
-      this.close()
+    closed () {
+      this.showRmaLines = false
+      this.showInvoiceLines = false
+      this.approveNumber = null
+      this.invoiceLines = []
     },
-    close () {
+    closeModal () {
+      this.closed()
       this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
     },
     search () {
