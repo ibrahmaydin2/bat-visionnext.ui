@@ -94,12 +94,12 @@ export default {
     this.textPassive = this.passiveText ? this.passiveText : this.$t('insert.passive')
     this.options = [
       { text: this.$t('insert.yes'), value: 1 },
-      { text: this.$t('insert.no'), value: 0 }
+      { text: this.$t('insert.no'), value: 2 }
     ]
     if (this.inputType === 'Boolean') {
       this.model = this.type === 'boolean' ? this.value : this.value === 1 || this.value === true
       if (this.type === 'number') {
-        this.selectedValue = this.value === true || this.value === 1 ? 1 : 0
+        this.selectedValue = this.value === true || this.value === 1 ? 1 : 2
         this.$emit('valuechange', this.selectedValue)
       }
     } else {
@@ -110,7 +110,7 @@ export default {
     model (newValue) {
       let val = null
       if (this.inputType === 'Boolean') {
-        val = this.type === 'boolean' ? newValue : newValue ? 1 : 0
+        val = this.type === 'boolean' ? newValue : newValue ? 1 : 2
       } else {
         val = newValue
       }
