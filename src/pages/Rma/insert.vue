@@ -47,8 +47,9 @@
               <NextDropdown
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
-                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
-                orConditionFields="Code,Description1,Name,Surname"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
+                or-condition-fields="Code,Description1,Name,Surname"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 v-model="representativeName"
                 label="Description1"
                 />
