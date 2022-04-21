@@ -69,6 +69,7 @@
             v-model="warehouse"
             :searchable="true"
             :custom-option="true"
+            :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"
           />
         </NextFormGroup>
       </b-row>
@@ -112,10 +113,11 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import mixin from '../../mixins/helper'
+import helperMixin from '../../mixins/helper'
+import indexMixin from '../../mixins/index'
 export default {
   name: 'PurchaseReturnInvoiceRmaApproveModal',
-  mixins: [mixin],
+  mixins: [helperMixin, indexMixin],
   components: {
   },
   props: {
@@ -282,10 +284,12 @@ export default {
         }
       })
     },
-    onRowSelected (item) {
+    onRowSelected (items) {
+      if (!items || items.length === 0) { return }
+
       this.showRmaLines = false
       let request = {
-        'recordId': item[0].RecordId
+        'recordId': items[0].RecordId
       }
       this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRmaDetail`).then((res) => {
         if (res.IsCompleted) {
@@ -295,12 +299,12 @@ export default {
           this.invoiceTypes = this.getInvoiceClassTypes()
           this.rmaLines = res.Model.RmaLines
           this.rmaDetail = res.Model
-          this.warehouse = {
-            Description1: res.Model.Warehouse ? res.Model.Warehouse.Label : '',
-            RecordId: res.Model.WarehouseId
-          }
-          this.form.WarehouseId = res.Model.WarehouseId
           this.showRmaLines = true
+          setTimeout(() => {
+            this.warehouse = this.convertLookupValueToSearchValue(res.Model.Warehouse)
+            this.form.WarehouseId = res.Model.WarehouseId
+            this.form.DocumentNumber = this.rmaDetail.DocumentNumber
+          }, 100)
         } else {
           this.$toasted.show(res.Message, {
             type: 'error',
