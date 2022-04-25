@@ -47,24 +47,24 @@
                 v-model="fromLocation"
                 :disabled="!assetMovementType || assetMovementType.Code === 'ADF'"
                 @input="selectedSearchType('FromLocationId', $event)"
-                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
-                :dynamic-and-condition="locationAndCondition"
-                :dynamic-or-conditions="locationOrConditions"
-                :order-by-columns="[{ column: 'System', orderByType: 1 }]"
+                :search="searchFromLocations"
+                searchable
                 :is-custom-slot="true"
-                :custom-option="true"
-                or-condition-fields="Description1,CustomerDesc,CustomerCode">
+                :custom-option="true">
+                <template v-slot:selected-option="{option}">
+                  <span>{{option.CustomerCode}} - {{option.Description_1}}</span>
+                </template>
                 <template v-slot:option="{option}">
-                   <table class="bordered-table">
-                     <tr>
-                        <td>{{option.Description1}}</td>
-                        <td>{{option.CustomerDesc}}</td>
-                        <td>{{option.CustomerCode}}</td>
-                        <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
-                        <td>{{option.CustomerCommercialTitle}}</td>
-                     </tr>
+                  <table class="bordered-table">
+                    <tr>
+                      <td>{{option.Description_1}}</td>
+                      <td>{{option.CustomerDesc}}</td>
+                      <td>{{option.CustomerCode}}</td>
+                      <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
+                      <td>{{option.CustomerCommercialTitle}}</td>
+                    </tr>
                    </table>
-                  </template>
+                </template>
               </NextDropdown>
             </NextFormGroup>
             <NextFormGroup item-key="FromStateId" :error="$v.form.FromStateId">
@@ -76,23 +76,23 @@
                 v-model="toLocation"
                 :disabled="!assetMovementType || assetMovementType.Code === 'STS' || assetMovementType.Code === 'ASR'"
                 @input="selectedSearchType('ToLocationId', $event)"
-                url="VisionNextCustomer/api/CustomerLocation/CustomSearch" searchable
+                :search="searchToLocations"
+                searchable
                 :is-custom-slot="true"
-                :custom-option="true"
-                :dynamic-and-condition="locationAndCondition"
-                :dynamic-or-conditions="locationOrConditions"
-                :order-by-columns="[{ column: 'System', orderByType: 1 }]"
-                or-condition-fields="Description1,CustomerDesc,CustomerCode">>
+                :custom-option="true">
+                  <template v-slot:selected-option="{option}">
+                    <span>{{option.CustomerCode}} - {{option.Description_1}}</span>
+                  </template>
                   <template v-slot:option="{option}">
-                   <table class="bordered-table">
+                    <table class="bordered-table">
                       <tr>
-                        <td>{{option.Description1}}</td>
+                        <td>{{option.Description_1}}</td>
                         <td>{{option.CustomerDesc}}</td>
                         <td>{{option.CustomerCode}}</td>
                         <td>{{option.StatusId === 2 ? $t('insert.passive'): $t('insert.active')}}</td>
                         <td>{{option.CustomerCommercialTitle}}</td>
                      </tr>
-                   </table>
+                    </table>
                   </template>
               </NextDropdown>
             </NextFormGroup>
@@ -273,25 +273,6 @@ export default {
       }
 
       return {}
-    },
-    locationOrConditions () {
-      return this.assetMovementType && this.assetMovementType.Code === 'ASR'
-        ? []
-        : [{
-          IsDefaultLocation: 1,
-          IsVehicleLocation: 1,
-          IsWarehouseLocation: 1
-        },
-        {
-          System: 1,
-          IsWarehouseLocation: 1,
-          IsVehicleLocation: 1
-        }]
-    },
-    locationAndCondition () {
-      return this.assetMovementType && this.assetMovementType.Code === 'ASR'
-        ? { StatusIds: [1], System: 1, IsDefaultLocation: 1 }
-        : { StatusIds: [1] }
     }
   },
   methods: {
@@ -390,6 +371,28 @@ export default {
     resetSources () {
       this.$refs.fromLocation.resetSource()
       this.$refs.toLocation.resetSource()
+    },
+    async searchToLocations (search) {
+      return this.searchLocations(search, true, false)
+    },
+    async searchFromLocations (search) {
+      return this.searchLocations(search, false, true)
+    },
+    async searchLocations (search, toLocation, fromLocation) {
+      let model = {
+        andConditionModel: {
+          MovementTypeId: this.form.MovementTypeId,
+          Text: search,
+          ToLocation: toLocation,
+          FromLocation: fromLocation
+        }
+      }
+
+      return this.$api.postByUrl(model, 'VisionNextCustomer/api/CustomerLocation/CustomerLocationSearchAndSelectForAsset').then((response) => {
+        if (response && response.ListModel) {
+          return response.ListModel.BaseModels
+        }
+      })
     }
   },
   watch: {

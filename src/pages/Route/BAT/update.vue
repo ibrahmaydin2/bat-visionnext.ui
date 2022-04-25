@@ -120,7 +120,7 @@
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.route.locations')">
-          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">7
+          <NextDetailPanel v-model="form.RouteDetails" :items="form.IsSuperRoute === 1 ? locationItems2 : locationItems1" :edit-form="editForm" :detail-buttons="detailButtons">
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection2
@@ -274,6 +274,7 @@ export default {
 
       this.form.RouteDetails = e.RouteDetails.map((item) => {
         item.DayFrequency = item.Day1Frequency
+        item.DayFreStartDate = item.Day1FreStartDate
         item.CustomerCode = item.Customer ? item.Customer.Code : ''
         return item
       })

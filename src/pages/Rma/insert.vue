@@ -47,8 +47,9 @@
               <NextDropdown
                 @input="selectedSearchType('RepresentativeId', $event)"
                 :disabled="insertReadonly.RepresentativeId"
-                url="VisionNextEmployee/api/Employee/AutoCompleteSearch"
-                orConditionFields="Code,Description1,Name,Surname"
+                url="VisionNextEmployee/api/Employee/AutoCompleteSearch" searchable
+                or-condition-fields="Code,Description1,Name,Surname"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 v-model="representativeName"
                 label="Description1"
                 />
@@ -267,8 +268,10 @@ export default {
         this.$api.postByUrl(request, 'VisionNextSystem/api/SysUser/Search').then(response => {
           if (response && response.ListModel && response.ListModel.BaseModels && response.ListModel.BaseModels.length > 0) {
             let user = response.ListModel.BaseModels[0]
-            this.representativeName = `${userModel.Name} ${userModel.Surname}`
-            this.form.RepresentativeId = user.EmployeeId
+            if (user && `${user.BranchId}` === `${this.$store.state.BranchId}`) {
+              this.representativeName = `${userModel.Name} ${userModel.Surname}`
+              this.form.RepresentativeId = user.EmployeeId
+            }
           }
         })
       }

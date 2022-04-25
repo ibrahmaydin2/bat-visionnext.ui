@@ -43,7 +43,7 @@
               </div>
             </template>
             <template #cell(Count)="data">
-              <b-form-input type="number" v-model="data.item.ConversionQuantity" min="0" oninput="this.value = Math.abs(this.value)" />
+              <NextInput type="number" v-model="data.item.ConversionQuantity" @keypress="onlyForCurrencyDot($event)" min=1 />
             </template>
           </b-table>
         </b-col>
@@ -74,7 +74,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { mapState } from 'vuex'
-import mixin from '../../mixins/helper'
+import mixin from '../../mixins/index'
 export default {
   name: 'OrderConvertModal',
   mixins: [mixin],
