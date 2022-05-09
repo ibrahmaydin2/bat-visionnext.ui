@@ -661,7 +661,7 @@
               <NextDropdown :disabled="editedPaymentPlans || (contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ')" v-model="contractPaymentPlans.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceTaken')" :error="$v.contractPaymentPlans.refInvoiceTaken" md="3" lg="3">
-              <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle/>
+              <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" radio/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceNumber')" :error="$v.contractPaymentPlans.refInvoiceNumber" md="3" lg="3">
               <NextInput type="text" v-model="contractPaymentPlans.refInvoiceNumber" :disabled="!editedPaymentPlans"/>
@@ -709,7 +709,7 @@
                   <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                   <b-td>{{c.Unit ? c.Unit.Label : c.UnitName}}</b-td>
-                  <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
+                  <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                   <b-td>{{c.RefInvoiceNumber}}</b-td>
                   <b-td>{{c.PoNumber}}</b-td>
                   <b-td class="text-center">

@@ -141,8 +141,8 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in rowData.ContractItems" :key="i">
-                      <b-td>{{c.ColumnName}}</b-td>
-                      <b-td>{{c.ColumnValue}}</b-td>
+                      <b-td>{{c.ColumnNameStr}}</b-td>
+                      <b-td>{{c.ColumnValueStr}}</b-td>
                       <b-td>{{c.QuotaQuantity}}</b-td>
                       <b-td>{{c.QuotaType ? c.QuotaType.Label : ''}}</b-td>
                       <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
@@ -184,8 +184,8 @@
                       <b-td>{{c.QuotaQuantity}}</b-td>
                       <b-td>{{c.QuotaUnit ? c.QuotaUnit.Label : ''}}</b-td>
                       <b-td>{{c.BudgetAmount}}</b-td>
-                      <b-td>{{c.QuotaColumnName}}</b-td>
-                      <b-td>{{c.QuotaColumnValue}}</b-td>
+                      <b-td>{{c.QuotaColumnNameStr}}</b-td>
+                      <b-td>{{c.QuotaColumnValueStr}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.StartDate)}}</b-td>
@@ -363,7 +363,7 @@
                       <b-td>{{dateConvertFromTimezone(c.QuotaBeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.QuotaEndDate)}}</b-td>
                       <b-td>{{c.Unit ? c.Unit.Label : ''}}</b-td>
-                      <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.active') : $t('insert.passive')}}</b-td>
+                      <b-td>{{c.RefInvoiceTaken === 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
                       <b-td>{{c.RefInvoiceNumber}}</b-td>
                       <b-td>{{c.PoNumber}}</b-td>
                     </b-tr>
