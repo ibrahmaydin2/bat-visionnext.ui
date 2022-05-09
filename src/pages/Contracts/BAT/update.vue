@@ -1525,7 +1525,7 @@ export default {
         QuotaEndDate: this.contractPaymentPlans.quotaEndDate,
         UnitId: this.contractPaymentPlans.unit ? this.contractPaymentPlans.unit.DecimalValue : null,
         UnitName: this.contractPaymentPlans.unit ? this.contractPaymentPlans.unit.Label : null,
-        RefInvoiceTaken: this.contractPaymentPlans.refInvoiceTaken,
+        RefInvoiceTaken: this.contractPaymentPlans.refInvoiceTaken === 1 ? 1 : 0,
         RefInvoiceNumber: this.contractPaymentPlans.refInvoiceNumber,
         PoNumber: this.contractPaymentPlans.poNumber
       }
