@@ -699,7 +699,7 @@
               <NextDropdown :disabled="contractPaymentPlans.benefitCondition && contractPaymentPlans.benefitCondition.Code === 'SOZ'" v-model="contractPaymentPlans.unit" :source="lookupValues.UNIT" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceTaken')" :error="$v.contractPaymentPlans.refInvoiceTaken" md="3" lg="3">
-              <NextCheckBox v-model="contractPaymentPlans.refInvoiceTaken" type="number" toggle disabled/>
+              <NextCheckBox radio v-model="contractPaymentPlans.refInvoiceTaken" type="number" disabled/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.refInvoiceNumber')" :error="$v.contractPaymentPlans.refInvoiceNumber" md="3" lg="3">
               <NextInput type="text" v-model="contractPaymentPlans.refInvoiceNumber" disabled/>
