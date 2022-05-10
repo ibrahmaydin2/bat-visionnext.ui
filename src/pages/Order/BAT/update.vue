@@ -190,7 +190,7 @@
                 :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)" min="1"></NextInput>
+              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -400,7 +400,7 @@
   </b-row>
 </template>
 <script>
-import { required, minValue } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import updateMixin from '../../../mixins/update'
 import { mapState } from 'vuex'
 export default {
@@ -960,8 +960,8 @@ export default {
           required
         },
         quantity: {
-          required,
-          minValue: minValue(1)
+          required
+          // minValue: minValue(1)
         },
         price: {
           required
