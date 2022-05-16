@@ -508,6 +508,7 @@
     "BATLeagueTargetUpdate": "BAT League Takip Güncelle"
   },
   "insert": {
+    "onlyNumbererror": "Sadece Harf veya Sayı Giriniz",
     "CustomerCreditNotDeleted": "Merkez Teminatı Tipindeki Kayıtlar Silinemez",
     "CustomerCreditNotEdited": "Merkez Teminatı Tipindeki Kayıtlar Düzenlenemez",    
     "notDeleted": "Merkez Tutarı 0'dan büyük bütçeler ile 'Onay bekliyor' durumundaki bütçeler silinemez.",
@@ -1127,7 +1128,8 @@
       "ECustomerAliases": "Müşteri Alias",
       "salesRepresentative": "Satış Temsilcisi",
       "name": "İsim",
-      "surname": "Soysim"
+      "surname": "Soysim",
+      "Email": "E-mail"
     },
     "fixedTerm": {
       "code": "Vade Kodu",

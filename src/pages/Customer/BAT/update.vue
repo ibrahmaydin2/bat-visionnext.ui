@@ -50,7 +50,7 @@
               <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" @input="setCommercialTitle()" />
             </NextFormGroup>
             <NextFormGroup item-key="LicenseNumber" :error="$v.form.LicenseNumber">
-              <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
+              <NextInput v-model="form.LicenseNumber" type="text" maxLength="12" @keypress="onlyNumber($event)" :oninput="maxLengthControl" :disabled="insertReadonly.LicenseNumber" />
             </NextFormGroup>
             <NextFormGroup item-key="TaxCustomerTypeId" :error="$v.form.TaxCustomerTypeId">
               <NextDropdown v-model="taxCustomerType" :disabled="insertReadonly.TaxCustomerTypeId" lookup-key="TAX_CUSTOMER_TYPE" @input="selectedType('TaxCustomerTypeId', $event); selectTaxCustomerType($event);"/>
@@ -608,7 +608,8 @@ export default {
           }
         }
       ],
-      assetLocationCurrentPage: 1
+      assetLocationCurrentPage: 1,
+      Description1: null
     }
   },
   computed: {
