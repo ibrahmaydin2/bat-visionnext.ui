@@ -244,12 +244,22 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'text',
+      modelProperty: 'EMail',
+      label: i18n.t('insert.customer.Email'),
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 5
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
       modelProperty: 'Genexp2',
       label: i18n.t('insert.customer.Model_Genexp2'),
       required: false,
       visible: false,
       isUnique: false,
-      id: 5
+      id: 6
     },
     {
       type: 'Text',
@@ -259,7 +269,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 6
+      id: 7
     },
     {
       type: 'Text',
@@ -269,7 +279,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 7
+      id: 8
     },
     {
       type: 'Text',
@@ -279,7 +289,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 8
+      id: 9
     },
     {
       type: 'Text',
@@ -289,7 +299,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 9
+      id: 10
     },
     {
       type: 'Lookup',
@@ -299,7 +309,7 @@ export const detailData = {
       label: i18n.t('insert.customer.Model_CityId'),
       required: true,
       visible: true,
-      id: 10
+      id: 11
     },
     {
       type: 'Dropdown',
@@ -312,8 +322,8 @@ export const detailData = {
       request: JSON.stringify({UpperValue: 'val', LookupTableCode: 'DISTRICT'}),
       required: true,
       visible: true,
-      parentId: 10,
-      id: 11
+      parentId: 11,
+      id: 12
     },
     {
       type: 'Text',
@@ -323,7 +333,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 12
+      id: 13
     },
     {
       type: 'Text',
@@ -333,7 +343,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 13
+      id: 14
     },
     {
       type: 'Text',
@@ -343,7 +353,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 14
+      id: 15
     },
     {
       type: 'Check',
@@ -353,7 +363,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 15
+      id: 16
     },
     {
       type: 'Check',
@@ -363,7 +373,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 16
+      id: 17
     },
     {
       type: 'Check',
@@ -373,7 +383,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 17
+      id: 18
     },
     {
       type: 'Check',
@@ -383,7 +393,7 @@ export const detailData = {
       required: false,
       visible: true,
       isUnique: false,
-      id: 18
+      id: 19
     },
     {
       type: 'Text',
@@ -394,7 +404,7 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
-      id: 19
+      id: 20
     }
   ],
   customerCreditHistoriesItemsBAT: [
