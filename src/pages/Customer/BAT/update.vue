@@ -608,8 +608,7 @@ export default {
           }
         }
       ],
-      assetLocationCurrentPage: 1,
-      Description1: null
+      assetLocationCurrentPage: 1
     }
   },
   computed: {
