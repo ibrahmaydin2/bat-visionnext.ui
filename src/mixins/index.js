@@ -241,10 +241,15 @@ export default {
     },
     onlyNumber ($event) {
       let keyCode = ($event.keyCode ? $event.keyCode : $event.which)
-      if (keyCode > 31 && (keyCode < 48 || keyCode > 57)) {
-        return false
+      if (!((keyCode >= 65 && keyCode <= 90) || ((keyCode >= 97 && keyCode <= 122)) || ((keyCode >= 48 && keyCode <= 57)))) {
+        this.$toasted.show(this.$t('insert.onlyNumbererror'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        $event.preventDefault()
       }
-      return true
+      return false
     }
   }
 }
