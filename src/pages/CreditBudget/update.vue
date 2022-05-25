@@ -448,12 +448,6 @@ export default {
           duration: '3000'
         })
         return
-      } if (this.selectedCustomerGuarantee.ApproveStateId === 51 || this.selectedCustomerGuarantee.CreditAmountCentral > 0) {
-        this.$toasted.show(this.$t('insert.notDeleted'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
       } else {
         if (this.selectedCustomerGuarantee.RecordId > 0) {
           this.CustomerGuarantees[this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)].RecordState = 4
