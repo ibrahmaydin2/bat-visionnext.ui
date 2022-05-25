@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.AnalysisQuestions.QuestionOptions')">
+        <b-tab :title="$t('insert.AnalysisQuestions.QuestionOptions')" v-if="form.AnswerTypeId === 1 || form.AnswerTypeId === 5">
           <NextDetailPanel v-model="form.QuestionChoices" :items="customerQuestionChoiceItems"/>
         </b-tab>
       </b-tabs>
