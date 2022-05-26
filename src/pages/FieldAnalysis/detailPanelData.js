@@ -28,11 +28,23 @@ export const detailData = {
       id: 2
     },
     {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'Label',
+      objectKey: 'Question',
+      parentProperty: 'AnswerType',
+      label: i18n.t('insert.itemAnalysis.answerType'),
+      visible: true,
+      disabled: true,
+      parentId: 1,
+      id: 3
+    },
+    {
       type: 'Check',
       modelProperty: 'IsNecessary',
       label: i18n.t('insert.fieldAnalysis.isNecessary'),
       visible: true,
-      id: 3
+      id: 4
     }
   ],
   fieldAnalysisBranchItems: [

@@ -53,7 +53,7 @@
               <NextDropdown v-model="customerCriteria"
                 :disabled="insertReadonly.CustomerCriteriaId"
                 @input="selectedType('CustomerCriteriaId', $event)"
-                :source="(lookup.CUSTOMER_CRITERIA ? lookup.CUSTOMER_CRITERIA.filter(c => c.Code != 'MS'): [])"
+                :source="(lookup.CUSTOMER_CRITERIA)"
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsNecessary" :error="$v.form.IsNecessary">
@@ -225,6 +225,10 @@ export default {
         {
           mainProperty: 'Code',
           targetProperty: 'QuestionIdDesc'
+        },
+        {
+          mainProperty: 'AnswerType',
+          targetProperty: 'Question'
         }
       ],
       convertedValuesQuestions: [
