@@ -37,7 +37,7 @@
             <NextDropdown v-model="month" :disabled="insertReadonly.MonthId" label="Label" :source="Months" @input="selectedType('MonthId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="YearId" :error="$v.form.YearId">
-            <NextDropdown v-model="year" :disabled="insertReadonly.YearId" label="Label" @input="selectedType('YearId', $event)"/>
+            <NextDropdown v-model="year" :disabled="insertReadonly.YearId" :source="years" label="Label" @input="selectedType('YearId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
@@ -92,11 +92,13 @@ export default {
       ],
       customer: null,
       month: null,
-      year: null
+      year: null,
+      years: []
     }
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.createYears()
   },
   methods: {
     setData () {
@@ -107,6 +109,16 @@ export default {
       this.year = rowData.Year
       if (!rowData.OpportunityTargetValues) {
         this.form.OpportunityTargetValues = []
+      }
+    },
+    createYears () {
+      let now = new Date()
+      let nowYear = now.getFullYear()
+      this.years = []
+      for (let index = nowYear - 2; index <= nowYear + 2; index++) {
+        this.years.push({
+          DecimalValue: index, Label: index
+        })
       }
     },
     save () {

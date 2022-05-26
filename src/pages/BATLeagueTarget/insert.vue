@@ -36,7 +36,7 @@
             <NextDropdown :disabled="insertReadonly.MonthId" label="Label" :source="Months" @input="selectedType('MonthId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="YearId" :error="$v.form.YearId">
-            <NextDropdown :disabled="insertReadonly.YearId" label="Label" @input="selectedType('YearId', $event)"/>
+            <NextDropdown :disabled="insertReadonly.YearId" :source="years" label="Label" @input="selectedType('YearId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
@@ -75,6 +75,7 @@ export default {
       opportunityTargetValuesItems: detailData.opportunityTargetValuesItems,
       routeName1: 'Customer',
       routeName2: 'OpportunityTarget',
+      years: [],
       Months: [
         {DecimalValue: 1, Label: this.$t('general.Months.january')},
         {DecimalValue: 2, Label: this.$t('general.Months.february')},
@@ -93,6 +94,7 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    this.createYears()
   },
   methods: {
     save () {
@@ -101,6 +103,16 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
         this.createData()
+      }
+    },
+    createYears () {
+      let now = new Date()
+      let nowYear = now.getFullYear()
+      this.years = []
+      for (let index = nowYear - 2; index <= nowYear + 2; index++) {
+        this.years.push({
+          DecimalValue: index, Label: index
+        })
       }
     }
   },
