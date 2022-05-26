@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CreditBudgetExcelModal @success="successExcelImport"></CreditBudgetExcelModal>
     <b-modal :id="`confirm-edit-modal${unique}`">
       <template #modal-title>
         {{$t('list.editConfirm')}}
@@ -32,12 +33,13 @@
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
         <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
       </NextFormGroup>
-      <b-col cols="12" md="1">
+      <b-col cols="12" md="2">
         <b-form-group>
           <AddDetailButton v-if="!isUpdated" @click.native="addItems()" />
           <b-button v-if="isUpdated" class="mt-4" size="sm" variant="success" @click="addItems()">
             <i class="fa fa-pencil-alt"></i> {{$t('insert.edit')}}
           </b-button>
+          <b-button v-if="isExcelImport" class="mt-4" size="sm" variant="success" v-b-modal.credit-budget-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
         </b-form-group>
       </b-col>
       <slot name="grid" />
@@ -176,6 +178,11 @@ export default {
     changeValidation: {
       type: Function,
       description: 'Dinamik validasyonlar için kullanılır'
+    },
+    isExcelImport: {
+      type: Boolean,
+      default: false,
+      description: 'Excel yükleme butonunun görünürlüğünü kontrol etmek için kullanılır.'
     }
   },
   model: {
@@ -442,6 +449,30 @@ export default {
           delete this.form[i.objectKey]
         }
       })
+    },
+    successExcelImport (data) {
+      if (data) {
+        let list = []
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          let existIndex = this.form.CustomerGuarantees.findIndex(c => c.CustomerId === obj.CustomerId)
+          if (existIndex > -1) {
+            this.form.CustomerGuarantees.splice(existIndex, 1)
+          }
+          obj.RecordState = 2
+          obj.StatusId = 1
+          obj.Deleted = 0
+          obj.System = 0
+          obj.ApproveStateId = 51
+          obj.CreditAmount = obj.CreditAmountCentral
+          if (obj.Period) {
+            obj.PaymentPeriod = obj.Period
+          }
+          obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
+          list.push(obj)
+        })
+        this.form.CustomerGuarantees = [...list, ...this.form.CustomerGuarantees]
+      }
     },
     additionalSearchType (id, label, model, valueProperty) {
       if (model) {

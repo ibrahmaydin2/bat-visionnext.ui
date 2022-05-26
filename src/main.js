@@ -70,6 +70,7 @@ import BudgetMasterApproveModal from './components/Actions/BudgetMasterApproveMo
 import AssignEmployeeModal from './components/Actions/AssignEmployeeModal'
 import CommonInfoModal from './components/Actions/CommonInfoModal'
 import NextMultipleSelection from './components/NextMultipleSelection'
+import NextMultipleSelection3 from './components/NextMultipleSelection3'
 import CommonExcelModal from './components/Actions/CommonExcelModal'
 import NextCustomerMultipleSearch from './components/NextCustomerMultipleSearch'
 import NextMultipleSelection2 from './components/NextMultipleSelection2'
@@ -163,6 +164,7 @@ Vue.component('BudgetMasterApproveModal', BudgetMasterApproveModal)
 Vue.component('AssignEmployeeModal', AssignEmployeeModal)
 Vue.component('CommonInfoModal', CommonInfoModal)
 Vue.component('NextMultipleSelection', NextMultipleSelection)
+Vue.component('NextMultipleSelection3', NextMultipleSelection3)
 Vue.component('CommonExcelModal', CommonExcelModal)
 Vue.component('NextCustomerMultipleSearch', NextCustomerMultipleSearch)
 Vue.component('DateRangePicker', DateRangePicker)

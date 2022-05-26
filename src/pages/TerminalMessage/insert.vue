@@ -52,13 +52,32 @@
           <NextDetailPanel v-model="form.TerminalMessageValidDates" :items="validDateItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.branchs')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.TerminalMessageBranchs" :items="messageBranchItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.TerminalMessageBranchs" :items="messageBranchItems">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection v-model="form.TerminalMessageBranchs" name="TerminalMessageMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.terminalMessage.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="customerCriterias" :items="customerCriteriaItems"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.terminalMessage.customerList')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="customerList" :items="customerListItems"></NextDetailPanel>
+          <NextDetailPanel v-model="customerList" :items="customerListItems" :isExcelImport="true" >
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  v-model="customerList" name="TerminalMessageMultipleCustomer"
+                  :hidden-values="hiddenValues"
+                >
+                </NextMultipleSelection>
+                <NextCustomerMultipleSearch
+                  v-model="customerList"
+                  :convertedValues="customerConvertedValues" />
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.terminalMessage.customerQuery')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MS'" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.TerminalMessageCustSqls" :items="custSqlItems"></NextDetailPanel>
@@ -104,7 +123,85 @@ export default {
       customerCriterias: [],
       routeName1: 'CommonApi',
       selectedMessageType: null,
-      selectedCustomerCriteria: null
+      selectedCustomerCriteria: null,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ColumnNameDesc'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'ColumnValueDesc'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'ColumnValueDesc2'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'Location'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
+        }
+      ],
+      hiddenValuesBranch: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'MessageBranchId'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'Code'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'Description1'
+        }
+      ],
+      customerConvertedValues: [
+        {
+          mainProperty: 'TableName',
+          convert: () => 'T_CUSTOMER'
+        },
+        {
+          mainProperty: 'ColumnName',
+          convert: () => 'RECORD_ID'
+        },
+        {
+          mainProperty: 'ColumnValue',
+          convert: (data) => data.RecordId
+        },
+        {
+          mainProperty: 'ColumnNameDesc',
+          convert: (data) => data.Code
+        },
+        {
+          mainProperty: 'CustomerName',
+          convert: (data) => data.CommercialTitle
+        },
+        {
+          mainProperty: 'Location',
+          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
+        }
+      ]
     }
   },
   mounted () {
