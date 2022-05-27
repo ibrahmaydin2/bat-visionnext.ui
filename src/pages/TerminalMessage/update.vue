@@ -72,9 +72,6 @@
                   :hidden-values="hiddenValues"
                 >
                 </NextMultipleSelection>
-                <NextCustomerMultipleSearch
-                  v-model="customerList"
-                  :convertedValues="customerConvertedValues" />
               </div>
             </template>
           </NextDetailPanel>
@@ -174,32 +171,6 @@ export default {
         {
           mainProperty: 'Description1',
           targetProperty: 'Description1'
-        }
-      ],
-      customerConvertedValues: [
-        {
-          mainProperty: 'TableName',
-          convert: () => 'T_CUSTOMER'
-        },
-        {
-          mainProperty: 'ColumnName',
-          convert: () => 'RECORD_ID'
-        },
-        {
-          mainProperty: 'ColumnValue',
-          convert: (data) => data.RecordId
-        },
-        {
-          mainProperty: 'ColumnNameDesc',
-          convert: (data) => data.Code
-        },
-        {
-          mainProperty: 'CustomerName',
-          convert: (data) => data.CommercialTitle
-        },
-        {
-          mainProperty: 'Location',
-          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
         }
       ]
     }
