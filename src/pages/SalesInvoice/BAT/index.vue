@@ -13,7 +13,7 @@
         </div>
       </b-container>
   </b-modal>
-    <Nextgrid apiurl="VisionNextInvoice/api/SalesInvoice/Search" selectionMode="multi" :after-actions="afterActions" />
+    <Nextgrid apiurl="VisionNextInvoice/api/SalesInvoice/Search" selectionMode="multi" :andConditionalModel="model" :workFlowModel="workFlowModel" selection-mode="multi" :actionCondition="actionCondition" :after-actions="afterActions" />
   </div>
 </template>
 <script>
@@ -24,7 +24,20 @@ export default {
       cashCardId: null,
       message: null,
       loading: null,
-      model: null
+      model: {
+        RecordTypeIds: [1, 2, 3, 5, 6]
+      },
+      workFlowModel: {
+        ControllerName: 'SalesInvoice',
+        ClassName: 'Invoice',
+        PageName: 'pg_SalesInvoice'
+      },
+      actionCondition: {
+        condition (row) {
+          return row.RecordTypeId === 3 || row.RecordTypeId === 4
+        },
+        actions: ['Get', 'Info']
+      }
     }
   },
   mounted () {
