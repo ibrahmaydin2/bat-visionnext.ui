@@ -26,10 +26,10 @@ export const detailData = {
       id: 2
     },
     {
-      type: 'Dropdown',
+      type: 'Lookup',
       modelProperty: 'TargetUnitId',
       objectKey: 'TargetUnit',
-      url: '',
+      url: 'ITEM_TYPE',
       label: i18n.t('insert.CustomerTarget.TargetUnitId'),
       required: true,
       visible: true,
@@ -39,7 +39,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'ReqItemId',
       objectKey: 'ReqItem',
-      url: '',
+      url: '/VisionNextItem/api/Item/Search',
       label: i18n.t('insert.CustomerTarget.ReqItemId'),
       required: false,
       visible: true,
