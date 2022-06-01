@@ -28,12 +28,44 @@
               <div v-html="getFormatDataByType(rowData.TciBreak1, 'object', 'insert.CustomerTarget.TciBreak1Id')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ItemColumnName, 'object', 'insert.CustomerTarget.ItemColumnName')"></div>
-              <div v-html="getFormatDataByType(rowData.ItemColumnValue, 'object', 'insert.CustomerTarget.ItemColumnValue')"></div>
+              <div v-html="getFormatDataByType(rowData.ItemColumnName, 'text', 'insert.CustomerTarget.ItemColumnName')"></div>
+              <div v-html="getFormatDataByType(rowData.ItemColumnValue, 'text', 'insert.CustomerTarget.ItemColumnValue')"></div>
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerTargetDetails')">
+        <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDetails')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.CustomerTarget.CustomerId')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.TargetQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.TargetUnitId')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.ReqItemId')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.ReqItemQuantity')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.DescriptionReqItem')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.GainAmount')}}</span></b-th>
+                <b-th><span>{{$t('insert.CustomerTarget.currencyId')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(c, i) in (rowData.CustomerTargetDetails ? rowData.CustomerTargetDetails.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{c.Customer.Label}}</b-td>
+                  <b-td>{{c.TargetQuantity}}</b-td>
+                  <b-td>{{c.TargetUnit.Label}}</b-td>
+                  <b-td>{{c.ReqItem ? c.ReqItem.Label : null}}</b-td>
+                  <b-td>{{c.ReqItemQuantity}}</b-td>
+                  <b-td>{{c.DescriptionReqItem}}</b-td>
+                  <b-td>{{c.GainAmount}}</b-td>
+                  <b-td>{{c.Currency.Label}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <!-- <b-tab :title="$t('insert.CustomerTargetDetails')">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -41,8 +73,8 @@
               </b-card>
             </b-col>
           </b-row>
-        </b-tab>
-        <b-tab :title="$t('insert.CustomerTargetDates')">
+        </b-tab> -->
+        <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDates')">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
@@ -64,7 +96,7 @@ export default {
   mixins: [mixin],
   data () {
     return {
-      customerTargetDetailsItems: detailData.customerTargetDetailsItems,
+      // customerTargetDetailsItems: detailData.customerTargetDetailsItems,
       customerTargetDatesItems: detailData.customerTargetDatesItems
     }
   },
