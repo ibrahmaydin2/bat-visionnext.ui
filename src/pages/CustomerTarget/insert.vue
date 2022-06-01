@@ -31,10 +31,19 @@
             <NextDropdown :disabled="insertReadonly.TciBreak1Id" @input="selectedType('TciBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
           </NextFormGroup>
           <NextFormGroup item-key="ItemColumnName" :error="$v.form.ItemColumnName">
-            <NextDropdown :disabled="insertReadonly.ItemColumnName" @input="selectedType('ItemColumnName', $event)" lookup-key="ITEM_CRITERIA"/>
+            <NextDropdown
+              :disabled="insertReadonly.ItemColumnName"
+              v-model="itemColumnName"
+              :source="itemCriterias"
+              :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+              @input="selectColumnName($event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="ItemColumnValue" :error="$v.form.ItemColumnValue">
-            <NextDropdown :disabled="insertReadonly.ItemColumnValue" @input="selectedType('ItemColumnValue', $event)" lookup-key="ITEM_DIAMETER"/>
+            <NextDropdown v-model="itemColumnValue"
+              :disabled="insertReadonly.ItemColumnValue"
+              :source="fieldValues" label="Label"
+              @input="selectedType('ItemColumnValue', $event)"
+            />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle />
@@ -118,9 +127,6 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <!-- <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDetails')">
-          <NextDetailPanel v-model="form.CustomerTargetDetails" :items="customerTargetDetailsItems"/>
-        </b-tab> -->
         <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDates')">
           <NextDetailPanel v-model="form.CustomerTargetDates" :items="customerTargetDatesItems"/>
         </b-tab>
@@ -154,8 +160,14 @@ export default {
       customerTargetDatesItems: detailData.customerTargetDatesItems,
       routeName1: 'Customer',
       currencies: [],
+      itemCriteria: null,
+      itemColumnValue: null,
+      itemColumnName: null,
       lookupValues: [],
       items: [],
+      itemValue: [],
+      fieldValues: [],
+      itemCriterias: [],
       selectedIndex: null,
       customerTargetDetails: {
         customer: null,
@@ -172,11 +184,32 @@ export default {
   },
   mounted () {
     this.createManualCode()
+    this.getItemCriterias()
     this.getCurrencies()
     this.getLookups()
     this.getItem()
   },
   methods: {
+    getItemCriterias () {
+      this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((response) => {
+        if (response && response.Values && response.Values.length > 0) {
+          this.itemCriterias = response.Values
+        }
+      })
+    },
+    selectColumnName  (data) {
+      this.fieldValues = []
+      this.form.ItemColumnValue = null
+      this.itemColumnValue = null
+      if (data) {
+        this.form.ItemColumnName = data.Label
+        this.$api.postByUrl({paramName: data.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.fieldValues = res.Values
+        })
+      } else {
+        this.form.ItemColumnName = null
+      }
+    },
     getLookups () {
       return this.$api.postByUrl({LookupTableCode: 'UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
         if (response && response.Values) {
@@ -227,7 +260,6 @@ export default {
         GainAmount: this.customerTargetDetails.gainAmount,
         CurrencyId: this.customerTargetDetails.currency.RecordId,
         CurrencyName: this.customerTargetDetails.currency.Description1
-        // IsDefaultValue: this.contractItems.IsDefaultValue
       }
       if (this.customerTargetDetails.isUpdated) {
         this.form.CustomerTargetDetails[this.selectedIndex] = item

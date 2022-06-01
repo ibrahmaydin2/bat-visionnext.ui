@@ -28,12 +28,12 @@
               <div v-html="getFormatDataByType(rowData.TciBreak1, 'object', 'insert.CustomerTarget.TciBreak1Id')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.ItemColumnName, 'object', 'insert.CustomerTarget.ItemColumnName')"></div>
-              <div v-html="getFormatDataByType(rowData.ItemColumnValue, 'object', 'insert.CustomerTarget.ItemColumnValue')"></div>
+              <div v-html="getFormatDataByType(rowData.ItemColumnName, 'text', 'insert.CustomerTarget.ItemColumnName')"></div>
+              <div v-html="getFormatDataByType(rowData.ItemColumnValue, 'text', 'insert.CustomerTarget.ItemColumnValue')"></div>
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.CustomerTargetDetails')">
+        <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDetails')">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -49,7 +49,7 @@
                 <b-th><span>{{$t('insert.CustomerTarget.currencyId')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in rowData.CustomerTargetDetails" :key="i">
+                <b-tr v-for="(c, i) in (rowData.CustomerTargetDetails ? rowData.CustomerTargetDetails.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{c.Customer.Label}}</b-td>
                   <b-td>{{c.TargetQuantity}}</b-td>
                   <b-td>{{c.TargetUnit.Label}}</b-td>
@@ -74,7 +74,7 @@
             </b-col>
           </b-row>
         </b-tab> -->
-        <b-tab :title="$t('insert.CustomerTargetDates')">
+        <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDates')">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">

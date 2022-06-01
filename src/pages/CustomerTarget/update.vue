@@ -31,10 +31,19 @@
             <NextDropdown v-model="tciBreak" :disabled="insertReadonly.TciBreak1Id" @input="selectedType('TciBreak1Id', $event)" lookup-key="TCI_BREAKDOWN"/>
           </NextFormGroup>
           <NextFormGroup item-key="ItemColumnName" :error="$v.form.ItemColumnName">
-            <NextDropdown v-model="itemColumnName" :disabled="insertReadonly.ItemColumnName" @input="selectedType('ItemColumnName', $event)" lookup-key="ITEM_CRITERIA"/>
+            <NextDropdown
+              :disabled="insertReadonly.ItemColumnName"
+              v-model="itemColumnName"
+              :source="itemCriterias"
+              :dynamic-request="{paramId: 'ITEM_CRITERIA'}" label="Label"
+              @input="selectColumnName($event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="ItemColumnValue" :error="$v.form.ItemColumnValue">
-            <NextDropdown v-model="itemColumnValue" :disabled="insertReadonly.ItemColumnValue" @input="selectedType('ItemColumnValue', $event)" lookup-key=""/>
+            <NextDropdown v-model="itemColumnValue"
+              :disabled="insertReadonly.ItemColumnValue"
+              :source="fieldValues" label="Label"
+              @input="selectedType($event)"
+            />
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle />
@@ -96,23 +105,23 @@
                 <!-- <b-th><span>{{$t('list.operations')}}</span></b-th> -->
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.CustomerTargetDetails" :key="i">
-                  <b-td>{{c.Customer ? c.Customer.Label : null}}</b-td>
+                <b-tr v-for="(c, i) in (form.CustomerTargetDetails ? form.CustomerTargetDetails.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{c.CustomerName ? c.CustomerName : c.Customer.Label}}</b-td>
                   <b-td>{{c.TargetQuantity}}</b-td>
-                  <b-td>{{c.TargetUnit ? c.TargetUnit.Label : null}}</b-td>
-                  <b-td>{{c.ReqItem ? c.ReqItem.Label : null}}</b-td>
+                  <b-td>{{c.TargetUnitLabel ? c.TargetUnitLabel : c.TargetUnit.Label}}</b-td>
+                  <b-td>{{c.ReqItem ? c.ReqItem.Label : c.ReqItem}}</b-td>
                   <b-td>{{c.ReqItemQuantity}}</b-td>
                   <b-td>{{c.DescriptionReqItem}}</b-td>
                   <b-td>{{c.GainAmount}}</b-td>
-                  <b-td>{{c.Currency ? c.Currency.Label : null}}</b-td>
-                  <!-- <b-td class="text-center">
+                  <b-td>{{c.CurrencyName ? c.CurrencyName : c.Currency.Label}}</b-td>
+                  <b-td class="text-center">
                     <b-button @click="editInvoiceLine(c)" class="btn mr-2 btn-warning btn-sm">
                       <i class="fa fa-pencil-alt"></i>
                     </b-button>
                     <b-button @click="removeContractItems(c)" class="btn mr-2 btn-danger btn-sm">
                       <i class="far fa-trash-alt"></i>
                     </b-button>
-                  </b-td> -->
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -142,7 +151,7 @@ export default {
         Code: null,
         Description1: null,
         ErpCode: null,
-        TciBreakId: null,
+        TciBreak1Id: null,
         ItemColumnName: null,
         ItemColumnValue: null,
         StatusId: 1
@@ -155,6 +164,8 @@ export default {
       currencies: [],
       lookupValues: [],
       items: [],
+      itemCriterias: [],
+      fieldValues: [],
       selectedIndex: null,
       customerTargetDetails: {
         customer: null,
@@ -171,26 +182,50 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    this.getItemCriterias()
     this.getCurrencies()
     this.getLookups()
     this.getItem()
   },
   methods: {
+    getItemCriterias () {
+      this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((response) => {
+        if (response && response.Values && response.Values.length > 0) {
+          this.itemCriterias = response.Values
+        }
+      })
+    },
+    selectColumnName  (data) {
+      this.fieldValues = []
+      this.form.ItemColumnValue = null
+      this.itemColumnValue = null
+      if (data) {
+        this.form.ItemColumnName = data.Label
+        this.$api.postByUrl({paramName: data.Label}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByValues').then((res) => {
+          this.fieldValues = res.Values
+        })
+      } else {
+        this.form.ItemColumnName = null
+      }
+    },
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      this.tciBreak = rowData.TciBreakId
+      this.tciBreak = rowData.TciBreak1
       this.itemColumnName = rowData.ItemColumnName
       this.itemColumnValue = rowData.ItemColumnValue
       if (!rowData.CustomerTargetDates) {
         this.form.CustomerTargetDates = []
       }
-      if (this.form.CustomerTargetDetails) {
-        this.form.CustomerTargetDetails.map(item => {
-          item.RecordState = 3
-          return item
-        })
+      if (!rowData.CustomerTargetDetails) {
+        this.form.CustomerTargetDetails = []
       }
+      // if (this.form.CustomerTargetDetails) {
+      //   this.form.CustomerTargetDetails.map(item => {
+      //     item.RecordState = 3
+      //     return item
+      //   })
+      // }
     },
     addContractItems () {
       this.$v.customerTargetDetails.$touch()
@@ -204,11 +239,12 @@ export default {
         RecordId: this.customerTargetDetails.recordId,
         RecordState: this.customerTargetDetails.recordId > 0 ? 3 : 2,
         StatusId: 1,
+        // TableName: 'T_CUSTOMER_TARGET_DETAIL',
         CustomerId: this.customerTargetDetails.customer.RecordId,
         CustomerName: this.customerTargetDetails.customer.Description1,
         TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
         TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
-        ReqItemId: this.customerTargetDetails.reqItem.RecordId,
+        ReqItemId: this.customerTargetDetails.reqItem.UnitSetId,
         ReqItem: this.customerTargetDetails.reqItem.Label,
         TargetQuantity: this.customerTargetDetails.targetQuantity,
         ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
@@ -216,7 +252,6 @@ export default {
         GainAmount: this.customerTargetDetails.gainAmount,
         CurrencyId: this.customerTargetDetails.currency.RecordId,
         CurrencyName: this.customerTargetDetails.currency.Description1
-        // IsDefaultValue: this.contractItems.IsDefaultValue
       }
       if (this.customerTargetDetails.isUpdated) {
         this.form.CustomerTargetDetails[this.selectedIndex] = item
@@ -230,7 +265,11 @@ export default {
       this.getLookups()
     },
     removeContractItems (item) {
-      this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.CustomerTargetDetails[this.form.CustomerTargetDetails.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
+      }
     },
     editInvoiceLine (item) {
       this.selectedIndex = this.form.CustomerTargetDetails.indexOf(item)
@@ -239,11 +278,34 @@ export default {
         reqItemQuantity: item.ReqItemQuantity,
         descriptionReqItem: item.DescriptionReqItem,
         gainAmount: item.GainAmount,
+        recordState: item.RecordState,
+        recordId: item.RecordId,
         isUpdated: true
       }
       this.getCurrencies(item.CurrencyId)
       this.getLookups(item.TargetUnitId)
-      this.getItem(item.ReqItemId)
+      this.getItem(item.items)
+    },
+    // editInvoiceLine (objectKey, item) {
+    //   let list = this.form.Custome
+    //   this.selectedIndex = list.indexOf(item)
+    //   this.setModel(objectKey, item)
+    // },
+    setModel (objectKey, item) {
+      this[objectKey] = {
+        targetUnit: {
+          DecimalValue: item.TargetUnitId,
+          Label: item.TargetUnitLabel ? item.TargetUnitLabel : item.TargetUnit.Label
+        },
+        currency: {
+          RecordId: item.CurrencyId,
+          Description1: item.Currency ? item.Currency.Label : item.CurrencyName
+        },
+        targetQuantity: item.TargetQuantity,
+        reqItemQuantity: item.ReqItemQuantity,
+        descriptionReqItem: item.DescriptionReqItem,
+        gainAmount: item.GainAmount
+      }
     },
     getLookups () {
       return this.$api.postByUrl({LookupTableCode: 'UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
@@ -267,7 +329,6 @@ export default {
       this.$api.postByUrl({}, '/VisionNextItem/api/Item/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.items = response.ListModel.BaseModels
-          this.form.ReqItemId = this.customerTargetDetails.reqItem.RecordId
         }
       })
     },
