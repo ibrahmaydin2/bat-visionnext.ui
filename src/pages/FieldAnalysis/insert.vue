@@ -121,6 +121,9 @@
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerCriterias')" v-if="customerCriteria && customerCriteria.Code === 'MK'">
           <NextDetailPanel v-model="customerCriterias" :items="fieldAnalysisDetailItems"></NextDetailPanel>
         </b-tab>
+        <b-tab lazy :title="$t('insert.terminalMessage.customerQuery')"  v-if="customerCriteria && customerCriteria.Code === 'MS'" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.FieldAnalysisCustSqls" :items="custSqlItems"></NextDetailPanel>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -154,7 +157,8 @@ export default {
         FieldAnalysisBranchs: [],
         FieldAnalysisEmployeeTypes: [],
         FieldAnalysisValidDates: [],
-        FieldAnalysisDetails: []
+        FieldAnalysisDetails: [],
+        FieldAnalysisCustSqls: []
       },
       customerCriteria: null,
       validityType: null,
@@ -167,6 +171,7 @@ export default {
       fieldAnalysisEmployeeItems: detailData.fieldAnalysisEmployeeItems,
       fieldAnalysisValidDateItems: detailData.fieldAnalysisValidDateItems,
       fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems,
+      custSqlItems: detailData.custSqlItems,
       hiddenValues: [
         {
           mainProperty: 'RecordId',

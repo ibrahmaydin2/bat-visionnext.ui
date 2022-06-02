@@ -204,5 +204,18 @@ export const detailData = {
       defaultValue: 'T_CUSTOMER',
       id: 3
     }
+  ],
+  custSqlItems: [
+    {
+      type: 'Dropdown',
+      modelProperty: 'CustomerSqlId',
+      objectKey: 'CustomerSql',
+      url: 'VisionNextAdmin/api/SysCustomerSql/Search',
+      label: 'insert.terminalMessage.customerQuery',
+      required: true,
+      visible: true,
+      isUnique: true,
+      id: 1
+    }
   ]
 }
