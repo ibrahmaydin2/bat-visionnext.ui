@@ -181,6 +181,11 @@ export default {
       ],
       fieldsRma: [
         {
+          key: 'ItemId',
+          label: this.$t('index.PurchaseReturnInvoice.ItemId'),
+          sortable: true
+        },
+        {
           key: 'Item',
           label: this.$t('index.PurchaseReturnInvoice.Item'),
           sortable: true,
@@ -201,6 +206,11 @@ export default {
         {
           key: 'Price',
           label: this.$t('index.PurchaseReturnInvoice.Price'),
+          sortable: true
+        },
+        {
+          key: 'Stock',
+          label: this.$t('index.PurchaseReturnInvoice.Stock'),
           sortable: true
         }
       ],
