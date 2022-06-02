@@ -60,6 +60,9 @@
                 v-model="customerTargetDetails.customer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 label="Description1"
+                :searchable="true"
+                :custom-option="true"
+                :is-customer="true"
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.TargetQuantity')" :error="$v.customerTargetDetails.targetQuantity" :required="true" md="3" lg="3">

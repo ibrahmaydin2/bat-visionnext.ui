@@ -3383,7 +3383,9 @@
       "UsedQuantity": "İade Edilen Miktar",
       "Quantity": "Talep Edilen İade Miktarı",
       "Price": "Geri Alış Fiyatı",
-      "Item": "Ürün" 
+      "Item": "Ürün",
+      "ItemId":"Ürün Kodu",
+      "Stock":"Stok Miktarı"
     },
     "customerMultipleSearch": {
       "title": "Toplu Müşteri Ekle",
