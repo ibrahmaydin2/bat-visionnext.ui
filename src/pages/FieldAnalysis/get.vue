@@ -95,6 +95,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.terminalMessage.customerQuery')" v-if="rowData.CustomerCriteria && rowData.CustomerCriteria.Code === 'MS'">
+           <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.FieldAnalysisCustSqls" :items="custSqlItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -114,7 +123,8 @@ export default {
       fieldAnalysisEmployeeItems: detailData.fieldAnalysisEmployeeItems,
       fieldAnalysisCustomerItems: detailData.fieldAnalysisCustomerItems,
       fieldAnalysisValidDateItems: detailData.fieldAnalysisValidDateItems,
-      fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems
+      fieldAnalysisDetailItems: detailData.fieldAnalysisDetailItems,
+      custSqlItems: detailData.custSqlItems
     }
   },
   mounted () {
