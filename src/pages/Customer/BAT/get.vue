@@ -190,7 +190,7 @@
                     {{data.value ? data.value.Label : ''}}
                   </template>
                   <template #cell(DBS_PRIORITY)="data" >
-                    <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
+                    {{$t(data.value)}}
                   </template>
                   <template #cell(AllowOverLimit)="data" >
                     <i :class="data.value.allowOverLimit === 1 ? 'fa fa-check text-success' : 'fa fa-times text-danger'"></i>
