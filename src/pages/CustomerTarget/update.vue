@@ -75,7 +75,7 @@
               <NextDropdown :disabled="true" :source="lookupValues" label="Label" v-model="customerTargetDetails.targetUnit" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.reqItem" :required="true" md="3" lg="3">
-              <NextDropdown v-model="customerTargetDetails.reqItem" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
+              <NextDropdown v-model="customerTargetDetails.reqItem" :dynamic-and-condition="{ StatusIds: [1] }" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="true" md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.reqItemQuantity"/>
