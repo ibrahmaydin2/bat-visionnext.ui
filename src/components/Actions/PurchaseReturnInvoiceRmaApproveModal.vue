@@ -64,12 +64,12 @@
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.Warehouse')" md="4" lg="4" :error="$v.form.WarehouseId">
           <NextDropdown
-            url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch"
             @input="selectedWarehouse"
             v-model="warehouse"
+            :source="warehouses"
             :searchable="true"
             :custom-option="true"
-            :dynamic-and-condition="{ StatusIds: [1] , IsVehicle: 0 }"
+            :disabled="true"
           />
         </NextFormGroup>
       </b-row>
@@ -141,6 +141,7 @@ export default {
     if (this.type === 'Waybill') {
       this.form.DocumentClassId = 8
     }
+    this.getWarehouse()
   },
   data () {
     return {
@@ -155,6 +156,7 @@ export default {
       invoiceTypes: [],
       invoiceLines: [],
       rmaLines: [],
+      warehouses: [],
       tableBusy: false,
       fields: [
         {
@@ -239,6 +241,19 @@ export default {
     }
   },
   methods: {
+    getWarehouse () {
+      let andConditionModel = {
+        StatusId: [1],
+        IsVehicle: 0
+      }
+      this.$api.postByUrl({andConditionModel}, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.warehouses = response.ListModel.BaseModels
+          this.warehouse = response.ListModel.BaseModels[0]
+          this.form.WarehouseId = this.warehouse.RecordId
+        }
+      })
+    },
     selectedType (label, model) {
       if (model) {
         this.invoiceType = model.label
@@ -303,10 +318,11 @@ export default {
           })
           this.invoiceTypes = this.getInvoiceClassTypes()
           this.rmaLines = res.Model.RmaLines
+          this.BranchId = this.$store.state.BranchId
           this.rmaDetail = res.Model
           this.showRmaLines = true
           setTimeout(() => {
-            this.warehouse = this.convertLookupValueToSearchValue(res.Model.Warehouse)
+            this.warehouse = this.getWarehouse()
             this.form.WarehouseId = res.Model.WarehouseId
             this.form.DocumentNumber = this.rmaDetail.DocumentNumber
           }, 100)
@@ -360,6 +376,7 @@ export default {
           })
           setTimeout(() => {
             this.$store.commit('setReloadGrid', true)
+            this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
           }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {
