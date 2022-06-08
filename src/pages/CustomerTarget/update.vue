@@ -59,7 +59,11 @@
               <NextDropdown
                 v-model="customerTargetDetails.customer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 label="Description1"
+                :searchable="true"
+                :custom-option="true"
+                :is-customer="true"
                 />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.TargetQuantity')" :error="$v.customerTargetDetails.targetQuantity" :required="true" md="3" lg="3">
@@ -71,7 +75,7 @@
               <NextDropdown :disabled="true" :source="lookupValues" label="Label" v-model="customerTargetDetails.targetUnit" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.reqItem" :required="true" md="3" lg="3">
-              <NextDropdown v-model="customerTargetDetails.reqItem" :source="items"/>
+              <NextDropdown v-model="customerTargetDetails.reqItem" :dynamic-and-condition="{ StatusIds: [1] }" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="true" md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.reqItemQuantity"/>
@@ -326,7 +330,7 @@ export default {
       })
     },
     getItem () {
-      this.$api.postByUrl({}, '/VisionNextItem/api/Item/Search').then((response) => {
+      this.$api.postByUrl({andConditionModel: { StatusIds: [1] }}, '/VisionNextItem/api/Item/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.items = response.ListModel.BaseModels
         }

@@ -39,6 +39,7 @@
           <b-thead>
             <b-tr>
               <b-th>{{$t('index.row')}}</b-th>
+              <b-th>{{$t('index.value')}}</b-th>
               <b-th>{{$t('index.column')}}</b-th>
               <b-th>{{$t('index.message')}}</b-th>
             </b-tr>
@@ -46,6 +47,7 @@
           <b-tbody>
             <b-tr v-for="(data, i) in datas" :key="i">
               <b-td>{{data.key}}</b-td>
+              <b-td>{{data.Value}}</b-td>
               <b-td>{{data.Column}}</b-td>
               <b-td>{{data.Message}}</b-td>
             </b-tr>
@@ -108,7 +110,8 @@ export default {
                 this.datas.push({
                   key: property,
                   Message: msg.Message,
-                  Column: msg.Column
+                  Column: msg.Column,
+                  Value: msg.Value
                 })
               })
             }
