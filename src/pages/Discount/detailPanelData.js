@@ -41,47 +41,57 @@ export const detailData = {
       defaultValue: 'T_ITEM',
       id: 3
     },
+    // {
+    //   type: 'Text',
+    //   inputType: 'number',
+    //   modelProperty: 'TakenQuantity',
+    //   label: i18n.t('insert.discount.takenQuantity'),
+    //   disabled (form, mainForm) {
+    //     return mainForm.DiscountKindId !== 6
+    //   },
+    //   required (form, mainForm) {
+    //     return mainForm.DiscountKindId === 6
+    //   },
+    //   visible: true,
+    //   id: 4
+    // },
+    // {
+    //   type: 'Text',
+    //   inputType: 'number',
+    //   modelProperty: 'SharePercent',
+    //   label: i18n.t('insert.discount.sharePercent'),
+    //   disabled (form, mainForm) {
+    //     return mainForm.DiscountKindId !== 6
+    //   },
+    //   required (form, mainForm) {
+    //     return mainForm.DiscountKindId === 6
+    //   },
+    //   visible: true,
+    //   id: 6
+    // },
+    // {
+    //   type: 'Text',
+    //   inputType: 'number',
+    //   modelProperty: 'MaxTakenAmount',
+    //   label: i18n.t('insert.discount.maxTakenAmount'),
+    //   disabled (form, mainForm) {
+    //     return mainForm.DiscountKindId !== 7 && mainForm.DiscountKindId !== 8
+    //   },
+    //   required (form, mainForm) {
+    //     return mainForm.DiscountKindId === 7 || mainForm.DiscountKindId === 8
+    //   },
+    //   visible: true,
+    //   id: 5
+    // },
     {
       type: 'Text',
       inputType: 'number',
-      modelProperty: 'TakenQuantity',
-      label: i18n.t('insert.discount.takenQuantity'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountKindId !== 6
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountKindId === 6
-      },
+      modelProperty: 'MinTakenAmount',
+      label: i18n.t('insert.discount.minTakenAmount'),
+      disabled: false,
+      required: false,
       visible: true,
       id: 4
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
-      modelProperty: 'SharePercent',
-      label: i18n.t('insert.discount.sharePercent'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountKindId !== 6
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountKindId === 6
-      },
-      visible: true,
-      id: 6
-    },
-    {
-      type: 'Text',
-      inputType: 'number',
-      modelProperty: 'MaxTakenAmount',
-      label: i18n.t('insert.discount.maxTakenAmount'),
-      disabled (form, mainForm) {
-        return mainForm.DiscountKindId !== 7 && mainForm.DiscountKindId !== 8
-      },
-      required (form, mainForm) {
-        return mainForm.DiscountKindId === 7 || mainForm.DiscountKindId === 8
-      },
-      visible: true,
-      id: 5
     }
   ],
   discountGivenItems: [
