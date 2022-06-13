@@ -398,6 +398,10 @@ export default {
 }
 </script>
 <style lang="sass">
+  #purchaseWaybillConvertModal___BV_modal_content_
+    height: 980px
+  .b-table-sticky-header
+    max-height: 675px
   .asc__listPage
     .card-body
       padding-top: 0px
