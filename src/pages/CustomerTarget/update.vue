@@ -237,6 +237,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let filteredArr = this.form.CustomerTargetDetails.filter(i => i.CustomerId === this.customerTargetDetails.customer.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
       let item = {
         Deleted: 0,
         System: 0,
@@ -365,6 +370,12 @@ export default {
         required
       },
       reqItemQuantity: {
+        required
+      },
+      descriptionReqItem: {
+        required
+      },
+      gainAmount: {
         required
       }
     }
