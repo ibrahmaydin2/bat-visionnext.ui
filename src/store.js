@@ -1935,10 +1935,10 @@ export const store = new Vuex.Store({
           'LanguageId': localStorage.getItem('LanguageId')
         }
       }
-      let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0]
+      let defaultBranch = user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0] ? user.AuthorizedBranches.filter(f => f.IsDefaultBranch === true)[0] : user.AuthorizedBranches.filter(f => f.IsDefaultBranch === false)[0]
       store.commit('userIDs', {
         userId: user.UserId,
-        company: user.AuthorizedCompanies[0].Id,
+        company: user.AuthorizedCompanies[0].Id ? user.AuthorizedCompanies[0].Id : 1,
         branch: defaultBranch.Id,
         branchName: defaultBranch.Desciption,
         customerId: defaultBranch.CustomerId

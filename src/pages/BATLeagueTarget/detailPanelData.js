@@ -11,7 +11,7 @@ export const detailData = {
       url: 'VisionNextItem/api/Item/AutoCompleteSearch',
       label: i18n.t('insert.bcp.Item'),
       required: (form) => {
-        return !form.TargetUnitId
+        return (!form.TargetUnitId) && (form.ReqItemId !== 1)
       },
       visible: true,
       isUnique: true,
