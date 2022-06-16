@@ -2,15 +2,37 @@ import i18n from '../../i18n'
 export const detailData = {
   opportunityTargetValuesItems: [
     {
+      type: 'Autocomplete',
+      modelProperty: 'ItemId',
+      objectKey: 'Item',
+      labelProperty: 'Description1',
+      customOption: true,
+      orConditionFields: 'Code,Description1',
+      url: 'VisionNextItem/api/Item/AutoCompleteSearch',
+      label: i18n.t('insert.bcp.Item'),
+      required: (form) => {
+        return (!form.TargetUnitId) && (form.ReqItemId !== 1)
+      },
+      visible: true,
+      isUnique: true,
+      disabled: (form) => {
+        return form.TargetUnitId != null || form.ReqItemId === 1
+      },
+      id: 1
+    },
+    {
       type: 'Text',
       inputType: 'number',
       modelProperty: 'TargetQuantity',
       defaultValue: 0,
       objectKey: 'TargetQuantity',
       label: i18n.t('insert.BATLeagueTarget.TargetQuantity'),
-      required: true,
+      // required: true,
+      required: (form) => {
+        return form.ItemId !== null || form.TargetUnitId !== null
+      },
       visible: true,
-      id: 1
+      id: 2
     },
     {
       type: 'Lookup',
@@ -20,7 +42,11 @@ export const detailData = {
       label: i18n.t('insert.BATLeagueTarget.TargetUnitId'),
       required: false,
       visible: true,
-      id: 2
+      isUnique: true,
+      disabled: (form) => {
+        return form.ItemId != null || form.ReqItemId === 1
+      },
+      id: 3
     },
     {
       type: 'Check',
@@ -30,7 +56,11 @@ export const detailData = {
       label: i18n.t('insert.BATLeagueTarget.ReqItemId'),
       required: false,
       visible: true,
-      id: 3
+      isUnique: true,
+      disabled: (form) => {
+        return form.ItemId != null || form.TargetUnitId != null
+      },
+      id: 4
     }
   ]
 }

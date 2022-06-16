@@ -80,10 +80,10 @@
             <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="true" md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.reqItemQuantity"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.descriptionReqItem" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.descriptionReqItem" :required="true" md="3" lg="3">
               <NextInput type="text" v-model="customerTargetDetails.descriptionReqItem"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.GainAmount')" :error="$v.customerTargetDetails.gainAmount" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.GainAmount')" :error="$v.customerTargetDetails.gainAmount" :required="true"  md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.gainAmount"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.currencyId')" :error="$v.customerTargetDetails.currency" :required="true" md="3" lg="3">
@@ -246,6 +246,11 @@ export default {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
         return false
       }
+      let filteredArr = this.form.CustomerTargetDetails.filter(i => i.CustomerId === this.customerTargetDetails.customer.RecordId && i.RecordState !== 4)
+      if (filteredArr.length > 0) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+        return false
+      }
       let item = {
         Deleted: 0,
         System: 0,
@@ -316,6 +321,12 @@ export default {
         required
       },
       reqItemQuantity: {
+        required
+      },
+      descriptionReqItem: {
+        required
+      },
+      gainAmount: {
         required
       }
     }

@@ -183,9 +183,12 @@ export default {
       ],
       fieldsRma: [
         {
-          key: 'ItemId',
+          key: 'Item',
           label: this.$t('index.PurchaseReturnInvoice.ItemId'),
-          sortable: true
+          sortable: true,
+          formatter: (value, key, item) => {
+            return value && value.Code
+          }
         },
         {
           key: 'Item',
