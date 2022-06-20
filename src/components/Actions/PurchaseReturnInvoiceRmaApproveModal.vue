@@ -54,7 +54,7 @@
     <section v-if="showRmaLines">
       <b-row>
         <NextFormGroup :title="$t('index.Convert.Code')" md="4" lg="4" :error="$v.form.InvoiceNumber">
-          <b-form-input type="text" v-model="form.InvoiceNumber" readonly />
+          <b-form-input type="text" v-model="form.InvoiceNumber" />
         </NextFormGroup>
         <NextFormGroup :title="$t('index.Convert.DocumentNumber')" md="4" lg="4" :error="$v.form.DocumentNumber">
           <b-form-input type="text" v-model="form.DocumentNumber" />
@@ -182,20 +182,20 @@ export default {
         }
       ],
       fieldsRma: [
-        {
-          key: 'Item',
-          label: this.$t('index.PurchaseReturnInvoice.ItemId'),
-          sortable: true,
-          formatter: (value, key, item) => {
-            return value && value.Code
-          }
-        },
+        // {
+        //   key: 'ItemId',
+        //   label: this.$t('index.PurchaseReturnInvoice.ItemId'),
+        //   sortable: true,
+        //   formatter: (value, key, item) => {
+        //     return value
+        //   }
+        // },
         {
           key: 'Item',
           label: this.$t('index.PurchaseReturnInvoice.Item'),
           sortable: true,
           formatter: (value, key, item) => {
-            return value && value.Label
+            return value && value.Code + ' ' + value.Label
           }
         },
         {

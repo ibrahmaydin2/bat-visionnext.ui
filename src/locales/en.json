@@ -3382,7 +3382,8 @@
       "UsedQuantity": "Returned Quantity",
       "Quantity": "Requested Return Quantity",
       "Price": "Buyback Price",
-      "Item": "Item" 
+      "Item": "Item",
+      "Stock": "Stock"
     },
     "customerMultipleSearch": {
       "title": "Add Multiple Customer",
