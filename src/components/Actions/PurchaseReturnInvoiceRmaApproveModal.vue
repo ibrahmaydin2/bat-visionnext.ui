@@ -69,7 +69,7 @@
             :source="warehouses"
             :searchable="true"
             :custom-option="true"
-            :disabled="true"
+            :disabled="false"
           />
         </NextFormGroup>
       </b-row>
