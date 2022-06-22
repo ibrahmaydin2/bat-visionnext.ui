@@ -998,15 +998,10 @@ export default {
       if (!this.form.TextField7) {
         this.form.TextField7 = ''
       }
-      if (!this.form.Description1) {
-        this.form.Description1 = ''
-      }
-      this.$watch(() => {
-        this.form.Description1 = ` - ${this.form.TextField6 ? `${this.form.TextField6}` : ''} ${this.form.TextField7 ? `${this.form.TextField7}` : ''}`
-      })
-
       this.$nextTick(() => {
-        this.form.CommercialTitle = `${this.form.Description1}`
+        this.form.CommercialTitle = `${this.form.Description1
+          ? `${this.form.Description1} - `
+          : ''}${this.form.TextField6} ${this.form.TextField7}`
       })
     }
   },

@@ -822,14 +822,10 @@ export default {
       if (!this.form.TextField7) {
         this.form.TextField7 = ''
       }
-      if (!this.form.Description1) {
-        this.form.Description1 = ''
-      }
-      this.$watch(() => {
-        this.form.Description1 = ` - ${this.form.TextField6 ? `${this.form.TextField6}` : ''} ${this.form.TextField7 ? `${this.form.TextField7}` : ''}`
-      })
       this.$nextTick(() => {
-        this.form.CommercialTitle = `${this.form.Description1}`
+        this.form.CommercialTitle = `${this.form.Description1
+          ? `${this.form.Description1} - `
+          : ''}${this.form.TextField6} ${this.form.TextField7}`
       })
     }
   },
@@ -923,9 +919,6 @@ export default {
         this.form.CustomerRegion4Id = null
         this.form.CustomerRegion5Id = null
       }
-    },
-    TextField6 (value) {
-      this.form.TextField6 = value
     },
     customerType (value) {
       if (value && value.DecimalValue === 5006) {
