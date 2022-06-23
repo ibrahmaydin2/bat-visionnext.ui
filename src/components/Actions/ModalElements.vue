@@ -190,7 +190,7 @@ export default {
       if (!date || typeof date === 'undefined') {
         return ''
       }
-      return new Date(date).toLocaleString('sv-SE')
+      return new Date(date).toISOString()
     },
     onClickAutoComplete (element) {
       this.selectedElement = element
