@@ -190,7 +190,7 @@ export default {
       if (!date || typeof date === 'undefined') {
         return ''
       }
-      return new Date(date).toISOString()
+      return new Date(date).toLocaleString('sv-SE')
     },
     onClickAutoComplete (element) {
       this.selectedElement = element
@@ -308,7 +308,7 @@ export default {
           model = this.dateConvertToISo(lastDayOfMonth)
           break
       }
-
+      console.log(model)
       return model
     }
   }
