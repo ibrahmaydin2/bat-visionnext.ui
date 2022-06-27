@@ -308,7 +308,6 @@ export default {
           model = this.dateConvertToISo(lastDayOfMonth)
           break
       }
-      console.log(model)
       return model
     }
   }
