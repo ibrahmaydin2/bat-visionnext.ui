@@ -105,14 +105,14 @@ export default {
           }
         }
       }
-      if (row && typeof row.Canceled !== 'undefined' && row.Canceled) {
-        this.$toasted.show(this.$t('index.errorCanceled'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
+      // if (row && typeof row.Canceled !== 'undefined' && row.Canceled) {
+      //   this.$toasted.show(this.$t('index.errorCanceled'), {
+      //     type: 'error',
+      //     keepOnHover: true,
+      //     duration: '3000'
+      //   })
+      //   return
+      // }
       if (row && typeof row.StateId !== 'undefined' && row.StateId === 3) {
         this.$toasted.show(this.$t('index.errorClosed'), {
           type: 'error',
