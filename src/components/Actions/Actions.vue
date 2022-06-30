@@ -113,7 +113,7 @@ export default {
       //   })
       //   return
       // }
-      if (row && typeof row.StateId !== 'undefined' && row.StateId === 3) {
+      if (row && typeof row.StateId !== 'undefined' && row.StateId === 3 && ((action.Title === 'Onayla') || (action.Title === 'İptal Et') || (action.Title === 'Kapat') || (action.Title === 'Belge Dönüştür'))) {
         this.$toasted.show(this.$t('index.errorClosed'), {
           type: 'error',
           keepOnHover: true,
