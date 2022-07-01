@@ -641,11 +641,13 @@ export default {
       this.form.TypeId = null
       this.customerType = null
       if (data) {
-        this.form.Category3Id = data.Label
+        this.form.Category3Id = data.Value
         this.$api.postByUrl({paramName: data.Label, paramId: data.Value}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByrecordIdOwnerType').then((res) => {
           if (res && res.Values) {
             this.selectedOwnerType = this.lookup.OWNER_TYPE.find(l => l.DecimalValue === res.Values[0].DecimalValue)
+            this.form.OwnerTypeId = res.Values[0].DecimalValue
             this.customerType = this.lookup.CUSTOMER_TYPE.find(l => l.DecimalValue === res.Values[1].DecimalValue)
+            this.form.TypeId = res.Values[1].DecimalValue
           }
         })
       } else {
