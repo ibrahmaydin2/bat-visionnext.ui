@@ -94,7 +94,8 @@ export default {
     sendFile (file) {
       let formData = {
         files: file,
-        ExcelIntegrationType: 15
+        ExcelIntegrationType: 15,
+        RecordId: this.$route.params.url
       }
       this.isLoading = true
       this.$store.commit('setDisabledLoading', true)

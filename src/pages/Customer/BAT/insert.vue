@@ -129,7 +129,7 @@
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.category3Id">
-              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectColumnName($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.category2Id">
               <NextDropdown v-model="customerCategory2" :disabled="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
@@ -634,6 +634,26 @@ export default {
         this.form[label] = null
       }
     },
+    selectColumnName  (data) {
+      // this.fieldValues = []
+      this.form.OwnerTypeId = null
+      this.selectedOwnerType = null
+      this.form.TypeId = null
+      this.customerType = null
+      if (data) {
+        this.form.Category3Id = data.Value
+        this.$api.postByUrl({paramName: data.Label, paramId: data.Value}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByrecordIdOwnerType').then((res) => {
+          if (res && res.Values) {
+            this.selectedOwnerType = this.lookup.OWNER_TYPE.find(l => l.DecimalValue === res.Values[0].DecimalValue)
+            this.form.OwnerTypeId = res.Values[0].DecimalValue
+            this.customerType = this.lookup.CUSTOMER_TYPE.find(l => l.DecimalValue === res.Values[1].DecimalValue)
+            this.form.TypeId = res.Values[1].DecimalValue
+          }
+        })
+      } else {
+        this.form.Category3Id = null
+      }
+    },
     setLicenseValidDate () {
       let now = new Date()
       now.setFullYear(now.getFullYear() + 1, '4', '1')
@@ -888,6 +908,24 @@ export default {
             }
           })
         }
+        // if (this.lookup.OWNER_TYPE) {
+        //   this.$api.postByUrl({model: {recordIds: [value.DecimalValue]}}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByrecordIdOwnerType').then((response) => {
+        //     if (response && response.RecordValue) {
+        //       let recordValue = parseFloat(response.RecordValue)
+        //       this.selectedOwnerType = this.lookup.OWNER_TYPE.find(l => l.DecimalValue === recordValue)
+        //       this.form.OwnerTypeId = recordValue
+        //     }
+        //   })
+        // }
+        // if (this.lookup.CUSTOMER_TYPE) {
+        //   this.$api.postByUrl({model: {recordIds: [value.DecimalValue]}}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByrecordIdOwnerType').then((response) => {
+        //     if (response && response.RecordValue) {
+        //       let recordValue = parseFloat(response.RecordValue)
+        //       this.customerType = this.lookup.CUSTOMER_TYPE.find(l => l.DecimalValue === recordValue)
+        //       this.form.TypeId = recordValue
+        //     }
+        //   })
+        // }
       } else {
         this.discountGroup3 = null
         this.customerCategory1 = null

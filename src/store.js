@@ -302,6 +302,13 @@ export const store = new Vuex.Store({
       convertedValues: [
         {
           mainProperty: 'Quantity',
+          targetProperty: 'SalesQuantity1',
+          getValue: (value, data) => {
+            return store.roundNumber(value ? parseInt(value) : 0)
+          }
+        },
+        {
+          mainProperty: 'Quantity',
           targetProperty: 'NetTotal',
           getValue: (value, data) => {
             return store.roundNumber(data.Price * (value ? parseFloat(value) : 0))

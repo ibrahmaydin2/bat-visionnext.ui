@@ -129,7 +129,7 @@
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
             <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
-              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.Category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="customerCategory3" :disabled="insertReadonly.Category3Id" lookup-key="CUSTOMER_CATEGORY_3" @input="selectColumnName($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.Category2Id">
               <NextDropdown v-model="customerCategory2" :disabled="true" lookup-key="CUSTOMER_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
@@ -623,6 +623,26 @@ export default {
     this.getPaymentTypes()
   },
   methods: {
+    selectColumnName  (data) {
+      // this.fieldValues = []
+      this.form.OwnerTypeId = null
+      this.selectedOwnerType = null
+      this.form.TypeId = null
+      this.type = null
+      if (data) {
+        this.form.Category3Id = data.Value
+        this.$api.postByUrl({paramName: data.Label, paramId: data.Value}, 'VisionNextCommonApi/api/LookupValue/GetSelectedParamNameByrecordIdOwnerType').then((res) => {
+          if (res && res.Values) {
+            this.selectedOwnerType = this.lookup.OWNER_TYPE.find(l => l.DecimalValue === res.Values[0].DecimalValue)
+            this.form.OwnerTypeId = res.Values[0].DecimalValue
+            this.type = this.lookup.CUSTOMER_TYPE.find(l => l.DecimalValue === res.Values[1].DecimalValue)
+            this.form.TypeId = res.Values[1].DecimalValue
+          }
+        })
+      } else {
+        this.form.Category3Id = null
+      }
+    },
     selectedType (label, model) {
       this.form[label] = model.DecimalValue
 

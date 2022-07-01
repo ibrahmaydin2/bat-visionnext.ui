@@ -286,7 +286,7 @@ export default {
 
       let model = ''
       let today = new Date()
-      let todayDate = new Date(today)
+      let todayDate = new Date(today.setHours(today.getHours() + 3))
       let firstDayOfMonth = new Date(todayDate.setDate(1))
       let firstDate = new Date(firstDayOfMonth)
       let nextMonth = new Date(firstDate.setMonth(firstDate.getMonth() + 1))
