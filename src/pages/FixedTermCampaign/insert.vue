@@ -236,12 +236,13 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'" :disabled="(selectedBranchCriteria && selectedBranchCriteria.Code === 'SL') && (!form.FixedTermCampaignDetails || form.FixedTermCampaignDetails.length === 0)">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.customer')" :error="$v.fixedTermCampaignCustomer.customerId" :required="true">
               <NextDropdown
-                url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
+                url="VisionNextCustomer/api/Customer/GetBranchesCustomerSearch"
                 v-model="customer"
+                :dynamic-and-condition="multipleDynamicAndCondition"
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 label="Description1"
@@ -253,8 +254,11 @@
              <NextFormGroup :title="$t('insert.fixedTermCampaign.locationId')" :error="$v.fixedTermCampaignCustomer.locationId" :required="true">
               <NextInput type="text" v-model="fixedTermCampaignCustomer.locationName" :disabled="true"/>
             </NextFormGroup>
-             <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budgetName" :required="true">
-              <NextInput type="text" v-model="fixedTermCampaignCustomer.budgetName" :disabled="true"/>
+             <NextFormGroup :title="$t('insert.fixedTermCampaign.budget')" :error="$v.fixedTermCampaignCustomer.budget" :required="true">
+              <NextInput type="text" v-model="fixedTermCampaignCustomer.budget" :disabled="false"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.usedAmount')" :error="$v.fixedTermCampaignCustomer.usedAmount">
+              <NextInput type="number" v-model="fixedTermCampaignCustomer.usedAmount" :disabled="false"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -269,6 +273,19 @@
                 @success="successExcelImport"
                 ></CommonExcelModal>
             </b-col>
+            <div cols="12" md="2">
+              <NextMultipleSelection
+                v-model="form.FixedTermCampaignDetails" name="FixedTermCampaignMultipleCustomer"
+                :hidden-values="hiddenValues"
+                :convertedValues="customerConvertedValues"
+                :validations="budgetValidation"
+                :dynamic-and-condition="multipleDynamicAndCondition">
+              </NextMultipleSelection>
+              <NextCustomerMultipleSearch
+                v-model="form.FixedTermCampaignDetails"
+                :dynamic-and-condition="multipleDynamicAndCondition"
+                :convertedValues="customerConvertedValues" />
+            </div>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -277,15 +294,18 @@
                 <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.usedAmount')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID')" :key="i">
                   <b-td>{{f.CustomerName}}</b-td>
                   <b-td>{{f.CustomerCode}}</b-td>
-                  <b-td>{{f.LocationName}}</b-td>
-                  <b-td>{{f.BudgetName}}</b-td>
+                  <b-td>{{f.LocationName ? f.LocationName.Label : ''}}</b-td>
+                  <b-td>{{f.Budget}}</b-td>
+                  <b-td>{{f.UsedAmount}}</b-td>
                   <b-td class="text-center">
+                    <!-- <i @click="editInvoiceLine(f)" class="fa fa-pencil-alt"></i> -->
                     <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -308,6 +328,9 @@
                 <AddDetailButton @click.native="addFixedTermCampaignDetail" />
               </b-form-group>
             </b-col>
+            <!-- <div cols="12" md="2">
+              <NextMultipleSelection3 v-model="form.FixedTermCampaignDetails" name="FixedTermCampaignMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection3>
+            </div> -->
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -382,6 +405,7 @@ export default {
       campaignItemValue: {},
       campaignItemAreaList: [],
       campaignItemValueList: [],
+      selectedIndex: null,
       fixedTermCampaignDetail: {
         tableName: null,
         columnName: null,
@@ -399,10 +423,104 @@ export default {
         customerCode: null,
         locationId: null,
         locationName: null,
-        budgetName: null
+        budget: null,
+        usedAmount: null
       },
       companyId: null,
-      branchId: null
+      branchId: null,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'CustomerCode'
+        },
+        // {
+        //   mainProperty: 'Code',
+        //   targetProperty: 'ColumnValue'
+        // },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'ColumnValueDesc'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'LocationName'
+        },
+        {
+          mainProperty: 'Budget',
+          targetProperty: 'BudgetName'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
+        }
+      ],
+      customerConvertedValues: [
+        {
+          mainProperty: 'TableName',
+          convert: () => 'T_CUSTOMER'
+        },
+        {
+          mainProperty: 'ColumnName',
+          convert: () => 'RECORD_ID'
+        },
+        {
+          mainProperty: 'ColumnValue',
+          convert: (data) => data.RecordId
+        },
+        {
+          mainProperty: 'CustomerCode',
+          convert: (data) => data.Code
+        },
+        {
+          mainProperty: 'CustomerName',
+          convert: (data) => data.CommercialTitle
+        },
+        {
+          mainProperty: 'LocationName',
+          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
+        },
+        {
+          mainProperty: 'BudgetName',
+          targetProperty: 'Budget',
+          getValue: (value, data) => {
+            return data.Budget
+          }
+        }
+      ],
+      budgetValidation: [
+        {
+          mainProperty: 'Budget',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
+      ]
+      // hiddenValuesBranch: [
+      //   {
+      //     mainProperty: 'RecordId',
+      //     targetProperty: 'AnalysisBranchId'
+      //   },
+      //   {
+      //     mainProperty: 'Code',
+      //     targetProperty: 'ColumnValue'
+      //   },
+      //   {
+      //     mainProperty: 'Description1',
+      //     targetProperty: 'Text'
+      //   }
+      // ]
     }
   },
   mounted () {
@@ -410,6 +528,14 @@ export default {
     this.getInsertPage(this.routeName)
     this.companyId = this.$store.state.CompanyId
     this.branchId = this.$store.state.BranchId
+  },
+  computed: {
+    multipleDynamicAndCondition () {
+      return this.form.FixedTermCampaignDetails.length > 0
+        ? { BranchIds: this.form.FixedTermCampaignDetails.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')
+          .map(f => f.ColumnValue) }
+        : {}
+    }
   },
   methods: {
     getInsertPage (e) {
@@ -593,12 +719,12 @@ export default {
         TableName: 'T_CUSTOMER',
         ColumnName: 'RECORD_ID',
         ColumnValue: this.fixedTermCampaignCustomer.customerId,
-        UsedAmount: null,
+        UsedAmount: this.fixedTermCampaignCustomer.usedAmount,
         BudgetAmount: null,
         CustomerName: this.fixedTermCampaignCustomer.customerName,
         CustomerCode: this.fixedTermCampaignCustomer.customerCode,
         LocationName: this.fixedTermCampaignCustomer.locationName,
-        BudgetName: this.fixedTermCampaignCustomer.budgetName
+        Budget: this.fixedTermCampaignCustomer.budget
       })
       this.fixedTermCampaignCustomer = {}
       this.customer = null
@@ -606,6 +732,17 @@ export default {
     },
     removeFixedTermCampaignCustomer (item) {
       this.form.FixedTermCampaignDetails.splice(this.form.FixedTermCampaignDetails.indexOf(item), 1)
+    },
+    editInvoiceLine (item) {
+      this.selectedIndex = this.form.FixedTermCampaignDetails.indexOf(item)
+      this.fixedTermCampaignCustomer = {
+        usedAmount: item.UsedAmount,
+        budget: item.Budget,
+        isUpdated: true
+      }
+      this.$forceUpdate()
+
+      // this.customerInfo(item.CustomerName, item.CustomerCode, item.LocationName)
     },
     save () {
       this.$v.form.$touch()
@@ -625,6 +762,14 @@ export default {
           })
           return
         }
+        // if (this.form.BudgetAmount === this.form.FixedTermCampaignDetails.Budget) {
+        //   this.$toasted.show(this.$t('insert.fixedTermCampaign.budgetError'), {
+        //     type: 'error',
+        //     keepOnHover: true,
+        //     duration: '3000'
+        //   })
+        //   return
+        // }
         this.form.FixedTermCampaignBranchs = this.form.FixedTermCampaignDetails
           .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID').map(a => {
             return {
@@ -671,7 +816,8 @@ export default {
               CustomerCode: a.CustomerCode,
               LocationId: a.LocationId,
               LocationName: a.LocationName,
-              BudgetName: a.BudgetName
+              Budget: a.Budget,
+              UsedAmount: a.UsedAmount
             }
           })
         this.createData()
@@ -732,17 +878,19 @@ export default {
         me.fixedTermCampaignCustomer.customerId = value.RecordId
         me.fixedTermCampaignCustomer.customerName = value.Description1
         me.fixedTermCampaignCustomer.customerCode = value.Code
-        let request = {
-          customerId: value.RecordId
-        }
-        me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
-          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
-            let customerBudget = res.ListModel.BaseModels[0]
-            me.fixedTermCampaignCustomer.budgetName = customerBudget.CustomerDesc
-            me.$forceUpdate()
-          }
-        })
-        me.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/Get').then((res) => {
+        me.fixedTermCampaignCustomer.locationName = value.DefaultLocation.Label
+        me.fixedTermCampaignCustomer.locationId = value.DefaultLocation.DecimalValue
+        // let request = {
+        //   customerId: value.RecordId
+        // }
+        // me.$api.post(request, 'Budget', 'BudgetMaster/GetCustomerBudget').then((res) => {
+        //   if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+        //     let customerBudget = res.ListModel.BaseModels[0]
+        //     me.fixedTermCampaignCustomer.budgetName = customerBudget.CustomerDesc
+        //     me.$forceUpdate()
+        //   }
+        // })
+        me.$api.post({RecordId: value.RecordId}, 'Customer', 'Customer/GetBranchesCustomerSearch').then((res) => {
           if (res && res.Model) {
             let defaultLocation = res.Model.DefaultLocation
             if (defaultLocation) {
