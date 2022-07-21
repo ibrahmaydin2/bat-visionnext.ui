@@ -258,7 +258,7 @@
               <NextInput type="text" v-model="fixedTermCampaignCustomer.budget" :disabled="false"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.usedAmount')" :error="$v.fixedTermCampaignCustomer.usedAmount">
-              <NextInput type="number" v-model="fixedTermCampaignCustomer.usedAmount" :disabled="false"/>
+              <NextInput type="number" v-model="fixedTermCampaignCustomer.usedAmount" :disabled="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -281,10 +281,6 @@
                 :validations="budgetValidation"
                 :dynamic-and-condition="multipleDynamicAndCondition">
               </NextMultipleSelection>
-              <NextCustomerMultipleSearch
-                v-model="form.FixedTermCampaignDetails"
-                :dynamic-and-condition="multipleDynamicAndCondition"
-                :convertedValues="customerConvertedValues" />
             </div>
           </b-row>
           <b-row>
@@ -305,7 +301,7 @@
                   <b-td>{{f.Budget}}</b-td>
                   <b-td>{{f.UsedAmount}}</b-td>
                   <b-td class="text-center">
-                    <!-- <i @click="editInvoiceLine(f)" class="fa fa-pencil-alt"></i> -->
+                    <i @click="editInvoiceLine(f)" class="fa fa-edit text-warning"></i>
                     <i @click="removeFixedTermCampaignCustomer(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
                 </b-tr>
@@ -711,7 +707,7 @@ export default {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
-      this.form.FixedTermCampaignDetails.push({
+      let item = {
         Deleted: 0,
         System: 0,
         RecordState: 2,
@@ -725,7 +721,13 @@ export default {
         CustomerCode: this.fixedTermCampaignCustomer.customerCode,
         LocationName: this.fixedTermCampaignCustomer.locationName,
         Budget: this.fixedTermCampaignCustomer.budget
-      })
+      }
+      if (this.fixedTermCampaignCustomer.isUpdated) {
+        this.form.FixedTermCampaignDetails[this.selectedIndex] = item
+        this.fixedTermCampaignCustomer.isUpdated = false
+      } else {
+        this.form.FixedTermCampaignDetails.push(item)
+      }
       this.fixedTermCampaignCustomer = {}
       this.customer = null
       this.$v.fixedTermCampaignCustomer.$reset()
