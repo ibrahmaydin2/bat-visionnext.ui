@@ -114,7 +114,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(f, i) in form.FixedTermCampaignTakens" :key="i">
+                <b-tr v-for="(f, i) in (form.FixedTermCampaignTakens ? form.FixedTermCampaignTakens.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{f.StartQuantity}}</b-td>
                   <b-td>{{f.EndQuantity}}</b-td>
                   <b-td>{{f.PaymentPeriod}}</b-td>
@@ -180,13 +180,15 @@
                 <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
                 <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.usedAmount')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.FixedTermCampaignCustomers" :key="i">
                   <b-td>{{f.Customer ? f.Customer.Label : f.CustomerName}}</b-td>
                   <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
-                  <b-td>{{f.LocationName}}</b-td>
-                  <b-td>{{f.Budget ? f.Budget.Label : f.BudgetName}}</b-td>
+                  <b-td>{{f.LocationName ? f.LocationName.Label : ''}}</b-td>
+                  <b-td>{{f.Budget}}</b-td>
+                  <b-td>{{f.UsedAmount}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -344,8 +346,19 @@ export default {
       this.$v.fixedTermCampaignTaken.$reset()
     },
     removeFixedTermCampaignTaken (item) {
-      this.form.FixedTermCampaignTakens.splice(this.form.FixedTermCampaignTakens.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.FixedTermCampaignTakens[this.form.FixedTermCampaignTakens.indexOf(item)].RecordState = 4
+      } else {
+        this.form.FixedTermCampaignTakens.splice(this.form.FixedTermCampaignTakens.indexOf(item), 1)
+      }
     },
+    // removeFixedTermCampaignTaken (item) {
+    //   if (item.RecordState > 0) {
+    //     this.form.FixedTermCampaignTakens[this.form.FixedTermCampaignTakens.indexOf(item)].RecordState = 4
+    //   } else {
+    //     this.form.FixedTermCampaignTakens.splice(this.form.FixedTermCampaignTakens.indexOf(item), 1)
+    //   }
+    // },
     setData () {
       let rowData = this.rowData
       this.form = rowData

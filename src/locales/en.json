@@ -2026,12 +2026,14 @@
       "budget": "Bütçe",
       "customerCode": "Müşteri Kodu",
       "startDateLessEndDate": "Bitiş Tarihi Başlangıç Tarihinden önce olamaz!",
+      "budgetError": "Müşterilere girilen bütçe, toplam bütçeye eşit olmalıdır",
       "routeId": "Rota Id",
       "branchId": "Şube Id",
       "branchCode":"Şube Kodu",
       "branchName":"Şube Adı",
       "importExcelButtonTitle": "Müşteriler",
-      "importExcelTitle": "Müşteri Yükle"
+      "importExcelTitle": "Müşteri Yükle",
+      "usedAmount": "Kullanılan Bütçe"
     },
     "discount": {
       "discountGivens": "İndirim Sonucu",

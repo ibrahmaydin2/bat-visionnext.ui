@@ -164,7 +164,7 @@ export default {
         Description1: null,
         CustomerId: null,
         DocumentNumber: null,
-        DocumentDate: this.getNowDateStr(),
+        DocumentDate: new Date(),
         PaymentDate: new Date(),
         CashTotal: null,
         CurrencyId: null,

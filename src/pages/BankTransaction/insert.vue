@@ -111,7 +111,7 @@ export default {
         StatusId: null,
         Code: null,
         CustomerId: null,
-        DocumentDate: this.getNowDateStr(),
+        DocumentDate: new Date(),
         DocumentNumber: null,
         CurrencyId: null,
         TransactionTypeId: null,
