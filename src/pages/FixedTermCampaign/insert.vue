@@ -382,7 +382,7 @@ export default {
         {
           type: 'Autocomplete',
           modelProperty: 'ColumnValue',
-          objectKey: 'ColumnNameDesc',
+          objectKey: 'CustomerCode',
           labelProperty: 'Code',
           customOption: true,
           isCustomer: true,
