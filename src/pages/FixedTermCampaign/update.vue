@@ -172,7 +172,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'">
+        <!-- <b-tab :title="$t('insert.fixedTermCampaign.customers')" v-if="(selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML') && (isCampaignDateNew === false)">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -193,6 +193,36 @@
               </b-tbody>
             </b-table-simple>
           </b-row>
+        </b-tab> -->
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="(selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML') && (isCampaignDateNew === false)">
+          <NextDetailPanel type="get" v-model="form.FixedTermCampaignCustomers" :items="getFixedTermCustomerItems()">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  v-model="form.FixedTermCampaignCustomers" name="FixedTermCampaignMultipleCustomer"
+                  :hidden-values="hiddenValues"
+                  :converted-values="customerConvertedValues"
+                  :validations="budgetValidation"
+                  :dynamic-and-condition="{multipleDynamicAndCondition, StatusIds: [1]}">
+                </NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
+        </b-tab>
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="(selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML') && (isCampaignDateNew === true)" :disabled="(selectedBranchCriteria && selectedBranchCriteria.Code === 'SL') && (!form.FixedTermCampaignBranchs || form.FixedTermCampaignBranchs.length === 0)">
+          <NextDetailPanel v-model="form.FixedTermCampaignCustomers" :showEdit="false" :showAddButton="false" :items="getFixedTermCustomerItems()">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  v-model="form.FixedTermCampaignCustomers" name="FixedTermCampaignMultipleCustomer"
+                  :hidden-values="hiddenValues"
+                  :converted-values="customerConvertedValues"
+                  :validations="budgetValidation"
+                  :dynamic-and-condition="{multipleDynamicAndCondition, StatusIds: [1]}">
+                </NextMultipleSelection>
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.fixedTermCampaign.branchs')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <b-row>
@@ -287,11 +317,96 @@ export default {
       isCampaignDateNew: false,
       currencies: [],
       companyId: null,
-      branchId: null
+      branchId: null,
+      hiddenValues: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'ColumnValue'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'CustomerCode'
+        },
+        // {
+        //   mainProperty: 'Code',
+        //   targetProperty: 'ColumnValue'
+        // },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'ColumnValueDesc'
+        },
+        {
+          mainProperty: 'CommercialTitle',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'LocationName'
+        },
+        {
+          mainProperty: 'Budget',
+          targetProperty: 'BudgetName'
+        },
+        {
+          defaultValue: 'RECORD_ID',
+          targetProperty: 'ColumnName'
+        },
+        {
+          defaultValue: 'T_CUSTOMER',
+          targetProperty: 'TableName'
+        }
+      ],
+      customerConvertedValues: [
+        {
+          mainProperty: 'TableName',
+          convert: () => 'T_CUSTOMER'
+        },
+        {
+          mainProperty: 'ColumnName',
+          convert: () => 'RECORD_ID'
+        },
+        {
+          mainProperty: 'ColumnValue',
+          convert: (data) => data.RecordId
+        },
+        {
+          mainProperty: 'CustomerCode',
+          convert: (data) => data.Code
+        },
+        {
+          mainProperty: 'CustomerName',
+          convert: (data) => data.CommercialTitle
+        },
+        {
+          mainProperty: 'LocationName',
+          convert: (data) => data.DefaultLocation ? data.DefaultLocation.Label : '-'
+        },
+        {
+          mainProperty: 'BudgetName',
+          targetProperty: 'Budget',
+          getValue: (value, data) => {
+            return data.Budget
+          }
+        }
+      ],
+      budgetValidation: [
+        {
+          mainProperty: 'Budget',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
+      ]
     }
   },
   computed: {
-    ...mapState(['routes', 'branchs', 'customers'])
+    ...mapState(['routes', 'branchs', 'customers']),
+    multipleDynamicAndCondition () {
+      return this.form.FixedTermCampaignBranchs.length > 0
+        ? { BranchIds: this.form.FixedTermCampaignBranchs.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')
+          .map(f => f.ColumnValue)}
+        : {}
+    }
   },
   mounted () {
     this.companyId = this.$store.state.CompanyId
@@ -302,6 +417,88 @@ export default {
     this.getInsertPage(this.routeName)
   },
   methods: {
+    getFixedTermCustomerItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'ColumnValue',
+          objectKey: 'Code',
+          labelProperty: 'Code',
+          customOption: true,
+          isCustomer: true,
+          orConditionFields: 'Code,Description1',
+          url: 'VisionNextCustomer/api/Customer/GetBranchesCustomerSearch',
+          label: this.$t('insert.fieldAnalysis.customerCode'),
+          dynamicAndCondition: this.multipleDynamicAndCondition,
+          required: true,
+          disabled: true,
+          visible: true,
+          isUnique: true,
+          id: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'CustomerName',
+          objectKey: 'Description1',
+          parentProperty: 'CommercialTitle',
+          label: this.$t('insert.fieldAnalysis.commercialTitle'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 2
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'LocationName',
+          valueProperty: 'Label',
+          objectKey: 'DefaultLocation',
+          parentProperty: 'DefaultLocation',
+          label: this.$t('insert.fieldAnalysis.location'),
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'Budget',
+          visible: true,
+          label: this.$t('insert.fixedTermCampaign.budget'),
+          defaultValue: 0,
+          disabled: true,
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'number',
+          modelProperty: 'UsedAmount',
+          visible: true,
+          disabled: true,
+          label: this.$t('insert.fixedTermCampaign.usedAmount'),
+          defaultValue: 0,
+          id: 5
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          id: 6
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 7
+        }
+      ]
+    },
     getInsertPage () {
       let today = new Date().toISOString().slice(0, 10)
       this.form.CampaignBeginDate = today
@@ -370,7 +567,14 @@ export default {
       this.selectedCurrency = this.convertLookupValueToSearchValue(rowData.Currency)
       this.form.UsedAmount = this.form.UsedAmount ? this.form.UsedAmount : 0
       this.setDisabledValues()
-      this.getCampaignCustomersDetail()
+      if (this.form.FixedTermCampaignDetails) {
+        this.form.FixedTermCampaignCustomers = this.form.FixedTermCampaignDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID' && i.RecordState !== 4)
+        // this.customers = this.form.FieldAnalysisDetails.filter(i => i.TableName === 'T_CUSTOMER' && i.ColumnName === 'RECORD_ID')
+      }
+      // if (!rowData.FixedTermCampaignCustomers) {
+      //   this.form.FixedTermCampaignCustomers = []
+      // }
+      // this.getCampaignCustomersDetail()
     },
     getCampaignCustomersDetail () {
       if (this.form.FixedTermCampaignCustomers && this.form.FixedTermCampaignCustomers.length > 0) {
@@ -465,6 +669,7 @@ export default {
               StatusId: a.StatusId
             }
           })
+        this.form.FixedTermCampaignDetails = [...this.form.FixedTermCampaignCustomers]
         this.updateData()
       }
     }
