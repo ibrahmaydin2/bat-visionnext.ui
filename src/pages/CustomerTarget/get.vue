@@ -37,7 +37,7 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-            <b-table-simple bordered small>
+            <b-table-simple :current-page="currentPage" :per-page="0" bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.CustomerTarget.CustomerId')}}</span></b-th>
                 <b-th><span>{{$t('insert.CustomerTarget.TargetQuantity')}}</span></b-th>
@@ -61,6 +61,12 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+              <b-pagination
+                :total-rows="totalRowCount"
+                v-model="currentPage"
+                :per-page="50"
+                aria-controls="customer-target-list"
+              ></b-pagination>
               </b-card>
             </b-col>
           </b-row>
@@ -97,11 +103,15 @@ export default {
   data () {
     return {
       // customerTargetDetailsItems: detailData.customerTargetDetailsItems,
-      customerTargetDatesItems: detailData.customerTargetDatesItems
+      customerTargetDatesItems: detailData.customerTargetDatesItems,
+      currentPage: 1,
+      totalRowCount: 0,
+      allList: {}
     }
   },
   mounted () {
     this.getData()
+    this.getCustomerTargetDetails()
   },
   computed: {
     ...mapState(['rowData'])
@@ -110,10 +120,40 @@ export default {
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },
+    getCustomerTargetDetails (currentPage) {
+      if (currentPage) {
+        this.currentPage = currentPage
+      }
+      let request = {
+        andConditionModel: {
+          CustomerTargetIds: [this.$route.params.url]
+        },
+        page: this.currentPage
+      }
+      this.isLoading = true
+      this.allList = {}
+      if (this.allList[this.currentPage]) {
+        this.rowData.CustomerTargetDetails = this.allList[this.currentPage]
+        return
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search', 50).then((response) => {
+        if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
+          this.rowData.CustomerTargetDetails = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.rowData.CustomerTargetDetails
+        }
+        this.$forceUpdate()
+      })
+    },
     getData () {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextCustomer/api/CustomerTarget', record: this.$route.params.url}).then(() => {
 
       })
+    }
+  },
+  watch: {
+    currentPage () {
+      this.getCustomerTargetDetails()
     }
   }
 }
