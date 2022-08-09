@@ -96,7 +96,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-table-simple bordered small>
+            <b-table-simple id="customer-target-list" :current-page="currentPage" :per-page="0" bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.CustomerTarget.CustomerId')}}</span></b-th>
                 <b-th><span>{{$t('insert.CustomerTarget.TargetQuantity')}}</span></b-th>
@@ -129,6 +129,13 @@
                 </b-tr>
               </b-tbody>
             </b-table-simple>
+            <b-pagination
+              v-if="form.CustomerTargetDetails.length > 49"
+              :total-rows="totalRowCount"
+              v-model="currentPage"
+              :per-page="50"
+              aria-controls="customer-target-list"
+            ></b-pagination>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDates')">
@@ -171,6 +178,9 @@ export default {
       itemCriterias: [],
       fieldValues: [],
       selectedIndex: null,
+      currentPage: 1,
+      totalRowCount: 0,
+      allList: {},
       customerTargetDetails: {
         customer: null,
         targetQuantity: null,
@@ -190,8 +200,34 @@ export default {
     this.getCurrencies()
     this.getLookups()
     this.getItem()
+    this.getCustomerTargetDetails()
   },
   methods: {
+    getCustomerTargetDetails (currentPage) {
+      if (currentPage) {
+        this.currentPage = currentPage
+      }
+      let request = {
+        andConditionModel: {
+          CustomerTargetIds: [this.$route.params.url]
+        },
+        page: this.currentPage
+      }
+      this.isLoading = true
+      this.allList = {}
+      if (this.allList[this.currentPage]) {
+        this.form.CustomerTargetDetails = this.allList[this.currentPage]
+        return
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search', 50).then((response) => {
+        if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
+          this.form.CustomerTargetDetails = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.form.CustomerTargetDetails
+        }
+        this.$forceUpdate()
+      })
+    },
     getItemCriterias () {
       this.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((response) => {
         if (response && response.Values && response.Values.length > 0) {
@@ -279,6 +315,8 @@ export default {
       } else {
         this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
       }
+      this.$forceUpdate()
+      // this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
     },
     editInvoiceLine (item) {
       this.selectedIndex = this.form.CustomerTargetDetails.indexOf(item)
@@ -353,6 +391,11 @@ export default {
       } else {
         this.updateData()
       }
+    }
+  },
+  watch: {
+    currentPage () {
+      this.getCustomerTargetDetails()
     }
   },
   validations () {
