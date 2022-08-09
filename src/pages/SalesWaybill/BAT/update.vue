@@ -366,7 +366,7 @@
   </b-row>
 </template>
 <script>
-import { required, minValue, minLength, maxLength } from 'vuelidate/lib/validators'
+import { required, minValue, minLength, maxLength, requiredIf } from 'vuelidate/lib/validators'
 import updateMixin from '../../../mixins/update'
 import { mapState } from 'vuex'
 export default {
@@ -470,7 +470,8 @@ export default {
       priceList: [],
       items: [],
       stocks: [],
-      salesWaybillCopy: false
+      salesWaybillCopy: false,
+      paymentRequired: false
     }
   },
   computed: {
@@ -483,8 +484,19 @@ export default {
     // eslint-disable-next-line eqeqeq
     this.salesWaybillCopy = this.$route.query.salesWaybillCopy == 1
     this.getInsertPage(this.routeName)
+    this.paymentTyperequire()
   },
   methods: {
+    paymentTyperequire () {
+      let model = {
+        InvoiceId: this.$route.params.url
+      }
+      this.$api.postByUrl(model, 'VisionNextInvoice/api/SalesWaybill/IsStockTransfer').then((response) => {
+        if (response) {
+          this.paymentRequired = response.IsRequired
+        }
+      })
+    },
     getInsertPage (e) {
       this.getData().then(() => {
         if (this.rowData.Canceled === 1) {
@@ -950,7 +962,7 @@ export default {
     }
   },
   validations () {
-    return {
+    let validation = {
       form: this.insertRules,
       selectedInvoiceLine: {
         selectedItem: {
@@ -996,6 +1008,22 @@ export default {
         }
       }
     }
+    // if (this.paymentRequired === true) {
+    //   this.insertRules.PaymentPeriodId = {
+    //     required
+    //   }
+    // } else {
+    //   this.insertRules.PaymentPeriodId = {
+    //     required: false
+    //   }
+    // }
+    this.insertRules.PaymentTypeId = {
+      required: requiredIf(function () {
+        return this.paymentRequired === true ? required : !required
+      })
+    }
+    this.insertRequired.PaymentTypeId = this.paymentRequired === true ? required : !required
+    return validation
   },
   watch: {
     selectedCustomer (e) {

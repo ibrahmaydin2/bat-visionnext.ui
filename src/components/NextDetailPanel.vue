@@ -35,7 +35,7 @@
       </NextFormGroup>
       <b-col cols="12" md="2">
         <b-form-group>
-          <AddDetailButton v-if="!isUpdated" @click.native="addItems()" />
+          <AddDetailButton v-if="!isUpdated && showAddButton" @click.native="addItems()" />
           <b-button v-if="isUpdated" class="mt-4" size="sm" variant="success" @click="addItems()">
             <i class="fa fa-pencil-alt"></i> {{$t('insert.edit')}}
           </b-button>
@@ -161,6 +161,11 @@ export default {
       type: Boolean,
       default: true,
       description: 'Grid satırında güncelle butonunun görünürlük bilgisi'
+    },
+    showAddButton: {
+      type: Boolean,
+      default: true,
+      description: 'Detay Panelde ekle butonunun görünürlük bilgisi'
     },
     hideOperations: {
       type: Boolean,
