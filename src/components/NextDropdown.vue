@@ -429,3 +429,9 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+.vs__dropdown-toggle
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+</style>
