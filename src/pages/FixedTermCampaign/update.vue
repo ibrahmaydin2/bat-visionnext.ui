@@ -44,7 +44,7 @@
               <NextCheckBox v-model="form.UseBudget" type="number" toggle :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <NextInput type="number" v-model="form.BudgetAmount" :disabled="true" />
+              <NextInput type="number" v-model="form.BudgetAmount" :disabled="isCampaignDateNew === false" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
               <NextInput type="number" v-model="form.UsedAmount" :disabled="true" />
@@ -126,7 +126,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
+        <!-- <b-tab :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
@@ -137,6 +137,44 @@
                 <b-tr v-for="(f, i) in form.FixedTermCampaignItems" :key="i">
                   <b-td>{{f.ColumnNameDescription}}</b-td>
                   <b-td>{{f.ColumnValueDescription}}</b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab> -->
+        <b-tab lazy :title="$t('insert.fixedTermCampaign.discountedItems')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
+          <b-row>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.campaignItemArea" :required="true" md="5" lg="5">
+              <NextDropdown
+                v-model="campaignItemArea"
+                :source="campaignItemAreaList"
+                :disabled="!isCampaignDateNew"
+                label="Label"
+              ></NextDropdown>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.fixedTermCampaign.value')" :error="$v.campaignItemValue" :required="true" md="5" lg="5">
+              <v-select v-model="campaignItemValue" :disabled="!isCampaignDateNew" :options="campaignItemValueList" :filterable="true" label="Label"/>
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addFixedTermCampaignItem" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.fixedTermCampaign.areaDescription')}}</span></b-th>
+                <b-th><span>{{$t('insert.fixedTermCampaign.value')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in (form.FixedTermCampaignItems ? form.FixedTermCampaignItems.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{f.ColumnNameDescription}}</b-td>
+                  <b-td>{{f.ColumnValueDescription}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeFixedTermCampaignItem(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -422,7 +460,7 @@ export default {
         {
           type: 'Autocomplete',
           modelProperty: 'ColumnValue',
-          objectKey: 'Code',
+          objectKey: 'ColumnValueDesc',
           labelProperty: 'Code',
           customOption: true,
           isCustomer: true,
@@ -509,6 +547,42 @@ export default {
       me.$api.postByUrl({paramId: 'ITEM_CRITERIA'}, 'VisionNextCommonApi/api/LookupValue/GetValuesBySysParams').then((res) => {
         me.campaignItemAreaList = res.Values
       })
+    },
+    addFixedTermCampaignItem () {
+      this.$v.campaignItemArea.$touch()
+      this.$v.campaignItemValue.$touch()
+      if (this.$v.customerItemArea.$error || this.$v.customerItemValue.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      this.form.FixedTermCampaignItems.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        CompanyId: null,
+        TableName: 'T_ITEM',
+        ColumnName: this.campaignItemArea.ForeignField,
+        ColumnValue: this.campaignItemValue.DecimalValue,
+        ColumnNameDescription: this.campaignItemArea.Label,
+        ColumnValueDescription: this.campaignItemValue.Label
+      })
+      this.campaignItemArea = null
+      this.campaignItemValue = null
+      this.$v.campaignItemArea.$reset()
+      this.$v.campaignItemValue.$reset()
+    },
+    removeFixedTermCampaignItem (item) {
+      // this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.FixedTermCampaignItems[this.form.FixedTermCampaignItems.indexOf(item)].RecordState = 4
+      } else {
+        this.form.FixedTermCampaignItems.splice(this.form.FixedTermCampaignItems.indexOf(item), 1)
+      }
     },
     addFixedTermCampaignTaken () {
       this.$v.fixedTermCampaignTaken.$touch()

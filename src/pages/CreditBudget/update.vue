@@ -497,9 +497,12 @@ export default {
     successExcelImport (data) {
       if (data) {
         let list = []
+        console.log(data)
+        console.log(this.CustomerGuarantees)
         Object.keys(data).map(d => {
           let obj = data[d]
           let existIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId === obj.CustomerId)
+          console.log(existIndex)
           if (existIndex > -1) {
             let exist = this.CustomerGuarantees[existIndex]
             obj.RecordState = exist.RecordId ? 3 : 2
@@ -507,6 +510,13 @@ export default {
             this.CustomerGuarantees.splice(existIndex, 1)
           } else {
             obj.RecordState = 2
+          }
+          let nonExistIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId !== obj.CustomerId)
+          console.log(nonExistIndex)
+          if (nonExistIndex > -1) {
+            let _CustomerGuarantees = this.CustomerGuarantees
+            _CustomerGuarantees[nonExistIndex].RecordState = 4
+            this.CustomerGuarantees = _CustomerGuarantees
           }
           obj.StatusId = 1
           obj.Deleted = 0
@@ -520,9 +530,14 @@ export default {
           obj.CreditBudgetId = this.form.RecordId
           list.push(obj)
         })
+        console.log(this.CustomerGuarantees)
+        console.log(list)
         this.CustomerGuarantees = [...this.CustomerGuarantees, ...list]
+        console.log(this.CustomerGuarantees)
         this.insertedDetails = this.CustomerGuarantees.filter(c => c.RecordState === 2)
-        this.updatedDetails = this.CustomerGuarantees.filter(c => c.RecordState === 3)
+        this.updatedDetails = this.CustomerGuarantees.filter(c => c.RecordState === 3 || c.RecordState === 4)
+        console.log(this.updatedDetails)
+        console.log(this.CustomerGuarantees)
         this.totalRowCount = this.CustomerGuarantees.length
         this.importedExcel = true
         this.filterCustomer = null

@@ -276,6 +276,10 @@ export default {
           mainProperty: 'Code',
           targetProperty: 'CustomerCode'
         },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'CustomerName'
+        },
         // {
         //   mainProperty: 'Code',
         //   targetProperty: 'ColumnValue'
@@ -382,7 +386,7 @@ export default {
         {
           type: 'Autocomplete',
           modelProperty: 'ColumnValue',
-          objectKey: 'CustomerCode',
+          objectKey: 'ColumnValueDesc',
           labelProperty: 'Code',
           customOption: true,
           isCustomer: true,

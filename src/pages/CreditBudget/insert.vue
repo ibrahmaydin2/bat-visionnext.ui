@@ -126,7 +126,7 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.CustomerGuarantees" :key="i">
+                <b-tr v-for="(c, i) in (form.CustomerGuarantees ? form.CustomerGuarantees.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{`${c.CustomerCode} - ${c.CustomerDesc}`}}</b-td>
                   <b-td>{{c.CreditLimit}}</b-td>
                   <b-td>{{c.RiskLimit}}</b-td>
@@ -292,7 +292,12 @@ export default {
       this.$v.customerGuarantees.$reset()
     },
     removeCustomerGuarantee (item) {
-      this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
+      // this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.CustomerGuarantees[this.form.CustomerGuarantees.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerGuarantees.splice(this.form.CustomerGuarantees.indexOf(item), 1)
+      }
     },
     editCustomerGuarantee (item) {
       this.customerGuarantees = item
