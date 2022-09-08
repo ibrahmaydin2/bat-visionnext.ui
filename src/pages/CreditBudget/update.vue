@@ -502,22 +502,23 @@ export default {
         Object.keys(data).map(d => {
           let obj = data[d]
           let existIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId === obj.CustomerId)
-          console.log(existIndex)
           if (existIndex > -1) {
             let exist = this.CustomerGuarantees[existIndex]
             obj.RecordState = exist.RecordId ? 3 : 2
             obj.RecordId = exist.RecordId
+            obj.CustomerCreditHistoryId = exist.CustomerCreditHistoryId
+            obj.CreditBudgetDetailId = exist.CreditBudgetDetailId
             this.CustomerGuarantees.splice(existIndex, 1)
           } else {
             obj.RecordState = 2
           }
-          let nonExistIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId !== obj.CustomerId)
-          console.log(nonExistIndex)
-          if (nonExistIndex > -1) {
-            let _CustomerGuarantees = this.CustomerGuarantees
-            _CustomerGuarantees[nonExistIndex].RecordState = 4
-            this.CustomerGuarantees = _CustomerGuarantees
-          }
+          // let nonExistIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId !== obj.CustomerId)
+          // console.log(nonExistIndex)
+          // if (nonExistIndex > -1) {
+          //   let _CustomerGuarantees = this.CustomerGuarantees
+          //   _CustomerGuarantees[nonExistIndex].RecordState = 4
+          //   this.CustomerGuarantees = _CustomerGuarantees
+          // }
           obj.StatusId = 1
           obj.Deleted = 0
           obj.System = 0
@@ -528,16 +529,14 @@ export default {
           }
           obj.paymentPeriodO = this.getPaymentPeriodById(obj.Period)
           obj.CreditBudgetId = this.form.RecordId
+          obj.IsBlackListed = 0
+          obj.RecordTypeId = null
+          obj.isUpdated = true
           list.push(obj)
         })
-        console.log(this.CustomerGuarantees)
-        console.log(list)
         this.CustomerGuarantees = [...this.CustomerGuarantees, ...list]
-        console.log(this.CustomerGuarantees)
         this.insertedDetails = this.CustomerGuarantees.filter(c => c.RecordState === 2)
         this.updatedDetails = this.CustomerGuarantees.filter(c => c.RecordState === 3 || c.RecordState === 4)
-        console.log(this.updatedDetails)
-        console.log(this.CustomerGuarantees)
         this.totalRowCount = this.CustomerGuarantees.length
         this.importedExcel = true
         this.filterCustomer = null
