@@ -1525,7 +1525,7 @@ export const store = new Vuex.Store({
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'model': { ...formData, fileProccessType: '1' }
+        'model': { ...formData }
       }
       return axios.post('/VisionNextExcelIntegrator/api/Upload/UploadFile',
         dataQuery,
