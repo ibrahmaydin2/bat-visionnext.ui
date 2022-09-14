@@ -364,7 +364,7 @@
               <NextDropdown v-model="routeDetailsObj.routeType" url="VisionNextRoute/api/RouteType/Search" @input="selectRouteType"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.routeCode')" :error="$v.routeDetailsObj.route" required>
-              <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode" custom-option></NextDropdown>
+              <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.salesRepresentative')" :error="$v.routeDetailsObj.representative" required>
               <NextDropdown v-model="routeDetailsObj.representative" :disabled="!routeDetailsObj.routeType" :source="representatives" label="Label" @input="selectRepresentative"></NextDropdown>

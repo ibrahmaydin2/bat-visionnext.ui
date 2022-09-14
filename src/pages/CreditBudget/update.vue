@@ -165,6 +165,7 @@
               :fields="customerGuaranteeFields"
               striped
               small
+              :tbody-tr-class="rowClass"
               sticky-header="300px"
               responsive
               select-mode="multi"
@@ -313,6 +314,10 @@ export default {
     this.getCreditBudgetDetails()
   },
   methods: {
+    rowClass (item, type) {
+      if (!item || type !== 'row') return
+      if (item.IsBlackListed === 1) return 'table-danger'
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
@@ -469,23 +474,31 @@ export default {
       this.$forceUpdate()
     },
     editCustomerGuarantee () {
-      this.customerGuarantees = {...this.selectedCustomerGuarantee}
-      this.selectedIndex = this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)
-      this.selectedCustomer = null
-      this.paymentPeriod = null
-      this.customerGuarantees.isUpdated = true
-      if (this.selectedCustomerGuarantee.RecordId > 0) {
-        this.customerGuarantees.RecordState = 3
+      if (this.selectedCustomerGuarantee.IsBlackListed === 1) {
+        this.$toasted.show(this.$t('insert.IsBlackListCustomerNotEdit'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      } else {
+        this.customerGuarantees = {...this.selectedCustomerGuarantee}
+        this.selectedIndex = this.CustomerGuarantees.indexOf(this.selectedCustomerGuarantee)
+        this.selectedCustomer = null
+        this.paymentPeriod = null
+        this.customerGuarantees.isUpdated = true
+        if (this.selectedCustomerGuarantee.RecordId > 0) {
+          this.customerGuarantees.RecordState = 3
+        }
+        this.customerGuarantees.CreditAmountCentral = this.selectedCustomerGuarantee.CreditAmount
+        this.paymentPeriod = this.getPaymentPeriodById(this.selectedCustomerGuarantee.PaymentPeriod)
+        this.selectedCustomer = {
+          RecordId: this.selectedCustomerGuarantee.CustomerId,
+          Description1: this.selectedCustomerGuarantee.CustomerDesc,
+          Code: this.selectedCustomerGuarantee.CustomerCode
+        }
+        this.selectedCustomerGuarantee = null
+        this.$bvModal.hide('credit-budget-confirm-edit-modal')
       }
-      this.customerGuarantees.CreditAmountCentral = this.selectedCustomerGuarantee.CreditAmount
-      this.paymentPeriod = this.getPaymentPeriodById(this.selectedCustomerGuarantee.PaymentPeriod)
-      this.selectedCustomer = {
-        RecordId: this.selectedCustomerGuarantee.CustomerId,
-        Description1: this.selectedCustomerGuarantee.CustomerDesc,
-        Code: this.selectedCustomerGuarantee.CustomerCode
-      }
-      this.selectedCustomerGuarantee = null
-      this.$bvModal.hide('credit-budget-confirm-edit-modal')
     },
     setData () {
       this.form = this.rowData

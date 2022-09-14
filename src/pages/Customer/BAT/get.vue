@@ -306,7 +306,7 @@
                   <b-tbody>
                     <b-tr v-for="(r, i) in rowData.RouteDetails" :key="i">
                       <b-td>{{r.RouteType ? r.RouteType.Label : '-'}}</b-td>
-                      <b-td>{{r.Route ? `${r.Route.Code} - ${r.Route.Label}` : '-'}}</b-td>
+                      <b-td>{{r.Route ? `${r.Route.Label}` : '-'}}</b-td>
                       <b-td>{{r.Representative ? r.Representative.Label : '-'}}</b-td>
                       <b-td>{{r.Day1VisitOrder}}</b-td>
                       <b-td>{{r.Day2VisitOrder}}</b-td>

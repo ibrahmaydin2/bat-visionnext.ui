@@ -364,7 +364,7 @@
               <NextDropdown v-model="routeDetailsObj.routeType" url="VisionNextRoute/api/RouteType/Search" @input="selectRouteType"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.routeCode')" :error="$v.routeDetailsObj.route" required>
-              <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode" custom-option></NextDropdown>
+              <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.salesRepresentative')" :error="$v.routeDetailsObj.representative" required>
               <NextDropdown v-model="routeDetailsObj.representative" :disabled="!routeDetailsObj.routeType" :source="representatives" label="Label" @input="selectRepresentative"></NextDropdown>
@@ -414,7 +414,7 @@
               <b-tbody>
                 <b-tr v-for="(r, i) in form.RouteDetails ? form.RouteDetails.filter(r => r.RecordState !== 4) : []" :key="i">
                   <b-td>{{r.RouteType ? r.RouteType.Label : r.RouteTypeIdDesc}}</b-td>
-                  <b-td>{{r.Route ? `${r.Route.Code} - ${r.Route.Label}` : `${r.RouteIdCode} - ${r.RouteIdDesc}`}}</b-td>
+                  <b-td>{{r.Route ? `${r.Route.Label}` : `${r.RouteIdDesc}`}}</b-td>
                   <b-td>{{r.Representative ? r.Representative.Label : r.RepresentativeIdDesc}}</b-td>
                   <b-td>{{r.Day1VisitOrder}}</b-td>
                   <b-td>{{r.Day2VisitOrder}}</b-td>
