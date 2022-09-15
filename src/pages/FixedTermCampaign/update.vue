@@ -233,9 +233,9 @@
           </b-row>
         </b-tab> -->
         <b-tab lazy :title="$t('insert.fixedTermCampaign.customers')" v-if="(selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML') && (isCampaignDateNew === false)">
-          <NextDetailPanel type="get" v-model="form.FixedTermCampaignCustomers" :items="getFixedTermCustomerItems()">
+          <NextDetailPanel type="get" v-model="form.FixedTermCampaignCustomers" :showAddButton="false" :items="getFixedTermCustomerItems()">
             <template slot="grid">
-              <div cols="12" md="2">
+              <div cols="12" md="2" row="1">
                 <NextMultipleSelection
                   v-model="form.FixedTermCampaignCustomers" name="FixedTermCampaignMultipleCustomer"
                   :hidden-values="hiddenValues"
@@ -460,7 +460,7 @@ export default {
         {
           type: 'Autocomplete',
           modelProperty: 'ColumnValue',
-          objectKey: 'ColumnValueDesc',
+          objectKey: 'Code',
           labelProperty: 'Code',
           customOption: true,
           isCustomer: true,
@@ -470,7 +470,7 @@ export default {
           dynamicAndCondition: this.multipleDynamicAndCondition,
           required: true,
           disabled: true,
-          visible: true,
+          visible: false,
           isUnique: true,
           id: 1
         },
@@ -481,7 +481,7 @@ export default {
           objectKey: 'Description1',
           parentProperty: 'CommercialTitle',
           label: this.$t('insert.fieldAnalysis.commercialTitle'),
-          visible: true,
+          visible: false,
           disabled: true,
           parentId: 1,
           id: 2
@@ -494,7 +494,7 @@ export default {
           objectKey: 'DefaultLocation',
           parentProperty: 'DefaultLocation',
           label: this.$t('insert.fieldAnalysis.location'),
-          visible: true,
+          visible: false,
           disabled: true,
           parentId: 1,
           id: 3
@@ -503,7 +503,7 @@ export default {
           type: 'Text',
           inputType: 'number',
           modelProperty: 'Budget',
-          visible: true,
+          visible: false,
           label: this.$t('insert.fixedTermCampaign.budget'),
           defaultValue: 0,
           disabled: true,
@@ -513,7 +513,7 @@ export default {
           type: 'Text',
           inputType: 'number',
           modelProperty: 'UsedAmount',
-          visible: true,
+          visible: false,
           disabled: true,
           label: this.$t('insert.fixedTermCampaign.usedAmount'),
           defaultValue: 0,
