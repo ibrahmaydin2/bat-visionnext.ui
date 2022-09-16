@@ -414,6 +414,9 @@ export const store = new Vuex.Store({
           } else {
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
+            // setTimeout(() => {
+            //   router.push({name: 'ResetPassword'})
+            // }, 1000)
           }
         })
         .catch(err => {
@@ -1525,7 +1528,7 @@ export const store = new Vuex.Store({
       let dataQuery = {
         'BranchId': state.BranchId,
         'CompanyId': state.CompanyId,
-        'model': { ...formData, fileProccessType: '1' }
+        'model': { ...formData }
       }
       return axios.post('/VisionNextExcelIntegrator/api/Upload/UploadFile',
         dataQuery,
