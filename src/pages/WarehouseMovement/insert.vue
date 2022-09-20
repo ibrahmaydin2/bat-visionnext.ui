@@ -104,8 +104,7 @@
             <NextFormGroup item-key="ToWarehouseId" :error="$v.form.ToWarehouseId" v-if="!(movementType && (movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '04'))" md="3" lg="3">
               <NextDropdown
                 v-model="toWarehouse"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
-                :dynamic-and-condition="{StatusIds: [1] } && getToWarehouseAndCondition()"
+                :source="fromWarehousesAll"
                 @input="selectToWarehouse($event)"
                 :disabled="(movementType && movementType.Code === '05') || movementType === null || isItemAdded || insertReadonly.ToWarehouseId" />
             </NextFormGroup>
