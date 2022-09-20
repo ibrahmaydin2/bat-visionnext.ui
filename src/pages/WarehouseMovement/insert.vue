@@ -70,9 +70,8 @@
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="!(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
               <NextDropdown
                 v-model="fromWarehouse"
-                :dynamic-and-condition="{ StatusIds: [1] } && getFromWarehouseAndCondition()"
                 @input="selectFromWarehouse($event)"
-                url="VisionNextWarehouse/api/Warehouse/AutoCompleteSearch" searchable
+                :source="fromWarehousesAll"
                 :disabled="(movementType && movementType.Code === '04') || movementType === null || isItemAdded || insertReadonly.FromWarehouseId" />
             </NextFormGroup>
             <NextFormGroup item-key="FromWarehouseId" :error="$v.form.FromWarehouseId" v-if="(movementType && (movementType.Code === '05' || movementType.Code === '01' || movementType.Code === '07' || movementType.Code === '12'))" md="3" lg="3">
@@ -253,6 +252,7 @@ export default {
       selectedIndex: null,
       toWarehouses: [],
       fromWarehouses: [],
+      fromWarehousesAll: [],
       multipleHiddenValues: [
         {
           mainProperty: 'FromQuantity',
@@ -285,6 +285,7 @@ export default {
     this.form.MovementTime = currentDate.toTimeString().slice(0, 5)
     this.getToWarehouses()
     this.getFromWarehouses()
+    this.getToWarehousesAll()
   },
   computed: {
     disabledMultipleSelection () {
@@ -576,6 +577,23 @@ export default {
       this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=2').then(res => {
         if (res && res.ListModel) {
           this.toWarehouses = res.ListModel.BaseModels
+        }
+      })
+    },
+    getToWarehousesAll () {
+      this.form.FromWarehouseId = null
+      this.fromWarehouse = null
+
+      let request = {
+        andConditionModel: {
+          StatusIds: [1],
+          ...this.getFromWarehouseAndCondition()
+        }
+      }
+
+      this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=4', 1000).then(res => {
+        if (res && res.ListModel) {
+          this.fromWarehousesAll = res.ListModel.BaseModels
         }
       })
     },
