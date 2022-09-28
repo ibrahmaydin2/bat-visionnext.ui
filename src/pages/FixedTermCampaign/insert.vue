@@ -44,7 +44,7 @@
               <NextCheckBox v-model="form.UseBudget" type="number" toggle/>
             </NextFormGroup>
             <NextFormGroup item-key="BudgetAmount" :error="$v.form.BudgetAmount">
-              <NextInput type="number" v-model="form.BudgetAmount" :disabled="!form.UseBudget" />
+              <NextInput type="number" v-model="form.BudgetAmount" :disabled="form.UseBudget !== 1" />
             </NextFormGroup>
             <NextFormGroup item-key="UsedAmount" :error="$v.form.UsedAmount">
               <NextInput type="number" v-model="form.UsedAmount" :disabled="true" />
@@ -345,8 +345,8 @@ export default {
       budgetValidation: [
         {
           mainProperty: 'Budget',
-          validation: (value, data) => {
-            return value > 0
+          validation: (value, data, form) => {
+            return this.form.UseBudget !== 1 ? !value : value > 0
           }
         }
       ]
@@ -848,6 +848,9 @@ export default {
         // this.form.FixedTermCampaignCustomers = this.form.FixedTermCampaignDetails
         //   .filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'RECORD_ID')
         this.form.FixedTermCampaignDetails = [...this.form.FixedTermCampaignCustomers.filter(f => f.RecordState !== 4), ...this.form.FixedTermCampaignRoutes, ...this.form.FixedTermCampaignBranchs, ...this.form.FixedTermCampaignCustomerCriterias]
+        if (this.form.UseBudget !== 1) {
+          this.form.UseBudget = 0
+        }
         this.createData()
       }
     },

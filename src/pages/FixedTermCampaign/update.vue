@@ -430,8 +430,8 @@ export default {
       budgetValidation: [
         {
           mainProperty: 'Budget',
-          validation: (value, data) => {
-            return value > 0
+          validation: (value, data, form) => {
+            return this.form.UseBudget !== 1 ? !value : value > 0
           }
         }
       ]
@@ -744,6 +744,9 @@ export default {
             }
           })
         this.form.FixedTermCampaignDetails = [...this.form.FixedTermCampaignCustomers]
+        if (this.form.UseBudget !== 1) {
+          this.form.UseBudget = 0
+        }
         this.updateData()
       }
     }
