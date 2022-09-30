@@ -832,6 +832,7 @@
       "TaxNumber": "Vergi Numarası"
     },
     "customer": {
+      "VKN": "Harcama Birim VKN",
       "Contracted": "Kontrat Durumu",
       "Barcode": "Barkod",
       "HoldsAsset": "Varlık Durumu",

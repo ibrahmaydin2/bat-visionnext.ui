@@ -121,10 +121,16 @@
             <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
               <NextCheckBox v-model="form.IsDutyFree" type="number" toggle :disabled="insertReadonly.IsDutyFree"/>
             </NextFormGroup>
+            <NextFormGroup item-key="IsPublic" :error="$v.form.IsPublic">
+              <NextCheckBox v-model="form.IsPublic" :disabled="insertReadonly.IsPublic" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()" v-if="form.Code">
           <NextDetailPanel v-model="form.CustomerLocations" :items="getLocalizationItems()" :main-form="form"/>
+        </b-tab>
+        <b-tab lazy :title="$t('insert.customer.CustomerGIB')"  @click.prevent="tabValidation()" v-if="form.IsPublic === 1">
+          <NextDetailPanel v-model="form.CustomerSpendingUnits" :items="customerSpendingUnitsItems" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
@@ -469,6 +475,7 @@ export default {
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
         RouteDetails: [],
+        CustomerSpendingUnits: [],
         CardType: null,
         Group: null,
         Kind: null,
@@ -529,11 +536,13 @@ export default {
         TCIBreak2: null,
         AssetLocations: [],
         DebitAccountRemainder: null,
-        CreditAccountRemainder: null
+        CreditAccountRemainder: null,
+        IsPublic: null
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
       customerDiscountsItems: detailData.customerDiscountsItems,
+      customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
       paymentTypesItems: detailData.paymentTypesItems,
       cardType: {},
       taxCustomerType: {},
@@ -822,6 +831,9 @@ export default {
       }
       if (!rowData.RouteDetails) {
         this.form.RouteDetails = []
+      }
+      if (!rowData.CustomerSpendingUnits) {
+        this.form.CustomerSpendingUnits = []
       }
     },
     getPaymentTypes () {
