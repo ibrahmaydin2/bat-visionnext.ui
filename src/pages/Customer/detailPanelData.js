@@ -1374,13 +1374,13 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
+      maxLength: 10,
       id: 4
     },
     {
       type: 'Text',
       inputType: 'text',
       modelProperty: 'CommercialTitle',
-      objectKey: 'CommercialTitle',
       label: i18n.t('insert.customer.BirimUnvan'),
       required: true,
       visible: true,
