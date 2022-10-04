@@ -1333,20 +1333,6 @@ export const detailData = {
   ],
   customerSpendingUnitsItems: [
     {
-      type: 'Dropdown',
-      modelProperty: 'CustomerId',
-      objectKey: 'Customer',
-      customOption: true,
-      isCustomer: true,
-      dynamicAndCondition: { StatusIds: [1] },
-      orConditionFields: 'Code,Description1,CommercialTitle',
-      url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-      label: i18n.t('insert.CustomerTarget.CustomerId'),
-      required: true,
-      visible: true,
-      id: 1
-    },
-    {
       type: 'Lookup',
       modelProperty: 'CountryId',
       objectKey: 'Country',
@@ -1354,7 +1340,7 @@ export const detailData = {
       label: i18n.t('insert.customer.Country'),
       required: true,
       visible: true,
-      id: 2
+      id: 1
     },
     {
       type: 'Lookup',
@@ -1364,7 +1350,7 @@ export const detailData = {
       label: i18n.t('insert.customer.Model_CityId'),
       required: true,
       visible: true,
-      id: 3
+      id: 2
     },
     {
       type: 'Dropdown',
@@ -1377,8 +1363,8 @@ export const detailData = {
       request: JSON.stringify({UpperValue: 'val', LookupTableCode: 'DISTRICT'}),
       required: true,
       visible: true,
-      parentId: 3,
-      id: 4
+      parentId: 2,
+      id: 3
     },
     {
       type: 'Text',
@@ -1388,7 +1374,7 @@ export const detailData = {
       required: true,
       visible: true,
       isUnique: false,
-      id: 5
+      id: 4
     },
     {
       type: 'Text',
