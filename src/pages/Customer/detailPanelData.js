@@ -1330,5 +1330,61 @@ export const detailData = {
       visible: true,
       id: 3
     }
+  ],
+  customerSpendingUnitsItems: [
+    {
+      type: 'Lookup',
+      modelProperty: 'CountryId',
+      objectKey: 'Country',
+      url: 'COUNTRY',
+      label: i18n.t('insert.customer.Country'),
+      required: true,
+      visible: true,
+      id: 1
+    },
+    {
+      type: 'Lookup',
+      modelProperty: 'CityId',
+      objectKey: 'City',
+      url: 'CITY',
+      label: i18n.t('insert.customer.Model_CityId'),
+      required: true,
+      visible: true,
+      id: 2
+    },
+    {
+      type: 'Dropdown',
+      modelProperty: 'DistrictId',
+      labelProperty: 'Label',
+      objectKey: 'District',
+      parentProperty: 'DecimalValue',
+      url: 'VisionNextCommonApi/api/LookupValue/GetValuesFromUpperValue',
+      label: i18n.t('insert.customer.Model_DistrictId'),
+      request: JSON.stringify({UpperValue: 'val', LookupTableCode: 'DISTRICT'}),
+      required: true,
+      visible: true,
+      parentId: 2,
+      id: 3
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'TaxNumber',
+      label: i18n.t('insert.customer.VKN'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      maxLength: 10,
+      id: 4
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
+      modelProperty: 'CommercialTitle',
+      label: i18n.t('insert.customer.BirimUnvan'),
+      required: true,
+      visible: true,
+      id: 5
+    }
   ]
 }

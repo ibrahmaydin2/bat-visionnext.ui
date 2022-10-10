@@ -33,6 +33,7 @@
               <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.customer.Model_TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
+              <div v-html="getFormatDataByType(rowData.IsPublic, 'check', 'insert.customer.IsPublic')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
@@ -88,6 +89,15 @@
                     </b-modal>
                   </b-tbody>
                 </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerGIB')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.CustomerSpendingUnits" :items="customerSpendingUnitsItems" />
               </b-card>
             </b-col>
           </b-row>
@@ -414,6 +424,7 @@ export default {
       Location: {},
       customerDiscountsItems: detailData.customerDiscountsItems,
       routeDetailsItems: detailData.routeDetailsItems,
+      customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
       showWorkFlow: false,
       assetLocationFields: [
         { key: 'Asset.Code', label: 'insert.customer.AssetId' },

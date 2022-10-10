@@ -129,10 +129,18 @@
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.fixedTermCampaign.customer')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.customerCode')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.locationId')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.budget')}}</span></b-th>
+                    <b-th><span>{{$t('insert.fixedTermCampaign.usedAmount')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in rowData.FixedTermCampaignCustomers" :key="i">
                       <b-td>{{f.Customer ? f.Customer.Label : ''}}</b-td>
+                      <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
+                      <b-td>{{f.LocationName ? f.LocationName.Label : ''}}</b-td>
+                      <b-td>{{f.Budget}}</b-td>
+                      <b-td>{{f.UsedAmount}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

@@ -832,6 +832,7 @@
       "TaxNumber": "Vergi Numarası"
     },
     "customer": {
+      "VKN": "Harcama Birim VKN",
       "Contracted": "Kontrat Durumu",
       "Barcode": "Barkod",
       "HoldsAsset": "Varlık Durumu",
@@ -2220,7 +2221,8 @@
       "CycleInstructionCriterias": "Müşteri Kriteri",
       "AreaDesc": "Alan Açıklaması",
       "AreaValue": "Değer",
-      "sameTaskError": "Aynı Görevden Birden Fazla Eklenemez"
+      "sameTaskError": "Aynı Görevden Birden Fazla Eklenemez",
+      "taxNumberLength": "Harcama Birim VKN alani 10 karakterden az olamaz!"
     },
     "unitSet": {
       "title": "Birim Tanımları",

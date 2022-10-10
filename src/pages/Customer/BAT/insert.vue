@@ -121,10 +121,16 @@
             <NextFormGroup item-key="IsDutyFree" :error="$v.form.IsDutyFree">
               <NextCheckBox v-model="form.IsDutyFree" type="number" toggle :disabled="insertReadonly.IsDutyFree"/>
             </NextFormGroup>
+            <NextFormGroup item-key="IsPublic" :error="$v.form.IsPublic">
+              <NextCheckBox v-model="form.IsPublic" :disabled="insertReadonly.IsPublic" type="number" toggle/>
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab lazy :title="$t('insert.customer.CustomerLocations')"  @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerLocations" :items="getLocalizationItems()" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.customer.CustomerGIB')"  @click.prevent="tabValidation()" v-if="form.IsPublic === 1">
+          <NextDetailPanel v-model="form.CustomerSpendingUnits" :items="customerSpendingUnitsItems" :before-add="beforeValidSpendingAdd"/>
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerClass')" @click.prevent="tabValidation()">
           <b-row>
@@ -454,6 +460,7 @@ export default {
         CustomerPaymentTypes: [],
         CustomerItemDiscounts: [],
         RouteDetails: [],
+        CustomerSpendingUnits: [],
         RecordTypeId: 1,
         Deleted: 0,
         RecordState: 2,
@@ -554,12 +561,14 @@ export default {
         RiskLimit: null,
         ReservedLimit: null,
         CurrentCredit: null,
-        CurrentRisk: null
+        CurrentRisk: null,
+        IsPublic: null
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
       customerDiscountsItems: detailData.customerDiscountsItems,
       paymentTypesItems: detailData.paymentTypesItems,
+      customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
       routeName: this.$route.meta.baseLink,
       taxNumberReq: 10,
       locationCityLabel: null,
@@ -729,6 +738,17 @@ export default {
         this.routeDetails.RouteTypeId = null
         this.routeDetails.RouteTypeIdDesc = null
       }
+    },
+    beforeValidSpendingAdd (item) {
+      if (item.TaxNumber.length < 10) {
+        this.$toasted.show(this.$t('insert.CycleInstruction.taxNumberLength'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      return true
     },
     selectRouteCode (value) {
       this.routeDetailsObj.representative = value ? value.Representative : null
