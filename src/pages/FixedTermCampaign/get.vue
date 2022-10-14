@@ -138,7 +138,7 @@
                     <b-tr v-for="(f, i) in rowData.FixedTermCampaignCustomers" :key="i">
                       <b-td>{{f.Customer ? f.Customer.Label : ''}}</b-td>
                       <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
-                      <b-td>{{f.LocationName ? f.LocationName.Label : ''}}</b-td>
+                      <b-td>{{f.DefaultLocation ? f.DefaultLocation.Label : ''}}</b-td>
                       <b-td>{{f.Budget}}</b-td>
                       <b-td>{{f.UsedAmount}}</b-td>
                     </b-tr>
