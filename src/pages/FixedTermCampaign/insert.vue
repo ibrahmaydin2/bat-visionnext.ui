@@ -169,7 +169,7 @@
           </NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.fieldAnalysis.customerList')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'" :disabled="(selectedBranchCriteria && selectedBranchCriteria.Code === 'SL') && (!form.FixedTermCampaignBranchs || form.FixedTermCampaignBranchs.length === 0)">
-          <NextDetailPanel v-model="form.FixedTermCampaignCustomers" :showAddButton="false" :items="getFixedTermCustomerItems()">
+          <NextDetailPanel v-model="form.FixedTermCampaignCustomers" :showEdit="false" :showWarning="true" :showAddButton="false" :items="getFixedTermCustomerItems()">
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection
