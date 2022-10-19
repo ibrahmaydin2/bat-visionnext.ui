@@ -3450,6 +3450,7 @@
     "delete": "Sil",
     "deleteConfirm": "Kayıt Silme",
     "rowDeleteConfirm": "Seçtiğiniz Kayıt Silinecektir! Onaylıyor musunuz?",
+    "rowEditWarning": "Seçtiğiniz kaydı düzenlemek için 'Toplu Ekle' butonuna tıklayınız!",
     "editConfirm": "Kayıt Düzenleme",
     "rowEditConfirm": "Seçtiğiniz kaydı düzenlemek istediğinize emin misiniz?"
   },

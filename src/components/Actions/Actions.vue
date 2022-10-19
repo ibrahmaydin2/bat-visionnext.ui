@@ -278,6 +278,14 @@ export default {
     },
     multiPrint (action) {
       this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
+        if (this.RecordIds.length === 0) {
+          this.$toasted.show(this.$t('index.chooseDocument'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          return
+        }
         if (res.IsCompleted === false) {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',

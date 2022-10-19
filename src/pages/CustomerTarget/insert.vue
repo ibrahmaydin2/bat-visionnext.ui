@@ -74,19 +74,19 @@
             <NextFormGroup :title="$t('insert.CustomerTarget.TargetUnitId')" :error="$v.customerTargetDetails.targetUnit" md="3" lg="3">
               <NextDropdown :disabled="true" :source="lookupValues" label="Label" v-model="customerTargetDetails.targetUnit" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.reqItem" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.reqItem" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
               <NextDropdown v-model="customerTargetDetails.reqItem" :dynamic-and-condition="{ StatusIds: [1] }" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.reqItemQuantity"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.descriptionReqItem" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.descriptionReqItem" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
               <NextInput type="text" v-model="customerTargetDetails.descriptionReqItem"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.CustomerTarget.GainAmount')" :error="$v.customerTargetDetails.gainAmount" :required="true"  md="3" lg="3">
               <NextInput type="number" v-model="customerTargetDetails.gainAmount"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.currencyId')" :error="$v.customerTargetDetails.currency" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.currencyId')" :error="$v.customerTargetDetails.currency" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
               <NextDropdown :disabled="true" v-model="customerTargetDetails.currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2">
@@ -140,7 +140,7 @@
 </template>
 <script>
 import insertMixin from '../../mixins/insert'
-import { required } from 'vuelidate/lib/validators'
+import { required, requiredIf } from 'vuelidate/lib/validators'
 import { detailData } from './detailPanelData'
 export default {
   mixins: [insertMixin],
@@ -236,11 +236,56 @@ export default {
       this.$api.postByUrl({andConditionModel: { StatusIds: [1] }}, '/VisionNextItem/api/Item/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.items = response.ListModel.BaseModels
-          this.form.ReqItemId = this.customerTargetDetails.reqItem.RecordId
+          // this.form.ReqItemId = this.customerTargetDetails.reqItem.RecordId
         }
       })
     },
     addContractItems () {
+      if (this.customerTargetDetails.reqItem && !this.customerTargetDetails.customer) {
+        this.$toasted.show(this.$t('insert.customerRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && !this.customerTargetDetails.targetQuantity) {
+        this.$toasted.show(this.$t('insert.targetQuantityRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && !this.customerTargetDetails.gainAmount) {
+        this.$toasted.show(this.$t('insert.gainAmountRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && !this.customerTargetDetails.reqItemQuantity) {
+        this.$toasted.show(this.$t('insert.reqItemQuantityRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && this.customerTargetDetails.reqItemQuantity && !this.customerTargetDetails.descriptionReqItem) {
+        this.$toasted.show(this.$t('insert.descriptionReqItemRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
       this.$v.customerTargetDetails.$touch()
       if (this.$v.customerTargetDetails.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
@@ -261,8 +306,8 @@ export default {
         CustomerName: this.customerTargetDetails.customer.Description1,
         TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
         TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
-        ReqItemId: this.customerTargetDetails.reqItem.RecordId,
-        ReqItem: this.customerTargetDetails.reqItem.Description1,
+        ReqItemId: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.RecordId : null,
+        ReqItem: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
         TargetQuantity: this.customerTargetDetails.targetQuantity,
         ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
         DescriptionReqItem: this.customerTargetDetails.descriptionReqItem,
@@ -312,7 +357,9 @@ export default {
         required
       },
       reqItem: {
-        required
+        required: requiredIf(function () {
+          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+        })
       },
       customer: {
         required
@@ -321,10 +368,14 @@ export default {
         required
       },
       reqItemQuantity: {
-        required
+        required: requiredIf(function () {
+          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+        })
       },
       descriptionReqItem: {
-        required
+        required: requiredIf(function () {
+          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+        })
       },
       gainAmount: {
         required
