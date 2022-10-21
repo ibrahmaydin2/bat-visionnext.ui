@@ -158,7 +158,7 @@
                 v-if="data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                type="number"
+                type="text"
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDot($event); keypress($event);"
                 @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
