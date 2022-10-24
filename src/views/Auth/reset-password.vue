@@ -82,10 +82,16 @@ export default {
         this.isLoading = true
         this.$api.postByUrl(this.model, 'VisionNextAuthentication/api/Authentication/ResetPassword').then((response) => {
           this.isLoading = false
-          if (response.IsCompleted) {
+          if (response.IsCompleted === true) {
             this.isSuccess = true
             this.model = {}
             this.$v.model.$reset()
+          } else {
+            this.$toasted.show(this.$t(response.Message), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
           }
         }).catch(() => {
           this.isLoading = false
