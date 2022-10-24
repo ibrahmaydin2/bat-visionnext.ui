@@ -3417,7 +3417,9 @@
     "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
     "passwordsNotMatch": "Şifreler aynı değildir.",
     "newPassword":"Yeni Şifre",
-    "reNewPassword": "Yeni Şifre Tekrar"
+    "reNewPassword": "Yeni Şifre Tekrar",
+    "oldPassword": "Mevcut Şifre",
+    "userName": "Kullanicı Adı"
   },
   "list": {
     "location": "Lokasyon",

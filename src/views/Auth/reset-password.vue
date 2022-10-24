@@ -2,6 +2,12 @@
   <b-form @submit.prevent="submitForm()">
     <b-alert v-if="isSuccess" show variant="success">{{$t('auth.successResetPassword')}}</b-alert>
     <b-row v-if="!isSuccess">
+      <NextFormGroup :title="$t('auth.userName')" :error="$v.model.userName" md="12" lg="12">
+        <NextInput v-model="model.userName" type="text" :placeholder="$t('auth.userName')"></NextInput>
+      </NextFormGroup>
+      <NextFormGroup :title="$t('auth.oldPassword')" :error="$v.model.oldPassword" md="12" lg="12">
+        <NextInput v-model="model.oldPassword" type="password" :placeholder="$t('auth.oldPassword')"></NextInput>
+      </NextFormGroup>
       <NextFormGroup :title="$t('auth.password')" :error="$v.model.password" md="12" lg="12">
         <NextInput v-model="model.password" type="password" :placeholder="$t('auth.newPassword')"></NextInput>
       </NextFormGroup>
@@ -11,6 +17,9 @@
     </b-row>
     <b-row class="text-center">
       <b-col cols="12" v-if="!isSuccess">
+        <b-col class="text-center" cols="12">
+          <b-alert show variant="danger">{{$t('insert.settings.passwordExpire')}}</b-alert>
+        </b-col>
         <b-button id="forgot-password-button" type="submit" :disabled="isLoading">
           <span v-if="!isLoading">{{$t('auth.resetPassword')}}</span>
           <b-spinner v-if="isLoading"/>
@@ -30,7 +39,9 @@ export default {
       model: {
         password: null,
         rePassword: null,
-        guid: null
+        oldPassword: null,
+        userName: null
+        // guid: null
       },
       isLoading: false,
       isSuccess: false
@@ -44,7 +55,9 @@ export default {
     return {
       model: {
         password: { required },
-        rePassword: { required }
+        rePassword: { required },
+        oldPassword: { required },
+        userName: { required }
       }
     }
   },
