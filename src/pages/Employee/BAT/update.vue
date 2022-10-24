@@ -326,6 +326,7 @@ export default {
         this.tabValidation()
       } else {
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 2
+        this.form.Email = this.form.Email ? this.form.Email.toLowerCase() : ''
         this.updateData()
       }
     },
