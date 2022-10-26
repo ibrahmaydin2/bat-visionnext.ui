@@ -279,35 +279,47 @@ export default {
       }, 1000)
     },
     multiPrint (action) {
-      this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
-        if (this.RecordIds.length === 0) {
-          this.$toasted.show(this.$t('index.chooseDocument'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        if (res.IsCompleted === false) {
-          this.$toasted.show(this.$t(res.Message), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          if (this.$route.path === '/DispatchRefDocument') { // Sadece 'Diğer İrsaliyeler' sayfasındayken çalışır
-            for (let i = 0; i < res.Response.length; i++) {
-              var payloadObject = {
-                id: res.Response[i].RecordId,
-                isCompleted: res.Response[i].IsCompleted,
-                message: res.Response[i].Message
-              }
-              this.$store.dispatch('acOtherDispatchMultiPrintList', payloadObject)
+      this.$api.postByUrl({ recordIds: this.RecordIds }, action.ActionUrl).then((res) => {
+        if (this.$route.path === '/DispatchRefDocument') { // Sadece 'Diğer İrsaliyeler' sayfasındayken çalışır
+          if (this.RecordIds.length === 0) {
+            this.$toasted.show(this.$t('index.chooseDocument'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          for (let i = 0; i < res.Response.length; i++) {
+            var payloadObject = {
+              id: res.Response[i].RecordId,
+              isCompleted: res.Response[i].IsCompleted,
+              message: res.Response[i].Message
             }
+            this.$store.dispatch('acOtherDispatchMultiPrintList', payloadObject)
+          }
+          if (res.MultiHtml != null) {
             this.htmlPrint(res.MultiHtml)
           }
-          return
+        } else {
+          if (this.RecordIds.length === 0) {
+            this.$toasted.show(this.$t('index.chooseDocument'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          if (res.IsCompleted === false) {
+            this.$toasted.show(this.$t('index.notContentFound'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+          if (res.MultiHtml != null) {
+            this.htmlPrint(res.MultiHtml)
+          }
         }
-        this.htmlPrint(res.MultiHtml)
       })
     },
     copy (action, row) {
