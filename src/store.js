@@ -292,6 +292,7 @@ export const store = new Vuex.Store({
     reloadGrid: false,
     cancelToken: {},
     isMultipleGrid: false,
+    otherDispatchMultiPrintList: [{'id': null, 'message': ''}], // NextGrid component'ında kullanırken hata vermemesi için bu şekilde tanımlandı
     multipleItemSearch: {
       hiddenValues: [
         {
@@ -1621,6 +1622,12 @@ export const store = new Vuex.Store({
       let filteredList = list.filter(l => platform.includes(l.subString))
 
       return filteredList.length > 0 ? filteredList[0].identity : '-'
+    },
+    acOtherDispatchMultiPrintList ({commit}, payload) {
+      commit('setOtherDispatchMultiPrintList', payload)
+    },
+    acSetOtherDispatchListToDefault ({commit}, payload) {
+      commit('setOtherDispatchMultiPrintListToDefault', payload)
     }
   },
   mutations: {
@@ -2098,6 +2105,12 @@ export const store = new Vuex.Store({
       if (process.env.VUE_APP_GOOGLE_ANALYTICS) {
         this._vm.$gtag.event('page_view', { method: 'Google' })
       }
+    },
+    setOtherDispatchMultiPrintList (state, payload) {
+      state.otherDispatchMultiPrintList.push(payload)
+    },
+    setOtherDispatchMultiPrintListToDefault (state, payload) {
+      state.otherDispatchMultiPrintList = payload
     }
   }
 })

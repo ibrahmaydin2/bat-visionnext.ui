@@ -164,7 +164,10 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''">
+        <b-tr v-for="(item, i) in items" :key="i" :id="item.RecordId" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''" :variant="otherDispatchListLength ? updateRowAfterMultiPrint(item.RecordId, 'color') : ''">
+          <b-tooltip v-if="isItemInDispatchList(item.RecordId)" :target=String(item.RecordId) position="bottom" >
+            {{updateRowAfterMultiPrint(item.RecordId, 'message')}}
+          </b-tooltip>
           <b-td v-for="h in head" :key="h.dataField+h.columnType">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
               <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
@@ -262,7 +265,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import mixin from '../mixins/index'
 import Workflow from './Workflow'
 import ConfirmModal from './Actions/ConfirmModal'
@@ -441,9 +444,18 @@ export default {
     this.getData(this.$route.name, this.currentPage, this.perPage, sortOpt, true)
     this.getWorkflowData()
     this.$store.commit('setSelectedTableRows', [])
+    this.$store.dispatch('acSetOtherDispatchListToDefault', [{'id': null, 'message': ''}]) // Renklendirilmiş satırların eski haline dönmesini sağlar
   },
   computed: {
-    ...mapState(['tableData', 'tableOperations', 'tableRows', 'tableRowsAll', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid'])
+    ...mapState(['tableData', 'tableOperations', 'tableRows', 'tableRowsAll', 'selectedTableRows', 'nextgrid', 'gridField', 'lookup', 'filtersCleared', 'lastGridItem', 'reloadGrid', 'otherDispatchMultiPrintList']),
+    ...mapActions(['acSetOtherDispatchListToDefault']),
+    otherDispatchListLength () {
+      if (this.otherDispatchMultiPrintList.length > 1) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     getWorkflowData () {
@@ -1144,6 +1156,27 @@ export default {
         return false
       }
       return true
+    },
+    isItemInDispatchList (itemId) { // Verilen itemId'nin otherDispatchMultiPrintList içinde olup olmadığını kontrol eder
+      if ((this.otherDispatchMultiPrintList.length < 2)) {
+        return false
+      } else {
+        for (let i = 1; i < this.otherDispatchMultiPrintList.length; i++) {
+          if ((itemId === this.otherDispatchMultiPrintList[i].id)) {
+            return true
+          }
+        }
+        return false
+      }
+    },
+    updateRowAfterMultiPrint (itemId, option) { // Çoklu Yazdırılmak istenilen kayıtların tablodaki rengini ve hover mesajını değiştirir
+      for (let i = 1; i < this.otherDispatchMultiPrintList.length; i++) {
+        if ((itemId === this.otherDispatchMultiPrintList[i].id) && (this.otherDispatchMultiPrintList[i].isCompleted === false)) {
+          return option === 'color' ? 'danger' : this.otherDispatchMultiPrintList[i].message
+        } else if ((itemId === this.otherDispatchMultiPrintList[i].id) && (this.otherDispatchMultiPrintList[i].isCompleted === true)) {
+          return option === 'color' ? 'success' : 'E-İrsaliye süreci başlatılmıştır'
+        }
+      }
     }
   },
   watch: {

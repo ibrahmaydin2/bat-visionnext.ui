@@ -450,7 +450,7 @@ const listIndex = [
   {path: '/OverDueDebitSearch', name: 'OverDueDebitSearch', component: OverDueDebitSearchIndex, meta: { title: i18n.t('router.OverDueDebitSearch'), createLink: 'OverDueDebitSearchInsert', keepAlive: true }},
   {path: '/SalesWaybill', name: 'SalesWaybill', component: SalesWaybillIndex, meta: { title: i18n.t('router.SalesWaybill'), createLink: 'SalesWaybillInsert', keepAlive: true }},
   {path: '/ServicePurchaseInvoice', name: 'ServicePurchaseInvoice', component: ServicePurchaseInvoiceIndex, meta: { title: i18n.t('router.ServicePurchaseInvoice'), createLink: 'ServicePurchaseInvoiceInsert', keepAlive: true }},
-  {path: '/DispatchRefDocument', name: 'DispatchRefDocument', component: DispatchRefDocumentIndex, meta: { title: i18n.t('router.DispatchRefDocument'), keepAlive: true }},
+  {path: '/DispatchRefDocument', name: 'DispatchRefDocument', component: DispatchRefDocumentIndex, meta: { title: i18n.t('router.DispatchRefDocument'), keepAlive: false }},
   {path: '/CreditBudget', name: 'CreditBudget', component: CreditBudgetIndex, meta: { title: i18n.t('router.CreditBudget'), createLink: 'CreditBudgetInsert', keepAlive: true }},
   {path: '/TerminalMessage', name: 'TerminalMessage', component: TerminalMessageIndex, meta: { title: i18n.t('router.TerminalMessage'), createLink: 'TerminalMessageInsert', keepAlive: true }},
   {path: '/Label', name: 'Label', component: LabelIndex, meta: { title: i18n.t('router.Label'), createLink: 'LabelInsert', keepAlive: true }},

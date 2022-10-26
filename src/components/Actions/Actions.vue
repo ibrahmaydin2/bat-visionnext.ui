@@ -47,9 +47,11 @@
   </b-dropdown-group>
 </template>
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Actions',
   computed: {
+    ...mapActions(['acOtherDispatchErrorList', 'acOtherDispatchSuccessList']),
     filteredActions () {
       return this.actions.filter(i => {
         if (i.IsMultiple === null) {
@@ -284,6 +286,17 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+          if (this.$route.path === '/DispatchRefDocument') { // Sadece 'Diğer İrsaliyeler' sayfasındayken çalışır
+            for (let i = 0; i < res.Response.length; i++) {
+              var payloadObject = {
+                id: res.Response[i].RecordId,
+                isCompleted: res.Response[i].IsCompleted,
+                message: res.Response[i].Message
+              }
+              this.$store.dispatch('acOtherDispatchMultiPrintList', payloadObject)
+            }
+            this.htmlPrint(res.MultiHtml)
+          }
           return
         }
         this.htmlPrint(res.MultiHtml)
