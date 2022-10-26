@@ -11,6 +11,15 @@
         <b-button size="sm" class="float-right ml-2" variant="success" @click="editItem()">{{$t('insert.okay')}}</b-button>
       </template>
     </b-modal>
+    <b-modal :id="`warning-edit-modal`">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.rowEditWarning')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="success" @click="$bvModal.hide(`warning-edit-modal`)">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-modal :id="`confirm-delete-modal${unique}`">
       <template #modal-title>
         {{$t('list.deleteConfirm')}}
@@ -64,6 +73,9 @@
         </template>
         <template #cell(operations)="data">
           <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showEdit && editable" @click="$bvModal.show(`confirm-edit-modal${unique}`); selectedItem = data.item;" class="btn mt-1 mr-1 btn-warning operations-button">
+            <i class="fa fa-pencil-alt"></i>
+          </b-button>
+          <b-button :title="$t('list.edit')" v-b-tooltip.hover.bottom v-if="showWarning && editable" @click="$bvModal.show(`warning-edit-modal`)" class="btn mt-1 mr-1 btn-warning operations-button">
             <i class="fa fa-pencil-alt"></i>
           </b-button>
           <b-button :title="$t('list.delete')" v-b-tooltip.hover.bottom v-if="editable" @click="$bvModal.show(`confirm-delete-modal${unique}`); selectedItem = data.item;" type="button" class="btn mt-1 mr-1 btn-danger operations-button">
@@ -161,6 +173,11 @@ export default {
       type: Boolean,
       default: true,
       description: 'Grid satırında güncelle butonunun görünürlük bilgisi'
+    },
+    showWarning: {
+      type: Boolean,
+      default: true,
+      description: 'Grid satırında güncelle butonu toplu eklemeye bağlı ise gösterilmesi gereken uyarı'
     },
     showAddButton: {
       type: Boolean,

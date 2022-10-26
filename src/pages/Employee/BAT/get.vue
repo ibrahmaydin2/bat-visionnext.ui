@@ -82,7 +82,7 @@
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.FaxNumber, 'text', 'insert.employee.Model_Fax')"></div>
-              <div v-html="getFormatDataByType(rowData.Email, 'text', 'insert.employee.Model_Email')"></div>
+              <div v-html="getFormatDataByType(rowData.Email ? rowData.Email.toLowerCase() : '', 'text', 'insert.employee.Model_Email')"></div>
             </b-card>
           </b-row>
         </b-tab>

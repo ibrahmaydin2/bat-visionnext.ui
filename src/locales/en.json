@@ -3413,7 +3413,9 @@
     "successResetPassword": "Your password has been successfully reset.",
     "passwordsNotMatch": "Password does not match.",
     "newPassword":"New Password",
-    "reNewPassword": "New Password Again"
+    "reNewPassword": "New Password Again",
+    "oldPassword": "Current Password",
+    "userName": "Username"
   },
   "list": {
     "location": "Location",

@@ -410,14 +410,20 @@ export const store = new Vuex.Store({
           document.getElementById('loginButton').disabled = false
           document.getElementById('loginLoaderText').style.display = 'block'
           document.getElementById('loginLoader').style.display = 'none'
-          if (res.data.IsCompleted === true) {
+          if ((res.data.IsCompleted === true) && (res.data.IsExpired === false)) {
             commit('login', res.data)
+            // window.onpopstate = function () {
+            //   commit('logout')
+            // }
+          } else if ((res.data.IsCompleted === true) && (res.data.IsExpired === true)) {
+            // commit('showAlert', { type: 'error', msg: res.data.Message })
+            commit('setTableData', [])
+            setTimeout(() => {
+              router.push({name: 'ResetPassword'})
+            }, 1000)
           } else {
             commit('showAlert', { type: 'error', msg: res.data.Message })
             commit('setTableData', [])
-            // setTimeout(() => {
-            //   router.push({name: 'ResetPassword'})
-            // }, 1000)
           }
         })
         .catch(err => {

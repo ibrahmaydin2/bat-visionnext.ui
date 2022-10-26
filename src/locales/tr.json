@@ -3417,7 +3417,9 @@
     "successResetPassword": "Şifreniz başarıyla yenilemiştir.",
     "passwordsNotMatch": "Şifreler aynı değildir.",
     "newPassword":"Yeni Şifre",
-    "reNewPassword": "Yeni Şifre Tekrar"
+    "reNewPassword": "Yeni Şifre Tekrar",
+    "oldPassword": "Mevcut Şifre",
+    "userName": "Kullanicı Adı"
   },
   "list": {
     "location": "Lokasyon",
@@ -3450,6 +3452,7 @@
     "delete": "Sil",
     "deleteConfirm": "Kayıt Silme",
     "rowDeleteConfirm": "Seçtiğiniz Kayıt Silinecektir! Onaylıyor musunuz?",
+    "rowEditWarning": "Seçtiğiniz kaydı düzenlemek için 'Toplu Ekle' butonuna tıklayınız!",
     "editConfirm": "Kayıt Düzenleme",
     "rowEditConfirm": "Seçtiğiniz kaydı düzenlemek istediğinize emin misiniz?"
   },
