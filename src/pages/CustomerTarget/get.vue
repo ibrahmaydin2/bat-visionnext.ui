@@ -37,30 +37,21 @@
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
-            <b-table-simple :current-page="currentPage" :per-page="0" bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.CustomerTarget.CustomerId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.TargetQuantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.TargetUnitId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.ReqItemId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.ReqItemQuantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.DescriptionReqItem')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.GainAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.currencyId')}}</span></b-th>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (rowData.CustomerTargetDetails ? rowData.CustomerTargetDetails.filter(f => f.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.Customer.Label}}</b-td>
-                  <b-td>{{c.TargetQuantity}}</b-td>
-                  <b-td>{{c.TargetUnit.Label}}</b-td>
-                  <b-td>{{c.ReqItem ? c.ReqItem.Label : null}}</b-td>
-                  <b-td>{{c.ReqItemQuantity}}</b-td>
-                  <b-td>{{c.DescriptionReqItem}}</b-td>
-                  <b-td>{{c.GainAmount}}</b-td>
-                  <b-td>{{c.Currency.Label}}</b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
+                <b-table
+                  :items="CustomerTarget"
+                  :fields="customerGuaranteeFields"
+                  striped
+                  small
+                  sticky-header="300px"
+                  responsive
+                  bordered
+                  :current-page="currentPage"
+                  :per-page="0"
+                >
+                  <template #head()="data">
+                    {{$t(data.label)}}
+                  </template>
+                </b-table>
               <b-pagination
                 :total-rows="totalRowCount"
                 v-model="currentPage"
@@ -106,7 +97,44 @@ export default {
       customerTargetDatesItems: detailData.customerTargetDatesItems,
       currentPage: 1,
       totalRowCount: 0,
-      allList: {}
+      allList: {},
+      CustomerTarget: [],
+      customerGuaranteeFields: [
+        {
+          key: 'Customer',
+          label: 'insert.CustomerTarget.CustomerId',
+          sortable: false,
+          formatter (value, key, obj) {
+            return `${obj.Customer ? obj.Customer.Code : ''} - ${obj.Customer ? obj.Customer.Label : ''}`
+          }
+        },
+        {key: 'TargetQuantity', label: 'insert.CustomerTarget.TargetQuantity', sortable: false},
+        {key: 'TargetUnitId',
+          label: 'insert.CustomerTarget.TargetUnitId',
+          formatter (value, key, obj) {
+            return `${obj.TargetUnit ? obj.TargetUnit.Label : ''}`
+          },
+          sortable: false
+        },
+        {key: 'ReqItem',
+          label: 'insert.CustomerTarget.ReqItemId',
+          formatter (value, key, obj) {
+            return `${obj.ReqItem ? obj.ReqItem.Label : ''}`
+          },
+          sortable: false
+        },
+        {key: 'ReqItemQuantity', label: 'insert.CustomerTarget.ReqItemQuantity', sortable: false},
+        {key: 'DescriptionReqItem', label: 'insert.CustomerTarget.DescriptionReqItem', sortable: false},
+        {key: 'GainAmount', label: 'insert.CustomerTarget.GainAmount', sortable: false},
+        {key: 'Currency',
+          label: 'insert.CustomerTarget.currencyId',
+          formatter (value, key, obj) {
+            return `${obj.Currency ? obj.Currency.Label : ''}`
+          },
+          sortable: false
+        },
+        {key: 'operations', label: 'list.operations', sortable: false}
+      ]
     }
   },
   mounted () {
@@ -133,14 +161,14 @@ export default {
       this.isLoading = true
       this.allList = {}
       if (this.allList[this.currentPage]) {
-        this.rowData.CustomerTargetDetails = this.allList[this.currentPage]
+        this.rowData.CustomerTarget = this.allList[this.currentPage]
         return
       }
       this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search', 50).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
-          this.rowData.CustomerTargetDetails = response.ListModel.BaseModels
-          this.allList[this.currentPage] = this.rowData.CustomerTargetDetails
+          this.CustomerTarget = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.CustomerTarget
         }
         this.$forceUpdate()
       })

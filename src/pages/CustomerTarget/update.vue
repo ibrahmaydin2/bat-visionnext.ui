@@ -1,5 +1,26 @@
 <template>
   <b-row class="asc__insertPage">
+    <CustomerTargetExcelModal @success="successExcelImportCustomerTarget"></CustomerTargetExcelModal>
+    <b-modal id="credit-budget-confirm-delete-modal">
+      <template #modal-title>
+        {{$t('list.deleteConfirm')}}
+      </template>
+      {{$t('list.rowDeleteConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-delete-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="removeContractItems()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
+    <b-modal id="credit-budget-confirm-edit-modal">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.rowEditConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('credit-budget-confirm-edit-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="editInvoiceLine()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -91,46 +112,42 @@
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
-                 <AddDetailButton @click.native="addContractItems" />
+                 <AddDetailButton @click.native="addCustomerGuarantee" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.customer-target-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
               </b-form-group>
             </b-col>
           </b-row>
           <b-row>
-            <b-table-simple id="customer-target-list" :current-page="currentPage" :per-page="0" bordered small>
-              <b-thead>
-                <b-th><span>{{$t('insert.CustomerTarget.CustomerId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.TargetQuantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.TargetUnitId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.ReqItemId')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.ReqItemQuantity')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.DescriptionReqItem')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.GainAmount')}}</span></b-th>
-                <b-th><span>{{$t('insert.CustomerTarget.currencyId')}}</span></b-th>
-                <!-- <b-th><span>{{$t('list.operations')}}</span></b-th> -->
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="(c, i) in (form.CustomerTargetDetails ? form.CustomerTargetDetails.filter(f => f.RecordState !== 4) : [])" :key="i">
-                  <b-td>{{c.CustomerName ? c.CustomerName : c.Customer.Label}}</b-td>
-                  <b-td>{{c.TargetQuantity}}</b-td>
-                  <b-td>{{c.TargetUnitLabel ? c.TargetUnitLabel : c.TargetUnit.Label}}</b-td>
-                  <b-td>{{c.ReqItem ? c.ReqItem.Label : c.ReqItem}}</b-td>
-                  <b-td>{{c.ReqItemQuantity}}</b-td>
-                  <b-td>{{c.DescriptionReqItem}}</b-td>
-                  <b-td>{{c.GainAmount}}</b-td>
-                  <b-td>{{c.CurrencyName ? c.CurrencyName : c.Currency.Label}}</b-td>
-                  <b-td class="text-center">
-                    <b-button @click="editInvoiceLine(c)" class="btn mr-2 btn-warning btn-sm">
-                      <i class="fa fa-pencil-alt"></i>
-                    </b-button>
-                    <b-button @click="removeContractItems(c)" class="btn mr-2 btn-danger btn-sm">
-                      <i class="far fa-trash-alt"></i>
-                    </b-button>
-                  </b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
+            <b-table
+              :items="(CustomerTarget ? CustomerTarget.filter(c => c.RecordState !== 4) : [])"
+              :fields="customerGuaranteeFields"
+              striped
+              small
+              sticky-header="300px"
+              responsive
+              select-mode="multi"
+              selectable
+              bordered
+              :current-page="currentPage"
+              :per-page="0"
+            >
+              <template #head()="data">
+                {{$t(data.label)}}
+              </template>
+              <template #cell(operations)="row">
+                <b-button :title="$t('list.edit')" @click="$bvModal.show('credit-budget-confirm-edit-modal'); selectedCustomerTarget = row.item;" class="btn mr-2 btn-warning btn-sm">
+                  <i class="fa fa-pencil-alt"></i>
+                </b-button>
+                <b-button :title="$t('list.delete')" @click="$bvModal.show('credit-budget-confirm-delete-modal'); selectedCustomerTarget = row.item;" type="button" class="btn mr-2 btn-danger btn-sm">
+                  <i class="far fa-trash-alt ml-1"></i>
+                </b-button>
+              </template>
+            </b-table>
             <b-pagination
-              v-if="form.CustomerTargetDetails.length > 49"
               :total-rows="totalRowCount"
               v-model="currentPage"
               :per-page="50"
@@ -177,21 +194,66 @@ export default {
       items: [],
       itemCriterias: [],
       fieldValues: [],
-      selectedIndex: null,
+      selectedIndex: 0,
       currentPage: 1,
       totalRowCount: 0,
       allList: {},
+      CustomerTarget: [],
+      selectedCustomerTarget: null,
+      filterCustomer: null,
+      insertedDetails: [],
+      updatedDetails: [],
+      importedExcel: false,
+      showUpdateBudget: false,
+      selectedItems: [],
       customerTargetDetails: {
         customer: null,
+        CustomerDesc: null,
+        CustomerId: null,
         targetQuantity: null,
         targetUnit: null,
         reqItemQuantity: null,
         reqItem: null,
         descriptionReqItem: null,
         currency: null,
-        gainAmount: null,
-        isUpdated: false
-      }
+        gainAmount: null
+      },
+      customerGuaranteeFields: [
+        {
+          key: 'Customer',
+          label: 'insert.CustomerTarget.CustomerId',
+          sortable: false,
+          formatter (value, key, obj) {
+            return `${obj.CustomerName ? obj.CustomerName : obj.Customer.Label}`
+          }
+        },
+        {key: 'TargetQuantity', label: 'insert.CustomerTarget.TargetQuantity', sortable: false},
+        {key: 'TargetUnitId',
+          label: 'insert.CustomerTarget.TargetUnitId',
+          formatter (value, key, obj) {
+            return `${obj.TargetUnitLabel ? obj.TargetUnitLabel : obj.TargetUnit.Label}`
+          },
+          sortable: false
+        },
+        {key: 'ReqItem',
+          label: 'insert.CustomerTarget.ReqItemId',
+          formatter (value, key, obj) {
+            return `${obj.ReqItem ? obj.ReqItem.Label : ''}`
+          },
+          sortable: false
+        },
+        {key: 'ReqItemQuantity', label: 'insert.CustomerTarget.ReqItemQuantity', sortable: false},
+        {key: 'DescriptionReqItem', label: 'insert.CustomerTarget.DescriptionReqItem', sortable: false},
+        {key: 'GainAmount', label: 'insert.CustomerTarget.GainAmount', sortable: false},
+        {key: 'Currency',
+          label: 'insert.CustomerTarget.currencyId',
+          formatter (value, key, obj) {
+            return `${obj.Currency ? obj.Currency.Label : ''}`
+          },
+          sortable: false
+        },
+        {key: 'operations', label: 'list.operations', sortable: false}
+      ]
     }
   },
   mounted () {
@@ -216,16 +278,41 @@ export default {
       this.isLoading = true
       this.allList = {}
       if (this.allList[this.currentPage]) {
-        this.form.CustomerTargetDetails = this.allList[this.currentPage]
+        this.CustomerTarget = this.allList[this.currentPage]
         return
       }
       this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search', 50).then((response) => {
         if (response && response.ListModel) {
           this.totalRowCount = response.ListModel.TotalRowCount
-          this.form.CustomerTargetDetails = response.ListModel.BaseModels
-          this.allList[this.currentPage] = this.form.CustomerTargetDetails
+          this.CustomerTarget = response.ListModel.BaseModels
+          this.allList[this.currentPage] = this.CustomerTarget
         }
         this.$forceUpdate()
+      })
+    },
+    getCustomerTargetDetails2 () {
+      let request = {
+        andConditionModel: {
+          CustomerTargetIds: [this.$route.params.url]
+        },
+        page: this.currentPage
+      }
+      this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search', 50).then((response) => {
+        if (response && response.ListModel) {
+          this.totalRowCount = response.ListModel.TotalRowCount
+          let responseList = response.ListModel.BaseModels
+            .filter(c => c.CustomerTarget !== null && c.CustomerTarget !== undefined)
+            .map(item => {
+              let customerGuarantees = item.CustomerTarget
+              customerGuarantees.RecordId = item.RecordId
+              return customerGuarantees
+            })
+          if (this.currentPage === 1) {
+            this.CustomerTarget = [...this.insertedDetails, ...responseList]
+          } else {
+            this.CustomerTarget = responseList
+          }
+        }
       })
     },
     getItemCriterias () {
@@ -257,15 +344,50 @@ export default {
       if (!rowData.CustomerTargetDates) {
         this.form.CustomerTargetDates = []
       }
-      if (!rowData.CustomerTargetDetails) {
-        this.form.CustomerTargetDetails = []
-      }
       // if (this.form.CustomerTargetDetails) {
       //   this.form.CustomerTargetDetails.map(item => {
       //     item.RecordState = 3
       //     return item
       //   })
       // }
+    },
+    successExcelImportCustomerTarget (data) {
+      if (data) {
+        let list = []
+        console.log(data)
+        console.log(this.CustomerTarget)
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          let existIndex = this.CustomerTarget.findIndex(c => c.CustomerId === obj.CustomerId)
+          if (existIndex > -1) {
+            let exist = this.CustomerTarget[existIndex]
+            obj.RecordState = exist.RecordId ? 3 : 2
+            obj.RecordId = exist.RecordId
+            this.CustomerTarget.splice(existIndex, 1)
+          } else {
+            obj.RecordState = 2
+          }
+          // let nonExistIndex = this.CustomerGuarantees.findIndex(c => c.CustomerId !== obj.CustomerId)
+          // console.log(nonExistIndex)
+          // if (nonExistIndex > -1) {
+          //   let _CustomerGuarantees = this.CustomerGuarantees
+          //   _CustomerGuarantees[nonExistIndex].RecordState = 4
+          //   this.CustomerGuarantees = _CustomerGuarantees
+          // }
+          obj.StatusId = 1
+          obj.Deleted = 0
+          obj.System = 0
+          obj.RecordTypeId = null
+          obj.isUpdated = true
+          list.push(obj)
+        })
+        this.CustomerTarget = [...this.CustomerTarget, ...list]
+        this.insertedDetails = this.CustomerTarget.filter(c => c.RecordState === 2)
+        this.updatedDetails = this.CustomerTarget.filter(c => c.RecordState === 3 || c.RecordState === 4)
+        this.totalRowCount = this.CustomerTarget.length
+        this.importedExcel = true
+        this.filterCustomer = null
+      }
     },
     addContractItems () {
       if (this.customerTargetDetails.reqItem && !this.customerTargetDetails.customer) {
@@ -335,13 +457,13 @@ export default {
         TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
         TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
         ReqItemId: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.RecordId : null,
-        ReqItem: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
+        ReqItemLabel: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
         TargetQuantity: this.customerTargetDetails.targetQuantity,
         ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
         DescriptionReqItem: this.customerTargetDetails.descriptionReqItem,
         GainAmount: this.customerTargetDetails.gainAmount,
-        CurrencyId: this.customerTargetDetails.currency.RecordId,
-        CurrencyName: this.customerTargetDetails.currency.Description1
+        CurrencyId: this.customerTargetDetails.currency ? this.customerTargetDetails.reqItem.RecordId : null,
+        CurrencyName: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.Description1 : null
       }
       if (this.customerTargetDetails.isUpdated) {
         this.form.CustomerTargetDetails[this.selectedIndex] = item
@@ -354,29 +476,171 @@ export default {
       this.getCurrencies()
       this.getLookups()
     },
-    removeContractItems (item) {
-      if (item.RecordId > 0) {
-        this.form.CustomerTargetDetails[this.form.CustomerTargetDetails.indexOf(item)].RecordState = 4
-      } else {
-        this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
+    async addCustomerGuarantee () {
+      this.$v.customerTargetDetails.$touch()
+      if (this.customerTargetDetails.reqItem && !this.customerTargetDetails.customer) {
+        this.$toasted.show(this.$t('insert.customerRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
       }
-      this.$forceUpdate()
-      // this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
-    },
-    editInvoiceLine (item) {
-      this.selectedIndex = this.form.CustomerTargetDetails.indexOf(item)
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && !this.customerTargetDetails.targetQuantity) {
+        this.$toasted.show(this.$t('insert.targetQuantityRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && !this.customerTargetDetails.gainAmount) {
+        this.$toasted.show(this.$t('insert.gainAmountRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && !this.customerTargetDetails.reqItemQuantity) {
+        this.$toasted.show(this.$t('insert.reqItemQuantityRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && this.customerTargetDetails.reqItemQuantity && !this.customerTargetDetails.descriptionReqItem) {
+        this.$toasted.show(this.$t('insert.descriptionReqItemRequired'), {
+          type: 'error',
+          keepOnHover: true,
+          position: 'top-center',
+          duration: '5000'
+        })
+        return
+      }
+      this.$v.customerTargetDetails.$touch()
+      // let filteredArr = this.form.CustomerTargetDetails.filter(i => i.CustomerId === this.customerTargetDetails.customer.RecordId && i.RecordState !== 4)
+      // if (filteredArr.length > 0) {
+      //   this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
+      //   return false
+      // }
+      if (!this.customerTargetDetails.isUpdated) {
+        let request = {
+          andConditionModel: {
+            CustomerTargetIds: [this.form.RecordId],
+            CustomerIds: [this.customerTargetDetails.customer.RecordId]
+          },
+          page: this.currentPage,
+          OrderByColumns: [
+            {
+              column: 'ApprovestateId',
+              'orderByType': 0
+            }
+          ]
+        }
+        let filteredList = await this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search')
+        this.getCurrencies()
+        this.getLookups()
+        if (this.CustomerTarget.some(c => c.CustomerId === this.customerTargetDetails.customer.RecordId && c.RecordState !== 4) || (filteredList && filteredList.ListModel && filteredList.ListModel.BaseModels.length > 0)) {
+          this.$toasted.show(this.$t('insert.creditBudget.sameRecordException'), { type: 'error', keepOnHover: true, duration: '3000' })
+          return false
+        }
+      }
       this.customerTargetDetails = {
-        targetQuantity: item.TargetQuantity,
-        reqItemQuantity: item.ReqItemQuantity,
-        descriptionReqItem: item.DescriptionReqItem,
-        gainAmount: item.GainAmount,
-        recordState: item.RecordState,
-        recordId: item.RecordId,
-        isUpdated: true
+        Deleted: 0,
+        System: 0,
+        RecordId: this.customerTargetDetails.recordId,
+        RecordState: this.customerTargetDetails.recordId > 0 ? 3 : 2,
+        StatusId: 1,
+        // TableName: 'T_CUSTOMER_TARGET_DETAIL',
+        CustomerId: this.customerTargetDetails.customer.RecordId,
+        CustomerName: this.customerTargetDetails.customer.Description1,
+        TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
+        TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
+        ReqItemId: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.RecordId : null,
+        ReqItem: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
+        TargetQuantity: this.customerTargetDetails.targetQuantity,
+        ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
+        DescriptionReqItem: this.customerTargetDetails.descriptionReqItem,
+        GainAmount: this.customerTargetDetails.gainAmount,
+        CurrencyId: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.RecordId : null,
+        CurrencyName: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.Description1 : null
       }
-      this.getCurrencies(item.CurrencyId)
-      this.getLookups(item.TargetUnitId)
-      this.getItem(item.items)
+      if (this.customerTargetDetails.isUpdated) {
+        this.CustomerTarget[this.selectedIndex] = this.customerTargetDetails
+        this.selectedIndex = null
+
+        let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.customerTargetDetails.CustomerId)
+        if (filteredList.length > 0) {
+          this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])] = this.customerTargetDetails
+        } else {
+          let data = {...this.customerGuarantees}
+          this.updatedDetails.push(data)
+        }
+      } else {
+        this.CustomerTarget.unshift(this.customerTargetDetails)
+        let filteredList = this.insertedDetails.filter(u => u.CustomerId === this.customerTargetDetails.CustomerId)
+        if (filteredList.length > 0) {
+          this.insertedDetails[this.insertedDetails.indexOf(filteredList[0])] = this.customerTargetDetails
+        } else {
+          let data = {...this.customerTargetDetails}
+          this.insertedDetails.push(data)
+        }
+        this.push(this.customerTargetDetails)
+      }
+      this.customerTargetDetails = {}
+      this.$v.customerTargetDetails.$reset()
+      this.getCurrencies()
+      this.getLookups()
+    },
+    removeContractItems (item) {
+      if (this.selectedCustomerTarget.RecordId > 0) {
+        this.CustomerTarget[this.CustomerTarget.indexOf(this.selectedCustomerTarget)].RecordState = 4
+      } else {
+        this.CustomerTarget.splice(this.CustomerTarget.indexOf(this.selectedCustomerTarget), 1)
+      }
+      let filteredList = this.updatedDetails.filter(u => u.CustomerId === this.selectedCustomerTarget.CustomerId)
+      if (filteredList.length > 0) {
+        this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])].RecordState = 4
+      } else {
+        let data = {...this.selectedCustomerTarget}
+        data.RecordState = 4
+        this.updatedDetails.push(data)
+      }
+      this.selectedCustomerTarget = null
+      this.$bvModal.hide('credit-budget-confirm-delete-modal')
+      this.$forceUpdate()
+    },
+    editInvoiceLine () {
+      this.customerTargetDetails = {...this.selectedCustomerTarget}
+      this.selectedIndex = this.CustomerTarget.indexOf(this.selectedCustomerTarget)
+      this.customerTargetDetails.isUpdated = true
+      if (this.selectedCustomerTarget.RecordId > 0) {
+        this.customerTargetDetails.RecordState = 3
+      }
+      this.customerTargetDetails.customer = null
+      this.customerTargetDetails.gainAmount = this.selectedCustomerTarget.GainAmount
+      this.customerTargetDetails.targetQuantity = this.selectedCustomerTarget.TargetQuantity
+      this.customerTargetDetails.descriptionReqItem = this.selectedCustomerTarget.DescriptionReqItem
+      this.customerTargetDetails.reqItemQuantity = this.selectedCustomerTarget.ReqItemQuantity
+      this.customerTargetDetails.currency = this.getCurrencies(this.selectedCustomerTarget.CurrencyId)
+      this.customerTargetDetails.targetUnit = this.getLookups(this.selectedCustomerTarget.TargetUnitId)
+      this.customerTargetDetails.reqItem = this.getItem(this.selectedCustomerTarget.ReqItem)
+      this.customerTargetDetails.customer = {
+        RecordId: this.selectedCustomerTarget.CustomerId,
+        Description1: this.selectedCustomerTarget.CustomerDesc,
+        Code: this.selectedCustomerTarget.CustomerCode
+      }
+      this.selectedCustomerTarget = null
+      this.$bvModal.hide('credit-budget-confirm-edit-modal')
+      // this.getCurrencies(item.CurrencyId)
+      // this.getLookups(item.TargetUnitId)
+      // this.getItem(item.items)
     },
     // editInvoiceLine (objectKey, item) {
     //   let list = this.form.Custome
@@ -434,13 +698,42 @@ export default {
         })
         this.tabValidation()
       } else {
+        let list = [...this.insertedDetails, ...this.updatedDetails]
+        this.form.CustomerTargetDetails = list.map((item) => {
+          let creditBudgetDetail = {
+            TargetUnitId: item.TargetUnitId,
+            TargetQuantity: item.TargetQuantity,
+            ReqItemId: item.ReqItemId,
+            ReqItemQuantity: item.ReqItemQuantity,
+            DescriptionReqItem: item.DescriptionReqItem,
+            GainAmount: item.GainAmount,
+            CustomerId: item.CustomerId,
+            CurrencyId: item.CurrencyId,
+            RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            RecordId: item.RecordId,
+            CustomerTarget: item
+          }
+
+          return creditBudgetDetail
+        })
         this.updateData()
       }
     }
   },
   watch: {
     currentPage () {
-      this.getCustomerTargetDetails()
+      if (!this.importedExcel) {
+        this.getCreditBudgetDetails()
+      }
+    },
+    filterCustomer () {
+      if (!this.importedExcel) {
+        this.currentPage = 1
+        this.getCreditBudgetDetails()
+      }
     }
   },
   validations () {

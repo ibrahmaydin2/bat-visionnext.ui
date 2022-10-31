@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <CustomerTargetExcelModal @success="successExcelImportCustomerTarget"></CustomerTargetExcelModal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -94,6 +95,11 @@
                  <AddDetailButton @click.native="addContractItems" />
               </b-form-group>
             </b-col>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <b-button class="mt-4" size="sm" variant="success" v-b-modal.customer-target-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
+              </b-form-group>
+            </b-col>
           </b-row>
           <b-row>
             <b-table-simple bordered small>
@@ -109,8 +115,8 @@
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
-                <b-tr v-for="(c, i) in form.CustomerTargetDetails" :key="i">
-                  <b-td>{{c.CustomerName}}</b-td>
+                <b-tr v-for="(c, i) in form.CustomerTarget" :key="i">
+                  <b-td>{{c.CustomerName ? c.CustomerName : c.CustomerDesc}}</b-td>
                   <b-td>{{c.TargetQuantity}}</b-td>
                   <b-td>{{c.TargetUnitLabel}}</b-td>
                   <b-td>{{c.ReqItem}}</b-td>
@@ -152,6 +158,7 @@ export default {
         RecordState: 2,
         CustomerTargetDetails: [],
         CustomerTargetDates: [],
+        CustomerTarget: [],
         Code: null,
         Description1: null,
         ErpCode: null,
@@ -200,6 +207,26 @@ export default {
           this.itemCriterias = response.Values
         }
       })
+    },
+    successExcelImportCustomerTarget (data) {
+      if (data) {
+        let list = []
+        Object.keys(data).map(d => {
+          let obj = data[d]
+          let existIndex = this.form.CustomerTarget.findIndex(c => c.CustomerId === obj.CustomerId)
+          if (existIndex > -1) {
+            this.form.CustomerTargetDetails.splice(existIndex, 1)
+          }
+          obj.RecordState = 2
+          obj.StatusId = 1
+          obj.Deleted = 0
+          obj.System = 0
+          obj.CurrencyId = 1
+          obj.TargetUnitId = 501
+          list.push(obj)
+        })
+        this.form.CustomerTarget = [...list, ...this.form.CustomerTarget]
+      }
     },
     selectColumnName  (data) {
       this.fieldValues = []
@@ -316,10 +343,10 @@ export default {
         CurrencyName: this.customerTargetDetails.currency.Description1
       }
       if (this.customerTargetDetails.isUpdated) {
-        this.form.CustomerTargetDetails[this.selectedIndex] = item
-        this.customerTargetDetails.isUpdated = false
+        this.form.CustomerTarget[this.selectedIndex] = item
+        this.selectedIndex = null
       } else {
-        this.form.CustomerTargetDetails.push(item)
+        this.form.CustomerTarget.push(item)
       }
       this.customerTargetDetails = {}
       this.$v.customerTargetDetails.$reset()
@@ -327,10 +354,16 @@ export default {
       this.getLookups()
     },
     removeContractItems (item) {
-      this.form.CustomerTargetDetails.splice(this.form.CustomerTargetDetails.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.CustomerTarget[this.form.CustomerTarget.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerTarget.splice(this.form.CustomerTarget.indexOf(item), 1)
+      }
     },
     editInvoiceLine (item) {
-      this.selectedIndex = this.form.CustomerTargetDetails.indexOf(item)
+      this.customerTargetDetails = item
+      this.customerTargetDetails.isUpdated = true
+      this.selectedIndex = this.form.CustomerTarget.indexOf(item)
       this.customerTargetDetails = {
         targetQuantity: item.TargetQuantity,
         reqItemQuantity: item.ReqItemQuantity,
@@ -347,6 +380,25 @@ export default {
       if (this.$v.form.$error) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
       } else {
+        this.form.CustomerTargetDetails = this.form.CustomerTarget.map((item) => {
+          let creditBudgetDetail = {
+            TargetUnitId: item.TargetUnitId,
+            TargetQuantity: item.TargetQuantity,
+            ReqItemId: item.ReqItemId,
+            ReqItemQuantity: item.ReqItemQuantity,
+            CurrencyId: item.CurrencyId,
+            DescriptionReqItem: item.DescriptionReqItem,
+            GainAmount: item.GainAmount,
+            CustomerId: item.CustomerId,
+            RecordState: 2,
+            StatusId: 1,
+            Deleted: 0,
+            System: 0,
+            CustomerTarget: item
+          }
+
+          return creditBudgetDetail
+        })
         this.createData()
       }
     }
