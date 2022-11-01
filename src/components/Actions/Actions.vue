@@ -47,9 +47,11 @@
   </b-dropdown-group>
 </template>
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Actions',
   computed: {
+    ...mapActions(['acOtherDispatchErrorList', 'acOtherDispatchSuccessList']),
     filteredActions () {
       return this.actions.filter(i => {
         if (i.IsMultiple === null) {
@@ -277,24 +279,47 @@ export default {
       }, 1000)
     },
     multiPrint (action) {
-      this.$api.postByUrl({recordIds: this.RecordIds}, action.ActionUrl).then((res) => {
-        if (this.RecordIds.length === 0) {
-          this.$toasted.show(this.$t('index.chooseDocument'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
+      this.$api.postByUrl({ recordIds: this.RecordIds }, action.ActionUrl).then((res) => {
+        if (this.$route.path === '/DispatchRefDocument') { // Sadece 'Diğer İrsaliyeler' sayfasındayken çalışır
+          if (this.RecordIds.length === 0) {
+            this.$toasted.show(this.$t('index.chooseDocument'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          for (let i = 0; i < res.Response.length; i++) {
+            var payloadObject = {
+              id: res.Response[i].RecordId,
+              isCompleted: res.Response[i].IsCompleted,
+              message: res.Response[i].Message
+            }
+            this.$store.dispatch('acOtherDispatchMultiPrintList', payloadObject)
+          }
+          if (res.MultiHtml != null) {
+            this.htmlPrint(res.MultiHtml)
+          }
+        } else {
+          if (this.RecordIds.length === 0) {
+            this.$toasted.show(this.$t('index.chooseDocument'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+            return
+          }
+          if (res.IsCompleted === false) {
+            this.$toasted.show(this.$t('index.notContentFound'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+          if (res.MultiHtml != null) {
+            this.htmlPrint(res.MultiHtml)
+          }
         }
-        if (res.IsCompleted === false) {
-          this.$toasted.show(this.$t(res.Message), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
-          return
-        }
-        this.htmlPrint(res.MultiHtml)
       })
     },
     copy (action, row) {
