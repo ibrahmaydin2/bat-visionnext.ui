@@ -227,7 +227,7 @@ export default {
           label: 'insert.CustomerTarget.CustomerId',
           sortable: false,
           formatter (value, key, obj) {
-            return `${value ? value.Label : obj.CustomerName}`
+            return `${value ? value.Label : obj.CustomerDesc}`
           }
         },
         {key: 'TargetQuantity', label: 'insert.CustomerTarget.TargetQuantity', sortable: false},
