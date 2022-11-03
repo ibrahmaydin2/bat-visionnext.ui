@@ -225,6 +225,7 @@
                 :converted-values="multipleItemSearch.convertedValues"
                 :validations="multipleItemSearch.quantityValidation"
                 :initial-values-func="multipleItemSearch.initialValue"
+                :summary-items="multipleItemSearch.summaryItems"
                 @input="calculateTotalPrices()" />
             </b-col>
           </b-row>

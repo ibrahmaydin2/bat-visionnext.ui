@@ -198,6 +198,7 @@
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
                 :validations="multipleItemSearch.quantityValidation"
+                :summary-items="multipleItemSearch.summaryItems"
                 @input="calculateTotalPrices()" />
             </b-col>
           </b-row>
