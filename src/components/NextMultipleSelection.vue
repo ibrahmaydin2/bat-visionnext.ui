@@ -161,8 +161,10 @@
                 type="number"
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"
+                @keydown="keyDown($event)"
                 @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
-                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined">
+                :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined"
+                :noWheel="noWheel">
               </NextInput>
             </div>
             <div v-else class="table-data-view" :style="data.field.thStyle" v-b-tooltip.hover :title="data.value" v-html="data.value"></div>
@@ -304,7 +306,8 @@ export default {
       selectModel: {},
       dynamicValidations: {},
       summary: {},
-      listSearched: false
+      listSearched: false,
+      noWheel: true
     }
   },
   methods: {
@@ -664,6 +667,7 @@ export default {
       return this.clickableColumns.some(c => c.mainProperty === data.field.column.EntityProperty)
     },
     keypress (event) {
+      console.log(event)
       if (event.keyCode === 13) {
         let tabIndex = event.target.tabIndex
         let td = event.target.parentElement.parentElement
@@ -673,6 +677,12 @@ export default {
         if (target && target.firstElementChild && target.firstElementChild.firstElementChild) {
           target.firstElementChild.firstElementChild.focus()
         }
+        event.preventDefault()
+      }
+    },
+    keyDown (event) {
+      console.log(event.keyCode)
+      if (event.keyCode === 38 || event.keyCode === 40) { // Aşağı veya Yukarı ok tuşlarına basıldığında çalışır
         event.preventDefault()
       }
     },
