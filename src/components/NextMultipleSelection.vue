@@ -667,7 +667,6 @@ export default {
       return this.clickableColumns.some(c => c.mainProperty === data.field.column.EntityProperty)
     },
     keypress (event) {
-      console.log(event)
       if (event.keyCode === 13) {
         let tabIndex = event.target.tabIndex
         let td = event.target.parentElement.parentElement
@@ -681,7 +680,6 @@ export default {
       }
     },
     keyDown (event) {
-      console.log(event.keyCode)
       if (event.keyCode === 38 || event.keyCode === 40) { // Aşağı veya Yukarı ok tuşlarına basıldığında çalışır
         event.preventDefault()
       }
