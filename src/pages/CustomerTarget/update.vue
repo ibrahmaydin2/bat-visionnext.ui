@@ -397,7 +397,6 @@ export default {
       }
     },
     async addCustomerGuarantee () {
-      debugger
       this.$v.customerTargetDetails.$touch()
       if (this.customerTargetDetails.ReqItem && !this.customerTargetDetails.Customer) {
         this.$toasted.show(this.$t('insert.customerRequired'), {

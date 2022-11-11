@@ -261,6 +261,7 @@
     <BudgetMasterApproveModal v-if="showBudgetMasterApproveModal" :modalAction="modalAction" :modalItem="modalItem" />
     <AssignEmployeeModal v-if="showAssignEmployeeModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CommonInfoModal v-if="showCommonInfoModal" :modalAction="modalAction" :modalItem="modalItem" />
+    <EFULogModal v-if="showEFULogModal" :modalAction="modalAction" :modalItem="modalItem" />
     <CreditBudgetBulkApproveModal v-if="showCreditBulkBudgetModal" :modalAction="modalAction" :modalItem="modalItem" size="xl"/>
   </div>
 </template>
@@ -402,6 +403,7 @@ export default {
       showBudgetMasterApproveModal: false,
       showAssignEmployeeModal: false,
       showCommonInfoModal: false,
+      showEFULogModal: false,
       showCreditBulkBudgetModal: false,
       sortableColumns: {},
       mobileDragDisabled: false,
@@ -484,6 +486,7 @@ export default {
       this.showBudgetMasterApproveModal = false
       this.showAssignEmployeeModal = false
       this.showCommonInfoModal = false
+      this.showEFULogModal = false
       this.showCreditBulkBudgetModal = false
 
       if (!this.validateAction(action.Action)) {
@@ -590,6 +593,11 @@ export default {
         this.showCommonInfoModal = true
         this.$nextTick(() => {
           this.$bvModal.show('common-info-modal')
+        })
+      } else if (action.Action === 'EfuLog') {
+        this.showEFULogModal = true
+        this.$nextTick(() => {
+          this.$bvModal.show('efu-log-modal')
         })
       } else if (action.Action === 'ContractCustomerApprove') {
         this.showCreditBulkBudgetModal = true
