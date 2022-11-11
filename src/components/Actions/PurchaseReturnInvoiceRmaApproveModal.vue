@@ -379,25 +379,27 @@ export default {
       this.showLoading = true
       this.$store.commit('setDisabledLoading', true)
       this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRmaAprrove`).then((res) => {
-        this.$store.commit('setDisabledLoading', false)
-        this.showLoading = false
-        this.$store.commit('setReloadGrid', true)
-        this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
             type: 'success',
             keepOnHover: true,
             duration: '3000'
           })
-          // setTimeout(() => {
-          //   this.$store.commit('setReloadGrid', true)
-          //   this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
-          // }, 1000)
+          setTimeout(() => {
+            this.$store.commit('setDisabledLoading', false)
+            this.showLoading = false
+            this.$store.commit('setReloadGrid', true)
+            this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
+          }, 1000)
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
+          })
+          setTimeout(() => {
+            this.$store.commit('setDisabledLoading', false)
+            this.showLoading = false
           })
         }
       })
