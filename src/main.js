@@ -70,6 +70,7 @@ import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkA
 import BudgetMasterApproveModal from './components/Actions/BudgetMasterApproveModal'
 import AssignEmployeeModal from './components/Actions/AssignEmployeeModal'
 import CommonInfoModal from './components/Actions/CommonInfoModal'
+import EFULogModal from './components/Actions/EFULogModal'
 import NextMultipleSelection from './components/NextMultipleSelection'
 import NextMultipleSelection3 from './components/NextMultipleSelection3'
 import CommonExcelModal from './components/Actions/CommonExcelModal'
@@ -165,6 +166,7 @@ Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)
 Vue.component('BudgetMasterApproveModal', BudgetMasterApproveModal)
 Vue.component('AssignEmployeeModal', AssignEmployeeModal)
 Vue.component('CommonInfoModal', CommonInfoModal)
+Vue.component('EFULogModal', EFULogModal)
 Vue.component('NextMultipleSelection', NextMultipleSelection)
 Vue.component('NextMultipleSelection3', NextMultipleSelection3)
 Vue.component('CommonExcelModal', CommonExcelModal)

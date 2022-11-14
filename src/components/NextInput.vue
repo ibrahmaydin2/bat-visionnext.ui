@@ -12,7 +12,9 @@
     :placeholder="placeholder"
     @keyup.enter="keyupEnter"
     :style="inputStyle"
-    @focus="onFocus"/>
+    @focus="onFocus"
+    :no-wheel="noWheel"
+    @keydown="keydown($event)"/>
 </template>
 <script>
 export default {
@@ -62,6 +64,13 @@ export default {
         return {}
       },
       descripton: 'Input style bilgisi'
+    },
+    noWheel: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+      descripton: 'Input tipi number ise, mouse scrollu ile inputun değiştirilmesini kontrol eder'
     }
   },
   data () {
@@ -78,6 +87,9 @@ export default {
     },
     keyupEnter (value) {
       this.$emit('enter', value)
+    },
+    keydown (value) {
+      this.$emit('keydown', value)
     },
     onFocus (value) {
       this.$emit('onFocus', value)

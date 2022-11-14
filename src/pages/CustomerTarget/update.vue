@@ -76,9 +76,9 @@
       <b-tabs>
         <b-tab :title="$t('insert.CustomerTarget.CustomerTargetDetails')">
           <b-row>
-            <NextFormGroup :title="$t('insert.CustomerTarget.CustomerId')" :error="$v.customerTargetDetails.customer" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.CustomerId')" :error="$v.customerTargetDetails.Customer" :required="true" md="3" lg="3">
               <NextDropdown
-                v-model="customerTargetDetails.customer"
+                v-model="customerTargetDetails.Customer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 label="Description1"
@@ -87,28 +87,28 @@
                 :is-customer="true"
                 />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.TargetQuantity')" :error="$v.customerTargetDetails.targetQuantity" :required="true" md="3" lg="3">
+            <NextFormGroup :title="$t('insert.CustomerTarget.TargetQuantity')" :error="$v.customerTargetDetails.TargetQuantity" :required="true" md="3" lg="3">
               <NextInput
-                v-model="customerTargetDetails.targetQuantity"
+                v-model="customerTargetDetails.TargetQuantity"
                 type="number"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.TargetUnitId')" :error="$v.customerTargetDetails.targetUnit" md="3" lg="3">
-              <NextDropdown :disabled="true" :source="lookupValues" label="Label" v-model="customerTargetDetails.targetUnit" />
+            <NextFormGroup :title="$t('insert.CustomerTarget.TargetUnitId')" :error="$v.customerTargetDetails.TargetUnit" md="3" lg="3">
+              <NextDropdown :disabled="true" :source="lookupValues" label="Label" v-model="customerTargetDetails.TargetUnit" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.reqItem" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
-              <NextDropdown v-model="customerTargetDetails.reqItem" :dynamic-and-condition="{ StatusIds: [1] }" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
+            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemId')" :error="$v.customerTargetDetails.ReqItem" :required="!(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount)" md="3" lg="3">
+              <NextDropdown v-model="customerTargetDetails.ReqItem" :dynamic-and-condition="{ StatusIds: [1] }" url="/VisionNextItem/api/Item/AutocompleteSearch" :searchable="true" :source="items" orConditionFields="Code,Description1" :custom-option="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.reqItemQuantity" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
-              <NextInput type="number" v-model="customerTargetDetails.reqItemQuantity"/>
+            <NextFormGroup :title="$t('insert.CustomerTarget.ReqItemQuantity')" :error="$v.customerTargetDetails.ReqItemQuantity" :required="!(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount)" md="3" lg="3">
+              <NextInput type="number" v-model="customerTargetDetails.ReqItemQuantity"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.descriptionReqItem" :required="!(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount)" md="3" lg="3">
-              <NextInput type="text" v-model="customerTargetDetails.descriptionReqItem"/>
+            <NextFormGroup :title="$t('insert.CustomerTarget.DescriptionReqItem')" :error="$v.customerTargetDetails.DescriptionReqItem" :required="!(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount)" md="3" lg="3">
+              <NextInput type="text" v-model="customerTargetDetails.DescriptionReqItem"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.GainAmount')" :error="$v.customerTargetDetails.gainAmount" :required="true" md="3" lg="3">
-              <NextInput type="number" v-model="customerTargetDetails.gainAmount"/>
+            <NextFormGroup :title="$t('insert.CustomerTarget.GainAmount')" :error="$v.customerTargetDetails.GainAmount" :required="true" md="3" lg="3">
+              <NextInput type="number" v-model="customerTargetDetails.GainAmount"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.CustomerTarget.currencyId')" :error="$v.customerTargetDetails.currency" :required="true" md="3" lg="3">
-              <NextDropdown :disabled="true" v-model="customerTargetDetails.currency" :source="currencies" />
+            <NextFormGroup :title="$t('insert.CustomerTarget.currencyId')" :error="$v.customerTargetDetails.Currency" :required="true" md="3" lg="3">
+              <NextDropdown :disabled="true" v-model="customerTargetDetails.Currency" :source="currencies" />
             </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
@@ -206,17 +206,20 @@ export default {
       importedExcel: false,
       showUpdateBudget: false,
       selectedItems: [],
+      customerEdit: [],
       customerTargetDetails: {
-        customer: null,
+        Customer: null,
         CustomerDesc: null,
         CustomerId: null,
-        targetQuantity: null,
-        targetUnit: null,
-        reqItemQuantity: null,
-        reqItem: null,
-        descriptionReqItem: null,
-        currency: null,
-        gainAmount: null
+        TargetQuantity: null,
+        TargetUnit: null,
+        ReqItemQuantity: null,
+        ReqItem: null,
+        ReqItemId: null,
+        DescriptionReqItem: null,
+        Currency: null,
+        GainAmount: null,
+        isUpdated: false
       },
       customerGuaranteeFields: [
         {
@@ -224,21 +227,21 @@ export default {
           label: 'insert.CustomerTarget.CustomerId',
           sortable: false,
           formatter (value, key, obj) {
-            return `${obj.CustomerName ? obj.CustomerName : obj.Customer.Label}`
+            return `${value ? value.Label : obj.CustomerDesc}`
           }
         },
         {key: 'TargetQuantity', label: 'insert.CustomerTarget.TargetQuantity', sortable: false},
-        {key: 'TargetUnitId',
+        {key: 'TargetUnit',
           label: 'insert.CustomerTarget.TargetUnitId',
           formatter (value, key, obj) {
-            return `${obj.TargetUnitLabel ? obj.TargetUnitLabel : obj.TargetUnit.Label}`
+            return `${value ? value.Label : obj.TargetUnitLabel}`
           },
           sortable: false
         },
         {key: 'ReqItem',
           label: 'insert.CustomerTarget.ReqItemId',
           formatter (value, key, obj) {
-            return `${obj.ReqItem ? obj.ReqItem.Label : ''}`
+            return `${value ? value.Label : ''}`
           },
           sortable: false
         },
@@ -248,7 +251,7 @@ export default {
         {key: 'Currency',
           label: 'insert.CustomerTarget.currencyId',
           formatter (value, key, obj) {
-            return `${obj.Currency ? obj.Currency.Label : ''}`
+            return `${value ? value.Label : obj.CurrencyName}`
           },
           sortable: false
         },
@@ -377,6 +380,10 @@ export default {
           obj.StatusId = 1
           obj.Deleted = 0
           obj.System = 0
+          obj.CurrencyId = 1
+          obj.TargetUnitId = 501
+          obj.TargetUnitLabel = this.$t('insert.creditBudget.KRT')
+          obj.CurrencyName = this.$t('insert.creditBudget.TRY')
           obj.RecordTypeId = null
           obj.isUpdated = true
           list.push(obj)
@@ -389,96 +396,9 @@ export default {
         this.filterCustomer = null
       }
     },
-    addContractItems () {
-      if (this.customerTargetDetails.reqItem && !this.customerTargetDetails.customer) {
-        this.$toasted.show(this.$t('insert.customerRequired'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
-      }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && !this.customerTargetDetails.targetQuantity) {
-        this.$toasted.show(this.$t('insert.targetQuantityRequired'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
-      }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && !this.customerTargetDetails.gainAmount) {
-        this.$toasted.show(this.$t('insert.gainAmountRequired'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
-      }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && !this.customerTargetDetails.reqItemQuantity) {
-        this.$toasted.show(this.$t('insert.reqItemQuantityRequired'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
-      }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && this.customerTargetDetails.reqItemQuantity && !this.customerTargetDetails.descriptionReqItem) {
-        this.$toasted.show(this.$t('insert.descriptionReqItemRequired'), {
-          type: 'error',
-          keepOnHover: true,
-          position: 'top-center',
-          duration: '5000'
-        })
-        return
-      }
-      this.$v.customerTargetDetails.$touch()
-      if (this.$v.customerTargetDetails.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), { type: 'error', keepOnHover: true, duration: '3000' })
-        return false
-      }
-      let filteredArr = this.form.CustomerTargetDetails.filter(i => i.CustomerId === this.customerTargetDetails.customer.RecordId && i.RecordState !== 4)
-      if (filteredArr.length > 0) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameRecordError') })
-        return false
-      }
-      let item = {
-        Deleted: 0,
-        System: 0,
-        RecordId: this.customerTargetDetails.recordId,
-        RecordState: this.customerTargetDetails.recordId > 0 ? 3 : 2,
-        StatusId: 1,
-        // TableName: 'T_CUSTOMER_TARGET_DETAIL',
-        CustomerId: this.customerTargetDetails.customer.RecordId,
-        CustomerName: this.customerTargetDetails.customer.Description1,
-        TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
-        TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
-        ReqItemId: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.RecordId : null,
-        ReqItemLabel: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
-        TargetQuantity: this.customerTargetDetails.targetQuantity,
-        ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
-        DescriptionReqItem: this.customerTargetDetails.descriptionReqItem,
-        GainAmount: this.customerTargetDetails.gainAmount,
-        CurrencyId: this.customerTargetDetails.currency ? this.customerTargetDetails.reqItem.RecordId : null,
-        CurrencyName: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.Description1 : null
-      }
-      if (this.customerTargetDetails.isUpdated) {
-        this.form.CustomerTargetDetails[this.selectedIndex] = item
-        this.customerTargetDetails.isUpdated = false
-      } else {
-        this.form.CustomerTargetDetails.push(item)
-      }
-      this.customerTargetDetails = {}
-      this.$v.customerTargetDetails.$reset()
-      this.getCurrencies()
-      this.getLookups()
-    },
     async addCustomerGuarantee () {
       this.$v.customerTargetDetails.$touch()
-      if (this.customerTargetDetails.reqItem && !this.customerTargetDetails.customer) {
+      if (this.customerTargetDetails.ReqItem && !this.customerTargetDetails.Customer) {
         this.$toasted.show(this.$t('insert.customerRequired'), {
           type: 'error',
           keepOnHover: true,
@@ -487,7 +407,7 @@ export default {
         })
         return
       }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && !this.customerTargetDetails.targetQuantity) {
+      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.Customer && !this.customerTargetDetails.TargetQuantity) {
         this.$toasted.show(this.$t('insert.targetQuantityRequired'), {
           type: 'error',
           keepOnHover: true,
@@ -496,7 +416,7 @@ export default {
         })
         return
       }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && !this.customerTargetDetails.gainAmount) {
+      if (this.customerTargetDetails.ReqItem && this.customerTargetDetails.Customer && this.customerTargetDetails.TargetQuantity && !this.customerTargetDetails.GainAmount) {
         this.$toasted.show(this.$t('insert.gainAmountRequired'), {
           type: 'error',
           keepOnHover: true,
@@ -505,7 +425,7 @@ export default {
         })
         return
       }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && !this.customerTargetDetails.reqItemQuantity) {
+      if (this.customerTargetDetails.ReqItem && this.customerTargetDetails.Customer && this.customerTargetDetails.TargetQuantity && this.customerTargetDetails.GainAmount && !this.customerTargetDetails.ReqItemQuantity) {
         this.$toasted.show(this.$t('insert.reqItemQuantityRequired'), {
           type: 'error',
           keepOnHover: true,
@@ -514,7 +434,7 @@ export default {
         })
         return
       }
-      if (this.customerTargetDetails.reqItem && this.customerTargetDetails.customer && this.customerTargetDetails.targetQuantity && this.customerTargetDetails.gainAmount && this.customerTargetDetails.reqItemQuantity && !this.customerTargetDetails.descriptionReqItem) {
+      if (this.customerTargetDetails.ReqItem && this.customerTargetDetails.Customer && this.customerTargetDetails.TargetQuantity && this.customerTargetDetails.GainAmount && this.customerTargetDetails.ReqItemQuantity && !this.customerTargetDetails.DescriptionReqItem) {
         this.$toasted.show(this.$t('insert.descriptionReqItemRequired'), {
           type: 'error',
           keepOnHover: true,
@@ -533,7 +453,7 @@ export default {
         let request = {
           andConditionModel: {
             CustomerTargetIds: [this.form.RecordId],
-            CustomerIds: [this.customerTargetDetails.customer.RecordId]
+            CustomerIds: [this.customerTargetDetails.Customer.RecordId]
           },
           page: this.currentPage,
           OrderByColumns: [
@@ -546,30 +466,10 @@ export default {
         let filteredList = await this.$api.postByUrl(request, 'VisionNextCustomer/api/CustomerTargetDetail/Search')
         this.getCurrencies()
         this.getLookups()
-        if (this.CustomerTarget.some(c => c.CustomerId === this.customerTargetDetails.customer.RecordId && c.RecordState !== 4) || (filteredList && filteredList.ListModel && filteredList.ListModel.BaseModels.length > 0)) {
+        if (this.CustomerTarget.some(c => c.CustomerId === this.customerTargetDetails.Customer.RecordId && c.RecordState !== 4) || (filteredList && filteredList.ListModel && filteredList.ListModel.BaseModels.length > 0)) {
           this.$toasted.show(this.$t('insert.creditBudget.sameRecordException'), { type: 'error', keepOnHover: true, duration: '3000' })
           return false
         }
-      }
-      this.customerTargetDetails = {
-        Deleted: 0,
-        System: 0,
-        RecordId: this.customerTargetDetails.recordId,
-        RecordState: this.customerTargetDetails.recordId > 0 ? 3 : 2,
-        StatusId: 1,
-        // TableName: 'T_CUSTOMER_TARGET_DETAIL',
-        CustomerId: this.customerTargetDetails.customer.RecordId,
-        CustomerName: this.customerTargetDetails.customer.Description1,
-        TargetUnitId: this.customerTargetDetails.targetUnit.DecimalValue,
-        TargetUnitLabel: this.customerTargetDetails.targetUnit.Label,
-        ReqItemId: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.RecordId : null,
-        ReqItem: this.customerTargetDetails.reqItem ? this.customerTargetDetails.reqItem.Description1 : null,
-        TargetQuantity: this.customerTargetDetails.targetQuantity,
-        ReqItemQuantity: this.customerTargetDetails.reqItemQuantity,
-        DescriptionReqItem: this.customerTargetDetails.descriptionReqItem,
-        GainAmount: this.customerTargetDetails.gainAmount,
-        CurrencyId: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.RecordId : null,
-        CurrencyName: this.customerTargetDetails.currency ? this.customerTargetDetails.currency.Description1 : null
       }
       if (this.customerTargetDetails.isUpdated) {
         this.CustomerTarget[this.selectedIndex] = this.customerTargetDetails
@@ -579,9 +479,10 @@ export default {
         if (filteredList.length > 0) {
           this.updatedDetails[this.updatedDetails.indexOf(filteredList[0])] = this.customerTargetDetails
         } else {
-          let data = {...this.customerGuarantees}
+          let data = {...this.customerTargetDetails}
           this.updatedDetails.push(data)
         }
+        console.log(this.customerTargetDetails)
       } else {
         this.CustomerTarget.unshift(this.customerTargetDetails)
         let filteredList = this.insertedDetails.filter(u => u.CustomerId === this.customerTargetDetails.CustomerId)
@@ -623,18 +524,17 @@ export default {
       if (this.selectedCustomerTarget.RecordId > 0) {
         this.customerTargetDetails.RecordState = 3
       }
-      this.customerTargetDetails.customer = null
-      this.customerTargetDetails.gainAmount = this.selectedCustomerTarget.GainAmount
-      this.customerTargetDetails.targetQuantity = this.selectedCustomerTarget.TargetQuantity
-      this.customerTargetDetails.descriptionReqItem = this.selectedCustomerTarget.DescriptionReqItem
-      this.customerTargetDetails.reqItemQuantity = this.selectedCustomerTarget.ReqItemQuantity
-      this.customerTargetDetails.currency = this.getCurrencies(this.selectedCustomerTarget.CurrencyId)
-      this.customerTargetDetails.targetUnit = this.getLookups(this.selectedCustomerTarget.TargetUnitId)
-      this.customerTargetDetails.reqItem = this.getItem(this.selectedCustomerTarget.ReqItem)
-      this.customerTargetDetails.customer = {
-        RecordId: this.selectedCustomerTarget.CustomerId,
-        Description1: this.selectedCustomerTarget.CustomerDesc,
-        Code: this.selectedCustomerTarget.CustomerCode
+      this.customerTargetDetails.GainAmount = this.selectedCustomerTarget.GainAmount
+      this.customerTargetDetails.TargetQuantity = this.selectedCustomerTarget.TargetQuantity
+      this.customerTargetDetails.DescriptionReqItem = this.selectedCustomerTarget.DescriptionReqItem
+      this.customerTargetDetails.ReqItemQuantity = this.selectedCustomerTarget.ReqItemQuantity
+      this.customerTargetDetails.Currency = this.getCurrencies(this.selectedCustomerTarget.CurrencyId)
+      this.customerTargetDetails.TargetUnit = this.getLookups(this.selectedCustomerTarget.TargetUnitId)
+      this.customerTargetDetails.ReqItem = this.selectedCustomerTarget.ReqItem
+      this.customerTargetDetails.Customer = {
+        RecordId: this.selectedCustomerTarget.CustomerId ? this.selectedCustomerTarget.CustomerId : this.selectedCustomerTarget.Customer.CustomerId,
+        Description1: this.selectedCustomerTarget.CustomerDesc ? this.selectedCustomerTarget.CustomerDesc : this.selectedCustomerTarget.Customer.Label,
+        Code: this.selectedCustomerTarget.CustomerCode ? this.selectedCustomerTarget.CustomerCode : this.selectedCustomerTarget.Customer.Code
       }
       this.selectedCustomerTarget = null
       this.$bvModal.hide('credit-budget-confirm-edit-modal')
@@ -667,8 +567,8 @@ export default {
       return this.$api.postByUrl({LookupTableCode: 'UNIT'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
         if (response && response.Values) {
           this.lookupValues = response.Values.UNIT
-          this.customerTargetDetails.targetUnit = response.Values.UNIT[3]
-          this.form.TargetUnitId = this.customerTargetDetails.targetUnit.RecordId
+          this.customerTargetDetails.TargetUnit = response.Values.UNIT[3]
+          this.form.TargetUnitId = this.customerTargetDetails.TargetUnit.RecordId
         }
       })
     },
@@ -676,8 +576,8 @@ export default {
       return this.$api.postByUrl({}, 'VisionNextSystem/api/SysCurrency/Search').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.currencies = response.ListModel.BaseModels
-          this.customerTargetDetails.currency = response.ListModel.BaseModels[0]
-          this.form.CurrencyId = this.customerTargetDetails.currency.RecordId
+          this.customerTargetDetails.Currency = response.ListModel.BaseModels[0]
+          this.form.CurrencyId = this.customerTargetDetails.Currency.RecordId
         }
       })
     },
@@ -743,7 +643,7 @@ export default {
       },
       reqItem: {
         required: requiredIf(function () {
-          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+          return !(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount) ? required : !required
         })
       },
       customer: {
@@ -754,12 +654,12 @@ export default {
       },
       reqItemQuantity: {
         required: requiredIf(function () {
-          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+          return !(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount) ? required : !required
         })
       },
       descriptionReqItem: {
         required: requiredIf(function () {
-          return !(customerTargetDetails.customer && customerTargetDetails.targetQuantity && customerTargetDetails.gainAmount) ? required : !required
+          return !(customerTargetDetails.Customer && customerTargetDetails.TargetQuantity && customerTargetDetails.GainAmount) ? required : !required
         })
       },
       gainAmount: {

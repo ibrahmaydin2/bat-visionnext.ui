@@ -102,10 +102,12 @@
         </b-button>
         <b-button
           variant="primary"
+          :disabled="showLoading"
           size="sm"
           @click="submitModal()"
         >
           {{$t('index.approve')}}
+          <b-spinner v-if="showLoading" small variant="primary"></b-spinner>
         </b-button>
       </div>
     </template>
@@ -146,6 +148,7 @@ export default {
   data () {
     return {
       approveNumber: null,
+      showLoading: false,
       form: {
         InvoiceNumber: null,
         DocumentNumber: null,
@@ -244,6 +247,9 @@ export default {
     }
   },
   methods: {
+    show () {
+      this.showLoading = false
+    },
     getWarehouse () {
       let andConditionModel = {
         StatusId: [1],
@@ -370,6 +376,8 @@ export default {
       let request = {
         model: this.rmaDetail
       }
+      this.showLoading = true
+      this.$store.commit('setDisabledLoading', true)
       this.$api.postByUrl(request, `VisionNextInvoice/api/PurchaseReturn${this.type}/ReceiveRmaAprrove`).then((res) => {
         if (res.IsCompleted === true) {
           this.$toasted.show(this.$t('insert.success'), {
@@ -378,15 +386,21 @@ export default {
             duration: '3000'
           })
           setTimeout(() => {
+            this.$store.commit('setDisabledLoading', false)
+            this.showLoading = false
             this.$store.commit('setReloadGrid', true)
             this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
-          }, 1000)
+          }, 3000)
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
           })
+          setTimeout(() => {
+            this.$store.commit('setDisabledLoading', false)
+            this.showLoading = false
+          }, 3000)
         }
       })
     }

@@ -80,7 +80,7 @@
           @click="getList">
           <i class="fa fa-search mr-1"></i>{{$t('index.Convert.find')}}</b-button>
         <b-button
-          :disabled="!form || !form.RecordId  || form.RecordId === 0"
+          :disabled="!form || !form.RecordId  || form.RecordId === 0 || showLoading"
           variant="primary"
           size="sm"
           @click="submitModal()"

@@ -592,7 +592,7 @@ export default {
 
       this.$api.postByUrl(request, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch?v=4', 1000).then(res => {
         if (res && res.ListModel) {
-          this.fromWarehousesAll = res.ListModel.BaseModels.filter(f => f.Description1 !== null)
+          this.fromWarehousesAll = res.ListModel.BaseModels.filter(f => f.Description1 !== null && f.VehicleId !== null)
         }
       })
     },
