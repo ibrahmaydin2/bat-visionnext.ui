@@ -390,7 +390,7 @@ export default {
             this.showLoading = false
             this.$store.commit('setReloadGrid', true)
             this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
-          }, 1000)
+          }, 3000)
         } else {
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
@@ -400,7 +400,7 @@ export default {
           setTimeout(() => {
             this.$store.commit('setDisabledLoading', false)
             this.showLoading = false
-          })
+          }, 3000)
         }
       })
     }
