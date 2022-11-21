@@ -118,7 +118,6 @@
                   name="RouteMultipleCustomer"
                   v-model="form.RouteDetails"
                   :hidden-values="hiddenValues"
-                  :dynamic-required-filters="dynamicRequiredFilters"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
                   :change-branch-id="true"
                   :record-count="20"

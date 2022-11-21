@@ -14,7 +14,7 @@
             <router-link :to="{name: 'Route' }">
               <CancelButton />
             </router-link>
-            <AddButton @click.native="save()" />
+            <AddButton @click.native="multiDelete()" />
           </b-col>
         </b-row>
       </header>
@@ -129,7 +129,6 @@
                   v-model="form.RouteDetails"
                   :hidden-values="hiddenValues"
                   :initial-values-func="initialValues"
-                  :dynamic-required-filters="dynamicRequiredFilters"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
                   :change-branch-id="true"
                   :record-count="20"
@@ -140,6 +139,16 @@
         </b-tab>
       </b-tabs>
     </b-col>
+    <b-modal id="confirm-update-modal">
+      <template #modal-title>
+        {{$t('list.editConfirm')}}
+      </template>
+      {{$t('list.locationCount') + ` ${this.multiDeleteCount.length} ` + $t('list.locationCountConfirm')}}
+      <template #modal-footer>
+        <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-update-modal')">{{$t('insert.cancel')}}</b-button>
+        <b-button size="sm" class="float-right ml-2" variant="success" @click="save()">{{$t('insert.okay')}}</b-button>
+      </template>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -197,6 +206,7 @@ export default {
       Location: {},
       selectedLocation: null,
       selectedLocationIndex: null,
+      multiDeleteCount: [],
       detailButtons: [
         {
           icon: 'fa fa-search',
@@ -493,6 +503,16 @@ export default {
         })
         this.form.StatusId = this.form.StatusId === 0 ? 2 : this.form.StatusId
         this.updateData()
+      }
+    },
+    async multiDelete () {
+      this.multiDeleteCount = this.form.RouteDetails.filter(r => r.RecordState === 4)
+      if (this.multiDeleteCount.length > 0) {
+        this.$nextTick(() => {
+          this.$root.$emit('bv::show::modal', 'confirm-update-modal')
+        })
+      } else {
+        this.save()
       }
     },
     setLocationDetail (model, index) {
