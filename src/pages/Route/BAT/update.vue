@@ -47,7 +47,8 @@
                 orConditionFields="Code,Description1,Name,Surname"
                 :customOption="true"
                 :is-employee="true"
-                :disabled="insertReadonly.RepresentativeId" />
+                :disabled="insertReadonly.RepresentativeId"
+                :dynamic-and-condition="{ StatusIds: [1] }" /> <!--Pasif olmayan personelleri listeler-->
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
