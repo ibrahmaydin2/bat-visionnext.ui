@@ -35,7 +35,7 @@
     </b-col>
     <b-col cols="12">
       <b-tabs>
-        <b-tab :title="$t('insert.customer.Customer')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.customer.Customer')" @click.prevent="tabValidation(), setCustomerRegion5Field()">
           <b-row>
             <NextFormGroup item-key="CommercialTitle" :error="$v.form.CommercialTitle">
               <NextInput v-model="form.CommercialTitle" type="text" :disabled="insertReadonly.CommercialTitle || (taxCustomerType && taxCustomerType.Code === 'GRK')" />
@@ -625,6 +625,9 @@ export default {
       return this.CustomerPaymentTypesArr.filter(item => {
         return item.RecordState !== 4
       })
+    },
+    getIsRouteRegion: function () {
+      return this.form.IsRouteRegion
     }
   },
   mounted () {
@@ -1033,6 +1036,21 @@ export default {
         this.form.CommercialTitle = null
       }
     },
+    setCustomerRegion5Field () {
+      if (this.form.IsRouteRegion === 1 && this.form.RouteDetails.length > 0) {
+        var routeIdCode = this.form.RouteDetails[this.form.RouteDetails.length - 1].RouteIdCode // En son eklenen rotanın RouteIdCode'u
+        for (let i = 0; i < this.routes.length; i++) {
+          if (routeIdCode === this.routes[i].Code && this.routes[i].CustomerRegion5 != null) { // Seçilen rotanın CustomerRegion5 alanı varsa çalışır
+            var customerRegion5Code = this.routes[i].CustomerRegion5.Code
+          }
+        }
+        for (let j = 0; j < this.$store.state.lookup.CUSTOMER_REGION_5.length; j++) {
+          if (this.$store.state.lookup.CUSTOMER_REGION_5[j].Code === customerRegion5Code) {
+            this.customerRegion5 = this.$store.state.lookup.CUSTOMER_REGION_5[j]
+          }
+        }
+      }
+    },
     async setCommercialTitle () {
       if (this.taxCustomerType && this.taxCustomerType.Code !== 'GRK') { return }
       if (!this.form.TextField6) {
@@ -1123,6 +1141,9 @@ export default {
       } else {
         this.paymentTypes = this.allPaymentTypes
       }
+    },
+    getIsRouteRegion () { // Bölge rota bazlı seçilsin butonuna tıklandığında çalışır
+      this.setCustomerRegion5Field()
     }
   },
   validations () {
