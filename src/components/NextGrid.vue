@@ -650,7 +650,10 @@ export default {
       if (!item || !header) { return '' }
 
       const obj = item[header.dataField]
-      if (header.modelControlUtil && header.modelControlUtil.InputType === 'AutoComplete' && obj && obj.Code) {
+      if (header.modelControlUtil && header.modelControlUtil.InputType === 'AutoComplete' && header.modelControlUtil.ModelProperty === 'RepresentativeIds' && obj && obj.Code) {
+        return `${obj.Label}`
+      }
+      if (header.modelControlUtil && header.modelControlUtil.InputType === 'AutoComplete' && header.modelControlUtil.ModelProperty !== 'RepresentativeIds' && obj && obj.Code) {
         return `${obj.Code} - ${obj.Label}`
       }
 
