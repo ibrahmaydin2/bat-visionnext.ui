@@ -48,7 +48,7 @@
                 :customOption="true"
                 :is-employee="true"
                 :disabled="insertReadonly.RepresentativeId"
-                :dynamic-and-condition="{ StatusIds: [2] }" /> <!--Pasif olmayan personelleri listeler-->
+                :dynamic-and-condition="{ StatusIds: [1] }" /> <!--Pasif olmayan personelleri listeler-->
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
