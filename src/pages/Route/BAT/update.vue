@@ -47,7 +47,8 @@
                 orConditionFields="Code,Description1,Name,Surname"
                 :customOption="true"
                 :is-employee="true"
-                :disabled="insertReadonly.RepresentativeId" />
+                :disabled="insertReadonly.RepresentativeId"
+                :dynamic-and-condition="{ StatusIds: [2] }" /> <!--Pasif olmayan personelleri listeler-->
             </NextFormGroup>
             <NextFormGroup item-key="VehicleId" :error="$v.form.VehicleId">
               <NextDropdown
@@ -56,7 +57,7 @@
                 @input="selectedSearchType('VehicleId', $event)"
                 url="VisionNextVehicle/api/Vehicle/AutoCompleteSearch"
                 :disabled="insertReadonly.VehicleId || vehicleHasStock"
-                :dynamic-and-condition="{ StatusIds: [1] }"
+                :dynamic-and-condition="{ StatusIds: [2] }"
                 :page-count="1000"/>
             </NextFormGroup>
             <NextFormGroup item-key="RouteTypeId" :error="$v.form.RouteTypeId">
