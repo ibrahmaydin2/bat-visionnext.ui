@@ -3454,7 +3454,9 @@
     "rowDeleteConfirm": "Seçtiğiniz Kayıt Silinecektir! Onaylıyor musunuz?",
     "rowEditWarning": "Seçtiğiniz kaydı düzenlemek için 'Toplu Ekle' butonuna tıklayınız!",
     "editConfirm": "Kayıt Düzenleme",
-    "rowEditConfirm": "Seçtiğiniz kaydı düzenlemek istediğinize emin misiniz?"
+    "rowEditConfirm": "Seçtiğiniz kaydı düzenlemek istediğinize emin misiniz?",
+    "locationCount": "Lokasyonlardan",
+    "locationCountConfirm": "kayıt silinecektir, onaylıyor musunuz?"
   },
   "dashboard": {
     "search": "Ara",
