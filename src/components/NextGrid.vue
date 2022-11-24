@@ -329,7 +329,7 @@ export default {
       default: 'none',
       description: 'Grid satırlarının seçilebilirlik ayarları'
     },
-    OrderByColumnsProps: {
+    OrderByColumns: {
       type: Array,
       default: () => [],
       description: 'Listeleme için orderByColumns bilgisi'
@@ -355,7 +355,7 @@ export default {
       modalQuery: '',
       modalQueryMessage: '',
       head: [],
-      items: [],
+      items: null,
       totalRowCount: null,
       totalPageCount: null,
       perPageOpt: [20, 50, 100],
@@ -395,7 +395,6 @@ export default {
       autoSearchInput: {},
       showMultipleLoadingPlanModal: false,
       AndConditionalModel: {},
-      orderByColumns: [],
       disabledDraggable: false,
       firstHead: null,
       firstSearchItem: null,
@@ -895,8 +894,7 @@ export default {
         count: this.perPage,
         search: searchQ,
         andConditionalModel: this.AndConditionalModel,
-        // Eğer sayfanın index dosyasında, props kullanılarak özel bir sıralama yapılmamışsa, sortColumns fonksiyonundaki sıralama çalışır
-        OrderByColumns: this.OrderByColumnsProps.length > 0 ? this.OrderByColumnsProps : this.orderByColumns,
+        OrderByColumns: this.OrderByColumns,
         sort: sortOpt
       }).then(() => {
         this.disabledAutoComplete = false
@@ -1083,7 +1081,7 @@ export default {
         this.isLookupReady = true
       }
     },
-    setRowsAfter (callback) {
+    setRowsAfter () {
       if (!this.isGridFieldsReady || !this.isLookupReady) {
         return
       }
@@ -1110,7 +1108,6 @@ export default {
       if (!this.firstHead) {
         this.firstHead = this.head.map(h => ({...h}))
       }
-      callback()
       this.searchOnTable()
     },
     getFormattedDate (defaultValue) {
@@ -1189,28 +1186,6 @@ export default {
           return option === 'color' ? 'danger' : this.otherDispatchMultiPrintList[i].message
         } else if ((itemId === this.otherDispatchMultiPrintList[i].id) && (this.otherDispatchMultiPrintList[i].isCompleted === true)) {
           return option === 'color' ? 'success' : 'E-İrsaliye süreci başlatılmıştır'
-        }
-      }
-    },
-    // Kayıt tipi kolonu bulunan sayfalarda aktif kayıtların kodlarını A-Z sıralı olacak şekilde listeler.
-    // Eğer yeni bir sayfanın kod kolonu sıralanmak isteniyorsa, fonksiyonun içindeki koşula eklenebilir.
-    sortColumns () {
-      for (let j = 0; j < this.head.length; j++) {
-        if (this.head[j].dataField === 'Status') {
-          var hasStatusColumn = true
-          break
-        }
-      }
-      for (let i = 0; i < this.head.length; i++) {
-        if (hasStatusColumn) {
-          if (this.head[i].dataField === 'Code' ||
-              this.head[i].dataField === 'Customer' ||
-              this.head[i].dataField === 'Customer.Description1' ||
-              this.head[i].dataField === 'MovementNumber' ||
-              this.head[i].dataField === 'ServiceNumber') {
-            this.orderByColumns.push({column: 'Status', orderByType: 'Ascending'}, {column: this.head[i].dataField, orderByType: 'Ascending'})
-            return
-          }
         }
       }
     }
@@ -1311,14 +1286,10 @@ export default {
       }
     },
     isGridFieldsReady: function (e) {
-      this.setRowsAfter(() => {
-        this.sortColumns()
-      })
+      this.setRowsAfter()
     },
     isLookupReady: function (e) {
-      this.setRowsAfter(() => {
-        this.sortColumns()
-      })
+      this.setRowsAfter()
     }
   }
 }
