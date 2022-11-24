@@ -302,7 +302,7 @@ export default {
         this.orConditionModels = [...orConditionModels, ...this.dynamicOrConditions]
       }
       let request = {
-        andConditionModel: andConditionModel,
+        andConditionModel: this.andConditionSearchField,
         orConditionModels: orConditionModels,
         ...dynamicRequest
       }

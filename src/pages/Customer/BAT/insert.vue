@@ -373,7 +373,7 @@
               <NextDropdown v-model="routeDetailsObj.route" :disabled="!routeDetailsObj.routeType" :source="routes" @input="selectRouteCode"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.salesRepresentative')" :error="$v.routeDetailsObj.representative" required>
-              <NextDropdown v-model="routeDetailsObj.representative" :disabled="!routeDetailsObj.routeType" :source="representatives" label="Label" @input="selectRepresentative"></NextDropdown>
+              <NextDropdown v-model="routeDetailsObj.representative" :disabled="!routeDetailsObj.routeType" :source="representatives" label="Label" @input="selectRepresentative" :orderByColumns="[{column: 'RepresentativeId', OrderByType: 'Ascending'}]"></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.customer.Day1VisitOrder')">
               <NextInput type="number" v-model="routeDetails.Day1VisitOrder"></NextInput>
@@ -720,7 +720,8 @@ export default {
           andConditionModel: {
             RouteTypeIds: [value.RecordId],
             StatusIds: [1]
-          }
+          },
+          orderByColumns: [{column: 'Code', orderByType: 'Ascending'}]
         }
         this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 500).then(res => {
           if (res && res.ListModel) {
