@@ -301,8 +301,9 @@ export default {
       if (this.dynamicOrConditions && this.dynamicOrConditions.length > 0) {
         this.orConditionModels = [...orConditionModels, ...this.dynamicOrConditions]
       }
+      this.andConditionModel = {...this.andConditionModel, ...this.dynamicAndCondition}
       let request = {
-        andConditionModel: this.andConditionSearchField,
+        andConditionModel: this.andConditionModel,
         orConditionModels: orConditionModels,
         ...dynamicRequest
       }

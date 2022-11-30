@@ -83,7 +83,7 @@
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
                 :is-customer="true"
-                :andConditionSearchField="{StatusIds: [1]}"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 :orderByColumns="[{column: 'Description1', OrderByType: 'Ascending'}]"
                 />
             </NextFormGroup>
