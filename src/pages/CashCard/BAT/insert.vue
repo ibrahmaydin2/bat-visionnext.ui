@@ -83,6 +83,8 @@
                 :searchable="true" :custom-option="true"
                 or-condition-fields="Code,Description1,CommercialTitle,Name,Surname"
                 :is-customer="true"
+                :andConditionSearchField="{StatusIds: [1]}"
+                :orderByColumns="[{column: 'Description1', OrderByType: 'Ascending'}]"
                 />
             </NextFormGroup>
             <NextFormGroup item-key="RouteId" :error="$v.form.RouteId">
@@ -92,7 +94,7 @@
                 url="VisionNextRoute/api/Route/AutoCompleteSearch"
                 v-model="Route"
                 or-condition-fields="Code,Description1,CommercialTitle"
-                :order-by-columns="[ { Column: 'Description1', OrderByType: 0 } ]"
+                :orderByColumns="[{column: 'Description1', OrderByType: 'Ascending'}]"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :page-count="500"
                 />
