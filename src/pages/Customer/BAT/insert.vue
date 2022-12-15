@@ -720,7 +720,8 @@ export default {
           andConditionModel: {
             RouteTypeIds: [value.RecordId],
             StatusIds: [1]
-          }
+          },
+          orderByColumns: [{column: 'Description1', orderByType: 'Ascending'}]
         }
         this.$api.postByUrl(request, 'VisionNextRoute/api/Route/Search', 500).then(res => {
           if (res && res.ListModel) {
