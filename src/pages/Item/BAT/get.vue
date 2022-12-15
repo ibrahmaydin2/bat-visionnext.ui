@@ -101,6 +101,24 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.item.ItemImage')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.item.FileName')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(f, i) in rowData.ItemAttachments" :key="i">
+                      <b-td>{{f.Attachment}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">

@@ -163,6 +163,38 @@
         <b-tab :title="$t('insert.item.ItemCode')">
           <NextDetailPanel v-model="form.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
         </b-tab>
+        <b-tab :title="$t('insert.item.ItemImage')">
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFile"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFile" @click.native="submitFile" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.item.FileName')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.ItemAttachments" :key="i">
+                  <b-td>{{f.Attachment.FileName}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeItemAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
             <NextFormGroup item-key="Category1Id" :error="$v.form.Category1Id">
@@ -262,19 +294,77 @@ export default {
         CardTypeId: null,
         ItemBoms: [],
         ItemCustomers: [],
-        ItemBarcodes: []
+        ItemBarcodes: [],
+        ItemAttachments: []
       },
       itemBomItems: detailData.itemBomItems,
       itemCustomerItems: detailData.itemCustomerItems,
       itemBarcodeItems: detailData.itemBarcodeItems,
       IsRMAOff: null,
-      IsSpGiftItem: null
+      IsSpGiftItem: null,
+      selectedFile: null,
+      filePath: null
     }
   },
   mounted () {
     this.createManualCode()
   },
   methods: {
+    submitFile () {
+      this.getBase64(this.selectedFile)
+    },
+    getBase64 (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      let fileName = file.name
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        console.log(fileName)
+        vm.getSaveAttachment(splitedFile, dataType, fileName)
+      }
+    },
+    getSaveAttachment (splitedFile) {
+      let formData = {
+        AttachmentFile: splitedFile
+      }
+      this.$api.postByUrl(formData, 'VisionNextCommonApi/api/Attachment/SaveFile').then((response) => {
+        if (response.IsCompleted === true) {
+          this.filePath = response.AttachmentFile
+          this.addFixedTermCampaignTaken()
+        } else {
+          this.$toasted.show(this.$t('insert.errorImage'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
+    },
+    addFixedTermCampaignTaken () {
+      let formData = {
+        FileName: this.filePath
+      }
+      this.form.ItemAttachments.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        Attachment: {
+          TableName: 'T_ITEM',
+          FileName: formData.FileName,
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1
+        }
+      })
+      this.selectedFile = null
+    },
+    removeItemAttachments (item) {
+      this.form.ItemAttachments.splice(this.form.ItemAttachments.indexOf(item), 1)
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
