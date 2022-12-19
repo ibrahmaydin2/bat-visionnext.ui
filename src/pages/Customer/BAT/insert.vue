@@ -229,7 +229,7 @@
               <NextDropdown :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="OutSourceOrderId" :error="$v.form.OutSourceOrderId">
-              <NextDropdown :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
+              <NextDropdown v-model="form.OutSourceOrderId" :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>

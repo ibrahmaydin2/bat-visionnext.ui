@@ -229,7 +229,7 @@
               <NextDropdown :disabled="insertReadonly.Activity1Id" lookup-key="CUSTOMER_ACTIVITY_1" @input="selectedType('Activity1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="OutSourceOrderId" :error="$v.form.OutSourceOrderId">
-              <NextDropdown :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
+              <NextDropdown v-model="outSourceOrder" :disabled="insertReadonly.OutSourceOrderId" lookup-key="OUT_SOURCE_ORDER" @input="selectedType('OutSourceOrderId', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -595,6 +595,7 @@ export default {
       customerRegion3: {},
       customerRegion2: {},
       customerRegion1: {},
+      outSourceOrder: {},
       routeDetailsObj: {
         routeType: null,
         route: null,
@@ -814,6 +815,7 @@ export default {
       this.salesDocumentType = rowData.SalesDocumentType
       this.classProposalReason = rowData.ClassProposalReason
       this.backMarginGroup = rowData.BackMarginGroup
+      this.outSourceOrder = rowData.OutSourceOrder
       if (!rowData.CustomerLocations) {
         this.form.CustomerLocations = []
       }
