@@ -176,7 +176,7 @@ export default {
     },
     showWarning: {
       type: Boolean,
-      default: true,
+      default: false,
       description: 'Grid satırında güncelle butonu toplu eklemeye bağlı ise gösterilmesi gereken uyarı'
     },
     showAddButton: {
