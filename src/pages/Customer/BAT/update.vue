@@ -1047,7 +1047,7 @@ export default {
         for (let j = 0; j < this.$store.state.lookup.CUSTOMER_REGION_5.length; j++) {
           if (this.$store.state.lookup.CUSTOMER_REGION_5[j].Code === customerRegion5Code) {
             this.customerRegion5 = this.$store.state.lookup.CUSTOMER_REGION_5[j]
-            this.form.CustomerRegion5 = this.$store.state.lookup.CUSTOMER_REGION_5[j]
+            this.form.CustomerRegion5Id = this.$store.state.lookup.CUSTOMER_REGION_5[j].DecimalValue
           }
         }
       }
