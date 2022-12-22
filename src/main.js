@@ -64,6 +64,7 @@ import NextTimePicker from './components/NextTimePicker'
 import NextInput from './components/NextInput'
 import NextTextArea from './components/NextTextArea'
 import CreditBudgetExcelModal from './components/Actions/CreditBudgetExcelModal'
+import FixedTermCampaignExcelModal from './components/Actions/FixedTermCampaignExcelModal'
 import CustomerTargetExcelModal from './components/Actions/CustomerTargetExcelModal'
 import UpdateCreditBudgetModal from './components/Actions/UpdateCreditBudgetModal'
 import CreditBudgetBulkApproveModal from './components/Actions/CreditBudgetBulkApproveModal'
@@ -160,6 +161,7 @@ Vue.component('NextTimePicker', NextTimePicker)
 Vue.component('NextInput', NextInput)
 Vue.component('NextTextArea', NextTextArea)
 Vue.component('CreditBudgetExcelModal', CreditBudgetExcelModal)
+Vue.component('FixedTermCampaignExcelModal', FixedTermCampaignExcelModal)
 Vue.component('CustomerTargetExcelModal', CustomerTargetExcelModal)
 Vue.component('UpdateCreditBudgetModal', UpdateCreditBudgetModal)
 Vue.component('CreditBudgetBulkApproveModal', CreditBudgetBulkApproveModal)

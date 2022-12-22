@@ -186,7 +186,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.ItemAttachments" :key="i">
-                  <b-td>{{f.Attachment.FileName}}</b-td>
+                  <b-td>{{f.Attachment ? f.Attachment.Description1 : f.Description1}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeItemAttachments(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -317,32 +317,40 @@ export default {
       let vm = this
       var reader = new FileReader()
       reader.readAsDataURL(file)
-      let fileName = file.name
       reader.onload = function () {
         let splitedFile = reader.result.split(',')[1]
         let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
         console.log(fileName)
         vm.getSaveAttachment(splitedFile, dataType, fileName)
       }
     },
-    getSaveAttachment (splitedFile) {
-      let formData = {
-        AttachmentFile: splitedFile
-      }
-      this.$api.postByUrl(formData, 'VisionNextCommonApi/api/Attachment/SaveFile').then((response) => {
-        if (response.IsCompleted === true) {
-          this.filePath = response.AttachmentFile
-          this.addFixedTermCampaignTaken()
-        } else {
-          this.$toasted.show(this.$t('insert.errorImage'), {
-            type: 'error',
-            keepOnHover: true,
-            duration: '3000'
-          })
+    getSaveAttachment (splitedFile, fileName) {
+      if (this.form.ItemAttachments.filter(r => r.RecordState !== 4).length > 0) {
+        this.$toasted.show(this.$t('insert.errorImage'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      } else {
+        let formData = {
+          AttachmentFile: splitedFile
         }
-      })
+        this.$api.postByUrl(formData, 'VisionNextCommonApi/api/Attachment/SaveFile').then((response) => {
+          if (response.IsCompleted === true) {
+            this.filePath = response.AttachmentFile
+            this.addFixedTermCampaignTaken(fileName)
+          } else {
+            this.$toasted.show(this.$t('insert.errorImage'), {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+          }
+        })
+      }
     },
-    addFixedTermCampaignTaken () {
+    addFixedTermCampaignTaken (fileName) {
       let formData = {
         FileName: this.filePath
       }
@@ -351,9 +359,11 @@ export default {
         System: 0,
         RecordState: 2,
         StatusId: 1,
+        Description1: this.selectedFile.name,
         Attachment: {
           TableName: 'T_ITEM',
           FileName: formData.FileName,
+          Description1: this.selectedFile.name,
           Deleted: 0,
           System: 0,
           RecordState: 2,
@@ -363,7 +373,11 @@ export default {
       this.selectedFile = null
     },
     removeItemAttachments (item) {
-      this.form.ItemAttachments.splice(this.form.ItemAttachments.indexOf(item), 1)
+      if (item.RecordId > 0) {
+        this.form.ItemAttachments[this.form.ItemAttachments.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ItemAttachments.splice(this.form.ItemAttachments.indexOf(item), 1)
+      }
     },
     save () {
       this.$v.form.$touch()

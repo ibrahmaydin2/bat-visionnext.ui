@@ -111,7 +111,7 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(f, i) in rowData.ItemAttachments" :key="i">
-                      <b-td>{{f.Attachment}}</b-td>
+                      <b-td>{{f.Attachment ? f.Attachment.Description1 : f.Description1}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

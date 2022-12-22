@@ -43,6 +43,7 @@
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesPriceChangeRate, 'text', 'insert.customer.Model_SalesPriceChangeRate')"></div>
               <div v-html="getFormatDataByType(rowData.BlockReason, 'object', 'insert.customer.Model_BlockReasonId')"></div>
+              <div v-html="getFormatDataByType(rowData.OutSourceOrder, 'object', 'insert.customer.OutSourceOrderId')"></div>
             </b-card>
           </b-row>
         </b-tab>

@@ -1,5 +1,6 @@
 <template>
   <b-row class="asc__insertPage">
+    <FixedTermCampaignExcelModal @success="successExcelImport"></FixedTermCampaignExcelModal>
     <b-col cols="12">
       <header>
         <b-row>
@@ -180,6 +181,11 @@
                   :dynamic-and-condition="{multipleDynamicAndCondition, StatusIds: [1]}">
                 </NextMultipleSelection>
               </div>
+              <b-col cols="12" md="2">
+                <b-form-group>
+                  <b-button class="mt-4" size="sm" variant="success" v-b-modal.fixedTerm-campaign-excel-modal><i class="fas fa-file-pdf"/> {{$t('insert.creditBudget.uploadExcel')}}</b-button>
+                </b-form-group>
+              </b-col>
             </template>
           </NextDetailPanel>
         </b-tab>
@@ -877,11 +883,11 @@ export default {
             CustomerName: obj.CustomerDescription,
             CustomerCode: obj.CustomerCode,
             LocationName: obj.CustomerLocation,
-            BudgetName: obj.Budget
+            Budget: obj.Budget
           }
           list.push(newObj)
         })
-        this.form.FixedTermCampaignDetails = list
+        this.form.FixedTermCampaignCustomers = [...this.form.FixedTermCampaignCustomers, ...list]
       }
     },
     getRouteAndCondition () {
