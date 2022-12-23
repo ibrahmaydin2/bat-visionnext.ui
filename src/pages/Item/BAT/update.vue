@@ -438,6 +438,7 @@ export default {
     removeItemAttachments (item) {
       if (item.RecordId > 0) {
         this.form.ItemAttachments[this.form.ItemAttachments.indexOf(item)].RecordState = 4
+        this.form.ItemAttachments.Attachment[this.form.ItemAttachments.Attachment.indexOf(item)].RecordState = 4
       } else {
         this.form.ItemAttachments.splice(this.form.ItemAttachments.indexOf(item), 1)
       }
