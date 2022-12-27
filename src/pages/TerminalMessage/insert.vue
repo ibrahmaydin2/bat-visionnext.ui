@@ -80,7 +80,21 @@
           <NextDetailPanel v-model="form.TerminalMessageCustSqls" :items="custSqlItems"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.terminalMessage.routes')" v-if="selectedMessageType && selectedMessageType.Code === 'RM'" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.TerminalMessageRoutes" :items="routeItems"></NextDetailPanel>
+          <NextDetailPanel v-model="form.TerminalMessageRoutes" :items="routeItems">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection
+                  name="TerminalMessageMultipleRoute"
+                  v-model="form.TerminalMessageRoutes"
+                  :hidden-values="hiddenValuesRoutes"
+                  :initial-values-func="initialValues"
+                  :dynamic-disabled-filters="dynamicDisabledFilters"
+                  :change-branch-id="true"
+                  :record-count="20"
+                  :after-func="editForm" />
+              </div>
+            </template>
+          </NextDetailPanel>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -172,6 +186,44 @@ export default {
           mainProperty: 'Description1',
           targetProperty: 'Description1'
         }
+      ],
+      hiddenValuesRoutes: [
+        {
+          mainProperty: 'RecordId',
+          targetProperty: 'CustomerId'
+        },
+        {
+          mainProperty: 'DefaultLocation',
+          targetProperty: 'Location'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'Customer'
+        },
+        {
+          mainProperty: 'Description1',
+          targetProperty: 'CustomerName'
+        },
+        {
+          mainProperty: 'Code',
+          targetProperty: 'CustomerCode'
+        },
+        {
+          mainProperty: 'DefaultLocationId',
+          targetProperty: 'LocationId'
+        }
+      ],
+      dynamicDisabledFilters: [
+        {
+          mainProperty: 'BranchId',
+          disabled: () => this.form.IsSuperRoute !== 1
+        }
+      ],
+      dynamicRequiredFilters: [
+        {
+          mainProperty: 'BranchId',
+          required: () => this.form.IsSuperRoute === 1
+        }
       ]
     }
   },
@@ -179,6 +231,49 @@ export default {
     this.createManualCode()
   },
   methods: {
+    initialValues: (values) => {
+      values.map(value => {
+        if (value.Location) {
+          value.DefaultLocation = value.Location
+        }
+        if (value.Customer) {
+          value.Code = value.Customer.Code
+          value.Description1 = value.Customer.Label
+        }
+        if (value.AddressDesc) {
+          value.AdressDetail = value.AddressDesc
+        }
+        value.SelectedRow = true
+        return value
+      })
+      return values
+    },
+    editForm (form) {
+      form.Day1FreStartDate = form.DayFreStartDate
+      form.Day2FreStartDate = form.DayFreStartDate
+      form.Day3FreStartDate = form.DayFreStartDate
+      form.Day4FreStartDate = form.DayFreStartDate
+      form.Day5FreStartDate = form.DayFreStartDate
+      form.Day6FreStartDate = form.DayFreStartDate
+      form.Day7FreStartDate = form.DayFreStartDate
+      form.Day1Frequency = form.DayFrequency
+      form.Day2Frequency = form.DayFrequency
+      form.Day3Frequency = form.DayFrequency
+      form.Day4Frequency = form.DayFrequency
+      form.Day5Frequency = form.DayFrequency
+      form.Day6Frequency = form.DayFrequency
+      form.Day7Frequency = form.DayFrequency
+
+      form.Day1Value = !form.Day1VisitOrder || form.Day1VisitOrder === '0' ? 0 : 1
+      form.Day2Value = !form.Day2VisitOrder || form.Day2VisitOrder === '0' ? 0 : 1
+      form.Day3Value = !form.Day3VisitOrder || form.Day3VisitOrder === '0' ? 0 : 1
+      form.Day4Value = !form.Day4VisitOrder || form.Day4VisitOrder === '0' ? 0 : 1
+      form.Day5Value = !form.Day5VisitOrder || form.Day5VisitOrder === '0' ? 0 : 1
+      form.Day6Value = !form.Day6VisitOrder || form.Day6VisitOrder === '0' ? 0 : 1
+      form.Day7Value = !form.Day7VisitOrder || form.Day7VisitOrder === '0' ? 0 : 1
+
+      return form
+    },
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
