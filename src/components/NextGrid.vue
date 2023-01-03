@@ -14,6 +14,7 @@
               :
               'asc__nextgrid-table-header asc__nextgrid-table-header-' + header.columnType + ' text-' + header.align"
           >
+          <input v-if="header.columnType === 'selection'" type="checkbox" @click="selectAll()" v-model="allSelected">
             <span class="asc__nextgrid-table-header-title grid-wrap-text">{{header.label}}{{header.label && header.required ? '*' : ''}}
               <span class="asc__nextgrid-table-header-sort" v-if="header.columnType !== 'operations' && header.columnType !== 'selection'">
                 <b-button
@@ -164,13 +165,13 @@
         </draggable>
       </b-thead>
       <b-tbody>
-        <b-tr v-for="(item, i) in items" :key="i" :id="item.RecordId" @click.native="selectRow(item)" :class="item.Selected ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''" :variant="otherDispatchListLength ? updateRowAfterMultiPrint(item.RecordId, 'color') : ''">
+        <b-tr v-for="(item, i) in items" :key="i" :id="item.RecordId" @click.native="selectRow(item)" :class="(item.Selected || allSelected) ? 'row-selected' : '' || selectionMode === 'multi' ? 'multi-hover-class': ''" :variant="otherDispatchListLength ? updateRowAfterMultiPrint(item.RecordId, 'color') : ''">
           <b-tooltip v-if="isItemInDispatchList(item.RecordId)" :target=String(item.RecordId) position="bottom" >
             {{updateRowAfterMultiPrint(item.RecordId, 'message')}}
           </b-tooltip>
           <b-td v-for="h in head" :key="h.dataField+h.columnType">
             <span v-if="h.columnType === 'selection'" class="d-block w-100">
-              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="item.Selected ? 'selected-color' : 'unselected-color'"></i>
+              <i v-if="selectionMode === 'multi'" class="fa fa-check-circle" :class="(item.Selected || allSelected) ? 'selected-color' : 'unselected-color'"></i>
             </span>
             <span v-if="h.columnType === 'operations'" class="d-block w-100">
               <b-dropdown v-if="tableOperations.RowActions.length >= 1" size="sm" variant="default" no-caret class="asc__nextgrid-dropdown-btn-p0">
@@ -407,7 +408,9 @@ export default {
       showCreditBulkBudgetModal: false,
       sortableColumns: {},
       mobileDragDisabled: false,
-      afterAction: null
+      afterAction: null,
+      allSelected: false,
+      recordIds: []
     }
   },
   mounted () {
@@ -460,6 +463,25 @@ export default {
     }
   },
   methods: {
+    selectAll (item) {
+      this.recordIds = []
+      this.allSelected = !this.allSelected
+      if (this.allSelected) {
+        for (item in this.items) {
+          let ids = this.items[item]
+          this.recordIds.push(ids)
+        }
+        console.log(this.recordIds)
+        console.log(this.selectedItems)
+        let allItems = this.recordIds.filter(r => r.RecordId === item.RecordId)
+        console.log(allItems)
+        if (allItems && allItems.length > 0) {
+          this.recordIds.splice(this.recordIds.indexOf(allItems))
+        }
+        console.log(this.recordIds)
+      }
+      this.$store.commit('setSelectedTableRows', this.recordIds)
+    },
     getWorkflowData () {
       if (this.workFlowModel && this.workFlowModel.ControllerName && this.workFlowModel.ClassName && this.workFlowModel.PageName) {
         this.$api.post(this.workFlowModel, 'Workflow', 'Workflow/GetWorkflowList').then((res) => {
