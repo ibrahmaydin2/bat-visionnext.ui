@@ -155,10 +155,11 @@
               <NextInput
                 :tabindex="data.index+1"
                 :ref="`NextInput${data.index}`"
+                v-mask="'##.##'"
                 v-if="data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                type="number"
+                type="text"
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"
                 @keydown="keyDown($event)"
