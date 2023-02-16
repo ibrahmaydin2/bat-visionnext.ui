@@ -503,6 +503,7 @@ export default {
     getData () {
       var me = this
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/Contract', record: this.$route.params.url}).then(() => {
+        console.log(me.rowData)
         me.showAssets = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 4)
         me.showPriceDiscount = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 6)
         me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)

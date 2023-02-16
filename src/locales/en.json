@@ -505,7 +505,11 @@
     "BATLeagueTarget": "BAT League Takip",
     "BATLeagueTargetGet": "BAT League Takip Görüntüle",
     "BATLeagueTargetInsert": "Yeni BAT League Takip",
-    "BATLeagueTargetUpdate": "BAT League Takip Güncelle"
+    "BATLeagueTargetUpdate": "BAT League Takip Güncelle",
+    "investmentForm":"Investment Form",
+    "investmentFormGet":"Investment Form Get",
+    "investmentFormInsert":"Investment Form Insert",
+    "investmentFormUpdate":"Investment Form Update"
   },
   "insert": {
     "onlyNumbererror": "Sadece Harf veya Sayı Giriniz",
@@ -2670,7 +2674,30 @@
       "selectItem": "Select Item",
       "requiredProducts": "Please enter the quantity for at least 1 item.",
       "addProducts": "Add Items"
+    },
+    "investmentForm":{
+      "customer":"Customer",
+      "customerName":"Customer Name",
+      "address":"Address",
+      "licenseNumber":"TAPDK Number",
+      "description":"Description",
+      "typeId":"Contract Type",
+      "route":"Route",
+      "tmrSrName":"TMR SR Name",
+      "customerCategory":"Customer Category",
+      "formDate":"Form Date",
+      "customerArea":"Area",
+      "signingType":"Signing Type",
+      "currentInvestment": "Current Investment",
+      "newInvestment": "New Investment",
+      "unitAndOrderDetails": "Unit And Order Details",
+      "contractStartDate":"Contract Start Date",
+      "contractEndDate":"Contract End Date",
+      "contractDuration":"Contract Duration",
+      "scheduledPaymentDate": "Scheduled Payment Date" ,
+      "salesVolumeClass": "Sales Volume Class"
     }
+  
   },
   "get": {
     "detail": "Details",
