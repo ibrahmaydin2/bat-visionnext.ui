@@ -1008,7 +1008,7 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+                <b-th><span>{{$t('insert.contract.Attachment')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.ContractAttachments" :key="i">
