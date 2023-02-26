@@ -481,14 +481,14 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.customer.customerAttachments')" @click.prevent="tabValidation()">
+        <b-tab :title="$t('insert.contract.signAttachment')" @click.prevent="tabValidation()">
           <b-row>
             <b-col>
               <b-card class="m-3 asc__showPage-card">
                 <b-row>
                   <b-table-simple bordered small>
                     <b-thead>
-                      <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+                      <b-th><span>{{$t('insert.contract.Attachment')}}</span></b-th>
                       <b-th><span>{{$t('list.operations')}}</span></b-th>
                     </b-thead>
                     <b-tbody>

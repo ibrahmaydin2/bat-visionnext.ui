@@ -367,7 +367,7 @@
                     </b-thead>
                     <b-tbody>
                       <b-tr v-for="(f, i) in rowData.CustomerAttachments.filter(f => f.CustomerAttachmentTypeId === 2120)" :key="i">
-                        <b-td>{{f.FileName ? f.FileName : ''}}</b-td>
+                        <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
                         <b-td>
                           <i @click="downloadFile(f)" class="fa fa-download"></i>
                         </b-td>
@@ -513,8 +513,7 @@ export default {
           }
         }
       ],
-      assetLocationCurrentPage: 1,
-      CustomerAttachments: []
+      assetLocationCurrentPage: 1
     }
   },
   mounted () {
