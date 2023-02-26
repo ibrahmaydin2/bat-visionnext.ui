@@ -463,6 +463,48 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.ContractOpponentAssets')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ContractOpponentAssets" :items="opponentAssetsItem" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.contract.ContractOtherDetailss')">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.ContractOtherDetailss" :items="otherDetailsItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.customerAttachments')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <b-row>
+                  <b-table-simple bordered small>
+                    <b-thead>
+                      <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+                      <b-th><span>{{$t('list.operations')}}</span></b-th>
+                    </b-thead>
+                    <b-tbody>
+                      <b-tr v-for="(f, i) in rowData.ContractAttachments" :key="i">
+                        <b-td>{{f.FileName ? f.FileName : ''}}</b-td>
+                        <b-td>
+                          <i @click="downloadFile(f)" class="fa fa-download"></i>
+                        </b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-row>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -470,11 +512,14 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../../mixins/index'
+import { detailData } from './../detailPanelData'
 export default {
   props: ['dataKey'],
   mixins: [mixin],
   data () {
     return {
+      opponentAssetsItem: detailData.opponentAssetsItem,
+      otherDetailsItems: detailData.otherDetailsItems,
       workFlowModel: {
         ControllerName: '',
         ClassName: 'Contract',
@@ -487,7 +532,8 @@ export default {
       showFreeItems: false,
       showPaymentPlans: false,
       showEndorsements: false,
-      showCustomPrices: false
+      showCustomPrices: false,
+      ContractAttachments: []
     }
   },
   mounted () {
@@ -497,6 +543,34 @@ export default {
     ...mapState(['rowData', 'style'])
   },
   methods: {
+    downloadFile (item) {
+      let vm = this
+      let data = {
+        RecordId: item.RecordId
+        // EncryptedKey: item.EncryptedKey
+      }
+      vm.$api.postByUrl(data, 'VisionNextContractManagement/api/ContractAttachment/GetCustomerAttachment').then(res => {
+        const base64String = res.File
+        const fileName = res.Description1
+        const blob = this.base64ToBlob(base64String)
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('download', fileName)
+        link.setAttribute('href', url)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    base64ToBlob (base64String) {
+      const byteCharacters = atob(base64String)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new Blob([byteArray], { type: 'application/octet-stream' })
+    },
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },

@@ -984,6 +984,43 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.contract.ContractOpponentAssets')"  @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.ContractOpponentAssets" :items="opponentAssetsItem" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.contract.ContractOtherDetailss')"  @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.ContractOtherDetailss" :items="otherDetailsItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.contract.ContractAttachments')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFile"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFile" @click.native="submitFile" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.ContractAttachments" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeContractAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -1022,11 +1059,16 @@ export default {
         ContractFreeItems: [],
         ContractPaymentPlans: [],
         ContractEndorsements: [],
-        ContractCustomPrices: []
+        ContractCustomPrices: [],
+        ContractOpponentAssets: [],
+        ContractOtherDetailss: [],
+        ContractAttachments: []
       },
       routeName1: 'ContractManagement',
       routeName2: 'Contract',
       relatedCustomerItems: detailData.relatedCustomerItems,
+      opponentAssetsItem: detailData.opponentAssetsItem,
+      otherDetailsItems: detailData.otherDetailsItems,
       assetItems: detailData.assetItemsBAT,
       validDates: {
         contractStartDate: null,
@@ -1183,7 +1225,8 @@ export default {
       contractBenefitTypeSource: [],
       itemCriterias: [],
       lookupValues: {},
-      currencies: []
+      currencies: [],
+      selectedFile: null
     }
   },
   computed: {
@@ -1199,6 +1242,41 @@ export default {
     this.getLookups()
   },
   methods: {
+    submitFile () {
+      this.getBase64(this.selectedFile)
+    },
+    getBase64 (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addContractAttachments(splitedFile, dataType, fileName)
+      }
+    },
+    addContractAttachments (splitedFile, dataType, fileName) {
+      this.form.ContractAttachments.push({
+        Deleted: 0,
+        System: 0,
+        RecordState: 2,
+        StatusId: 1,
+        Description1: this.selectedFile.name,
+        contractAttachmentTypeId: 2361,
+        fileName: fileName,
+        file: splitedFile
+      })
+      this.selectedFile = null
+    },
+    removeContractAttachments (item) {
+      if (item.RecordId > 0) {
+        this.form.ContractAttachments[this.form.ContractAttachments.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ContractAttachments.splice(this.form.ContractAttachments.indexOf(item), 1)
+      }
+    },
     save () {
       this.$v.form.$touch()
       this.$v.validDates.$touch()
