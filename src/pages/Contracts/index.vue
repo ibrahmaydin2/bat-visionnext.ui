@@ -1,10 +1,13 @@
 <template>
-  <Nextgrid apiurl="VisionNextContractManagement/api/Contract/Search" :workFlowModel="workFlowModel" />
+  <Nextgrid apiurl="VisionNextContractManagement/api/Contract/Search" :workFlowModel="workFlowModel" :andConditionalModel="model"/>
 </template>
 <script>
 export default {
   data () {
     return {
+      model: {
+        IsContract: 1
+      },
       workFlowModel: {
         ControllerName: '',
         ClassName: 'Contract',

@@ -354,6 +354,79 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.customerAttachments')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <div v-html="getFormatDataByType(rowData.IbanNo, 'text', 'insert.IbanNo')"></div>
+                <b-row>
+                  <b-table-simple bordered small>
+                    <b-thead>
+                      <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+                      <b-th><span>{{$t('list.operations')}}</span></b-th>
+                    </b-thead>
+                    <b-tbody>
+                      <b-tr v-for="(f, i) in rowData.CustomerAttachments.filter(f => f.CustomerAttachmentTypeId === 2120)" :key="i">
+                        <b-td>{{f.FileName ? f.FileName : ''}}</b-td>
+                        <b-td>
+                          <i @click="downloadFile(f)" class="fa fa-download"></i>
+                        </b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-row>
+                <b-row>
+                  <b-table-simple bordered small>
+                    <b-thead>
+                      <b-th><span>{{$t('insert.customer.sign')}}</span></b-th>
+                      <b-th><span>{{$t('list.operations')}}</span></b-th>
+                    </b-thead>
+                    <b-tbody>
+                      <b-tr v-for="(f, i) in rowData.CustomerAttachments.filter(f => f.CustomerAttachmentTypeId === 2121)" :key="i">
+                        <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                        <b-td>
+                          <i @click="downloadFile(f)" class="fa fa-download"></i>
+                        </b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-row>
+                <b-row>
+                  <b-table-simple bordered small>
+                    <b-thead>
+                      <b-th><span>{{$t('insert.customer.commercial')}}</span></b-th>
+                      <b-th><span>{{$t('list.operations')}}</span></b-th>
+                    </b-thead>
+                    <b-tbody>
+                      <b-tr v-for="(f, i) in rowData.CustomerAttachments.filter(f => f.CustomerAttachmentTypeId === 2122)" :key="i">
+                        <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                        <b-td>
+                          <i @click="downloadFile(f)" class="fa fa-download"></i>
+                        </b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-row>
+                <b-row>
+                  <b-table-simple bordered small>
+                    <b-thead>
+                      <b-th><span>{{$t('insert.customer.customerTAPDK')}}</span></b-th>
+                      <b-th><span>{{$t('list.operations')}}</span></b-th>
+                    </b-thead>
+                    <b-tbody>
+                      <b-tr v-for="(f, i) in rowData.CustomerAttachments.filter(f => f.CustomerAttachmentTypeId === 2123)" :key="i">
+                        <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                        <b-td>
+                          <i @click="downloadFile(f)" class="fa fa-download"></i>
+                        </b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-row>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
@@ -440,7 +513,8 @@ export default {
           }
         }
       ],
-      assetLocationCurrentPage: 1
+      assetLocationCurrentPage: 1,
+      CustomerAttachments: []
     }
   },
   mounted () {
@@ -450,6 +524,33 @@ export default {
     ...mapState(['rowData', 'style'])
   },
   methods: {
+    downloadFile (item) {
+      let vm = this
+      let data = {
+        RecordId: item.RecordId
+      }
+      vm.$api.postByUrl(data, 'VisionNextCustomer/api/CustomerAttachment/GetCustomerAttachment').then(res => {
+        const base64String = res.File
+        const fileName = res.Description1
+        const blob = this.base64ToBlob(base64String)
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('download', fileName)
+        link.setAttribute('href', url)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    base64ToBlob (base64String) {
+      const byteCharacters = atob(base64String)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new Blob([byteArray], { type: 'application/octet-stream' })
+    },
     closeQuick () {
       this.$router.push({name: this.$route.meta.base})
     },

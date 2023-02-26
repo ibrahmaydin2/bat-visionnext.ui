@@ -95,6 +95,7 @@ export default {
       let formData = {
         files: file,
         ExcelIntegrationType: 21,
+        FileProccessType: 1,
         RecordId: this.$route.params.url
       }
       this.isLoading = true
