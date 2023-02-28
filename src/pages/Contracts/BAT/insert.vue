@@ -655,7 +655,7 @@
             </b-table-simple>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
+        <b-tab lazy :title="$t('insert.contract.contractPaymentPlans')" v-if="showPaymentPlans">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.benefitCondition')" :error="$v.contractPaymentPlans.benefitCondition" :required="true" md="3" lg="3">
               <NextDropdown v-model="contractPaymentPlans.benefitCondition" :source="lookupValues.CONTRACT_BENEFIT_TYPE" label="Label" />
@@ -1264,7 +1264,8 @@ export default {
         RecordState: 2,
         StatusId: 1,
         Description1: this.selectedFile.name,
-        contractAttachmentTypeId: 2361,
+        contractAttachmentTypeId: 2141,
+
         fileName: fileName,
         file: splitedFile
       })
@@ -1384,6 +1385,30 @@ export default {
       this.showPaymentPlans = this.form.ContractBenefits.some(c => c.BenefitTypeId === 3)
       this.showEndorsements = this.form.ContractBenefits.some(c => c.BenefitTypeId === 9)
       this.showCustomPrices = this.form.ContractBenefits.some(c => c.BenefitTypeId === 10)
+      if (!this.showPaymentPlans) {
+        this.removeContractPaymentPlans()
+      }
+      if (!this.showAssets) {
+        this.removeContractItems()
+      }
+      if (!this.showPriceDiscount) {
+        this.removeContractPriceDiscounts()
+      }
+      if (!this.showInvestments) {
+        this.removeContractInvestments()
+      }
+      if (!this.showDiscounts) {
+        this.removeContractDiscounts()
+      }
+      if (!this.showFreeItems) {
+        this.removeContractFreeItems()
+      }
+      if (!this.showEndorsements) {
+        this.removeContractEndorsements()
+      }
+      if (!this.showCustomPrices) {
+        this.removeContractCustomPrices()
+      }
       this.$forceUpdate()
     },
     editContractBenefits (item) {
@@ -1539,6 +1564,9 @@ export default {
     },
     removeContractItems (item) {
       this.form.ContractItems.splice(this.form.ContractItems.indexOf(item), 1)
+      if (!this.showAssets) {
+        this.form.ContractItems = []
+      }
     },
     addContractPriceDiscounts () {
       this.$v.contractPriceDiscounts.$touch()
@@ -1587,6 +1615,9 @@ export default {
     },
     removeContractPriceDiscounts (item) {
       this.form.ContractPriceDiscounts.splice(this.form.ContractPriceDiscounts.indexOf(item), 1)
+      if (!this.showPriceDiscount) {
+        this.form.ContractPriceDiscounts = []
+      }
     },
     addContractInvestments () {
       this.$v.contractInvestments.$touch()
@@ -1635,6 +1666,9 @@ export default {
     },
     removeContractInvestments (item) {
       this.form.ContractInvestments.splice(this.form.ContractInvestments.indexOf(item), 1)
+      if (!this.showInvestments) {
+        this.form.ContractInvestments = []
+      }
     },
     addContractDiscounts () {
       this.$v.contractDiscounts.$touch()
@@ -1681,6 +1715,9 @@ export default {
     },
     removeContractDiscounts (item) {
       this.form.ContractDiscounts.splice(this.form.ContractDiscounts.indexOf(item), 1)
+      if (!this.showDiscounts) {
+        this.form.ContractDiscounts = []
+      }
     },
     addContractFreeItems () {
       this.$v.contractFreeItems.$touch()
@@ -1731,6 +1768,9 @@ export default {
     },
     removeContractFreeItems (item) {
       this.form.ContractFreeItems.splice(this.form.ContractFreeItems.indexOf(item), 1)
+      if (!this.showFreeItems) {
+        this.form.ContractFreeItems = []
+      }
     },
     addContractPaymentPlans () {
       this.$v.contractPaymentPlans.$touch()
@@ -1785,6 +1825,9 @@ export default {
     },
     removeContractPaymentPlans (item) {
       this.form.ContractPaymentPlans.splice(this.form.ContractPaymentPlans.indexOf(item), 1)
+      if (!this.showPaymentPlans) {
+        this.form.ContractPaymentPlans = []
+      }
     },
     addContractEndorsements () {
       this.$v.contractEndorsements.$touch()
@@ -1847,6 +1890,9 @@ export default {
     },
     removeContractEndorsements (item) {
       this.form.ContractEndorsements.splice(this.form.ContractEndorsements.indexOf(item), 1)
+      if (!this.showEndorsements) {
+        this.form.ContractEndorsements = []
+      }
     },
     addContractCustomPrices () {
       this.$v.contractCustomPrices.$touch()
@@ -1897,6 +1943,9 @@ export default {
     },
     removeContractCustomPrices (item) {
       this.form.ContractCustomPrices.splice(this.form.ContractCustomPrices.indexOf(item), 1)
+      if (!this.showCustomPrices) {
+        this.form.ContractCustomPrices = []
+      }
     },
     editRow (objectKey, list, item) {
       this.selectedIndex = list.indexOf(item)

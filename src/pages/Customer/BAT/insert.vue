@@ -28,7 +28,7 @@
             <NextDropdown :disabled="insertReadonly.StatusReasonId" label="Description1" url="VisionNextCommonApi/api/CancelReason/Search" @input="selectedSearchType('StatusReasonId', $event)"/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.customer.DocumentStatusId')" :error="$v.form.DocumentStatusId">
-            <NextDropdown v-model="form.DocumentStatusId" :disabled="insertReadonly.DocumentStatusId"  lookup-key="CUSTOMER_DOCUMENT_STATUS" @input="selectedType('DocumentStatusId', $event)"/>
+            <NextDropdown v-model="form.DocumentStatusId" :disabled="insertReadonly.DocumentStatusId" :get-lookup="true" lookup-key="CUSTOMER_DOCUMENT_STATUS" @input="selectedType('DocumentStatusId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle/>

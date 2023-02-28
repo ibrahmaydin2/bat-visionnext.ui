@@ -1259,20 +1259,10 @@ export default {
       }
     },
     addContractAttachments (splitedFile, dataType, fileName) {
-      // this.form.ContractAttachments.push({
-      //   Deleted: 0,
-      //   System: 0,
-      //   RecordState: 2,
-      //   StatusId: 1,
-      //   contractAttachmentTypeId: 2361,
-      //   Description1: this.selectedFile.name,
-      //   fileName: fileName,
-      //   file: splitedFile
-      // })
-      let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2361 && item.Description1 === fileName)
+      let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2341 && item.Description1 === fileName)
       if (exist) {
         exist.RecordState = 3
-        exist.ContractAttachmentTypeId = 2361
+        exist.ContractAttachmentTypeId = 2341
         exist.fileName = exist.fileName
         exist.filePath = exist.filePath
         exist.RecordId = exist.RecordId
@@ -1282,7 +1272,7 @@ export default {
           System: 0,
           RecordState: 2,
           StatusId: 1,
-          contractAttachmentTypeId: 2361,
+          contractAttachmentTypeId: 2341,
           Description1: this.selectedFile.name,
           fileName: fileName,
           file: splitedFile
