@@ -549,7 +549,7 @@ export default {
         RecordId: item.RecordId
         // EncryptedKey: item.EncryptedKey
       }
-      vm.$api.postByUrl(data, 'VisionNextContractManagement/api/ContractAttachment/GetCustomerAttachment').then(res => {
+      vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
         const base64String = res.File
         const fileName = res.Description1
         const blob = this.base64ToBlob(base64String)
@@ -576,7 +576,7 @@ export default {
     },
     getData () {
       var me = this
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/Contract', record: this.$route.params.url}).then(() => {
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
         me.showAssets = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 4)
         me.showPriceDiscount = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 6)
         me.showInvestments = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 5)

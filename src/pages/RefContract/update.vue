@@ -113,7 +113,7 @@ export default {
         RecordId: null
       },
       contractTransferStatus: null,
-      routeName1: 'ContractManagement',
+      routeName1: 'Contract',
       sourceContracts: [],
       sourceContract: {},
       targetCustomer: {},
@@ -164,7 +164,7 @@ export default {
     selectedSourceCustomer (label, model) {
       if (model) {
         this.form[label] = model.RecordId
-        this.$api.get('ContractManagement', `RefContract/GetResourceContract?customerId=${model.RecordId}`).then((res) => {
+        this.$api.get('Contract', `RefContract/GetResourceContract?customerId=${model.RecordId}`).then((res) => {
           this.sourceContracts = res
         })
         this.checkIsHero(model.RecordId)
@@ -191,12 +191,12 @@ export default {
       }
     },
     getCustomerDetail (id) {
-      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
+      this.$api.get('Contract', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
         this.contractDetail = res
       })
     },
     checkIsHero (customerId) {
-      this.$api.get('ContractManagement', `Contract/CheckHeroStatus?customerId=${customerId}`).then((res) => {
+      this.$api.get('Contract', `Contract/CheckHeroStatus?customerId=${customerId}`).then((res) => {
         this.form.IsHero = res && res.IsHero === true ? 1 : 0
       })
     },
