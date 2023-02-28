@@ -56,7 +56,7 @@
               <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" :disabled="insertReadonly.ApproveStateId"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.TypeId" v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
+              <NextDropdown :disabled="insertReadonly.TypeId" v-model="selectedContractType"  url="VisionNextContract/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4" show-copy copy-values="Code,Description1">
               <NextDropdown
@@ -86,7 +86,7 @@
         <b-tab :title="$t('insert.contract.contractBenefits')">
           <b-row>
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
-               <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
+               <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContract/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
               <NextDropdown
@@ -268,7 +268,7 @@
               <NextInput :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
-              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
+              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContract/api/ItemFormula/Search" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" md="3" lg="3">
               <NextDropdown
@@ -1005,7 +1005,7 @@ export default {
         ContractEndorsements: [],
         ContractCustomPrices: []
       },
-      routeName1: 'ContractManagement',
+      routeName1: 'Contract',
       routeName2: 'Contract',
       relatedCustomerItems: detailData.relatedCustomerItems,
       assetItems: detailData.assetItems,
@@ -1249,7 +1249,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.CustomerId = e.RecordId
-        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
+        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContract/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
       } else {
         this.form.CustomerId = null
         this.$store.commit('setCustomerContracts', [])

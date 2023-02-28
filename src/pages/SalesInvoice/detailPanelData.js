@@ -47,7 +47,7 @@ export const detailData = {
       type: 'Dropdown',
       modelProperty: 'ContractId',
       objectKey: 'Contract',
-      url: 'VisionNextContractManagement/api/Contract/Search',
+      url: 'VisionNextContract/api/Contract/Search',
       label: i18n.t('insert.order.ContractId'),
       disabled: (form) => {
       },

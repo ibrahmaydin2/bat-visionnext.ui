@@ -835,6 +835,7 @@ export default {
         exist.fileName = exist.fileName
         exist.filePath = exist.filePath
         exist.RecordId = exist.RecordId
+        exist.File = splitedFile
       } else {
         this.form.CustomerAttachments.push({
           Deleted: 0,
@@ -872,6 +873,7 @@ export default {
         exist.fileName = exist.fileName
         exist.filePath = exist.filePath
         exist.RecordId = exist.RecordId
+        exist.File = splitedFile
       } else {
         this.form.CustomerAttachments.push({
           Deleted: 0,
@@ -909,11 +911,14 @@ export default {
       }
     },
     addCustomerAttachmentCommercial (splitedFile, dataType, fileName) {
-      let exist = this.form.CustomerAttachments.find(item => item.customerAttachmentTypeId === 2122 && item.Description1 === fileName)
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2122 && item.Description1 === fileName)
       if (exist) {
         exist.RecordState = 3
-        exist.file = splitedFile
-        exist.fileName = fileName
+        exist.CustomerAttachmentTypeId = 2122
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
       } else {
         this.form.CustomerAttachments.push({
           Deleted: 0,
@@ -944,11 +949,14 @@ export default {
       }
     },
     addCustomerAttachmentTAPDK (splitedFile, dataType, fileName) {
-      let exist = this.form.CustomerAttachments.find(item => item.customerAttachmentTypeId === 2123 && item.Description1 === fileName)
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2123 && item.Description1 === fileName)
       if (exist) {
         exist.RecordState = 3
-        exist.file = splitedFile
-        exist.fileName = fileName
+        exist.CustomerAttachmentTypeId = 2123
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
       } else {
         this.form.CustomerAttachments.push({
           Deleted: 0,

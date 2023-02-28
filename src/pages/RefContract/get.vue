@@ -85,10 +85,10 @@ export default {
       this.$router.push({name: this.$route.meta.base})
     },
     getData () {
-      this.$store.dispatch('getData', {...this.query, api: 'VisionNextContractManagement/api/RefContract', record: this.$route.params.url})
+      this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/RefContract', record: this.$route.params.url})
     },
     getCustomerDetail (id) {
-      this.$api.get('ContractManagement', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
+      this.$api.get('Contract', `RefContract/GetRefContractDetails?contractId=${id}`).then((res) => {
         this.contractDetail = res
       })
     }

@@ -216,7 +216,7 @@ export default {
   },
   methods: {
     show () {
-      this.$api.postByUrl({}, 'VisionNextContractManagement/api/ItemFormula/GetCode').then((res) => {
+      this.$api.postByUrl({}, 'VisionNextContract/api/ItemFormula/GetCode').then((res) => {
         this.form.Code = res.Model.Code
       })
     },
@@ -362,7 +362,7 @@ export default {
       let request = {
         Model: this.form
       }
-      this.$api.postByUrl(request, 'VisionNextContractManagement/api/ItemFormula/Insert').then((response) => {
+      this.$api.postByUrl(request, 'VisionNextContract/api/ItemFormula/Insert').then((response) => {
         if (response.IsCompleted) {
           this.$toasted.show(this.$t('insert.success'), { type: 'success', keepOnHover: true, duration: '3000' })
           this.close()
