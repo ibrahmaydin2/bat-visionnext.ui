@@ -16,6 +16,10 @@
   -------------------------------------------------------------------------------------------------------------
   En alt dizinde bulunan "*" "tümü" anlamına gelir ve her zaman en alt satırda olmalıdır.
   Tanımlanmamış tüm ekranlar / hatalı linkler ana sayfaya yönlendirecektir.
+  -------------------------------------------------------------------------------------------------------------
+  baseLink alanına girdiğimiz değer istediğimiz yere istek atmıyorsa çalıştığımız ekranındaki(insert, get, update vb.)
+  data() return içerisine routeName1: '' routeName2: '' parametrelerini ekleyip değer olarak istek atmak istediğimiz tabloya göre yazmalıyız.
+  örnek => routeName1: 'ContractManagement' routeName2: 'Contract' gibi.
 */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -643,8 +647,7 @@ const listUpdate = [
   { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } },
   { path: '/Update/CustomerTarget/:url', name: 'CustomerTargetUpdate', component: CustomerTargetUpdate, meta: { title: i18n.t('router.CustomerTargetUpdate'), baseLink: 'CustomerTarget' } },
   { path: '/Update/BATLeagueTarget/:url', name: 'BATLeagueTargetUpdate', component: BATLeagueTargetUpdate, meta: { title: i18n.t('router.BATLeagueTargetUpdate'), baseLink: 'BATLeagueTarget' } },
-  //{ path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.ContractsGet'), baseLink: 'Contracts' } },
-  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: '' } },
+  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: 'InvestmenForm' } }
 ]
 
 const listInsert = [
