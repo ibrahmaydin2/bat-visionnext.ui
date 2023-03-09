@@ -1,5 +1,5 @@
 <template>
-  <Nextgrid apiurl="VisionNextContractManagement/api/RefContract/Search" :workFlowModel="workFlowModel" />
+  <Nextgrid apiurl="VisionNextContract/api/RefContract/Search" :workFlowModel="workFlowModel" />
 </template>
 <script>
 export default {

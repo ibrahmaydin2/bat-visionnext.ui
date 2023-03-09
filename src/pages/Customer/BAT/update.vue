@@ -27,6 +27,9 @@
           <NextFormGroup item-key="StatusReasonId" :error="$v.form.StatusReasonId">
             <NextDropdown v-model="statusReason" :disabled="insertReadonly.StatusReasonId" label="Description1" url="VisionNextCommonApi/api/CancelReason/Search" @input="selectedSearchType('StatusReasonId', $event)"/>
           </NextFormGroup>
+          <NextFormGroup :title="$t('insert.customer.DocumentStatusId')" :error="$v.form.DocumentStatusId">
+            <NextDropdown v-model="form.DocumentStatusId" :disabled="insertReadonly.DocumentStatusId"  lookup-key="CUSTOMER_DOCUMENT_STATUS" @input="selectedType('DocumentStatusId', $event)"/>
+          </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle/>
           </NextFormGroup>
@@ -442,6 +445,145 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.customerAttachments')" @click.prevent="tabValidation()">
+          <b-row>
+            <NextFormGroup :title="$t('insert.IbanNo')" :error="$v.form.IbanNo">
+              <NextInput v-model="form.IbanNo" type="number" :disabled="insertReadonly.IbanNo" />
+            </NextFormGroup>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFileTaxOffice"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFileTaxOffice" @click.native="submitFileTaxOffice" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.taxOfficePDF')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.CustomerAttachments.filter(f => (f.CustomerAttachmentTypeId === 2120 || f.customerAttachmentTypeId === 2120) && f.RecordState !== 4)" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeCustomerAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-td>
+                    <i @click="downloadFile(f)" class="fa fa-download"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFileSign"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFileSign" @click.native="submitFileSign" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.sign')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.CustomerAttachments.filter(f => (f.CustomerAttachmentTypeId === 2121 || f.customerAttachmentTypeId === 2121) && f.RecordState !== 4)" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeCustomerAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-td>
+                    <i @click="downloadFile(f)" class="fa fa-download"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFileCommercial"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFileCommercial" @click.native="submitFileCommercial" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.commercial')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.CustomerAttachments.filter(f => (f.CustomerAttachmentTypeId === 2122 || f.customerAttachmentTypeId === 2122) && f.RecordState !== 4)" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeCustomerAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-td>
+                    <i @click="downloadFile(f)" class="fa fa-download"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFileTAPDK"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFileTAPDK" @click.native="submitFileTAPDK" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.customerTAPDK')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.CustomerAttachments.filter(f => (f.CustomerAttachmentTypeId === 2123 || f.customerAttachmentTypeId === 2123) && f.RecordState !== 4)" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeCustomerAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-td>
+                    <i @click="downloadFile(f)" class="fa fa-download"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.customer.assetLocationsItems')" @click.prevent="tabValidation()">
           <b-table id="asset-locations"
             :items="form.AssetLocations ? form.AssetLocations.filter(r => r.Quantity > 0) : []"
@@ -537,7 +679,10 @@ export default {
         AssetLocations: [],
         DebitAccountRemainder: null,
         CreditAccountRemainder: null,
-        IsPublic: null
+        IsPublic: null,
+        CustomerAttachments: [],
+        IbanNo: null,
+        DocumentStatusId: null
       },
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
@@ -618,7 +763,11 @@ export default {
           }
         }
       ],
-      assetLocationCurrentPage: 1
+      assetLocationCurrentPage: 1,
+      selectedFileCommercial: null,
+      selectedFileSign: null,
+      selectedFileTaxOffice: null,
+      selectedFileTAPDK: null
     }
   },
   computed: {
@@ -636,6 +785,192 @@ export default {
     this.getPaymentTypes()
   },
   methods: {
+    downloadFile (item) {
+      let vm = this
+      let data = {
+        RecordId: item.RecordId
+      }
+      vm.$api.postByUrl(data, 'VisionNextCustomer/api/CustomerAttachment/GetCustomerAttachment').then(res => {
+        const base64String = res.File
+        const fileName = res.Description1
+        const blob = this.base64ToBlob(base64String)
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('download', fileName)
+        link.setAttribute('href', url)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    base64ToBlob (base64String) {
+      const byteCharacters = atob(base64String)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new Blob([byteArray], { type: 'application/octet-stream' })
+    },
+    submitFileTaxOffice () {
+      this.getBase64TaxOffice(this.selectedFileTaxOffice)
+    },
+    getBase64TaxOffice (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addCustomerAttachmentsTaxOffice(splitedFile, dataType, fileName)
+      }
+    },
+    addCustomerAttachmentsTaxOffice (splitedFile, dataType, fileName) {
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2120 && item.Description1 === fileName)
+      if (exist) {
+        exist.RecordState = 3
+        exist.CustomerAttachmentTypeId = 2120
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
+      } else {
+        this.form.CustomerAttachments.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          Description1: this.selectedFileTaxOffice.name,
+          customerAttachmentTypeId: 2120,
+          fileName: fileName,
+          file: splitedFile
+        })
+      }
+      this.selectedFileTaxOffice = null
+    },
+    submitFileSign () {
+      this.getBase64Sign(this.selectedFileSign)
+    },
+    getBase64Sign (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addCustomerAttachmentsSign(splitedFile, dataType, fileName)
+      }
+    },
+    addCustomerAttachmentsSign (splitedFile, dataType, fileName) {
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2121 && item.Description1 === fileName)
+      if (exist) {
+        exist.RecordState = 3
+        exist.CustomerAttachmentTypeId = 2121
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
+      } else {
+        this.form.CustomerAttachments.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          Description1: this.selectedFileSign.name,
+          customerAttachmentTypeId: 2121,
+          fileName: fileName,
+          file: splitedFile
+        })
+      }
+      this.selectedFileSign = null
+    },
+    removeCustomerAttachments (item) {
+      if (item.RecordId > 0) {
+        this.form.CustomerAttachments[this.form.CustomerAttachments.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerAttachments.splice(this.form.CustomerAttachments.indexOf(item), 1)
+      }
+    },
+    submitFileCommercial () {
+      this.getBase64Commercial(this.selectedFileCommercial)
+    },
+    getBase64Commercial (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addCustomerAttachmentCommercial(splitedFile, dataType, fileName)
+      }
+    },
+    addCustomerAttachmentCommercial (splitedFile, dataType, fileName) {
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2122 && item.Description1 === fileName)
+      if (exist) {
+        exist.RecordState = 3
+        exist.CustomerAttachmentTypeId = 2122
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
+      } else {
+        this.form.CustomerAttachments.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          Description1: this.selectedFileCommercial.name,
+          customerAttachmentTypeId: 2122,
+          fileName: fileName,
+          file: splitedFile
+        })
+      }
+      this.selectedFileCommercial = null
+    },
+    submitFileTAPDK () {
+      this.getBase64TAPDK(this.selectedFileTAPDK)
+    },
+    getBase64TAPDK (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addCustomerAttachmentTAPDK(splitedFile, dataType, fileName)
+      }
+    },
+    addCustomerAttachmentTAPDK (splitedFile, dataType, fileName) {
+      let exist = this.form.CustomerAttachments.find(item => item.CustomerAttachmentTypeId === 2123 && item.Description1 === fileName)
+      if (exist) {
+        exist.RecordState = 3
+        exist.CustomerAttachmentTypeId = 2123
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
+      } else {
+        this.form.CustomerAttachments.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          Description1: this.selectedFileTAPDK.name,
+          customerAttachmentTypeId: 2123,
+          fileName: fileName,
+          file: splitedFile
+        })
+      }
+      this.selectedFileTAPDK = null
+    },
     selectColumnName  (data) {
       // this.fieldValues = []
       this.form.OwnerTypeId = null
@@ -659,7 +994,7 @@ export default {
     selectedType (label, model) {
       this.form[label] = model.DecimalValue
 
-      if (label === 'TaxCustomerTypeId') {
+      if (label === 'CustomerTypeId') {
         if (model.Code === 'TZK') {
           this.taxNumberReq = 10
         } else {

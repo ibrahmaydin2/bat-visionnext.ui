@@ -56,7 +56,7 @@
               <NextDropdown v-model="selectedApproveState" lookup-key="APPROVE_STATE"  @input="selectedType('ApproveStateId', $event)" :disabled="insertReadonly.ApproveStateId || isGeneralDisabled"/>
             </NextFormGroup>
             <NextFormGroup item-key="TypeId" :error="$v.form.TypeId" md="2" lg="2">
-              <NextDropdown :disabled="insertReadonly.TypeId || isGeneralDisabled" v-model="selectedContractType"  url="VisionNextContractManagement/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
+              <NextDropdown :disabled="insertReadonly.TypeId || isGeneralDisabled" v-model="selectedContractType"  url="VisionNextContract/api/ContractType/Search" @input="selectedSearchType('TypeId', $event); selectContractType($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="CustomerId" :error="$v.form.CustomerId" md="4" lg="4" show-copy copy-values="Code,Description1">
               <NextDropdown
@@ -86,7 +86,7 @@
         <b-tab :title="$t('insert.contract.contractBenefits')">
           <b-row v-if="!isGeneralDisabled">
             <NextFormGroup :title="$t('insert.contract.BenefitTypeId')" :error="$v.contractBenefits.benefitType" :required="true" md="4" lg="4">
-              <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContractManagement/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
+              <NextDropdown v-model="contractBenefits.benefitType" url="VisionNextContract/api/ContractBenefitType/Search" :source="contractBenefitTypeSource" v-on:all-source="(values) => {contractBenefitTypes = values}"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.BudgetMasterId')" :error="$v.contractBenefits.budgetMaster" :required="!contractBenefits.benefitType || (contractBenefits.benefitType.RecordId !== 4)" md="4" lg="4">
               <NextDropdown
@@ -262,7 +262,7 @@
               <NextInput :disabled="true" type="number" v-model="contractPriceDiscounts.branchSharePercent" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.itemFormula')" md="3" lg="3">
-              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContractManagement/api/ItemFormula/Search" />
+              <NextDropdown :disabled="!contractPriceDiscounts.benefitCondition || contractPriceDiscounts.benefitCondition.Code !== 'YYM'" v-model="contractPriceDiscounts.itemFormula" url="VisionNextContract/api/ItemFormula/Search" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.contract.currency')" md="3" lg="3">
               <NextDropdown v-model="contractPriceDiscounts.currency" :source="currencies" />
@@ -948,6 +948,47 @@
             </b-table-simple>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.contract.ContractOpponentAssets')"  @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.ContractOpponentAssets" :items="opponentAssetsItem" />
+        </b-tab>
+        <b-tab lazy :title="$t('insert.contract.ContractOtherDetailss')"  @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.ContractOtherDetailss" :items="otherDetailsItems" />
+        </b-tab>
+        <b-tab :title="$t('insert.contract.signAttachment')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col cols="12">
+              <b-form-file
+                class="col-md-4"
+                v-model="selectedFile"
+                :placeholder="$t('insert.chooseFileOrDrop')"
+                :drop-placeholder="$t('insert.dropFileHere')"
+                :browse-text="$t('insert.choose')"
+              ></b-form-file>
+              <b-form-group>
+                <AddDetailButton :disabled="!selectedFile" @click.native="submitFile" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.contract.Attachment')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(f, i) in form.ContractAttachments.filter(f => f.RecordState !== 4)" :key="i">
+                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td class="text-center">
+                    <i @click="removeContractAttachments(f)" class="far fa-trash-alt text-danger"></i>
+                  </b-td>
+                  <b-td>
+                    <i @click="downloadFile(f)" class="fa fa-download"></i>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -986,11 +1027,16 @@ export default {
         ContractFreeItems: [],
         ContractPaymentPlans: [],
         ContractEndorsements: [],
-        ContractCustomPrices: []
+        ContractCustomPrices: [],
+        ContractOpponentAssets: [],
+        ContractOtherDetailss: [],
+        ContractAttachments: []
       },
-      routeName1: 'ContractManagement',
+      routeName1: 'Contract',
       routeName2: 'Contract',
       relatedCustomerItems: detailData.relatedCustomerItems,
+      opponentAssetsItem: detailData.opponentAssetsItem,
+      otherDetailsItems: detailData.otherDetailsItems,
       assetItems: detailData.assetItemsBAT,
       validDates: {
         contractStartDate: null,
@@ -1150,7 +1196,8 @@ export default {
       currencies: [],
       itemCriterias: [],
       lookupValues: {},
-      editedPaymentPlans: false
+      editedPaymentPlans: false,
+      selectedFile: null
     }
   },
   computed: {
@@ -1168,6 +1215,79 @@ export default {
     this.getCurrencies()
   },
   methods: {
+    downloadFile (item) {
+      let vm = this
+      let data = {
+        RecordId: item.RecordId
+        // EncryptedKey: item.EncryptedKey
+      }
+      vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
+        const base64String = res.File
+        const fileName = res.Description1
+        const blob = this.base64ToBlob(base64String)
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('download', fileName)
+        link.setAttribute('href', url)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    base64ToBlob (base64String) {
+      const byteCharacters = atob(base64String)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new Blob([byteArray], { type: 'application/octet-stream' })
+    },
+    submitFile () {
+      this.getBase64(this.selectedFile)
+    },
+    getBase64 (file) {
+      let vm = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function () {
+        let splitedFile = reader.result.split(',')[1]
+        let dataType = reader.result.split(';base64,')[0]
+        let fileName = file.name
+        console.log(fileName)
+        vm.addContractAttachments(splitedFile, dataType, fileName)
+      }
+    },
+    addContractAttachments (splitedFile, dataType, fileName) {
+      let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2341 && item.Description1 === fileName)
+      if (exist) {
+        exist.RecordState = 3
+        exist.ContractAttachmentTypeId = 2341
+        exist.fileName = exist.fileName
+        exist.filePath = exist.filePath
+        exist.RecordId = exist.RecordId
+        exist.File = splitedFile
+      } else {
+        this.form.ContractAttachments.push({
+          Deleted: 0,
+          System: 0,
+          RecordState: 2,
+          StatusId: 1,
+          contractAttachmentTypeId: 2341,
+          Description1: this.selectedFile.name,
+          fileName: fileName,
+          file: splitedFile
+        })
+      }
+      this.selectedFile = null
+    },
+    removeContractAttachments (item) {
+      if (item.RecordId > 0) {
+        this.form.ContractAttachments[this.form.ContractAttachments.indexOf(item)].RecordState = 4
+      } else {
+        this.form.ContractAttachments.splice(this.form.ContractAttachments.indexOf(item), 1)
+      }
+    },
     setData () {
       let rowData = this.rowData
       this.form = rowData
@@ -1236,7 +1356,7 @@ export default {
     selectedCustomer (e) {
       if (e) {
         this.form.CustomerId = e.RecordId
-        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContractManagement/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
+        this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContract/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [e.RecordId] }})
       } else {
         this.form.CustomerId = null
         this.$store.commit('setCustomerContracts', [])
