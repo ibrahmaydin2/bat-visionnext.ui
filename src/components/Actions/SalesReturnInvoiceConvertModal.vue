@@ -296,7 +296,7 @@ export default {
       }
       this.showLoading = true
       this.$store.commit('setDisabledLoading', true)
-      let api = this.type === 'Invoice' ? 'VisionNextInvoice/api/SalesReturnInvoice/SalesReturnInvoiceConvert' : 'VisionNextInvoice/api/SalesReturnWaybill/ReceiveInvoiceConvert'
+      let api = this.type === 'Invoice' ? '/api/SalesReturnInvoice/SalesReturnInvoiceConvert' : 'VisionNextInvoice/api/SalesReturnWaybill/ReceiveInvoiceConvert'
       this.$api.postByUrl(request, api).then((response) => {
         this.$store.commit('setDisabledLoading', false)
         this.form = {}
