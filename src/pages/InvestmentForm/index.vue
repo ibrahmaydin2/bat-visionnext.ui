@@ -5,10 +5,10 @@
 export default {
   data () {
     return {
-      model:{
+      model: {
         IsInvestment: 1
-        }
       }
     }
   }
+}
 </script>

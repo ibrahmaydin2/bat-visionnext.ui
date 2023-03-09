@@ -23,7 +23,7 @@
                 v-model="selectedCustomer"
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 :searchable="true" :custom-option="true"
-                or-condition-fields="Code,Description1,CommercialTitle"
+                or-condition-fields="Description1,CommercialTitle"
                 @change="selectedCustomer()"
                 @input="selectedSearchType('CustomerId', $event);"
                 :dynamic-and-condition="{ StatusIds: [1] }"
@@ -414,7 +414,7 @@ export default {
         ContractValidDateStartDate: null,
         ContractValidDateEndDate: null,
         ContractValidDurationDate: null
-      },   
+      },
       customerBudgets: [],
       customerList: [],
       selectedCustomer: null,
@@ -426,7 +426,9 @@ export default {
       KindId: null,
       lookupValues: {},
       getCustomerContractList: [],
-      date: null
+      date: null,
+      routeName1: 'ContractManagement',
+      routeName2: 'Contract'
     }
   },
   mounted () {
@@ -437,24 +439,32 @@ export default {
       let rowData = this.rowData
       this.form = rowData
       console.log(this.form)
-      this.form.customerName = rowData.CommercialTitle
+      this.selectedCustomer = rowData.Description1
+      this.form.customerName = rowData.Description1
+      this.form.address = rowData.CustomerLocations[0]['AddressDetail']
+      this.form.licenseNumber = rowData.LicenseNumber
+      this.form.customerArea = rowData.CustomerRegion5.Label
+      this.RouteDetailsList = rowData.RouteDetails.filter(r => r.RouteTypeId === 5)
+      this.form.route = this.RouteDetailsList[0].Route.Label
+      this.form.tmrSrName = this.RouteDetailsList[0].Representative.Label
       this.KindId = rowData.KindId
-
       this.getLookups(this.KindId)
       this.getCustomerContract(this.form.CustomerId)
     }
   },
   getLookups (kindId) {
     this.$api.postByUrl({LookupTableCode: 'CUSTOMER_KIND'}, 'VisionNextCommonApi/api/LookupValue/GetValuesMultiple?v=2').then((response) => {
-      if (this.lookupValues = response.Values.CUSTOMER_KIND.find(a => a.DecimalValue === kindId))
-      this.form.salesVolumeClass = this.lookupValues.Label
+      if (response) {
+        (this.lookupValues = response.Values.CUSTOMER_KIND.find(a => a.DecimalValue === kindId))
+        this.form.salesVolumeClass = this.lookupValues.Label
+      }
     })
   },
   getCustomerContract (CustomerId) {
-    let request = { 
+    let request = {
       recordId: 0,
-      customerId: CustomerId }
-      this.$api.postByUrl(request, `VisionNextContractManagement/api/Contract/GetCustomerContract`).then((res) => {
+      customerId: CustomerId}
+    this.$api.postByUrl(request, `VisionNextContractManagement/api/Contract/GetCustomerContract`).then((res) => {
       this.getCustomerContractList = res.Model
       this.form.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
       this.form.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
@@ -468,7 +478,7 @@ export default {
       this.contractList = response.ListModel.BaseModels[1]
       this.form.typeId = this.contractList.Description1
     })
-  },
+  }
 }
 </script>
 <style lang="sass">
