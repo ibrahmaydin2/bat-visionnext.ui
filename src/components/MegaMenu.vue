@@ -234,7 +234,7 @@ export default {
       position: fixed !important
       width: 90%
       max-height: calc(90vh - 42px)
-      overflow-x: auto
+      overflow-x: hidden
       overflow-y: hidden
       top:42px !important
       flex-wrap: wrap
