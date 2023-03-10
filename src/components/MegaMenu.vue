@@ -175,7 +175,6 @@ export default {
               position: fixed
               visibility: hidden
               left: calc(230px + 308px)
-              width: 300px
               height: 310px
               top: 8px
               background: #ffffff
