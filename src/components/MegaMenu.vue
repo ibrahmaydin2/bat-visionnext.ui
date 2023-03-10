@@ -92,6 +92,8 @@ export default {
 }
 </script>
 <style lang="sass">
+  .fas fa-angle-double-right isub ul
+    overflow-x: auto
   .asc__item-head-search
     display: block
     line-height: normal
@@ -222,7 +224,7 @@ export default {
                   position: absolute
               & ul
                 visibility: hidden
-                overflow: hidden
+                overflow-x: auto
                 height: 100%
               &:hover
                 & ul
