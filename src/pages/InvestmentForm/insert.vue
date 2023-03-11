@@ -183,7 +183,7 @@
                 </b-col>
                 <b-col cols="6">
                   <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                    <NextInput :disabled="true" type="text" v-model="validDates.contractDuration">{{ this.validDates.contractDuration }}</NextInput>
+                    <NextInput :disabled="true" type="text" v-model="daysDifference"></NextInput>
                   </NextFormGroup>
                 </b-col>
               </b-row>
@@ -253,9 +253,7 @@
                       </b-tr>
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.total')}}</b-td>
-                        <b-td><span>
-                        <b-td><NextInput type="number" v-model="newInvestmentBudgetTotal" :disabled="true"/></b-td>
-                        </span></b-td>
+                        <b-td><NextInput type="number" v-model="totalBudgets" :disabled="true"/></b-td>
                         <b-td></b-td>
                         <b-td></b-td>
                       </b-tr>
@@ -517,17 +515,17 @@ export default {
         Tekel2000ContractQuotaQuantity: null
       },
       newInvestmentBudgetCash: {
-        Cash: null,
+        Cash: 0,
         cashScheduledPaymentDate: null,
         cashBudgetMaster: null
       },
       newInvestmentBudgetDTI: {
-        OnlyDTI: null,
+        OnlyDTI: 0,
         onlyDtiScheduledPaymentDate: null,
         onlyDtiBudgetMaster: null
       },
       newInvestmentBudgetYYM: {
-        Yym: null,
+        Yym: 0,
         yymScheduledPaymentDate: null,
         yymBudgetMaster: null
       },
@@ -568,6 +566,24 @@ export default {
         currency: null,
         benefitBudget: null,
         tciBreak1Id: null
+      }
+    }
+  },
+  computed: {
+    totalBudgets () {
+      return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
+        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
+       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
+    },
+    daysDifference () {
+      if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
+        const startDate = new Date(this.validDates.contractStartDate)
+        const endDate = new Date(this.validDates.contractEndDate)
+        const diffTime = Math.abs(endDate - startDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        return diffDays
+      } else {
+        return null
       }
     }
   },
@@ -883,6 +899,8 @@ export default {
         this.form.ContractOpponentAssets.push(this.contractOpponentAssetsPMI, this.contractOpponentAssetsJTI, this.contractOpponentAssetsITC)
         this.form.ContractAssets.push(this.contractAssets)
         this.form.ContractBenefits.push(this.contractBenefitsAsset)
+        this.newInvestmentBudgetTotal = this.totalBudgets
+        this.validDates.contractDuration = this.daysDifference
         this.createData()
       }
     },
