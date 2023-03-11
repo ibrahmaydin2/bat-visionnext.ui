@@ -42,7 +42,7 @@
               <NextTextArea v-model="form.Description1" md="3" lg="3"></NextTextArea>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.typeId')" md="3" lg="3">
-              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" :disabled="true" v-model="form.TypeId"/>
+              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" :disabled="true" v-model="form.ContractTypeDesc"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.route')">
               <NextInput v-model="form.route" type="text" md="3" lg="3" :disabled="true" />
@@ -322,9 +322,9 @@
                       <b-tbody>
                         <b-tr>
                           <b-td>{{$t('insert.investmentForm.unit')}}</b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)" @change="changeUnitType()"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)" @change="changeUnitType()"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)" @change="changeUnitType()"/></b-td>
                         </b-tr>
                         <b-tr>
                           <b-td>{{$t('insert.investmentForm.unitType')}}</b-td>
@@ -411,7 +411,8 @@ export default {
         Deleted: 0,
         ContractNumber: null,
         Description1: null,
-        TypeId: 2,
+        TypeId: null,
+        ContractTypeDesc: null,
         StatusId: 1,
         Genexp1: null,
         ContractBenefits: [],
@@ -509,9 +510,9 @@ export default {
         ContractValidDurationDate: null
       },
       currentInvestmentBudget: {
-        KentBrandContract: null,
-        RothmansBrandContract: null,
-        Tekel2000BrandContract: null,
+        KentBrandContract: 'Kent',
+        RothmansBrandContract: 'Rothmans',
+        Tekel2000BrandContract: 'Tekel 2000',
         KentContractQuotaQuantity: null,
         RothmansContractQuotaQuantity: null,
         Tekel2000ContractQuotaQuantity: null
@@ -535,28 +536,28 @@ export default {
         KentContractItemQuotaQuantity: null,
         RothmansContractItemQuotaQuantity: null,
         Tekel2000ContractItemQuotaQuantity: null,
-        KentBrandContractItem: null,
-        RothmansBrandContractItem: null,
-        Tekel2000BrandContractItem: null,
+        KentBrandContractItem: 'Kent',
+        RothmansBrandContractItem: 'Rothmans',
+        Tekel2000BrandContractItem: 'Tekel 2000',
         TotalBrandContractItem: null,
         kentMonthlyAverageSales: 0,
         rothmansMonthlyAverageSales: 0,
         tekelMonthlyAverageSales: 0,
-        totalMonthlyAverageSales: 0
+        totalMonthlyAverageSales: 10
       },
       currentSales: {
-        KentBrandLC: null,
+        KentBrandLC: 'Kent',
         KentNetSales: null,
-        RothmansBrandLC: null,
+        RothmansBrandLC: 'Rothmans',
         RothmansNetSales: null,
-        Tekel2000BrandLC: null,
+        Tekel2000BrandLC: 'Tekel 2000',
         Tekel2000NetSales: null
       },
       otherDetails: {
-        furniteCost: 0,
-        numberOfFrontFaces: 0,
-        frontFaceCost: 0,
-        totalFurniteCost: 0
+        furniteCost: 10,
+        numberOfFrontFaces: 13,
+        frontFaceCost: 11,
+        totalFurniteCost: 12
       },
       routeName1: 'Contract',
       routeName2: 'Contract',
@@ -568,12 +569,22 @@ export default {
         currency: null,
         benefitBudget: null,
         tciBreak1Id: null
-      }
+      },
+      changeUnitType: null,
+      investmentBudgetTotalNew: null
     }
   },
   watch: {
     selectedCustomer () {
       this.getCustomer()
+    },
+    changeUnitType () {
+      this.getUnitAvailable()
+    }
+  },
+  computed: {
+    newInvestmentBudgetTotal : function () {
+      return parseInt(this.newInvestmentBudgetCash.Cash) + parseInt(this.newInvestmentBudgetDTI.OnlyDTI) + parseInt(this.newInvestmentBudgetYYM.Yym)
     }
   },
   methods: {
@@ -783,75 +794,84 @@ export default {
           OpponentAssetTypeIdDesc: this.ItcUnitTypeLabel,
           BrandIdDesc: 'ITC'
         }
-        this.contractItemsKent = {
-          Deleted: 0,
-          System: 0,
-          RecordId: this.RecordId,
-          RecordState: 2,
-          StatusId: 1,
-          SalesQuantity: 0,
-          SalesAmount: 0,
-          TableName: 'T_ITEM',
-          ColumnName: 'TYPE_ID',
-          ColumnValue: 5251,
-          ColumnNameStr: 'Marka',
-          ColumnValueStr: 'Kent',
-          QuotaQuantity: this.targetSale.kentMonthlyAverageSales,
-          QuotaTypeId: 2271078,
-          QuotaTypeName: 'Miktarsal',
-          UnitId: 501,
-          UnitName: 'Karton',
-          QuotaAmount: null,
-          CurrencyId: 1,
-          CurrencyName: 'Türk Lirası',
-          IsDefaultValue: true
-        }
-        this.contractItemsRothmans = {
-          Deleted: 0,
-          System: 0,
-          RecordId: this.RecordId,
-          RecordState: 2,
-          StatusId: 1,
-          SalesQuantity: 0,
-          SalesAmount: 0,
-          TableName: 'T_ITEM',
-          ColumnName: 'TYPE_ID',
-          ColumnValue: 21853082445,
-          ColumnNameStr: 'Marka',
-          ColumnValueStr: 'Rothmans',
-          QuotaQuantity: this.targetSale.rothmansMonthlyAverageSales,
-          QuotaTypeId: 2271078,
-          QuotaTypeName: 'Miktarsal',
-          UnitId: 501,
-          UnitName: 'Karton',
-          QuotaAmount: null,
-          CurrencyId: 1,
-          CurrencyName: 'Türk Lirası',
-          IsDefaultValue: true
-        }
-        this.contractItemsTekel2000 = {
-          Deleted: 0,
-          System: 0,
-          RecordId: this.RecordId,
-          RecordState: 2,
-          StatusId: 1,
-          SalesQuantity: 0,
-          SalesAmount: 0,
-          TableName: 'T_ITEM',
-          ColumnName: 'TYPE_ID',
-          ColumnValue: 21853082445,
-          ColumnNameStr: 'Marka',
-          ColumnValueStr: 'Tekel 2000',
-          QuotaQuantity: this.targetSale.tekelMonthlyAverageSales,
-          QuotaTypeId: 2271078,
-          QuotaTypeName: 'Miktarsal',
-          UnitId: 501,
-          UnitName: 'Karton',
-          QuotaAmount: null,
-          CurrencyId: 1,
-          CurrencyName: 'Türk Lirası',
-          IsDefaultValue: true
-        }
+        if (this.targetSale.kentMonthlyAverageSales != null || this.targetSale.kentMonthlyAverageSales > 0) {
+          this.contractItemsKent = {
+            Deleted: 0,
+            System: 0,
+            RecordId: this.RecordId,
+            RecordState: 2,
+            StatusId: 1,
+            SalesQuantity: 0,
+            SalesAmount: 0,
+            TableName: 'T_ITEM',
+            ColumnName: 'TYPE_ID',
+            ColumnValue: 5251,
+            ColumnNameStr: 'Marka',
+            ColumnValueStr: 'Kent',
+            QuotaQuantity: this.targetSale.kentMonthlyAverageSales,
+            QuotaTypeId: 2271078,
+            QuotaTypeName: 'Miktarsal',
+            UnitId: 501,
+            UnitName: 'Karton',
+            QuotaAmount: null,
+            CurrencyId: 1,
+            CurrencyName: 'Türk Lirası',
+            IsDefaultValue: true
+          }
+          this.form.ContractItems.push(this.contractItemsKent)
+        } else { }
+        if (this.targetSale.rothmansMonthlyAverageSales != null || this.targetSale.rothmansMonthlyAverageSales > 0) {
+          this.contractItemsRothmans = {
+            Deleted: 0,
+            System: 0,
+            RecordId: this.RecordId,
+            RecordState: 2,
+            StatusId: 1,
+            SalesQuantity: 0,
+            SalesAmount: 0,
+            TableName: 'T_ITEM',
+            ColumnName: 'TYPE_ID',
+            ColumnValue: 21853082445,
+            ColumnNameStr: 'Marka',
+            ColumnValueStr: 'Rothmans',
+            QuotaQuantity: this.targetSale.rothmansMonthlyAverageSales,
+            QuotaTypeId: 2271078,
+            QuotaTypeName: 'Miktarsal',
+            UnitId: 501,
+            UnitName: 'Karton',
+            QuotaAmount: null,
+            CurrencyId: 1,
+            CurrencyName: 'Türk Lirası',
+            IsDefaultValue: true
+          }
+          this.form.ContractItems.push(this.contractItemsRothmans)
+        } else { }
+        if (this.targetSale.tekelMonthlyAverageSales != null || this.targetSale.tekelMonthlyAverageSales > 0) {
+          this.contractItemsTekel2000 = {
+            Deleted: 0,
+            System: 0,
+            RecordId: this.RecordId,
+            RecordState: 2,
+            StatusId: 1,
+            SalesQuantity: 0,
+            SalesAmount: 0,
+            TableName: 'T_ITEM',
+            ColumnName: 'TYPE_ID',
+            ColumnValue: 21853082445,
+            ColumnNameStr: 'Marka',
+            ColumnValueStr: 'Tekel 2000',
+            QuotaQuantity: this.targetSale.tekelMonthlyAverageSales,
+            QuotaTypeId: 2271078,
+            QuotaTypeName: 'Miktarsal',
+            UnitId: 501,
+            UnitName: 'Karton',
+            QuotaAmount: null,
+            CurrencyId: 1,
+            CurrencyName: 'Türk Lirası',
+            IsDefaultValue: true
+          }
+          this.form.ContractItems.push(this.contractItemsTekel2000)
+        } else { }
         this.contractAssets =
         {
           AssetId: 1823856813,
@@ -869,20 +889,15 @@ export default {
           StatusId: 1,
           BenefitTypeId: 4,
           BenefitTypeName: 'Varlik',
-          BenefitBudget: '',
-          BudgetMasterId: '',
-          BudgetMasterName: '',
           CurrencyId: 1,
           CurrencyName: 'Türk Lirası',
-          TciBreak1Id: '',
-          TciBreak1Name: '',
           usedAmount: 0
         }
-        this.form.ContractItems.push(this.contractItemsKent, this.contractItemsRothmans, this.contractItemsTekel2000)
         this.form.ContractOtherDetailss.push(this.contractOtherDetailss)
         this.form.ContractOpponentAssets.push(this.contractOpponentAssetsPMI, this.contractOpponentAssetsJTI, this.contractOpponentAssetsITC)
         this.form.ContractAssets.push(this.contractAssets)
         this.form.ContractBenefits.push(this.contractBenefitsAsset)
+        this.newInvestmentBudgetTotal = this.investmentBudgetTotalNew
         this.createData()
       }
     },
@@ -948,10 +963,10 @@ export default {
       this.form.Genexp1 = this.targetSale.totalMonthlyAverageSales
     },
     calculateFurniteCostCalculate () {
-      this.otherDetails.furniteCost = 0
-      this.otherDetails.numberOfFrontFaces = 0
-      this.otherDetails.frontFaceCost = this.otherDetails.numberOfFrontFaces * 17
-      this.otherDetails.totalFurniteCost = this.otherDetails.furniteCost + this.otherDetails.frontFaceCost
+      this.otherDetails.furniteCost = 10
+      this.otherDetails.numberOfFrontFaces = 10
+      this.otherDetails.frontFaceCost = 100
+      this.otherDetails.totalFurniteCost = 100
     },
     // calculateContractDuration () {
 
@@ -970,24 +985,33 @@ export default {
     // },
     getCustomer () {
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        this.customerList = res.Model
-        this.assetsLocationList = res.Model
-        this.form.customerName = this.customerList.CommercialTitle
-        this.form.address = this.customerList.CustomerLocations[0]['AddressDetail']
-        this.form.licenseNumber = this.customerList.LicenseNumber
-        this.form.customerArea = this.customerList.CustomerRegion5.Label
-        this.RouteDetailsList = this.customerList.RouteDetails.filter(r => r.RouteTypeId === 5)
-        this.form.route = this.RouteDetailsList[0].Route.Label
-        this.form.tmrSrName = this.RouteDetailsList[0].Representative.Label
-        this.KindId = res.Model.KindId
-        this.CustomerId = res.Model.CustomerId
-        this.getLookups(this.KindId)
-        this.getCustomerContract(this.form.CustomerId)
-        this.getLastContract(this.form.CustomerId)
-        this.getContractItemCriteria()
-        this.getCustomerBudgets(this.form.CustomerId)
-        this.selectContractType()
-        this.getCode(res.Model.BranchId)
+        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId !== 2302) {
+          this.customerList = res.Model
+          this.assetsLocationList = res.Model
+          this.form.customerName = this.customerList.CommercialTitle
+          this.form.address = this.customerList.CustomerLocations[0]['AddressDetail']
+          this.form.licenseNumber = this.customerList.LicenseNumber
+          this.form.customerArea = this.customerList.CustomerRegion5.Label
+          this.RouteDetailsList = this.customerList.RouteDetails.filter(r => r.RouteTypeId === 5)
+          this.form.route = this.RouteDetailsList[0].Route.Label
+          this.form.tmrSrName = this.RouteDetailsList[0].Representative.Label
+          this.KindId = res.Model.KindId
+          this.CustomerId = res.Model.CustomerId
+          this.getLookups(this.KindId)
+          this.getCustomerContract(this.form.CustomerId)
+          this.getLastContract(this.form.CustomerId)
+          this.getContractItemCriteria()
+          this.getCustomerBudgets(this.form.CustomerId)
+          this.selectContractType()
+          this.getCode(res.Model.BranchId)
+        } else {
+          this.$toasted.show(this.$t('insert.investmentForm.requiredDocument'),
+            {
+              type: 'error',
+              keepOnHover: true,
+              duration: '3000'
+            })
+        }
       })
     },
     getCode (BranchId) {
@@ -1018,19 +1042,16 @@ export default {
 
         var ContractItemList = this.getCustomerContractList.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
-        if (kentContractList.length > 0) {
+        if (kentContractList && kentContractList.length > 0) {
           this.currentInvestmentBudget.KentContractQuotaQuantity = kentContractList[0].QuotaQuantity
-          this.currentInvestmentBudget.KentBrandContract = kentContractList[0].ColumnValueStr
         }
         var rothmansContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Rothmans')
-        if (rothmansContractList.length > 0) {
+        if (rothmansContractList && rothmansContractList.length > 0) {
           this.currentInvestmentBudget.RothmansContractQuotaQuantity = rothmansContractList[0].QuotaQuantity
-          this.currentInvestmentBudget.RothmansBrandContract = rothmansContractList[0].ColumnValueStr
         }
         var tekel2000List = ContractItemList.filter(a => a.ColumnValueStr === 'Tekel 2000')
-        if (tekel2000List.length > 0) {
+        if (tekel2000List && tekel2000List.length > 0) {
           this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity = tekel2000List[0].QuotaQuantity
-          this.currentInvestmentBudget.Tekel2000BrandContract = tekel2000List[0].ColumnValueStr
         }
       })
     },
@@ -1040,6 +1061,7 @@ export default {
       this.$api.postByUrl(request, '/VisionNextContractManagement/api/ContractType/Search').then((response) => {
         this.contractList = response.ListModel.BaseModels[1]
         this.form.TypeId = this.contractList.RecordId
+        this.form.ContractTypeDesc = this.contractList.Description1
       })
     },
     getLastContract (CustomerId) {
@@ -1051,17 +1073,14 @@ export default {
         var filteredLastContract = this.getLastContractList
         var kentContract = filteredLastContract.filter(a => a.Brand === 'Kent')
         if (kentContract && kentContract.length > 0) {
-          this.currentSales.KentBrandLC = kentContract[0].Brand
           this.currentSales.KentNetSales = kentContract[0].NetSales
         }
         var rothmansContract = filteredLastContract.filter(a => a.Brand === 'Rothmans')
         if (rothmansContract && rothmansContract.length > 0) {
-          this.currentSales.RothmansBrandLC = rothmansContract[0].Brand
           this.currentSales.RothmansNetSales = rothmansContract[0].NetSales
         }
         var tekelContract = filteredLastContract.filter(a => a.Brand === 'Tekel 2000')
         if (tekelContract && tekelContract.length > 0) {
-          this.currentSales.Tekel2000BrandLC = tekelContract[0].Brand
           this.currentSales.Tekel2000NetSales = tekelContract[0].NetSales
         }
       })
@@ -1075,17 +1094,14 @@ export default {
         var filteredContractItemCriteria = this.ContractItemCriteriaList
         var kentContractItemCriteria = filteredContractItemCriteria.filter(a => a.ColumnValueStr === 'Kent')
         if (kentContractItemCriteria.length > 0) {
-          this.targetSale.KentBrandContractItem = kentContractItemCriteria[0].ColumnValueStr
           this.targetSale.KentContractItemQuotaQuantity = kentContractItemCriteria[0].QuotaQuantity
         }
         var rothmansContractItemCriteria = filteredContractItemCriteria.filter(a => a.ColumnValueStr === 'Rothmans')
         if (rothmansContractItemCriteria.length > 0) {
-          this.targetSale.RothmansBrandContractItem = rothmansContractItemCriteria[0].ColumnValueStr
           this.targetSale.RothmansContractItemQuotaQuantity = rothmansContractItemCriteria[0].QuotaQuantity
         }
         var tekel2000ContractItemCriteria = filteredContractItemCriteria.filter(a => a.ColumnValueStr === 'Tekel 2000')
         if (tekel2000ContractItemCriteria.length > 0) {
-          this.targetSale.Tekel2000BrandContractItem = tekel2000ContractItemCriteria[0].ColumnValueStr
           this.targetSale.Tekel2000ContractItemQuotaQuantity = tekel2000ContractItemCriteria[0].QuotaQuantity
         }
       })
@@ -1098,7 +1114,11 @@ export default {
       this.form.ApproveStateId = 2381
     }
     return {
-      form: this.insertRules,
+      form: {
+        signingType: {
+          required
+        }
+      },
       validDates: {
         contractStartDate: {
           required

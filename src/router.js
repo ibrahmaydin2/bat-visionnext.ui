@@ -647,7 +647,7 @@ const listUpdate = [
   { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } },
   { path: '/Update/CustomerTarget/:url', name: 'CustomerTargetUpdate', component: CustomerTargetUpdate, meta: { title: i18n.t('router.CustomerTargetUpdate'), baseLink: 'CustomerTarget' } },
   { path: '/Update/BATLeagueTarget/:url', name: 'BATLeagueTargetUpdate', component: BATLeagueTargetUpdate, meta: { title: i18n.t('router.BATLeagueTargetUpdate'), baseLink: 'BATLeagueTarget' } },
-  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: 'InvestmenForm' } }
+  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: 'InvestmentForm' } }
 ]
 
 const listInsert = [
