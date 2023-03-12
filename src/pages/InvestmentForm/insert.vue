@@ -575,6 +575,24 @@ export default {
       changeUnitType: null,
     }
   },
+  computed: {
+    totalBudgets () {
+      return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
+        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
+       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
+    },
+    daysDifference () {
+      if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
+        const startDate = new Date(this.validDates.contractStartDate)
+        const endDate = new Date(this.validDates.contractEndDate)
+        const diffTime = Math.abs(endDate - startDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        return diffDays
+      } else {
+        return null
+      }
+    }
+  },
   watch: {
     selectedCustomer () {
       this.getCustomer()
