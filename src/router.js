@@ -482,7 +482,7 @@ const listIndex = [
   {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }},
   {path: '/CustomerTarget', name: 'CustomerTarget', component: CustomerTargetIndex, meta: { title: i18n.t('router.CustomerTarget'), createLink: 'CustomerTargetInsert', keepAlive: true }},
   {path: '/BATLeagueTarget', name: 'BATLeagueTarget', component: BATLeagueTargetIndex, meta: { title: i18n.t('router.BATLeagueTarget'), createLink: 'BATLeagueTargetInsert', keepAlive: true }},
-  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.InvestmentForm'), createLink: 'InvestmentFormInsert', keepAlive: true }}
+  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.investmentForm'), createLink: 'InvestmentFormInsert', keepAlive: true }}
 
 ]
 

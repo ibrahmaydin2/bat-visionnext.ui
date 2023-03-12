@@ -54,7 +54,7 @@
                 <NextDatePicker v-model="form.formDate" :disabled="true"/>
               </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.salesVolumeClass')">
-              <NextDropdown v-model="form.salesVolumeClass"  :disabled="true" :source="lookupValues.CUSTOMER_KIND" md="3" lg="3" />
+              <NextDropdown v-model="form.salesVolumeClass"  :disabled="true"  md="3" lg="3" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.customerArea')" md="3" lg="3">
               <NextInput v-model="form.customerArea" type="text" md="3" lg="3" :disabled="true" />
@@ -1010,17 +1010,17 @@ export default {
     },
     getCustomer () {
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId == 2302) {
+        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId === 2302) {
           this.customerList = res.Model
           this.assetsLocationList = res.Model
           this.form.customerName = this.customerList.CommercialTitle
           this.form.address = this.customerList.CustomerLocations[0]['AddressDetail']
           this.form.licenseNumber = this.customerList.LicenseNumber
           this.form.customerArea = this.customerList.CustomerRegion5.Label
-          this.RouteDetailsList = this.customerList.RouteDetails.filter(r => r.RouteTypeId === 5)
-          this.form.route = this.RouteDetailsList[0].Route.Label
-          this.form.tmrSrName = this.RouteDetailsList[0].Representative.Label
-          this.KindId = res.Model.KindId
+          this.RouteDetailsList = this.customerList.RouteDetails ? this.customerList.RouteDetails.filter(r => r.RouteTypeId === 5) : ''
+          this.form.route = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Route.Label : ''
+          this.form.tmrSrName = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Representative.Label : ''
+          this.KindId =this.customerList.KindId
           this.CustomerId = res.Model.CustomerId
           this.getLookups(this.KindId)
           this.getCustomerContract(this.form.CustomerId)
@@ -1052,6 +1052,7 @@ export default {
         if (response) {
           this.lookupValues = response.Values.CUSTOMER_KIND.find(a => a.DecimalValue === kindId)
           this.form.salesVolumeClass = this.lookupValues.Label
+          console.log(this.form.salesVolumeClass)
         }
       })
     },
@@ -1090,10 +1091,12 @@ export default {
       })
     },
     getLastContract (CustomerId) {
-      let request = {
+      if(CustomerId > 0) {
+        let request = {
         customerId: CustomerId }
-      this.$api.postByUrl(request, `VisionNextContractManagement/api/Contract/LastContractAvarageSales`).then((res) => {
+      this.$api.postByUrl(request, `VisionNextContract/api/Contract/LastContractAvarageSales`).then((res) => {
         this.GrossMargin = res.GrossMargin
+        console.log(this.GrossMargin)
         this.getLastContractList = res.LastContractDetails
         var filteredLastContract = this.getLastContractList
         var kentContract = filteredLastContract.filter(a => a.Brand === 'Kent')
@@ -1109,6 +1112,7 @@ export default {
           this.currentSales.Tekel2000NetSales = tekelContract[0].NetSales
         }
       })
+      }
     },
     getContractItemCriteria () {
       let request = {
