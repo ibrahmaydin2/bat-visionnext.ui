@@ -183,7 +183,7 @@
                 </b-col>
                 <b-col cols="6">
                   <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                    <NextInput :disabled="true" type="text" v-model="validDates.contractDuration">{{ this.validDates.contractDuration }}</NextInput>
+                    <NextInput :disabled="true" type="text" v-model="daysDifference"></NextInput>
                   </NextFormGroup>
                 </b-col>
               </b-row>
@@ -206,15 +206,15 @@
                       <b-td><NextInput v-model="targetSale.kentMonthlyAverageSales" type="number" /></b-td>
                       <b-td><NextInput v-model="targetSale.rothmansMonthlyAverageSales" type="number" /></b-td>
                       <b-td><NextInput v-model="targetSale.tekelMonthlyAverageSales" type="number" /></b-td>
-                      <b-td><NextInput v-model="targetSale.totalMonthlyAverageSales" type="number" :disabled="true"/></b-td>
+                      <b-td><NextInput v-model="totalTargetedAverageMonthlySales" type="number" :disabled="true"/></b-td>
 
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.targetAnnualSalesProfit')}}</b-td>
-                      <b-td>{{this.targetSale.KentContractItemQuotaQuantity}}</b-td>
-                      <b-td>{{this.targetSale.RothmansContractItemQuotaQuantity}}</b-td>
-                      <b-td>{{this.targetSale.Tekel2000ContractItemQuotaQuantity}}</b-td>
-                      <b-td>{{this.targetSale.KentContractItemQuotaQuantity + this.targetSale.RothmansContractItemQuotaQuantity + this.targetSale.Tekel2000ContractItemQuotaQuantity }} </b-td>
+                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitKent" type="number" :disabled="true"/></b-td>
+                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitRothmans" type="number" :disabled="true"/></b-td>
+                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitTekel" type="number" :disabled="true"/></b-td>
+                      <b-td><NextInput v-model="totalTargetAnnualSalesProfit" type="number" :disabled="true"/></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -254,7 +254,7 @@
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.total')}}</b-td>
                         <b-td><span>
-                        <b-td><NextInput type="number" v-model="newInvestmentBudgetTotal" :disabled="true"/></b-td>
+                        <b-td><NextInput type="number" v-model="totalBudgets" :disabled="true"/></b-td>
                         </span></b-td>
                         <b-td></b-td>
                         <b-td></b-td>
@@ -272,11 +272,11 @@
                   <b-tbody>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.expectedProfitability')}}</b-td>
-                      <b-td><NextInput type="number"  :disabled="true" v-model="newReturnOfInvestment.expectedProfitability"/></b-td>
+                      <b-td><NextInput type="number"  :disabled="true" v-model="totalExpectedProfitability"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.expectedReturnOnInvestment')}}</b-td>
-                      <b-td><NextInput type="number" :disabled="true" v-model="newReturnOfInvestment.returnOnInvestment"/></b-td>
+                      <b-td><NextInput type="number" :disabled="true" v-model="totalReturnOnInvestment"/></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -351,19 +351,19 @@
                   <b-tbody>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.furniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.furniteCost" @change="calculateFurniteCostCalculate()"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.furniteCost"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.numberOfFrontFaces')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces" @change="calculateFurniteCostCalculate()"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.frontFaceCost" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="totalFrontFaceCost" :disabled="true"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.totalFurniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.totalFurniteCost" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="totalFurniteCost" :disabled="true"/></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -518,24 +518,24 @@ export default {
         Tekel2000ContractQuotaQuantity: null
       },
       newInvestmentBudgetCash: {
-        Cash: null,
+        Cash: 0,
         cashScheduledPaymentDate: null,
         cashBudgetMaster: null
       },
       newInvestmentBudgetDTI: {
-        OnlyDTI: null,
+        OnlyDTI: 0,
         onlyDtiScheduledPaymentDate: null,
         onlyDtiBudgetMaster: null
       },
       newInvestmentBudgetYYM: {
-        Yym: null,
+        Yym: 0,
         yymScheduledPaymentDate: null,
         yymBudgetMaster: null
       },
       targetSale: {
-        KentContractItemQuotaQuantity: null,
-        RothmansContractItemQuotaQuantity: null,
-        Tekel2000ContractItemQuotaQuantity: null,
+        KentContractItemQuotaQuantity: 0,
+        RothmansContractItemQuotaQuantity: 0,
+        Tekel2000ContractItemQuotaQuantity: 0,
         KentBrandContractItem: 'Kent',
         RothmansBrandContractItem: 'Rothmans',
         Tekel2000BrandContractItem: 'Tekel 2000',
@@ -543,7 +543,8 @@ export default {
         kentMonthlyAverageSales: 0,
         rothmansMonthlyAverageSales: 0,
         tekelMonthlyAverageSales: 0,
-        totalMonthlyAverageSales: 10
+        totalMonthlyAverageSales: 0,
+        totalTargetAnnualSales: 0
       },
       currentSales: {
         KentBrandLC: 'Kent',
@@ -554,10 +555,10 @@ export default {
         Tekel2000NetSales: null
       },
       otherDetails: {
-        furniteCost: 10,
-        numberOfFrontFaces: 13,
-        frontFaceCost: 11,
-        totalFurniteCost: 12
+        furniteCost: 0,
+        numberOfFrontFaces: 0,
+        frontFaceCost: 0,
+        totalFurniteCost: 0
       },
       routeName1: 'Contract',
       routeName2: 'Contract',
@@ -570,21 +571,60 @@ export default {
         benefitBudget: null,
         tciBreak1Id: null
       },
+      newInvestmentBudgetTotal: null,
       changeUnitType: null,
-      investmentBudgetTotalNew: null
     }
   },
   watch: {
     selectedCustomer () {
       this.getCustomer()
-    },
-    changeUnitType () {
-      this.getUnitAvailable()
     }
   },
   computed: {
-    newInvestmentBudgetTotal : function () {
-      return parseInt(this.newInvestmentBudgetCash.Cash) + parseInt(this.newInvestmentBudgetDTI.OnlyDTI) + parseInt(this.newInvestmentBudgetYYM.Yym)
+    totalBudgets () {
+      return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
+        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
+       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
+    },
+    daysDifference () {
+      if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
+        const startDate = new Date(this.validDates.contractStartDate)
+        const endDate = new Date(this.validDates.contractEndDate)
+        const diffTime = Math.abs(endDate - startDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        return diffDays
+      } else {
+        return null
+      }
+    },
+    totalExpectedProfitability () {
+      return (this.totalTargetAnnualSalesProfit) - (this.totalBudgets)
+    },
+    totalReturnOnInvestment () {
+      return (this.totalTargetAnnualSalesProfit) / (this.totalBudgets)
+    },
+    totalTargetedAverageMonthlySales() {
+      return (this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) +
+        (this.targetSale.rothmansMonthlyAverageSales > 0 ? parseInt(this.targetSale.rothmansMonthlyAverageSales) : 0) +
+       (this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0)
+    },
+    totalTargetAnnualSalesProfitKent() {
+      return (parseInt(this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) * this.GrossMargin)
+    },
+    totalTargetAnnualSalesProfitRothmans() {
+      return (parseInt(this.targetSale.rothmansMonthlyAverageSales > 0 ? parseInt(this.targetSale.rothmansMonthlyAverageSales) : 0) * this.GrossMargin)
+    },
+    totalTargetAnnualSalesProfitTekel() {
+      return (parseInt(this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0) * this.GrossMargin)
+    },
+    totalTargetAnnualSalesProfit () {
+      return (this.totalTargetAnnualSalesProfitKent) + (this.totalTargetAnnualSalesProfitRothmans) + (this.totalTargetAnnualSalesProfitTekel)
+    },
+    totalFrontFaceCost () {
+      return (this.otherDetails.numberOfFrontFaces > 0 ? parseInt(this.otherDetails.numberOfFrontFaces) : 0) * 17
+    },
+    totalFurniteCost () {
+      return (parseInt(this.otherDetails.furniteCost + this.totalFrontFaceCost))
     }
   },
   methods: {
@@ -897,7 +937,17 @@ export default {
         this.form.ContractOpponentAssets.push(this.contractOpponentAssetsPMI, this.contractOpponentAssetsJTI, this.contractOpponentAssetsITC)
         this.form.ContractAssets.push(this.contractAssets)
         this.form.ContractBenefits.push(this.contractBenefitsAsset)
-        this.newInvestmentBudgetTotal = this.investmentBudgetTotalNew
+        this.newInvestmentBudgetTotal = this.totalBudgets
+        this.validDates.contractDuration = this.daysDifference
+        this.targetSale.totalMonthlyAverageSales = this.totalTargetedAverageMonthlySales
+        this.targetSale.KentContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitKent
+        this.targetSale.RothmansContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitRothmans
+        this.targetSale.Tekel2000ContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitTekel
+        this.targetSale.totalTargetAnnualSales = this.totalTargetAnnualSalesProfit
+        this.newReturnOfInvestment.expectedProfitability = this.totalExpectedProfitability
+        this.newReturnOfInvestment.returnOnInvestment = this.totalReturnOnInvestment
+        this.otherDetails.frontFaceCost = this.totalFrontFaceCost
+        this.otherDetails.totalFurniteCost = this.totalFurniteCost
         this.createData()
       }
     },
@@ -958,34 +1008,9 @@ export default {
         })
       }
     },
-    calculateMonthlyAverageSales () {
-      this.targetSale.totalMonthlyAverageSales = parseInt(this.targetSale.kentMonthlyAverageSales) + parseInt(this.targetSale.rothmansMonthlyAverageSales) + parseInt(this.targetSale.tekelMonthlyAverageSales)
-      this.form.Genexp1 = this.targetSale.totalMonthlyAverageSales
-    },
-    calculateFurniteCostCalculate () {
-      this.otherDetails.furniteCost = 10
-      this.otherDetails.numberOfFrontFaces = 10
-      this.otherDetails.frontFaceCost = 100
-      this.otherDetails.totalFurniteCost = 100
-    },
-    // calculateContractDuration () {
-
-    //   console.log(this.validDates.contractStartDate)
-    //   console.log(this.validDates.contractEndDate)
-    //   let xyz = Math.floor(this.validDates.contractStartDate - this.validDates.contractEndDate)
-    //   console.log(xyz)
-    //   let startDateContract = this.validDates.contractStartDate
-    //   let endDateContract = this.validDates.contractEndDate
-    //   if(startDateContract && endDateContract){
-    //     let durationContract = Math.floor(endDateContract - startDateContract) / (1000 * 60 * 60 * 24)
-    //     durationContract = this.form.contractDuration
-    //     console.log(durationContract)
-    //     console.log(this.form.contractDuration)
-    //   }
-    // },
     getCustomer () {
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId !== 2302) {
+        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId == 2302) {
           this.customerList = res.Model
           this.assetsLocationList = res.Model
           this.form.customerName = this.customerList.CommercialTitle
