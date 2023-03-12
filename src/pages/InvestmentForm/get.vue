@@ -98,11 +98,11 @@
                     <b-tbody>
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.currentReturnOnInvestmentTL')}}</b-td>
-                        <b-td>{{(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) - (this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
+                        <b-td>{{parseInt(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) - parseInt(this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
                       </b-tr>
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.rateOfReturnOnInvestment')}}</b-td>
-                        <b-td>{{(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) / (this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
+                        <b-td>{{parseInt(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) / parseInt(this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
                       </b-tr>
                     </b-tbody>
                   </b-table-simple>
@@ -505,16 +505,19 @@ export default {
         if (kentContract && kentContract.length > 0) {
           this.currentSales.KentBrandLC = kentContract[0].Brand
           this.currentSales.KentNetSales = kentContract[0].NetSales
+          console.log(this.currentSales.KentNetSales)
         }
         var rothmansContract = filteredLastContract.filter(a => a.Brand === 'Rothmans')
         if (rothmansContract && rothmansContract.length > 0) {
           this.currentSales.RothmansBrandLC = rothmansContract[0].Brand
           this.currentSales.RothmansNetSales = rothmansContract[0].NetSales
+          console.log(this.currentSales.RothmansNetSales)
         }
         var tekelContract = filteredLastContract.filter(a => a.Brand === 'Tekel 2000')
         if (tekelContract && tekelContract.length > 0) {
           this.currentSales.Tekel2000BrandLC = tekelContract[0].Brand
           this.currentSales.Tekel2000NetSales = tekelContract[0].NetSales
+          console.log(this.currentSales.Tekel2000NetSales)
         }
       })
     },
