@@ -18,6 +18,7 @@
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.code')}}:</b> {{rowData.Code && rowData.Code}}</span>
             <span><i class="fas fa-code" />  <b>{{$t('insert.customer.Model_StatusReasonId')}}:</b> {{rowData.StatusReason ? rowData.StatusReason.Label : ''}}</span>
             <span><i class="fas fa-check" />  <b>{{$t('insert.customer.status')}}:</b> {{(rowData.Status) ? rowData.Status.Label : ''}}</span>
+            <span><i class="fas fa-check" />  <b>{{$t('insert.customer.documentStatus')}}:</b> {{rowData.DocumentStatus ? rowData.DocumentStatus.Label : ''}}</span>
           </section>
         </b-col>
       </b-row>
