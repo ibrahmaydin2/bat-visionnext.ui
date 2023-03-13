@@ -506,9 +506,9 @@
     "BATLeagueTargetGet": "BAT League Takip Görüntüle",
     "BATLeagueTargetInsert": "Yeni BAT League Takip",
     "BATLeagueTargetUpdate": "BAT League Takip Güncelle",
-    "investmentForm":"Yatırım Formu",
-    "investmentFormGet":"Yatırım Formu Görüntüle",
-    "investmentFormInsert":"Yeni Yatırım Formu",
+    "InvestmentForm2":"Yatırım Formu",
+    "InvestmentFormGet":"Yatırım Formu Görüntüle",
+    "InvestmentFormInsert":"Yeni Yatırım Formu",
     "InvestmentFormUpdate":"Yatırım Formu Güncelle"
   },
   "insert": {

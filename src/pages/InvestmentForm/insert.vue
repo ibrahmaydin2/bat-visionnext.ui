@@ -42,7 +42,7 @@
               <NextTextArea v-model="form.Description1" md="3" lg="3"></NextTextArea>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.typeId')" md="3" lg="3">
-              <NextDropdown url="VisionNextContractManagement/api/ContractType/Search" :disabled="true" v-model="form.ContractTypeDesc"/>
+              <NextDropdown url="VisionNextContract/api/ContractType/Search" :disabled="true" v-model="form.ContractTypeDesc"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.route')">
               <NextInput v-model="form.route" type="text" md="3" lg="3" :disabled="true" />
@@ -85,7 +85,7 @@
               </b-col>
               <b-col cols="6" class="mr-1">
                 <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                  <NextInput type="text" v-model="contractDates.ContractValidDurationDate" :disabled="true"/>
+                  <NextInput type="text" v-model="daysDifference2" :disabled="true"/>
                 </NextFormGroup>
               </b-col>
             </b-row>
@@ -155,11 +155,11 @@
                     <b-tbody>
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.currentReturnOnInvestmentTL')}}</b-td>
-                        <b-td>{{(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) - (this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
+                        <b-td>{{((this.currentSales.KentNetSales * this.GrossMargin) + (this.currentSales.RothmansNetSales * this.GrossMargin) + (this.currentSales.Tekel2000NetSales * this.GrossMargin)) - (this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity)}}</b-td>
                       </b-tr>
                       <b-tr>
                         <b-td>{{$t('insert.investmentForm.rateOfReturnOnInvestment')}}</b-td>
-                        <b-td>{{(this.currentSales.KentNetSales + this.currentSales.RothmansNetSales + this.currentSales.Tekel2000NetSales) / (this.currentSales.KentQuotaQuantity + this.currentSales.RothmansQuotaQuantity + this.currentSales.Tekel2000QuotaQuantity) }}</b-td>
+                        <b-td>{{((this.currentSales.KentNetSales * this.GrossMargin) + (this.currentSales.RothmansNetSales * this.GrossMargin) + (this.currentSales.Tekel2000NetSales * this.GrossMargin)) / (this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity)}}</b-td>
                       </b-tr>
                     </b-tbody>
                   </b-table-simple>
@@ -241,14 +241,14 @@
                       </b-tr>
                       <b-tr>
                         <b-td>Only DTI</b-td>
-                        <b-td><NextInput type="number" v-model="newInvestmentBudgetDTI.OnlyDTI" :min="0" :disabled="newInvestmentBudgetYYM.Yym > 0" /></b-td>
-                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetDTI.onlyDtiBudgetMaster" :disabled="newInvestmentBudgetYYM.Yym > 0" :source="customerBudgets" @input=" getCustomerBudget($event,2)"/></b-td>
+                        <b-td><NextInput type="number" v-model="newInvestmentBudgetDTI.OnlyDTI" :min="0" /></b-td>
+                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetDTI.onlyDtiBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,2)"/></b-td>
                         <b-td><NextDatePicker v-model="newInvestmentBudgetDTI.onlyDtiScheduledPaymentDate" :disabled="true"/></b-td>
                       </b-tr>
                       <b-tr>
                         <b-td>YYM</b-td>
-                        <b-td><NextInput type="number"  v-model="newInvestmentBudgetYYM.Yym" :min="0" :disabled="newInvestmentBudgetDTI.OnlyDTI > 0"/></b-td>
-                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetYYM.yymBudgetMaster" :disabled="newInvestmentBudgetDTI.OnlyDTI > 0" :source="customerBudgets" @input=" getCustomerBudget($event,3)"/></b-td>
+                        <b-td><NextInput type="number"  v-model="newInvestmentBudgetYYM.Yym" :min="0" /></b-td>
+                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetYYM.yymBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,3)"/></b-td>
                         <b-td><NextDatePicker v-model="newInvestmentBudgetYYM.yymScheduledPaymentDate" :disabled="true"/></b-td>
                       </b-tr>
                       <b-tr>
@@ -322,9 +322,9 @@
                       <b-tbody>
                         <b-tr>
                           <b-td>{{$t('insert.investmentForm.unit')}}</b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)" @change="changeUnitType()"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)" @change="changeUnitType()"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)" @change="changeUnitType()"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)"/></b-td>
+                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)"/></b-td>
                         </b-tr>
                         <b-tr>
                           <b-td>{{$t('insert.investmentForm.unitType')}}</b-td>
@@ -580,6 +580,17 @@ export default {
     }
   },
   computed: {
+    daysDifference2 () {
+      if (this.contractDates.ContractValidDateStartDate && this.contractDates.ContractValidDateEndDate) {
+        const startDate = new Date(this.contractDates.ContractValidDateStartDate)
+        const endDate = new Date(this.contractDates.ContractValidDateEndDate)
+        const diffTime = Math.abs(endDate - startDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        return diffDays
+      } else {
+        return null
+      }
+    },
     daysDifference () {
       if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
         const startDate = new Date(this.validDates.contractStartDate)
@@ -678,6 +689,13 @@ export default {
   },
   methods: {
     save () {
+      this.form.ContractBenefits = []
+      this.form.ContractAssets = []
+      this.form.ContractPriceDiscounts = []
+      this.form.ContractOtherDetailss = []
+      this.form.ContractOpponentAssets = []
+      this.form.ContractItems = []
+      this.form.ContractPaymentPlans = []
       this.$v.form.$touch()
       this.$v.validDates.$touch()
       if (this.$v.form.$error || this.$v.validDates.$error) {
@@ -696,7 +714,7 @@ export default {
           StartDate: this.validDates.contractStartDate,
           EndDate: this.validDates.contractEndDate
         }]
-        if (this.newInvestmentBudgetCash.Cash !== null || this.newInvestmentBudgetCash.cashBudgetMaster !== null || this.newInvestmentBudgetCash.cashScheduledPaymentDate !== null) {
+        if (this.newInvestmentBudgetCash.Cash > 0 || this.newInvestmentBudgetCash.cashBudgetMaster !== null || this.newInvestmentBudgetCash.cashScheduledPaymentDate !== null) {
           this.contractBenefitsCash = {
             Deleted: 0,
             System: 0,
@@ -734,7 +752,8 @@ export default {
             this.form.ContractPaymentPlans.push(this.contractPaymentPlansCash)
           }
         }
-        if (this.newInvestmentBudgetDTI.OnlyDTI !== null || this.newInvestmentBudgetDTI.onlyDtiBudgetMaster !== null || this.newInvestmentBudgetDTI.onlyDtiScheduledPaymentDate !== null) {
+        var total = this.newInvestmentBudgetDTI.OnlyDTI + this.newInvestmentBudgetYYM.Yym
+        if (this.newInvestmentBudgetDTI.OnlyDTI > 0 || this.newInvestmentBudgetDTI.onlyDtiBudgetMaster !== null || this.newInvestmentBudgetDTI.onlyDtiScheduledPaymentDate !== null) {
           this.contractBenefitsOnlyDti = {
             Deleted: 0,
             System: 0,
@@ -742,7 +761,7 @@ export default {
             StatusId: 1,
             BenefitTypeId: 6,
             BenefitTypeName: 'Dip Toplam İndirimi',
-            BenefitBudget: this.newInvestmentBudgetDTI.OnlyDTI,
+            BenefitBudget: total,
             BudgetMasterId: this.OnlyDtiBudgetMasterId,
             BudgetMasterName: '',
             CurrencyId: 1,
@@ -770,18 +789,18 @@ export default {
             DiscountAmount: 0,
             StartDate: this.validDates.contractStartDate,
             BranchSharePercent: 0,
-            ItemFormulaId: null,
+            ItemFormulaId: 16217595186,
             ItemFormulaName: null,
             CurrencyId: 1,
             CurrencyName: 'Türk Lirası'
           }
-          let cashType = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 6)
-          if (cashType.length === 0) {
+          let dtiType = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 6)
+          if (dtiType.length === 0) {
             this.form.ContractBenefits.push(this.contractBenefitsOnlyDti)
-            this.form.ContractPriceDiscounts.push(this.contractPriceDiscountsOnlyDti)
           }
+          this.form.ContractPriceDiscounts.push(this.contractPriceDiscountsOnlyDti)
         }
-        if (this.newInvestmentBudgetYYM.Yym !== null || this.newInvestmentBudgetYYM.yymBudgetMaster !== null || this.newInvestmentBudgetYYM.yymScheduledPaymentDate !== null) {
+        if (this.newInvestmentBudgetYYM.Yym > 0 || this.newInvestmentBudgetYYM.yymBudgetMaster !== null || this.newInvestmentBudgetYYM.yymScheduledPaymentDate !== null) {
           this.contractBenefitsYym = {
             Deleted: 0,
             System: 0,
@@ -790,8 +809,8 @@ export default {
             StatusId: 1,
             BenefitTypeId: 6,
             BenefitTypeName: 'Dip Toplam İndirimi',
-            BenefitBudget: this.newInvestmentBudgetYYM.Yym,
-            BudgetMasterId: this.form.YymBudgetMasterId,
+            BenefitBudget: total,
+            BudgetMasterId: this.YymBudgetMasterId,
             BudgetMasterName: '',
             CurrencyId: 1,
             CurrencyName: 'Türk Lirası',
@@ -818,16 +837,16 @@ export default {
             QuotaColumnValueStr: null,
             StartDate: this.validDates.contractStartDate,
             BranchSharePercent: 0,
-            ItemFormulaId: null,
+            ItemFormulaId: 16217595186,
             ItemFormulaName: null,
             CurrencyId: 1,
             CurrencyName: 'Türk Lirası'
           }
-          let cashType = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 6)
-          if (cashType.length === 0) {
+          let yymType = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 6)
+          if (yymType.length === 0) {
             this.form.ContractBenefits.push(this.contractBenefitsYym)
-            this.form.ContractPriceDiscounts.push(this.contractPriceDiscountsYym)
           }
+          this.form.ContractPriceDiscounts.push(this.contractPriceDiscountsYym)
         }
         this.contractOtherDetailss = {
           Code: this.form.Code + '-1',
@@ -964,7 +983,7 @@ export default {
         this.contractAssets =
         {
           AssetId: 1823856813,
-          PlannedServiceDate: this.form.scheduledPaymentDate,
+          PlannedServiceDate: this.validDates.contractStartDate,
           Deleted: 0,
           System: 0,
           RecordState: 2,
@@ -982,11 +1001,15 @@ export default {
           CurrencyName: 'Türk Lirası',
           usedAmount: 0
         }
+        let cashType = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4)
+        if (cashType.length === 0) {
+          this.form.ContractBenefits.push(this.contractBenefitsAsset)
+        }
         this.form.ContractOtherDetailss.push(this.contractOtherDetailss)
         this.form.ContractOpponentAssets.push(this.contractOpponentAssetsPMI, this.contractOpponentAssetsJTI, this.contractOpponentAssetsITC)
         this.form.ContractAssets.push(this.contractAssets)
-        this.form.ContractBenefits.push(this.contractBenefitsAsset)
         this.validDates.contractDuration = this.daysDifference
+        this.contractDates.ContractValidDurationDate = this.daysDifference2
         this.createData()
       }
     },
@@ -1098,7 +1121,7 @@ export default {
       let request = {
         recordId: 0,
         customerId: CustomerId }
-      this.$api.postByUrl(request, `VisionNextContractManagement/api/Contract/GetCustomerContract`).then((res) => {
+      this.$api.postByUrl(request, `VisionNextContract/api/Contract/GetCustomerContract`).then((res) => {
         this.getCustomerContractList = res.Model
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
@@ -1122,7 +1145,7 @@ export default {
     selectContractType () {
       let request = {
         RecordId: 2 }
-      this.$api.postByUrl(request, '/VisionNextContractManagement/api/ContractType/Search').then((response) => {
+      this.$api.postByUrl(request, '/VisionNextContract/api/ContractType/Search').then((response) => {
         this.contractList = response.ListModel.BaseModels[1]
         this.form.TypeId = this.contractList.RecordId
         this.form.ContractTypeDesc = this.contractList.Description1
@@ -1155,7 +1178,7 @@ export default {
       let request = {
         typeId: 3
       }
-      this.$api.postByUrl(request, `VisionNextContractManagement/api/Contract/GetContractItemCriteria`).then((response) => {
+      this.$api.postByUrl(request, `VisionNextContract/api/Contract/GetContractItemCriteria`).then((response) => {
         this.ContractItemCriteriaList = response
         var filteredContractItemCriteria = this.ContractItemCriteriaList
         var kentContractItemCriteria = filteredContractItemCriteria.filter(a => a.ColumnValueStr === 'Kent')
@@ -1178,6 +1201,18 @@ export default {
       this.form.ApproveStateId = 2382
     } else {
       this.form.ApproveStateId = 2381
+    }
+    if (this.opponentUnitStatus.pmiUnit && this.opponentUnitStatus.pmiUnit.DecimalValue === 0) {
+      this.opponentUnitStatus.pmiUnitType = {}
+      this.opponentUnitStatus.pmiInvestmentAmount = ''
+    }
+    if (this.opponentUnitStatus.jtiUnit && this.opponentUnitStatus.jtiUnit.DecimalValue === 0) {
+      this.opponentUnitStatus.jtiUnitType = {}
+      this.opponentUnitStatus.jtiInvestmentAmount = ''
+    }
+    if (this.opponentUnitStatus.itcUnit && this.opponentUnitStatus.itcUnit.DecimalValue === 0) {
+      this.opponentUnitStatus.itcUnitType = {}
+      this.opponentUnitStatus.itcInvestmentAmount = ''
     }
     return {
       form: {
