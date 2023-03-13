@@ -28,7 +28,7 @@
             <NextDropdown v-model="statusReason" :disabled="insertReadonly.StatusReasonId" label="Description1" url="VisionNextCommonApi/api/CancelReason/Search" @input="selectedSearchType('StatusReasonId', $event)"/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.customer.DocumentStatusId')" :error="$v.form.DocumentStatusId">
-            <NextDropdown v-model="documentStatus" :source="lookupValues" label="Label" :disabled="true" @input="selectedType('DocumentStatusId', $event)"/>
+            <NextDropdown v-model="documentStatus" lookup-key="CUSTOMER_DOCUMENT_STATUS" :disabled="true" :get-lookup="true" @input="selectedType('DocumentStatusId', $event)"/>
           </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId">
             <NextCheckBox v-model="form.StatusId" :disabled="insertReadonly.StatusId" type="number" toggle/>
@@ -785,18 +785,18 @@ export default {
   mounted () {
     this.getData().then(() => this.setData())
     this.getPaymentTypes()
-    this.getLookups()
+    // this.getLookups()
   },
   methods: {
-    getLookups () {
-      return this.$api.postByUrl({LookupTableCode: 'CUSTOMER_DOCUMENT_STATUS'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=2').then((response) => {
-        if (response && response.Values) {
-          this.lookupValues = response.Values
-          this.documentStatus = this.lookupValues[0].Label
-          this.form.DocumentStatusId = this.lookupValues[0].DecimalValue
-        }
-      })
-    },
+    // getLookups () {
+    //   return this.$api.postByUrl({LookupTableCode: 'CUSTOMER_DOCUMENT_STATUS'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=2').then((response) => {
+    //     if (response && response.Values) {
+    //       this.lookupValues = response.Values
+    //       this.documentStatus = this.lookupValues[0].Label
+    //       this.form.DocumentStatusId = this.lookupValues[0].DecimalValue
+    //     }
+    //   })
+    // },
     downloadFile (item) {
       let vm = this
       let data = {
@@ -1055,7 +1055,7 @@ export default {
         this.form.IsBlackListed = this.checkConvertToNumber(this.form.IsBlackListed)
         this.form.Statement = this.checkConvertToNumber(this.form.Statement)
         this.form.IsOpportunitySpot = this.checkConvertToNumber(this.form.IsOpportunitySpot)
-        this.form.DocumentStatusId = this.lookupValues[0].DecimalValue
+        // this.form.DocumentStatusId = this.lookupValues[0].DecimalValue
         let model = {
           'model': this.form
         }
@@ -1128,6 +1128,7 @@ export default {
       this.invoiceCombineRule = rowData.InvoiceCombineRule
       this.blockReason = rowData.BlockReason
       this.statusReason = this.convertLookupValueToSearchValue(rowData.StatusReason)
+      this.documentStatus = rowData.DocumentStatus
       this.customerInvoiceType = rowData.CustomerInvoiceType
       this.type = rowData.Type
       this.salesDocumentType = rowData.SalesDocumentType
