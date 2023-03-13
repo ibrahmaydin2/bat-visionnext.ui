@@ -482,7 +482,7 @@ const listIndex = [
   {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }},
   {path: '/CustomerTarget', name: 'CustomerTarget', component: CustomerTargetIndex, meta: { title: i18n.t('router.CustomerTarget'), createLink: 'CustomerTargetInsert', keepAlive: true }},
   {path: '/BATLeagueTarget', name: 'BATLeagueTarget', component: BATLeagueTargetIndex, meta: { title: i18n.t('router.BATLeagueTarget'), createLink: 'BATLeagueTargetInsert', keepAlive: true }},
-  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.investmentForm'), createLink: 'InvestmentFormInsert', keepAlive: true }}
+  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.InvestmentForm2'), createLink: 'InvestmentFormInsert', keepAlive: true }}
 
 ]
 
@@ -722,7 +722,7 @@ const listInsert = [
   { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } },
   { path: '/Insert/CustomerTarget', name: 'CustomerTargetInsert', component: CustomerTargetInsert, meta: { title: i18n.t('router.CustomerTargetInsert'), baseLink: 'CustomerTarget' } },
   { path: '/Insert/BATLeagueTarget', name: 'BATLeagueTargetInsert', component: BATLeagueTargetInsert, meta: { title: i18n.t('router.BATLeagueTargetInsert'), baseLink: 'BATLeagueTarget' } },
-  { path: '/Insert/InvestmentForm', name: 'InvestmentFormInsert', component: InvestmentFormInsert, meta: { title: i18n.t('router.investmentFormInsert'), baseLink: 'InvestmentForm' } }
+  { path: '/Insert/InvestmentForm', name: 'InvestmentFormInsert', component: InvestmentFormInsert, meta: { title: i18n.t('router.InvestmentFormInsert'), baseLink: 'InvestmentForm' } }
 ]
 
 const routes = [
