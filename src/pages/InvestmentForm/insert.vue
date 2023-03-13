@@ -7,7 +7,7 @@
             <Breadcrumb/>
           </b-col>
           <b-col cols="12" md="6" class="text-right">
-            <router-link :to="{ name: 'InvestmentForm' }">
+            <router-link :to="{ name: 'investmentForm' }">
               <CancelButton />
             </router-link>
             <AddButton @click.native="save()" />
@@ -571,26 +571,7 @@ export default {
         benefitBudget: null,
         tciBreak1Id: null
       },
-      newInvestmentBudgetTotal: null,
-      changeUnitType: null,
-    }
-  },
-  computed: {
-    totalBudgets () {
-      return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
-        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
-       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
-    },
-    daysDifference () {
-      if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
-        const startDate = new Date(this.validDates.contractStartDate)
-        const endDate = new Date(this.validDates.contractEndDate)
-        const diffTime = Math.abs(endDate - startDate)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        return diffDays
-      } else {
-        return null
-      }
+      changeUnitType: null
     }
   },
   watch: {
@@ -599,11 +580,6 @@ export default {
     }
   },
   computed: {
-    totalBudgets () {
-      return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
-        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
-       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
-    },
     daysDifference () {
       if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
         const startDate = new Date(this.validDates.contractStartDate)
@@ -615,34 +591,89 @@ export default {
         return null
       }
     },
-    totalExpectedProfitability () {
-      return (this.totalTargetAnnualSalesProfit) - (this.totalBudgets)
+    totalBudgets: {
+      get () {
+        return (this.newInvestmentBudgetCash.Cash > 0 ? parseInt(this.newInvestmentBudgetCash.Cash) : 0) +
+        (this.newInvestmentBudgetDTI.OnlyDTI > 0 ? parseInt(this.newInvestmentBudgetDTI.OnlyDTI) : 0) +
+       (this.newInvestmentBudgetYYM.Yym > 0 ? parseInt(this.newInvestmentBudgetYYM.Yym) : 0)
+      },
+      set (value) {
+        this.newInvestmentBudgetTotal = value
+      }
     },
-    totalReturnOnInvestment () {
-      return (this.totalTargetAnnualSalesProfit) / (this.totalBudgets)
+    totalExpectedProfitability: {
+      get () {
+        return (this.totalTargetAnnualSalesProfit) - (this.totalBudgets)
+      },
+      set (value) {
+        this.newReturnOfInvestment.expectedProfitability = value
+      }
     },
-    totalTargetedAverageMonthlySales() {
-      return (this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) +
+    totalReturnOnInvestment: {
+      get () {
+        return (((this.totalTargetAnnualSalesProfit) - (this.totalBudgets)) / (this.totalBudgets)) * 100
+      },
+      set (value) {
+        this.newReturnOfInvestment.returnOnInvestment = value
+      }
+    },
+    totalTargetedAverageMonthlySales: {
+      get () {
+        return (this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) +
         (this.targetSale.rothmansMonthlyAverageSales > 0 ? parseInt(this.targetSale.rothmansMonthlyAverageSales) : 0) +
        (this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0)
+      },
+      set (value) {
+        this.targetSale.totalMonthlyAverageSales = value
+      }
     },
-    totalTargetAnnualSalesProfitKent() {
-      return (parseInt(this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) * this.GrossMargin)
+    totalTargetAnnualSalesProfitKent: {
+      get () {
+        return (parseInt(this.targetSale.kentMonthlyAverageSales > 0 ? parseInt(this.targetSale.kentMonthlyAverageSales) : 0) * this.GrossMargin)
+      },
+      set (value) {
+        this.targetSale.KentContractItemQuotaQuantity = value
+      }
     },
-    totalTargetAnnualSalesProfitRothmans() {
-      return (parseInt(this.targetSale.rothmansMonthlyAverageSales > 0 ? parseInt(this.targetSale.rothmansMonthlyAverageSales) : 0) * this.GrossMargin)
+    totalTargetAnnualSalesProfitRothmans: {
+      get () {
+        return (parseInt(this.targetSale.rothmansMonthlyAverageSales > 0 ? parseInt(this.targetSale.rothmansMonthlyAverageSales) : 0) * this.GrossMargin)
+      },
+      set (value) {
+        this.targetSale.RothmansContractItemQuotaQuantity = value
+      }
     },
-    totalTargetAnnualSalesProfitTekel() {
-      return (parseInt(this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0) * this.GrossMargin)
+    totalTargetAnnualSalesProfitTekel: {
+      get () {
+        return (parseInt(this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0) * this.GrossMargin)
+      },
+      set (value) {
+        this.targetSale.Tekel2000ContractItemQuotaQuantity = value
+      }
     },
-    totalTargetAnnualSalesProfit () {
-      return (this.totalTargetAnnualSalesProfitKent) + (this.totalTargetAnnualSalesProfitRothmans) + (this.totalTargetAnnualSalesProfitTekel)
+    totalTargetAnnualSalesProfit: {
+      get () {
+        return (this.targetSale.KentContractItemQuotaQuantity) + (this.targetSale.RothmansContractItemQuotaQuantity) + (this.targetSale.Tekel2000ContractItemQuotaQuantity)
+      },
+      set (value) {
+        this.targetSale.totalTargetAnnualSales = value
+      }
     },
-    totalFrontFaceCost () {
-      return (this.otherDetails.numberOfFrontFaces > 0 ? parseInt(this.otherDetails.numberOfFrontFaces) : 0) * 17
+    totalFrontFaceCost: {
+      get () {
+        return parseInt((this.otherDetails.numberOfFrontFaces > 0 ? parseInt(this.otherDetails.numberOfFrontFaces) : 0) * 17)
+      },
+      set (value) {
+        this.otherDetails.frontFaceCost = value
+      }
     },
-    totalFurniteCost () {
-      return (parseInt(this.otherDetails.furniteCost + this.totalFrontFaceCost))
+    totalFurniteCost: {
+      get () {
+        return parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
+      },
+      set (value) {
+        this.otherDetails.totalFurniteCost = value
+      }
     }
   },
   methods: {
@@ -955,17 +986,7 @@ export default {
         this.form.ContractOpponentAssets.push(this.contractOpponentAssetsPMI, this.contractOpponentAssetsJTI, this.contractOpponentAssetsITC)
         this.form.ContractAssets.push(this.contractAssets)
         this.form.ContractBenefits.push(this.contractBenefitsAsset)
-        this.newInvestmentBudgetTotal = this.totalBudgets
         this.validDates.contractDuration = this.daysDifference
-        this.targetSale.totalMonthlyAverageSales = this.totalTargetedAverageMonthlySales
-        this.targetSale.KentContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitKent
-        this.targetSale.RothmansContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitRothmans
-        this.targetSale.Tekel2000ContractItemQuotaQuantity = this.totalTargetAnnualSalesProfitTekel
-        this.targetSale.totalTargetAnnualSales = this.totalTargetAnnualSalesProfit
-        this.newReturnOfInvestment.expectedProfitability = this.totalExpectedProfitability
-        this.newReturnOfInvestment.returnOnInvestment = this.totalReturnOnInvestment
-        this.otherDetails.frontFaceCost = this.totalFrontFaceCost
-        this.otherDetails.totalFurniteCost = this.totalFurniteCost
         this.createData()
       }
     },
@@ -1038,7 +1059,7 @@ export default {
           this.RouteDetailsList = this.customerList.RouteDetails ? this.customerList.RouteDetails.filter(r => r.RouteTypeId === 5) : ''
           this.form.route = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Route.Label : ''
           this.form.tmrSrName = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Representative.Label : ''
-          this.KindId =this.customerList.KindId
+          this.KindId = this.customerList.KindId
           this.CustomerId = res.Model.CustomerId
           this.getLookups(this.KindId)
           this.getCustomerContract(this.form.CustomerId)
@@ -1070,7 +1091,6 @@ export default {
         if (response) {
           this.lookupValues = response.Values.CUSTOMER_KIND.find(a => a.DecimalValue === kindId)
           this.form.salesVolumeClass = this.lookupValues.Label
-          console.log(this.form.salesVolumeClass)
         }
       })
     },
@@ -1109,27 +1129,26 @@ export default {
       })
     },
     getLastContract (CustomerId) {
-      if(CustomerId > 0) {
+      if (CustomerId > 0) {
         let request = {
-        customerId: CustomerId }
-      this.$api.postByUrl(request, `VisionNextContract/api/Contract/LastContractAvarageSales`).then((res) => {
-        this.GrossMargin = res.GrossMargin
-        console.log(this.GrossMargin)
-        this.getLastContractList = res.LastContractDetails
-        var filteredLastContract = this.getLastContractList
-        var kentContract = filteredLastContract.filter(a => a.Brand === 'Kent')
-        if (kentContract && kentContract.length > 0) {
-          this.currentSales.KentNetSales = kentContract[0].NetSales
-        }
-        var rothmansContract = filteredLastContract.filter(a => a.Brand === 'Rothmans')
-        if (rothmansContract && rothmansContract.length > 0) {
-          this.currentSales.RothmansNetSales = rothmansContract[0].NetSales
-        }
-        var tekelContract = filteredLastContract.filter(a => a.Brand === 'Tekel 2000')
-        if (tekelContract && tekelContract.length > 0) {
-          this.currentSales.Tekel2000NetSales = tekelContract[0].NetSales
-        }
-      })
+          customerId: CustomerId }
+        this.$api.postByUrl(request, `VisionNextContract/api/Contract/LastContractAvarageSales`).then((res) => {
+          this.GrossMargin = res.GrossMargin
+          this.getLastContractList = res.LastContractDetails
+          var filteredLastContract = this.getLastContractList
+          var kentContract = filteredLastContract.filter(a => a.Brand === 'Kent')
+          if (kentContract && kentContract.length > 0) {
+            this.currentSales.KentNetSales = kentContract[0].NetSales
+          }
+          var rothmansContract = filteredLastContract.filter(a => a.Brand === 'Rothmans')
+          if (rothmansContract && rothmansContract.length > 0) {
+            this.currentSales.RothmansNetSales = rothmansContract[0].NetSales
+          }
+          var tekelContract = filteredLastContract.filter(a => a.Brand === 'Tekel 2000')
+          if (tekelContract && tekelContract.length > 0) {
+            this.currentSales.Tekel2000NetSales = tekelContract[0].NetSales
+          }
+        })
       }
     },
     getContractItemCriteria () {
