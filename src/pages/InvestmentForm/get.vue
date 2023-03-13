@@ -7,7 +7,7 @@
       <b-row>
         <b-col cols="12">
           <header>
-            <Breadcrumb :title="'router.investmentForm'" />
+            <Breadcrumb :title="rowData.Description1" />
           </header>
         </b-col>
       </b-row>
