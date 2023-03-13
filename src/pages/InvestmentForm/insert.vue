@@ -1049,7 +1049,7 @@ export default {
     },
     getCustomer () {
       this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId !== 2302) {
+        if (res.Model.DocumentStatusId && res.Model.DocumentStatusId === 2302) {
           this.customerList = res.Model
           this.assetsLocationList = res.Model
           this.form.customerName = this.customerList.CommercialTitle
