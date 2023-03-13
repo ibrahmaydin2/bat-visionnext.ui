@@ -747,7 +747,7 @@ export default {
       selectedFileTaxOffice: null,
       selectedFileTAPDK: null,
       documentStatus: null,
-      lookupValues: [],
+      lookupValues: []
     }
   },
   computed: {
