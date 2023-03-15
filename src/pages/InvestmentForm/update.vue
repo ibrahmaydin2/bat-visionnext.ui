@@ -427,7 +427,7 @@ export default {
       lookupValues: {},
       getCustomerContractList: [],
       date: null,
-      routeName1: 'ContractManagement',
+      routeName1: 'Contract',
       routeName2: 'Contract'
     }
   },
@@ -438,7 +438,6 @@ export default {
     setData () {
       let rowData = this.rowData
       this.form = rowData
-      console.log(this.form)
       this.selectedCustomer = rowData.Description1
       this.form.customerName = rowData.Description1
       this.form.address = rowData.CustomerLocations[0]['AddressDetail']

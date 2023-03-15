@@ -85,7 +85,7 @@
               </b-col>
               <b-col cols="6" class="mr-1">
                 <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                  <NextInput type="text" v-model="daysDifference2" :disabled="true"/>
+                  <NextInput type="text" v-model="daysDifferenceCurrentInvestment" :disabled="true"/>
                 </NextFormGroup>
               </b-col>
             </b-row>
@@ -183,7 +183,7 @@
                 </b-col>
                 <b-col cols="6">
                   <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                    <NextInput :disabled="true" type="text" v-model="daysDifference"></NextInput>
+                    <NextInput :disabled="true" type="text" v-model="daysDifferenceNewInvestment"></NextInput>
                   </NextFormGroup>
                 </b-col>
               </b-row>
@@ -292,7 +292,7 @@
                     <b-table-simple bordered small>
                         <b-thead>
                           <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
-                          <b-th><span>{{$t('insert.investmentForm.unitName')}} Adı</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
                           <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
                           <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
                         </b-thead>
@@ -425,7 +425,8 @@ export default {
         ContractAssets: [],
         ContractDiscounts: [],
         ContractFreeItems: [],
-        SignatureTypeId: null
+        SignatureTypeId: null,
+        investmentStatusId: 2320
       },
       contractBenefitsAsset: [],
       contractAssets: [],
@@ -580,7 +581,7 @@ export default {
     }
   },
   computed: {
-    daysDifference2 () {
+    daysDifferenceCurrentInvestment () {
       if (this.contractDates.ContractValidDateStartDate && this.contractDates.ContractValidDateEndDate) {
         const startDate = new Date(this.contractDates.ContractValidDateStartDate)
         const endDate = new Date(this.contractDates.ContractValidDateEndDate)
@@ -591,7 +592,7 @@ export default {
         return null
       }
     },
-    daysDifference () {
+    daysDifferenceNewInvestment () {
       if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
         const startDate = new Date(this.validDates.contractStartDate)
         const endDate = new Date(this.validDates.contractEndDate)
@@ -712,7 +713,8 @@ export default {
           RecordState: 2,
           StatusId: 1,
           StartDate: this.validDates.contractStartDate,
-          EndDate: this.validDates.contractEndDate
+          EndDate: this.validDates.contractEndDate,
+          CreatedDateTime: this.form.formDate
         }]
         if (this.newInvestmentBudgetCash.Cash > 0 || this.newInvestmentBudgetCash.cashBudgetMaster !== null || this.newInvestmentBudgetCash.cashScheduledPaymentDate !== null) {
           this.contractBenefitsCash = {
@@ -1083,14 +1085,14 @@ export default {
           this.form.route = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Route.Label : ''
           this.form.tmrSrName = this.RouteDetailsList.length > 0 ? this.RouteDetailsList[0].Representative.Label : ''
           this.KindId = this.customerList.KindId
-          this.CustomerId = res.Model.CustomerId
+          this.CustomerId = this.customerList.CustomerId
           this.getLookups(this.KindId)
           this.getCustomerContract(this.form.CustomerId)
           this.getLastContract(this.form.CustomerId)
           this.getContractItemCriteria()
           this.getCustomerBudgets(this.form.CustomerId)
           this.selectContractType()
-          this.getCode(res.Model.BranchId)
+          this.getCode(this.customerList.BranchId)
         } else {
           this.$toasted.show(this.$t('insert.investmentForm.requiredDocument'),
             {
@@ -1125,7 +1127,6 @@ export default {
         this.getCustomerContractList = res.Model
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
-        this.contractDates.ContractValidDurationDate = this.form.ContractValidDateEndDate - this.form.ContractValidDateStartDate
 
         var ContractItemList = this.getCustomerContractList.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
