@@ -551,11 +551,12 @@ export default {
       }
       vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
         const base64String = res.File
-        const fileName = res.Description1
+        const fileName = res.FileName
+        const fieldDescription = res.Description1
         const blob = this.base64ToBlob(base64String)
         const url = URL.createObjectURL(blob)
         const link = document.createElement('a')
-        link.setAttribute('download', fileName)
+        link.setAttribute('download', fieldDescription !== null ? fieldDescription : fileName)
         link.setAttribute('href', url)
         document.body.appendChild(link)
         link.click()

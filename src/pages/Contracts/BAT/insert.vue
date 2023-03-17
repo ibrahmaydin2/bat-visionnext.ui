@@ -1264,7 +1264,7 @@ export default {
         RecordState: 2,
         StatusId: 1,
         Description1: this.selectedFile.name,
-        contractAttachmentTypeId: 2141,
+        contractAttachmentTypeId: 2361,
 
         fileName: fileName,
         file: splitedFile
