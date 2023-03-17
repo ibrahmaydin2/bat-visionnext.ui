@@ -901,10 +901,18 @@ export default {
       this.selectedFileSign = null
     },
     removeCustomerAttachments (item) {
-      if (item.RecordId > 0) {
-        this.form.CustomerAttachments[this.form.CustomerAttachments.indexOf(item)].RecordState = 4
+      if (this.form.DocumentStatusId === 2302) {
+        this.$toasted.show('Belgeler "Onaylandı" statüsünde iken belge silinemez!', {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
       } else {
-        this.form.CustomerAttachments.splice(this.form.CustomerAttachments.indexOf(item), 1)
+        if (item.RecordId > 0) {
+          this.form.CustomerAttachments[this.form.CustomerAttachments.indexOf(item)].RecordState = 4
+        } else {
+          this.form.CustomerAttachments.splice(this.form.CustomerAttachments.indexOf(item), 1)
+        }
       }
     },
     submitFileCommercial () {
