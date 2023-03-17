@@ -977,7 +977,7 @@
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in form.ContractAttachments.filter(f => f.RecordState !== 4)" :key="i">
-                  <b-td>{{f.Description1 ? f.Description1 : ''}}</b-td>
+                  <b-td>{{f.Description1 !== null ? f.Description1 : f.FileName}}</b-td>
                   <b-td class="text-center">
                     <i @click="removeContractAttachments(f)" class="far fa-trash-alt text-danger"></i>
                   </b-td>
@@ -1223,11 +1223,12 @@ export default {
       }
       vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
         const base64String = res.File
-        const fileName = res.Description1
+        const fileName = res.FileName
+        const fieldDescription = res.Description1
         const blob = this.base64ToBlob(base64String)
         const url = URL.createObjectURL(blob)
         const link = document.createElement('a')
-        link.setAttribute('download', fileName)
+        link.setAttribute('download', fieldDescription !== null ? fieldDescription : fileName)
         link.setAttribute('href', url)
         document.body.appendChild(link)
         link.click()
@@ -1262,7 +1263,7 @@ export default {
       let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2341 && item.Description1 === fileName)
       if (exist) {
         exist.RecordState = 3
-        exist.ContractAttachmentTypeId = 2341
+        exist.ContractAttachmentTypeId = 2361
         exist.fileName = exist.fileName
         exist.filePath = exist.filePath
         exist.RecordId = exist.RecordId
@@ -1273,7 +1274,7 @@ export default {
           System: 0,
           RecordState: 2,
           StatusId: 1,
-          contractAttachmentTypeId: 2341,
+          contractAttachmentTypeId: 2361,
           Description1: this.selectedFile.name,
           fileName: fileName,
           file: splitedFile
