@@ -17,10 +17,10 @@
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(customerList.Description1 ? customerList.Description1 : '', 'text', 'insert.investmentForm.customer')"></div>
               <div v-html="getFormatDataByType(customerList.CommercialTitle ? customerList.CommercialTitle : '' , 'text', 'insert.investmentForm.customerName')"></div>
-              <div v-html="getFormatDataByType(customerList.CustomerLocations && customerList.CustomerLocations[0].length > 0 ? customerList.CustomerLocations[0].AddressDetail : '', 'text', 'insert.investmentForm.address')"></div>
+              <div v-html="getFormatDataByType(customerList.CustomerLocations && customerList.CustomerLocations.length > 0 ? customerList.CustomerLocations[0].AddressDetail : '', 'text', 'insert.investmentForm.address')"></div>
               <div v-html="getFormatDataByType(customerList.LicenseNumber ? customerList.LicenseNumber : '', 'text', 'insert.investmentForm.licenseNumber')"></div>
               <div v-html="getFormatDataByType(rowData.Description1 ? rowData.Description1 : '', 'text', 'insert.investmentForm.description')"></div>
-              <div v-html="getFormatDataByType(customerList.CustomerRegion5 ? customerList.CustomerRegion5.Label : '', 'text', 'insert.investmentForm.typeId')"></div>
+              <div v-html="getFormatDataByType(rowData.Type ? rowData.Type.Label : null, 'text', 'insert.investmentForm.typeId')"></div>
             </b-card>
              <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(customerList.RouteDetails && customerList.RouteDetails.length > 0 ? customerList.RouteDetails[0].Route.Label : '', 'text', 'insert.investmentForm.route')"></div>
@@ -32,7 +32,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.investmentForm.currentInvestment')" active>
+        <b-tab :title="$t('insert.investmentForm.currentInvestment')">
           <b-row class="p-1">
             <b-col cols="12" md="7">
               <b-card class="m-3 asc__showPage-card">
@@ -103,12 +103,26 @@
                     </b-thead>
                     <b-tbody>
                       <b-tr>
-                        <b-td></b-td>
-                        <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                        <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                        <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                        <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
-                      </b-tr>
+                      <b-td>Nakit</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>Only DTI</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>YYM</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                    </b-tr>
                     </b-tbody>
                   </b-table-simple>
               </b-card>
@@ -134,7 +148,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.investmentForm.newInvestment')" active>
+        <b-tab :title="$t('insert.investmentForm.newInvestment')">
           <b-row class="p-1">
             <b-col cols="12" md="7">
               <b-card class="m-3 asc__showPage-card">
@@ -252,17 +266,17 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.investmentForm.unitAndOrderDetails')" active>
+        <b-tab :title="$t('insert.investmentForm.unitAndOrderDetails')">
           <b-row class="p-1">
             <b-col cols="12" md="7">
               <b-card class="m-3 asc__showPage-card">
                 <h6>{{$t('insert.investmentForm.currentUnitStatus')}}</h6>
                 <b-table-simple bordered small>
                   <b-thead>
-                    <b-th><span>{{$t('insert.investmentForm.currentUnitStatus')}}</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.currentUnitStatus')}} Adı</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.currentUnitStatus')}}</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.currentUnitStatus')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in this.assetsLocationList.AssetLocations" :key="i">
@@ -292,7 +306,7 @@
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.unitType')}}</b-td>
-                      <b-td v-for="(c, i) in rowData.ContractOpponentAssets" :key="i">{{c.OpponentAssetTypeIdDesc ? c.OpponentAssetTypeIdDesc : ''}}</b-td>
+                      <b-td v-for="(c, i) in rowData.ContractOpponentAssets" :key="i">{{c.OpponentAssetTypeId && c.OpponentAssetTypeId !== null && c.OpponentAssetTypeId === 2341 ? 'Buyuk' : 'Kucuk' || c.OpponentAssetTypeId && c.OpponentAssetTypeId === null ? '' : 'Kucuk'}}</b-td>
                     </b-tr>
                     <b-tr >
                       <b-td>{{$t('insert.investmentForm.investmentAmount')}}</b-td>
@@ -582,19 +596,19 @@ export default {
 
         var ContractItemList = this.rowData.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
-        if (kentContractList.length > 0) {
-          this.currentInvestmentBudget.KentContractQuotaQuantity = kentContractList[0].QuotaQuantity
-          this.targetSale.kentMonthlyAverageSales = kentContractList[0].QuotaQuantity
+        if (kentContractList && kentContractList.length > 0) {
+          this.currentInvestmentBudget.KentContractQuotaQuantity = kentContractList[0].QuotaQuantity ? kentContractList[0].QuotaQuantity : 0
+          this.targetSale.kentMonthlyAverageSales = kentContractList[0].QuotaQuantity ? kentContractList[0].QuotaQuantity : 0
         }
         var rothmansContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Rothmans')
-        if (rothmansContractList.length > 0) {
-          this.currentInvestmentBudget.RothmansContractQuotaQuantity = rothmansContractList[0].QuotaQuantity
-          this.targetSale.rothmansMonthlyAverageSales = rothmansContractList[0].QuotaQuantity
+        if (rothmansContractList && rothmansContractList.length > 0) {
+          this.currentInvestmentBudget.RothmansContractQuotaQuantity = rothmansContractList[0].QuotaQuantity ? rothmansContractList[0].QuotaQuantity : 0
+          this.targetSale.rothmansMonthlyAverageSales = rothmansContractList[0].QuotaQuantity ? rothmansContractList[0].QuotaQuantity : 0
         }
         var tekel2000List = ContractItemList.filter(a => a.ColumnValueStr === 'Tekel 2000')
-        if (tekel2000List.length > 0) {
-          this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity = tekel2000List[0].QuotaQuantity
-          this.targetSale.tekelMonthlyAverageSales = tekel2000List[0].QuotaQuantity
+        if (tekel2000List && tekel2000List.length > 0) {
+          this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity = tekel2000List[0].QuotaQuantity ? tekel2000List[0].QuotaQuantity : 0
+          this.targetSale.tekelMonthlyAverageSales = tekel2000List[0].QuotaQuantity ? tekel2000List[0].QuotaQuantity : 0
         }
       })
     }

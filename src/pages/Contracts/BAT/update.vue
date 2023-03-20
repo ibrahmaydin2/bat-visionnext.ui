@@ -1254,7 +1254,6 @@ export default {
         let splitedFile = reader.result.split(',')[1]
         let dataType = reader.result.split(';base64,')[0]
         let fileName = file.name
-        console.log(fileName)
         vm.addContractAttachments(splitedFile, dataType, fileName)
       }
     },
