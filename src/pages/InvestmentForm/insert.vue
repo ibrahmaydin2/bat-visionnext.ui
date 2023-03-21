@@ -136,7 +136,21 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr>
-                      <b-td></b-td>
+                      <b-td>Nakit</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>Only DTI</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
+                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>YYM</b-td>
                       <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
                       <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
                       <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
@@ -203,9 +217,9 @@
                   <b-tbody>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.targetedAverageMonthlySales')}}</b-td>
-                      <b-td><NextInput v-model="targetSale.kentMonthlyAverageSales" type="number" /></b-td>
-                      <b-td><NextInput v-model="targetSale.rothmansMonthlyAverageSales" type="number" /></b-td>
-                      <b-td><NextInput v-model="targetSale.tekelMonthlyAverageSales" type="number" /></b-td>
+                      <b-td><NextInput v-model="targetSale.kentMonthlyAverageSales" type="number" :min="0"/></b-td>
+                      <b-td><NextInput v-model="targetSale.rothmansMonthlyAverageSales" type="number" :min="0"/></b-td>
+                      <b-td><NextInput v-model="targetSale.tekelMonthlyAverageSales" type="number" :min="0"/></b-td>
                       <b-td><NextInput v-model="totalTargetedAverageMonthlySales" type="number" :disabled="true"/></b-td>
 
                     </b-tr>
@@ -386,7 +400,6 @@ export default {
         customerName: null,
         address: null,
         licenseNumber: null,
-        description: null,
         route: null,
         tmrSrName: null,
         salesVolumeClass: [],
@@ -623,7 +636,7 @@ export default {
     },
     totalReturnOnInvestment: {
       get () {
-        return (((this.totalTargetAnnualSalesProfit) - (this.totalBudgets)) / (this.totalBudgets)) * 100
+        return this.roundNumber((((this.totalTargetAnnualSalesProfit) - (this.totalBudgets)) / (this.totalBudgets)) * 100)
       },
       set (value) {
         this.newReturnOfInvestment.returnOnInvestment = value
@@ -864,7 +877,7 @@ export default {
         }
         this.contractOpponentAssetsPMI = {
           Code: this.form.Code + '-1',
-          IsAvaible: this.PmiAvaible,
+          IsAvailable: this.PmiIsAvailable ? this.PmiIsAvailable : null,
           OpponentAssetTypeId: this.PmiUnitTypeSize,
           BrandId: 1,
           investmentTotal: this.opponentUnitStatus.pmiInvestmentAmount,
@@ -873,12 +886,11 @@ export default {
           System: 0,
           RecordState: 2,
           StatusId: 1,
-          OpponentAssetTypeIdDesc: this.PmiUnitTypeLabel,
           BrandIdDesc: 'PMI'
         }
         this.contractOpponentAssetsJTI = {
           Code: this.form.Code + '-1',
-          IsAvaible: this.JtiAvaible,
+          IsAvailable: this.JtiIsAvailable ? this.JtiIsAvailable : null,
           OpponentAssetTypeId: this.JtiUnitTypeSize,
           BrandId: 1,
           investmentTotal: this.opponentUnitStatus.jtiInvestmentAmount,
@@ -887,12 +899,11 @@ export default {
           System: 0,
           RecordState: 2,
           StatusId: 1,
-          OpponentAssetTypeIdDesc: this.JtiUnitTypeLabel,
           BrandIdDesc: 'JTI'
         }
         this.contractOpponentAssetsITC = {
           Code: this.form.Code + '-1',
-          IsAvaible: this.ItcAvaible,
+          IsAvailable: this.ItcIsAvailable ? this.ItcIsAvailable : null,
           OpponentAssetTypeId: this.ItcUnitTypeSize,
           BrandId: 1,
           investmentTotal: this.opponentUnitStatus.itcInvestmentAmount,
@@ -901,7 +912,6 @@ export default {
           System: 0,
           RecordState: 2,
           StatusId: 1,
-          OpponentAssetTypeIdDesc: this.ItcUnitTypeLabel,
           BrandIdDesc: 'ITC'
         }
         if (this.targetSale.kentMonthlyAverageSales != null || this.targetSale.kentMonthlyAverageSales > 0) {
