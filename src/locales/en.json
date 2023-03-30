@@ -1134,7 +1134,7 @@
       "name": "Name",
       "surname": "Surname",
       "Email": "E-mail",
-      "GsmNumber" : "GSM"
+      "Gsm" : "GSM"
     },
     "fixedTerm": {
       "code": "Paymet Period Code",
