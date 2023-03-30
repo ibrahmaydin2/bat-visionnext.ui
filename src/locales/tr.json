@@ -1136,7 +1136,7 @@
       "name": "İsim",
       "surname": "Soysim",
       "Email": "E-mail",
-      "GsmNumber" : "GSM"
+      "Gsm" : "GSM"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
