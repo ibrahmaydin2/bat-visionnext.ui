@@ -1135,7 +1135,8 @@
       "salesRepresentative": "Satış Temsilcisi",
       "name": "İsim",
       "surname": "Soysim",
-      "Email": "E-mail"
+      "Email": "E-mail",
+      "GsmNumber" : "GSM"
     },
     "fixedTerm": {
       "code": "Vade Kodu",
