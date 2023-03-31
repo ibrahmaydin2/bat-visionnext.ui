@@ -266,7 +266,7 @@ export default {
         this.$toasted.show(this.$t('insert.vanLoading.fromWhStockQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return
       }
-      this.vanLoadingItem.LoadingQuantity = this.vanLoadingItem.LoadingQuantity ? parseInt(this.vanLoadingItem.LoadingQuantity) : 0
+      this.vanLoadingItem.LoadingQuantity = this.vanLoadingItem.LoadingQuantity ? this.vanLoadingItem.LoadingQuantity : 0
       if (this.vanLoadingItem.LoadingQuantity === 0 || this.vanLoadingItem.LoadingQuantity > this.vanLoadingItem.FromWhStockQuantity) {
         this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return

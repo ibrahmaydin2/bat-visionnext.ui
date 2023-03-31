@@ -158,7 +158,7 @@
                 v-if="data.field.column.ColumnType === 'Decimal'"
                 v-model="data.item[data.field.key]"
                 @input="setConvertedValues($event, data)"
-                type="number"
+                type="text"
                 :input-class="`min-input-width ${data.item.class}`"
                 @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"
                 @keydown="keyDown($event)"
@@ -263,7 +263,7 @@ export default {
     },
     recordCount: {
       type: Number,
-      default: 100,
+      default: 1000,
       description: 'Listenin pageRecordCount değerini setler'
     },
     afterFunc: {
@@ -615,7 +615,14 @@ export default {
       })
       let filteredList = [...this.selectedList]
       if (this.filterFunc) {
+        this.selectedList = this.selectedList.map(f => {
+          if (f.Quantity) {
+            f.Quantity = f.Quantity.replace(',', '.')
+          }
+          return f
+        })
         filteredList = this.selectedList.filter(s => this.filterFunc(s))
+        console.log(this.selectedList)
         if (filteredList.length === 0) {
           this.$toasted.show(this.$t('insert.multipleGrid.filteredFuncError'), {
             type: 'error',
@@ -634,7 +641,12 @@ export default {
 
         return newItem
       })
-      let allList = [...filteredList, ...removedList]
+      let allList = []
+      if (this.$route.meta.baseLink === 'FixedTermCampaign' || this.$route.meta.baseLink === 'VanLoading') {
+        allList = [...filteredList]
+      } else {
+        allList = [...filteredList, ...removedList]
+      }
       if (this.afterFunc) {
         allList = allList.map(a => this.afterFunc(a))
       }
