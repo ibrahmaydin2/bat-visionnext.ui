@@ -61,6 +61,7 @@
                     <b-th><span>{{$t('insert.customer.Model_XPosition')}} - {{$t('insert.customer.Model_YPosition')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_ContactName')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_PhoneNumber1')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.Gsm')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_FaxNumber')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_Alias')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.Model_IsDefaultLocation')}}</span></b-th>
@@ -79,6 +80,7 @@
                       <b-td>{{r.XPosition}} - {{r.YPosition}}</b-td>
                       <b-td>{{r.ContactName}}</b-td>
                       <b-td>{{r.PhoneNumber1}}</b-td>
+                      <b-td>{{r.GsmNumber}}</b-td>
                       <b-td>{{r.FaxNumber}}</b-td>
                       <b-td>{{r.Alias}}</b-td>
                       <b-td>{{r.IsDefaultLocation == 1 ? $t('insert.yes') : $t('insert.no')}}</b-td>
@@ -460,6 +462,7 @@ export default {
         {key: 'AddressDescription', label: this.$t('insert.customer.Model_AddressDescription'), sortable: true},
         {key: 'ContactName', label: this.$t('insert.customer.Model_GsmNumber'), sortable: true},
         {key: 'PhoneNumber1', label: this.$t('insert.customer.Model_PhoneNumber1'), sortable: true},
+        {key: 'GsmNumber', label: this.$t('insert.customer.Gsm'), sortable: true},
         {key: 'PhoneNumber2', label: this.$t('insert.customer.Model_PhoneNumber2'), sortable: true},
         {key: 'IsDefaultLocation', label: this.$t('insert.customer.Model_IsDefaultLocation'), sortable: true},
         {key: 'IsInvoiceAddress', label: this.$t('insert.customer.Model_IsInvoiceAddress'), sortable: true},
