@@ -263,7 +263,7 @@ export default {
     },
     recordCount: {
       type: Number,
-      default: 1000,
+      default: 10000,
       description: 'Listenin pageRecordCount değerini setler'
     },
     afterFunc: {
