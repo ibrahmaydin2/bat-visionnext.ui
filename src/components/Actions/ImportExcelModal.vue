@@ -111,7 +111,8 @@ export default {
     sendFile (file) {
       let formData = {
         files: file,
-        ExcelIntegrationType: this.modalAction.Query
+        ExcelIntegrationType: this.modalAction.Query,
+        FileProccessType: 1
       }
 
       if (this.modalAction.QueryMessage !== null) {
