@@ -102,7 +102,7 @@
         </b-button>
         <b-button
           variant="primary"
-          :disabled="showLoading"
+          :disabled="showLoading || disabledButton"
           size="sm"
           @click="submitModal()"
         >
@@ -149,6 +149,7 @@ export default {
     return {
       approveNumber: null,
       showLoading: false,
+      disabledButton: true,
       form: {
         InvoiceNumber: null,
         DocumentNumber: null,
@@ -315,8 +316,8 @@ export default {
     },
     onRowSelected (items) {
       if (!items || items.length === 0) { return }
-
       this.showRmaLines = false
+      this.disabledButton = false
       let request = {
         'recordId': items[0].RecordId
       }
@@ -390,8 +391,10 @@ export default {
             this.showLoading = false
             this.$store.commit('setReloadGrid', true)
             this.$root.$emit('bv::hide::modal', 'purchaseReturnInvoiceRmaApproveModal')
+            this.disabledButton = true
           }, 3000)
         } else {
+          this.disabledButton = false
           this.$toasted.show(this.$t(res.Message), {
             type: 'error',
             keepOnHover: true,

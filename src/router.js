@@ -361,6 +361,11 @@ import SaoGet from '@/pages/Sao/get'
 import SaoInsert from '@/pages/Sao/insert'
 import SaoUpdate from '@/pages/Sao/update'
 
+import SalesMaximumQuantityIndex from '@/pages/SalesMaximumQuantity/'
+import SalesMaximumQuantityGet from '@/pages/SalesMaximumQuantity/get'
+import SalesMaximumQuantityInsert from '@/pages/SalesMaximumQuantity/insert'
+import SalesMaximumQuantityUpdate from '@/pages/SalesMaximumQuantity/update'
+
 import AssetServiceIndex from '@/pages/AssetService/'
 import AssetServiceGet from '@/pages/AssetService/get'
 import AssetServiceInsert from '@/pages/AssetService/insert'
@@ -482,6 +487,7 @@ const listIndex = [
   {path: '/FieldAnalysis', name: 'FieldAnalysis', component: FieldAnalysisIndex, meta: { title: i18n.t('router.FieldAnalysis'), createLink: 'FieldAnalysisInsert', keepAlive: true }},
   {path: '/LoyaltyCategory', name: 'LoyaltyCategory', component: LoyaltyCategoryIndex, meta: { title: i18n.t('router.LoyaltyCategory'), createLink: 'LoyaltyCategoryInsert', keepAlive: true }},
   {path: '/Sao', name: 'Sao', component: SaoIndex, meta: { title: i18n.t('router.Sao'), createLink: 'SaoInsert', keepAlive: true }},
+  {path: '/SalesMaximumQuantity', name: 'SalesMaximumQuantity', component: SalesMaximumQuantityIndex, meta: { title: i18n.t('router.SalesMaximumQuantity'), createLink: 'SalesMaximumQuantityInsert', keepAlive: true }},
   {path: '/AssetService', name: 'AssetService', component: AssetServiceIndex, meta: { title: i18n.t('router.AssetService'), createLink: 'AssetServiceInsert', keepAlive: true }},
   {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }},
   {path: '/CustomerTarget', name: 'CustomerTarget', component: CustomerTargetIndex, meta: { title: i18n.t('router.CustomerTarget'), createLink: 'CustomerTargetInsert', keepAlive: true }},
@@ -573,6 +579,7 @@ const listGet = [
   { path: '/FieldAnalysis/:url', name: 'FieldAnalysisGet', component: FieldAnalysisGet, meta: { title: i18n.t('router.FieldAnalysisGet'), baseLink: 'FieldAnalysis' } },
   { path: '/LoyaltyCategory/:url', name: 'LoyaltyCategoryGet', component: LoyaltyCategoryGet, meta: { title: i18n.t('router.LoyaltyCategoryGet'), baseLink: 'LoyaltyCategory' } },
   { path: '/Sao/:url', name: 'SaoGet', component: SaoGet, meta: { title: i18n.t('router.SaoGet'), baseLink: 'Sao' } },
+  { path: '/SalesMaximumQuantity/:url', name: 'SalesMaximumQuantityGet', component: SalesMaximumQuantityGet, meta: { title: i18n.t('router.SalesMaximumQuantityGet'), baseLink: 'SalesMaximumQuantity' } },
   { path: '/AssetService/:url', name: 'AssetServiceGet', component: AssetServiceGet, meta: { title: i18n.t('router.AssetServiceGet'), baseLink: 'AssetService' } },
   { path: '/NewOrder/:url', name: 'NewOrderGet', component: getTenantPage('NewOrder', 'get'), meta: { title: i18n.t('router.NewOrderGet'), baseLink: 'NewOrder' } },
   { path: '/CustomerTarget/:url', name: 'CustomerTargetGet', component: CustomerTargetGet, meta: { title: i18n.t('router.CustomerTargetGet'), baseLink: 'CustomerTarget' } },
@@ -649,6 +656,7 @@ const listUpdate = [
   { path: '/Update/FieldAnalysis/:url', name: 'FieldAnalysisUpdate', component: FieldAnalysisUpdate, meta: { title: i18n.t('router.FieldAnalysisUpdate'), baseLink: 'FieldAnalysis' } },
   { path: '/Update/LoyaltyCategory/:url', name: 'LoyaltyCategoryUpdate', component: LoyaltyCategoryUpdate, meta: { title: i18n.t('router.LoyaltyCategoryUpdate'), baseLink: 'LoyaltyCategory' } },
   { path: '/Update/Sao/:url', name: 'SaoUpdate', component: SaoUpdate, meta: { title: i18n.t('router.SaoUpdate'), baseLink: 'Sao' } },
+  { path: '/Update/SalesMaximumQuantity/:url', name: 'SalesMaximumQuantityUpdate', component: SalesMaximumQuantityUpdate, meta: { title: i18n.t('router.SalesMaximumQuantityUpdate'), baseLink: 'SalesMaximumQuantity' } },
   { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } },
   { path: '/Update/CustomerTarget/:url', name: 'CustomerTargetUpdate', component: CustomerTargetUpdate, meta: { title: i18n.t('router.CustomerTargetUpdate'), baseLink: 'CustomerTarget' } },
   { path: '/Update/BATLeagueTarget/:url', name: 'BATLeagueTargetUpdate', component: BATLeagueTargetUpdate, meta: { title: i18n.t('router.BATLeagueTargetUpdate'), baseLink: 'BATLeagueTarget' } },
@@ -724,6 +732,7 @@ const listInsert = [
   { path: '/Insert/FieldAnalysis', name: 'FieldAnalysisInsert', component: FieldAnalysisInsert, meta: { title: i18n.t('router.FieldAnalysisInsert'), baseLink: 'FieldAnalysis' } },
   { path: '/Insert/LoyaltyCategory', name: 'LoyaltyCategoryInsert', component: LoyaltyCategoryInsert, meta: { title: i18n.t('router.LoyaltyCategoryInsert'), baseLink: 'LoyaltyCategory' } },
   { path: '/Insert/Sao', name: 'SaoInsert', component: SaoInsert, meta: { title: i18n.t('router.SaoInsert'), baseLink: 'Sao' } },
+  { path: '/Insert/SalesMaximumQuantity', name: 'SalesMaximumQuantityInsert', component: SalesMaximumQuantityInsert, meta: { title: i18n.t('router.SalesMaximumQuantityInsert'), baseLink: 'SalesMaximumQuantity' } },
   { path: '/Insert/AssetService', name: 'AssetServiceInsert', component: AssetServiceInsert, meta: { title: i18n.t('router.AssetServiceInsert'), baseLink: 'AssetService' } },
   { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } },
   { path: '/Insert/CustomerTarget', name: 'CustomerTargetInsert', component: CustomerTargetInsert, meta: { title: i18n.t('router.CustomerTargetInsert'), baseLink: 'CustomerTarget' } },

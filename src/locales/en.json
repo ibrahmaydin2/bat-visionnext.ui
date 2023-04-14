@@ -1133,7 +1133,8 @@
       "ECustomerAliases": "Customer Alias",
       "name": "Name",
       "surname": "Surname",
-      "Email": "E-mail"
+      "Email": "E-mail",
+      "Gsm" : "GSM"
     },
     "fixedTerm": {
       "code": "Paymet Period Code",

@@ -58,7 +58,7 @@
                 :is-vehicle="true"
                 :dynamic-and-condition="{ StatusIds: [1] }"
                 :page-count="1000"
-                @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle"/>
+                @input="selectedSearchType('VehicleId', $event)" :disabled="insertReadonly.VehicleId || !form.IsVehicle || vehicleHasStock"/>
             </NextFormGroup>
             <NextFormGroup item-key="IsVirtualWarehouse" :error="$v.form.IsVirtualWarehouse">
               <NextCheckBox v-model="form.IsVirtualWarehouse" type="number" toggle :disabled="insertReadonly.IsVirtualWarehouse || form.IsVehicle === 1" />
@@ -108,7 +108,8 @@ export default {
       },
       selectedVehicle: null,
       address: {},
-      locationItems: detailData.locationItems
+      locationItems: detailData.locationItems,
+      vehicleHasStock: false
     }
   },
   mounted () {
@@ -160,10 +161,11 @@ export default {
       this.form.IsVehicle = 1
       this.$bvModal.hide('vehicle-confirm-modal')
     },
-    setData () {
+    async setData () {
       let rowData = this.rowData
       this.form = rowData
       this.form.IsVirtualWarehouse = rowData.IsVirtualWareHouse
+      this.initialVehicleId = this.form.VehicleId
       if (rowData.Vehicle) {
         this.selectedVehicle = this.convertLookupValueToSearchValue(rowData.Vehicle)
       }
@@ -171,6 +173,9 @@ export default {
         CityId: rowData.CityId,
         DistrictId: rowData.DistrictId,
         Address: rowData.AddressDetail
+      }
+      if (this.form.VehicleId) {
+        this.vehicleHasStock = await this.checkVehicleStock()
       }
     },
     beforeAdd (form) {
@@ -183,6 +188,42 @@ export default {
         return false
       }
       return true
+    },
+    async checkVehicleStock (vehicleId) {
+      if (vehicleId === this.initialVehicleId) {
+        return this.vehicleHasStock
+      }
+
+      const recordId = !vehicleId ? this.form.VehicleId : vehicleId
+      const searchRequest = {
+        andConditionModel: {
+          VehicleIds: [recordId],
+          IsVehicle: 1
+        }
+      }
+      const searchResponse = await this.$api.postByUrl(searchRequest, 'VisionNextWarehouse/api/Warehouse/AutoCompleteSearch').then(res => {
+        if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+          return res.ListModel.BaseModels[0]
+        }
+
+        return false
+      })
+
+      if (searchResponse) {
+        const stockRequest = {
+          andConditionModel: {
+            WarehouseIds: [searchResponse.RecordId]
+          }
+        }
+
+        return this.$api.postByUrl(stockRequest, 'VisionNextWarehouse/api/WarehouseStock/AutoCompleteSearch').then(res => {
+          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
+            return res.ListModel.BaseModels.some(r => r.Quantity > 0)
+          }
+        })
+      }
+
+      return false
     }
   },
   validations () {

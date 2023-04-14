@@ -244,6 +244,17 @@ export const detailData = {
     {
       type: 'Text',
       inputType: 'text',
+      modelProperty: 'GsmNumber',
+      label: i18n.t('insert.customer.Gsm'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      maxLength: 11,
+      id: 21
+    },
+    {
+      type: 'Text',
+      inputType: 'text',
       modelProperty: 'EMail',
       label: i18n.t('insert.customer.Email'),
       required: false,
