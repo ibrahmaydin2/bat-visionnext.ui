@@ -2725,8 +2725,29 @@
       "newInvestmentBudget": "New Investment Budget",
       "contractDates": "Contract Dates",
       "unit": "Unit"
+    },
+    "periodicSalesComparison": {
+      "Code": "Code",
+      "Description1": "Description",
+      "Definiton": "Definition",
+      "StatusId": "Status Id",
+      "Definitions": "Definitions",
+      "PastSalesStart": "Past Sales Start",
+      "PastSalesEnd": "Past Sales End",
+      "PastSalesControlAmount": "Past Sales Control Amount",
+      "BranchCriterion": "Branch Criterion",
+      "NextSalesStart": "Next Sales Start",
+      "NextSalesEnd": "Next Sales End",
+      "NextSalesControlAmount": "Next Sales Control Amount",
+      "ProductCriteria": "Product Criteria",
+      "PastSaleColor": "Past Sale Color",
+      "NextSaleColor": "Next Sale Color",
+      "Branches": "Branches",
+      "Products": "Products",
+      "BranchCode": "Branch Code",
+      "FieldDescription": "Field Description",
+      "Value": "Value"
     }
-  
   },
   "get": {
     "detail": "Details",

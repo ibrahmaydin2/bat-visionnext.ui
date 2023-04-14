@@ -2727,7 +2727,28 @@
       "newInvestmentBudget": "Yeni Yatırım Bütçesi",
       "contractDates": "Kontrat Tarihleri",
       "unit": "Ünite"
-
+    },
+    "periodicSalesComparison": {
+      "Code": "Kod",
+      "Description1": "Açıklama",
+      "Definiton": "Tanım",
+      "StatusId": " Durum",
+      "Definitions": "Tanımlar",
+      "PastSalesStart": "Geçmiş Satış Başlangıç",
+      "PastSalesEnd": "Geçmiş Satış Bitiş ",
+      "PastSalesControlAmount": "Geçmiş Satış Kontrol Miktarı",
+      "BranchCriterion": "Şube Kriteri",
+      "NextSalesStart": "Gelecek Satış Başlangıç",
+      "NextSalesEnd": "Gelecek Satış Bitiş",
+      "NextSalesControlAmount": "Gelecek Satış Kontrol Miktarı",
+      "ProductCriteria": "Ürün Kriteri",
+      "PastSaleColor": "Geçmiş Satış Rengi",
+      "NextSaleColor": "Gelecek Satış Rengi",
+      "Branches": "Şubeler",
+      "Products": "Ürünler",
+      "BranchCode": "Şube Kodu",
+      "FieldDescription": "Alan Açıklaması",
+      "Value": "Değer"
     }
   },
   "get": {
