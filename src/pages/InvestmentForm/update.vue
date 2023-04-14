@@ -655,7 +655,7 @@ export default {
        (this.targetSale.tekelMonthlyAverageSales > 0 ? parseInt(this.targetSale.tekelMonthlyAverageSales) : 0)
       },
       set (value) {
-        this.targetSale.totalMonthlyAverageSales = value
+        this.form.Genexp1 = value
       }
     },
     totalTargetAnnualSalesProfitKent: {
