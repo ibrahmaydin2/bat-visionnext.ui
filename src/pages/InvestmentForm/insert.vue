@@ -38,7 +38,7 @@
             <NextFormGroup :title="$t('insert.investmentForm.licenseNumber')">
               <NextInput v-model="form.licenseNumber" type="text" md="3" lg="3" :disabled="true"/>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.investmentForm.description')">
+            <NextFormGroup :title="$t('insert.investmentForm.description')" :error="$v.form.Description1" :required="true">
               <NextTextArea v-model="form.Description1" md="3" lg="3"></NextTextArea>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.investmentForm.typeId')" md="3" lg="3">
@@ -1228,6 +1228,9 @@ export default {
     return {
       form: {
         signingType: {
+          required
+        },
+        Description1: {
           required
         }
       },
