@@ -348,9 +348,9 @@
                         </b-tr>
                         <b-tr>
                           <b-td>{{$t('insert.investmentForm.investmentAmount')}}</b-td>
-                          <b-td><NextInput type="text" v-model="opponentUnitStatus.pmiInvestmentAmount" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0"/></b-td>
-                          <b-td><NextInput type="text" v-model="opponentUnitStatus.jtiInvestmentAmount" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0"/></b-td>
-                          <b-td><NextInput type="text" v-model="opponentUnitStatus.itcInvestmentAmount" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0"/></b-td>
+                          <b-td><NextInput v-model="opponentUnitStatus.pmiInvestmentAmount" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
+                          <b-td><NextInput v-model="opponentUnitStatus.jtiInvestmentAmount" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
+                          <b-td><NextInput v-model="opponentUnitStatus.itcInvestmentAmount" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
                         </b-tr>
                       </b-tbody>
                     </b-table-simple>
