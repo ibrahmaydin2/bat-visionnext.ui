@@ -118,7 +118,7 @@
                         <b-td>{{(this.currentSales.KentNetSales * this.GrossMargin) + (this.currentSales.RothmansNetSales * this.GrossMargin) + (this.currentSales.Tekel2000NetSales * this.GrossMargin)}} </b-td>
                       </b-tr>
                     </b-tbody>
-                  </b-table-simple>
+                </b-table-simple>
               </b-col>
             </b-row>
           </fieldset>
@@ -129,32 +129,36 @@
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.investmentForm.contractGainType')}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.KentBrandContract)}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.RothmansBrandContract)}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.Tekel2000BrandContract)}}</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.total')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningsTypeBudget')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr>
                       <b-td>Nakit</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.Cash ? this.currentInvestmentBudgetCash.Cash : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.cashBudgetMaster ? this.currentInvestmentBudgetCash.cashBudgetMaster : '-----'}}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.cashScheduledPaymentDate ? this.currentInvestmentBudgetCash.cashScheduledPaymentDate : '-----'}}</b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>Only DTI</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetDTI.OnlyDTI ? this.currentInvestmentBudgetDTI.OnlyDTI : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetDTI.dtiBudgetMaster ? this.currentInvestmentBudgetDTI.dtiBudgetMaster : '-----'}}</b-td>
+                      <b-td></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>YYM</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetYYM.Yym ? this.currentInvestmentBudgetYYM.Yym : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetYYM.yymBudgetMaster ? this.currentInvestmentBudgetYYM.yymBudgetMaster : '-----'}}</b-td>
+                      <b-td></b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>{{$t('insert.investmentForm.total')}}</b-td>
+                      <b-td>{{ this.currentInvestmentBudgetCash.Cash + this.currentInvestmentBudgetDTI.OnlyDTI + this.currentInvestmentBudgetYYM.Yym}}<span>
+                      <b-td></b-td>
+                      </span></b-td>
+                      <b-td></b-td>
+                      <b-td></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -181,210 +185,210 @@
             </b-row>
           </fieldset>
         </b-tab>
-          <b-tab :title="$t('insert.investmentForm.newInvestment')" @click.prevent="tabValidation()" >
-            <fieldset class="fs-border">
-              <legend class="fs-legend-detail">{{$t('insert.investmentForm.contractDates') }}</legend>
-              <b-row class="p-1">
-                <b-col cols="6">
-                  <NextFormGroup :title="$t('insert.investmentForm.contractStartDate')" :error="$v.validDates.contractStartDate" :required="true">
-                    <NextDatePicker v-model="validDates.contractStartDate"/>
-                  </NextFormGroup>
-                </b-col>
-                <b-col cols="6" class="mr-1">
-                  <NextFormGroup :title="$t('insert.investmentForm.contractEndDate')" :error="$v.validDates.contractEndDate" :required="true">
-                    <NextDatePicker v-model="validDates.contractEndDate"/>
-                  </NextFormGroup>
-                </b-col>
-                <b-col cols="6">
-                  <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
-                    <NextInput :disabled="true" type="text" v-model="daysDifferenceNewInvestment"></NextInput>
-                  </NextFormGroup>
-                </b-col>
-              </b-row>
-            </fieldset>
-            <fieldset class="fs-border">
-              <legend class="fs-legend-detail">{{$t('insert.investmentForm.targetSale')}}</legend>
-              <b-row class="p-3">
-                <b-col cols="6">
-                  <b-table-simple bordered small>
+        <b-tab :title="$t('insert.investmentForm.newInvestment')" @click.prevent="tabValidation()" >
+          <fieldset class="fs-border">
+            <legend class="fs-legend-detail">{{$t('insert.investmentForm.contractDates') }}</legend>
+            <b-row class="p-1">
+              <b-col cols="6">
+                <NextFormGroup :title="$t('insert.investmentForm.contractStartDate')" :error="$v.validDates.contractStartDate" :required="true">
+                  <NextDatePicker v-model="validDates.contractStartDate"/>
+                </NextFormGroup>
+              </b-col>
+              <b-col cols="6" class="mr-1">
+                <NextFormGroup :title="$t('insert.investmentForm.contractEndDate')" :error="$v.validDates.contractEndDate" :required="true">
+                  <NextDatePicker v-model="validDates.contractEndDate"/>
+                </NextFormGroup>
+              </b-col>
+              <b-col cols="6">
+                <NextFormGroup :title="$t('insert.investmentForm.contractDuration')">
+                  <NextInput :disabled="true" type="text" v-model="daysDifferenceNewInvestment"></NextInput>
+                </NextFormGroup>
+              </b-col>
+            </b-row>
+          </fieldset>
+          <fieldset class="fs-border">
+            <legend class="fs-legend-detail">{{$t('insert.investmentForm.targetSale')}}</legend>
+            <b-row class="p-3">
+              <b-col cols="6">
+                <b-table-simple bordered small>
+                <b-thead>
+                  <b-th></b-th>
+                  <b-th><span>{{$t(this.targetSale.KentBrandContractItem)}}</span></b-th>
+                  <b-th><span>{{$t(this.targetSale.RothmansBrandContractItem)}}</span></b-th>
+                  <b-th><span>{{$t(this.targetSale.Tekel2000BrandContractItem)}}</span></b-th>
+                  <b-th><span>{{$t('insert.investmentForm.total')}}</span></b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.targetedAverageMonthlySales')}}</b-td>
+                    <b-td><NextInput v-model="targetSale.kentMonthlyAverageSales" type="number" :min="0"/></b-td>
+                    <b-td><NextInput v-model="targetSale.rothmansMonthlyAverageSales" type="number" :min="0"/></b-td>
+                    <b-td><NextInput v-model="targetSale.tekelMonthlyAverageSales" type="number" :min="0"/></b-td>
+                    <b-td><NextInput v-model="totalTargetedAverageMonthlySales" type="number" :disabled="true"/></b-td>
+
+                  </b-tr>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.targetAnnualSalesProfit')}}</b-td>
+                    <b-td><NextInput v-model="totalTargetAnnualSalesProfitKent" type="number" :disabled="true"/></b-td>
+                    <b-td><NextInput v-model="totalTargetAnnualSalesProfitRothmans" type="number" :disabled="true"/></b-td>
+                    <b-td><NextInput v-model="totalTargetAnnualSalesProfitTekel" type="number" :disabled="true"/></b-td>
+                    <b-td><NextInput v-model="totalTargetAnnualSalesProfit" type="number" :disabled="true"/></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+              </b-col>
+            </b-row>
+          </fieldset>
+          <fieldset class="fs-border">
+            <legend class="fs-legend-detail">{{$t('insert.investmentForm.newInvestmentBudget')}}</legend>
+            <b-row class="p-3">
+              <b-col cols="6">
+                <b-table-simple bordered small>
                   <b-thead>
-                    <b-th></b-th>
-                    <b-th><span>{{$t(this.targetSale.KentBrandContractItem)}}</span></b-th>
-                    <b-th><span>{{$t(this.targetSale.RothmansBrandContractItem)}}</span></b-th>
-                    <b-th><span>{{$t(this.targetSale.Tekel2000BrandContractItem)}}</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.total')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.contractGainType')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningsTypeBudget')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr>
-                      <b-td>{{$t('insert.investmentForm.targetedAverageMonthlySales')}}</b-td>
-                      <b-td><NextInput v-model="targetSale.kentMonthlyAverageSales" type="number" :min="0"/></b-td>
-                      <b-td><NextInput v-model="targetSale.rothmansMonthlyAverageSales" type="number" :min="0"/></b-td>
-                      <b-td><NextInput v-model="targetSale.tekelMonthlyAverageSales" type="number" :min="0"/></b-td>
-                      <b-td><NextInput v-model="totalTargetedAverageMonthlySales" type="number" :disabled="true"/></b-td>
-
+                      <b-td>Nakit</b-td>
+                      <b-td><NextInput type="number" v-model="newInvestmentBudgetCash.Cash"  :min="0" /></b-td>
+                      <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetCash.cashBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,1)"/></b-td>
+                      <b-td><NextDatePicker v-model="newInvestmentBudgetCash.cashScheduledPaymentDate"/></b-td>
                     </b-tr>
                     <b-tr>
-                      <b-td>{{$t('insert.investmentForm.targetAnnualSalesProfit')}}</b-td>
-                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitKent" type="number" :disabled="true"/></b-td>
-                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitRothmans" type="number" :disabled="true"/></b-td>
-                      <b-td><NextInput v-model="totalTargetAnnualSalesProfitTekel" type="number" :disabled="true"/></b-td>
-                      <b-td><NextInput v-model="totalTargetAnnualSalesProfit" type="number" :disabled="true"/></b-td>
+                      <b-td>Only DTI</b-td>
+                      <b-td><NextInput type="number" v-model="newInvestmentBudgetDTI.OnlyDTI" :min="0" /></b-td>
+                      <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetDTI.onlyDtiBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,2)"/></b-td>
+                      <b-td><NextDatePicker v-model="newInvestmentBudgetDTI.onlyDtiScheduledPaymentDate" :disabled="true"/></b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>YYM</b-td>
+                      <b-td><NextInput type="number"  v-model="newInvestmentBudgetYYM.Yym" :min="0" /></b-td>
+                      <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetYYM.yymBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,3)"/></b-td>
+                      <b-td><NextDatePicker v-model="newInvestmentBudgetYYM.yymScheduledPaymentDate" :disabled="true"/></b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>{{$t('insert.investmentForm.total')}}</b-td>
+                      <b-td><span>
+                      <b-td><NextInput type="number" v-model="totalBudgets" :disabled="true"/></b-td>
+                      </span></b-td>
+                      <b-td></b-td>
+                      <b-td></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
-                </b-col>
-              </b-row>
-            </fieldset>
-            <fieldset class="fs-border">
-              <legend class="fs-legend-detail">{{$t('insert.investmentForm.newInvestmentBudget')}}</legend>
+              </b-col>
+            </b-row>
+          </fieldset>
+          <fieldset class="fs-border">
+          <legend class="fs-legend-detail">{{$t('insert.investmentForm.newReturnOfInvestment')}}</legend>
+          <b-row class="p-3">
+            <b-col cols="6">
+              <b-table-simple bordered small>
+                <b-tbody>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.expectedProfitability')}}</b-td>
+                    <b-td><NextInput type="number"  :disabled="true" v-model="totalExpectedProfitability"/></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.expectedReturnOnInvestment')}}</b-td>
+                    <b-td><NextInput type="number" :disabled="true" v-model="totalReturnOnInvestment"/></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
+        </fieldset>
+        </b-tab>
+        <b-tab :title="$t('insert.investmentForm.unitAndOrderDetails')" @click.prevent="tabValidation()" >
+          <fieldset class="fs-border">
+              <legend class="fs-legend-detail">{{$t('insert.investmentForm.currentUnitStatus')}}</legend>
               <b-row class="p-3">
                 <b-col cols="6">
                   <b-table-simple bordered small>
-                    <b-thead>
-                      <b-th><span>{{$t('insert.investmentForm.contractGainType')}}</span></b-th>
-                      <b-th><span>{{$t('insert.investmentForm.earningAmount')}}</span></b-th>
-                      <b-th><span>{{$t('insert.investmentForm.earningsTypeBudget')}}</span></b-th>
-                      <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
-                    </b-thead>
+                      <b-thead>
+                        <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
+                        <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
+                        <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
+                        <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
+                      </b-thead>
                     <b-tbody>
-                      <b-tr>
-                        <b-td>Nakit</b-td>
-                        <b-td><NextInput type="number" v-model="newInvestmentBudgetCash.Cash"  :min="0" /></b-td>
-                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetCash.cashBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,1)"/></b-td>
-                        <b-td><NextDatePicker v-model="newInvestmentBudgetCash.cashScheduledPaymentDate"/></b-td>
-                      </b-tr>
-                      <b-tr>
-                        <b-td>Only DTI</b-td>
-                        <b-td><NextInput type="number" v-model="newInvestmentBudgetDTI.OnlyDTI" :min="0" /></b-td>
-                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetDTI.onlyDtiBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,2)"/></b-td>
-                        <b-td><NextDatePicker v-model="newInvestmentBudgetDTI.onlyDtiScheduledPaymentDate" :disabled="true"/></b-td>
-                      </b-tr>
-                      <b-tr>
-                        <b-td>YYM</b-td>
-                        <b-td><NextInput type="number"  v-model="newInvestmentBudgetYYM.Yym" :min="0" /></b-td>
-                        <b-td><NextDropdown  label="CustomerDesc" v-model="newInvestmentBudgetYYM.yymBudgetMaster" :source="customerBudgets" @input=" getCustomerBudget($event,3)"/></b-td>
-                        <b-td><NextDatePicker v-model="newInvestmentBudgetYYM.yymScheduledPaymentDate" :disabled="true"/></b-td>
-                      </b-tr>
-                      <b-tr>
-                        <b-td>{{$t('insert.investmentForm.total')}}</b-td>
-                        <b-td><span>
-                        <b-td><NextInput type="number" v-model="totalBudgets" :disabled="true"/></b-td>
-                        </span></b-td>
-                        <b-td></b-td>
-                        <b-td></b-td>
+                      <b-tr v-for="(c, i) in this.assetsLocationList.AssetLocations" :key="i">
+                        <b-td>{{$t('insert.investmentForm.unit') + (i+1)}}</b-td>
+                        <b-td>{{c.Asset.Label}}</b-td>
+                        <b-td>{{c.Quantity}}</b-td>
+                        <b-td>{{c.Customer.Label}}</b-td>
                       </b-tr>
                     </b-tbody>
                   </b-table-simple>
                 </b-col>
               </b-row>
-            </fieldset>
-            <fieldset class="fs-border">
-            <legend class="fs-legend-detail">{{$t('insert.investmentForm.newReturnOfInvestment')}}</legend>
-            <b-row class="p-3">
-              <b-col cols="6">
-                <b-table-simple bordered small>
-                  <b-tbody>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.expectedProfitability')}}</b-td>
-                      <b-td><NextInput type="number"  :disabled="true" v-model="totalExpectedProfitability"/></b-td>
-                    </b-tr>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.expectedReturnOnInvestment')}}</b-td>
-                      <b-td><NextInput type="number" :disabled="true" v-model="totalReturnOnInvestment"/></b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-col>
-            </b-row>
           </fieldset>
-          </b-tab>
-          <b-tab :title="$t('insert.investmentForm.unitAndOrderDetails')" @click.prevent="tabValidation()" >
-            <fieldset class="fs-border">
-                <legend class="fs-legend-detail">{{$t('insert.investmentForm.currentUnitStatus')}}</legend>
-                <b-row class="p-3">
-                  <b-col cols="6">
-                    <b-table-simple bordered small>
-                        <b-thead>
-                          <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
-                          <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
-                          <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
-                          <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
-                        </b-thead>
-                      <b-tbody>
-                        <b-tr v-for="(c, i) in this.assetsLocationList.AssetLocations" :key="i">
-                          <b-td>{{$t('insert.investmentForm.unit') + (i+1)}}</b-td>
-                          <b-td>{{c.Asset.Label}}</b-td>
-                          <b-td>{{c.Quantity}}</b-td>
-                          <b-td>{{c.Customer.Label}}</b-td>
-                        </b-tr>
-                      </b-tbody>
-                    </b-table-simple>
-                  </b-col>
-                </b-row>
-            </fieldset>
-            <fieldset class="fs-border">
-                <legend class="fs-legend-detail">{{$t('insert.investmentForm.opponentUnitStatus')}}</legend>
-                <b-row class="p-3">
-                  <b-col cols="6">
-                    <b-table-simple bordered small >
-                        <b-thead>
-                          <b-th><span>Firma</span></b-th>
-                          <b-th><span>PMI</span></b-th>
-                          <b-th><span>JTI</span></b-th>
-                          <b-th><span>ITC</span></b-th>
-                        </b-thead>
-                      <b-tbody>
-                        <b-tr>
-                          <b-td>{{$t('insert.investmentForm.unit')}}</b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)"/></b-td>
-                        </b-tr>
-                        <b-tr>
-                          <b-td>{{$t('insert.investmentForm.unitType')}}</b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnitType" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 1)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnitType" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 2)"/></b-td>
-                          <b-td><NextDropdown v-model="opponentUnitStatus.itcUnitType" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 3)"/></b-td>
-                        </b-tr>
-                        <b-tr>
-                          <b-td>{{$t('insert.investmentForm.investmentAmount')}}</b-td>
-                          <b-td><NextInput v-model="opponentUnitStatus.pmiInvestmentAmount" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
-                          <b-td><NextInput v-model="opponentUnitStatus.jtiInvestmentAmount" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
-                          <b-td><NextInput v-model="opponentUnitStatus.itcInvestmentAmount" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
-                        </b-tr>
-                      </b-tbody>
-                    </b-table-simple>
-                  </b-col>
-                </b-row>
-            </fieldset>
-            <fieldset class="fs-border">
-            <legend class="fs-legend-detail">{{$t('insert.investmentForm.otherDetails')}}</legend>
-            <b-row class="p-3">
-              <b-col cols="6">
-                <b-table-simple bordered small >
-                  <b-tbody>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.furniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.furniteCost"/></b-td>
-                    </b-tr>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.numberOfFrontFaces')}}</b-td>
-                      <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces"/></b-td>
-                    </b-tr>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="totalFrontFaceCost" :disabled="true"/></b-td>
-                    </b-tr>
-                    <b-tr>
-                      <b-td>{{$t('insert.investmentForm.totalFurniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="totalFurniteCost" :disabled="true"/></b-td>
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </b-col>
-            </b-row>
+          <fieldset class="fs-border">
+              <legend class="fs-legend-detail">{{$t('insert.investmentForm.opponentUnitStatus')}}</legend>
+              <b-row class="p-3">
+                <b-col cols="6">
+                  <b-table-simple bordered small >
+                      <b-thead>
+                        <b-th><span>Firma</span></b-th>
+                        <b-th><span>PMI</span></b-th>
+                        <b-th><span>JTI</span></b-th>
+                        <b-th><span>ITC</span></b-th>
+                      </b-thead>
+                    <b-tbody>
+                      <b-tr>
+                        <b-td>{{$t('insert.investmentForm.unit')}}</b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 1)"/></b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 2)"/></b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.itcUnit" label="Label" :source="IsUnit" @input="getUnitAvailable($event, 3)"/></b-td>
+                      </b-tr>
+                      <b-tr>
+                        <b-td>{{$t('insert.investmentForm.unitType')}}</b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.pmiUnitType" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 1)"/></b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.jtiUnitType" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 2)"/></b-td>
+                        <b-td><NextDropdown v-model="opponentUnitStatus.itcUnitType" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0" lookup-key="OPPONENT_ASSET_TYPE" :get-lookup="true" @input="getUnitTypeSize($event, 3)"/></b-td>
+                      </b-tr>
+                      <b-tr>
+                        <b-td>{{$t('insert.investmentForm.investmentAmount')}}</b-td>
+                        <b-td><NextInput v-model="opponentUnitStatus.pmiInvestmentAmount" :disabled="opponentUnitStatus.pmiUnit && opponentUnitStatus.pmiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
+                        <b-td><NextInput v-model="opponentUnitStatus.jtiInvestmentAmount" :disabled="opponentUnitStatus.jtiUnit && opponentUnitStatus.jtiUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
+                        <b-td><NextInput v-model="opponentUnitStatus.itcInvestmentAmount" :disabled="opponentUnitStatus.itcUnit && opponentUnitStatus.itcUnit.DecimalValue === 0" type="number" :min="0"/></b-td>
+                      </b-tr>
+                    </b-tbody>
+                  </b-table-simple>
+                </b-col>
+              </b-row>
           </fieldset>
-          </b-tab>
+          <fieldset class="fs-border">
+          <legend class="fs-legend-detail">{{$t('insert.investmentForm.otherDetails')}}</legend>
+          <b-row class="p-3">
+            <b-col cols="6">
+              <b-table-simple bordered small >
+                <b-tbody>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.furniteCost')}}</b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.furniteCost"/></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.numberOfFrontFaces')}}</b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces"/></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
+                    <b-td><NextInput type="number" v-model="totalFrontFaceCost" :disabled="true"/></b-td>
+                  </b-tr>
+                  <b-tr>
+                    <b-td>{{$t('insert.investmentForm.totalFurniteCost')}}</b-td>
+                    <b-td><NextInput type="number" v-model="totalFurniteCost" :disabled="true"/></b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-col>
+          </b-row>
+        </fieldset>
+        </b-tab>
         </b-tabs>
       </b-col>
   </b-row>
@@ -524,12 +528,22 @@ export default {
         ContractValidDurationDate: null
       },
       currentInvestmentBudget: {
-        KentBrandContract: 'Kent',
-        RothmansBrandContract: 'Rothmans',
-        Tekel2000BrandContract: 'Tekel 2000',
         KentContractQuotaQuantity: null,
         RothmansContractQuotaQuantity: null,
         Tekel2000ContractQuotaQuantity: null
+      },
+      currentInvestmentBudgetCash: {
+        Cash: null,
+        cashScheduledPaymentDate: null,
+        cashBudgetMaster: null
+      },
+      currentInvestmentBudgetDTI: {
+        OnlyDTI: null,
+        onlyDtiBudgetMaster: null
+      },
+      currentInvestmentBudgetYYM: {
+        Yym: null,
+        yymBudgetMaster: null
       },
       newInvestmentBudgetCash: {
         Cash: 0,
@@ -1137,7 +1151,25 @@ export default {
         this.getCustomerContractList = res.Model
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
-
+        var ContractBenefitsList = this.getCustomerContractList.ContractBenefits
+        console.log(ContractBenefitsList)
+        var cashCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 3)
+        if (cashCurrentInvestmenBudget && cashCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetCash.Cash = cashCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetCash.cashScheduledPaymentDate = cashCurrentInvestmenBudget[0].CreatedDateTime
+          this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
+        var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
+        console.log(dtiCurrentInvestmenBudget)
+        if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
+        var yymCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'YYM')
+        if (yymCurrentInvestmenBudget && yymCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetYYM.Yym = yymCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetYYM.yymBudgetMaster = yymCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
         var ContractItemList = this.getCustomerContractList.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
         if (kentContractList && kentContractList.length > 0) {
