@@ -130,32 +130,36 @@
                 <b-table-simple bordered small>
                   <b-thead>
                     <b-th><span>{{$t('insert.investmentForm.contractGainType')}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.KentBrandContract)}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.RothmansBrandContract)}}</span></b-th>
-                    <b-th><span>{{$t(this.currentInvestmentBudget.Tekel2000BrandContract)}}</span></b-th>
-                    <b-th><span>{{$t('insert.investmentForm.total')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningAmount')}}</span></b-th>
+                    <b-th><span>{{$t('insert.investmentForm.earningsTypeBudget')}}</span></b-th>
+                    <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr>
                       <b-td>Nakit</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.Cash ? this.currentInvestmentBudgetCash.Cash : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.cashBudgetMaster ? this.currentInvestmentBudgetCash.cashBudgetMaster : '-----'}}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetCash.cashScheduledPaymentDate ? this.currentInvestmentBudgetCash.cashScheduledPaymentDate : '-----'}}</b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>Only DTI</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetDTI.OnlyDTI ? this.currentInvestmentBudgetDTI.OnlyDTI : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetDTI.dtiBudgetMaster ? this.currentInvestmentBudgetDTI.dtiBudgetMaster : '-----'}}</b-td>
+                      <b-td></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>YYM</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.RothmansContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}}</b-td>
-                      <b-td>{{this.currentInvestmentBudget.KentContractQuotaQuantity + this.currentInvestmentBudget.RothmansContractQuotaQuantity + this.currentInvestmentBudget.Tekel2000ContractQuotaQuantity}} </b-td>
+                      <b-td>{{this.currentInvestmentBudgetYYM.Yym ? this.currentInvestmentBudgetYYM.Yym : '-----' }}</b-td>
+                      <b-td>{{this.currentInvestmentBudgetYYM.yymBudgetMaster ? this.currentInvestmentBudgetYYM.yymBudgetMaster : '-----'}}</b-td>
+                      <b-td></b-td>
+                    </b-tr>
+                    <b-tr>
+                      <b-td>{{$t('insert.investmentForm.total')}}</b-td>
+                      <b-td>{{ this.currentInvestmentBudgetCash.Cash + this.currentInvestmentBudgetDTI.OnlyDTI + this.currentInvestmentBudgetYYM.Yym}}<span>
+                      <b-td></b-td>
+                      </span></b-td>
+                      <b-td></b-td>
+                      <b-td></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -524,12 +528,22 @@ export default {
         ContractValidDurationDate: null
       },
       currentInvestmentBudget: {
-        KentBrandContract: 'Kent',
-        RothmansBrandContract: 'Rothmans',
-        Tekel2000BrandContract: 'Tekel 2000',
         KentContractQuotaQuantity: null,
         RothmansContractQuotaQuantity: null,
         Tekel2000ContractQuotaQuantity: null
+      },
+      currentInvestmentBudgetCash: {
+        Cash: null,
+        cashScheduledPaymentDate: null,
+        cashBudgetMaster: null
+      },
+      currentInvestmentBudgetDTI: {
+        OnlyDTI: null,
+        onlyDtiBudgetMaster: null
+      },
+      currentInvestmentBudgetYYM: {
+        Yym: null,
+        yymBudgetMaster: null
       },
       newInvestmentBudgetCash: {
         Cash: 0,
@@ -1229,7 +1243,24 @@ export default {
         this.getCustomerContractList = res.Model
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
-
+        var ContractBenefitsList = this.getCustomerContractList.ContractBenefits
+        var cashCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 3)
+        if (cashCurrentInvestmenBudget && cashCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetCash.Cash = cashCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetCash.cashScheduledPaymentDate = cashCurrentInvestmenBudget[0].CreatedDateTime
+          this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
+        var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
+        console.log(dtiCurrentInvestmenBudget)
+        if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
+        var yymCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'YYM')
+        if (yymCurrentInvestmenBudget && yymCurrentInvestmenBudget.length > 0) {
+          this.currentInvestmentBudgetYYM.Yym = yymCurrentInvestmenBudget[0].BenefitBudget
+          this.currentInvestmentBudgetYYM.yymBudgetMaster = yymCurrentInvestmenBudget[0].BudgetMaster.Label
+        }
         var ContractItemList = this.getCustomerContractList.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
         if (kentContractList && kentContractList.length > 0) {
