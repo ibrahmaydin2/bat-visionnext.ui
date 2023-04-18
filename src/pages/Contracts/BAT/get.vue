@@ -36,6 +36,7 @@
               <div v-html="getFormatDataByType(rowData.ApproveState, 'object', 'insert.contract.ApproveStateId')"></div>
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.contract.TypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Customer, 'object', 'insert.contract.CustomerId')"></div>
+              <div v-html="getFormatDataByType(rowData.SignatureType, 'object', 'insert.contract.SignatureType')"></div>
             </b-card>
           </b-row>
         </b-tab>

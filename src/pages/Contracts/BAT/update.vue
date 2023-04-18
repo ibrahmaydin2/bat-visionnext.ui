@@ -24,6 +24,9 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1 || isGeneralDisabled" />
           </NextFormGroup>
+          <NextFormGroup :title="$t('insert.cnotract.SignatureTypeId')" :error="$v.form.SignatureTypeId">
+            <NextDropdown v-model="signatureType" lookup-key="SIGNATURE_TYPE" label="Label" :disabled="true" @input="selectedType('SignatureTypeId', $event)"/>
+          </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
             <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId || isGeneralDisabled"/>
           </NextFormGroup>
@@ -1016,6 +1019,7 @@ export default {
         FinanceCode: null,
         CustomerFinanceCode: null,
         Code: null,
+        SignatureTypeId: null,
         ContractRelatedCustomers: [],
         ContractValidDates: [],
         ContractBenefits: [],
@@ -1197,7 +1201,8 @@ export default {
       itemCriterias: [],
       lookupValues: {},
       editedPaymentPlans: false,
-      selectedFile: null
+      selectedFile: null,
+      signatureType: null
     }
   },
   computed: {
@@ -1296,6 +1301,7 @@ export default {
       this.selectedBrand = rowData.Brand
       this.selectedContractType = this.convertLookupValueToSearchValue(rowData.Type)
       this.customer = this.convertLookupValueToSearchValue(rowData.Customer)
+      this.signatureType = rowData.SignatureType
       this.showAssets = this.form.ContractBenefits.filter(c => c.BenefitTypeId === 4 && c.RecordState !== 4).length > 0
       this.showPriceDiscount = this.form.ContractBenefits.some(c => c.BenefitTypeId === 6 && c.RecordState !== 4)
       this.showInvestments = this.form.ContractBenefits.some(c => c.BenefitTypeId === 5 && c.RecordState !== 4)
