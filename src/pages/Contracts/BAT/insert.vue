@@ -24,6 +24,9 @@
           <NextFormGroup item-key="Description1" :error="$v.form.Description1" md="3" lg="3">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
+          <NextFormGroup :title="$t('insert.cnotract.SignatureTypeId')" :error="$v.form.SignatureTypeId">
+            <NextDropdown v-model="signatureType" :source="lookupValuesSignatureType" label="Label" :disabled="false" @input="selectedType('SignatureTypeId', $event)"/>
+          </NextFormGroup>
           <NextFormGroup item-key="StatusId" :error="$v.form.StatusId" md="3" lg="3">
             <NextCheckBox v-model="form.StatusId" type="number" toggle :disabled="insertReadonly.StatusId"/>
           </NextFormGroup>
@@ -1048,6 +1051,7 @@ export default {
         FinanceCode: null,
         CustomerFinanceCode: null,
         Code: null,
+        SignatureTypeId: null,
         ContractRelatedCustomers: [],
         ContractValidDates: [],
         ContractBenefits: [],
@@ -1226,7 +1230,9 @@ export default {
       itemCriterias: [],
       lookupValues: {},
       currencies: [],
-      selectedFile: null
+      selectedFile: null,
+      signatureType: null,
+      lookupValuesSignatureType: []
     }
   },
   computed: {
@@ -1240,6 +1246,7 @@ export default {
     this.getItemCriterias()
     this.getCurrencies()
     this.getLookups()
+    this.getLookupsSignatureType()
   },
   methods: {
     submitFile () {
@@ -2076,6 +2083,15 @@ export default {
           this[objectKey].benefitCondition = benefitTypes[0]
         }
       }
+    },
+    getLookupsSignatureType () {
+      return this.$api.postByUrl({LookupTableCode: 'SIGNATURE_TYPE'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=2').then((response) => {
+        if (response && response.Values) {
+          this.lookupValuesSignatureType = response.Values
+          this.signatureType = this.lookupValuesSignatureType.Label
+          this.form.SignatureTypeId = this.lookupValuesSignatureType.DecimalValue
+        }
+      })
     },
     setContractFocType (objectKey, decimalValue) {
       if (decimalValue) {
