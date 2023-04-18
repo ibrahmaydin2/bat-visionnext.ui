@@ -615,7 +615,6 @@ export default {
           this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
         }
         var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
-        console.log(dtiCurrentInvestmenBudget)
         if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
           this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
           this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label
