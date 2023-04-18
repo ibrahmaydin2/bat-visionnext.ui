@@ -387,6 +387,10 @@ import InvestmentFormGet from '@/pages/InvestmentForm/get'
 import InvestmentFormInsert from '@/pages/InvestmentForm/insert'
 import InvestmentFormUpdate from '@/pages/InvestmentForm/update'
 
+import PeriodicSalesComparisonIndex from '@/pages/PeriodicSalesComparison/'
+import PeriodicSalesComparisonGet from '@/pages/PeriodicSalesComparison/get'
+import PeriodicSalesComparisonInsert from '@/pages/PeriodicSalesComparison/insert'
+import PeriodicSalesComparisonUpdate from '@/pages/PeriodicSalesComparison/update'
 Vue.use(Router)
 
 // TenantBase Pages
@@ -488,8 +492,8 @@ const listIndex = [
   {path: '/NewOrder', name: 'NewOrder', component: NewOrderIndex, meta: { title: i18n.t('router.NewOrder'), createLink: 'NewOrderInsert', keepAlive: true }},
   {path: '/CustomerTarget', name: 'CustomerTarget', component: CustomerTargetIndex, meta: { title: i18n.t('router.CustomerTarget'), createLink: 'CustomerTargetInsert', keepAlive: true }},
   {path: '/BATLeagueTarget', name: 'BATLeagueTarget', component: BATLeagueTargetIndex, meta: { title: i18n.t('router.BATLeagueTarget'), createLink: 'BATLeagueTargetInsert', keepAlive: true }},
-  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.InvestmentForm2'), createLink: 'InvestmentFormInsert', keepAlive: true }}
-
+  {path: '/InvestmentForm', name: 'InvestmentForm', component: InvestmentFormIndex, meta: { title: i18n.t('router.InvestmentForm2'), createLink: 'InvestmentFormInsert', keepAlive: true }},
+  {path: '/PeriodicSalesComparison', name: 'PeriodicSalesComparison', component: PeriodicSalesComparisonIndex, meta: { title: i18n.t('router.PeriodicSalesComparison'), createLink: 'PeriodicSalesComparisonInsert', keepAlive: true }}
 ]
 
 const listGet = [
@@ -580,7 +584,8 @@ const listGet = [
   { path: '/NewOrder/:url', name: 'NewOrderGet', component: getTenantPage('NewOrder', 'get'), meta: { title: i18n.t('router.NewOrderGet'), baseLink: 'NewOrder' } },
   { path: '/CustomerTarget/:url', name: 'CustomerTargetGet', component: CustomerTargetGet, meta: { title: i18n.t('router.CustomerTargetGet'), baseLink: 'CustomerTarget' } },
   { path: '/BATLeagueTarget/:url', name: 'BATLeagueTargetGet', component: BATLeagueTargetGet, meta: { title: i18n.t('router.BATLeagueTargetGet'), baseLink: 'BATLeagueTarget' } },
-  { path: '/InvestmentForm/:url', name: 'InvestmentFormGet', component: InvestmentFormGet, meta: { title: i18n.t('router.InvestmentFormGet'), baseLink: 'InvestmentForm' } }
+  { path: '/InvestmentForm/:url', name: 'InvestmentFormGet', component: InvestmentFormGet, meta: { title: i18n.t('router.InvestmentFormGet'), baseLink: 'InvestmentForm' } },
+  { path: '/PeriodicSalesComparison/:url', name: 'PeriodicSalesComparisonGet', component: PeriodicSalesComparisonGet, meta: { title: i18n.t('router.PeriodicSalesComparisonGet'), baseLink: 'PeriodicSalesComparison' } }
 ]
 
 const listUpdate = [
@@ -655,7 +660,8 @@ const listUpdate = [
   { path: '/Update/NewOrder/:url', name: 'NewOrderUpdate', component: getTenantPage('NewOrder', 'update'), meta: { title: i18n.t('router.NewOrderUpdate'), baseLink: 'NewOrder' } },
   { path: '/Update/CustomerTarget/:url', name: 'CustomerTargetUpdate', component: CustomerTargetUpdate, meta: { title: i18n.t('router.CustomerTargetUpdate'), baseLink: 'CustomerTarget' } },
   { path: '/Update/BATLeagueTarget/:url', name: 'BATLeagueTargetUpdate', component: BATLeagueTargetUpdate, meta: { title: i18n.t('router.BATLeagueTargetUpdate'), baseLink: 'BATLeagueTarget' } },
-  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: 'InvestmentForm' } }
+  { path: '/Update/InvestmentForm/:url', name: 'InvestmentFormUpdate', component: InvestmentFormUpdate, meta: { title: i18n.t('router.InvestmentFormUpdate'), baseLink: 'InvestmentForm' } },
+  { path: '/Update/PeriodicSalesComparison/:url', name: 'PeriodicSalesComparisonUpdate', component: PeriodicSalesComparisonUpdate, meta: { title: i18n.t('router.PeriodicSalesComparisonUpdate'), baseLink: 'PeriodicSalesComparison' } }
 ]
 
 const listInsert = [
@@ -731,7 +737,8 @@ const listInsert = [
   { path: '/Insert/NewOrder', name: 'NewOrderInsert', component: getTenantPage('NewOrder', 'insert'), meta: { title: i18n.t('router.NewOrderInsert'), baseLink: 'NewOrder' } },
   { path: '/Insert/CustomerTarget', name: 'CustomerTargetInsert', component: CustomerTargetInsert, meta: { title: i18n.t('router.CustomerTargetInsert'), baseLink: 'CustomerTarget' } },
   { path: '/Insert/BATLeagueTarget', name: 'BATLeagueTargetInsert', component: BATLeagueTargetInsert, meta: { title: i18n.t('router.BATLeagueTargetInsert'), baseLink: 'BATLeagueTarget' } },
-  { path: '/Insert/InvestmentForm', name: 'InvestmentFormInsert', component: InvestmentFormInsert, meta: { title: i18n.t('router.InvestmentFormInsert'), baseLink: 'InvestmentForm' } }
+  { path: '/Insert/InvestmentForm', name: 'InvestmentFormInsert', component: InvestmentFormInsert, meta: { title: i18n.t('router.InvestmentFormInsert'), baseLink: 'InvestmentForm' } },
+  { path: '/Insert/PeriodicSalesComparison', name: 'PeriodicSalesComparisonInsert', component: PeriodicSalesComparisonInsert, meta: { title: i18n.t('router.PeriodicSalesComparisonInsert'), baseLink: 'PeriodicSalesComparison' } }
 ]
 
 const routes = [
