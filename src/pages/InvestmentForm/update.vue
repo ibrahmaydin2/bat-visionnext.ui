@@ -1058,6 +1058,12 @@ export default {
     },
     setData () {
       let rowData = this.rowData
+      if (rowData.InvestmentStatusId !== 2320) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.InvestmentForm.onlyPendingApproval') })
+        setTimeout(() => {
+          this.$router.push({ name: 'InvestmentForm' })
+        }, 2000)
+      }
       this.form = rowData
       this.signingType = rowData.SignatureType
       this.form.FormDate = rowData.ContractValidDates[0].CreatedDateTime ? rowData.ContractValidDates[0].CreatedDateTime : ''
@@ -1251,7 +1257,6 @@ export default {
           this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
         }
         var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
-        console.log(dtiCurrentInvestmenBudget)
         if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
           this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
           this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label

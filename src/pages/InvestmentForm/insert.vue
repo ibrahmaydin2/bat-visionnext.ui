@@ -1152,7 +1152,6 @@ export default {
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
         var ContractBenefitsList = this.getCustomerContractList.ContractBenefits
-        console.log(ContractBenefitsList)
         var cashCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 3)
         if (cashCurrentInvestmenBudget && cashCurrentInvestmenBudget.length > 0) {
           this.currentInvestmentBudgetCash.Cash = cashCurrentInvestmenBudget[0].BenefitBudget
@@ -1160,7 +1159,6 @@ export default {
           this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
         }
         var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
-        console.log(dtiCurrentInvestmenBudget)
         if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
           this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
           this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label
