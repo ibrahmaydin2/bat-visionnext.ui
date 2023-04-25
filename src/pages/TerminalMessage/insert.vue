@@ -52,7 +52,7 @@
           <NextDetailPanel v-model="form.TerminalMessageValidDates" :items="validDateItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.terminalMessage.branchs')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.TerminalMessageBranchs" :items="messageBranchItems">
+          <NextDetailPanel v-model="form.TerminalMessageBranchs" :items="getMessageBranchItems()">
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection v-model="form.TerminalMessageBranchs" name="TerminalMessageMultipleBranch" :hidden-values="hiddenValuesBranch"></NextMultipleSelection>
@@ -63,13 +63,14 @@
         <b-tab lazy :title="$t('insert.terminalMessage.customerCriterias')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MK'" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="customerCriterias" :items="customerCriteriaItems"></NextDetailPanel>
         </b-tab>
-        <b-tab lazy :title="$t('insert.terminalMessage.customerList')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="customerList" :items="customerListItems" :isExcelImport="true" >
+        <b-tab lazy :title="$t('insert.terminalMessage.customerList')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'ML'" :disabled="(!form.TerminalMessageBranchs || form.TerminalMessageBranchs.length === 0)" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="customerList" :items="getCustomerListItems()" :isExcelImport="true" >
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection
                   v-model="customerList" name="TerminalMessageMultipleCustomer"
                   :hidden-values="hiddenValues"
+                  :dynamic-and-condition="{multipleDynamicAndCondition}"
                 >
                 </NextMultipleSelection>
               </div>
@@ -79,8 +80,8 @@
         <b-tab lazy :title="$t('insert.terminalMessage.customerQuery')" v-if="selectedCustomerCriteria && selectedCustomerCriteria.Code === 'MS'" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.TerminalMessageCustSqls" :items="custSqlItems"></NextDetailPanel>
         </b-tab>
-        <b-tab lazy :title="$t('insert.terminalMessage.routes')" v-if="selectedMessageType && selectedMessageType.Code === 'RM'" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.TerminalMessageRoutes" :items="routeItems">
+        <b-tab lazy :title="$t('insert.terminalMessage.routes')" v-if="selectedMessageType && selectedMessageType.Code === 'RM'" :disabled="(!form.TerminalMessageBranchs || form.TerminalMessageBranchs.length === 0)" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.TerminalMessageRoutes" :items="getRouteItems()">
             <template slot="grid">
               <div cols="12" md="2">
                 <NextMultipleSelection
@@ -89,6 +90,7 @@
                   :hidden-values="hiddenValuesRoutes"
                   :initial-values-func="initialValues"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
+                  :dynamic-and-condition="{multipleDynamicAndCondition, StatusIds: [1]}"
                   :change-branch-id="true"
                   :record-count="20"
                   :after-func="editForm" />
@@ -230,7 +232,170 @@ export default {
   mounted () {
     this.createManualCode()
   },
+  computed: {
+    multipleDynamicAndCondition () {
+      return this.form.TerminalMessageBranchs.length > 0
+        ? { BranchIds: this.form.TerminalMessageBranchs.filter(f => f.TableName === 'T_CUSTOMER' && f.ColumnName === 'BRANCH_ID')
+          .map(f => f.MessageBranchId ? f.MessageBranchId : f.RecordId)}
+        : {}
+    }
+  },
   methods: {
+    getRouteItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'RouteId',
+          labelProperty: 'Code',
+          objectKey: 'Code',
+          url: 'VisionNextRoute/api/Route/AutoCompleteSearch',
+          label: 'insert.terminalMessage.routeCode',
+          dynamicAndCondition: this.multipleDynamicAndCondition,
+          pageCount: 500,
+          required: true,
+          visible: true,
+          id: 1
+        },
+        {
+          type: 'Text',
+          modelProperty: 'Description1',
+          parentProperty: 'Description1',
+          label: 'insert.terminalMessage.routeName',
+          disabled: true,
+          visible: true,
+          id: 2,
+          parentId: 1
+        },
+        {
+          type: 'Text',
+          modelProperty: 'Code',
+          parentProperty: 'Code',
+          label: '',
+          false: true,
+          hideOnTable: true,
+          id: 3,
+          parentId: 1
+        }
+      ]
+    },
+    getCustomerListItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'ColumnValue',
+          objectKey: 'ColumnNameDesc',
+          labelProperty: 'Code',
+          customOption: true,
+          isCustomer: true,
+          orConditionFields: 'Code,Description1',
+          dynamicAndCondition: this.multipleDynamicAndCondition,
+          url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
+          label: 'insert.terminalMessage.customerCode',
+          required: true,
+          visible: true,
+          isUnique: true,
+          id: 1
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'CommercialTitle',
+          objectKey: 'ColumnValueDesc',
+          parentProperty: 'Description1',
+          label: 'insert.terminalMessage.commercialTitle',
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 2
+        },
+        {
+          type: 'Label',
+          inputType: 'text',
+          modelProperty: 'Location',
+          valueProperty: 'AddressDetail',
+          objectKey: 'ColumnValueDesc2',
+          parentProperty: 'DefaultLocationId',
+          url: 'VisionNextCustomer/api/CustomerLocation/Get',
+          label: 'insert.terminalMessage.location',
+          visible: true,
+          disabled: true,
+          parentId: 1,
+          id: 3
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          parentId: null,
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          parentProperty: null,
+          hideOnTable: true,
+          defaultValue: 'RECORD_ID',
+          parentId: null,
+          id: 5
+        }
+      ]
+    },
+    getMessageBranchItems () {
+      return [
+        {
+          type: 'Autocomplete',
+          modelProperty: 'MessageBranchId',
+          labelProperty: 'Code',
+          objectKey: 'Code',
+          url: 'VisionNextBranch/api/Branch/AutoCompleteSearch',
+          label: 'insert.terminalMessage.branchCode',
+          customOption: true,
+          orConditionFields: 'Code,Description1',
+          required: true,
+          visible: true,
+          id: 1
+        },
+        {
+          type: 'Text',
+          modelProperty: 'Description1',
+          parentProperty: 'Description1',
+          label: 'insert.terminalMessage.branchName',
+          disabled: true,
+          visible: true,
+          id: 2,
+          parentId: 1
+        },
+        {
+          type: 'Text',
+          modelProperty: 'Code',
+          parentProperty: 'Code',
+          label: '',
+          false: true,
+          hideOnTable: true,
+          id: 3,
+          parentId: 1
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'ColumnName',
+          hideOnTable: true,
+          defaultValue: 'BRANCH_ID',
+          id: 4
+        },
+        {
+          type: 'Text',
+          inputType: 'text',
+          modelProperty: 'TableName',
+          hideOnTable: true,
+          defaultValue: 'T_CUSTOMER',
+          id: 5
+        }
+      ]
+    },
     initialValues: (values) => {
       values.map(value => {
         if (value.Location) {
