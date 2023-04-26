@@ -1151,22 +1151,26 @@ export default {
         this.getCustomerContractList = res.Model
         this.contractDates.ContractValidDateStartDate = this.getCustomerContractList.ContractValidDates[0].StartDate
         this.contractDates.ContractValidDateEndDate = this.getCustomerContractList.ContractValidDates[0].EndDate
-        var ContractBenefitsList = this.getCustomerContractList.ContractBenefits
+        var ContractBenefitsList = this.getCustomerContractList.ContractBenefits ? this.getCustomerContractList.ContractBenefits : []
         var cashCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 3)
         if (cashCurrentInvestmenBudget && cashCurrentInvestmenBudget.length > 0) {
-          this.currentInvestmentBudgetCash.Cash = cashCurrentInvestmenBudget[0].BenefitBudget
-          this.currentInvestmentBudgetCash.cashScheduledPaymentDate = cashCurrentInvestmenBudget[0].CreatedDateTime
-          this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget[0].BudgetMaster.Label
+          this.currentInvestmentBudgetCash.Cash = cashCurrentInvestmenBudget ? cashCurrentInvestmenBudget[0].BenefitBudget : ''
+          this.currentInvestmentBudgetCash.cashScheduledPaymentDate = cashCurrentInvestmenBudget ? cashCurrentInvestmenBudget[0].CreatedDateTime : ''
+          this.currentInvestmentBudgetCash.cashBudgetMaster = cashCurrentInvestmenBudget ? cashCurrentInvestmenBudget[0].BudgetMaster.Label : ''
         }
-        var dtiCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'DT')
-        if (dtiCurrentInvestmenBudget && dtiCurrentInvestmenBudget.length > 0) {
-          this.currentInvestmentBudgetDTI.OnlyDTI = dtiCurrentInvestmenBudget[0].BenefitBudget
-          this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiCurrentInvestmenBudget[0].BudgetMaster.Label
-        }
-        var yymCurrentInvestmenBudget = ContractBenefitsList.filter(c => c.BenefitTypeId === 6 && c.BenefitType.Code === 'YYM')
-        if (yymCurrentInvestmenBudget && yymCurrentInvestmenBudget.length > 0) {
-          this.currentInvestmentBudgetYYM.Yym = yymCurrentInvestmenBudget[0].BenefitBudget
-          this.currentInvestmentBudgetYYM.yymBudgetMaster = yymCurrentInvestmenBudget[0].BudgetMaster.Label
+        var ContractPriceDiscountsList = this.getCustomerContractList.ContractPriceDiscounts
+        var dtiYymBenefits = ContractBenefitsList.filter(c => c.BenefitTypeId === 6)
+        if (dtiYymBenefits || dtiYymBenefits.length > 0) {
+          var dtiContractPriceDiscount = ContractPriceDiscountsList.filter(c => c.BenefitConditionId === 49)
+          if (dtiContractPriceDiscount && dtiContractPriceDiscount.length > 0) {
+            this.currentInvestmentBudgetDTI.OnlyDTI = dtiYymBenefits ? dtiYymBenefits[0].BenefitBudget : ''
+            this.currentInvestmentBudgetDTI.dtiBudgetMaster = dtiYymBenefits ? dtiYymBenefits[0].BudgetMaster.Label : ''
+          }
+          var yymContractPriceDiscount = ContractPriceDiscountsList.filter(c => c.BenefitConditionId === 102000)
+          if (yymContractPriceDiscount && yymContractPriceDiscount.length > 0) {
+            this.currentInvestmentBudgetYYM.Yym = dtiYymBenefits ? dtiYymBenefits[0].BenefitBudget : ''
+            this.currentInvestmentBudgetYYM.yymBudgetMaster = dtiYymBenefits ? dtiYymBenefits[0].BudgetMaster.Label : ''
+          }
         }
         var ContractItemList = this.getCustomerContractList.ContractItems
         var kentContractList = ContractItemList.filter(a => a.ColumnValueStr === 'Kent')
