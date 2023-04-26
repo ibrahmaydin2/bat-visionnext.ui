@@ -970,6 +970,9 @@
               <b-form-group>
                 <AddDetailButton :disabled="!selectedFile" @click.native="submitFile" />
               </b-form-group>
+              <b-button :title="$t('list.edit')" @click="downloadDraft" class="btn mr-2 btn-warning btn-sm">
+                <i class="fa fa-pencil-alt"></i>
+              </b-button>
             </b-col>
           </b-row>
           <b-row>
@@ -1202,7 +1205,8 @@ export default {
       lookupValues: {},
       editedPaymentPlans: false,
       selectedFile: null,
-      signatureType: null
+      signatureType: null,
+      itemDraft: null
     }
   },
   computed: {
@@ -1220,6 +1224,30 @@ export default {
     this.getCurrencies()
   },
   methods: {
+    downloadDraft () {
+      this.$store.dispatch('getData', {api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
+        this.itemDraft = this.rowData.ContractAttachments[0].RecordId
+        console.log(this.itemDraft)
+      })
+      let vm = this
+      let data = {
+        RecordId: this.itemDraft.RecordId
+        // EncryptedKey: item.EncryptedKey
+      }
+      vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
+        const base64String = res.File
+        const fileName = res.FileName
+        const fieldDescription = res.Description1
+        const blob = this.base64ToBlob(base64String)
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('download', fieldDescription !== null ? fieldDescription : fileName)
+        link.setAttribute('href', url)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
     downloadFile (item) {
       let vm = this
       let data = {

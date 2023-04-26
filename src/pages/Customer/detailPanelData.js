@@ -1,5 +1,38 @@
 import i18n from '../../i18n'
 export const detailData = {
+  customerSeasonRatesItems: [
+    {
+      type: 'Date',
+      modelProperty: 'BeginDate',
+      objectKey: 'BeginDate',
+      label: i18n.t('insert.item.BeginDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 1
+    },
+    {
+      type: 'Date',
+      modelProperty: 'EndDate',
+      objectKey: 'EndDate',
+      label: i18n.t('insert.item.EndDate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 2
+    },
+    {
+      type: 'Text',
+      inputType: 'number',
+      modelProperty: 'Rate',
+      objectKey: 'Rate',
+      label: i18n.t('insert.customer.Rate'),
+      required: true,
+      visible: true,
+      isUnique: false,
+      id: 3
+    }
+  ],
   locationItems: [
     {
       type: 'Text',

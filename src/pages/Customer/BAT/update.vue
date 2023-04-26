@@ -599,6 +599,9 @@
             aria-controls="asset-locations"
           ></b-pagination>
         </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerSeasonRates')" @click.prevent="tabValidation()">
+          <NextDetailPanel v-model="form.CustomerSeasonRates" :items="customerSeasonRatesItems" />
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -618,6 +621,7 @@ export default {
         CustomerItemDiscounts: [],
         RouteDetails: [],
         CustomerSpendingUnits: [],
+        CustomerSeasonRates: [],
         CardType: null,
         Group: null,
         Kind: null,
@@ -689,6 +693,7 @@ export default {
       customerDiscountsItems: detailData.customerDiscountsItems,
       customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
       paymentTypesItems: detailData.paymentTypesItems,
+      customerSeasonRatesItems: detailData.customerSeasonRatesItems,
       cardType: {},
       taxCustomerType: {},
       blockReason: {},
@@ -1195,6 +1200,9 @@ export default {
       }
       if (!rowData.CustomerSpendingUnits) {
         this.form.CustomerSpendingUnits = []
+      }
+      if (!rowData.CustomerSeasonRates) {
+        this.form.CustomerSeasonRates = []
       }
     },
     getPaymentTypes () {
