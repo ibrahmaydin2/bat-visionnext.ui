@@ -599,8 +599,51 @@
             aria-controls="asset-locations"
           ></b-pagination>
         </b-tab>
-        <b-tab :title="$t('insert.customer.CustomerSeasonRates')" @click.prevent="tabValidation()">
+        <!-- <b-tab :title="$t('insert.customer.CustomerSeasonRates')" @click.prevent="tabValidation()">
           <NextDetailPanel v-model="form.CustomerSeasonRates" :items="customerSeasonRatesItems" />
+        </b-tab> -->
+        <b-tab :title="$t('insert.customer.CustomerSeasonRates')">
+          <b-row>
+            <NextFormGroup :title="$t('insert.customer.startDateSeason')" :error="$v.customerRates.startDate" required md="3" lg="3">
+              <NextDatePicker v-model="customerRates.startDate"></NextDatePicker>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.endDateSeason')" :error="$v.customerRates.endDate" required md="3" lg="3">
+              <NextDatePicker v-model="customerRates.endDate"> </NextDatePicker>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.rate')" :error="$v.customerRates.rate" required md="3" lg="3">
+              <NextInput type="number" v-model="customerRates.rate" @keypress="onlyForCurrencyDotOrComma($event)"></NextInput>
+            </NextFormGroup>
+            <b-col cols="12" md="2">
+              <b-form-group>
+                <AddDetailButton @click.native="addCustomerSeasonRates" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.customer.startDateSeason')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.endDateSeason')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.rate')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(c, i) in (form.CustomerSeasonRates ? form.CustomerSeasonRates.filter(f => f.RecordState !== 4) : [])" :key="i">
+                  <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                  <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
+                  <b-td>{{c.Rate}}</b-td>
+                  <b-td class="text-center">
+                    <b-button :title="$t('list.edit')" @click="editCustomerSeasonRates(c)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button :title="$t('list.delete')" @click="removeCustomerSeasonRates(c)" type="button" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt ml-1"></i>
+                    </b-button>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
         </b-tab>
       </b-tabs>
     </b-col>
@@ -774,7 +817,12 @@ export default {
       selectedFileTaxOffice: null,
       selectedFileTAPDK: null,
       documentStatus: null,
-      lookupValues: []
+      lookupValues: [],
+      customerRates: {
+        startDate: null,
+        endDate: null,
+        rate: null
+      }
     }
   },
   computed: {
@@ -793,6 +841,48 @@ export default {
     // this.getLookups()
   },
   methods: {
+    addCustomerSeasonRates () {
+      this.$v.customerRates.$touch()
+      if (this.$v.customerRates.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let item = {
+        BeginDate: this.customerRates.startDate,
+        RecordState: 2,
+        EndDate: this.customerRates.endDate,
+        Rate: this.customerRates.rate
+      }
+      if (this.customerRates.isUpdated) {
+        this.form.CustomerSeasonRates[this.selectedIndex] = item
+        this.customerRates.isUpdated = false
+      } else {
+        this.form.CustomerSeasonRates.push(item)
+      }
+      console.log(this.customerRates.startDate)
+      this.customerRates = {}
+      this.$v.customerRates.$reset()
+    },
+    removeCustomerSeasonRates (item) {
+      if (item.RecordId > 0) {
+        this.form.CustomerSeasonRates[this.form.CustomerSeasonRates.indexOf(item)].RecordState = 4
+      } else {
+        this.form.CustomerSeasonRates.splice(this.form.CustomerSeasonRates.indexOf(item), 1)
+      }
+    },
+    editCustomerSeasonRates (item) {
+      this.customerRates.startDate = item.BeginDate
+      this.customerRates.endDate = item.EndDate
+      this.customerRates.rate = item.Rate
+      this.customerRates.RecordId = item.RecordId
+      this.customerRates.RecordState = 3
+      this.customerRates.isUpdated = true
+      this.selectedIndex = this.form.CustomerSeasonRates.indexOf(item)
+    },
     // getLookups () {
     //   return this.$api.postByUrl({LookupTableCode: 'CUSTOMER_DOCUMENT_STATUS'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=2').then((response) => {
     //     if (response && response.Values) {
@@ -1545,6 +1635,17 @@ export default {
           required
         },
         representative: {
+          required
+        }
+      },
+      customerRates: {
+        rate: {
+          required
+        },
+        startDate: {
+          required
+        },
+        endDate: {
           required
         }
       }

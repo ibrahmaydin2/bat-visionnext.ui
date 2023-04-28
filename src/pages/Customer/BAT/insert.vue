@@ -573,13 +573,13 @@
         </b-tab> -->
         <b-tab :title="$t('insert.customer.CustomerSeasonRates')">
           <b-row>
-            <NextFormGroup :title="$t('insert.customer.startDate')" :error="$v.customerRates.startDate" :required="true" md="3" lg="3">
-              <NextDatePicker v-model="customerRates.startDate"/>
+            <NextFormGroup :title="$t('insert.customer.startDateSeason')" :error="$v.customerRates.startDate" required md="3" lg="3">
+              <NextDatePicker v-model="customerRates.startDate"></NextDatePicker>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.customer.endDate')" :error="$v.customerRates.endDate" :required="true" md="3" lg="3">
-              <NextDatePicker v-model="customerRates.endDate"/>
+            <NextFormGroup :title="$t('insert.customer.endDateSeason')" :error="$v.customerRates.endDate" required md="3" lg="3">
+              <NextDatePicker v-model="customerRates.endDate"> </NextDatePicker>
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.customer.rate')" :error="$v.customerRates.rate" :required="true" md="2" lg="2">
+            <NextFormGroup :title="$t('insert.customer.rate')" :error="$v.customerRates.rate" required md="3" lg="3">
               <NextInput type="number" v-model="customerRates.rate" @keypress="onlyForCurrencyDotOrComma($event)"></NextInput>
             </NextFormGroup>
             <b-col cols="12" md="2">
@@ -591,9 +591,9 @@
           <b-row>
             <b-table-simple bordered small>
               <b-thead>
-                <b-th><span>{{$t('insert.creditBudget.customer')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.creditLimit')}}</span></b-th>
-                <b-th><span>{{$t('insert.creditBudget.riskLimit')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.startDateSeason')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.endDateSeason')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.rate')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -1105,7 +1105,6 @@ export default {
       }
     },
     addCustomerSeasonRates () {
-      debugger
       this.$v.customerRates.$touch()
       if (this.$v.customerRates.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -1115,14 +1114,26 @@ export default {
         })
         return false
       }
-      this.form.CustomerSeasonRates.push({
+      // this.form.CustomerSeasonRates.push({
+      //   BeginDate: this.customerRates.startDate,
+      //   RecordState: 2,
+      //   EndDate: this.customerRates.endDate,
+      //   Rate: this.customerRates.rate
+      // })
+      let item = {
         BeginDate: this.customerRates.startDate,
         RecordState: 2,
         EndDate: this.customerRates.endDate,
         Rate: this.customerRates.rate
-      })
+      }
+      if (this.customerRates.isUpdated) {
+        this.form.CustomerSeasonRates[this.selectedIndex] = item
+        this.customerRates.isUpdated = false
+      } else {
+        this.form.CustomerSeasonRates.push(item)
+      }
       console.log(this.customerRates.startDate)
-      this.customerRates = null
+      this.customerRates = {}
       this.$v.customerRates.$reset()
     },
     removeCustomerSeasonRates (item) {
@@ -1133,7 +1144,12 @@ export default {
       }
     },
     editCustomerSeasonRates (item) {
-
+      this.customerRates.startDate = item.BeginDate
+      this.customerRates.endDate = item.EndDate
+      this.customerRates.rate = item.Rate
+      this.customerRates.RecordId = item.RecordId
+      this.customerRates.isUpdated = true
+      this.selectedIndex = this.form.CustomerSeasonRates.indexOf(item)
     },
     addRouteDetails () {
       this.$v.routeDetailsObj.$touch()
