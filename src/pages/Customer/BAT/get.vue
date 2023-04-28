@@ -430,6 +430,28 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.customer.CustomerSeasonRates')" @click.prevent="tabValidation()">
+          <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.customer.startDateSeason')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.endDateSeason')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.rate')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(c, i) in rowData.CustomerSeasonRates" :key="i">
+                      <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
+                      <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
+                      <b-td>{{c.Rate}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>
