@@ -1006,9 +1006,6 @@
               <b-form-group>
                 <AddDetailButton :disabled="!selectedFile" @click.native="submitFile" />
               </b-form-group>
-              <b-button :title="$t('list.edit')" @click="downloadDraft" class="btn mr-2 btn-warning btn-sm">
-                <i class="fa fa-pencil-alt"></i>
-              </b-button>
             </b-col>
           </b-row>
           <b-row>
@@ -1235,8 +1232,7 @@ export default {
       currencies: [],
       selectedFile: null,
       signatureType: null,
-      lookupValuesSignatureType: [],
-      itemDraft: null
+      lookupValuesSignatureType: []
     }
   },
   computed: {
@@ -1253,29 +1249,6 @@ export default {
     this.getLookupsSignatureType()
   },
   methods: {
-    downloadDraft () {
-      this.$store.dispatch('getData', {api: 'VisionNextContract/api/Contract'}).then(() => {
-        this.itemDraft = this.rowData.ContractAttachments[0].RecordId
-      })
-      let vm = this
-      let data = {
-        RecordId: this.itemDraft
-        // EncryptedKey: item.EncryptedKey
-      }
-      vm.$api.postByUrl(data, 'VisionNextContract/api/ContractAttachment/GetCustomerAttachment').then(res => {
-        const base64String = res.File
-        const fileName = res.FileName
-        const fieldDescription = res.Description1
-        const blob = this.base64ToBlob(base64String)
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.setAttribute('download', fieldDescription !== null ? fieldDescription : fileName)
-        link.setAttribute('href', url)
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      })
-    },
     submitFile () {
       this.getBase64(this.selectedFile)
     },
