@@ -70,7 +70,7 @@
                 <NextMultipleSelection
                   v-model="customerList" name="TerminalMessageMultipleCustomer"
                   :hidden-values="hiddenValues"
-                  :dynamic-and-condition="{multipleDynamicAndCondition}"
+                  :dynamic-and-condition="multipleDynamicAndCondition"
                 >
                 </NextMultipleSelection>
               </div>
@@ -90,7 +90,7 @@
                   :hidden-values="hiddenValuesRoutes"
                   :initial-values-func="initialValues"
                   :dynamic-disabled-filters="dynamicDisabledFilters"
-                  :dynamic-and-condition="{multipleDynamicAndCondition, StatusIds: [1]}"
+                  :dynamic-and-condition="multipleDynamicAndCondition"
                   :change-branch-id="true"
                   :record-count="20"
                   :after-func="editForm" />
