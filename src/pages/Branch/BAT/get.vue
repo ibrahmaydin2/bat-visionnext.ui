@@ -142,6 +142,28 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.bankInformation')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">
+                <b-table-simple bordered small>
+                  <b-thead>
+                    <b-th><span>{{$t('insert.branch.bankName')}}</span></b-th>
+                    <b-th><span>{{$t('insert.branch.title')}}</span></b-th>
+                    <b-th><span>{{$t('insert.branch.ibanNo')}}</span></b-th>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(b, i) in (rowData.BranchBanks ? rowData.BranchBanks : [])" :key="i">
+                     <b-td>{{b.Description1}}</b-td>
+                     <b-td>{{b.Title}}</b-td>
+                     <b-td>{{b.IbanNumber}}</b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </div>
   </div>

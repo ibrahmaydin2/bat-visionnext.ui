@@ -237,6 +237,53 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.branch.bankInformation')">
+          <b-row>
+            <NextFormGroup :title="$t('insert.branch.bankName')" :error="$v.branchBankId"  @click.prevent="tabValidation()">
+              <NextDropdown
+                v-model="branchBankId"
+                @input="getBranchs($event, 'BankId', 'bankBranch', 'bankBranches')"
+                url="VisionNextBank/api/Bank/AutoCompleteSearch"
+                :searchable="false"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.branch.title')" :error="$v.branchBanks.title">
+              <NextInput v-model="branchBanks.title" type="text"/>
+            </NextFormGroup>
+            <NextFormGroup :title="$t('insert.branch.ibanNo')" :error="$v.branchBanks.ibanNumber">
+              <NextInput v-model="branchBanks.ibanNumber" type="text" v-mask="'TR##-####-####-####-####-####-##'" placeholder="TR" />
+            </NextFormGroup>
+            <b-col cols="12" md="2" lg="2" class="text-right">
+              <b-form-group>
+                <AddDetailButton @click.native="addBankInformation" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-table-simple bordered small>
+              <b-thead>
+                <b-th><span>{{$t('insert.branch.bankName')}}</span></b-th>
+                <b-th><span>{{$t('insert.branch.title')}}</span></b-th>
+                <b-th><span>{{$t('insert.branch.ibanNo')}}</span></b-th>
+                <b-th><span>{{$t('list.operations')}}</span></b-th>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="(b, i) in form.BranchBanks" :key="i">
+                  <b-td>{{b.Description1}}</b-td>
+                  <b-td>{{b.Title}}</b-td>
+                  <b-td>{{b.IbanNumber}}</b-td>
+                  <b-td class="text-center">
+                    <b-button @click="editBankInformation(b)" class="btn mr-2 btn-warning btn-sm">
+                      <i class="fa fa-pencil-alt"></i>
+                    </b-button>
+                    <b-button @click="removeBankInformation(b)" class="btn mr-2 btn-danger btn-sm">
+                      <i class="far fa-trash-alt"></i>
+                    </b-button>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
+          </b-row>
+        </b-tab>
       </b-tabs>
     </b-col>
   </b-row>
@@ -328,7 +375,8 @@ export default {
         CreditAccountRemainder: null,
         TciBreak1Id: null,
         TciBreak2Id: null,
-        SapCustomerId: null
+        SapCustomerId: null,
+        BranchBanks: []
       },
       customerLocationItems: detailData.customerLocationItems,
       customerCreditHistoriesItems: detailData.customerCreditHistoriesItems,
@@ -340,7 +388,13 @@ export default {
       customerCategory3: null,
       customerCategory2: null,
       customerCategory1: null,
-      taxNumberReq: 10
+      taxNumberReq: 10,
+      selectedIndex: -1,
+      branchBankId: {},
+      branchBanks: {
+        title: null,
+        ibanNumber: null
+      }
     }
   },
   computed: {
@@ -367,6 +421,67 @@ export default {
       } else {
         this.createData()
       }
+    },
+    getBranchs (model, modelKey, ListKey) {
+      this[modelKey] = null
+      this[ListKey] = []
+
+      if (model) {
+        this.branchBankId = {
+          RecordId: model.RecordId,
+          Description1: model.Description1
+        }
+        this.$api.postByUrl({RecordId: model.RecordId}, 'VisionNextBank/api/Bank/Get').then(res => {
+          this[ListKey] = res.Model ? res.Model.BankBranches : []
+        })
+      } else {
+        this.branchBanks.bankId = null
+      }
+    },
+    addBankInformation () {
+      this.$v.branchBanks.$touch()
+      if (this.$v.branchBanks.$error) {
+        this.$toasted.show(this.$t('insert.requiredFields'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+        return false
+      }
+      let item = {
+        BankId: this.branchBankId.bankId,
+        Description1: this.branchBankId.Description1,
+        Title: this.branchBanks.title,
+        IbanNumber: this.branchBanks.ibanNumber,
+        RecordId: this.branchBanks.recordId,
+        RecordState: this.branchBanks.recordId > 0 ? 3 : 2
+      }
+      if (this.branchBanks.isUpdated) {
+        this.form.BranchBanks[this.selectedIndex] = item
+        this.selectedIndex = -1
+      } else {
+        this.form.BranchBanks.push(item)
+      }
+      this.branchBankId = {}
+      this.branchBanks = {}
+      this.$v.branchBanks.$reset()
+      this.$forceUpdate()
+    },
+    editBankInformation (item) {
+      this.branchBanks = {
+        recordId: item.RecordId,
+        recordState: item.RecordId > 0 ? 3 : 2,
+        bankId: item.BankId,
+        title: item.Title,
+        ibanNumber: item.IbanNumber,
+        isUpdated: true
+      }
+      this.branchBankId = item.Description1
+      this.selectedIndex = this.form.BranchBanks.indexOf(item)
+    },
+    removeBankInformation (item) {
+      this.form.BranchBanks.splice(this.form.BranchBanks.indexOf(item), 1)
+      this.$forceUpdate()
     },
     selectedType (label, model) {
       this.form[label] = model.DecimalValue
@@ -401,7 +516,18 @@ export default {
   },
   validations () {
     return {
-      form: this.insertRules
+      form: this.insertRules,
+      branchBanks: {
+        title: {
+          required
+        },
+        ibanNumber: {
+          required
+        }
+      },
+      branchBankId: {
+        required
+      }
     }
   },
   watch: {

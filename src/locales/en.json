@@ -1508,7 +1508,10 @@
       "discountPercent2" : "Ürün indirimi 2",
       "branchPaymentTypes": "Ödeme Tipleri",
       "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir.",
-      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir"
+      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir",
+      "bankInformation": "Bank Information",
+      "title": "Title",
+      "ibanNo": "Iban No"
     },
     "bcp": {
       "DiscountGroup7Id": "BCP Cluster",
