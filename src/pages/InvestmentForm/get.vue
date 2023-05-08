@@ -221,7 +221,7 @@
                       <b-th><span>{{$t('insert.contract.plannedPaymentDate')}}</span></b-th>
                     </b-thead>
                     <b-tbody>
-                      <b-tr v-for="(c, i) in rowData.ContractBenefits.filter(c => c.BenefitTypeId === 3)" :key="i" >
+                      <b-tr v-for="(c, i) in rowData.ContractBenefits && rowData.ContractBenefits.length > 0 ? rowData.ContractBenefits.filter(c => c.BenefitTypeId === 3) : []" :key="i" >
                         <b-td>Nakit</b-td>
                         <b-td>{{c.BenefitBudget}}</b-td>
                         <b-td>{{c.BudgetMaster.Label}}</b-td>
@@ -481,7 +481,9 @@ export default {
       contractOpponentAssets: [],
       newInvestmentBudgetTotal: null,
       ContractPriceDiscountsDTI: [],
-      ContractPriceDiscountsYYM: []
+      ContractPriceDiscountsYYM: [],
+      currentDiffDays: null,
+      newDiffDays: null
     }
   },
   mounted () {
@@ -489,26 +491,24 @@ export default {
   },
   computed: {
     ...mapState(['rowData', 'style']),
-    daysDifferenceNewInvestment () {
-      if (this.validDates.contractStartDate && this.validDates.contractEndDate) {
-        const startDate = new Date(this.validDates.contractStartDate)
-        const endDate = new Date(this.validDates.contractEndDate)
-        const diffTime = Math.abs(endDate - startDate)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        return diffDays
-      } else {
-        return null
-      }
-    },
-    daysDifferenceCurrentInvestment () {
-      if (this.contractDates.ContractValidDateStartDate && this.contractDates.ContractValidDateEndDate) {
+    daysDifferenceCurrentInvestment: {
+      get () {
         const startDate = new Date(this.contractDates.ContractValidDateStartDate)
         const endDate = new Date(this.contractDates.ContractValidDateEndDate)
-        const diffTime = Math.abs(endDate - startDate)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        return diffDays
-      } else {
-        return null
+        return Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
+      },
+      set (value) {
+        this.currentDiffDays = value
+      }
+    },
+    daysDifferenceNewInvestment: {
+      get () {
+        const startDate = new Date(this.validDates.contractStartDate)
+        const endDate = new Date(this.validDates.contractEndDate)
+        return Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
+      },
+      set (value) {
+        this.newDiffDays = value
       }
     }
   },
@@ -517,7 +517,7 @@ export default {
       this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
         this.ContractPriceDiscountsDTI = this.rowData.ContractPriceDiscounts ? this.rowData.ContractPriceDiscounts.filter(c => c.BenefitConditionId === 49) : []
         this.ContractPriceDiscountsYYM = this.rowData.ContractPriceDiscounts ? this.rowData.ContractPriceDiscounts.filter(c => c.BenefitConditionId === 102000) : []
-        this.PlannedPaymentDate = this.rowData.ContractPaymentPlans[0].PlannedPaymentDate.split('T')[0]
+        this.PlannedPaymentDate = this.rowData.ContractPaymentPlans && this.rowData.ContractPaymentPlans.length > 0 ? this.rowData.ContractPaymentPlans[0].PlannedPaymentDate.split('T')[0] : ''
         this.validDates.contractStartDate = this.rowData.ContractValidDates[0].StartDate
         this.validDates.contractEndDate = this.rowData.ContractValidDates[0].EndDate
         this.contractOpponentAssets = this.rowData.ContractOpponentAssets
