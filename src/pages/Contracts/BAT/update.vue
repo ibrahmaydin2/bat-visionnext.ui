@@ -1264,27 +1264,32 @@ export default {
       }
     },
     addContractAttachments (splitedFile, dataType, fileName) {
-      let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2341 && item.Description1 === fileName)
-      if (exist) {
-        exist.RecordState = 3
-        exist.ContractAttachmentTypeId = 2361
-        exist.fileName = exist.fileName
-        exist.filePath = exist.filePath
-        exist.RecordId = exist.RecordId
-        exist.File = splitedFile
+      if (this.form.SignatureTypeId === 2141 && this.form.ApproveStateId === 2381) {
+        let exist = this.form.ContractAttachments.find(item => item.ContractAttachmentTypeId === 2361)
+        if (exist) {
+          exist.RecordState = 3
+          exist.ContractAttachmentTypeId = 2361
+          exist.FileName = fileName
+          exist.Description1 = fileName
+          exist.File = splitedFile
+        } else {
+          this.form.ContractAttachments.push({
+            Deleted: 0,
+            System: 0,
+            RecordState: 2,
+            StatusId: 1,
+            contractAttachmentTypeId: 2361,
+            Description1: this.selectedFile.name,
+            fileName: fileName,
+            file: splitedFile
+          })
+        }
+        this.selectedFile = null
+      } else if (this.form.SignatureTypeId === 2140) {
+        this.$toasted.show(this.$t('insert.biometricSigWarning'), { type: 'error', keepOnHover: true, duration: '5000' })
       } else {
-        this.form.ContractAttachments.push({
-          Deleted: 0,
-          System: 0,
-          RecordState: 2,
-          StatusId: 1,
-          contractAttachmentTypeId: 2361,
-          Description1: this.selectedFile.name,
-          fileName: fileName,
-          file: splitedFile
-        })
+        this.$toasted.show(this.$t('insert.InkSignatureWarning'), { type: 'error', keepOnHover: true, duration: '5000' })
       }
-      this.selectedFile = null
     },
     removeContractAttachments (item) {
       if (item.RecordId > 0) {
