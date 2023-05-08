@@ -512,6 +512,8 @@
     "investmentFormUpdate":"Investment Form Update"
   },
   "insert": {
+    "InkSignatureWarning": "Sözleşme İmzalama Tipi 'Islak İmza' ise sadece 'Müşteri & Firma İmzası Bekleniyor' statüsünde imzalı doküman yüklenebilir",
+    "biometricSigWarning": "Sözleşme İmzalama Tipi 'Biyometrik İmza' ise, hiçbir statüde belge yüklenemez!",
     "onlyNumbererror": "Sadece Harf veya Sayı Giriniz",
     "CustomerCreditNotDeleted": "Merkez Teminatı Tipindeki Kayıtlar Silinemez",
     "CustomerCreditNotEdited": "Merkez Teminatı Tipindeki Kayıtlar Düzenlenemez",    
