@@ -512,6 +512,8 @@
     "InvestmentFormUpdate":"Yatırım Formu Güncelle"
   },
   "insert": {
+    "InkSignatureWarning": "Sözleşme İmzalama Tipi 'Islak İmza' ise, sadece 'Müşteri & Firma İmzası Bekleniyor' statüsünde imzalı doküman yüklenebilir!",
+    "biometricSigWarning": "Sözleşme İmzalama Tipi 'Biyometrik İmza' ise, hiçbir statüde belge yüklenemez!",
     "onlyNumbererror": "Sadece Harf veya Sayı Giriniz",
     "CustomerCreditNotDeleted": "Merkez Teminatı Tipindeki Kayıtlar Silinemez",
     "CustomerCreditNotEdited": "Merkez Teminatı Tipindeki Kayıtlar Düzenlenemez",
@@ -1510,7 +1512,10 @@
       "discountPercent2": "Ürün indirimi 2",
       "branchPaymentTypes": "Ödeme Tipleri",
       "branchPaymentTypesRequired": "En az 1 ödeme Tipi girilmelidir.",
-      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir"
+      "branchPaymentPeriodRequired": "Açık Hesap Seçiliyken Ödeme Vadesi Tabında En Az 1 Ödeme Vadesi Girilmelidir",
+      "bankInformation": "Banka Bilgisi",
+      "title": "Ünvan",
+      "ibanNo": "İban No"
     },
     "bcp": {
       "DiscountGroup7Id": "BCP Cluster",
