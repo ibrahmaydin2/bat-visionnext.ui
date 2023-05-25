@@ -467,17 +467,18 @@ export default {
       this.$v.branchBanks.$reset()
       this.$forceUpdate()
     },
-    editBankInformation (item) {
+    editBankInformation (item, index) {
+      this.selectedIndex = this.form.BranchBanks.indexOf(item)
+      this.branchBankId = {
+        RecordId: item.BankId,
+        Description1: item.Description1
+      }
       this.branchBanks = {
-        recordId: item.RecordId,
-        recordState: item.RecordId > 0 ? 3 : 2,
-        bankId: item.BankId,
         title: item.Title,
         ibanNumber: item.IbanNumber,
+        recordId: item.RecordId,
         isUpdated: true
       }
-      this.branchBankId = item.Description1
-      this.selectedIndex = this.form.BranchBanks.indexOf(item)
     },
     removeBankInformation (item) {
       this.form.BranchBanks.splice(this.form.BranchBanks.indexOf(item), 1)
