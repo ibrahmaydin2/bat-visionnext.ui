@@ -1052,6 +1052,8 @@ export default {
         CustomerFinanceCode: null,
         Code: null,
         SignatureTypeId: null,
+        IsContract: 1,
+        IsInvestment: 0,
         ContractRelatedCustomers: [],
         ContractValidDates: [],
         ContractBenefits: [],
