@@ -838,6 +838,7 @@
       "TaxNumber": "Vergi Numarası"
     },
     "customer": {
+      "rateType": "Rate Type",
       "Contracted": "Contract State",
       "Barcode": "Barcode",
       "HoldsAsset": "Inventory State",

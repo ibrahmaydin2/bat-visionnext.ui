@@ -838,6 +838,7 @@
       "TaxNumber": "Vergi Numarası"
     },
     "customer": {
+      "rateType": "Oran Tipi",
       "VKN": "Harcama Birim VKN",
       "Contracted": "Kontrat Durumu",
       "Barcode": "Barkod",
