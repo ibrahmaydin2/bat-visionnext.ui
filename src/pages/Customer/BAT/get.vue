@@ -446,7 +446,7 @@
                       <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
                       <b-td>{{c.Rate}}</b-td>
-                      <b-td>{{c.RateType}}</b-td>
+                      <b-td>{{c.RateType ? c.RateType.Label : ''}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
