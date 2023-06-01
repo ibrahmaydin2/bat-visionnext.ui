@@ -641,7 +641,7 @@
                   <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
                   <b-td>{{c.Rate}}</b-td>
-                  <b-td>{{c.RateType}}</b-td>
+                  <b-td>{{c.RateType ? c.RateType.Label : ''}}</b-td>
                   <b-td class="text-center">
                     <b-button :title="$t('list.edit')" @click="editCustomerSeasonRates(c)" class="btn mr-2 btn-warning btn-sm">
                       <i class="fa fa-pencil-alt"></i>
@@ -868,7 +868,7 @@ export default {
         EndDate: this.customerRates.endDate,
         Rate: this.customerRates.rate,
         RateTypeId: this.customerRates.rateType.DecimalValue,
-        RateType: this.customerRates.rateType.Label
+        RateType: this.customerRates.rateType
       }
       if (this.customerRates.isUpdated) {
         this.form.CustomerSeasonRates[this.selectedIndex] = item
