@@ -512,6 +512,7 @@
     "investmentFormUpdate":"Investment Form Update"
   },
   "insert": {
+    "IbanNo": "Banka Bilgisi Iban No",
     "InkSignatureWarning": "Sözleşme İmzalama Tipi 'Islak İmza' ise sadece 'Müşteri & Firma İmzası Bekleniyor' statüsünde imzalı doküman yüklenebilir",
     "biometricSigWarning": "Sözleşme İmzalama Tipi 'Biyometrik İmza' ise, hiçbir statüde belge yüklenemez!",
     "onlyNumbererror": "Sadece Harf veya Sayı Giriniz",
@@ -838,6 +839,14 @@
       "TaxNumber": "Vergi Numarası"
     },
     "customer": {
+      "OpponentAssetType": "Ünite Tipi",
+      "BrandId": "Ünite",
+      "taxOfficePDF": "Vergi Levhası (PDF)",
+      "sign": "İmza Sirküsü/Beyannamesi (PDF)",
+      "commercial": "Ticari Sicil Gazetesi (PDF)",
+      "customerTAPDK": "Müşteri TAPDK Bilgisi",
+      "customerAttachments": "Müşteri Belgeleri",
+      "rateType": "Rate Type",
       "Contracted": "Contract State",
       "Barcode": "Barcode",
       "HoldsAsset": "Inventory State",
@@ -1582,6 +1591,10 @@
       "isCsBank": "Çek Bankası"
     },
     "contract": {
+      "ContractAttachments": "Imzalı Belge Yükle",
+      "ContractOpponentAssets": "Rakip Ünite Bilgisi",
+      "ContractOtherDetailss": "Mobilya Masraf Bilgisi",
+      "investmentTotal": "Yatırım Tutarı",
       "management": "Kontrat Yönetimi",
       "otherContract": "Müşterinin Diğer Kontratları",
       "additionalCustomer": "Ek Müşteriler",

@@ -439,12 +439,14 @@
                     <b-th><span>{{$t('insert.customer.startDateSeason')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.endDateSeason')}}</span></b-th>
                     <b-th><span>{{$t('insert.customer.rate')}}</span></b-th>
+                    <b-th><span>{{$t('insert.customer.rateType')}}</span></b-th>
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(c, i) in rowData.CustomerSeasonRates" :key="i">
                       <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                       <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
                       <b-td>{{c.Rate}}</b-td>
+                      <b-td>{{c.RateType}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>

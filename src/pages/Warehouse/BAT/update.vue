@@ -216,9 +216,9 @@ export default {
           }
         }
 
-        return this.$api.postByUrl(stockRequest, 'VisionNextWarehouse/api/WarehouseStock/AutoCompleteSearch').then(res => {
-          if (res && res.ListModel && res.ListModel.BaseModels && res.ListModel.BaseModels.length > 0) {
-            return res.ListModel.BaseModels.some(r => r.Quantity > 0)
+        return this.$api.getByUrl(`VisionNextWarehouse/api/WarehouseStock/IsStockQuantity?warehouseId=${stockRequest.andConditionModel.WarehouseIds}`).then(res => {
+          if (res && res.IsCompleted === true) {
+            return res.IsQuantity
           }
         })
       }

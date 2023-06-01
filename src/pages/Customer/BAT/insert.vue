@@ -582,6 +582,14 @@
             <NextFormGroup :title="$t('insert.customer.rate')" :error="$v.customerRates.rate" required md="3" lg="3">
               <NextInput type="number" v-model="customerRates.rate" @keypress="onlyForCurrencyDotOrComma($event)"></NextInput>
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.customer.rateType')" :error="$v.customerRates.rateType" required md="3" lg="3">
+              <NextDropdown
+                v-model="customerRates.rateType"
+                lookup-key="CUSTOMER_SEASON_RATES_TYPE"
+                :get-lookup="true"
+                @input="selectedType('RateTypeId', $event)"
+              />
+            </NextFormGroup>
             <b-col cols="12" md="2">
               <b-form-group>
                 <AddDetailButton @click.native="addCustomerSeasonRates" />
@@ -594,6 +602,7 @@
                 <b-th><span>{{$t('insert.customer.startDateSeason')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.endDateSeason')}}</span></b-th>
                 <b-th><span>{{$t('insert.customer.rate')}}</span></b-th>
+                <b-th><span>{{$t('insert.customer.rateType')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
@@ -601,6 +610,7 @@
                   <b-td>{{dateConvertFromTimezone(c.BeginDate)}}</b-td>
                   <b-td>{{dateConvertFromTimezone(c.EndDate)}}</b-td>
                   <b-td>{{c.Rate}}</b-td>
+                  <b-td>{{c.RateType}}</b-td>
                   <b-td class="text-center">
                     <b-button :title="$t('list.edit')" @click="editCustomerSeasonRates(c)" class="btn mr-2 btn-warning btn-sm">
                       <i class="fa fa-pencil-alt"></i>
@@ -799,7 +809,8 @@ export default {
       customerRates: {
         startDate: null,
         endDate: null,
-        rate: null
+        rate: null,
+        rateType: null
       }
     }
   },
@@ -1124,7 +1135,9 @@ export default {
         BeginDate: this.customerRates.startDate,
         RecordState: 2,
         EndDate: this.customerRates.endDate,
-        Rate: this.customerRates.rate
+        Rate: this.customerRates.rate,
+        RateTypeId: this.customerRates.rateType.DecimalValue,
+        RateType: this.customerRates.rateType.Label
       }
       if (this.customerRates.isUpdated) {
         this.form.CustomerSeasonRates[this.selectedIndex] = item
@@ -1147,6 +1160,7 @@ export default {
       this.customerRates.startDate = item.BeginDate
       this.customerRates.endDate = item.EndDate
       this.customerRates.rate = item.Rate
+      this.customerRates.rateType = item.RateType
       this.customerRates.RecordId = item.RecordId
       this.customerRates.isUpdated = true
       this.selectedIndex = this.form.CustomerSeasonRates.indexOf(item)
@@ -1297,6 +1311,9 @@ export default {
           required
         },
         endDate: {
+          required
+        },
+        rateType: {
           required
         }
       }

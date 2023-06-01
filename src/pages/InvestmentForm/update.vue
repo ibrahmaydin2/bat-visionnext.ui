@@ -1008,7 +1008,7 @@ export default {
             SalesAmount: 0,
             TableName: 'T_ITEM',
             ColumnName: 'TYPE_ID',
-            ColumnValue: 21853082445,
+            ColumnValue: 1864401844,
             ColumnNameStr: 'Marka',
             ColumnValueStr: 'Tekel 2000',
             QuotaQuantity: this.targetSale.tekelMonthlyAverageSales,
