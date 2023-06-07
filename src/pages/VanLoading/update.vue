@@ -234,6 +234,11 @@ export default {
         this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return
       }
+      let filteredArr = this.VanLoadingItems.filter(i => i.ItemId === this.vanLoadingItem.ItemId)
+      if (filteredArr.length > 0 && !this.vanLoadingItem.isUpdated) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
       this.detailPanelRecordId++
       if (this.vanLoadingItems.IsUpdated) {
         this.vanLoadingItems.RecordState = 3
