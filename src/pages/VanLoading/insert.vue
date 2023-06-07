@@ -86,6 +86,7 @@
                   :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], RouteIds: [form.RouteId], DocumentDate: form.LoadingDate}"
                   :hidden-values="hiddenValues"
                   :clickable-columns="clickableColumns"
+                  :validations="loadingQuantityValidation"
                 />
             </b-col>
           </b-row>
@@ -130,6 +131,7 @@
 <script>
 import insertMixin from '../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -186,6 +188,14 @@ export default {
           targetProperty: 'ToWhStockQuantity'
         }
       ],
+      loadingQuantityValidation: [
+        {
+          mainProperty: 'LoadingQuantity',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
+      ],
       clickableColumns: [
         {
           mainProperty: 'AverageSalesQuantity',
@@ -209,6 +219,9 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     selectedItem (e, loadingQuantity) {
@@ -272,7 +285,7 @@ export default {
         return
       }
       let filteredArr = this.VanLoadingItems.filter(i => i.ItemId === this.vanLoadingItem.ItemId)
-      if (filteredArr.length > 0 && !this.vanLoadingItem.isUpdated) {
+      if (filteredArr.length > 0 && !this.vanLoadingItem.IsUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }

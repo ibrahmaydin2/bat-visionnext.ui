@@ -235,7 +235,7 @@ export default {
         return
       }
       let filteredArr = this.VanLoadingItems.filter(i => i.ItemId === this.vanLoadingItem.ItemId)
-      if (filteredArr.length > 0 && !this.vanLoadingItem.isUpdated) {
+      if (filteredArr.length > 0 && !this.vanLoadingItem.IsUpdated) {
         this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
         return false
       }
