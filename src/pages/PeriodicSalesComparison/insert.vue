@@ -19,7 +19,7 @@
       <section>
         <b-row>
           <NextFormGroup :title="$t('insert.periodicSalesComparison.Code')" :error="$v.form.Code" :required="true" md="3" lg="3">
-            <NextInput type="text" v-model="form.Code" :disabled="insertReadonly.Code" />
+            <NextInput type="text" v-model="form.Code" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.periodicSalesComparison.Description1')" :error="$v.form.Description1" :required="true" md="3" lg="3">
             <NextInput type="text" v-model="form.Description1" :disabled="insertReadonly.Description1" />
