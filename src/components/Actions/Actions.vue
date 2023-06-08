@@ -22,6 +22,10 @@
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
         </span>
+        <span class="d-inline-block w-100" v-else-if="action.ViewType === 'Action' && action.Action === 'SendAgain'" @click.prevent.stop="actionMethod (action)">
+          <img width="10" height="10" :src="icon" />
+          <span class="ml-1">{{action.Title}}</span>
+        </span>
         <!-- <span class="d-inline-block w-100" v-else>
           <img width="10" height="10" :src="icon" />
           <span class="ml-1">{{action.Title}}</span>
@@ -262,6 +266,32 @@ export default {
         } else {
           this.$store.commit('setPrintDocuments', [])
           this.$toasted.show(this.$t('index.documentNotFound'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        }
+      })
+    },
+    actionMethod (action) {
+      this.$api.postByUrl({ recordIds: this.RecordIds }, action.ActionUrl).then((res) => {
+        if (this.RecordIds.length === 0) {
+          this.$toasted.show(this.$t('index.chooseDocument'), {
+            type: 'error',
+            keepOnHover: true,
+            duration: '3000'
+          })
+        } else if (res.IsCompleted === true) {
+          this.$toasted.show(this.$t('insert.success'), {
+            type: 'success',
+            keepOnHover: true,
+            duration: '3000'
+          })
+          setTimeout(() => {
+            this.$store.commit('setReloadGrid', true)
+          }, 1000)
+        } else {
+          this.$toasted.show(this.$t(res.Response[0].Message), {
             type: 'error',
             keepOnHover: true,
             duration: '3000'
