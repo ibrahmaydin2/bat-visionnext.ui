@@ -642,7 +642,7 @@ export default {
         return newItem
       })
       let allList = []
-      if (this.$route.meta.baseLink === 'FixedTermCampaign' || this.$route.meta.baseLink === 'VanLoading') {
+      if (this.$route.meta.baseLink === 'FixedTermCampaign' || this.$route.meta.baseLink === 'VanLoading' || this.$route.meta.baseLink === 'WarehouseMovement') {
         allList = [...filteredList]
       } else {
         allList = [...filteredList, ...removedList]
