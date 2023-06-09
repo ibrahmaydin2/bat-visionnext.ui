@@ -86,6 +86,7 @@
                   :dynamic-and-condition="{WarehouseIds: [form.FromWarehouseId], RouteIds: [form.RouteId], DocumentDate: form.LoadingDate}"
                   :hidden-values="hiddenValues"
                   :clickable-columns="clickableColumns"
+                  :validations="loadingQuantityValidation"
                 />
             </b-col>
           </b-row>
@@ -130,6 +131,7 @@
 <script>
 import insertMixin from '../../mixins/insert'
 import { required } from 'vuelidate/lib/validators'
+import { mapState } from 'vuex'
 export default {
   mixins: [insertMixin],
   data () {
@@ -186,6 +188,14 @@ export default {
           targetProperty: 'ToWhStockQuantity'
         }
       ],
+      loadingQuantityValidation: [
+        {
+          mainProperty: 'LoadingQuantity',
+          validation: (value, data) => {
+            return value > 0
+          }
+        }
+      ],
       clickableColumns: [
         {
           mainProperty: 'AverageSalesQuantity',
@@ -209,6 +219,9 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapState(['multipleItemSearch'])
   },
   methods: {
     selectedItem (e, loadingQuantity) {
@@ -271,6 +284,11 @@ export default {
         this.$toasted.show(this.$t('insert.vanLoading.loadingQuantityError'), { type: 'error', keepOnHover: true, duration: '3000' })
         return
       }
+      let filteredArr = this.VanLoadingItems.filter(i => i.ItemId === this.vanLoadingItem.ItemId)
+      if (filteredArr.length > 0 && !this.vanLoadingItem.IsUpdated) {
+        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.sameItemError') })
+        return false
+      }
       if (this.vanLoadingItem.IsUpdated) {
         this.VanLoadingItems[this.selectedIndex] = this.vanLoadingItem
         this.selectedIndex = 0
@@ -315,7 +333,7 @@ export default {
         if (res.ListModel && res.ListModel.BaseModels) {
           this.vanLoadingItem.Item = res.ListModel.BaseModels[0]
           this.selectedIndex = this.VanLoadingItems.indexOf(item)
-          let loadingQuantity = item.LoadingQuantity ? parseInt(item.LoadingQuantity) : 0
+          let loadingQuantity = item.LoadingQuantity ? item.LoadingQuantity : 0
           this.selectedItem(this.vanLoadingItem.Item, loadingQuantity)
         }
       })

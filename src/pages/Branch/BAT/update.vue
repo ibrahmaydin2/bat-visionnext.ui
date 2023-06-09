@@ -245,7 +245,7 @@
               <NextInput v-model="branchBanks.title" type="text"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.branch.ibanNo')" :error="$v.branchBanks.ibanNumber">
-              <NextInput v-model="branchBanks.ibanNumber" type="text" v-mask="'TR##-####-####-####-####-####-##'" placeholder="TR" />
+              <NextInput v-model="branchBanks.ibanNumber" type="text" v-mask="'TR## #### #### #### #### #### ##'" placeholder="TR" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
