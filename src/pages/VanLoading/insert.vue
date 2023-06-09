@@ -333,7 +333,7 @@ export default {
         if (res.ListModel && res.ListModel.BaseModels) {
           this.vanLoadingItem.Item = res.ListModel.BaseModels[0]
           this.selectedIndex = this.VanLoadingItems.indexOf(item)
-          let loadingQuantity = item.LoadingQuantity ? parseInt(item.LoadingQuantity) : 0
+          let loadingQuantity = item.LoadingQuantity ? item.LoadingQuantity : 0
           this.selectedItem(this.vanLoadingItem.Item, loadingQuantity)
         }
       })
