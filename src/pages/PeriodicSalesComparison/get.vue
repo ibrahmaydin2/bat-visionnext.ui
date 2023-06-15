@@ -41,7 +41,7 @@
             </b-card>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.periodicSalesComparison.Products')">
+        <b-tab :title="$t('insert.periodicSalesComparison.Products')" v-if="rowData.ItemCriteriaId === 24">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -61,7 +61,7 @@
             </b-col>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.periodicSalesComparison.Branches')">
+        <b-tab :title="$t('insert.periodicSalesComparison.Branches')" v-if="rowData.BranchCriteriaId === 30">
           <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
@@ -72,8 +72,8 @@
                   </b-thead>
                   <b-tbody>
                     <b-tr v-for="(b, i) in (rowData.PeriodicSalesComparisonDetails ? rowData.PeriodicSalesComparisonDetails.filter(b => b.TableName == 'T_BRANCH') : [])" :key="i">
-                       <b-td>{{b.ColumnNameDesc}}</b-td>
-                       <b-td>{{b.ColumnValueDesc}}</b-td>
+                       <b-td>{{b.Code}}</b-td>
+                       <b-td>{{b.Description1}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
