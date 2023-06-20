@@ -113,6 +113,11 @@
         </b-tab>
         <b-tab lazy :title="$t('insert.periodicSalesComparison.Branches')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="periodicSalesBranchs" :items="getPeriodicSalesBranches()">
+            <template slot="grid">
+              <div cols="12" md="2">
+                <NextMultipleSelection3 v-model="periodicSalesBranchs" name="PeriodicSalesMultipleBranch"></NextMultipleSelection3>
+              </div>
+            </template>
           </NextDetailPanel>
         </b-tab>
       </b-tabs>
@@ -302,8 +307,8 @@ export default {
       return [
         {
           type: 'Autocomplete',
-          modelProperty: 'ColumnValue',
-          objectKey: 'ColumnNameDesc',
+          modelProperty: 'Code',
+          objectKey: 'Code',
           labelProperty: 'Code',
           customOption: true,
           orConditionFields: 'Code,Description1',
@@ -318,9 +323,9 @@ export default {
         {
           type: 'Label',
           inputType: 'text',
-          modelProperty: 'CommercialTitle',
-          objectKey: 'ColumnValueDesc',
-          parentProperty: 'CommercialTitle',
+          modelProperty: 'Description1',
+          objectKey: 'Description1',
+          parentProperty: 'Description1',
           label: this.$t('insert.fieldAnalysis.commercialTitle'),
           visible: false,
           disabled: true,
