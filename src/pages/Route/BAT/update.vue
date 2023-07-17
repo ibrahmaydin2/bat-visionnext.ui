@@ -143,7 +143,7 @@
       <template #modal-title>
         {{$t('list.editConfirm')}}
       </template>
-      {{$t('list.locationCount') + ` ${this.multiDeleteCount.length} ` + $t('list.locationCountConfirm')}}
+      {{('Lokasyonlardan') + ` ${this.multiDeleteCount.length} ` + ('kayıt silinecektir, onaylıyor musunuz?')}}
       <template #modal-footer>
         <b-button size="sm" class="float-right ml-2"  variant="outline-danger" @click="$bvModal.hide('confirm-update-modal')">{{$t('insert.cancel')}}</b-button>
         <b-button size="sm" class="float-right ml-2" variant="success" @click="save()">{{$t('insert.okay')}}</b-button>
