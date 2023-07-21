@@ -395,10 +395,10 @@
   </b-row>
 </template>
 <script>
-import mixin from '../../mixins/update'
+import updateMixin from '../../mixins/update'
 import { required } from 'vuelidate/lib/validators'
 export default {
-  mixins: [mixin],
+  mixins: [updateMixin],
   data () {
     return {
       form: {
@@ -548,17 +548,20 @@ export default {
       newInvestmentBudgetCash: {
         Cash: 0,
         cashScheduledPaymentDate: null,
-        cashBudgetMaster: null
+        cashBudgetMaster: null,
+        recordId: null
       },
       newInvestmentBudgetDTI: {
         OnlyDTI: 0,
         onlyDtiScheduledPaymentDate: null,
-        onlyDtiBudgetMaster: null
+        onlyDtiBudgetMaster: null,
+        recordId: null
       },
       newInvestmentBudgetYYM: {
         Yym: 0,
         yymScheduledPaymentDate: null,
-        yymBudgetMaster: null
+        yymBudgetMaster: null,
+        recordId: null
       },
       targetSale: {
         KentContractItemQuotaQuantity: 0,
@@ -572,7 +575,10 @@ export default {
         rothmansMonthlyAverageSales: 0,
         tekelMonthlyAverageSales: 0,
         totalMonthlyAverageSales: 0,
-        totalTargetAnnualSales: 0
+        totalTargetAnnualSales: 0,
+        recordIdKent: null,
+        recordIdRothmans: null,
+        recordIdTekel2000: null
       },
       currentSales: {
         KentBrandLC: 'Kent',
@@ -586,7 +592,8 @@ export default {
         furniteCost: 0,
         numberOfFrontFaces: 0,
         frontFaceCost: 0,
-        totalFurniteCost: 0
+        totalFurniteCost: 0,
+        recordId: null
       },
       routeName1: 'Contract',
       routeName2: 'Contract',
@@ -722,9 +729,10 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
-      this.setData()
-    })
+    // this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
+    //   this.setData()
+    // })
+    this.getData().then(() => this.setData())
   },
   methods: {
     save () {
@@ -746,27 +754,30 @@ export default {
           return false
         }
         this.form.ContractValidDates = [{
-          Deleted: 1,
+          Deleted: 0,
           System: 0,
           RecordState: 3,
           StatusId: 1,
           StartDate: this.validDates.contractStartDate,
           EndDate: this.validDates.contractEndDate,
-          CreatedDateTime: this.form.FormDate
+          CreatedDateTime: this.form.FormDate,
+          RecordId: this.validDates.recordId
         }]
         if (this.form.StatusId !== 1) {
           this.form.StatusId = 2
         }
         if (this.newInvestmentBudgetCash.Cash > 0 || this.newInvestmentBudgetCash.cashBudgetMaster !== null || this.newInvestmentBudgetCash.cashScheduledPaymentDate !== null) {
           this.contractBenefitsCash = {
-            Deleted: 1,
+            Deleted: 0,
             System: 0,
-            RecordState: 3,
+            RecordId: this.newInvestmentBudgetCash.recordId,
+            RecordState: this.newInvestmentBudgetCash.recordId > 0 ? 3 : 2,
             StatusId: 1,
             BenefitTypeId: 3,
             BenefitTypeName: 'Nakit',
             BenefitBudget: this.newInvestmentBudgetCash.Cash,
-            BudgetMasterId: this.ContractBenefitsCash[0].BudgetMasterId,
+            BudgetMaster: this.newInvestmentBudgetCash.cashBudgetMaster,
+            // BudgetMasterId: this.ContractBenefitsCash[0].BudgetMasterId,
             BudgetMasterName: '',
             CurrencyId: 1,
             CurrencyName: 'Türk Lirası',
@@ -775,9 +786,10 @@ export default {
             usedAmount: 0
           }
           this.contractPaymentPlansCash = {
-            Deleted: 1,
+            Deleted: 0,
             System: 0,
-            RecordState: 3,
+            RecordId: this.newInvestmentBudgetCash.recordId,
+            RecordState: this.newInvestmentBudgetCash.recordId > 0 ? 3 : 2,
             StatusId: 1,
             QuotaTableName: 'T-ITEM',
             BenefitConditionId: 49,
@@ -898,9 +910,10 @@ export default {
           ShelfExpense: this.otherDetails.frontFaceCost,
           TotalExpense: this.otherDetails.totalFurniteCost,
           Description1: 'Test',
-          Deleted: 1,
+          Deleted: 0,
           System: 0,
-          RecordState: 3,
+          RecordId: this.otherDetails.recordId,
+          RecordState: this.otherDetails.recordId > 0 ? 3 : 2,
           StatusId: 1
         }
         this.contractOpponentAssetsPMI = {
@@ -947,10 +960,10 @@ export default {
         }
         if (this.targetSale.kentMonthlyAverageSales != null || this.targetSale.kentMonthlyAverageSales > 0) {
           this.contractItemsKent = {
-            Deleted: 1,
+            Deleted: 0,
             System: 0,
-            RecordId: this.RecordId,
-            RecordState: 3,
+            RecordId: this.targetSale.recordIdKent,
+            RecordState: this.targetSale.recordIdKent > 0 ? 3 : 2,
             StatusId: 1,
             SalesQuantity: 0,
             SalesAmount: 0,
@@ -973,10 +986,10 @@ export default {
         } else { }
         if (this.targetSale.rothmansMonthlyAverageSales != null || this.targetSale.rothmansMonthlyAverageSales > 0) {
           this.contractItemsRothmans = {
-            Deleted: 1,
+            Deleted: 0,
             System: 0,
-            RecordId: this.RecordId,
-            RecordState: 3,
+            RecordId: this.targetSale.recordIdRothmans,
+            RecordState: this.targetSale.recordIdRothmans > 0 ? 3 : 2,
             StatusId: 1,
             SalesQuantity: 0,
             SalesAmount: 0,
@@ -997,12 +1010,12 @@ export default {
           }
           this.form.ContractItems.push(this.contractItemsRothmans)
         } else { }
-        if (this.targetSale.tekelMonthlyAverageSales != null || this.targetSale.tekelMonthlyAverageSales > 0) {
+        if (this.targetSale.tekelMonthlyAverageSales !== null && this.targetSale.tekelMonthlyAverageSales > 0) {
           this.contractItemsTekel2000 = {
-            Deleted: 1,
+            Deleted: 0,
             System: 0,
-            RecordId: this.RecordId,
-            RecordState: 3,
+            RecordId: this.targetSale.recordIdTekel2000,
+            RecordState: this.targetSale.recordIdTekel2000 > 0 ? 3 : 2,
             StatusId: 1,
             SalesQuantity: 0,
             SalesAmount: 0,
@@ -1058,19 +1071,28 @@ export default {
     },
     setData () {
       let rowData = this.rowData
-      if (rowData.InvestmentStatusId !== 2320) {
-        this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.InvestmentForm.onlyPendingApproval') })
-        setTimeout(() => {
-          this.$router.push({ name: 'InvestmentForm' })
-        }, 2000)
-      }
+      // if (rowData.InvestmentStatusId !== 2320) {
+      //   this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.InvestmentForm.onlyPendingApproval') })
+      //   setTimeout(() => {
+      //     this.$router.push({ name: 'InvestmentForm' })
+      //   }, 2000)
+      // }
       this.form = rowData
       this.signingType = rowData.SignatureType
       this.form.FormDate = rowData.ContractValidDates[0].CreatedDateTime ? rowData.ContractValidDates[0].CreatedDateTime : ''
       this.validDates.contractStartDate = rowData.ContractValidDates[0].StartDate
       this.validDates.contractEndDate = rowData.ContractValidDates[0].EndDate
+      this.validDates.recordId = rowData.ContractValidDates[0].RecordId
+      // this.targetSale.kentMonthlyAverageSales = rowData.ContractItems[0].QuotaQuantity
+      this.targetSale.recordIdKent = rowData.ContractItems[0] ? rowData.ContractItems[0].RecordId : ''
+      // this.targetSale.rothmansMonthlyAverageSales = rowData.ContractItems[1].QuotaQuantity
+      this.targetSale.recordIdRothmans = rowData.ContractItems[1] ? rowData.ContractItems[1].RecordId : ''
+      // this.targetSale.tekelMonthlyAverageSales = rowData.ContractItems[2].QuotaQuantity
+      this.targetSale.recordIdTekel2000 = rowData.ContractItems[2] ? rowData.ContractItems[2].RecordId : ''
       this.contractOpponentAssets = rowData.ContractOpponentAssets
       this.ContractOtherDetailsFurniture = rowData.ContractOtherDetailss ? rowData.ContractOtherDetailss : []
+      this.otherDetails.recordId = rowData.ContractOtherDetailss ? rowData.ContractOtherDetailss.RecordId : ''
+      this.newInvestmentBudgetCash.recordId = rowData.ContractPaymentPlans[0] ? rowData.ContractPaymentPlans[0].RecordId : ''
       this.newInvestmentBudgetCash.cashScheduledPaymentDate = rowData.ContractPaymentPlans[0].PlannedPaymentDate ? rowData.ContractPaymentPlans[0].PlannedPaymentDate : ''
       this.ContractPriceDiscountsDTI = rowData.ContractPriceDiscounts && rowData.ContractPriceDiscounts.length > 0 ? rowData.ContractPriceDiscounts.filter(c => c.BenefitConditionId === 49) : []
       this.ContractPriceDiscountsYYM = rowData.ContractPriceDiscounts && rowData.ContractPriceDiscounts.length > 0 ? rowData.ContractPriceDiscounts.filter(c => c.BenefitConditionId === 102000) : []
@@ -1083,6 +1105,7 @@ export default {
       this.getCustomer()
       this.getContractOpponentAssets()
       this.getContractBenefits()
+      this.getCustomerContract()
       if (this.ContractBenefitsCash[0] !== null && this.ContractBenefitsCash[0].BudgetMasterId !== null) {
         this.CashBudgetMasterId = this.ContractBenefitsCash[0].BudgetMasterId ? this.ContractBenefitsCash[0].BudgetMasterId : null
       }

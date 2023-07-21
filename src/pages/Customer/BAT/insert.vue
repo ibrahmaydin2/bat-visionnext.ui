@@ -1011,7 +1011,6 @@ export default {
       } else {
         this.form.LicenseValidDate = this.dateConvertToISo(this.form.LicenseValidDate)
         this.form.StatusId = this.form.StatusId === true || this.form.StatusId === 1 ? 1 : 0
-        this.form.DocumentStatusId = this.lookupValues[0].DecimalValue
         let model = {
           'model': this.form
         }
