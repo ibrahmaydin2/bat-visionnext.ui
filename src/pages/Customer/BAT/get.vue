@@ -29,10 +29,15 @@
               <div v-html="getFormatDataByType(rowData.CommercialTitle, 'text', 'insert.customer.Model_CommercialTitle')"></div>
               <div v-if="rowData.TaxCustomerType && rowData.TaxCustomerType.Code === 'GRK'" v-html="getFormatDataByType(rowData.TextField6, 'text', 'insert.customer.name')"></div>
               <div v-if="rowData.TaxCustomerType && rowData.TaxCustomerType.Code === 'GRK'" v-html="getFormatDataByType(rowData.TextField7, 'text', 'insert.customer.surname')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerEmail, 'text', 'insert.customer.customerEmail')"></div>
               <div v-html="getFormatDataByType(rowData.Description1, 'text', 'insert.customer.Model_Description1')"></div>
               <div v-html="getFormatDataByType(rowData.TaxCustomerType, 'object', 'insert.customer.Model_TaxCustomerTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.TaxOffice, 'text', 'insert.customer.Model_TaxOffice')"></div>
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
+              <div v-html="getFormatDataByType(rowData.RouteCode, 'text', 'insert.customer.RouteCode')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerRegion5 ? rowData.CustomerRegion5.Label : null, 'text', 'insert.customer.customerRegion5')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerInvoiceType ? rowData.CustomerInvoiceType.Label : null, 'text', 'insert.customer.Model_CustomerInvoiceTypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.LicenseValidDate, 'date', 'insert.customer.LicenseValidDate')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.IsPublic, 'check', 'insert.customer.IsPublic')"></div>
             </b-card>
@@ -40,11 +45,16 @@
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
               <div v-html="getFormatDataByType(rowData.CardType, 'object', 'insert.customer.Model_CardTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.customer.Model_TypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.SalesVisitFrequency, 'object', 'insert.customer.Model_salesVisitFrequency')"></div>
+              <div v-html="getFormatDataByType(rowData.serviceVisitFrequency, 'object', 'insert.customer.serviceVisitFrequency')"></div>
               <div v-html="getFormatDataByType(rowData.SalesType, 'object', 'insert.customer.Model_SalesTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesPriceChangeRate, 'text', 'insert.customer.Model_SalesPriceChangeRate')"></div>
               <div v-html="getFormatDataByType(rowData.BlockReason, 'object', 'insert.customer.Model_BlockReasonId')"></div>
+              <div v-html="getFormatDataByType(rowData.MarketingRegion5 ? rowData.MarketingRegion5.Label : null, 'text', 'insert.customer.marketingRegion5')"></div>
               <div v-html="getFormatDataByType(rowData.OutSourceOrder, 'object', 'insert.customer.OutSourceOrderId')"></div>
+              <div v-html="getFormatDataByType(rowData.IsRouteRegion, 'check', 'insert.customer.isRouteRegion')"></div>
+              <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'VisionPlus E_Fatura Kullan')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -140,6 +150,24 @@
                 <div v-html="getFormatDataByType(rowData.Field4, 'object', 'insert.customer.Model_Field4')"></div>
                 <div v-html="getFormatDataByType(rowData.Field5, 'object', 'insert.customer.Model_Field5')"></div>
                 <div v-html="getFormatDataByType(rowData.TextField6, 'object', 'insert.customer.Model_TextField6')"></div> -->
+            </b-card>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.customer.AdditionalClassInformation')">
+          <b-row class="p-4">
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DiscountGroup1 ? rowData.DiscountGroup1.Label : null, 'text', 'insert.customer.Model_DiscountGroup1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup3 ? rowData.DiscountGroup3.Label : null, 'text', 'insert.customer.Model_DiscountGroup3Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup5 ? rowData.DiscountGroup5.Label : null, 'text', 'insert.customer.Model_DiscountGroup5Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup4 ? rowData.DiscountGroup4.Label : null, 'text', 'insert.customer.Model_DiscountGroup4Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup6 ? rowData.DiscountGroup6.Label : null, 'text', 'insert.customer.Model_DiscountGroup6Id')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DiscountGroup7 ? rowData.DiscountGroup7.Label : null, 'text', 'insert.customer.Model_DiscountGroup7Id')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup8 ? rowData.DiscountGroup8.Label : null, 'text', 'insert.customer.Model_DiscountGroup8Id')"></div>
+              <div v-html="getFormatDataByType(rowData.Kind ? rowData.Kind.Label : null, 'text', 'insert.customer.Model_KindId')"></div>
+              <div v-html="getFormatDataByType(rowData.Activity1 ? rowData.Activity1.Label : null, 'text', 'insert.customer.Activity1Id')"></div>
+              <div v-html="getFormatDataByType(rowData.OutSourceOrder ? rowData.OutSourceOrder.Label : null, 'text', 'insert.customer.OutSourceOrderId')"></div>
             </b-card>
           </b-row>
         </b-tab>
@@ -239,6 +267,24 @@
                 </b-table>
               </b-card>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab :title="$t('insert.detail')">
+          <b-row class="p-4"> 
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.TextField1, 'text', 'insert.customer.textField1')"></div>
+              <div v-html="getFormatDataByType(rowData.TextField2, 'text', 'insert.customer.textField2')"></div>
+              <div v-html="getFormatDataByType(rowData.Barcode, 'text', 'insert.customer.barcode')"></div>
+              <div v-html="getFormatDataByType(rowData.HoldsAsseto ? rowData.HoldsAsseto.Label : null, 'text', 'insert.customer.holdAsset')"></div>
+              <div v-html="getFormatDataByType(rowData.Contracted, 'text', 'insert.customer.contracted')"></div>
+            </b-card>
+            <b-card class="col-md-6 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'insert.customer.discountGroup10')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup2, 'object', 'insert.customer.discountGroup2')"></div>
+              <div v-html="getFormatDataByType(rowData.DiscountGroup9, 'text', 'insert.customer.discountGroup9')"></div>
+              <div v-html="getFormatDataByType(rowData.SignName ? rowData.SignName.Label : null, 'text', 'insert.customer.signNameId')"></div>
+              <div v-html="getFormatDataByType(rowData.IsOpportunitySpot, 'check', 'insert.customer.isOpportunitySpot')"></div>
+            </b-card>
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.customer.tag')">
