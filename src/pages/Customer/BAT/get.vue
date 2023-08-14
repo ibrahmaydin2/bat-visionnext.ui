@@ -270,7 +270,7 @@
           </b-row>
         </b-tab>
         <b-tab :title="$t('insert.detail')">
-          <b-row class="p-4"> 
+          <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.TextField1, 'text', 'insert.customer.textField1')"></div>
               <div v-html="getFormatDataByType(rowData.TextField2, 'text', 'insert.customer.textField2')"></div>
