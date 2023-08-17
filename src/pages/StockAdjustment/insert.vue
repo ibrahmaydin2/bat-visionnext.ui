@@ -90,7 +90,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12" md="2" lg="2">
-              <NextMultipleSelection
+              <NextMultipleSelectionStockAdjustment
                 name="StockAdjustmentMultipleItem"
                 v-model="form.StockAdjustmentItems"
                 :hidden-values="hiddenValues"
