@@ -369,6 +369,10 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    if (!localStorage.getItem('visitedItemBefore')) {
+      localStorage.setItem('visitedItemBefore', 'true');
+      location.reload();
+    }
   },
   methods: {
     submitFile () {
