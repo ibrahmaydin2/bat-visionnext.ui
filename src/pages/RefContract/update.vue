@@ -159,6 +159,10 @@ export default {
         this.getCustomerDetail(this.rowData.SourceContractId)
       }
     })
+    if (!localStorage.getItem('visitedRefContractBefore')) {
+      localStorage.setItem('visitedRefContractBefore', 'true');
+      location.reload();
+    }
   },
   methods: {
     selectedSourceCustomer (label, model) {

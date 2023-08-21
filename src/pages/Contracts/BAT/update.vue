@@ -1220,6 +1220,10 @@ export default {
     this.getLookups()
     this.getItemCriterias()
     this.getCurrencies()
+    if (!localStorage.getItem('visitedContractBefore')) {
+      localStorage.setItem('visitedContractBefore', 'true');
+      location.reload();
+    }
   },
   methods: {
     downloadFile (item) {
