@@ -424,6 +424,10 @@ export default {
     this.getData().then(() => this.setData())
     this.getBranchLocations()
     this.getCurrentBranch()
+    if (!localStorage.getItem('visitedBranchPageBefore')) {
+      localStorage.setItem('visitedBranchPageBefore', 'true');
+      location.reload();
+    }
   },
   methods: {
     setData () {

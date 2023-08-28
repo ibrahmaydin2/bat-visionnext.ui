@@ -198,34 +198,34 @@
         <b-tab :title="$t('insert.item.AdditionalClassificationAreas')">
           <b-row>
             <NextFormGroup item-key="Category1Id" :error="$v.form.Category1Id">
-              <NextDropdown v-model="Category1" :disabled="insertReadonly.Category1Id" lookup-key="ITEM_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
+              <NextDropdown v-model="form.Category1" :disabled="insertReadonly.Category1Id" lookup-key="ITEM_CATEGORY_1" @input="selectedType('Category1Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category2Id" :error="$v.form.Category2Id">
-              <NextDropdown v-model="Category2" :disabled="insertReadonly.Category2Id" lookup-key="ITEM_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
+              <NextDropdown v-model="form.Category2" :disabled="insertReadonly.Category2Id" lookup-key="ITEM_CATEGORY_2" @input="selectedType('Category2Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category3Id" :error="$v.form.Category3Id">
-              <NextDropdown v-model="Category3" :disabled="insertReadonly.Category3Id" lookup-key="ITEM_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
+              <NextDropdown v-model="form.Category3" :disabled="insertReadonly.Category3Id" lookup-key="ITEM_CATEGORY_3" @input="selectedType('Category3Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category4Id" :error="$v.form.Category4Id">
-              <NextDropdown v-model="Category4" :disabled="insertReadonly.Category4Id" lookup-key="ITEM_CATEGORY_4" @input="selectedType('Category4Id', $event)"/>
+              <NextDropdown v-model="form.Category4" :disabled="insertReadonly.Category4Id" lookup-key="ITEM_CATEGORY_4" @input="selectedType('Category4Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category5Id" :error="$v.form.Category5Id">
-              <NextDropdown v-model="Category5" :disabled="insertReadonly.Category5Id" lookup-key="ITEM_CATEGORY_5" @input="selectedType('Category5Id', $event)"/>
+              <NextDropdown v-model="form.Category5" :disabled="insertReadonly.Category5Id" lookup-key="ITEM_CATEGORY_5" @input="selectedType('Category5Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category6Id" :error="$v.form.Category6Id">
-              <NextDropdown v-model="Category6" :disabled="insertReadonly.Category6Id" lookup-key="ITEM_CATEGORY_6" @input="selectedType('Category6Id', $event)"/>
+              <NextDropdown v-model="form.Category6" :disabled="insertReadonly.Category6Id" lookup-key="ITEM_CATEGORY_6" @input="selectedType('Category6Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category7Id" :error="$v.form.Category7Id">
-              <NextDropdown v-model="Category7" :disabled="insertReadonly.Category7Id" lookup-key="ITEM_CATEGORY_7" @input="selectedType('Category7Id', $event)"/>
+              <NextDropdown v-model="form.Category7" :disabled="insertReadonly.Category7Id" lookup-key="ITEM_CATEGORY_7" @input="selectedType('Category7Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category8Id" :error="$v.form.Category8Id">
-              <NextDropdown v-model="Category8" :disabled="insertReadonly.Category8Id" lookup-key="ITEM_CATEGORY_8" @input="selectedType('Category8Id', $event)"/>
+              <NextDropdown v-model="form.Category8" :disabled="insertReadonly.Category8Id" lookup-key="ITEM_CATEGORY_8" @input="selectedType('Category8Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category9Id" :error="$v.form.Category9Id">
-              <NextDropdown v-model="Category9" :disabled="insertReadonly.Category9Id" lookup-key="ITEM_CATEGORY_9" @input="selectedType('Category9Id', $event)"/>
+              <NextDropdown v-model="form.Category9" :disabled="insertReadonly.Category9Id" lookup-key="ITEM_CATEGORY_9" @input="selectedType('Category9Id', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Category10Id" :error="$v.form.Category10Id">
-              <NextDropdown v-model="Category10" :disabled="insertReadonly.Category10Id" lookup-key="ITEM_CATEGORY_10" @input="selectedType('Category10Id', $event)"/>
+              <NextDropdown v-model="form.Category10" :disabled="insertReadonly.Category10Id" lookup-key="ITEM_CATEGORY_10" @input="selectedType('Category10Id', $event)"/>
             </NextFormGroup>
           </b-row>
         </b-tab>
@@ -369,6 +369,10 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    if (!localStorage.getItem('visitedItemBefore')) {
+      localStorage.setItem('visitedItemBefore', 'true');
+      location.reload();
+    }
   },
   methods: {
     submitFile () {
