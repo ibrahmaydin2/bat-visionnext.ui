@@ -345,7 +345,7 @@
               <NextDropdown v-model="form.HoldsAsseto" :disabled="insertReadonly.HoldsAsset" lookup-key="CUSTOMER_HOLD_ASSET" @input="selectedType('HoldsAsset', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="Contracted" :error="$v.form.Contracted">
-              <NextDropdown v-model="form.Contracted" :disabled="insertReadonly.Contracted" lookup-key="CUSTOMER_CONTRACTED" @input="selectedType('Contracted', $event)"/>
+              <NextDropdown v-model="form.Contractedo" :disabled="insertReadonly.Contracted" lookup-key="CUSTOMER_CONTRACTED" @input="selectedType('Contracted', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup10Id" :error="$v.form.DiscountGroup10Id">
               <NextDropdown v-model="form.DiscountGroup10" :disabled="insertReadonly.DiscountGroup10Id" lookup-key="CUSTOMER_DISCOUNT_GROUP_10" @input="selectedType('DiscountGroup10Id', $event)"/>
