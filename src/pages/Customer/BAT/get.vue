@@ -36,7 +36,7 @@
               <div v-html="getFormatDataByType(rowData.TaxNumber, 'text', 'insert.customer.Model_TaxNumber')"></div>
               <div v-html="getFormatDataByType(rowData.RouteCode, 'text', 'insert.customer.RouteCode')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerRegion5 ? rowData.CustomerRegion5.Label : null, 'text', 'insert.customer.customerRegion5')"></div>
-              <div v-html="getFormatDataByType(rowData.CustomerInvoiceType ? rowData.CustomerInvoiceType.Label : null, 'text', 'insert.customer.Model_CustomerInvoiceTypeId')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerInvoiceType ? rowData.CustomerInvoiceType.Label : null, 'text', 'Müşteri Kullanılan E - Fatura Tipi')"></div>
               <div v-html="getFormatDataByType(rowData.LicenseValidDate, 'date', 'insert.customer.LicenseValidDate')"></div>
               <div v-html="getFormatDataByType(rowData.UseEInvoice, 'check', 'insert.customer.Model_UseEInvoice')"></div>
               <div v-html="getFormatDataByType(rowData.IsPublic, 'check', 'insert.customer.IsPublic')"></div>
@@ -276,7 +276,7 @@
               <div v-html="getFormatDataByType(rowData.TextField2, 'text', 'insert.customer.textField2')"></div>
               <div v-html="getFormatDataByType(rowData.Barcode, 'text', 'insert.customer.barcode')"></div>
               <div v-html="getFormatDataByType(rowData.HoldsAsseto ? rowData.HoldsAsseto.Label : null, 'text', 'insert.customer.holdAsset')"></div>
-              <div v-html="getFormatDataByType(rowData.Contracted, 'text', 'insert.customer.contracted')"></div>
+              <div v-html="getFormatDataByType(rowData.Contractedo ? rowData.Contractedo.Label : null, 'text', 'insert.customer.contracted')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.DiscountGroup10, 'object', 'insert.customer.discountGroup10')"></div>
