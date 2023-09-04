@@ -97,7 +97,7 @@
               <NextInput type="text" v-model="rmaOrderLine.Item.Description1" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Quantity')" :required="true" :error="$v.rmaOrderLine.Quantity"  md="3" lg="3">
-              <NextInput type="number" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <NextInput type="text" v-model="rmaOrderLine.Quantity" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <b-col class="ml-auto"  md="2" lg="2">
               <b-form-group>
@@ -132,7 +132,7 @@
                   <b-tr v-for="(w, i) in rmaOrderLines" :key="i">
                     <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
                     <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
-                    <b-td>{{w.Quantity}}</b-td>
+                    <b-td>{{formatValue (w.Quantity)}}</b-td>
                     <b-td class="text-center">
                       <b-button :title="$t('list.delete')" @click="removeItems(w)" class="btn mr-2 btn-danger btn-sm">
                         <i class="far fa-trash-alt"></i>
@@ -212,7 +212,18 @@ export default {
     this.form.RmaOrderDate = date
     this.form.PriceDate = date
   },
+  computed: {
+    RmaItemsFormatted() {
+      return this.rmaOrderLines.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
+  },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     addItems () {
       this.$v.rmaOrderLine.$touch()
       if (this.$v.rmaOrderLine.$error) {

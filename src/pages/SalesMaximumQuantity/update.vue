@@ -55,7 +55,7 @@
               ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.SalesMaxQuantity.Quantity')" :error="$v.salesMaximum.Quantity">
-              <NextInput v-model="salesMaximum.Quantity" type="number" />
+              <NextInput v-model="salesMaximum.Quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)" />
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -80,7 +80,7 @@
                 <b-tr v-for="(f, i) in (SalesMaximum ? SalesMaximum.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{f.Code}}</b-td>
                   <b-td>{{f.Customer ? f.Customer.Label : f.CustomerName}}</b-td>
-                  <b-td>{{f.Quantity}}</b-td>
+                  <b-td>{{formatValue(f.Quantity)}}</b-td>
                   <b-td class="text-center">
                     <b-button @click="editSalesMaximum(f)" class="btn mr-2 btn-warning btn-sm">
                       <i class="fa fa-pencil-alt"></i>
@@ -135,12 +135,25 @@ export default {
     }
   },
   computed: {
-    ...mapState(['createCode'])
+    ...mapState(['createCode']),
+    ItemsFormatted() {
+      return this.SalesMaximum ? SalesMaximum.filter(f => f.RecordState !== 4) : [].map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
   },
   mounted () {
     this.getData().then(() => this.setData())
   },
   methods: {
+    formatValue(value) {
+      if (value) {
+        return value.toString().replace(/,/g, '.')
+      } else {
+        return ''
+      }
+    },
     successExcelImport (data) {
       if (data) {
         let list = []

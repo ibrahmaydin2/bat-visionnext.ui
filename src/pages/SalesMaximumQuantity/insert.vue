@@ -39,7 +39,7 @@
     <b-col cols="12">
       <b-tabs>
         <b-tab :title="$t('insert.SalesMaximumQuantity.CustomerList')">
-          <NextDetailPanel v-model="form.SalesMaximumQuantityCustomers" :items="salesMaximumQuantityCustomersItems"/>
+          <NextDetailPanelSalesMaxQuantity v-model="form.SalesMaximumQuantityCustomers" :items="salesMaximumQuantityCustomersItems"/>
         </b-tab>
       </b-tabs>
     </b-col>
