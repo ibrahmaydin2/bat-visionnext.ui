@@ -131,7 +131,7 @@
               <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Cardboard')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
-              <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <NextInput type="text" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
@@ -179,7 +179,7 @@
                   <b-tr v-for="(w, i) in rmaLines" :key="i">
                     <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
                     <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
-                    <b-td>{{w.Quantity}}</b-td>
+                    <b-td>{{formatValue(w.Quantity)}}</b-td>
                     <b-td>{{w.Item ? w.Item.SalesQuantity1 :  w.SalesQuantity1 }}</b-td>
                     <b-td>{{w.Item ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
                     <b-td>{{getPrice(w)}}</b-td>
@@ -251,12 +251,21 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loginUser', 'UserId'])
+    ...mapState(['loginUser', 'UserId']),
+    RmaItemsFormatted() {
+      return this.rmaLines.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
   },
   mounted () {
     this.getUserInfo()
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     getUserInfo () {
       let userModel = JSON.parse(localStorage.getItem('UserModel'))
       if (userModel) {

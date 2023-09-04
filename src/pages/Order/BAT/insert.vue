@@ -164,7 +164,7 @@
                     :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput :disabled="disabledItems" type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)"></NextInput>
+              <NextInput :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -197,7 +197,7 @@
                 :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                 :hidden-values="multipleItemSearch.hiddenValues"
                 :converted-values="multipleItemSearch.convertedValues"
-                :validations="multipleItemSearch.quantityValidation"
+                :validations="multipleItemSearch.quantityValidationDotOrComma"
                 :summary-items="multipleItemSearch.summaryItems"
                 @input="calculateTotalPrices()" />
             </b-col>
@@ -219,7 +219,7 @@
                 <b-tr v-for="(o, i) in form.OrderLines" :key="i">
                   <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.ItemCode}}</b-td>
-                  <b-td>{{o.Quantity}}</b-td>
+                  <b-td>{{formatValue (o.Quantity)}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
@@ -416,9 +416,18 @@ export default {
     ...mapState(['multipleItemSearch']),
     customerSearchUrl () {
       return this.selectedBranch.DistributionTypeId === 5 ? 'VisionNextCustomer/api/Customer/SearchSapCustomer' : 'VisionNextCustomer/api/Customer/Search'
+    },
+    OrderItemsFormatted() {
+      return this.form.OrderLines.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
     }
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     getInsertPage (e) {
       this.$api.post({RecordId: this.$store.state.BranchId}, 'Branch', 'Branch/Get').then((response) => {
         this.selectedBranch = response ? response.Model : {}
@@ -558,9 +567,10 @@ export default {
       if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price || !this.priceListItem) {
         return false
       }
+      let quantity = this.selectedOrderLine.quantity.replace(/,/g, '.');
       let vatRate = this.priceListItem.VatRate
       this.selectedOrderLine.vatRate = vatRate
-      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
+      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * quantity)
       this.selectedOrderLine.vatTotal = this.roundNumber(this.selectedOrderLine.netTotal * vatRate / 100)
       this.selectedOrderLine.grossTotal = this.roundNumber(parseFloat(this.selectedOrderLine.netTotal) + parseFloat(this.selectedOrderLine.vatTotal))
     },

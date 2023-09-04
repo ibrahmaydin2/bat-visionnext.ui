@@ -28,13 +28,18 @@ export const detailData = {
       id: 2
     },
     {
-      type: 'Text',
-      inputType: 'number',
+      type: 'NumberDotOrComma',
+      inputType: 'text',
       modelProperty: 'Quantity',
       label: i18n.t('insert.SalesMaxQuantity.Quantity'),
       required: true,
       visible: true,
-      id: 3
+      id: 3,
+      validation: (value, data) => {
+        let normalizedValue = String(value).replace(',', '.');
+        let numberValue = parseFloat(normalizedValue);
+        return numberValue > 0
+      },
     }
   ]
 }

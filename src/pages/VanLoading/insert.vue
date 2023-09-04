@@ -71,7 +71,7 @@
               <NextInput v-model="vanLoadingItem.SuggestedQuantity" type="text" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity">
-              <NextInput v-model="vanLoadingItem.LoadingQuantity" @keypress="onlyForCurrencyDot($event)" min="1"  type="number"/>
+              <NextInput v-model="vanLoadingItem.LoadingQuantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <b-col cols="12" md="3" class="text-right ml-auto addButton">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
@@ -113,7 +113,7 @@
                     <b-td>{{r.LastSalesQuantity}}</b-td>
                     <b-td>{{r.LastdaySalesQuantity}}</b-td>
                     <b-td>{{r.SuggestedQuantity}}</b-td>
-                    <b-td>{{r.LoadingQuantity}}</b-td>
+                    <b-td>{{formatValue (r.LoadingQuantity)}}</b-td>
                     <b-td class="text-center">
                       <i @click="editVanLoadingItems(r)" class="fa fa-edit text-warning"></i>
                       <i @click="removeVanLoadingItems(r)" class="far fa-trash-alt text-danger"></i>
@@ -192,7 +192,9 @@ export default {
         {
           mainProperty: 'LoadingQuantity',
           validation: (value, data) => {
-            return value > 0
+            let normalizedValue = String(value).replace(',', '.');
+            let numberValue = parseFloat(normalizedValue);
+            return numberValue > 0;
           }
         }
       ],
@@ -221,9 +223,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    VanLoadingItemsFormatted() {
+      return this.VanLoadingItems.map(item => ({
+        ...item,
+        LoadingQuantity: this.formatValue(item.LoadingQuantity)
+      }));
+    }
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     selectedItem (e, loadingQuantity) {
       if (e) {
         const datas = {
