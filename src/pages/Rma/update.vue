@@ -135,7 +135,7 @@
               <NextInput type="text" v-model="rmaLine.Item.LastPrice" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.Cardboard')" :required="true" :error="$v.rmaLine.Quantity" md="3" lg="3">
-              <NextInput type="number" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <NextInput type="text" v-model="rmaLine.Quantity" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.RMA.meanPrice')" md="3" lg="3">
               <NextInput type="text" v-model="rmaLine.Item.MeanPrice" :disabled="true"/>
@@ -190,7 +190,7 @@
                   <b-tr v-for="(w, i) in (rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [])" :key="i">
                     <b-td>{{w.Item ? w.Item.Code : w.Code}}</b-td>
                     <b-td>{{w.Item ? w.Item.Description1 : w.Description1}}</b-td>
-                    <b-td>{{w.Quantity}}</b-td>
+                    <b-td>{{formatValue(w.Quantity)}}</b-td>
                     <b-td>{{getReturnQuantity(w)}}</b-td>
                     <b-td>{{w.Item && w.Item.LastSalesQuantity ? w.Item.LastSalesQuantity : w.LastSalesQuantity}}</b-td>
                     <b-td>{{getPrice(w)}}</b-td>
@@ -279,12 +279,27 @@ export default {
       }
     }
   },
+  computed: {
+    RmaItemsFormatted() {
+      return this.rmaLines ? rmaLines.filter(r => r.RecordState !== 4) : [].map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
+  },
   mounted () {
     this.getData().then(() => {
       this.setModel()
     })
   },
   methods: {
+    formatValue(value) {
+      if (value) {
+        return value.toString().replace(/,/g, '.')
+      } else {
+        return ''
+      }
+    },
     searchItem (search, loading) {
       let model = {
         orConditionModels: [

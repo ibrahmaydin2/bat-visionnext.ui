@@ -144,7 +144,7 @@
                 :custom-option="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrencyDot($event)" min="1" />
+              <NextInput type="text" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedInvoiceLine.price" :disabled="true" />
@@ -179,7 +179,7 @@
                   :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
                   :hidden-values="multipleItemSearch.hiddenValues"
                   :converted-values="multipleItemSearch.convertedValues"
-                  :validations="multipleItemSearch.multipleValidations"
+                  :validations="multipleItemSearch.multipleValidationsDotOrComma"
                   @input="calculateTotalPrices()"
                 />
             </b-col>
@@ -201,7 +201,7 @@
                 <b-tr v-for="(o, i) in form.InvoiceLines" :key="i">
                   <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.ItemCode}}</b-td>
-                  <b-td>{{o.Quantity}}</b-td>
+                  <b-td>{{formatValue (o.Quantity)}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
@@ -321,7 +321,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['stocks', 'multipleItemSearch'])
+    ...mapState(['stocks', 'multipleItemSearch']),
+    SalesInvoiceItemsFormatted() {
+      return this.form.InvoiceLines.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
   },
   mounted () {
     this.createManualCode('InvoiceNumber')
@@ -329,6 +335,9 @@ export default {
     this.getInvoiceKind()
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     getInsertPage () {
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
@@ -440,9 +449,10 @@ export default {
       if (!this.selectedInvoiceLine.quantity || !this.selectedInvoiceLine.selectedItem || !this.selectedInvoiceLine.price || !this.priceListItem) {
         return false
       }
+      let quantity = this.selectedInvoiceLine.quantity.replace(/,/g, '.');
       let vatRate = this.priceListItem.VatRate
       this.selectedInvoiceLine.vatRate = vatRate
-      this.selectedInvoiceLine.netTotal = this.roundNumber(this.selectedInvoiceLine.price * this.selectedInvoiceLine.quantity)
+      this.selectedInvoiceLine.netTotal = this.roundNumber(this.selectedInvoiceLine.price * quantity)
       this.selectedInvoiceLine.totalVat = this.roundNumber(this.selectedInvoiceLine.netTotal * vatRate / 100)
       this.selectedInvoiceLine.grossTotal = this.roundNumber(parseFloat(this.selectedInvoiceLine.netTotal) + parseFloat(this.selectedInvoiceLine.totalVat))
     },
@@ -632,7 +642,7 @@ export default {
         },
         quantity: {
           required,
-          minValue: minValue(1)
+          //minValue: minValue(1)
         },
         price: {
           required

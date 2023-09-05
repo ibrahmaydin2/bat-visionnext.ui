@@ -311,7 +311,8 @@ export const store = new Vuex.Store({
         {
           mainProperty: 'Quantity',
           targetProperty: 'NetTotal',
-          getValue: (value, data) => {
+          getValue: (value, data) => {      
+            value = value.replace(/,/g, '.')      
             return store.roundNumber(data.Price * (value ? parseFloat(value) : 0))
           }
         },
@@ -342,11 +343,35 @@ export const store = new Vuex.Store({
           }
         }
       ],
+      multipleValidationsDotOrComma: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            let normalizedValue = String(value).replace(',', '.');
+            let numberValue = parseFloat(normalizedValue);
+            if (value && parseFloat(value) > data.StockQuantity) {
+              store.commit('showAlert', { type: 'danger', msg: i18n.t('insert.order.quantityStockException') })
+              return false
+            }
+            return true , numberValue > 0
+          }
+        }
+      ],
       quantityValidation: [
         {
           mainProperty: 'Quantity',
           validation: (value, data) => {
             return value > 0
+          }
+        }
+      ],
+      quantityValidationDotOrComma: [
+        {
+          mainProperty: 'Quantity',
+          validation: (value, data) => {
+            let normalizedValue = String(value).replace(',', '.');
+            let numberValue = parseFloat(normalizedValue);
+            return numberValue > 0
           }
         }
       ],

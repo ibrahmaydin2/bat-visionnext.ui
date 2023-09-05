@@ -130,7 +130,7 @@
                 :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="number" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDot($event)" min="1"></NextInput>
+              <NextInput type="text" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"></NextInput>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -163,7 +163,7 @@
                   :disabled-button="!form.WarehouseId || !form.PriceListId"
                   :converted-values="multipleItemSearch.convertedValues"
                   :dynamic-and-condition="{WarehouseIds: [form.WarehouseId], PriceListIds: [form.PriceListId], CustomerIds: [form.CustomerId], CurrencyIds: [form.CurrencyId]}"
-                  :validations="multipleItemSearch.quantityValidation"
+                  :validations="multipleItemSearch.quantityValidationDotOrComma"
                   :summary-items="multipleItemSearch.summaryItems"
                   @input="calculateTotalPrices()"
                 />
@@ -186,7 +186,7 @@
                 <b-tr v-for="(o, i) in form.OrderLines" :key="i">
                   <b-td>{{o.Description1}}</b-td>
                   <b-td>{{o.ItemCode}}</b-td>
-                  <b-td>{{o.Quantity}}</b-td>
+                  <b-td>{{formatValue (o.Quantity)}}</b-td>
                   <b-td>{{o.Price}}</b-td>
                   <b-td>{{o.VatRate}}</b-td>
                   <b-td>{{o.NetTotal}}</b-td>
@@ -301,9 +301,18 @@ export default {
     this.getInsertPage(this.routeName)
   },
   computed: {
-    ...mapState(['multipleItemSearch'])
+    ...mapState(['multipleItemSearch']),
+    PurchaseOrderItemsFormatted() {
+      return this.form.OrderLines.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    }
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     getInsertPage (e) {
       let currentDate = new Date()
       let date = currentDate.toISOString().slice(0, 10) + 'T00:00:00.000Z'
@@ -440,9 +449,10 @@ export default {
       if (!this.selectedOrderLine.quantity || !this.selectedOrderLine.selectedItem || !this.selectedOrderLine.price || !this.priceListItem) {
         return false
       }
+      let quantity = this.selectedOrderLine.quantity.replace(/,/g, '.');
       let vatRate = this.selectedOrderLine.selectedItem.Vat
       this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? vatRate : 0
-      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * this.selectedOrderLine.quantity)
+      this.selectedOrderLine.netTotal = this.roundNumber(this.selectedOrderLine.price * quantity)
       this.selectedOrderLine.vatTotal = this.priceListItem.IsVatIncluded === 1 ? 0 : this.roundNumber(this.selectedOrderLine.netTotal * vatRate / 100)
       this.selectedOrderLine.grossTotal = this.roundNumber(parseFloat(this.selectedOrderLine.netTotal) + parseFloat(this.selectedOrderLine.vatTotal))
     },
@@ -711,7 +721,7 @@ export default {
         },
         quantity: {
           required,
-          minValue: minValue(1)
+          //minValue: minValue(1)
         },
         price: {
           required
