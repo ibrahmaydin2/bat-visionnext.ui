@@ -45,8 +45,8 @@
               <div v-html="getFormatDataByType(rowData.DeliveryDayParam, 'text', 'insert.customer.Model_DeliveryDayParam')"></div>
               <div v-html="getFormatDataByType(rowData.CardType, 'object', 'insert.customer.Model_CardTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'insert.customer.Model_TypeId')"></div>
-              <div v-html="getFormatDataByType(rowData.SalesVisitFrequency, 'object', 'insert.customer.Model_salesVisitFrequency')"></div>
-              <div v-html="getFormatDataByType(rowData.serviceVisitFrequency, 'object', 'insert.customer.serviceVisitFrequency')"></div>
+              <div v-html="getFormatDataByType(rowData.SalesVisitFrequency, 'text', 'insert.customer.Model_salesVisitFrequency')"></div>
+              <div v-html="getFormatDataByType(rowData.ServiceVisitFrequency, 'text', 'insert.customer.serviceVisitFrequency')"></div>
               <div v-html="getFormatDataByType(rowData.SalesType, 'object', 'insert.customer.Model_SalesTypeId')"></div>
               <div v-html="getFormatDataByType(rowData.PriceListCategory, 'object', 'insert.customer.Model_PriceListCategoryId')"></div>
               <div v-html="getFormatDataByType(rowData.SalesPriceChangeRate, 'text', 'insert.customer.Model_SalesPriceChangeRate')"></div>
