@@ -159,10 +159,19 @@ export default {
         this.getCustomerDetail(this.rowData.SourceContractId)
       }
     })
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
     if (!localStorage.getItem('visitedRefContractBefore')) {
-      localStorage.setItem('visitedRefContractBefore', 'true');
-      location.reload();
+      localStorage.setItem('visitedRefContractBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 4) {
+        visitCounter = 0;
+        location.reload(true);
+      }
     }
+    localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
     selectedSourceCustomer (label, model) {
