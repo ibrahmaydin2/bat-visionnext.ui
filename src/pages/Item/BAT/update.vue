@@ -369,10 +369,19 @@ export default {
   },
   mounted () {
     this.getData().then(() => this.setData())
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
     if (!localStorage.getItem('visitedItemBefore')) {
-      localStorage.setItem('visitedItemBefore', 'true');
-      location.reload();
+      localStorage.setItem('visitedItemBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 4) {
+        visitCounter = 0;
+        location.reload(true);
+      }
     }
+    localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
     submitFile () {

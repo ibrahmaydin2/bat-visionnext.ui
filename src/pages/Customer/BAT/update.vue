@@ -850,10 +850,19 @@ export default {
     this.getData().then(() => this.setData())
     this.getPaymentTypes()
     // this.getLookups()
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
     if (!localStorage.getItem('visitedCustomerPageBefore')) {
-      localStorage.setItem('visitedCustomerPageBefore', 'true');
-      location.reload();
+      localStorage.setItem('visitedCustomerPageBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 4) {
+        visitCounter = 0;
+        location.reload(true);
+      }
     }
+    localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
     addCustomerSeasonRates () {
