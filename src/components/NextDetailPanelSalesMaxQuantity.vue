@@ -312,14 +312,6 @@ export default {
     },
     addItems () {
       this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$toasted.show(this.$t('insert.requiredFields'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-        return
-      }
 
       this.form = {
         ...this.form,
