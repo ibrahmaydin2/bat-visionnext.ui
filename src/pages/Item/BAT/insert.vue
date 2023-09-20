@@ -120,7 +120,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdown :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.UnitSetId" @selected-record-id="handleSelectedRecordId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
               <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
@@ -160,8 +160,8 @@
         <b-tab :title="$t('insert.item.CustomerCode')">
           <NextDetailPanel v-model="form.ItemCustomers" :items="itemCustomerItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.item.ItemCode')">
-          <NextDetailPanel v-model="form.ItemBarcodes" :items="itemBarcodeItems"></NextDetailPanel>
+        <b-tab :title="$t('insert.item.ItemCode')" v-if="this.selectedRecordId !== null">
+          <NextDetailPanelSalesMaxQuantity v-model="form.ItemBarcodes" :items="getFixedTermCampaignCustomerCriterias()"></NextDetailPanelSalesMaxQuantity>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemImage')">
           <b-row>
@@ -303,13 +303,62 @@ export default {
       IsRMAOff: null,
       IsSpGiftItem: null,
       selectedFile: null,
-      filePath: null
+      filePath: null,
+      selectedRecordId: null,
+      unitSetId: null,
     }
   },
   mounted () {
     this.createManualCode()
   },
   methods: {
+    handleSelectedRecordId(recordId) {
+      console.log('Seçilen Birim Seti Record Id:', recordId)
+      this.selectedRecordId = recordId
+      this.unitSetId = recordId
+      // this.makeSecondApiCall()
+    },
+    // makeSecondApiCall() {
+    //   if (this.selectedRecordId !== null) {
+    //     let request = {
+    //       recordId: this.selectedRecordId,
+    //       unitSetId: this.unitSetId,
+    //     }
+    //     this.$api.postByUrl(request, '/VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit')
+    //   } else {
+    //     console.log('recordId is null. API request cannot be made.');
+    //   }
+    // },
+    getFixedTermCampaignCustomerCriterias () {
+      if (this.selectedRecordId !== null) { 
+        return [
+          {
+            type: 'Text',
+            inputType: 'text',
+            modelProperty: 'Barcode',
+            label: 'insert.item.ItemBarcodesBarcode',
+            required: true,
+            visible: true,
+            md: '2',
+            lg: '2',
+            id: 1
+          },
+          {
+            type: 'Dropdown',
+            modelProperty: 'UnitSetId',
+            objectKey: 'UnitSet',
+            dynamicRequest: { recordId: this.selectedRecordId, unitSetId: this.unitSetId },
+            url: 'VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit',
+            label: 'insert.item.ItemBarcodesUnitId',
+            required: true,
+            visible: true,
+            md: '2',
+            lg: '2',
+            id: 2
+          }
+        ]
+    }
+    },
     submitFile () {
       this.getBase64(this.selectedFile)
     },

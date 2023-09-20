@@ -1,8 +1,8 @@
 <template>
 <v-select
-    :disabled="disabled" v-model="selectedValue"
+    :disabled="disabled" v-model="selectedValue" 
     :options="getSource()" @search="searchValue"
-    @input="selectValue($event)" :filterable="searchable ? false : true"
+    @input="selectValue" :filterable="searchable ? false : true"
     :label="labelKey" :multiple="multiple"
     :reduce="getReduceFunc()">
     <template slot="no-options" v-if="searchable">
@@ -256,6 +256,9 @@ export default {
     }
   },
   methods: {
+    handleSelection(value) {
+      this.$emit('selection-changed', value);
+    },
     searchValue (search, loading) {
       if (!this.searchable || search.length < 3 || (!this.url && !this.search)) {
         return false
@@ -366,8 +369,9 @@ export default {
         }
       })
     },
-    selectValue (value) {
-      this.$emit('input', value)
+    selectValue (selectedItem) {
+      const selectedRecordId = selectedItem.RecordId;
+      this.$emit('selected-record-id', selectedRecordId);
     },
     getLookupValues () {
       let lookupValue = this.lookup[this.lookupKey]
