@@ -57,8 +57,10 @@ import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
 import NextDropdown from './components/NextDropdown'
+import NextDropdownUnitSet from './components/NextDropdownUnitSet'
 import NextDetailPanel from './components/NextDetailPanel'
 import NextDetailPanelSalesMaxQuantity from './components/NextDetailPanelSalesMaxQuantity'
+import NextDetailPanelUnitSet from './components/NextDetailPanelUnitSet'
 import NextLocation from './components/NextLocation'
 import NextDatePicker from './components/NextDatePicker'
 import NextDatePicker2 from './components/NextDatePicker2'
@@ -157,8 +159,10 @@ Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
 Vue.component('NextDropdown', NextDropdown)
+Vue.component('NextDropdownUnitSet', NextDropdownUnitSet)
 Vue.component('NextDetailPanel', NextDetailPanel)
 Vue.component('NextDetailPanelSalesMaxQuantity', NextDetailPanelSalesMaxQuantity)
+Vue.component('NextDetailPanelUnitSet', NextDetailPanelUnitSet)
 Vue.component('Actions', Actions)
 Vue.component('NextLocation', NextLocation)
 Vue.component('NextDatePicker', NextDatePicker)
