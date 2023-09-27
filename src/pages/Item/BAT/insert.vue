@@ -120,7 +120,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdown :disabled="insertReadonly.UnitSetId" @selected-record-id="handleSelectedRecordId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
+              <NextDropdownUnitSet :disabled="insertReadonly.UnitSetId" @selected-record-id="handleSelectedRecordId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
               <NextDropdown :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
@@ -161,7 +161,7 @@
           <NextDetailPanel v-model="form.ItemCustomers" :items="itemCustomerItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemCode')" v-if="this.selectedRecordId !== null">
-          <NextDetailPanelSalesMaxQuantity v-model="form.ItemBarcodes" :items="getFixedTermCampaignCustomerCriterias()"></NextDetailPanelSalesMaxQuantity>
+          <NextDetailPanelUnitSet v-model="form.ItemBarcodes" :items="getFixedTermCampaignCustomerCriterias()"></NextDetailPanelUnitSet>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemImage')">
           <b-row>
@@ -344,7 +344,7 @@ export default {
             id: 1
           },
           {
-            type: 'Dropdown',
+            type: 'DropdownUnitSet',
             modelProperty: 'UnitSetId',
             objectKey: 'UnitSet',
             dynamicRequest: { recordId: this.selectedRecordId, unitSetId: this.unitSetId },
