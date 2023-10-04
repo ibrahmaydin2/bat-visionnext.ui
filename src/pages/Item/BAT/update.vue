@@ -120,7 +120,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdownUnitSet :disabled="insertReadonly.UnitSetId" @selected-record-id="handleSelectedRecordId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="selectedSearchType('UnitSetId', $event)"/>
+              <NextDropdown :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="combinedMethod($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
               <NextDropdown v-model="DiscountGroup1" :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
@@ -160,8 +160,8 @@
         <b-tab :title="$t('insert.item.CustomerCode')">
           <NextDetailPanel v-model="form.ItemCustomers" :items="itemCustomerItems"></NextDetailPanel>
         </b-tab>
-        <b-tab :title="$t('insert.item.ItemCode')" v-if="this.selectedRecordId !== null">
-          <NextDetailPanelUnitSet v-model="form.ItemBarcodes" :items="getFixedTermCampaignCustomerCriterias()"></NextDetailPanelUnitSet>
+        <b-tab :title="$t('insert.item.ItemCode')">
+          <NextDetailPanel v-model="form.ItemBarcodes" :items="getUnitSetItems()"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.item.ItemImage')">
           <b-row>
@@ -365,8 +365,9 @@ export default {
       selectedFile: null,
       Attachment: [],
       filePath: null,
-      selectedRecordId: null,
-      unitSetId: null
+      unitSetId: null,
+      unitSet: null,
+      unitSets: [],
     }
   },
   mounted () {
@@ -386,25 +387,39 @@ export default {
     localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
-    handleSelectedRecordId(recordId) {
-      console.log('Seçilen Birim Seti Record Id:', recordId)
-      this.selectedRecordId = recordId
-      this.unitSetId = recordId
-      // this.makeSecondApiCall()
-    },
-    // makeSecondApiCall() {
-    //   if (this.selectedRecordId !== null) {
-    //     let request = {
-    //       recordId: this.selectedRecordId,
-    //       unitSetId: this.unitSetId,
-    //     }
-    //     this.$api.postByUrl(request, '/VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit')
-    //   } else {
-    //     console.log('recordId is null. API request cannot be made.');
-    //   }
-    // },
-    getFixedTermCampaignCustomerCriterias () {
-      if (this.selectedRecordId !== null) { 
+    combinedMethod(unitSetId) {
+  if (unitSetId) {
+    this.form['UnitSetId'] = unitSetId.RecordId;
+    this.form.UnitSet = unitSetId.UnitSetIdDesc;
+    this.unitSetId = unitSetId.RecordId;
+    console.log('Seçilen Record ID:', unitSetId.RecordId);
+
+    let request = {
+      recordId: unitSetId.RecordId,
+      unitSetId: unitSetId.RecordId,
+    };
+    this.$api.postByUrl(
+      request,
+      'VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit'
+    ).then((response) => {
+      this.unitSets = response && response.length > 0 ? response.map((r) => {
+        r.Deleted = 0;
+        r.System = 0;
+        r.RecordState = 2;
+        r.StatusId = 1;
+        r.UnitSetId = 0;
+        r.UnitSet = 0;
+        r.UnitSetIdDesc = 0;
+        return r;
+      }) : [];
+    });
+  } else {
+    this.form['UnitSetId'] = null;
+    this.unitSetId = null;
+    this.unitSets = [];
+  }
+},
+    getUnitSetItems () {
         return [
           {
             type: 'Text',
@@ -418,11 +433,10 @@ export default {
             id: 1
           },
           {
-            type: 'DropdownUnitSet',
+            type: 'Dropdown',
             modelProperty: 'UnitSetId',
             objectKey: 'UnitSet',
-            dynamicRequest: { recordId: this.selectedRecordId, unitSetId: this.unitSetId },
-            url: 'VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit',
+            source: this.unitSets,
             label: 'insert.item.ItemBarcodesUnitId',
             required: true,
             visible: true,
@@ -431,7 +445,6 @@ export default {
             id: 2
           }
         ]
-    }
     },
     submitFile () {
       this.getBase64(this.selectedFile)
