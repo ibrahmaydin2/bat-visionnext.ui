@@ -865,7 +865,7 @@ export default {
     localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
-    addCustomerSeasonRates () {
+            addCustomerSeasonRates () {
       this.$v.customerRates.$touch()
       if (this.$v.customerRates.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -1321,7 +1321,7 @@ export default {
       if (!rowData.CustomerSeasonRates) {
         this.form.CustomerSeasonRates = []
       }
-    },
+          },
     getPaymentTypes () {
       this.$api.postByUrl({}, 'VisionNextCommonApi/api/PaymentType/AutoCompleteSearch').then((response) => {
         if (response.ListModel) {
@@ -1331,17 +1331,24 @@ export default {
       })
     },
     changeValidation (data) {
-      let isError = data.CreditDescriptionId === 100
+      let isErrorBTB = data.CreditDescription.Code === 'BTB' 
+      let isErrorMT = data.CreditDescriptionId === 100
 
-      if (isError) {
+      if (isErrorBTB) {
+        this.$toasted.show(('Bulut Tahsilat Teminatı Tipindeki Kayıtlar Silinemez ve Düzenlenemez.'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      }
+      if (isErrorMT) {
         this.$toasted.show(this.$t('insert.CustomerCreditNotDeleted'), {
           type: 'error',
           keepOnHover: true,
           duration: '3000'
         })
       }
-
-      return !isError
+      return !isErrorBTB &&  !isErrorMT
     },
     selectRouteType (value) {
       this.routeDetailsObj.route = null
