@@ -164,7 +164,8 @@
                     :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
+              <NextInput v-if=" this.UnitCode === 'ADET' " :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-else :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -403,6 +404,8 @@ export default {
       paymentTypes: [],
       priceList: [],
       items: [],
+      UnitCode: null,
+      UnitCodeEdit: null,
       stocks: [],
       disabledItems: true,
       selectedBranch: {}
@@ -509,6 +512,8 @@ export default {
       this.$api.post(request, 'Item', 'Item/Search').then((res) => {
         if (res.ListModel && res.ListModel.BaseModels) {
           me.selectedOrderLine.selectedItem = res.ListModel.BaseModels[0]
+          //console.log(res.ListModel.BaseModels[0].Unit.Code)
+          me.UnitCodeEdit = res.ListModel.BaseModels[0].Unit.Code
           me.selectItem()
           me.$forceUpdate()
         }
@@ -555,6 +560,8 @@ export default {
     selectItem (value) {
       if (value) {
         this.selectedOrderLine.selectedItem = value
+        this.UnitCode = value.UnitCode
+        //console.log(value.UnitCode)
       }
       this.searchPriceListItem()
       this.setStock()

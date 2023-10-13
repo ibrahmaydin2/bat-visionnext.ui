@@ -200,6 +200,12 @@ export default {
         $event.preventDefault()
       }
     },
+    onlyForNumber ($event){
+      const inputValue = $event.key
+      if (!/^\d$/.test(inputValue) && inputValue !== "Backspace") {
+        $event.preventDefault()
+      }
+    },
     onlyForCurrencyStr ($event) {
       let model = $event.currentTarget.value
       let keyCode = ($event.keyCode ? $event.keyCode : $event.which)

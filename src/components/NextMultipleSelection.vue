@@ -160,7 +160,7 @@
                 @input="setConvertedValues($event, data)"
                 type="text"
                 :input-class="`min-input-width ${data.item.class}`"
-                @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"
+                @keypress="preventDotForItemSelected($event, data); onlyForCurrencyDotOrComma($event); keypress($event);"
                 @keydown="keyDown($event)"
                 @onFocus="(event) => data.item[data.field.key] = event.target.value == '0' ? undefined : data.item[data.field.key]"
                 :input-style="data.field.column.maxLength ? {'width': `${data.field.column.maxLength}px`} : undefined"
@@ -565,6 +565,15 @@ export default {
       this.$nextTick(() => {
         this.calculateSummary()
       })
+    },
+      preventDotForItemSelected($event, data){
+      if(data.item.UnitDesc === "Adet"){
+        const forbiddenChars = ['.', ',']
+        const inputValue = $event.key
+        if (forbiddenChars.includes(inputValue)) {
+          $event.preventDefault()
+        }
+      }
     },
     rowSelected (data) {
       this.selectedList = data
