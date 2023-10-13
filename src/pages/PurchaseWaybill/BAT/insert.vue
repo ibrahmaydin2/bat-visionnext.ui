@@ -129,7 +129,8 @@
                 :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="text" v-model="selectedInvoiceLine.quantity" @input="selectQuantity" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
+              <NextInput v-if=" this.UnitCode === 'ADET' " :disabled="disabledItems" v-model="selectedInvoiceLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-else :disabled="disabledItems" v-model="selectedInvoiceLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedInvoiceLine.price" :disabled="true" />
@@ -300,6 +301,7 @@ export default {
       selectedIndex: null,
       customerFirstSet: true,
       documentDateFirstSet: true,
+      UnitCode: null,
       currentCustomer: {},
       customerSelectCancelled: false
     }
@@ -441,6 +443,7 @@ export default {
     },
     selectItem (item) {
       this.selectedInvoiceLine.selectedItem = item
+      this.UnitCode = item.UnitCode
       this.searchPriceListItem()
       this.setStock()
     },

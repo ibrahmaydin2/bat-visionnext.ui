@@ -190,7 +190,8 @@
                 :disabled="disabledItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput :disabled="disabledItems" type="text" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)"></NextInput>
+              <NextInput v-if=" this.UnitCode === 'ADET' " :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-else :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -484,7 +485,8 @@ export default {
       items: [],
       stocks: [],
       disabledItems: false,
-      selectedBranch: {}
+      selectedBranch: {},
+      UnitCode: null
     }
   },
   mounted () {
@@ -637,6 +639,7 @@ export default {
     selectItem (value) {
       if (value) {
         this.selectedOrderLine.selectedItem = value
+        this.UnitCode = value.UnitCode
       }
       this.searchPriceListItem()
       this.setStock()
