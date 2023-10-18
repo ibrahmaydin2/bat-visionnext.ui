@@ -1117,14 +1117,7 @@ export default {
           this.getCustomerBudgets(this.form.CustomerId)
           this.selectContractType()
           this.getCode(this.customerList.BranchId)
-        } else {
-          this.$toasted.show(this.$t('insert.investmentForm.requiredDocument'),
-            {
-              type: 'error',
-              keepOnHover: true,
-              duration: '3000'
-            })
-        }
+        } else { }
       })
     },
     getCode (BranchId) {

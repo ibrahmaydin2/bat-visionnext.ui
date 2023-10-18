@@ -71,7 +71,8 @@
               <NextInput v-model="vanLoadingItem.SuggestedQuantity" type="text" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.vanLoading.LoadingQuantity')" :required="true" :error="$v.vanLoadingItem.LoadingQuantity">
-              <NextInput v-model="vanLoadingItem.LoadingQuantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
+              <NextInput v-if="this.vanLoadingItem.UnitCode === 'ADET'" v-model="vanLoadingItem.LoadingQuantity" type="text" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-else v-model="vanLoadingItem.LoadingQuantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <b-col cols="12" md="3" class="text-right ml-auto addButton">
               <b-form-group :label="$t('insert.vanLoading.items')" label-class="v-none">
@@ -170,7 +171,8 @@ export default {
         ConvFact1: 1,
         ConvFact2: 1,
         RecordId: null,
-        Item: null
+        Item: null,
+        UnitCode: null,
       },
       detailPanelRecordId: null,
       selectedIndex: 0,
@@ -249,7 +251,8 @@ export default {
           this.vanLoadingItem.Description1 = e.Description1
           this.vanLoadingItem.unitId = e.UnitId
           this.vanLoadingItem.unitSetId = e.UnitSetId
-          this.vanLoadingItem.RecordId = this.detailPanelRecordId
+          this.vanLoadingItem.UnitCode = e.UnitCode
+          this.vanLoadingItem.RecordId = this.detailPanelRecordI
           if (loadingQuantity >= 0) {
             this.vanLoadingItem.IsUpdated = true
           }
