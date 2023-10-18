@@ -133,7 +133,8 @@
                 :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedOrderLine.quantity" :required="true" md="2" lg="2">
-              <NextInput type="text" v-model="selectedOrderLine.quantity" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"></NextInput>
+              <NextInput v-if=" this.UnitCode === 'ADET' " :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-else :disabled="disabledItems" v-model="selectedOrderLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedOrderLine.price" :required="true" md="2" lg="2">
               <NextInput type="number" v-model="selectedOrderLine.price" :disabled="true"></NextInput>
@@ -295,6 +296,7 @@ export default {
       customers: [],
       priceList: [],
       items: [],
+      UnitCode: null,
       priceListItems: [],
       stocks: []
     }
@@ -441,6 +443,7 @@ export default {
       if (value) {
         this.selectedOrderLine.selectedItem = value
         this.selectedOrderLine.vatRate = this.priceListItem.UseConsumerPrice === 0 ? value.Vat : 0
+        this.UnitCode = value.UnitCode
       }
       this.searchPriceListItem()
       this.setStock()
