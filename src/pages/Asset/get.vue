@@ -29,12 +29,14 @@
               <div v-html="getFormatDataByType(rowData.Brand, 'object', 'get.asset.brand')"></div>
               <div v-html="getFormatDataByType(rowData.Model, 'object', 'get.asset.model')"></div>
               <div v-html="getFormatDataByType(rowData.AssetType, 'object', 'get.asset.assetType')"></div>
+              <div v-html="getFormatDataByType(rowData.FurnitureExpense, 'text', 'Mobilya Masrafı')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
               <div v-html="getFormatDataByType(rowData.Type, 'object', 'get.asset.type')"></div>
               <div v-html="getFormatDataByType(rowData.AssetClass, 'object', 'get.asset.assetClass')"></div>
               <div v-html="getFormatDataByType(rowData.TrackType, 'object', 'get.asset.trackType')"></div>
               <div v-html="getFormatDataByType(rowData.Barcode, 'text', 'get.asset.barcode')"></div>
+              <div v-html="getFormatDataByType(rowData.ShelfQuantity, 'text', 'Önyüz Sayısı')"></div>
             </b-card>
           </b-row>
         </b-tab>

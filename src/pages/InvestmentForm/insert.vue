@@ -306,25 +306,55 @@
           <fieldset class="fs-border">
               <legend class="fs-legend-detail">{{$t('insert.investmentForm.currentUnitStatus')}}</legend>
               <b-row class="p-3">
-                <b-col cols="6">
+                  <b-col cols="6">
                   <b-table-simple bordered small>
-                      <b-thead>
-                        <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
-                        <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
-                        <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
-                        <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
-                      </b-thead>
-                    <b-tbody>
-                      <b-tr v-for="(c, i) in this.assetsLocationList.AssetLocations" :key="i">
-                        <b-td>{{$t('insert.investmentForm.unit') + (i+1)}}</b-td>
-                        <b-td>{{c.Asset.Label}}</b-td>
-                        <b-td>{{c.Quantity}}</b-td>
-                        <b-td>{{c.Customer.Label}}</b-td>
-                      </b-tr>
-                    </b-tbody>
-                  </b-table-simple>
-                </b-col>
-              </b-row>
+                        <b-thead>
+                          <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
+                          <b-th><span>{{('Önyüz Sayısı')}}</span></b-th>
+                          <b-th><span>{{('Mobilya Masrafı')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
+                        </b-thead>
+                      <b-tbody>
+                        <b-tr v-for="(item, index) in form.data" :key="index">
+                          <b-td>{{$t('insert.investmentForm.unit') + (index+1)}}</b-td>
+                          <b-td>{{item.Description1}}</b-td>
+                          <b-td>
+                            <span v-if="item.ShelfQuantity!= null">{{item.ShelfQuantity}}</span>
+                            <NextInput v-else type="number" v-model="item.ShelfQuantity"></NextInput>
+                          </b-td>
+                          <b-td>
+                            <span v-if="item.FurnitureExpense!= null">{{item.FurnitureExpense}}</span>
+                            <NextInput v-else type="number" v-model="item.FurnitureExpense"></NextInput>
+                          </b-td>
+                          <b-td>{{item.AssetLocations[0].Quantity}}</b-td>
+                          <b-td>{{item.AssetLocations[0].Customer.Label}}</b-td>
+                        </b-tr>
+                      </b-tbody>
+                    </b-table-simple>
+                    <!-- <NextMultipleSelection
+                      name="AssetMovementCardMultipleAsset"
+                      v-model="this.form.data"
+                    /> -->
+                    <!-- <b-table-simple bordered small>
+                        <b-thead>
+                          <b-th><span>{{$t('insert.investmentForm.Units')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.unitName')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.piece')}}</span></b-th>
+                          <b-th><span>{{$t('insert.investmentForm.location')}}</span></b-th>
+                        </b-thead>
+                      <b-tbody>
+                        <b-tr v-for="(c, i) in this.assetsLocationList.AssetLocations" :key="i">
+                          <b-td>{{$t('insert.investmentForm.unit') + (i+1)}}</b-td>
+                          <b-td>{{c.Asset.Label}}</b-td>
+                          <b-td>{{c.Quantity}}</b-td>
+                          <b-td>{{c.Customer.Label}}</b-td>
+                        </b-tr>
+                      </b-tbody>
+                    </b-table-simple> -->
+                  </b-col>
+                </b-row>
           </fieldset>
           <fieldset class="fs-border">
               <legend class="fs-legend-detail">{{$t('insert.investmentForm.opponentUnitStatus')}}</legend>
@@ -369,11 +399,11 @@
                 <b-tbody>
                   <b-tr>
                     <b-td>{{$t('insert.investmentForm.furniteCost')}}</b-td>
-                    <b-td><NextInput type="number" v-model="otherDetails.furniteCost"/></b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.furniteCost" :disabled="true"/></b-td>
                   </b-tr>
                   <b-tr>
                     <b-td>{{$t('insert.investmentForm.numberOfFrontFaces')}}</b-td>
-                    <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces"/></b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces" :disabled="true"/></b-td>
                   </b-tr>
                   <b-tr>
                     <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
@@ -716,6 +746,16 @@ export default {
     }
   },
   methods: {
+    search () {
+       let request = {
+        AndConditionModel:{CustomerIds: [this.form.CustomerId]}
+           }
+      this.$api.postByUrl(request, '/VisionNextAsset/api/AssetLocation/SearchWithAsset').then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.form.data = response.ListModel.BaseModels
+        }
+      })
+    },
     save () {
       this.form.ContractBenefits = []
       this.form.ContractAssets = []
@@ -1024,6 +1064,7 @@ export default {
           BenefitTypeId: 4,
           BenefitTypeName: 'Varlik',
           CurrencyId: 1,
+          TciBreak1Id: 26190839843,
           CurrencyName: 'Türk Lirası',
           usedAmount: 0
         }
@@ -1116,6 +1157,7 @@ export default {
           this.getContractItemCriteria()
           this.getCustomerBudgets(this.form.CustomerId)
           this.selectContractType()
+          this.search()
           this.getCode(this.customerList.BranchId)
         } else { }
       })

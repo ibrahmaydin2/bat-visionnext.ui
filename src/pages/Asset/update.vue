@@ -55,6 +55,12 @@
             <NextFormGroup item-key="Barcode" :error="$v.form.Barcode">
               <NextInput type="text" v-model="form.Barcode" :disabled="insertReadonly.Barcode" />
             </NextFormGroup>
+            <NextFormGroup title="Mobilya Masrafı" :error="$v.form.FurnitureExpense">
+              <NextInput type="number" v-model="form.FurnitureExpense" :disabled="insertReadonly.FurnitureExpense" />
+            </NextFormGroup>
+            <NextFormGroup title="Önyüz Sayısı" :error="$v.form.ShelfQuantity">
+              <NextInput type="number" v-model="form.ShelfQuantity" :disabled="insertReadonly.ShelfQuantity" />
+            </NextFormGroup>
           </b-row>
         </b-tab>
         <b-tab  :title="$t('get.asset.properties')" v-if="assetPropertyValues && assetPropertyValues.length > 0">
@@ -104,6 +110,8 @@ export default {
         BrandId: null,
         AssetClassId: null,
         Barcode: null,
+        FurnitureExpense: null,
+        ShelfQuantity: null,
         ModelId: null,
         Category3Id: null,
         TrackTypeId: null,
