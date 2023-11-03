@@ -120,7 +120,7 @@
               <NextInput v-model="form.FinanceCode" type="text" :disabled="insertReadonly.FinanceCode" />
             </NextFormGroup>
             <NextFormGroup item-key="UnitSetId" :error="$v.form.UnitSetId">
-              <NextDropdown :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="combinedMethod($event)"/>
+              <NextDropdown v-model="UnitSet" :item-selected="true" :disabled="insertReadonly.UnitSetId" url="VisionNextUnit/api/UnitSet/AutoCompleteSearch" @input="combinedMethod($event)"/>
             </NextFormGroup>
             <NextFormGroup item-key="DiscountGroup1Id" :error="$v.form.DiscountGroup1Id">
               <NextDropdown v-model="DiscountGroup1" :disabled="insertReadonly.DiscountGroup1Id" lookup-key="ITEM_DISCOUNT_GROUP_1" @input="selectedType('DiscountGroup1Id', $event)"/>
@@ -388,37 +388,37 @@ export default {
   },
   methods: {
     combinedMethod(unitSetId) {
-  if (unitSetId) {
-    this.form['UnitSetId'] = unitSetId.RecordId;
-    this.form.UnitSet = unitSetId.UnitSetIdDesc;
-    this.unitSetId = unitSetId.RecordId;
-    console.log('Seçilen Record ID:', unitSetId.RecordId);
+      if (unitSetId) {
+        this.form['UnitSetId'] = unitSetId.RecordId;
+        this.form.UnitSet = unitSetId.UnitSetIdDesc;
+        this.unitSetId = unitSetId.RecordId;
+        console.log('Seçilen Record ID:', unitSetId.RecordId);
 
-    let request = {
-      recordId: unitSetId.RecordId,
-      unitSetId: unitSetId.RecordId,
-    };
-    this.$api.postByUrl(
-      request,
-      'VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit'
-    ).then((response) => {
-      this.unitSets = response && response.length > 0 ? response.map((r) => {
-        r.Deleted = 0;
-        r.System = 0;
-        r.RecordState = 2;
-        r.StatusId = 1;
-        r.UnitSetId = 0;
-        r.UnitSet = 0;
-        r.UnitSetIdDesc = 0;
-        return r;
-      }) : [];
-    });
-  } else {
-    this.form['UnitSetId'] = null;
-    this.unitSetId = null;
-    this.unitSets = [];
-  }
-},
+        let request = {
+          recordId: unitSetId.RecordId,
+          unitSetId: unitSetId.RecordId,
+        };
+        this.$api.postByUrl(
+          request,
+          'VisionNextUnit/api/UnitSet/SearchForByUnitSetToUnit'
+        ).then((response) => {
+          this.unitSets = response && response.length > 0 ? response.map((r) => {
+            r.Deleted = 0;
+            r.System = 0;
+            r.RecordState = 2;
+            r.StatusId = 1;
+            r.UnitSetId = 0;
+            r.UnitSet = 0;
+            r.UnitSetIdDesc = 0;
+            return r;
+          }) : [];
+        });
+      } else {
+        this.form['UnitSetId'] = null;
+        this.unitSetId = null;
+        this.unitSets = [];
+      }
+    },
     getUnitSetItems () {
         return [
           {
