@@ -163,6 +163,11 @@
         default: false,
         description: 'Listenin ilk elemanı varsayılan olarak seçili getirir'
       },
+      itemSelected: {
+        type: Boolean,
+        default: false,
+        description: 'Değeri varsayılan olarak seçili getirir'
+      },
       pageCount: {
         type: Number,
         default: 50,
@@ -410,6 +415,10 @@
           this.findDefaultValue(this.defaultValue, source)
         } else if (this.firstItemSelected && source.length > 0) {
           this.selectedValue = source[0]
+          this.$emit('input', this.selectedValue)
+        }
+        else if (this.itemSelected && source.length > 0) {
+          this.selectedValue = this.value
           this.$emit('input', this.selectedValue)
         }
       },
