@@ -91,7 +91,7 @@
                     <b-td>{{contract.ContractNumber}}</b-td>
                     <b-td>{{contract.Description1}}</b-td>
                     <b-td>{{contract.ApproveState ? contract.ApproveState.Label : ''}}</b-td>
-                    <b-td>{{contract.StatusReason ? contract.StatusReason.Label : ''}}</b-td>
+                    <b-td>{{contract.Status ? contract.Status.Label : ''}}</b-td>
                     <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].StartDate) : ''}}</b-td>
                     <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].EndDate) : ''}}</b-td>
                   </b-tr>
