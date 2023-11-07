@@ -40,6 +40,36 @@
             </b-card>
           </b-row>
         </b-tab>
+        <b-tab :title="$t('insert.contract.otherContract')">
+          <b-row>
+            <b-col cols="12" md="12">
+              <b-card class="m-4 asc__showPage-card">              
+              <b-table-simple bordered small>
+                <b-thead>
+                  <b-th>{{$t('insert.contract.Code')}}</b-th>
+                  <b-th>{{$t('insert.contract.ContractNumber')}}</b-th>
+                  <b-th>{{$t('insert.contract.Description1')}}</b-th>
+                  <b-th>{{$t('insert.contract.ApproveState')}}</b-th>
+                  <b-th>{{$t('insert.contract.StatusReason')}}</b-th>
+                  <b-th>{{$t('insert.contract.validBeginDate')}}</b-th>
+                  <b-th>{{$t('insert.contract.validEndDate')}}</b-th>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(contract, i) in customerContractList" :key="'dl' + i">
+                    <b-td>{{contract.Code}}</b-td>
+                    <b-td>{{contract.ContractNumber}}</b-td>
+                    <b-td>{{contract.Description1}}</b-td>
+                    <b-td>{{contract.ApproveState ? contract.ApproveState.Label : ''}}</b-td>
+                    <b-td>{{contract.Status ? contract.Status.Label : ''}}</b-td>
+                    <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].StartDate) : ''}}</b-td>
+                    <b-td>{{contract.ContractValidDates && contract.ContractValidDates.length > 0 ? dateConvertFromTimezone(contract.ContractValidDates[0].EndDate) : ''}}</b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.contract.additionalCustomer')">
           <b-row>
             <b-col cols="12" md="12">
@@ -519,6 +549,9 @@ export default {
   mixins: [mixin],
   data () {
     return {
+      form:{
+        CustomerId: null,
+      },
       opponentAssetsItem: detailData.opponentAssetsItem,
       otherDetailsItems: detailData.otherDetailsItems,
       workFlowModel: {
@@ -534,16 +567,24 @@ export default {
       showPaymentPlans: false,
       showEndorsements: false,
       showCustomPrices: false,
+      customerContractList: [],
       ContractAttachments: []
     }
   },
   mounted () {
     this.getData()
+    if (this.customerContractList) {
+      this.customerContractList = []
+    }
+    // this.getCustomerBudgets()
   },
   computed: {
-    ...mapState(['rowData', 'style'])
+    ...mapState(['rowData', 'style', 'customerContracts'])
   },
   methods: {
+    // getCustomerBudgets () {
+    //   this.$store.dispatch('getSearchItems', {...this.query, api: 'VisionNextContract/api/Contract/Search', name: 'customerContracts', andConditionModel: { customerIds: [this.rowData.CustomerId] }})
+    // },
     downloadFile (item) {
       let vm = this
       let data = {
@@ -587,7 +628,23 @@ export default {
         me.showPaymentPlans = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 3)
         me.showEndorsements = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 9)
         me.showCustomPrices = me.rowData.ContractBenefits.some(c => c.BenefitTypeId === 10)
+        this.$store.dispatch('getSearchItems', {
+          ...this.query,
+          api: 'VisionNextContract/api/Contract/Search',
+          name: 'customerContracts',
+          andConditionModel: { customerIds: [this.rowData.CustomerId] }
+        }).then((response) => {
+        if (response && response.ListModel && response.ListModel.BaseModels) {
+          this.form.data = response.ListModel.BaseModels
+        }
       })
+        console.log(this.rowData.CustomerId)
+      })
+    }
+  },
+  watch: {
+    customerContracts (e) {
+      this.customerContractList = e
     }
   }
 }
