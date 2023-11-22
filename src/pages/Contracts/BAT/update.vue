@@ -106,7 +106,7 @@
               type="number"
               v-model="contractBenefits.benefitBudget" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.contract.TciBreak1Id')" :error="$v.contractBenefits.tciBreak1" :required="true" md="4" lg="4">
+            <NextFormGroup :title="$t('insert.contract.TciBreak1Id')" :error="$v.contractBenefits.tciBreak1" md="4" lg="4">
               <NextDropdown v-model="contractBenefits.tciBreak1" lookup-key="TCI_BREAKDOWN" :get-lookup="true"/>
             </NextFormGroup>
             <b-col cols="12" md="2">
@@ -2104,8 +2104,8 @@ export default {
         BudgetMasterName: this.contractBenefits.budgetMaster ? this.contractBenefits.budgetMaster.CustomerDesc : '',
         CurrencyId: this.contractBenefits.currency.RecordId,
         CurrencyName: this.contractBenefits.currency.Description1,
-        TciBreak1Id: this.contractBenefits.tciBreak1.DecimalValue,
-        TciBreak1Name: this.contractBenefits.tciBreak1.Label,
+        TciBreak1Id: this.contractBenefits.tciBreak1 ? this.contractBenefits.tciBreak1.DecimalValue : null,
+        TciBreak1Name: this.contractBenefits.tciBreak1 ? this.contractBenefits.tciBreak1.Label : null,
         usedAmount: 0
       }
       if (this.contractBenefits.isUpdated) {
@@ -2184,9 +2184,6 @@ export default {
         required
       },
       benefitBudget: {
-        required
-      },
-      tciBreak1: {
         required
       }
     }

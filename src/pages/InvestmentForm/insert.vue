@@ -407,11 +407,11 @@
                   </b-tr>
                   <b-tr>
                     <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
-                    <b-td><NextInput type="number" v-model="totalFrontFaceCost" :disabled="true"/></b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.totalFrontFaceCost" :disabled="true"/></b-td>
                   </b-tr>
                   <b-tr>
                     <b-td>{{$t('insert.investmentForm.totalFurniteCost')}}</b-td>
-                    <b-td><NextInput type="number" v-model="totalFurniteCost" :disabled="true"/></b-td>
+                    <b-td><NextInput type="number" v-model="otherDetails.totalFurniteCost" :disabled="true"/></b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -473,7 +473,7 @@ export default {
         ContractDiscounts: [],
         ContractFreeItems: [],
         SignatureTypeId: null,
-        investmentStatusId: 2320
+        investmentStatusId: 2326
       },
       contractBenefitsAsset: [],
       contractAssets: [],
@@ -637,6 +637,21 @@ export default {
       this.getCustomer()
     }
   },
+    mounted () {
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
+    if (!localStorage.getItem('visitedCustomerPageBefore')) {
+      localStorage.setItem('visitedCustomerPageBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 2) {
+        visitCounter = 0;
+        location.reload(true);
+      }
+    }
+    localStorage.setItem('visitCounter', visitCounter.toString())
+  },
   computed: {
     daysDifferenceCurrentInvestment () {
       if (this.contractDates.ContractValidDateStartDate && this.contractDates.ContractValidDateEndDate) {
@@ -728,22 +743,22 @@ export default {
         this.targetSale.totalTargetAnnualSales = value
       }
     },
-    totalFrontFaceCost: {
-      get () {
-        return parseInt((this.otherDetails.numberOfFrontFaces > 0 ? parseInt(this.otherDetails.numberOfFrontFaces) : 0) * 17)
-      },
-      set (value) {
-        this.otherDetails.frontFaceCost = value
-      }
-    },
-    totalFurniteCost: {
-      get () {
-        return parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
-      },
-      set (value) {
-        this.otherDetails.totalFurniteCost = value
-      }
-    }
+    // totalFrontFaceCost: {
+    //   get () {
+    //     return parseInt((this.otherDetails.numberOfFrontFaces > 0 ? parseInt(this.otherDetails.numberOfFrontFaces) : 0) * 17)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.frontFaceCost = value
+    //   }
+    // },
+    // totalFurniteCost: {
+    //   get () {
+    //     return parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.totalFurniteCost = value
+    //   }
+    // }
   },
   methods: {
     search () {
@@ -753,6 +768,10 @@ export default {
       this.$api.postByUrl(request, '/VisionNextAsset/api/AssetLocation/SearchWithAsset').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.form.data = response.ListModel.BaseModels
+          this.otherDetails.numberOfFrontFaces = this.form.data.reduce((total, item) => total + (item.ShelfQuantity || 0), 0)
+          this.otherDetails.furniteCost = this.form.data.reduce((total, item) => total + (item.FurnitureExpense || 0), 0)
+          this.otherDetails.totalFrontFaceCost = parseInt(this.ContractOtherDetailsFurniture[0].ShelfExpense) * parseInt(this.otherDetails.numberOfFrontFaces)
+          this.otherDetails.totalFurniteCost = parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
         }
       })
     },

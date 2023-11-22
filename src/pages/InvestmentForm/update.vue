@@ -400,19 +400,19 @@
                   <b-tbody>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.furniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="furniteCost" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.furniteCost" :disabled="true"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.numberOfFrontFaces')}}</b-td>
-                      <b-td><NextInput type="number" v-model="numberOfFrontFaces" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.numberOfFrontFaces" :disabled="true"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.frontFaceCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="totalFrontFaceCost" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.totalFrontFaceCost" :disabled="true"/></b-td>
                     </b-tr>
                     <b-tr>
                       <b-td>{{$t('insert.investmentForm.totalFurniteCost')}}</b-td>
-                      <b-td><NextInput type="number" v-model="totalFurniteCost" :disabled="true"/></b-td>
+                      <b-td><NextInput type="number" v-model="otherDetails.totalFurniteCost" :disabled="true"/></b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -473,7 +473,7 @@ export default {
         ContractDiscounts: [],
         ContractFreeItems: [],
         SignatureTypeId: null,
-        investmentStatusId: 2320
+        investmentStatusId: 2326
       },
       contractBenefitsAsset: [],
       contractAssets: [],
@@ -741,43 +741,56 @@ export default {
         this.targetSale.totalTargetAnnualSales = value
       }
     },
-    numberOfFrontFaces: {
-      get () {
-        return this.form.data.reduce((total, item) => total + (item.ShelfQuantity || 0), 0)
-      },
-      set (value) {
-        this.otherDetails.numberOfFrontFaces = value
-      }
-    },
-    furniteCost: {
-      get () {
-        return this.form.data.reduce((total, item) => total + (item.FurnitureExpense || 0), 0)
-      },
-      set (value) {
-        this.otherDetails.furniteCost = value
-      }
-    },
-    totalFrontFaceCost: {
-      get () {
-        return parseInt(this.ContractOtherDetailsFurniture[0].ShelfExpense) * parseInt(this.otherDetails.numberOfFrontFaces)
-      },
-      set (value) {
-        this.otherDetails.frontFaceCost = value
-      }
-    },
-    totalFurniteCost: {
-      get () {
-        return parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
-      },
-      set (value) {
-        this.otherDetails.totalFurniteCost = value
-      }
-    }
+    // numberOfFrontFaces: {
+    //   get () {
+    //     return this.form.data.reduce((total, item) => total + (item.ShelfQuantity || 0), 0)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.numberOfFrontFaces = value
+    //   }
+    // },
+    // furniteCost: {
+    //   get () {
+    //     return this.form.data.reduce((total, item) => total + (item.FurnitureExpense || 0), 0)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.furniteCost = value
+    //   }
+    // },
+    // totalFrontFaceCost: {
+    //   get () {
+    //     return parseInt(this.ContractOtherDetailsFurniture[0].ShelfExpense) * parseInt(this.otherDetails.numberOfFrontFaces)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.frontFaceCost = value
+    //   }
+    // },
+    // totalFurniteCost: {
+    //   get () {
+    //     return parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
+    //   },
+    //   set (value) {
+    //     this.otherDetails.totalFurniteCost = value
+    //   }
+    // }
   },
   mounted () {
     // this.$store.dispatch('getData', {...this.query, api: 'VisionNextContract/api/Contract', record: this.$route.params.url}).then(() => {
     //   this.setData()
     // })
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
+    if (!localStorage.getItem('visitedCustomerPageBefore')) {
+      localStorage.setItem('visitedCustomerPageBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 2) {
+        visitCounter = 0;
+        location.reload(true);
+      }
+    }
+    localStorage.setItem('visitCounter', visitCounter.toString())
     this.getData().then(() => this.setData())
   },
   methods: {
@@ -788,6 +801,10 @@ export default {
       this.$api.postByUrl(request, '/VisionNextAsset/api/AssetLocation/SearchWithAsset').then((response) => {
         if (response && response.ListModel && response.ListModel.BaseModels) {
           this.form.data = response.ListModel.BaseModels
+          this.otherDetails.numberOfFrontFaces = this.form.data.reduce((total, item) => total + (item.ShelfQuantity || 0), 0)
+          this.otherDetails.furniteCost = this.form.data.reduce((total, item) => total + (item.FurnitureExpense || 0), 0)
+          this.otherDetails.totalFrontFaceCost = parseInt(this.ContractOtherDetailsFurniture[0].ShelfExpense) * parseInt(this.otherDetails.numberOfFrontFaces)
+          this.otherDetails.totalFurniteCost = parseInt(this.otherDetails.furniteCost) + parseInt(this.otherDetails.frontFaceCost)
         }
       })
     },
@@ -833,7 +850,7 @@ export default {
             BenefitTypeName: 'Nakit',
             BenefitBudget: this.newInvestmentBudgetCash.Cash,
             BudgetMaster: this.newInvestmentBudgetCash.cashBudgetMaster,
-            // BudgetMasterId: this.ContractBenefitsCash[0].BudgetMasterId,
+            BudgetMasterId: this.ContractBenefitsCash[0].BudgetMasterId,
             BudgetMasterName: '',
             CurrencyId: 1,
             CurrencyName: 'Türk Lirası',
