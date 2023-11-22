@@ -43,16 +43,6 @@
       <b-tabs>
         <b-tab :title="$t('insert.budgetMaster.title')" active @click.prevent="tabValidation()">
           <b-row>
-            <NextFormGroup item-key="EmployeeId" :error="$v.form.EmployeeId">
-              <NextDropdown
-                v-model="employee"
-                :disabled="insertReadonly.EmployeeId"
-                @input="selectEmployee($event)"
-                or-condition-fields="Code,Description1,EmployeeDesc"
-                :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}"
-                label="EmployeeDesc"
-                url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
-            </NextFormGroup>
             <NextFormGroup item-key="BudgetGroupId" :error="$v.form.BudgetGroupId">
               <NextDropdown v-model="budgetGroup" disabled @input="selectedType('BudgetGroupId', $event)" lookup-key="BUDGET_GROUP"/>
             </NextFormGroup>
@@ -75,6 +65,62 @@
         </b-tab>
         <b-tab lazy :title="$t('insert.budgetMaster.branches')" v-if="branchCriteria && branchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="form.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
+        </b-tab>
+        <b-tab title="Bütçe Onaylayıcıları" active @click.prevent="tabValidation()">
+          <b-row>
+            <NextFormGroup title="1. Bütçe Onaylayıcı *" :error="$v.form.EmployeeId">
+                <NextDropdown
+                  v-model="employee"
+                  :disabled="insertReadonly.EmployeeId"
+                  @input="selectEmployee($event)"
+                  or-condition-fields="Code,Description1,EmployeeDesc"
+                  :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}"
+                  label="EmployeeDesc"
+                  url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
+            </NextFormGroup>
+            <NextFormGroup title="Minimum Tutar" :error="$v.form.Employee1MinAmount">
+                <NextInput  type="number" v-model="form.Employee1MinAmount" :disabled="insertReadonly.Employee1MinAmount" readonly/>
+            </NextFormGroup>
+            <NextFormGroup title="Maximum Tutar">
+                <NextInput  type="number" v-model="form.Employee1MaxAmount"/>
+            </NextFormGroup>
+          </b-row>  
+          <b-row>
+            <NextFormGroup title="2. Bütçe Onaylayıcı" :error="$v.form.Employee2Id">
+                <NextDropdown
+                  v-model="employee2"
+                  :disabled="insertReadonly.Employee2Id"
+                  @input="selectEmployee2($event)"
+                  or-condition-fields="Code,Description1,EmployeeDesc"
+                  :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}"
+                  label="EmployeeDesc"
+                  url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
+            </NextFormGroup>
+            <NextFormGroup title="Minimum Tutar">
+                <NextInput  type="number" v-model="Employee2MinAmount" readonly/>
+            </NextFormGroup>
+            <NextFormGroup title="Maximum Tutar">
+                <NextInput  type="number" v-model="form.Employee2MaxAmount"/>
+            </NextFormGroup>
+          </b-row>  
+          <b-row>
+            <NextFormGroup title="3. Bütçe Onaylayıcı " :error="$v.form.Employee3Id">
+                <NextDropdown
+                  v-model="employee3"
+                  :disabled="insertReadonly.Employee3Id"
+                  @input="selectEmployee3($event)"
+                  or-condition-fields="Code,Description1,EmployeeDesc"
+                  :dynamic-and-condition="{GroupIds: [1,12,14,20,999]}"
+                  label="EmployeeDesc"
+                  url="VisionNextSystem/api/SysUser/SearchForNonBranchWithEmployee" searchable/>
+            </NextFormGroup>
+            <NextFormGroup title="Minimum Tutar">
+                <NextInput  type="number" v-model="Employee3MinAmount" readonly />
+            </NextFormGroup>
+            <NextFormGroup title="Maximum Tutar">
+                <NextInput  type="number" v-model="form.Employee3MaxAmount" readonly/>
+            </NextFormGroup>
+          </b-row>  
         </b-tab>
       </b-tabs>
     </b-col>
@@ -104,6 +150,14 @@ export default {
         RecordState: 2,
         StatusId: 1,
         EmployeeId: null,
+        Employee2Id: null,
+        Employee3Id: null,
+        Employee1MinAmount: 0,
+        Employee2MinAmount: '',
+        Employee3MinAmount: '',
+        Employee1MaxAmount: '',
+        Employee2MaxAmount: '',
+        Employee3MaxAmount: '',
         BudgetGroupId: null,
         CustomerColumnName: null,
         CustomerColumnValue: null,
@@ -122,6 +176,8 @@ export default {
       currencies: [],
       branchCriteria: null,
       employee: null,
+      employee2: null,
+      employee3: null,
       budgetGroup: null,
       customerColumnName: null,
       budgetItems: detailData.budgetItems,
@@ -148,6 +204,24 @@ export default {
   mounted () {
     this.getInsertPage()
   },
+  computed: {
+        Employee2MinAmount: {
+          get () {
+            return this.form.Employee1MaxAmount - 0 + 1
+          },
+          set (value) {
+            this.form.Employee2MinAmount = value
+          }
+        },
+        Employee3MinAmount: {
+          get () {
+            return this.form.Employee2MaxAmount - 0 + 1
+          },
+          set (value) {
+            this.form.Employee3MinAmount = value
+          }
+        }
+      },
   methods: {
     getInsertPage () {
       this.getData().then(() => this.setData())
@@ -160,6 +234,18 @@ export default {
         this.employee = {
           EmployeeId: rowData.Employee.DecimalValue,
           EmployeeDesc: rowData.Employee.Label
+        }
+      }
+      if (rowData.Employee2) {
+        this.employee2 = {
+          Employee2Id: rowData.Employee2.DecimalValue,
+          EmployeeDesc: rowData.Employee2.Label
+        }
+      }
+      if (rowData.Employee3) {
+        this.employee3 = {
+          Employee3Id: rowData.Employee3.DecimalValue,
+          EmployeeDesc: rowData.Employee3.Label
         }
       }
       this.budgetGroup = rowData.BudgetGroup
@@ -178,7 +264,8 @@ export default {
         })
         this.tabValidation()
       } else {
-        this.fillBudgets()
+        this.form.Budgets.Employee2Id = this.form.Employee2Id
+        this.form.Budgets.Employee3Id = this.form.Employee3Id
         this.updateData()
       }
     },
@@ -227,20 +314,6 @@ export default {
         }
       })
     },
-    fillBudgets () {
-      this.form.Budgets = this.form.Budgets.map((budget) => {
-        budget.Code = this.form.Code
-        budget.Description1 = this.form.Description1
-        budget.EmployeeId = this.form.EmployeeId
-        budget.BudgetGroupId = this.form.BudgetGroupId
-        budget.CustomerColumnName = this.form.CustomerColumnName
-        budget.CustomerColumnValue = this.form.CustomerColumnValue
-        budget.CurrencyId = this.form.CurrencyId
-        budget.BranchCriteriaId = this.form.BranchCriteriaId
-
-        return budget
-      })
-    },
     getDetail (data) {
       this.selectedBudgetDetail = data
       this.$bvModal.show('detail-modal')
@@ -260,6 +333,24 @@ export default {
       } else {
         this.employee = null
         this.form.EmployeeId = null
+      }
+    },
+    selectEmployee2 (value) {
+      if (value) {
+        this.employee2 = value
+        this.form.Employee2Id = value.EmployeeId
+      } else {
+        this.employee2 = null
+        this.form.Employee2Id = null
+      }
+    },
+    selectEmployee3 (value) {
+      if (value) {
+        this.employee3 = value
+        this.form.Employee3Id = value.EmployeeId
+      } else {
+        this.employee3 = null
+        this.form.Employee3Id = null
       }
     }
   }
