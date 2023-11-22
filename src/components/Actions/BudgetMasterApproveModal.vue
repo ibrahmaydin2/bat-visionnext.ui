@@ -19,15 +19,23 @@
       <NextFormGroup :title="$t('insert.budgetMaster.contractDescription')" md="4" lg="4">
         <NextInput v-model="model.contractDescription" />
       </NextFormGroup>
-      <NextFormGroup :title="$t('insert.budgetMaster.approveState')" md="4" lg="4" :required="false">
+      <NextFormGroup title="Kontrat Durumu" md="4" lg="4" :required="false">
         <NextDropdown
           lookup-key="APPROVE_STATE"
           :get-lookup="true"
           @input="setApproveState"
           v-model="approveState"
        />
-       </NextFormGroup>
-       <b-col cols="12" md="8">
+      </NextFormGroup>
+      <NextFormGroup title="Yatırım Formu Onay Durumu" md="4" lg="4" :required="false">
+        <NextDropdown
+          lookup-key="INVESTMENT_STATUS"
+          :get-lookup="true"
+          @input="setInvestmentStatus"
+          v-model="InvestmentStatus"
+       />
+      </NextFormGroup>
+       <b-col cols="12" md="4">
         <b-form-group>
           <b-button
             @click="filter"
@@ -113,6 +121,7 @@ export default {
     return {
       model: {},
       approveState: null,
+      InvestmentStatus: null,
       isLoading: false,
       isApproveLoading: false,
       isRejectLoading: false,
@@ -156,9 +165,16 @@ export default {
         },
         {
           key: 'ApproveStateId',
-          label: this.$t('insert.budgetMaster.approveState'),
+          label: 'Kontrat Durumu',
           formatter: (value, key, item) => {
             return item.Approvestate ? item.Approvestate.Label : ''
+          }
+        },
+        {
+          key: 'InvestmentStatus',
+          label: 'Yatırım Formu Onay Durumu',
+          formatter: (value, key, item) => {
+            return item.InvestmentStatus ? item.InvestmentStatus.Label : ''
           }
         }
       ]
@@ -229,6 +245,9 @@ export default {
     },
     setApproveState (value) {
       this.model.approveStateId = value ? value.DecimalValue : null
+    },
+    setInvestmentStatus (value) {
+      this.model.InvestmentStatus = value ? value.DecimalValue : null
     },
     hide () {
       this.approveState = null

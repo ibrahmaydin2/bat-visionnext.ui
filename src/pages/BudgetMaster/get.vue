@@ -34,12 +34,11 @@
         <b-tab :title="$t('insert.budgetMaster.title')" active>
           <b-row class="p-4">
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.Employee, 'object', 'insert.budgetMaster.employee')"></div>
               <div v-html="getFormatDataByType(rowData.BudgetGroup, 'object', 'insert.budgetMaster.budgetGroup')"></div>
               <div v-html="getFormatDataByType(rowData.CustomerColumnNameDesc, 'text', 'insert.budgetMaster.customerColumnName')"></div>
+              <div v-html="getFormatDataByType(rowData.CustomerColumnValueDesc, 'text', 'insert.budgetMaster.customerColumnValue')"></div>
             </b-card>
             <b-card class="col-md-6 col-12 asc__showPage-card">
-              <div v-html="getFormatDataByType(rowData.CustomerColumnValueDesc, 'text', 'insert.budgetMaster.customerColumnValue')"></div>
               <div v-html="getFormatDataByType(rowData.Currency, 'object', 'insert.budgetMaster.currency')"></div>
               <div v-html="getFormatDataByType(rowData.BranchCriteria, 'object', 'insert.budgetMaster.branchCriteria')"></div>
             </b-card>
@@ -61,6 +60,25 @@
                 <NextDetailPanel type="get" v-model="rowData.SelectedBranches" :items="selectedBranchItems"></NextDetailPanel>
               </b-card>
             </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab title="Bütçe Onaylayıcıları">
+          <b-row class="p-4">
+            <b-card class="col-md-4 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Employee, 'object', '1. Bütçe Onaylayıcı')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee2, 'object', '2. Bütçe Onaylayıcı')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee3, 'object', '3. Bütçe Onaylayıcı')"></div>
+            </b-card>
+            <b-card class="col-md-4 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Employee1MinAmount, 'text', 'Minimum Tutar')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee2MinAmount, 'text', 'Minimum Tutar')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee3MinAmount, 'text', 'Minimum Tutar')"></div>
+            </b-card>
+            <b-card class="col-md-4 col-12 asc__showPage-card">
+              <div v-html="getFormatDataByType(rowData.Employee1MaxAmount, 'text', 'Maximum Tutar')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee2MaxAmount, 'text', 'Maximum Tutar')"></div>
+              <div v-html="getFormatDataByType(rowData.Employee3MaxAmount, 'text', 'Maximum Tutar')"></div>
+            </b-card>
           </b-row>
         </b-tab>
       </b-tabs>
