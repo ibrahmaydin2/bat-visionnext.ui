@@ -328,7 +328,8 @@
           <NextDetailPanel v-model="form.CustomerCreditHistories" :changeValidation="changeValidation" :items="customerCreditHistoriesItemsBAT" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerPaymentTypes" :items="paymentTypesItems" />
+          <NextDetailPanel v-if="this.DistributionTypeId === 6" v-model="form.CustomerPaymentTypes" :items="getPaymentTypesItems()" />
+          <NextDetailPanel v-else-if="this.DistributionTypeId === 5" v-model="form.CustomerPaymentTypes" :items="getPaymentTypesItemsLimited()" />
         </b-tab>
         <b-tab :title="$t('insert.customer.detail')" @click.prevent="tabValidation()">
           <b-row>
@@ -745,7 +746,7 @@ export default {
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
       customerDiscountsItems: detailData.customerDiscountsItems,
       customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
-      paymentTypesItems: detailData.paymentTypesItems,
+      //paymentTypesItems: detailData.paymentTypesItems,
       customerSeasonRatesItems: detailData.customerSeasonRatesItems,
       cardType: {},
       taxCustomerType: {},
@@ -804,6 +805,7 @@ export default {
         route: null,
         representative: null
       },
+      DistributionTypeId: null,
       routeDetails: {},
       routes: [],
       representatives: [],
@@ -865,7 +867,39 @@ export default {
     localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
-            addCustomerSeasonRates () {
+    getPaymentTypesItemsLimited () {
+        return [
+            {
+            type: 'Dropdown',
+            modelProperty: 'PaymentTypeId',
+            objectKey: 'PaymentType',
+            url: 'VisionNextCommonApi/api/PaymentType/Search',
+            label: 'Ödeme Tipi',
+            required: true,
+            filter (item) {
+            let list = ['PES', 'AH', 'KK', 'CK', 'SNT', 'BC']
+            return list.includes(item.Code)
+            },
+            visible: true,
+            id: 1
+          }
+        ]
+    },
+    getPaymentTypesItems () {
+        return [
+            {
+            type: 'Dropdown',
+            modelProperty: 'PaymentTypeId',
+            objectKey: 'PaymentType',
+            url: 'VisionNextCommonApi/api/PaymentType/Search',
+            label: 'Ödeme Tipi',
+            required: true,
+            visible: true,
+            id: 1
+          }
+        ]
+    },
+    addCustomerSeasonRates () {
       this.$v.customerRates.$touch()
       if (this.$v.customerRates.$error) {
         this.$toasted.show(this.$t('insert.requiredFields'), {
@@ -1294,6 +1328,8 @@ export default {
       this.classProposalReason = rowData.ClassProposalReason
       this.backMarginGroup = rowData.BackMarginGroup
       this.outSourceOrder = rowData.OutSourceOrder
+      this.DistributionTypeId = this.form.DistributionTypeId
+      console.log(this.form.DistributionTypeId)
       if (!rowData.CustomerLocations) {
         this.form.CustomerLocations = []
       }
@@ -1331,9 +1367,17 @@ export default {
       })
     },
     changeValidation (data) {
+      let isErrorEFT = data.CreditDescription.Code === 'EFT/Havale-1' 
       let isErrorBTB = data.CreditDescription.Code === 'BTB' 
       let isErrorMT = data.CreditDescriptionId === 100
 
+      if (isErrorEFT) {
+        this.$toasted.show(('EFT / Havale-1 Tipindeki Kayıtlar Silinemez ve Düzenlenemez.'), {
+          type: 'error',
+          keepOnHover: true,
+          duration: '3000'
+        })
+      }
       if (isErrorBTB) {
         this.$toasted.show(('Bulut Tahsilat Teminatı Tipindeki Kayıtlar Silinemez ve Düzenlenemez.'), {
           type: 'error',
@@ -1348,7 +1392,7 @@ export default {
           duration: '3000'
         })
       }
-      return !isErrorBTB &&  !isErrorMT
+      return !isErrorBTB && !isErrorMT && !isErrorEFT
     },
     selectRouteType (value) {
       this.routeDetailsObj.route = null
