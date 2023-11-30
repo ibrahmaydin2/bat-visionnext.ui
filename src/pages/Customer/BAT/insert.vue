@@ -328,7 +328,8 @@
           <NextDetailPanel v-model="form.CustomerCreditHistories" :items="customerCreditHistoriesItemsBAT" />
         </b-tab>
         <b-tab :title="$t('insert.customer.CustomerPaymentTypes')" @click.prevent="tabValidation()">
-          <NextDetailPanel v-model="form.CustomerPaymentTypes" :items="paymentTypesItems" />
+          <NextDetailPanel v-if="this.DistributionTypeId === 6" v-model="form.CustomerPaymentTypes" :items="getPaymentTypesItems()" />
+          <NextDetailPanel v-else-if="this.DistributionTypeId === 5" v-model="form.CustomerPaymentTypes" :items="getPaymentTypesItemsLimited()" />
         </b-tab>
         <b-tab :title="$t('insert.customer.detail')" @click.prevent="tabValidation()">
           <b-row>
@@ -753,7 +754,7 @@ export default {
       locationItemsBAT: detailData.locationItemsBAT,
       customerCreditHistoriesItemsBAT: detailData.customerCreditHistoriesItemsBAT,
       customerDiscountsItems: detailData.customerDiscountsItems,
-      paymentTypesItems: detailData.paymentTypesItems,
+      //paymentTypesItems: detailData.paymentTypesItems,
       customerSpendingUnitsItems: detailData.customerSpendingUnitsItems,
       customerSeasonRatesItems: detailData.customerSeasonRatesItems,
       routeName: this.$route.meta.baseLink,
@@ -784,6 +785,7 @@ export default {
       selectedTradeFocus: null,
       customerType: null,
       paymentTypes: [],
+      DistributionTypeId: null,
       allPaymentTypes: [],
       customerRegion5: null,
       customerRegion4: null,
@@ -825,10 +827,43 @@ export default {
   mounted () {
     this.createManualCode()
     this.getPaymentTypes()
+    this.getBranchSearch()
     this.setLicenseValidDate()
     this.getLookups()
   },
   methods: {
+    getPaymentTypesItemsLimited () {
+        return [
+            {
+            type: 'Dropdown',
+            modelProperty: 'PaymentTypeId',
+            objectKey: 'PaymentType',
+            url: 'VisionNextCommonApi/api/PaymentType/Search',
+            label: 'Ödeme Tipi',
+            required: true,
+            filter (item) {
+            let list = ['PES', 'AH', 'KK', 'CK', 'SNT', 'BC']
+            return list.includes(item.Code)
+            },
+            visible: true,
+            id: 1
+          }
+        ]
+    },
+    getPaymentTypesItems () {
+        return [
+            {
+            type: 'Dropdown',
+            modelProperty: 'PaymentTypeId',
+            objectKey: 'PaymentType',
+            url: 'VisionNextCommonApi/api/PaymentType/Search',
+            label: 'Ödeme Tipi',
+            required: true,
+            visible: true,
+            id: 1
+          }
+        ]
+    },
     getLookups () {
       return this.$api.postByUrl({LookupTableCode: 'CUSTOMER_DOCUMENT_STATUS'}, 'VisionNextCommonApi/api/LookupValue/GetValues?v=2').then((response) => {
         if (response && response.Values) {
@@ -1031,6 +1066,19 @@ export default {
         if (response.ListModel) {
           this.allPaymentTypes = response.ListModel.BaseModels
           this.paymentTypes = this.allPaymentTypes
+        }
+      })
+    },
+    getBranchSearch () {
+      let request = {
+          andConditionModel: {
+            RecordIds: [localStorage.getItem('BranchId')]
+          }
+        }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then((response) => {
+        if (response.ListModel) {
+          this.DistributionTypeId = response.ListModel.BaseModels[0].DistributionTypeId
+          console.log(this.DistributionTypeId)
         }
       })
     },

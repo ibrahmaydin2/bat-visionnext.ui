@@ -178,6 +178,7 @@ import LoadingPlanInsert from '@/pages/LoadingPlan/insert'
 import LoadingPlanUpdate from '@/pages/LoadingPlan/update'
 
 import CashCardIndex from '@/pages/CashCard/'
+import EFTHavale2Index from '@/pages/EFTHavale2/'
 
 import TerminalLogIndex from '@/pages/TerminalLog/'
 import TerminalLogGet from '@/pages/TerminalLog/get'
@@ -446,6 +447,7 @@ const listIndex = [
   {path: '/PotentialCustomer', name: 'PotentialCustomer', component: PotentialCustomerIndex, meta: { title: i18n.t('router.PotentialCustomer'), keepAlive: true }},
   {path: '/LoadingPlan', name: 'LoadingPlan', component: LoadingPlanIndex, meta: { title: i18n.t('router.LoadingPlan'), createLink: 'LoadingPlanInsert', keepAlive: true }},
   {path: '/CashCard', name: 'CashCard', component: CashCardIndex, meta: { title: i18n.t('router.CashCard'), createLink: 'CashCardInsert', keepAlive: true }},
+  {path: '/EFTHavale2', name: 'EFTHavale2', component: EFTHavale2Index, meta: { title: 'EFT/Havale-2', createLink: 'EFTHavale2Insert', keepAlive: true }},
   {path: '/TerminalLog', name: 'TerminalLog', component: TerminalLogIndex, meta: { title: i18n.t('router.TerminalLog'), createLink: 'TerminalLogInsert', keepAlive: true }},
   {path: '/TerminalPasswordLog', name: 'TerminalPasswordLog', component: TerminalPasswordLogIndex, meta: { title: i18n.t('router.TerminalPasswordLog'), createLink: 'TerminalPasswordLogInsert', keepAlive: true }},
   {path: '/WarehouseMovement', name: 'WarehouseMovement', component: WarehouseMovementIndex, meta: { title: i18n.t('router.WarehouseMovement'), createLink: 'WarehouseMovementInsert', keepAlive: true }},
@@ -539,6 +541,7 @@ const listGet = [
   { path: '/PotentialCustomer/:url', name: 'PotentialCustomerGet', component: PotentialCustomerGet, meta: { title: i18n.t('router.PotentialCustomerGet'), baseLink: 'PotentialCustomer' } },
   { path: '/LoadingPlan/:url', name: 'LoadingPlanGet', component: LoadingPlanGet, meta: { title: i18n.t('router.LoadingPlanGet'), baseLink: 'LoadingPlan' } },
   { path: '/CashCard/:url', name: 'CashCardGet', component: getTenantPage('CashCard', 'get'), meta: { title: i18n.t('router.CashCardGet'), baseLink: 'CashCard' } },
+  { path: '/EFTHavale2/:url', name: 'EFTHavale2Get', component: getTenantPage('EFTHavale2', 'get'), meta: { title: 'EFT/Havale-2 Görüntüle', baseLink: 'EFTHavale2' } },
   { path: '/TerminalLog/:url', name: 'TerminalLogGet', component: TerminalLogGet, meta: { title: i18n.t('router.TerminalLogGet'), baseLink: 'TerminalLog' } },
   { path: '/TerminalPasswordLog/:url', name: 'TerminalPasswordLogGet', component: TerminalPasswordLogGet, meta: { title: i18n.t('router.TerminalPasswordLogGet'), baseLink: 'TerminalPasswordLog' } },
   { path: '/WarehouseMovement/:url', name: 'WarehouseMovementGet', component: WarehouseMovementGet, meta: { title: i18n.t('router.WarehouseMovementGet'), baseLink: 'WarehouseMovement' } },
@@ -622,6 +625,7 @@ const listUpdate = [
   { path: '/Update/PotentialCustomer/:url', name: 'PotentialCustomerUpdate', component: PotentialCustomerUpdate, meta: { title: i18n.t('router.PotentialCustomerUpdate'), baseLink: 'PotentialCustomer' } },
   { path: '/Update/LoadingPlan/:url', name: 'LoadingPlanUpdate', component: LoadingPlanUpdate, meta: { title: i18n.t('router.LoadingPlanUpdate'), baseLink: 'LoadingPlan' } },
   { path: '/Update/CashCard/:url', name: 'CashCardUpdate', component: getTenantPage('CashCard', 'update'), meta: { title: i18n.t('router.CashCardUpdate'), baseLink: 'CashCard' } },
+  { path: '/Update/EFTHavale2/:url', name: 'EFTHavale2Update', component: getTenantPage('EFTHavale2', 'update'), meta: { title:'EFT/Havale-2 Güncelle', baseLink: 'EFTHavale2' } },
   { path: '/Update/LoyaltyExpense/:url', name: 'LoyaltyExpenseUpdate', component: LoyaltyExpenseUpdate, meta: { title: i18n.t('router.LoyaltyExpenseUpdate'), baseLink: 'LoyaltyExpense' } },
   { path: '/Update/CycleInstruction/:url', name: 'CycleInstructionUpdate', component: CycleInstructionUpdate, meta: { title: i18n.t('router.CycleInstructionUpdate'), baseLink: 'CycleInstruction' } },
   { path: '/Update/Rma/:url', name: 'RmaUpdate', component: RmaUpdate, meta: { title: i18n.t('router.RmaUpdate'), baseLink: 'Rma' } },
@@ -698,6 +702,7 @@ const listInsert = [
   { path: '/Insert/VanLoading', name: 'VanLoadingInsert', component: VanLoadingInsert, meta: { title: i18n.t('router.VanLoadingInsert'), baseLink: 'VanLoading' } },
   { path: '/Insert/LoadingPlan', name: 'LoadingPlanInsert', component: LoadingPlanInsert, meta: { title: i18n.t('router.LoadingPlanInsert'), baseLink: 'LoadingPlan' } },
   { path: '/Insert/CashCard', name: 'CashCardInsert', component: getTenantPage('CashCard', 'insert'), meta: { title: i18n.t('router.CashCardInsert'), baseLink: 'CashCard' } },
+  { path: '/Insert/EFTHavale2', name: 'EFTHavale2Insert', component: getTenantPage('EFTHavale2', 'insert'), meta: { title:'Yeni EFT/Havale-2 İşlemi', baseLink: 'EFTHavale2' } },
   { path: '/Insert/TerminalPasswordLog', name: 'TerminalPasswordLogInsert', component: TerminalPasswordLogInsert, meta: { title: i18n.t('router.TerminalPasswordLogInsert'), baseLink: 'TerminalPasswordLog' } },
   { path: '/Insert/RouteBalance', name: 'RouteBalance', component: RouteBalanceInsert, meta: { title: i18n.t('router.RouteBalanceInsert'), baseLink: 'RouteBalance' } },
   { path: '/Insert/WarehouseMovement', name: 'WarehouseMovementInsert', component: WarehouseMovementInsert, meta: { title: i18n.t('router.WarehouseMovementInsert'), baseLink: 'WarehouseMovement' } },
