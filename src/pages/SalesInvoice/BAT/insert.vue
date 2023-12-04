@@ -782,14 +782,21 @@ export default {
       this.customerSelectCancelled = true
       this.selectedCustomer = this.currentCustomer
     },
-    getPaymentTypes () {
-      let me = this
-      this.$api.post({RecordId: this.form.CustomerId}, 'Customer', 'Customer/Get').then((res) => {
-        me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
-        me.selectedPaymentType = res.Model.DefaultPaymentType
-        me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue
-      })
-    },
+    getPaymentTypes() {
+  let me = this
+  this.$api.post({ RecordId: this.form.CustomerId }, 'Customer', 'Customer/Get').then((res) => {
+    if(me.DistributionTypeId === 5){
+      me.paymentTypes = res.Model.CustomerPaymentTypes
+        .filter(c => c.PaymentType.Code !== 'EFT/Havale-1' &&  c.PaymentType.Code !== 'EFT/Havale-2' )
+        .map(c => c.PaymentType);
+    }
+    else if(me.DistributionTypeId === 6){
+      me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+    }  
+    me.selectedPaymentType = res.Model.DefaultPaymentType;
+    me.form.PaymentTypeId = me.selectedPaymentType.DecimalValue;
+  })
+},
     save () {
       this.$v.form.$touch()
       if (this.$v.form.$error) {
