@@ -48,6 +48,7 @@
                 url="VisionNextCustomer/api/Customer/AutoCompleteSearch"
                 v-model="Customer"
                 :searchable="true" :custom-option="true"
+                :dynamic-and-condition="{ StatusIds: [1] }"
                 or-condition-fields="Code,Description1,CommercialTitle"
                 :is-customer="true"
                 />
