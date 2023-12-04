@@ -796,12 +796,12 @@ export default {
     getPaymentTypes() {
   let me = this
   this.$api.post({ RecordId: this.form.CustomerId }, 'Customer', 'Customer/Get').then((res) => {
-    if(me.DistributionTypeId === 5){
+    if(res.Model.DistributionTypeId === 5){
       me.paymentTypes = res.Model.CustomerPaymentTypes
         .filter(c => c.PaymentType.Code !== 'EFT/Havale-1' &&  c.PaymentType.Code !== 'EFT/Havale-2' )
         .map(c => c.PaymentType);
     }
-    else if(me.DistributionTypeId === 6){
+    else if(res.Model.DistributionTypeId === 6){
       me.paymentTypes = res.Model.CustomerPaymentTypes.map(c => c.PaymentType)
     }  
     me.selectedPaymentType = res.Model.DefaultPaymentType;
