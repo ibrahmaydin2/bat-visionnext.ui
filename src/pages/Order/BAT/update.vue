@@ -826,7 +826,14 @@ export default {
         this.selectedCustomer = this.convertLookupValueToSearchValue(rowData.Customer)
         this.$api.post({RecordId: rowData.CustomerId}, 'Customer', 'Customer/Get').then((response) => {
           this.selectedCustomer = response.Model
+          if(response.Model.DistributionTypeId === 5){
+          this.paymentTypes = response.Model.CustomerPaymentTypes
+          .filter(c => c.PaymentType.Code !== 'EFT/Havale-1' &&  c.PaymentType.Code !== 'EFT/Havale-2' )
+          .map(c => c.PaymentType)
+        }
+        else if(response.Model.DistributionTypeId === 6){
           this.paymentTypes = response.Model.CustomerPaymentTypes.map(c => c.PaymentType)
+        } 
         })
         this.selectedStatus = this.convertLookupValueToSearchValue(rowData.Status)
         this.selectedState = this.convertLookupValueToSearchValue(rowData.State)
