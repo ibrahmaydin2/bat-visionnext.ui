@@ -142,7 +142,8 @@
               <NextInput type="number" v-model="warehouseMovementItems.toWhStockQuantity" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.warehouseMovementItems.quantity" md="3" lg="3">
-              <NextInput type="number" v-model="warehouseMovementItems.quantity" @keypress="onlyForCurrencyDot($event)" min="1"/>
+              <NextInput v-if=" this.UnitCode === 'ADET' " v-model="warehouseMovementItems.quantity" type="text" @keypress="onlyForNumber($event)"/>
+              <NextInput v-else v-model="warehouseMovementItems.quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event)"/>
             </NextFormGroup>
             <b-col cols="12" md="3" lg="3" class="ml-auto">
               <b-form-group>
@@ -183,7 +184,7 @@
                     <b-td>{{r.Description1}}</b-td>
                     <b-td>{{r.FromWhStockQuantity}}</b-td>
                     <b-td>{{r.ToWhStockQuantity}}</b-td>
-                    <b-td>{{r.Quantity}}</b-td>
+                    <b-td>{{formatValue(r.Quantity)}}</b-td>
                     <b-td class="text-center">
                       <b-button :title="$t('list.edit')" @click="editItem(r)" class="btn mr-2 btn-warning btn-sm">
                         <i class="fa fa-pencil-alt"></i>
@@ -237,6 +238,7 @@ export default {
         toWhStockQuantity: null,
         quantity: null
       },
+      UnitCode: null,
       maxPlanQuantity: null,
       fromStatus: null,
       toStatus: null,
@@ -287,6 +289,12 @@ export default {
     this.getToWarehousesAll()
   },
   computed: {
+    WarehouseItemsFormatted() {
+      return this.form.WarehouseMovementItems.map(item => ({
+        ...item,
+        Quantity: this.formatValue(item.Quantity)
+      }));
+    },
     disabledMultipleSelection () {
       if (this.movementType) {
         switch (this.movementType.Code) {
@@ -307,6 +315,9 @@ export default {
     }
   },
   methods: {
+    formatValue(value) {
+      return value.replace(/,/g, '.');
+    },
     setStockStatus (value) {
       this.stockStatus = value
     },
@@ -351,6 +362,9 @@ export default {
     },
     selectedItem (e) {
       if (e) {
+        this.warehouseMovementItems.item = e
+        this.UnitCode = e.UnitCode        
+        //console.log(this.UnitCode)
         this.$v.form.$touch()
         if (this.$v.form.$error) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
