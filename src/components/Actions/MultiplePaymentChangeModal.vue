@@ -292,7 +292,7 @@ export default {
       this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then((response) => {
         if (response.ListModel) {
           this.DistributionTypeId = response.ListModel.BaseModels[0].DistributionTypeId
-          console.log(this.DistributionTypeId)
+          //console.log(this.DistributionTypeId)
         }
       })
     },

@@ -567,7 +567,7 @@ export default {
       })
     },
       preventDotForItemSelected($event, data){
-      if(data.item.UnitDesc === "Adet"){
+      if(data.item.UnitDesc === "Adet" || data.item.UnitDescription === "Adet"){
         const forbiddenChars = ['.', ',']
         const inputValue = $event.key
         if (forbiddenChars.includes(inputValue)) {
