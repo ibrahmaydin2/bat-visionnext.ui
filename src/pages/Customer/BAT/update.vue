@@ -859,7 +859,7 @@ export default {
     } 
     else {
       visitCounter++
-      if (visitCounter >= 4) {
+      if (visitCounter >= 2) {
         visitCounter = 0;
         location.reload(true);
       }
