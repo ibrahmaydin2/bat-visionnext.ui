@@ -485,6 +485,19 @@ export default {
     this.salesWaybillCopy = this.$route.query.salesWaybillCopy == 1
     this.getInsertPage(this.routeName)
     this.paymentTyperequire()
+    let visitCounter = parseInt(localStorage.getItem('visitCounter')) || 0
+    if (!localStorage.getItem('visitedItemBefore')) {
+      localStorage.setItem('visitedItemBefore', 'true')
+      location.reload(true)
+    } 
+    else {
+      visitCounter++
+      if (visitCounter >= 2) {
+        visitCounter = 0;
+        location.reload(true);
+      }
+    }
+    localStorage.setItem('visitCounter', visitCounter.toString())
   },
   methods: {
     paymentTyperequire () {
