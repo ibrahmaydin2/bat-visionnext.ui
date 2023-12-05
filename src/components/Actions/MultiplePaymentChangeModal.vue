@@ -3,7 +3,11 @@
     <b-container>
       <b-row>
         <NextFormGroup :title="$t('insert.customer.CustomerPaymentTypes')" :error="$v.TypeId" md="6" lg="6">
-          <NextDropdown url="VisionNextCommonApi/api/PaymentType/Search" @input="selectedSearchType('TypeId', $event)"/>
+          <NextDropdown v-if="this.DistributionTypeId === 5" url="VisionNextCommonApi/api/PaymentType/Search"
+           :filter="i => i.Code === 'PES'  || i.Code === 'AH' || i.Code === 'KK' || i.Code === 'BC' "
+           @input="selectedSearchType('TypeId', $event)"/>
+           <NextDropdown v-else-if="this.DistributionTypeId === 6" url="VisionNextCommonApi/api/PaymentType/Search"
+           @input="selectedSearchType('TypeId', $event)"/>
         </NextFormGroup>
         <NextFormGroup :title="$t('get.terminal.OperationType')" :error="$v.OperationTypeId" md="6" lg="6">
           <v-select :options="[{label: $t('insert.add'), RecordId: 1}, {label: $t('index.remove'), RecordId: 0}]" @input="selectedSearchType('OperationTypeId', $event)"></v-select>
@@ -113,6 +117,7 @@ export default {
       customerList: [],
       selectedItems: [],
       tableBusy: false,
+      DistributionTypeId: null,
       fields: [
         {
           key: 'selected',
@@ -134,6 +139,9 @@ export default {
         }
       ]
     }
+  },
+  mounted () {
+    this.getBranchSearch()
   },
   validations () {
     return {
@@ -272,6 +280,19 @@ export default {
             keepOnHover: true,
             duration: '3000'
           })
+        }
+      })
+    },
+    getBranchSearch () {
+      let request = {
+          andConditionModel: {
+            RecordIds: [localStorage.getItem('BranchId')]
+          }
+        }
+      this.$api.postByUrl(request, 'VisionNextBranch/api/Branch/Search').then((response) => {
+        if (response.ListModel) {
+          this.DistributionTypeId = response.ListModel.BaseModels[0].DistributionTypeId
+          console.log(this.DistributionTypeId)
         }
       })
     },
