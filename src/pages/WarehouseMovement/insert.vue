@@ -142,7 +142,7 @@
               <NextInput type="number" v-model="warehouseMovementItems.toWhStockQuantity" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.BranchStockTransfer.PlanQuantity')" :required="true" :error="$v.warehouseMovementItems.quantity" md="3" lg="3">
-              <NextInput v-if=" this.UnitCode === 'ADET' " v-model="warehouseMovementItems.quantity" type="text" @keypress="onlyForNumber($event)"/>
+              <NextInput v-if=" this.UnitId === 1526" v-model="warehouseMovementItems.quantity" type="text" @keypress="onlyForNumber($event)"/>
               <NextInput v-else v-model="warehouseMovementItems.quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event)"/>
             </NextFormGroup>
             <b-col cols="12" md="3" lg="3" class="ml-auto">
@@ -239,6 +239,7 @@ export default {
         quantity: null
       },
       UnitCode: null,
+      UnitId: null,
       maxPlanQuantity: null,
       fromStatus: null,
       toStatus: null,
@@ -363,8 +364,8 @@ export default {
     selectedItem (e) {
       if (e) {
         this.warehouseMovementItems.item = e
-        this.UnitCode = e.UnitCode        
-        //console.log(this.UnitCode)
+        this.UnitCode = e.UnitCode  
+        this.UnitId = e.UnitId    
         this.$v.form.$touch()
         if (this.$v.form.$error) {
           this.$store.commit('showAlert', { type: 'danger', msg: this.$t('insert.requiredFields') })
@@ -444,6 +445,7 @@ export default {
         ItemId: this.warehouseMovementItems.item.RecordId,
         UnitSetId: this.warehouseMovementItems.item.UnitSetId,
         UnitId: this.warehouseMovementItems.item.UnitId,
+        UnitCode: this.warehouseMovementItems.item.UnitCode,
         ConvFact1: 1,
         ConvFact2: 1,
         RecordId: this.warehouseMovementItems.item.RecordId,
@@ -470,6 +472,8 @@ export default {
     },
     editItem (item) {
       this.selectedIndex = this.form.WarehouseMovementItems.indexOf(item)
+      this.UnitCode = item.UnitCode
+      this.UnitId = item.UnitId  
       this.warehouseMovementItems = {
         item: {
           Code: item.Code,
@@ -483,6 +487,7 @@ export default {
         quantity: item.Quantity,
         isUpdated: true
       }
+      this.getItem(item.ItemId)
     },
     cleanItem () {
       this.warehouseMovementItems = {}
