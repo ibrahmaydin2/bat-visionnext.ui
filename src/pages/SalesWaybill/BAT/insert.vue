@@ -159,7 +159,7 @@
                     :search="searchItems"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.quantity')" :error="$v.selectedInvoiceLine.quantity" :required="true" md="2" lg="2">
-              <NextInput v-if=" this.UnitCode === 'ADET' " :disabled="disabledItems" v-model="selectedInvoiceLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
+              <NextInput v-if=" this.UnitId === 1526 " :disabled="disabledItems" v-model="selectedInvoiceLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForNumber($event); keypress($event);" />
               <NextInput v-else :disabled="disabledItems"  v-model="selectedInvoiceLine.quantity" type="text" @input="selectQuantity($event)" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.order.price')" :error="$v.selectedInvoiceLine.price" :required="true" md="2" lg="2">
@@ -431,6 +431,7 @@ export default {
         PrintedDispatchNumber: null
       },
       UnitCode: null,
+      UnitId: null,
       routeName1: 'Invoice',
       campaignFields: [
         {key: 'selection', label: '', sortable: false, visibility: 'campaignSelectable'},
@@ -634,6 +635,7 @@ export default {
       if (value) {
         this.selectedInvoiceLine.selectedItem = value
         this.UnitCode = value.UnitCode
+        this.UnitId = value.UnitId
       }
       this.searchPriceListItem()
       this.setStock()
@@ -776,6 +778,7 @@ export default {
     },
     editInvoiceLine (item) {
       this.selectedIndex = this.form.InvoiceLines.indexOf(item)
+      this.UnitId = item.UnitId
       this.selectedInvoiceLine = {
         quantity: item.Quantity,
         price: item.Price,
