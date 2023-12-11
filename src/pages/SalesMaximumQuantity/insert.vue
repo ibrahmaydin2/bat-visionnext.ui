@@ -25,7 +25,7 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.SalesMaximumQuantity.StatusId')" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox2 v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.SalesMaximumQuantity.BeginDate')" :error="$v.form.BeginDate">
             <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />

@@ -26,7 +26,7 @@
             <NextInput v-model="form.Description1" type="text" :disabled="insertReadonly.Description1" />
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.SalesMaximumQuantity.StatusId')" :error="$v.form.StatusId">
-            <NextCheckBox v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox2 v-model="form.StatusId" type="number" :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.SalesMaximumQuantity.BeginDate')" :error="$v.form.BeginDate">
             <NextDatePicker v-model="form.BeginDate" :disabled="insertReadonly.BeginDate" />
@@ -57,6 +57,9 @@
             <NextFormGroup :title="$t('insert.SalesMaxQuantity.Quantity')" :error="$v.salesMaximum.Quantity">
               <NextInput v-model="salesMaximum.Quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)" />
             </NextFormGroup>
+            <NextFormGroup :title="$t('insert.SalesMaximumQuantity.StatusId')" :error="$v.form.StatusId">
+              <NextCheckBox v-model="salesMaximum.IsTotalQuantity" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
                 <AddDetailButton @click.native="addSalesMaximumQuantityCustomers" />
@@ -74,12 +77,14 @@
                 <b-th><span>{{$t('insert.SalesMaximumQuantity.Code')}}</span></b-th>
                 <b-th><span>{{$t('insert.SalesMaxQuantity.CustomerId')}}</span></b-th>
                 <b-th><span>{{$t('insert.SalesMaxQuantity.Quantity')}}</span></b-th>
+                <b-th><span>{{('Üst Limitleme Yöntemi')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in (SalesMaximum ? SalesMaximum.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{f.Code}}</b-td>
                   <b-td>{{f.Customer ? f.Customer.Label : f.CustomerName}}</b-td>
+                  <b-td>{{f.IsTotalQuantity}}</b-td>
                   <b-td>{{formatValue(f.Quantity)}}</b-td>
                   <b-td class="text-center">
                     <b-button @click="editSalesMaximum(f)" class="btn mr-2 btn-warning btn-sm">
@@ -115,6 +120,7 @@ export default {
         Description1: null,
         StatusId: 1,
         CustomerId: null,
+        IsTotalQuantity: null,
         BeginDate: null,
         EndDate: null,
         SalesMaximumQuantityCustomers: []
@@ -130,6 +136,7 @@ export default {
         Code: null,
         CustomerId: null,
         Quantity: null,
+        IsTotalQuantity: null,
         isUpdated: false
       }
     }
@@ -203,6 +210,7 @@ export default {
           RecordId: this.salesMaximum.RecordId,
           RecordState: 2,
           CustomerId: this.salesMaximum.CustomerId.RecordId,
+          IsTotalQuantity: this.salesMaximum.IsTotalQuantity,
           CustomerName: this.salesMaximum.CustomerId.Description1,
           Code: this.salesMaximum.Code,
           Quantity: this.salesMaximum.Quantity
@@ -237,6 +245,7 @@ export default {
     editSalesMaximum (item) {
       this.selectedIndex = this.SalesMaximum.indexOf(item)
       this.salesMaximum = {
+        IsTotalQuantity: item.IsTotalQuantity,
         Code: item.Code,
         CustomerId: item.CustomerId,
         RecordId: item.RecordId,
@@ -280,6 +289,7 @@ export default {
             Code: item.Code,
             Quantity: item.Quantity,
             CustomerId: item.CustomerId,
+            IsTotalQuantity: item.IsTotalQuantity,
             CustomerName: item.CustomerName,
             RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
             StatusId: 1,
