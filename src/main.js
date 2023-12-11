@@ -53,6 +53,7 @@ import DownloadButton from './components/DownloadButton'
 import CancelButton from './components/CancelButton'
 import GetFormField from './components/GetFormField'
 import NextCheckBox from './components/NextCheckBox'
+import NextCheckBox2 from './components/NextCheckBox2'
 import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
 import Actions from './components/Actions/Actions'
@@ -155,6 +156,7 @@ Vue.component('DownloadButton', DownloadButton)
 Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
+Vue.component('NextCheckBox2', NextCheckBox2)
 Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)
 Vue.component('NextFormGroup', NextFormGroup)
