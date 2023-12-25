@@ -21,11 +21,33 @@ export const detailData = {
       dynamicAndCondition: { StatusIds: [1] },
       orConditionFields: 'Code,Description1,CommercialTitle',
       url: 'VisionNextCustomer/api/Customer/AutoCompleteSearch',
-      label: i18n.t('insert.SalesMaxQuantity.CustomerId'),
+      label: i18n.t('insert.route.CustomerId'),
+      hideOnTable: true,
       required: true,
       visible: true,
       isUnique: true,
       id: 2
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'CustomerCode',
+      parentProperty: 'Code',
+      disabled: true,
+      label: i18n.t('insert.route.CustomerId'),
+      id: 3,
+      parentId: 2
+    },
+    {
+      type: 'Label',
+      inputType: 'text',
+      modelProperty: 'CustomerName',
+      parentProperty: 'Description1',
+      objectKey: 'Customer',
+      disabled: true,
+      label: i18n.t('insert.route.CustomerName'),
+      id: 3,
+      parentId: 2
     },
     {
       type: 'NumberDotOrComma',
@@ -34,12 +56,21 @@ export const detailData = {
       label: i18n.t('insert.SalesMaxQuantity.Quantity'),
       required: true,
       visible: true,
-      id: 3,
+      id: 4,
       validation: (value, data) => {
         let normalizedValue = String(value).replace(',', '.');
         let numberValue = parseFloat(normalizedValue);
         return numberValue > 0
       },
-    }
+    },
+    {
+      type: 'Check',
+      modelProperty: 'IsTotalQuantity',
+      label: 'Üst Limitleme Yöntemi',
+      required: false,
+      visible: true,
+      isUnique: false,
+      id: 5
+    },
   ]
 }
