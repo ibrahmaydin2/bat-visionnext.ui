@@ -55,10 +55,10 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesStart')" :error="$v.form.NextSaleStartDate" :required="true">
-              <NextDatePicker v-model="form.NextSaleStartDate" :disabled="insertReadonly.NextSaleStartDate"/>
+              <NextDatePicker v-model="form.NextSaleStartDate" :disabled="true"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesEnd')" :error="$v.form.NextSaleEndDate" :required="true">
-              <NextDatePicker v-model="form.NextSaleEndDate" :disabled="insertReadonly.NextSaleEndDate" />
+              <NextDatePicker v-model="form.NextSaleEndDate" :disabled="true" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesControlAmount')" :error="$v.form.NextSaleQuantity" :required="true">
               <NextInput v-model="form.NextSaleQuantity" type="number" :min="0" :disabled="true"/>
