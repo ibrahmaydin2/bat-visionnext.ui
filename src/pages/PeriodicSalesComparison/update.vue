@@ -28,7 +28,7 @@
             <NextInput type="text" v-model="form.Definition" :disabled="true" />
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.periodicSalesComparison.StatusId')" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number"  :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox2 v-model="form.StatusId" type="number"  :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
@@ -55,10 +55,10 @@
                 label="Label"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesStart')" :error="$v.form.NextSaleStartDate" :required="true">
-              <NextDatePicker v-model="form.NextSaleStartDate"/>
+              <NextDatePicker v-model="form.NextSaleStartDate" :disabled="insertReadonly.NextSaleStartDate"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesEnd')" :error="$v.form.NextSaleEndDate" :required="true">
-              <NextDatePicker v-model="form.NextSaleEndDate"/>
+              <NextDatePicker v-model="form.NextSaleEndDate" :disabled="insertReadonly.NextSaleEndDate" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSalesControlAmount')" :error="$v.form.NextSaleQuantity" :required="true">
               <NextInput v-model="form.NextSaleQuantity" type="number" :min="0" :disabled="true"/>
@@ -67,10 +67,10 @@
               <NextDropdown v-model="selectedItemCriteria" :disabled="true" @input="selectedType('ItemCriteriaId', $event)" :source="(lookupValues.ITEM_CRITERIA ? lookupValues.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.PastSaleColor')" :required="true" >
-              <NextDropdown v-model="pastSaleColorId" :disabled="true"/>
+              <NextDropdown v-model="pastSaleColorId" :disabled="insertReadonly.pastSaleColorId"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.NextSaleColor')" :required="true">
-              <NextDropdown v-model="nextSaleColorId" :disabled="true"/>
+              <NextDropdown v-model="nextSaleColorId" :disabled="insertReadonly.nextSaleColorId" />
             </NextFormGroup>
           </b-row>
         </b-tab>

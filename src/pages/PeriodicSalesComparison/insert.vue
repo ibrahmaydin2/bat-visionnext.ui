@@ -28,7 +28,7 @@
             <NextInput type="text" v-model="form.Definition" :disabled="insertReadonly.Definiton" />
           </NextFormGroup>
           <NextFormGroup :title="$t('insert.periodicSalesComparison.StatusId')" :error="$v.form.StatusId" md="3" lg="3">
-            <NextCheckBox v-model="form.StatusId" type="number"  :disabled="insertReadonly.StatusId" toggle/>
+            <NextCheckBox2 v-model="form.StatusId" type="number"  :disabled="insertReadonly.StatusId" toggle/>
           </NextFormGroup>
         </b-row>
       </section>
