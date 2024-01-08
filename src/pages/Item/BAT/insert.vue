@@ -382,37 +382,40 @@ export default {
         let dataType = reader.result.split(';base64,')[0]
         let fileName = file.name
         console.log(fileName)
-        vm.getSaveAttachment(splitedFile, dataType, fileName)
+        vm.addFixedTermCampaignTaken(splitedFile, fileName, dataType)
+        console.log(reader.result.split(';base64,')[0])
       }
     },
-    getSaveAttachment (splitedFile, fileName) {
-      if (this.form.ItemAttachments.filter(r => r.RecordState !== 4).length > 0) {
-        this.$toasted.show(this.$t('insert.errorImage'), {
-          type: 'error',
-          keepOnHover: true,
-          duration: '3000'
-        })
-      } else {
-        let formData = {
-          AttachmentFile: splitedFile
-        }
-        this.$api.postByUrl(formData, 'VisionNextCommonApi/api/Attachment/SaveFile').then((response) => {
-          if (response.IsCompleted === true) {
-            this.filePath = response.AttachmentFile
-            this.addFixedTermCampaignTaken(fileName)
-          } else {
-            this.$toasted.show(this.$t('insert.errorImage'), {
-              type: 'error',
-              keepOnHover: true,
-              duration: '3000'
-            })
-          }
-        })
-      }
-    },
-    addFixedTermCampaignTaken (fileName) {
+    // getSaveAttachment (splitedFile, fileName) {
+    //   if (this.form.ItemAttachments.filter(r => r.RecordState !== 4).length > 0) {
+    //     this.$toasted.show(this.$t('insert.errorImage'), {
+    //       type: 'error',
+    //       keepOnHover: true,
+    //       duration: '3000'
+    //     })
+    //   } else {
+    //     let formData = {
+    //       AttachmentFile: splitedFile
+    //     }
+    //     this.$api.postByUrl(formData, 'VisionNextCommonApi/api/Attachment/SaveFile').then((response) => {
+    //       if (response.IsCompleted === true) {
+    //         this.filePath = response.AttachmentFile
+    //     this.addFixedTermCampaignTaken(fileName)
+    //       } else {
+    //         this.$toasted.show(this.$t('insert.errorImage'), {
+    //           type: 'error',
+    //           keepOnHover: true,
+    //           duration: '3000'
+    //         })
+    //       }
+    //     })
+    //   }
+    // },
+    addFixedTermCampaignTaken (splitedFile,fileName, dataType) {
       let formData = {
-        FileName: this.filePath
+        FileName: fileName,
+        File: splitedFile,
+        FileType: dataType
       }
       this.form.ItemAttachments.push({
         Deleted: 0,
@@ -427,7 +430,9 @@ export default {
           Deleted: 0,
           System: 0,
           RecordState: 2,
-          StatusId: 1
+          StatusId: 1,
+          File: formData.File,
+          FileType: formData.FileType
         }
       })
       this.selectedFile = null
