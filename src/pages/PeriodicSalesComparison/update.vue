@@ -74,8 +74,8 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab :title="$t('insert.periodicSalesComparison.Products')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
-          <b-row>
+        <b-tab :title="$t('insert.periodicSalesComparison.Products')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UL'">
+          <!-- <b-row>
             <b-col cols="12" md="12">
               <b-card class="m-4 asc__showPage-card">
                 <b-table-simple bordered small>
@@ -92,7 +92,8 @@
                 </b-table-simple>
               </b-card>
             </b-col>
-          </b-row>
+          </b-row> -->
+          <NextDetailPanel v-model="periodicSalesItems" :items="itemAnalysisItems"></NextDetailPanel>
         </b-tab>
         <b-tab :title="$t('insert.periodicSalesComparison.Branches')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <b-row>
@@ -121,6 +122,7 @@
 <script>
 import updateMixin from '../../mixins/update'
 import { required } from 'vuelidate/lib/validators'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [updateMixin],
   data () {
@@ -146,6 +148,7 @@ export default {
         PeriodicSalesComparisonDetails: []
       },
       routeName1: 'CommonApi',
+      itemAnalysisItems: detailData.itemAnalysisItems,
       selectedBranchCriteria: null,
       selectedItemCriteria: null,
       selectedBranch: null,
