@@ -64,7 +64,7 @@
               <NextInput v-model="form.NextSaleQuantity" type="number" :min="0"/>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.ProductCriteria')" :error="$v.form.ItemCriteriaId" :required="true">
-              <NextDropdown v-model="selectedItemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" :source="(lookupValues.ITEM_CRITERIA ? lookupValues.ITEM_CRITERIA.filter(i => i.Code != 'UL') : [])" label="Label" />
+              <NextDropdown v-model="selectedItemCriteria" :disabled="insertReadonly.ItemCriteriaId" @input="selectedType('ItemCriteriaId', $event)" :source="(lookupValues.ITEM_CRITERIA ? lookupValues.ITEM_CRITERIA.filter(i => i.Code != 'UK') : [])" label="Label" />
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.periodicSalesComparison.PastSaleColor')" :error="$v.pastSaleColorId" :required="true" >
               <NextDropdown v-model="pastSaleColorId" :source="colorList" @input="getColorValue($event, 1)"/>
@@ -74,7 +74,7 @@
             </NextFormGroup>
           </b-row>
         </b-tab>
-        <b-tab lazy :title="$t('insert.periodicSalesComparison.Products')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
+        <!-- <b-tab lazy :title="$t('insert.periodicSalesComparison.Products')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UK'">
           <b-row>
             <NextFormGroup :title="$t('insert.fixedTermCampaign.areaDescription')" :error="$v.periodicSalesItemArea" :required="true" md="5" lg="5">
               <NextDropdown
@@ -110,6 +110,9 @@
               </b-tbody>
             </b-table-simple>
           </b-row>
+        </b-tab> -->
+        <b-tab lazy :title="$t('insert.itemAnalysis.itemList')" v-if="selectedItemCriteria && selectedItemCriteria.Code === 'UL'">
+          <NextDetailPanel v-model="periodicSalesItems" :items="itemAnalysisItems"></NextDetailPanel>
         </b-tab>
         <b-tab lazy :title="$t('insert.periodicSalesComparison.Branches')" v-if="selectedBranchCriteria && selectedBranchCriteria.Code === 'SL'">
           <NextDetailPanel v-model="periodicSalesBranchs" :items="getPeriodicSalesBranches()">
@@ -126,6 +129,7 @@
 </template>
 <script>
 import mixin from '../../mixins/insert'
+import { detailData } from './detailPanelData'
 import { required } from 'vuelidate/lib/validators'
 export default {
   mixins: [mixin],
@@ -160,6 +164,7 @@ export default {
       periodicSalesItemAreaList: [],
       periodicSalesItemValueList: [],
       companyId: null,
+      itemAnalysisItems: detailData.itemAnalysisItems,
       branchId: null,
       lookupValues: {},
       colorList: [],
