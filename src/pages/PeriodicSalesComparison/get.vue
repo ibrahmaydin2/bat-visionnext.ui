@@ -61,6 +61,15 @@
             </b-col>
           </b-row>
         </b-tab>
+        <b-tab lazy :title="$t('insert.itemAnalysis.itemList')" v-if="rowData.ItemCriteria && rowData.ItemCriteria.Code === 'UL'">
+           <b-row>
+            <b-col>
+              <b-card class="m-3 asc__showPage-card">
+                <NextDetailPanel type="get" v-model="rowData.periodicSalesItems" :items="itemAnalysisItems" />
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-tab>
         <b-tab :title="$t('insert.periodicSalesComparison.Branches')" v-if="rowData.BranchCriteriaId === 30">
           <b-row>
             <b-col cols="12" md="12">
@@ -88,11 +97,14 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from '../../mixins/index'
+import { detailData } from './detailPanelData'
 export default {
   mixins: [mixin],
   props: ['dataKey'],
   data () {
-    return {}
+    return {
+      itemAnalysisItems: detailData.itemAnalysisItems,
+    }
   },
   mounted () {
     this.getData()
