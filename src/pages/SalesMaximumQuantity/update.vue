@@ -55,10 +55,10 @@
               ></NextDropdown>
             </NextFormGroup>
             <NextFormGroup :title="$t('insert.SalesMaxQuantity.Quantity')" :error="$v.salesMaximum.Quantity">
-              <NextInput v-model="salesMaximum.Quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event); keypress($event)" />
+              <NextInput v-model="salesMaximum.Quantity" type="text" @keypress="onlyForCurrencyDotOrComma($event)" />
             </NextFormGroup>
-            <NextFormGroup :title="$t('insert.SalesMaximumQuantity.StatusId')" :error="$v.form.StatusId">
-              <NextCheckBox v-model="salesMaximum.IsTotalQuantity" type="number" :disabled="insertReadonly.StatusId" toggle/>
+            <NextFormGroup title="Üst Limitleme Yöntemi" :error="$v.form.StatusId">
+              <NextCheckBoxSalesMaximumQty v-model="salesMaximum.IsTotalQuantity" type="number" :disabled="insertReadonly.StatusId" toggle/>
             </NextFormGroup>
             <b-col cols="12" md="2" lg="2" class="text-right">
               <b-form-group>
@@ -75,14 +75,16 @@
             <b-table-simple bordered small>
               <b-thead>
                 <b-th><span>{{$t('insert.SalesMaximumQuantity.Code')}}</span></b-th>
-                <b-th><span>{{$t('insert.SalesMaxQuantity.CustomerId')}}</span></b-th>
-                <b-th><span>{{$t('insert.SalesMaxQuantity.Quantity')}}</span></b-th>
+                <b-th><span>{{('Müşteri Kodu')}}</span></b-th>
+                <b-th><span>{{('Müşteri Adı')}}</span></b-th>
                 <b-th><span>{{('Üst Limitleme Yöntemi')}}</span></b-th>
+                <b-th><span>{{$t('insert.SalesMaxQuantity.Quantity')}}</span></b-th>
                 <b-th><span>{{$t('list.operations')}}</span></b-th>
               </b-thead>
               <b-tbody>
                 <b-tr v-for="(f, i) in (SalesMaximum ? SalesMaximum.filter(f => f.RecordState !== 4) : [])" :key="i">
                   <b-td>{{f.Code}}</b-td>
+                  <b-td>{{f.Customer ? f.Customer.Code : f.CustomerCode}}</b-td>
                   <b-td>{{f.Customer ? f.Customer.Label : f.CustomerName}}</b-td>
                   <b-td>{{f.IsTotalQuantity}}</b-td>
                   <b-td>{{formatValue(f.Quantity)}}</b-td>
@@ -175,6 +177,7 @@ export default {
             obj.RecordId = exist.RecordId
             obj.CustomerId = exist.CustomerId
             obj.CustomerName = exist.CustomerName
+            obj.CustomerCode = exist.CustomerCode
             this.SalesMaximum.splice(existIndex, 1)
           } else {
             obj.RecordState = 2
@@ -212,6 +215,7 @@ export default {
           CustomerId: this.salesMaximum.CustomerId.RecordId,
           IsTotalQuantity: this.salesMaximum.IsTotalQuantity,
           CustomerName: this.salesMaximum.CustomerId.Description1,
+          CustomerCode: this.salesMaximum.CustomerId.Code,
           Code: this.salesMaximum.Code,
           Quantity: this.salesMaximum.Quantity
         }
@@ -291,6 +295,7 @@ export default {
             CustomerId: item.CustomerId,
             IsTotalQuantity: item.IsTotalQuantity,
             CustomerName: item.CustomerName,
+            CustomerCode: item.CustomerCode,
             RecordState: item.RecordState === 4 ? 4 : item.RecordId > 0 ? 3 : 2,
             StatusId: 1,
             Deleted: 0,
