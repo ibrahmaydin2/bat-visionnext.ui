@@ -53,6 +53,7 @@ import DownloadButton from './components/DownloadButton'
 import CancelButton from './components/CancelButton'
 import GetFormField from './components/GetFormField'
 import NextCheckBox from './components/NextCheckBox'
+import NextCheckBoxSalesMaximumQty from './components/NextCheckBoxSalesMaximumQty'
 import NextCheckBox2 from './components/NextCheckBox2'
 import NextAddress from './components/NextAddress'
 import NextFormGroup from './components/NextFormGroup'
@@ -156,6 +157,7 @@ Vue.component('DownloadButton', DownloadButton)
 Vue.component('CancelButton', CancelButton)
 Vue.component('GetFormField', GetFormField)
 Vue.component('NextCheckBox', NextCheckBox)
+Vue.component('NextCheckBoxSalesMaximumQty', NextCheckBoxSalesMaximumQty)
 Vue.component('NextCheckBox2', NextCheckBox2)
 Vue.component('NextAddress', NextAddress)
 Vue.component('DatePicker', DatePicker)

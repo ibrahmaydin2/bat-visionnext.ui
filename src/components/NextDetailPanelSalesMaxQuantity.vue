@@ -39,7 +39,7 @@
         <NextInput v-model="label[item.modelProperty]" v-if="item.type === 'Label'" :type="item.inputType" :readonly="isDisabled(item)" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'Text'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :minLength="item.minLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" />
         <NextInput v-model="form[item.modelProperty]" v-if="item.type === 'NumberDotOrComma'" :type="item.inputType" :readonly="isDisabled(item)" @input="enterValue(item.id, $event)" :maxLength="item.maxLength" :minLength="item.minLength" :oninput="item.isPostCode ? postCodeControl : maxLengthControl" @keypress="onlyForCurrencyDotOrComma($event); keypress($event);"/>
-        <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number"  toggle :disabled="isDisabled(item)" />
+        <NextCheckBoxSalesMaximumQty v-model="form[item.modelProperty]" v-if="item.type === 'Check'" type="number"  toggle :disabled="isDisabled(item)" />
         <NextCheckBox v-model="form[item.modelProperty]" v-if="item.type === 'Radio'" type="number" radio :disabled="isDisabled(item)" />
         <NextDatePicker v-model="form[item.modelProperty]" v-if="item.type === 'Date'" :disabled="isDisabled(item)" />
       </NextFormGroup>
@@ -250,7 +250,7 @@ export default {
             label: this.$t(item.label),
             formatter: (value, key, obj) => {
               if (item.type === 'Check') {
-                value = value === 1 ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'
+                value = value === 1 ? '1' : '0'
               } else if (item.type === 'Date') {
                 value = this.dateConvertFromTimezone(value)
               } else if (this.objectTypes.includes(item.type)) {
