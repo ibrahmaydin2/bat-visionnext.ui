@@ -17,7 +17,7 @@ steps:
 
 - script: |
     npm install
-    npm run build dev bat
+    npm run build uat bat
   displayName: 'npm install and build'
   
 - task: CopyFiles@2
