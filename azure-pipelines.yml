@@ -9,10 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  projectFolder: 'src'
-  buildOutputFolder: 'src/dist'
-
 steps:
 - task: NodeTool@0
   inputs:
@@ -20,14 +16,13 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    pushd $(projectFolder) && npm install && popd
-    pushd $(projectFolder) && npm run build dev bat && popd
+    npm install
+    npm run build dev bat
   displayName: 'npm install and build'
   
 - task: CopyFiles@2
   inputs:
-    sourceFolder: '$(buildOutputFolder)' 
-    contents: '**/*' 
+    sourceFolder: 'dist' 
     targetFolder: '$(Build.ArtifactStagingDirectory)'
     cleanTargetFolder: true
 
@@ -35,9 +30,9 @@ steps:
   inputs:
     rootFolderOrFile: $(Build.ArtifactStagingDirectory)
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/dist.zip'
     includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/dist.zip'
