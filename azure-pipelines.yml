@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- development
+- staging
 
 pool:
   vmImage: ubuntu-latest
@@ -17,7 +17,7 @@ steps:
 
 - script: |
     npm install
-    npm run build dev bat
+    npm run build uat bat
   displayName: 'npm install and build'
   
 - task: CopyFiles@2
