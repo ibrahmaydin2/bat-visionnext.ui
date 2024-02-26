@@ -8,6 +8,7 @@
 # kopyalanmış projeyi çalıştırmadan önce
 npm install
 # localhost:8080 portundan projeyi çalıştırmak için
+# projeyi çalıştırmak için node versiyonu 14.5.0 olmalıdır
 npm start
 
 # projeyi derlemek için
